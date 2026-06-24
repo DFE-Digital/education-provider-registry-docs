@@ -1,0 +1,11 @@
+# Nanoc build output and local dependency cache.
+/docs-site/output
+/docs-site/tmp
+/docs-site/.bundle
+/docs-site/.bundle-user
+/docs-site/content/features/*.md
+!/docs-site/content/features/.gitkeep
+/docs-site/vendor/bundle
+/docs-site/vendor/bundle-cache
+/docs-site/vendor/bundle-home
+/.bundle
