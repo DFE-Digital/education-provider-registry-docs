@@ -1,0 +1,61 @@
+name: Publish documentation site
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-docs-site.yml"
+      - "docs-site/**"
+      - "features/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Generate feature pages from Gherkin
+        shell: pwsh
+        run: ./docs-site/scripts/generate-feature-pages.ps1
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+          working-directory: docs-site
+
+      - name: Compile Nanoc site
+        working-directory: docs-site
+        run: bundle exec nanoc compile
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs-site/output
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

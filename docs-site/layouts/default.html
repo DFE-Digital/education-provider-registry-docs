@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Education Provider Registry docs</title>
+    <style>
+      body {
+        color: #0b0c0c;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      header {
+        background: #1d70b8;
+        color: #ffffff;
+        padding: 1rem 2rem;
+      }
+
+      header a {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      header a:hover {
+        text-decoration: underline;
+      }
+
+      main {
+        margin: 0 auto;
+        max-width: 960px;
+        padding: 2rem;
+      }
+
+      table {
+        border-collapse: collapse;
+        margin: 1rem 0;
+        width: 100%;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #b1b4b6;
+        padding: 0.5rem;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      code {
+        background: #f3f2f1;
+        padding: 0.1rem 0.2rem;
+      }
+
+      pre {
+        border: 1px solid #b1b4b6;
+        overflow-x: auto;
+        padding: 1rem;
+      }
+
+      pre code {
+        background: transparent;
+        padding: 0;
+      }
+
+      .meta {
+        color: #505a5f;
+        font-size: 0.95rem;
+      }
+
+      .mermaid {
+        margin: 1.5rem 0;
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/default.min.css">
+  </head>
+  <body>
+    <header>
+      <strong><a href="/education-provider-registry-docs/">Education Provider Registry docs</a></strong>
+    </header>
+    <main>
+      <%= yield %>
+    </main>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.14.0/+esm";
+
+      mermaid.initialize({
+        startOnLoad: true,
+        securityLevel: "loose"
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/gherkin.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
