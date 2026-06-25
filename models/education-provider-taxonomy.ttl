@@ -3,10 +3,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-# GIAS 2.0 Establishment Details Taxonomy
+# Education Provider Registry Taxonomy
 #
 # Scope: this version covers classifications used by the fields shown in the
-# Establishment Details table in the public establishment record view.
+# establishment record Details tab in the public view.
 #
 # Facets are represented as top concepts. Taxons are narrower concepts beneath
 # their facet. Establishment types are represented as taxons under
@@ -15,13 +15,13 @@
 # taxonomy classifications.
 #
 # It is not a complete provider-domain taxonomy and does not attempt to classify
-# fields outside the Establishment Details table.
+# fields outside the establishment record Details tab.
 
 
 epr:establishmentDetailsTaxonomy
     a skos:ConceptScheme ;
-    dcterms:title "GIAS 2.0 Establishment Details Taxonomy"@en ;
-    dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the Establishment Details table in the public establishment record view."@en ;
+    dcterms:title "Education Provider Registry Taxonomy"@en ;
+    dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the establishment record Details tab in the public view."@en ;
     dcterms:created "2026-06-16"^^xsd:date ;
     dcterms:modified "2026-06-24"^^xsd:date ;
     epr:status "Provisional"@en ;
@@ -48,7 +48,7 @@ epr:establishmentDetailsTaxonomy
 
 epr:establishmentDetailsTaxonomyFacets
     a skos:Collection ;
-    skos:prefLabel "Establishment Details taxonomy facets"@en ;
+    skos:prefLabel "Education provider taxonomy facets"@en ;
     skos:member
         epr:EstablishmentType,
         epr:EducationPhase,

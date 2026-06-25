@@ -5,15 +5,15 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-# GIAS 2.0 Establishment Details Vocabulary
+# Education Provider Registry Vocabulary
 #
-# Scope: this version covers the fields shown in the Establishment Details
-# table in the public establishment record view.
+# Scope: this version covers the fields shown in the establishment record
+# Details tab in the public view.
 #
 # It defines business vocabulary for those displayed detail fields, including
 # field concepts, labels, aliases, definitions, relationships, review statuses
 # and source notes. It is not a complete provider-domain ontology and does not
-# attempt to model fields outside the Establishment Details table.
+# attempt to model fields outside the establishment record Details tab.
 #
 # Canonical concept identifiers are the expanded epr: IRIs, for example
 # epr:EstablishmentLifecycle expands to:
@@ -28,8 +28,8 @@ epr:status
 
 epr:establishmentDetailsVocabulary
     a skos:ConceptScheme ;
-    dcterms:title "GIAS 2.0 Establishment Details Vocabulary"@en ;
-    dcterms:description "Controlled vocabulary for the GIAS 2.0 data-modelling work, scoped to the fields shown in the Establishment Details table in the public establishment record view."@en ;
+    dcterms:title "Education Provider Registry Vocabulary"@en ;
+    dcterms:description "Controlled vocabulary for the GIAS 2.0 data-modelling work, scoped to the fields shown in the establishment record Details tab in the public view."@en ;
     dcterms:created "2026-06-16"^^xsd:date ;
     epr:status "Provisional"@en ;
     skos:hasTopConcept

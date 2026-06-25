@@ -7,7 +7,7 @@
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 
-# GIAS 2.0 Establishment Details - Data Quality SHACL Shapes
+# Education Provider Registry - Data Quality SHACL Shapes
 #
 # Scope: value-level constraints on EPR establishment fields.
 # This file constrains datatypes, ranges and cardinality for properties
@@ -36,7 +36,7 @@
 
 <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/>
     a owl:Ontology ;
-    dcterms:title "GIAS 2.0 Establishment Details Data Quality SHACL Shapes"@en ;
+    dcterms:title "Education Provider Registry Data Quality SHACL Shapes"@en ;
     dcterms:description "Value-level SHACL constraints for EPR establishment records: datatypes, numeric ranges and cardinality rules for identity, lifecycle and measure fields."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
     dcterms:modified "2026-06-19"^^xsd:date ;
