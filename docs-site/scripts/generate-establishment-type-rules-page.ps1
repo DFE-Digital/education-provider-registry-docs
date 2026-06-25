@@ -76,6 +76,10 @@ $typeMeta = [ordered]@{
     'PupilReferralUnit'                            = @{ Code = '14'; Label = "Pupil referral unit" }
     'LocalAuthorityNurserySchool'                  = @{ Code = '15'; Label = "Local authority nursery school" }
     'FurtherEducation'                             = @{ Code = '18'; Label = "Further education" }
+    'SecureUnits'                                  = @{ Code = '24'; Label = "Secure units" }
+    'OffshoreSchools'                              = @{ Code = '25'; Label = "Offshore schools" }
+    'ServiceChildrensEducation'                    = @{ Code = '26'; Label = "Service children's education" }
+    'MiscellaneousEstablishment'                   = @{ Code = '27'; Label = "Miscellaneous" }
     'AcademySponsorLed'                            = @{ Code = '28'; Label = "Academy sponsor led" }
     'HigherEducationInstitution'                   = @{ Code = '29'; Label = "Higher education institution" }
     'WelshEstablishment'                           = @{ Code = '30'; Label = "Welsh establishment" }
@@ -98,6 +102,7 @@ $typeMeta = [ordered]@{
     'ChildrensCentre'                              = @{ Code = '47'; Label = "Children's centre" }
     'ChildrensCentreLinkedSite'                    = @{ Code = '48'; Label = "Children's centre linked site" }
     'OnlineProvider'                               = @{ Code = '49'; Label = "Online provider" }
+    'InstitutionFundedByOtherGovernmentDepartment' = @{ Code = '56'; Label = "Institution funded by other government department" }
     'AcademySecure16To19'                          = @{ Code = '57'; Label = "Academy secure 16 to 19" }
 }
 
