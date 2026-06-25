@@ -5,6 +5,13 @@
 /docs-site/.bundle-user
 /docs-site/content/features/*.md
 !/docs-site/content/features/.gitkeep
+/docs-site/content/business-domain/*.md
+/docs-site/content/models/*.md
+!/docs-site/content/models/index.md
+/docs-site/content/taxonomy/*.md
+!/docs-site/content/taxonomy/.gitkeep
+/docs-site/content/vocabulary/*.md
+!/docs-site/content/vocabulary/.gitkeep
 /docs-site/vendor/bundle
 /docs-site/vendor/bundle-cache
 /docs-site/vendor/bundle-home

@@ -1,10 +1,14 @@
 # docs-site
 
-This folder contains the [Nanoc](https://nanoc.ws/) site used to publish generated documentation views over the source-controlled feature files in this repository.
+This folder contains the [Nanoc](https://nanoc.ws/) site used to publish generated documentation views over source-controlled documentation, behaviour and model artefacts in this repository.
 
 Nanoc is a Ruby static site generator. In this repo the docs site is intentionally contained in `docs-site/`: local build scripts live in `docs-site/scripts/`, generated markdown lives in `docs-site/content/`, Ruby dependencies are installed under `docs-site/vendor/bundle/`, and the generated HTML is written to `docs-site/output/`.
 
-The feature pages are generated from the Gherkin `.feature` files in `../features/`.
+The site publishes:
+
+- Feature pages generated from the Gherkin `.feature` files in `../features/`.
+- Business-domain pages copied from `../business-domain/`.
+- Vocabulary, taxonomy, SHACL and model pages generated or copied from `../models/`.
 
 ## Compile the docs locally
 
@@ -17,9 +21,11 @@ Run this command from `docs-site/`:
 The script:
 
 1. Generates Markdown pages from `../features/*.feature`.
-2. Configures Bundler to install dependencies under `docs-site/vendor/bundle/`.
-3. Installs the Ruby gems if needed.
-4. Compiles the Nanoc site into `docs-site/output/`.
+2. Copies business-domain Markdown from `../business-domain/`.
+3. Generates vocabulary, taxonomy, SHACL and model pages from `../models/`.
+4. Configures Bundler to install dependencies under `docs-site/vendor/bundle/`.
+5. Installs the Ruby gems if needed.
+6. Compiles the Nanoc site into `docs-site/output/`.
 
 After the first successful install, you can skip the Bundler install step when you only want to regenerate and compile the site:
 
@@ -31,11 +37,12 @@ To check the result locally, open `docs-site/output/index.html` in a browser.
 
 If a layout, filter, or generated page change does not appear in the output, delete `docs-site/output/` and `docs-site/tmp/`, then run `.\scripts\compile-local.ps1` again.
 
-## Feature files remain the source of truth
+## Source files remain the source of truth
 
 Do not edit generated Markdown under `docs-site/content/features/`.
+Do not edit generated or copied Markdown under `docs-site/content/business-domain/`, `docs-site/content/models/`, `docs-site/content/taxonomy/` or `docs-site/content/vocabulary/`.
 
-Edit the `.feature` files under `../features/`, then regenerate and compile the docs site.
+Edit the source files under `../features/`, `../business-domain/` or `../models/`, then regenerate and compile the docs site.
 
 ## Gherkin rendering
 

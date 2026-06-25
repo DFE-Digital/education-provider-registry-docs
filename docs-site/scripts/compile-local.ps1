@@ -93,6 +93,13 @@ function Set-NanocWindowsCompatibility {
 }
 
 & (Join-Path $PSScriptRoot "generate-feature-pages.ps1")
+& (Join-Path $PSScriptRoot "copy-business-domain-pages.ps1")
+& (Join-Path $PSScriptRoot "generate-vocabulary-pages.ps1")
+& (Join-Path $PSScriptRoot "generate-taxonomy-pages.ps1")
+& (Join-Path $PSScriptRoot "generate-shacl-rules-page.ps1")
+& (Join-Path $PSScriptRoot "generate-data-quality-rules-page.ps1")
+& (Join-Path $PSScriptRoot "generate-establishment-type-rules-page.ps1")
+& (Join-Path $PSScriptRoot "copy-model-pages.ps1")
 
 Push-Location $docsSiteRoot
 try {

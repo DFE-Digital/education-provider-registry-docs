@@ -1,0 +1,1596 @@
+﻿@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# GIAS 2.0 Establishment Details Taxonomy
+#
+# Scope: this version covers classifications used by the fields shown in the
+# Establishment Details table in the public establishment record view.
+#
+# Facets are represented as top concepts. Taxons are narrower concepts beneath
+# their facet. Establishment types are represented as taxons under
+# EstablishmentType, with an intermediate type-group level. Dates, identifiers,
+# measures and organisation relationships are excluded because they are not
+# taxonomy classifications.
+#
+# It is not a complete provider-domain taxonomy and does not attempt to classify
+# fields outside the Establishment Details table.
+
+
+epr:establishmentDetailsTaxonomy
+    a skos:ConceptScheme ;
+    dcterms:title "GIAS 2.0 Establishment Details Taxonomy"@en ;
+    dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the Establishment Details table in the public establishment record view."@en ;
+    dcterms:created "2026-06-16"^^xsd:date ;
+    dcterms:modified "2026-06-24"^^xsd:date ;
+    epr:status "Provisional"@en ;
+    skos:hasTopConcept
+        epr:EstablishmentType,
+        epr:EducationPhase,
+        epr:EstablishmentStatus,
+        epr:AdmissionsPolicy,
+        epr:GenderOfEntry,
+        epr:BoardingProvision,
+        epr:NurseryProvision,
+        epr:SixthFormProvision,
+        epr:SpecialClassProvision,
+        epr:ReligiousCharacter,
+        epr:ReligiousEthos,
+        epr:EstablishmentGroupType,
+        epr:GroupRelationshipType,
+        epr:GovernanceRoleType,
+        epr:GovernanceAppointingBody .
+
+#################################################################
+# Facet collection
+#################################################################
+
+epr:establishmentDetailsTaxonomyFacets
+    a skos:Collection ;
+    skos:prefLabel "Establishment Details taxonomy facets"@en ;
+    skos:member
+        epr:EstablishmentType,
+        epr:EducationPhase,
+        epr:EstablishmentStatus,
+        epr:AdmissionsPolicy,
+        epr:GenderOfEntry,
+        epr:BoardingProvision,
+        epr:NurseryProvision,
+        epr:SixthFormProvision,
+        epr:SpecialClassProvision,
+        epr:ReligiousCharacter,
+        epr:ReligiousEthos,
+        epr:EstablishmentGroupType,
+        epr:GroupRelationshipType,
+        epr:GovernanceRoleType,
+        epr:GovernanceAppointingBody .
+
+#################################################################
+# Type-group collection
+#################################################################
+
+epr:establishmentTypeGroups
+    a skos:Collection ;
+    skos:prefLabel "Establishment type groups"@en ;
+    skos:member
+        epr:EstablishmentTypeGroupColleges,
+        epr:EstablishmentTypeGroupUniversities,
+        epr:EstablishmentTypeGroupIndependentSchools,
+        epr:EstablishmentTypeGroupLaMaintainedSchools,
+        epr:EstablishmentTypeGroupNonMaintainedSpecialSchools,
+        epr:EstablishmentTypeGroupWelshEstablishments,
+        epr:EstablishmentTypeGroupOtherTypes,
+        epr:EstablishmentTypeGroupAcademies,
+        epr:EstablishmentTypeGroupFreeSchools,
+        epr:EstablishmentTypeGroupChildrensCentres,
+        epr:EstablishmentTypeGroupOnlineProviders .
+
+#################################################################
+# Facets
+#################################################################
+
+epr:EstablishmentType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Establishment type"@en ;
+    skos:definition "The legal, operational or policy classification recorded as the establishment's type."@en ;
+    skos:scopeNote "This remains an overloaded legacy classification mixing legal form, sector and operational model. The intermediate type-group level is retained for traceability."@en ;
+    skos:narrower
+        epr:EstablishmentTypeGroupAcademies,
+        epr:EstablishmentTypeGroupChildrensCentres,
+        epr:EstablishmentTypeGroupColleges,
+        epr:EstablishmentTypeGroupFreeSchools,
+        epr:EstablishmentTypeGroupIndependentSchools,
+        epr:EstablishmentTypeGroupLaMaintainedSchools,
+        epr:EstablishmentTypeGroupNonMaintainedSpecialSchools,
+        epr:EstablishmentTypeGroupOnlineProviders,
+        epr:EstablishmentTypeGroupOtherTypes,
+        epr:EstablishmentTypeGroupUniversities,
+        epr:EstablishmentTypeGroupWelshEstablishments ;
+    epr:status "Provisional"@en .
+
+epr:EducationPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Education phase"@en ;
+    skos:definition "The broad stage of education provided by an establishment."@en ;
+    skos:narrower
+        epr:NurseryPhase,
+        epr:PrimaryPhase,
+        epr:MiddlePhase,
+        epr:MiddleDeemedSecondaryPhase,
+        epr:SecondaryPhase,
+        epr:AllThroughPhase,
+        epr:SixteenToNineteenPhase,
+        epr:NotApplicableEducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Establishment status"@en ;
+    skos:definition "The current lifecycle or operating-state classification of an establishment."@en ;
+    skos:narrower
+        epr:OpenStatus,
+        epr:ClosedStatus,
+        epr:OpenProposedToCloseStatus,
+        epr:ProposedToOpenStatus ;
+    epr:status "Provisional"@en .
+
+epr:AdmissionsPolicy
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Admissions policy"@en ;
+    skos:definition "The classification describing how places are allocated."@en ;
+    skos:narrower
+        epr:SelectiveAdmissions,
+        epr:NonSelectiveAdmissions,
+        epr:NotApplicableAdmissionsPolicy ;
+    epr:status "Provisional"@en .
+
+epr:GenderOfEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Gender of entry"@en ;
+    skos:definition "The classification describing the establishment's gender admission arrangement."@en ;
+    skos:narrower
+        epr:BoysOnlyGenderEntry,
+        epr:GirlsOnlyGenderEntry,
+        epr:MixedGenderEntry,
+        epr:NotApplicableGenderOfEntry ;
+    epr:status "Provisional"@en .
+
+epr:BoardingProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Boarding provision"@en ;
+    skos:definition "The classification describing whether boarding places are offered."@en ;
+    skos:narrower
+        epr:BoardingSchool,
+        epr:HasBoarders,
+        epr:NoBoarders ;
+    epr:status "Provisional"@en .
+
+epr:NurseryProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Nursery provision"@en ;
+    skos:definition "The classification describing whether the establishment offers nursery classes."@en ;
+    skos:narrower
+        epr:HasNurseryClasses,
+        epr:NoNurseryClasses,
+        epr:NotApplicableNurseryProvision ;
+    epr:status "Provisional"@en .
+
+epr:SixthFormProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Sixth-form provision"@en ;
+    skos:definition "The classification describing whether the establishment has a sixth form."@en ;
+    skos:narrower
+        epr:HasSixthForm,
+        epr:NoSixthForm,
+        epr:NotApplicableSixthFormProvision ;
+    epr:status "Provisional"@en .
+
+epr:SpecialClassProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Special-class provision"@en ;
+    skos:definition "The classification describing whether the establishment has special classes."@en ;
+    skos:narrower
+        epr:HasSpecialClasses,
+        epr:NoSpecialClasses,
+        epr:NotApplicableSpecialClassProvision ;
+    epr:status "Provisional"@en .
+
+epr:ReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Religious character"@en ;
+    skos:definition "The formal religious-character classification designated for an establishment."@en ;
+    skos:narrower
+        epr:ChurchOfEnglandCharacter,
+        epr:JewishCharacter,
+        epr:MuslimCharacter,
+        epr:NoReligiousCharacter,
+        epr:NotApplicableReligiousCharacter,
+        epr:OtherReligiousCharacter,
+        epr:RomanCatholicCharacter ;
+    epr:status "Provisional"@en .
+
+epr:ReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Religious ethos"@en ;
+    skos:definition "The recorded religious-ethos classification associated with an establishment."@en ;
+    skos:scopeNote "Its distinction from religious character requires business validation."@en ;
+    skos:narrower
+        epr:ChristianEthos,
+        epr:NoReligiousEthos,
+        epr:NotApplicableReligiousEthos,
+        epr:OtherReligiousEthos ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment type groups
+#################################################################
+
+epr:EstablishmentTypeGroupColleges
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Colleges"@en ;
+    skos:altLabel "Further education colleges"@en ;
+    skos:definition "The GIAS establishment type group covering further and sixth-form education colleges."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:FurtherEducation,
+        epr:SixthFormCentre ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupUniversities
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Universities and higher education"@en ;
+    skos:altLabel "HEI"@en ;
+    skos:definition "The GIAS establishment type group covering higher education institutions."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:HigherEducationInstitution ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupIndependentSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Independent schools"@en ;
+    skos:definition "The GIAS establishment type group covering city technology colleges and other independent schools."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:CityTechnologyCollege,
+        epr:OtherIndependentSchool ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupLaMaintainedSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Local authority maintained schools"@en ;
+    skos:altLabel "LA maintained schools"@en ;
+    skos:definition "The GIAS establishment type group covering schools maintained by a local authority."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:CommunitySchool,
+        epr:VoluntaryAidedSchool,
+        epr:VoluntaryControlledSchool,
+        epr:FoundationSchool,
+        epr:CommunitySpecialSchool,
+        epr:FoundationSpecialSchool,
+        epr:PupilReferralUnit,
+        epr:LocalAuthorityNurserySchool ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupNonMaintainedSpecialSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Non-maintained special schools"@en ;
+    skos:definition "The GIAS establishment type group covering non-maintained and independent special schools."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:NonMaintainedSpecialSchool,
+        epr:OtherIndependentSpecialSchool ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupWelshEstablishments
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Welsh establishments"@en ;
+    skos:definition "The GIAS establishment type group covering establishments in Wales."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:WelshEstablishment ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupOtherTypes
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Other types"@en ;
+    skos:altLabel "Miscellaneous"@en ;
+    skos:definition "The GIAS establishment type group covering miscellaneous and other establishment types."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:SecureUnits,
+        epr:OffshoreSchools,
+        epr:ServiceChildrensEducation,
+        epr:MiscellaneousEstablishment,
+        epr:SpecialPost16Institution,
+        epr:BritishSchoolsOverseas,
+        epr:InstitutionFundedByOtherGovernmentDepartment ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupAcademies
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academies"@en ;
+    skos:definition "The GIAS establishment type group covering all academy types."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:AcademySponsorLed,
+        epr:AcademySpecialSponsorLed,
+        epr:AcademyConverter,
+        epr:AcademyAlternativeProvisionConverter,
+        epr:AcademyAlternativeProvisionSponsorLed,
+        epr:AcademySpecialConverter,
+        epr:Academy1619Converter,
+        epr:Academy16To19SponsorLed,
+        epr:AcademySecure16To19 ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupFreeSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Free schools (type group)"@en ;
+    skos:altLabel "Free schools"@en ;
+    skos:definition "The GIAS establishment type group covering all free school types."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:FreeSchool,
+        epr:FreeSchoolSpecial,
+        epr:FreeSchoolAlternativeProvision,
+        epr:FreeSchool16To19,
+        epr:UniversityTechnicalCollege,
+        epr:StudioSchool ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupChildrensCentres
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Children's centres"@en ;
+    skos:definition "The GIAS establishment type group covering children's centres and linked sites."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:ChildrensCentre,
+        epr:ChildrensCentreLinkedSite ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentTypeGroupOnlineProviders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Online providers"@en ;
+    skos:definition "The GIAS establishment type group covering online education providers."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:OnlineProvider ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 4: LA maintained schools
+#################################################################
+
+epr:CommunitySchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Community school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 01"@en ;
+    epr:status "Provisional"@en .
+
+epr:VoluntaryAidedSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Voluntary aided school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 02"@en ;
+    epr:status "Provisional"@en .
+
+epr:VoluntaryControlledSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Voluntary controlled school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 03"@en ;
+    epr:status "Provisional"@en .
+
+epr:FoundationSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Foundation school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 05"@en ;
+    epr:status "Provisional"@en .
+
+epr:CommunitySpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Community special school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 07"@en ;
+    epr:status "Provisional"@en .
+
+epr:FoundationSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Foundation special school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 12"@en ;
+    epr:status "Provisional"@en .
+
+epr:PupilReferralUnit
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Pupil referral unit"@en ;
+    skos:altLabel "PRU"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 14"@en ;
+    epr:status "Provisional"@en .
+
+epr:LocalAuthorityNurserySchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Local authority nursery school"@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    dcterms:source "Type code 15"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 5: non-maintained special schools
+#################################################################
+
+epr:NonMaintainedSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Non-maintained special school"@en ;
+    skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
+    dcterms:source "Type code 08"@en ;
+    epr:status "Provisional"@en .
+
+epr:OtherIndependentSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Other independent special school"@en ;
+    skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
+    dcterms:source "Type code 10"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 3: independent schools
+#################################################################
+
+epr:CityTechnologyCollege
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "City technology college"@en ;
+    skos:altLabel "CTC"@en ;
+    skos:broader epr:EstablishmentTypeGroupIndependentSchools ;
+    dcterms:source "Type code 06"@en ;
+    epr:status "Provisional"@en .
+
+epr:OtherIndependentSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Other independent school"@en ;
+    skos:broader epr:EstablishmentTypeGroupIndependentSchools ;
+    dcterms:source "Type code 11"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 1: colleges
+#################################################################
+
+epr:FurtherEducation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Further education"@en ;
+    skos:altLabel "Further education college"@en ;
+    skos:broader epr:EstablishmentTypeGroupColleges ;
+    dcterms:source "Type code 18"@en ;
+    epr:status "Provisional"@en .
+
+epr:SixthFormCentre
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Sixth form centre"@en ;
+    skos:broader epr:EstablishmentTypeGroupColleges ;
+    dcterms:source "Type code 31"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 2: universities
+#################################################################
+
+epr:HigherEducationInstitution
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Higher education institution"@en ;
+    skos:altLabel "HEI"@en ;
+    skos:broader epr:EstablishmentTypeGroupUniversities ;
+    dcterms:source "Type code 29"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 6: Welsh establishments
+#################################################################
+
+epr:WelshEstablishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Welsh establishment"@en ;
+    skos:broader epr:EstablishmentTypeGroupWelshEstablishments ;
+    dcterms:source "Type code 30"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - other types
+#################################################################
+
+epr:SecureUnits
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Secure units"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 24"@en ;
+    epr:status "Provisional"@en .
+
+epr:OffshoreSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Offshore schools"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 25"@en ;
+    epr:status "Provisional"@en .
+
+epr:ServiceChildrensEducation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Service children's education"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 26"@en ;
+    epr:status "Provisional"@en .
+
+epr:MiscellaneousEstablishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Miscellaneous"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 27"@en ;
+    epr:status "Provisional"@en .
+
+epr:SpecialPost16Institution
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Special post 16 institution"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 32"@en ;
+    epr:status "Provisional"@en .
+
+epr:BritishSchoolsOverseas
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "British schools overseas"@en ;
+    skos:altLabel "BSO"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 37"@en ;
+    epr:status "Provisional"@en .
+
+epr:InstitutionFundedByOtherGovernmentDepartment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Institution funded by other government department"@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    dcterms:source "Type code 56"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 10: academies
+#################################################################
+
+epr:AcademySponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy sponsor led"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 28"@en ;
+    epr:status "Provisional"@en .
+
+epr:AcademySpecialSponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy special sponsor led"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 33"@en ;
+    epr:status "Provisional"@en .
+
+epr:AcademyConverter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy converter"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 34"@en ;
+    epr:status "Provisional"@en .
+
+epr:AcademyAlternativeProvisionConverter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy alternative provision converter"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 42"@en ;
+    epr:status "Provisional"@en .
+
+epr:AcademyAlternativeProvisionSponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy alternative provision sponsor led"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 43"@en ;
+    epr:status "Provisional"@en .
+
+epr:AcademySpecialConverter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy special converter"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 44"@en ;
+    epr:status "Provisional"@en .
+
+epr:Academy1619Converter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy 16-19 converter"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 45"@en ;
+    epr:status "Provisional"@en .
+
+epr:Academy16To19SponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy 16 to 19 sponsor led"@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 46"@en ;
+    epr:status "Provisional"@en .
+
+epr:AcademySecure16To19
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy secure 16 to 19"@en ;
+    skos:scopeNote "Secure establishment with a more restricted public Details view than the database field mapping implies. Only 17 fields are publicly visible compared to 30+ mapped in the database."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    dcterms:source "Type code 57"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 11: free schools
+#################################################################
+
+epr:FreeSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Free schools"@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    dcterms:source "Type code 35"@en ;
+    epr:status "Provisional"@en .
+
+epr:FreeSchoolSpecial
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Free schools special"@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    dcterms:source "Type code 36"@en ;
+    epr:status "Provisional"@en .
+
+epr:FreeSchoolAlternativeProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Free schools alternative provision"@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    dcterms:source "Type code 38"@en ;
+    epr:status "Provisional"@en .
+
+epr:FreeSchool16To19
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Free schools 16 to 19"@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    dcterms:source "Type code 39"@en ;
+    epr:status "Provisional"@en .
+
+epr:UniversityTechnicalCollege
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "University technical college"@en ;
+    skos:altLabel "UTC"@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    dcterms:source "Type code 40"@en ;
+    epr:status "Provisional"@en .
+
+epr:StudioSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Studio schools"@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    dcterms:source "Type code 41"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 12: children's centres
+#################################################################
+
+epr:ChildrensCentre
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Children's centre"@en ;
+    skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
+    dcterms:source "Type code 47"@en ;
+    epr:status "Provisional"@en .
+
+epr:ChildrensCentreLinkedSite
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Children's centre linked site"@en ;
+    skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
+    dcterms:source "Type code 48"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-type taxons - group 13: online providers
+#################################################################
+
+epr:OnlineProvider
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Online provider"@en ;
+    skos:scopeNote "Has a distinct Details tab presentation: open date becomes accreditation date, close date becomes accreditation date ended, and an accreditation and quality assurance section replaces several standard school fields."@en ;
+    skos:broader epr:EstablishmentTypeGroupOnlineProviders ;
+    dcterms:source "Type code 49"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Education-phase taxons
+#################################################################
+
+epr:NurseryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Nursery"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:PrimaryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Primary"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:MiddlePhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Middle deemed primary"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:MiddleDeemedSecondaryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Middle deemed secondary"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:SecondaryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Secondary"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:AllThroughPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "All-through"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:SixteenToNineteenPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "16 to 19"@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+epr:NotApplicableEducationPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Not applicable (education phase)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:scopeNote "Not applicable specifically within the education-phase facet."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-status taxons
+#################################################################
+
+epr:OpenStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Open"@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:ClosedStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Closed"@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:OpenProposedToCloseStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Open, but proposed to close"@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:ProposedToOpenStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Proposed to open"@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Admissions-policy taxons
+#################################################################
+
+epr:SelectiveAdmissions
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Selective"@en ;
+    skos:broader epr:AdmissionsPolicy ;
+    epr:status "Provisional"@en .
+
+epr:NonSelectiveAdmissions
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Non-selective"@en ;
+    skos:broader epr:AdmissionsPolicy ;
+    epr:status "Provisional"@en .
+
+epr:NotApplicableAdmissionsPolicy
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Not applicable (admissions policy)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:scopeNote "Not applicable specifically within the admissions-policy facet."@en ;
+    skos:broader epr:AdmissionsPolicy ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Gender-of-entry taxons
+#################################################################
+
+epr:MixedGenderEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Mixed"@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Provisional"@en .
+
+epr:BoysOnlyGenderEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Boys"@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Provisional"@en .
+
+epr:GirlsOnlyGenderEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Girls"@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Provisional"@en .
+
+epr:NotApplicableGenderOfEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Not applicable (gender of entry)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:scopeNote "Not applicable specifically within the gender-of-entry facet."@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Boarding-provision taxons
+#################################################################
+
+epr:NoBoarders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "No boarders"@en ;
+    skos:broader epr:BoardingProvision ;
+    epr:status "Provisional"@en .
+
+epr:HasBoarders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Has boarders"@en ;
+    skos:broader epr:BoardingProvision ;
+    epr:status "Provisional"@en .
+
+epr:BoardingSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Boarding school"@en ;
+    skos:broader epr:BoardingProvision ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Nursery-provision taxons
+#################################################################
+
+epr:HasNurseryClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Has nursery classes"@en ;
+    skos:broader epr:NurseryProvision ;
+    epr:status "Provisional"@en .
+
+epr:NoNurseryClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "No nursery classes"@en ;
+    skos:broader epr:NurseryProvision ;
+    epr:status "Provisional"@en .
+
+epr:NotApplicableNurseryProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Not applicable (nursery provision)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:scopeNote "Not applicable specifically within the nursery-provision facet."@en ;
+    skos:broader epr:NurseryProvision ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Sixth-form-provision taxons
+#################################################################
+
+epr:HasSixthForm
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Has a sixth form"@en ;
+    skos:broader epr:SixthFormProvision ;
+    epr:status "Provisional"@en .
+
+epr:NoSixthForm
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Does not have a sixth form"@en ;
+    skos:broader epr:SixthFormProvision ;
+    epr:status "Provisional"@en .
+
+epr:NotApplicableSixthFormProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Not applicable (sixth-form provision)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:scopeNote "Not applicable specifically within the sixth-form-provision facet."@en ;
+    skos:broader epr:SixthFormProvision ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Special-class-provision taxons
+#################################################################
+
+epr:NoSpecialClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "No special classes"@en ;
+    skos:broader epr:SpecialClassProvision ;
+    epr:status "Provisional"@en .
+
+epr:HasSpecialClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Has special classes"@en ;
+    skos:broader epr:SpecialClassProvision ;
+    epr:status "Provisional"@en .
+
+epr:NotApplicableSpecialClassProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Not applicable (special-class provision)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:scopeNote "Not applicable specifically within the special-class-provision facet. Confirm the actual recorded value in GIAS data."@en ;
+    skos:broader epr:SpecialClassProvision ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Religious-character taxons
+#################################################################
+
+epr:NotApplicableReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Does not apply (religious character)"@en ;
+    skos:altLabel "Does not apply"@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+epr:NoReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "No religious character"@en ;
+    skos:altLabel "None"@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+epr:ChurchOfEnglandCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Church of England"@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+epr:RomanCatholicCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Roman Catholic"@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+epr:JewishCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Jewish"@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+epr:MuslimCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Muslim"@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+epr:OtherReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Other religious character"@en ;
+    skos:altLabel "Other"@en ;
+    skos:scopeNote "Other religious character values exist in the database; full enumeration requires further extraction."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Religious-ethos taxons
+#################################################################
+
+epr:NotApplicableReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Does not apply (religious ethos)"@en ;
+    skos:altLabel "Does not apply"@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Provisional"@en .
+
+epr:NoReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "No religious ethos"@en ;
+    skos:altLabel "None"@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Provisional"@en .
+
+epr:ChristianEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Christian"@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Provisional"@en .
+
+epr:OtherReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Other religious ethos"@en ;
+    skos:altLabel "Other"@en ;
+    skos:scopeNote "Other religious-ethos values exist in the database; full enumeration requires further extraction."@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment-group-type facet (v1.1)
+#################################################################
+
+epr:EstablishmentGroupType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Establishment group type"@en ;
+    skos:definition "The classification of an establishment group by its type, corresponding to EstablishmentGroupType codes in GIAS."@en ;
+    skos:scopeNote "Active group types only (codes 01, 02, 05, 06, 08, 09, 10, 11). Three archived group types are intentionally excluded. Code 03 (Collegiate) and code 04 (Partnership) have no rows in current GIAS data and no public service representation. Code 07 (Umbrella trust) has approximately 20 legacy rows in current data but does not render a public group details page on the GIAS service; it is retained in the data for historical continuity only."@en ;
+    skos:narrower
+        epr:Federation,
+        epr:GenericTrust,
+        epr:SchoolSponsor,
+        epr:MultiAcademyTrust,
+        epr:ChildrensCentreGroup,
+        epr:ChildrensCentreCollaboration,
+        epr:SingleAcademyTrust,
+        epr:SecureSingleAcademyTrust ;
+    epr:status "Provisional"@en .
+
+epr:Federation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Federation"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 01"@en ;
+    epr:status "Provisional"@en .
+
+epr:GenericTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Trust"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 02"@en ;
+    epr:status "Provisional"@en .
+
+epr:SchoolSponsor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "School sponsor"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 05"@en ;
+    epr:status "Provisional"@en .
+
+epr:MultiAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Multi-academy trust"@en ;
+    skos:altLabel "MAT"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 06"@en ;
+    epr:status "Provisional"@en .
+
+epr:ChildrensCentreGroup
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Children's centres group"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 08"@en ;
+    epr:status "Provisional"@en .
+
+epr:ChildrensCentreCollaboration
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Children's centres collaboration"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 09"@en ;
+    epr:status "Provisional"@en .
+
+epr:SingleAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Single-academy trust"@en ;
+    skos:altLabel "SAT"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 10"@en ;
+    epr:status "Provisional"@en .
+
+epr:SecureSingleAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Secure single-academy trust"@en ;
+    skos:broader epr:EstablishmentGroupType ;
+    dcterms:source "Group type code 11"@en ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Group-relationship-type facet (v1.1)
+#################################################################
+
+epr:GroupRelationshipType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Group relationship type"@en ;
+    skos:definition "The classification of a group-to-group relationship, distinguishing the role of each group in the relationship."@en ;
+    skos:narrower
+        epr:SuccessorMultiAcademyTrust,
+        epr:PredecessorSingleAcademyTrust ;
+    epr:status "Provisional"@en .
+
+epr:SuccessorMultiAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Successor MAT"@en ;
+    skos:broader epr:GroupRelationshipType ;
+    epr:status "Provisional"@en .
+
+epr:PredecessorSingleAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Predecessor SAT"@en ;
+    skos:broader epr:GroupRelationshipType ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Governance-role-type facet (v1.2)
+#################################################################
+
+epr:GovernanceRoleType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governance role type"@en ;
+    skos:definition "The classification of the governance role held. 22 values: 20 from the GIAS governance extract, plus headteacher ex-officio governor (SI 2012/1034) and associate member (SI 2013/1624)."@en ;
+    skos:scopeNote "Three structural groups: maintained-school roles; academy establishment-level roles; trust/MAT roles."@en ;
+    skos:narrower
+        epr:GovernorRole,
+        epr:ChairOfGovernorsRole,
+        epr:HeadteacherExOfficioGovernorRole,
+        epr:AssociateMemberRole,
+        epr:LocalGovernorRole,
+        epr:ChairOfLocalGoverningBodyRole,
+        epr:TrusteeRole,
+        epr:ChairOfTrusteesRole,
+        epr:MemberRole,
+        epr:AccountingOfficerRole,
+        epr:ChiefFinancialOfficerRole,
+        epr:SharedLocalGovernorEstablishmentRole,
+        epr:SharedLocalGovernorGroupRole,
+        epr:SharedChairOfLocalGoverningBodyEstablishmentRole,
+        epr:SharedChairOfLocalGoverningBodyGroupRole,
+        epr:GovernanceProfessionalLaMaintainedSchoolRole,
+        epr:LocalGovernanceProfessionalIndividualAcademyRole,
+        epr:GovernanceProfessionalSatRole,
+        epr:GovernanceProfessionalMatRole,
+        epr:GovernanceProfessionalFederationRole,
+        epr:SharedGovernanceProfessionalEstablishmentRole,
+        epr:SharedGovernanceProfessionalGroupRole ;
+    epr:status "Provisional"@en .
+
+epr:GovernorRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governor"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChairOfGovernorsRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Chair of governors"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:HeadteacherExOfficioGovernorRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Headteacher (ex-officio governor)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:AssociateMemberRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Associate member"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:LocalGovernorRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Local governor"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChairOfLocalGoverningBodyRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Chair of local governing body"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:TrusteeRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Trustee"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChairOfTrusteesRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Chair of trustees"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:MemberRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Member"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:AccountingOfficerRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Accounting officer"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChiefFinancialOfficerRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Chief financial officer"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedLocalGovernorEstablishmentRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Shared local governor (establishment)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedLocalGovernorGroupRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Shared local governor (group)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedChairOfLocalGoverningBodyEstablishmentRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Shared chair of local governing body (establishment)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedChairOfLocalGoverningBodyGroupRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Shared chair of local governing body (group)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalLaMaintainedSchoolRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governance professional - local authority maintained school"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:LocalGovernanceProfessionalIndividualAcademyRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Local governance professional - individual academy or free school"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalSatRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governance professional - single-academy trust (SAT)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalMatRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governance professional - multi-academy trust (MAT)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalFederationRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governance professional - federation"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedGovernanceProfessionalEstablishmentRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Shared governance professional (establishment)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedGovernanceProfessionalGroupRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Shared governance professional (group)"@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Governance-appointing-body facet (v1.2)
+#################################################################
+
+epr:GovernanceAppointingBody
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:topConceptOf epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Governance appointing body"@en ;
+    skos:definition "The body or mechanism responsible for making the governance appointment. 18 active values derived from the GIAS governance extract. RSC value retired."@en ;
+    skos:scopeNote "Accounting Officer and Chief Financial Officer roles do not typically carry an appointing body value."@en ;
+    skos:narrower
+        epr:AppointedByGoverningBoard,
+        epr:AppointedByFoundationOrTrust,
+        epr:ElectedByParents,
+        epr:ElectedBySchoolStaff,
+        epr:ExOfficioHeadteacher,
+        epr:AppointedByAcademyMembers,
+        epr:AppointingBodyNotApplicable,
+        epr:ParentAppointedByGbDueToNoElection,
+        epr:FoundationOrSponsorMembers,
+        epr:NominatedByLaAppointedByGb,
+        epr:ExOfficioFoundationGovernor,
+        epr:AppointedByTrustees,
+        epr:AppointedByLa,
+        epr:PersonsAppointedByFoundationOrSponsor,
+        epr:OriginalSignatoryMembers,
+        epr:NominatedByOtherBodyAppointedByGb,
+        epr:AdditionalMembersAppointedByMembers,
+        epr:InterimExecutiveBoard ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByGoverningBoard
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Appointed by GB/board"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByFoundationOrTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Appointed by foundation/Trust"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ElectedByParents
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Elected by parents"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ElectedBySchoolStaff
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Elected by school staff"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ExOfficioHeadteacher
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Ex-officio by virtue of office as headteacher/principal"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByAcademyMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Appointed by academy members"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointingBodyNotApplicable
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "N/A"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ParentAppointedByGbDueToNoElection
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Parent appointed by GB/board due to no election candidates"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:FoundationOrSponsorMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Foundation/sponsor members"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:NominatedByLaAppointedByGb
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Nominated by LA and appointed by GB"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ExOfficioFoundationGovernor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Ex-officio foundation governor (appointed by foundation by virtue of the office they hold)"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByTrustees
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Appointed by trustees"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByLa
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Appointed by LA"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:PersonsAppointedByFoundationOrSponsor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Persons who are appointed by the foundation body or sponsor (if applicable)"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:OriginalSignatoryMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Original (signatory) members"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:NominatedByOtherBodyAppointedByGb
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Nominated by other body and appointed by GB"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AdditionalMembersAppointedByMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Any additional members appointed by the members of the academy trust"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:InterimExecutiveBoard
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Interim Executive Board"@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+
+
