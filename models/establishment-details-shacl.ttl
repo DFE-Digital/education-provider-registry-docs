@@ -33,7 +33,7 @@
     dcterms:title "GIAS 2.0 Establishment Details SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-06-19"^^xsd:date ;
+    dcterms:modified "2026-06-25"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
     owl:versionInfo "0.5" ;
@@ -414,7 +414,7 @@ epr:LaMainstreamSchoolShape
 epr:LaSpecialSchoolShape
     a sh:NodeShape ;
     rdfs:label "LA special school shape"@en ;
-    rdfs:comment "Rules for LA maintained special schools. SEN provision is required. Sixth-form provision is not applicable."@en ;
+    rdfs:comment "Rules for LA maintained special schools. SEN provision is required. Admissions policy, nursery and sixth-form provision are shown in GIAS and required."@en ;
     sh:targetClass epr:LaMaintainedSpecialSchool ;
 
     sh:property [
@@ -425,10 +425,10 @@ epr:LaSpecialSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
-        sh:maxCount 0 ;
-        sh:name "Sixth-form provision (not applicable)"@en ;
-        sh:message "Sixth-form provision is not applicable for LA special schools."@en ;
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "LA special schools must have an education phase."@en ;
     ] ;
 
     sh:property [
@@ -485,6 +485,27 @@ epr:LaSpecialSchoolShape
         sh:minCount 1 ;
         sh:name "SEN unit number on roll and capacity"@en ;
         sh:message "LA special schools must have SEN unit measures."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "LA special schools must have an admissions policy classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "LA special schools must have a nursery provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Sixth-form provision"@en ;
+        sh:message "LA special schools must have a sixth-form provision classification."@en ;
     ] .
 
 
@@ -573,6 +594,13 @@ epr:PupilReferralUnitShape
         sh:minCount 1 ;
         sh:name "PRU operational fields"@en ;
         sh:message "Pupil referral units must have a PRU operational record."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:maxCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Pupil referral units may have an admissions policy classification."@en ;
     ] .
 
 
@@ -583,7 +611,7 @@ epr:PupilReferralUnitShape
 epr:LocalAuthorityNurserySchoolShape
     a sh:NodeShape ;
     rdfs:label "Local authority nursery school shape"@en ;
-    rdfs:comment "Rules for LA nursery schools. Sixth-form provision is not applicable."@en ;
+    rdfs:comment "Rules for LA nursery schools. Education phase, admissions policy, nursery and sixth-form provision are all required."@en ;
     sh:targetClass epr:LocalAuthorityNurserySchool ;
 
     sh:property [
@@ -591,13 +619,6 @@ epr:LocalAuthorityNurserySchoolShape
         sh:minCount 1 ;
         sh:name "Education phase"@en ;
         sh:message "LA nursery schools must have an education phase (expected: Nursery)."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
-        sh:maxCount 0 ;
-        sh:name "Sixth-form provision (not applicable)"@en ;
-        sh:message "Sixth-form provision is not applicable for LA nursery schools."@en ;
     ] ;
 
     sh:property [
@@ -682,6 +703,20 @@ epr:LocalAuthorityNurserySchoolShape
         sh:minCount 1 ;
         sh:name "SEN unit number on roll and capacity"@en ;
         sh:message "LA nursery schools must have SEN unit measures."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "LA nursery schools must have an admissions policy classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Sixth-form provision"@en ;
+        sh:message "LA nursery schools must have a sixth-form provision classification."@en ;
     ] .
 
 
@@ -695,7 +730,7 @@ epr:LocalAuthorityNurserySchoolShape
 epr:NonMaintainedSpecialSchoolGroupShape
     a sh:NodeShape ;
     rdfs:label "Non-maintained special school group shape"@en ;
-    rdfs:comment "Rules for non-maintained and independent special schools. Proprietor is required; SEN provision is required; sixth-form provision is not applicable."@en ;
+    rdfs:comment "Rules for non-maintained and independent special schools. Proprietor is required; SEN provision is required. Admissions policy, nursery and sixth-form provision are shown in GIAS and required."@en ;
     sh:targetClass epr:NonMaintainedAndIndependentSpecialSchool ;
 
     sh:property [
@@ -724,13 +759,6 @@ epr:NonMaintainedSpecialSchoolGroupShape
         sh:minCount 1 ;
         sh:name "SEN and resourced provision"@en ;
         sh:message "Non-maintained special schools must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
-        sh:maxCount 0 ;
-        sh:name "Sixth-form provision (not applicable)"@en ;
-        sh:message "Sixth-form provision is not applicable for non-maintained special schools."@en ;
     ] ;
 
     sh:property [
@@ -843,6 +871,27 @@ epr:NonMaintainedSpecialSchoolGroupShape
         sh:maxCount 0 ;
         sh:name "SEN unit measures (not applicable)"@en ;
         sh:message "SEN unit measures are not applicable for non-maintained special schools."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Non-maintained special schools must have an admissions policy classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Non-maintained special schools must have a nursery provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Sixth-form provision"@en ;
+        sh:message "Non-maintained special schools must have a sixth-form provision classification."@en ;
     ] .
 
 
@@ -1010,6 +1059,27 @@ epr:IndependentSchoolGroupShape
         sh:maxCount 0 ;
         sh:name "SEN unit measures (not applicable)"@en ;
         sh:message "SEN unit measures are not applicable for independent schools."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Independent schools must have a nursery provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Sixth-form provision"@en ;
+        sh:message "Independent schools must have a sixth-form provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasFaithContext epro:associatedWithDiocese ) ;
+        sh:maxCount 1 ;
+        sh:name "Diocese"@en ;
+        sh:message "An independent school may have a diocese association (CTC type 06 shows Diocese; other independent school types do not)."@en ;
     ] .
 
 
@@ -1330,6 +1400,55 @@ epr:AcademySpecialShape
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Academy special schools must have an academy sponsor relationship. Note: type 44 (Academy special converter) shows 'Single-academy trust' in the UI - see design decision in shacl-open-items.md."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Academy special schools must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Academy special schools must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Academy special schools must have an admissions policy."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Academy special schools must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Academy special schools must have a nursery-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Academy special schools must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "An academy special school may have at most one school capacity."@en ;
     ] .
 
 
@@ -1449,6 +1568,55 @@ epr:AcademyAlternativeProvisionShape
         sh:minCount 1 ;
         sh:name "SEN unit number on roll and capacity"@en ;
         sh:message "Academy alternative provision establishments must have SEN unit measures."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Academy alternative provision establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Academy alternative provision establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Academy alternative provision establishments must have an admissions policy."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Academy alternative provision establishments must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Academy alternative provision establishments must have a nursery-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Academy alternative provision establishments must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "An academy alternative provision establishment may have at most one school capacity."@en ;
     ] .
 
 
@@ -1574,6 +1742,55 @@ epr:Academy1619Shape
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Academy 16-19 establishments must have an academy sponsor relationship. Note: type 45 (Academy 16-19 converter) shows 'Single-academy trust' in the UI - see design decision in shacl-open-items.md."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Academy 16-19 establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Academy 16-19 establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Academy 16-19 establishments must have an admissions policy."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Academy 16-19 establishments must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Academy 16-19 establishments must have a nursery-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Academy 16-19 establishments must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "An academy 16-19 establishment may have at most one school capacity."@en ;
     ] .
 
 
@@ -1662,6 +1879,34 @@ epr:AcademySecure16To19Shape
         sh:maxCount 0 ;
         sh:name "SEN and resourced provision (not applicable in public view)"@en ;
         sh:message "SEN and resourced provision is not shown in the restricted public Details view for academy secure 16 to 19."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Academy secure 16 to 19 establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Academy secure 16 to 19 establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "An academy secure 16 to 19 establishment may have at most one school capacity."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:maxCount 0 ;
+        sh:name "Age range (not applicable in public view)"@en ;
+        sh:message "Age range is not shown in the restricted public Details view for academy secure 16 to 19."@en ;
     ] .
 
 
@@ -1977,6 +2222,55 @@ epr:FreeSchoolSpecialShape
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Free school specials must have an academy sponsor relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Free school specials must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Free school specials must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Free school specials must have an admissions policy."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Free school specials must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Free school specials must have a nursery-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Free school specials must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "A free school special may have at most one school capacity."@en ;
     ] .
 
 
@@ -2093,6 +2387,55 @@ epr:FreeSchoolAlternativeProvisionShape
         sh:minCount 1 ;
         sh:name "SEN unit number on roll and capacity"@en ;
         sh:message "Free school alternative provision establishments must have SEN unit measures."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Free school alternative provision establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Free school alternative provision establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Free school alternative provision establishments must have an admissions policy."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Free school alternative provision establishments must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Free school alternative provision establishments must have a nursery-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Free school alternative provision establishments must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "A free school alternative provision establishment may have at most one school capacity."@en ;
     ] .
 
 
@@ -2209,6 +2552,55 @@ epr:FreeSchool16To19Shape
         sh:minCount 1 ;
         sh:name "SEN unit number on roll and capacity"@en ;
         sh:message "Free school 16 to 19 establishments must have SEN unit measures."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Free school 16 to 19 establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Free school 16 to 19 establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ;
+        sh:minCount 1 ;
+        sh:name "Admissions policy"@en ;
+        sh:message "Free school 16 to 19 establishments must have an admissions policy."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Free school 16 to 19 establishments must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Nursery provision"@en ;
+        sh:message "Free school 16 to 19 establishments must have a nursery-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Free school 16 to 19 establishments must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "A free school 16 to 19 establishment may have at most one school capacity."@en ;
     ] .
 
     # Note: Type 39 shows 'Single-academy trust' in the UI. Academy sponsor is not
@@ -3086,11 +3478,287 @@ epr:BritishSchoolsOverseasShape
     ] .
 
 
-# Note: Secure units (24), Offshore schools (25), Service children's education (26),
-# Miscellaneous (27) and Institution funded by other government department (56)
-# have variable field applicability that requires further analysis of actual GIAS data
-# before strong constraints can be added. No specific shapes are defined for these types
-# in this version.
+#################################################################
+# Specific shape - Secure units (type 24)
+#################################################################
+
+epr:SecureUnitsShape
+    a sh:NodeShape ;
+    rdfs:label "Secure units shape"@en ;
+    rdfs:comment "Rules for secure units. Education phase and gender are shown in GIAS. No accountability relationships, provision, faith, SEN, inspection or age range apply."@en ;
+    sh:targetClass epr:SecureUnits ;
+
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Secure units have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Secure units have no academy trust accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Secure units have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for secure units."@en ] ;
+    sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for secure units."@en ] ;
+    sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for secure units."@en ] ;
+    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for secure units."@en ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Secure units must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Secure units must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasPupilCount ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils"@en ;
+        sh:message "Secure units must have a pupil count."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasFreeSchoolMealMeasure ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils eligible for free school meals"@en ;
+        sh:message "Secure units must have a free school meal measure."@en ;
+    ] .
+
+
+#################################################################
+# Specific shape - Offshore schools (type 25)
+#################################################################
+
+epr:OffshoreSchoolsShape
+    a sh:NodeShape ;
+    rdfs:label "Offshore schools shape"@en ;
+    rdfs:comment "Rules for offshore schools. Education phase, gender and age range are shown in GIAS. No accountability relationships, provision, faith, SEN or inspection apply."@en ;
+    sh:targetClass epr:OffshoreSchools ;
+
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Offshore schools have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Offshore schools have no academy trust accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Offshore schools have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for offshore schools."@en ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Offshore schools must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Offshore schools must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Offshore schools must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasPupilCount ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils"@en ;
+        sh:message "Offshore schools must have a pupil count."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasFreeSchoolMealMeasure ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils eligible for free school meals"@en ;
+        sh:message "Offshore schools must have a free school meal measure."@en ;
+    ] .
+
+
+#################################################################
+# Specific shape - Service children's education (type 26)
+#################################################################
+
+epr:ServiceChildrensEducationShape
+    a sh:NodeShape ;
+    rdfs:label "Service children's education shape"@en ;
+    rdfs:comment "Rules for SCE establishments. Education phase, gender, age range and Ofsted are shown in GIAS. No accountability relationships, provision, faith or SEN apply."@en ;
+    sh:targetClass epr:ServiceChildrensEducation ;
+
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "SCE establishments have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "SCE establishments have no academy trust accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "SCE establishments have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for SCE establishments."@en ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "SCE establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "SCE establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "SCE establishments must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasPupilCount ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils"@en ;
+        sh:message "SCE establishments must have a pupil count."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasFreeSchoolMealMeasure ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils eligible for free school meals"@en ;
+        sh:message "SCE establishments must have a free school meal measure."@en ;
+    ] ;
+
+    sh:property [
+        sh:path epro:hasOfstedInspectionRecord ;
+        sh:minCount 1 ;
+        sh:name "Ofsted rating and reports"@en ;
+        sh:message "SCE establishments must have an Ofsted inspection record."@en ;
+    ] .
+
+
+#################################################################
+# Specific shape - Miscellaneous (type 27)
+#################################################################
+
+epr:MiscellaneousEstablishmentShape
+    a sh:NodeShape ;
+    rdfs:label "Miscellaneous establishment shape"@en ;
+    rdfs:comment "Rules for miscellaneous establishments. Education phase and gender are shown in GIAS. No accountability relationships, provision, faith, SEN, inspection or age range apply."@en ;
+    sh:targetClass epr:MiscellaneousEstablishment ;
+
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Miscellaneous establishments have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Miscellaneous establishments have no academy trust accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Miscellaneous establishments have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for miscellaneous establishments."@en ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Miscellaneous establishments must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Miscellaneous establishments must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasPupilCount ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils"@en ;
+        sh:message "Miscellaneous establishments must have a pupil count."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasFreeSchoolMealMeasure ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils eligible for free school meals"@en ;
+        sh:message "Miscellaneous establishments must have a free school meal measure."@en ;
+    ] .
+
+
+#################################################################
+# Specific shape - Institution funded by other government department (type 56)
+#################################################################
+
+epr:InstitutionFundedByOtherGovernmentDepartmentShape
+    a sh:NodeShape ;
+    rdfs:label "Institution funded by other government department shape"@en ;
+    rdfs:comment "Rules for institutions funded by other government departments. Education phase and gender are shown in GIAS. No accountability relationships, provision, faith, SEN, inspection or age range apply."@en ;
+    sh:targetClass epr:InstitutionFundedByOtherGovernmentDepartment ;
+
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Other-department institutions have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Other-department institutions have no academy trust accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasAccountabilityRelationship epro:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Other-department institutions have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( epro:hasEducationAdmissionsAndProvision epro:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for other-department institutions."@en ] ;
+    sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for other-department institutions."@en ] ;
+
+    sh:property [
+        sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;
+        sh:minCount 1 ;
+        sh:name "Education phase"@en ;
+        sh:message "Other-department institutions must have an education phase."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasEducationAdmissionsAndProvision epro:classifiedByGenderOfEntry ) ;
+        sh:minCount 1 ;
+        sh:name "Gender of entry"@en ;
+        sh:message "Other-department institutions must have a gender-of-entry classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasPupilCount ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils"@en ;
+        sh:message "Other-department institutions must have a pupil count."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( epro:hasCapacityAndPupilMeasures epro:hasFreeSchoolMealMeasure ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils eligible for free school meals"@en ;
+        sh:message "Other-department institutions must have a free school meal measure."@en ;
+    ] .
 
 
 #################################################################
