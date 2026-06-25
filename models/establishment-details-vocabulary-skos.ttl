@@ -1,0 +1,3180 @@
+﻿@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# GIAS 2.0 Establishment Details Vocabulary
+#
+# Scope: this version covers the fields shown in the Establishment Details
+# table in the public establishment record view.
+#
+# It defines business vocabulary for those displayed detail fields, including
+# field concepts, labels, aliases, definitions, relationships, review statuses
+# and source notes. It is not a complete provider-domain ontology and does not
+# attempt to model fields outside the Establishment Details table.
+#
+# Canonical concept identifiers are the expanded epr: IRIs, for example
+# epr:EstablishmentLifecycle expands to:
+# https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/EstablishmentLifecycle/
+#
+# The namespace is published through the GitHub Pages documentation site and provides persistent, resolvable concept URIs.
+
+epr:status
+    a rdf:Property ;
+    rdfs:label "Vocabulary status"@en ;
+    rdfs:comment "The review status assigned to a concept in the working GIAS 2.0 vocabulary."@en .
+
+epr:establishmentDetailsVocabulary
+    a skos:ConceptScheme ;
+    dcterms:title "GIAS 2.0 Establishment Details Vocabulary"@en ;
+    dcterms:description "Controlled vocabulary for the GIAS 2.0 data-modelling work, scoped to the fields shown in the Establishment Details table in the public establishment record view."@en ;
+    dcterms:created "2026-06-16"^^xsd:date ;
+    epr:status "Provisional"@en ;
+    skos:hasTopConcept
+        epr:Establishment,
+        epr:EstablishmentIdentity,
+        epr:EstablishmentClassification,
+        epr:EstablishmentAccountability,
+        epr:EstablishmentLifecycle,
+        epr:RecordCurrencyAndStewardship,
+        epr:EstablishmentLocationAndContact,
+        epr:EstablishmentLeadership,
+        epr:EducationAdmissionsAndProvision,
+        epr:CapacityAndPupilMeasures,
+        epr:FaithContext,
+        epr:SenAndResourcedProvision,
+        epr:AlternativeProvisionCharacteristics,
+        epr:InspectionRecord,
+        epr:AccreditationAndQualityAssurance,
+        epr:ExternalReference,
+        epr:EstablishmentGroupMembership,
+        epr:GovernanceAppointments .
+
+#################################################################
+# Thematic collections
+#################################################################
+
+epr:coreConcepts
+    a skos:Collection ;
+    skos:prefLabel "Core concepts"@en ;
+    skos:member
+        epr:Establishment,
+        epr:EstablishmentDetails,
+        epr:EstablishmentType,
+        epr:EstablishmentTypeGroup,
+        epr:AcademyConverter,
+        epr:CommunitySchool,
+        epr:OtherIndependentSchool .
+
+epr:identityAndIdentifiers
+    a skos:Collection ;
+    skos:prefLabel "Identity and identifiers"@en ;
+    skos:member
+        epr:EstablishmentName,
+        epr:UniqueReferenceNumber,
+        epr:EstablishmentNumber,
+        epr:DfeNumber,
+        epr:Laestab,
+        epr:UkProviderReferenceNumber,
+        epr:FeHeIdentifier .
+
+epr:classificationAndAccountability
+    a skos:Collection ;
+    skos:prefLabel "Classification and accountability"@en ;
+    skos:member
+        epr:EducationPhase,
+        epr:FurtherEducationType,
+        epr:ProviderType,
+        epr:LocalAuthority,
+        epr:MaintainingAuthority,
+        epr:AcademyTrust,
+        epr:SingleAcademyTrust,
+        epr:AcademySponsor,
+        epr:Proprietor .
+
+epr:lifecycle
+    a skos:Collection ;
+    skos:prefLabel "Lifecycle"@en ;
+    skos:member
+        epr:EstablishmentStatus,
+        epr:OpenStatus,
+        epr:ClosedStatus,
+        epr:OpenProposedToCloseStatus,
+        epr:ProposedToOpenStatus,
+        epr:OpenDate,
+        epr:ReasonEstablishmentOpened,
+        epr:ClosedDate,
+        epr:ReasonEstablishmentClosed .
+
+epr:recordCurrencyAndStewardship
+    a skos:Collection ;
+    skos:prefLabel "Record currency and stewardship"@en ;
+    skos:member
+        epr:DateLastChangedOrConfirmed .
+
+epr:locationAndContact
+    a skos:Collection ;
+    skos:prefLabel "Location and contact"@en ;
+    skos:member
+        epr:MainAddress,
+        epr:Website,
+        epr:TelephoneNumber,
+        epr:UniquePropertyReferenceNumber .
+
+epr:leadership
+    a skos:Collection ;
+    skos:prefLabel "Leadership"@en ;
+    skos:member
+        epr:HeadteacherOrPrincipal,
+        epr:CentreManager,
+        epr:PreferredJobTitle .
+
+epr:educationAdmissionsAndProvision
+    a skos:Collection ;
+    skos:prefLabel "Education, admissions and provision"@en ;
+    skos:member
+        epr:StatutoryAgeRange,
+        epr:GenderOfEntry,
+        epr:AdmissionsPolicy,
+        epr:BoardingProvision,
+        epr:NurseryProvision,
+        epr:SixthFormProvision,
+        epr:SpecialClassProvision,
+        epr:Section41Approval .
+
+epr:capacityAndPupilMeasures
+    a skos:Collection ;
+    skos:prefLabel "Capacity and pupil measures"@en ;
+    skos:member
+        epr:SchoolCapacity,
+        epr:PupilCount,
+        epr:CensusDate,
+        epr:PupilsEligibleForFreeSchoolMeals,
+        epr:PercentagePupilsEligibleForFreeSchoolMeals,
+        epr:SpecialPupilsOnStatementOrEhcPlan,
+        epr:SpecialPupilsNotOnStatementOrEhcPlan .
+
+epr:faithContext
+    a skos:Collection ;
+    skos:prefLabel "Faith context"@en ;
+    skos:member
+        epr:ReligiousCharacter,
+        epr:ReligiousEthos,
+        epr:Diocese .
+
+epr:senAndResourcedProvision
+    a skos:Collection ;
+    skos:prefLabel "SEN and resourced provision"@en ;
+    skos:member
+        epr:TypeOfSenProvision,
+        epr:TypeOfResourcedProvision,
+        epr:ResourcedProvisionPupilCount,
+        epr:ResourcedProvisionCapacity,
+        epr:SenUnitPupilCount,
+        epr:SenUnitCapacity .
+
+epr:alternativeProvisionCharacteristics
+    a skos:Collection ;
+    skos:prefLabel "Alternative provision characteristics"@en ;
+    skos:member
+        epr:TeenageMothersProvision,
+        epr:TeenageMothersPlaces,
+        epr:ChildcareFacilitiesProvision,
+        epr:SenFacilitiesProvision,
+        epr:EbdPupilsProvision,
+        epr:AlternativeProvisionPlaces,
+        epr:FullTimeProvision,
+        epr:PupilsEducatedByOtherProviders .
+
+epr:inspectionRecord
+    a skos:Collection ;
+    skos:prefLabel "Inspection record"@en ;
+    skos:member
+        epr:InspectorateName,
+        epr:InspectorateReport,
+        epr:DateOfLastInspectionVisit,
+        epr:DateOfNextInspectionVisit .
+
+epr:accreditationAndQualityAssurance
+    a skos:Collection ;
+    skos:prefLabel "Accreditation and quality assurance"@en ;
+    skos:member
+        epr:AccreditationDate,
+        epr:AccreditationExpiryDate,
+        epr:AccreditationDateEnded,
+        epr:QualityAssuranceBodyName,
+        epr:QualityAssuranceBodyReport,
+        epr:CompaniesHouseNumber,
+        epr:EstablishmentAccredited .
+
+epr:externalReferences
+    a skos:Collection ;
+    skos:prefLabel "External references"@en ;
+    skos:member
+        epr:InspectionReportReference,
+        epr:ExternalServiceReference .
+
+epr:groupMembershipConcepts
+    a skos:Collection ;
+    skos:prefLabel "Establishment groups and membership"@en ;
+    skos:member
+        epr:EstablishmentGroup,
+        epr:MultiAcademyTrust,
+        epr:SecureSingleAcademyTrust,
+        epr:Federation,
+        epr:SchoolSponsor,
+        epr:ChildrensCentreGroup,
+        epr:ChildrensCentreCollaboration,
+        epr:GenericTrust,
+        epr:GroupMembership,
+        epr:GroupRelationship,
+        epr:GroupRelationshipType,
+        epr:GroupId,
+        epr:GroupUkprn,
+        epr:SuccessorMultiAcademyTrust,
+        epr:PredecessorSingleAcademyTrust .
+
+epr:governanceConcepts
+    a skos:Collection ;
+    skos:prefLabel "Governance"@en ;
+    skos:member
+        epr:GovernanceAppointment,
+        epr:GovernanceIdentifier,
+        epr:GovernancePerson,
+        epr:GovernancePersonIdentifier,
+        epr:GovernanceRoleType,
+        epr:GovernanceAppointmentDate,
+        epr:GovernanceTermEndDate,
+        epr:GovernanceAppointingBody .
+
+#################################################################
+# Top concepts
+#################################################################
+
+epr:Establishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment"@en ;
+    skos:altLabel "Establishments"@en ;
+    skos:definition "A registered education provider recorded in GIAS, including schools (maintained, academy and independent), further education colleges, children's centres, pupil referral units and online providers. Each establishment is assigned a unique reference number (URN) by the Department for Education."@en ;
+    skos:scopeNote "Do not use school as a universal synonym because GIAS includes non-school establishments."@en ;
+    skos:narrower
+        epr:EstablishmentDetails ;
+    epr:status "Preferred"@en .
+
+epr:EstablishmentIdentity
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment identity"@en ;
+    skos:definition "The names and identifiers that uniquely distinguish and refer to an establishment, including the URN, LAESTAB number, establishment name and any sector-specific identifiers such as the UKPRN or FE Identifier."@en ;
+    skos:narrower
+        epr:DfeNumber,
+        epr:EstablishmentName,
+        epr:EstablishmentNumber,
+        epr:FeHeIdentifier,
+        epr:Laestab,
+        epr:UkProviderReferenceNumber,
+        epr:UniqueReferenceNumber ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentClassification
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment classification"@en ;
+    skos:definition "The controlled classifications used to categorise an establishment by type, type group, education phase, provider type and further education sub-type. These classifications determine which fields and UI sections are displayed for an establishment in GIAS."@en ;
+    skos:narrower
+        epr:EducationPhase,
+        epr:EstablishmentType,
+        epr:EstablishmentTypeGroup,
+        epr:FurtherEducationType,
+        epr:ProviderType ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentAccountability
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment accountability"@en ;
+    skos:definition "The organisations accountable for an establishment's governance, funding and operation: the maintaining local authority (for maintained schools), the academy trust and any sponsor (for academies and free schools), or the proprietor (for independent schools and PRUs)."@en ;
+    skos:narrower
+        epr:AcademySponsor,
+        epr:AcademyTrust,
+        epr:LocalAuthority,
+        epr:MaintainingAuthority,
+        epr:Proprietor ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentLifecycle
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment lifecycle"@en ;
+    skos:definition "The status, key dates and statutory reasons describing the opening, ongoing operation and closure of an establishment. Establishment status values include Open, Closed, Open but proposed to close and Proposed to open."@en ;
+    skos:narrower
+        epr:ClosedDate,
+        epr:EstablishmentStatus,
+        epr:OpenDate,
+        epr:ReasonEstablishmentClosed,
+        epr:ReasonEstablishmentOpened ;
+    epr:status "Provisional"@en .
+
+epr:RecordCurrencyAndStewardship
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Record currency and stewardship"@en ;
+    skos:definition "The date on which an establishment's GIAS record was last changed or confirmed as current, supporting data-quality monitoring and audit."@en ;
+    skos:narrower
+        epr:DateLastChangedOrConfirmed ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentLocationAndContact
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment location and contact"@en ;
+    skos:definition "The physical location, postal address, Unique Property Reference Number and published contact details (website and telephone) for an establishment."@en ;
+    skos:narrower
+        epr:MainAddress,
+        epr:TelephoneNumber,
+        epr:UniquePropertyReferenceNumber,
+        epr:Website ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentLeadership
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment leadership"@en ;
+    skos:definition "The name, title and preferred job title of the person holding principal leadership responsibility for an establishment, such as the headteacher, principal or children's centre manager."@en ;
+    skos:narrower
+        epr:CentreManager,
+        epr:HeadteacherOrPrincipal,
+        epr:PreferredJobTitle ;
+    epr:status "Provisional"@en .
+
+epr:EducationAdmissionsAndProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Education, admissions and provision"@en ;
+    skos:definition "The statutory age range, gender of entry, admissions policy and supplementary provision characteristics (boarding, nursery, sixth form, special classes and section 41 approval) recorded for an establishment."@en ;
+    skos:narrower
+        epr:AdmissionsPolicy,
+        epr:BoardingProvision,
+        epr:GenderOfEntry,
+        epr:NurseryProvision,
+        epr:Section41Approval,
+        epr:SixthFormProvision,
+        epr:SpecialClassProvision,
+        epr:StatutoryAgeRange ;
+    epr:status "Provisional"@en .
+
+epr:CapacityAndPupilMeasures
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Capacity and pupil measures"@en ;
+    skos:definition "Numeric measures describing an establishment's registered capacity and pupil population as at the DfE school census date, including free school meal eligibility and, for special schools, pupil counts by SEN plan status."@en ;
+    skos:narrower
+        epr:CensusDate,
+        epr:PercentagePupilsEligibleForFreeSchoolMeals,
+        epr:PupilCount,
+        epr:PupilsEligibleForFreeSchoolMeals,
+        epr:SchoolCapacity,
+        epr:SpecialPupilsNotOnStatementOrEhcPlan,
+        epr:SpecialPupilsOnStatementOrEhcPlan ;
+    epr:status "Provisional"@en .
+
+epr:FaithContext
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Faith context"@en ;
+    skos:definition "The formal religious-character designation, self-declared religious ethos and diocesan affiliation recorded for an establishment. Religious character is a statutory designation; religious ethos is self-declared and may differ."@en ;
+    skos:narrower
+        epr:Diocese,
+        epr:ReligiousCharacter,
+        epr:ReligiousEthos ;
+    epr:status "Provisional"@en .
+
+epr:SenAndResourcedProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEN and resourced provision"@en ;
+    skos:definition "The types of SEN provision offered, resourced-provision type, and numeric measures (capacity and pupil count on roll) for any resourced provision or SEN unit within the establishment, as defined in the SEND Code of Practice 2015."@en ;
+    skos:narrower
+        epr:ResourcedProvisionCapacity,
+        epr:ResourcedProvisionPupilCount,
+        epr:SenUnitCapacity,
+        epr:SenUnitPupilCount,
+        epr:TypeOfResourcedProvision,
+        epr:TypeOfSenProvision ;
+    epr:status "Provisional"@en .
+
+epr:AlternativeProvisionCharacteristics
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Alternative provision characteristics"@en ;
+    skos:definition "Operational indicators and place counts specific to pupil referral units established under s.19 of the Education Act 1996, covering provision for teenage mothers, childcare, SEN, EBD pupils, full-time education and education by other providers."@en ;
+    skos:scopeNote "Shown on the Details tab for pupil referral units (type 14). Not applicable to mainstream or independent schools."@en ;
+    skos:narrower
+        epr:AlternativeProvisionPlaces,
+        epr:ChildcareFacilitiesProvision,
+        epr:EbdPupilsProvision,
+        epr:FullTimeProvision,
+        epr:PupilsEducatedByOtherProviders,
+        epr:SenFacilitiesProvision,
+        epr:TeenageMothersPlaces,
+        epr:TeenageMothersProvision ;
+    epr:status "Provisional"@en .
+
+epr:InspectionRecord
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Inspection record"@en ;
+    skos:definition "The non-Ofsted inspectorate name, inspection report link and inspection visit dates recorded for an establishment. Applies to independent schools and British schools overseas inspected by bodies such as ISI or the British Schools Overseas inspectorate."@en ;
+    skos:scopeNote "Shown for independent schools (inspectorate name only) and British schools overseas (inspectorate name, report and visit dates). Ofsted links appear under External reference rather than here."@en ;
+    skos:narrower
+        epr:DateOfLastInspectionVisit,
+        epr:DateOfNextInspectionVisit,
+        epr:InspectorateName,
+        epr:InspectorateReport ;
+    epr:status "Provisional"@en .
+
+epr:AccreditationAndQualityAssurance
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Accreditation and quality assurance"@en ;
+    skos:definition "The accreditation status, dates (start, expiry and end), quality assurance body name and report, Companies House number and accreditation flag for online providers under the DfE online education provider accreditation scheme, introduced in 2021."@en ;
+    skos:scopeNote "Applicable only to online providers (type 49). Accreditation date and accreditation date ended are type-49-specific presentations of the OpenDate and CloseDate fields."@en ;
+    skos:narrower
+        epr:AccreditationDate,
+        epr:AccreditationDateEnded,
+        epr:AccreditationExpiryDate,
+        epr:CompaniesHouseNumber,
+        epr:EstablishmentAccredited,
+        epr:QualityAssuranceBodyName,
+        epr:QualityAssuranceBodyReport ;
+    epr:status "Provisional"@en .
+
+epr:ExternalReference
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "External reference"@en ;
+    skos:definition "Links from the GIAS establishment record to related information owned and published by other services, including the Ofsted inspection report reference and other external service references."@en ;
+    skos:narrower
+        epr:ExternalServiceReference,
+        epr:InspectionReportReference ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentGroupMembership
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment group membership"@en ;
+    skos:definition "The organisations and governance structures that group establishments together, and the membership relationships between establishments and those groups. Covers academy trusts, federations, school sponsors and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility."@en ;
+    skos:narrower
+        epr:EstablishmentGroup,
+        epr:GroupMembership,
+        epr:GroupRelationship,
+        epr:GroupRelationshipType,
+        epr:GroupId,
+        epr:GroupUkprn ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentGroup
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment group"@en ;
+    skos:definition "An organisation or governance structure to which one or more establishments belong. Includes academy trusts, federations, school sponsors and children's centre groups."@en ;
+    skos:scopeNote "Distinct from the accountability relationship, which records which body is legally responsible for the establishment. Academy trusts are both establishment groups and accountability bodies simultaneously."@en ;
+    skos:narrower
+        epr:MultiAcademyTrust,
+        epr:SecureSingleAcademyTrust,
+        epr:Federation,
+        epr:SchoolSponsor,
+        epr:ChildrensCentreGroup,
+        epr:ChildrensCentreCollaboration,
+        epr:GenericTrust ;
+    skos:related epr:EstablishmentAccountability ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:MultiAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Multi-academy trust"@en ;
+    skos:altLabel "MAT"@en ;
+    skos:definition "A single legal academy-trust entity incorporated under the Companies Act 2006 that operates two or more academies, free schools, UTCs or studio schools. It has a master funding agreement with the Secretary of State and a supplemental funding agreement for each individual academy. Governed by a board of trustees. Source: GOV.UK academy trust governance guide."@en ;
+    skos:scopeNote "An academy trust operating two or more academies. Distinct from a single-academy trust, which operates exactly one academy. A SAT can convert to a MAT by adding an academy."@en ;
+    skos:broader epr:AcademyTrust ;
+    skos:related epr:SingleAcademyTrust ;
+    epr:status "Provisional"@en .
+
+epr:SecureSingleAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Secure single-academy trust"@en ;
+    skos:definition "A single-academy trust operating a secure 16-to-19 academy providing education within secure residential accommodation for young people aged 16 to 19 subject to a custodial sentence or secure order."@en ;
+    skos:broader epr:SingleAcademyTrust ;
+    epr:status "Provisional"@en .
+
+epr:Federation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Federation"@en ;
+    skos:definition "A formal statutory arrangement in which two or more maintained schools are governed by a single federated governing body. Each member school retains its own URN, establishment number, admissions arrangements and Ofsted inspection identity. Some governance and funding arrangements may be shared or pooled under federation rules. Applicable only to maintained schools, including maintained nursery schools; academy grouping uses the trust model. Source: School Governance (Federations) Regulations 2012."@en ;
+    skos:scopeNote "Federations apply only to maintained schools. An academy cannot join a federation - academies are grouped through the trust model instead. This distinction is confirmed as a business rule."@en ;
+    skos:broader epr:EstablishmentGroup ;
+    epr:status "Provisional"@en .
+
+epr:SchoolSponsor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "School sponsor"@en ;
+    skos:definition "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. The sponsor supports governance, leadership and educational improvement of the sponsored academies. Source: Academies Act 2010."@en ;
+    skos:scopeNote "School sponsors are distinct from AcademySponsor in the accountability layer, which records which sponsor is accountable for a specific academy. SchoolSponsor here is the group organisation itself."@en ;
+    skos:broader epr:EstablishmentGroup ;
+    skos:related epr:AcademySponsor ;
+    epr:status "Provisional"@en .
+
+epr:ChildrensCentreGroup
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Children's centres group"@en ;
+    skos:definition "An operational cluster of children's centres with a lead-centre arrangement, registered as a group in GIAS."@en ;
+    skos:broader epr:EstablishmentGroup ;
+    epr:status "Provisional"@en .
+
+epr:ChildrensCentreCollaboration
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Children's centres collaboration"@en ;
+    skos:definition "A cross-group collaboration arrangement between children's centres, registered as a group in GIAS."@en ;
+    skos:broader epr:EstablishmentGroup ;
+    epr:status "Provisional"@en .
+
+epr:GenericTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Trust"@en ;
+    skos:definition "A generic trust group type (EstablishmentGroupType code 02), distinct from an academy trust. Rarely used in current GIAS data; retained for completeness."@en ;
+    skos:broader epr:EstablishmentGroup ;
+    epr:status "Provisional"@en .
+
+epr:GroupMembership
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group membership"@en ;
+    skos:definition "A dated record of an establishment's membership of an establishment group, trust, federation, sponsor arrangement or children's centre collaboration. An establishment may have membership in more than one group simultaneously."@en ;
+    skos:scopeNote "Maps to GroupLink in the current GIAS schema. Contains the establishment (via URN), the group (via group ID), and an effective date."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:GroupRelationship
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group relationship"@en ;
+    skos:definition "A recorded relationship between two establishment groups, for example where a single-academy trust is the predecessor to a newly formed multi-academy trust. Used to preserve conversion history."@en ;
+    skos:scopeNote "Maps to GroupRelationsLink in the current GIAS schema. Currently used primarily to record SAT-to-MAT conversion history."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:GroupRelationshipType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group relationship type"@en ;
+    skos:definition "The classification of a group-to-group relationship, distinguishing the role of each group in the relationship."@en ;
+    skos:narrower
+        epr:SuccessorMultiAcademyTrust,
+        epr:PredecessorSingleAcademyTrust ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:SuccessorMultiAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Successor MAT"@en ;
+    skos:definition "A group relationship type value indicating that the group is the multi-academy trust formed when a single-academy trust expanded or merged."@en ;
+    skos:broader epr:GroupRelationshipType ;
+    epr:status "Provisional"@en .
+
+epr:PredecessorSingleAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Predecessor SAT"@en ;
+    skos:definition "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en ;
+    skos:broader epr:GroupRelationshipType ;
+    epr:status "Provisional"@en .
+
+epr:GroupId
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group identifier"@en ;
+    skos:definition "The business-facing GIAS group identifier assigned to an establishment group. Distinct from the internal surrogate key used in the GIAS database."@en ;
+    skos:scopeNote "Group ID is conditionally populated by group type. School sponsors use an SP-prefixed identifier (e.g. SP01153). Multi-academy trusts and single-academy trusts use a TR-prefixed identifier (e.g. TR00261). Group ID is absent for secure single-academy trusts, federations, trust (code 02), children's centre groups and children's centre collaborations."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:GroupUkprn
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group UKPRN"@en ;
+    skos:definition "A UK Provider Reference Number assigned to the group organisation by the UKRLP register. Sourced from UKRLP by matching on Companies House number."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceAppointments
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance appointments"@en ;
+    skos:definition "The governance data model for GIAS, covering the formal appointments of governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals at establishments and academy trusts. Governance data submission is a statutory obligation under section 538 of the Education Act 1996."@en ;
+    skos:narrower
+        epr:GovernanceAppointment,
+        epr:GovernanceIdentifier,
+        epr:GovernancePerson,
+        epr:GovernancePersonIdentifier,
+        epr:GovernanceRoleType,
+        epr:GovernanceAppointmentDate,
+        epr:GovernanceTermEndDate,
+        epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceAppointment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance appointment"@en ;
+    skos:definition "A record of one named person holding one governance role at one establishment or group during a defined period. Identified by the GIAS Governance Identifier (GID). Carries the role type, appointment date, optional term-end date and appointing body."@en ;
+    skos:scopeNote "Maps to one GID row in the GIAS governance extract. Statutory basis for data collection: Education Act 1996 s.538. Policy purpose: national database of governors. Personal data - access controls required."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceIdentifier
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance identifier (GID)"@en ;
+    skos:altLabel "GID"@en ;
+    skos:definition "The GIAS-assigned identifier for a governance appointment record. Unique per governance row. Not a person identifier - one physical person may have multiple GIDs across different roles and establishments."@en ;
+    skos:scopeNote "GID identifies the appointment record, not the individual. Matching individuals across GIDs is not supported by this identifier alone. Source: GIAS governance extract."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceRoleType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance role type"@en ;
+    skos:definition "The classification of the governance role held. Enumeration of 22 values: 20 from the GIAS governance extract, plus headteacher ex-officio governor and associate member from the maintained schools governance guide (SI 2012/1034, SI 2013/1624)."@en ;
+    skos:scopeNote "Three structural groups: maintained-school roles (Governor, Chair of Governors, Headteacher ex-officio, Associate member, Governance Professional LA); academy establishment-level roles (Local Governor, Chair of LGB, Local Governance Professional, Shared establishment variants); trust/MAT roles (Trustee, Member, Chair of Trustees, Accounting Officer, CFO, Governance Professional SAT/MAT, Shared group variants, Governance Professional Federation)."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceAppointmentDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointment date"@en ;
+    skos:definition "The date on which the governance appointment took effect."@en ;
+    skos:scopeNote "Source: GIAS governance extract field Date of appointment. Required for most role types; a SHACL advisory note is appropriate when absent."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceTermEndDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Term end date"@en ;
+    skos:definition "The date on which the governance appointment ended or is due to end. When unpopulated, absence does not confirm a current appointment - term-end status requires business-rule validation."@en ;
+    skos:scopeNote "Source: GIAS governance extract field Date term of office ends/ended. Absence for Member role is structurally expected - members do not have fixed terms."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernancePerson
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance person"@en ;
+    skos:definition "A named individual who holds or has held a formal governance role at an establishment, establishment group or trust. Covers governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals. One GovernancePerson may be linked from multiple GovernanceAppointment records."@en ;
+    skos:scopeNote "GovernancePerson covers the full range of governance role types. Personal data - requires access-control treatment. Policy purpose: identify individuals who govern in more than one context (national database of governors)."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernancePersonIdentifier
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance person identifier"@en ;
+    skos:definition "A pseudonymous identifier for a GovernancePerson, derived by hashing normalised date of birth, surname and forename1. Deterministic - the same person's details always produce the same hash - but the raw date of birth is not recoverable from the hash."@en ;
+    skos:scopeNote "Where a governance person's surname has changed, a previous-surname alias hash enables continuity across appointments. This identifier is pseudonymous, not anonymous. It can be re-linked to the source GIAS record and must be treated as personal data under UK GDPR."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceAppointingBody
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointing body"@en ;
+    skos:definition "The body or mechanism responsible for appointing the governor, trustee or member. Enumeration of 18 modelled values, including governing board, foundation, parents, school staff, academy members, local authority, trustees and ex-officio mechanisms."@en ;
+    skos:scopeNote "Source: GIAS governance extract field Appointing body (primary); maintained schools governance guide; SI 2012/1034; academy trust governance guide; model articles of association. One legacy value (Regional Schools Commissioner) retired. Not typically populated for Accounting Officer and Chief Financial Officer roles."@en ;
+    skos:broader epr:GovernanceAppointments ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Core concepts
+#################################################################
+
+epr:EstablishmentDetails
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment details"@en ;
+    skos:definition "The full set of descriptive information presented for an establishment in GIAS, spanning identity, classification, accountability, lifecycle, location, leadership, provision, capacity, faith context, SEN, inspection and accreditation."@en ;
+    skos:scopeNote "A presentation grouping, not necessarily a single target-domain entity or aggregate."@en ;
+    skos:broader epr:Establishment ;
+    epr:status "Provisional"@en .
+
+epr:EstablishmentType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment type"@en ;
+    skos:altLabel "School type"@en, "Type of Establishment"@en, "EstablishmentType"@en ;
+    skos:definition "The legal, operational or policy classification assigned to an establishment, distinguishing its governance model, funding route and statutory basis within the English education system."@en ;
+    skos:scopeNote "The label 'school type' is too narrow for the wider registry, which includes colleges, universities, children's centres and online providers. The classification conflates legal form, sector and operational model within a single dimension; each leaf concept is grouped under one of 11 type groups."@en ;
+    skos:broader epr:EstablishmentClassification ;
+    skos:related epr:EstablishmentTypeGroup ;
+    skos:narrower
+        epr:EstablishmentTypeGroupAcademies,
+        epr:EstablishmentTypeGroupChildrensCentres,
+        epr:EstablishmentTypeGroupColleges,
+        epr:EstablishmentTypeGroupFreeSchools,
+        epr:EstablishmentTypeGroupIndependentSchools,
+        epr:EstablishmentTypeGroupLaMaintainedSchools,
+        epr:EstablishmentTypeGroupNonMaintainedSpecialSchools,
+        epr:EstablishmentTypeGroupOnlineProviders,
+        epr:EstablishmentTypeGroupOtherTypes,
+        epr:EstablishmentTypeGroupUniversities,
+        epr:EstablishmentTypeGroupWelshEstablishments ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Database: Establishment.type_code -> EstablishmentType.code"@en .
+
+epr:EstablishmentTypeGroup
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment type group"@en ;
+    skos:altLabel "Establishment Type Group"@en, "EstablishmentTypeGroup"@en ;
+    skos:definition "A coarse classification that groups related establishment types into named sectors or programme families, such as Academies, Local authority maintained schools or Independent schools."@en ;
+    skos:scopeNote "There are 11 type groups: Academies, Children's centres, Colleges, Free schools, Independent schools, Local authority maintained schools, Non-maintained special schools, Online providers, Other types, Universities and higher education, and Welsh establishments."@en ;
+    skos:broader epr:EstablishmentClassification ;
+    skos:related epr:EstablishmentType ;
+    epr:status "Preferred"@en .
+
+epr:AcademyConverter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy converter"@en ;
+    skos:definition "A maintained school or other eligible institution that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en ;
+    skos:scopeNote "This is an establishment type, not a trust type. The converting school retains its existing character but leaves local-authority maintenance on conversion."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    skos:related epr:AcademyTrust ;
+    epr:status "Preferred"@en .
+
+epr:CommunitySchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Community school"@en ;
+    skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the local authority employs all staff, owns the land and buildings, and acts as the admissions authority."@en ;
+    skos:scopeNote "The most common LA-maintained school type. Governing bodies set the ethos but the local authority retains greater control than in foundation or voluntary schools."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    skos:related epr:LocalAuthority, epr:MaintainingAuthority ;
+    epr:status "Preferred"@en .
+
+epr:OtherIndependentSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Other independent school"@en ;
+    skos:definition "An independent school registered with the Secretary of State that does not fall into a more specific independent-school category; it charges fees and is not maintained or funded by a local authority or the academy programme."@en ;
+    skos:scopeNote "Distinct from Other independent special school, which is an independent school approved to cater for pupils with special educational needs. City technology colleges are also classified separately within this group."@en ;
+    skos:broader epr:EstablishmentTypeGroupIndependentSchools ;
+    skos:related epr:Proprietor ;
+    epr:status "Preferred"@en .
+
+#################################################################
+# Reviewed taxonomy value vocabulary concepts
+#################################################################
+
+epr:EstablishmentTypeGroupAcademies
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academies"@en ;
+    skos:definition "The establishment type group for all academy establishments: state-funded schools operating outside local-authority maintenance under a funding agreement with the Secretary of State, established under the Academies Act 2010."@en ;
+    skos:scopeNote "Contains 9 types: Academy converter, Academy sponsor led, Academy 16-19 converter, Academy 16 to 19 sponsor led, Academy alternative provision converter, Academy alternative provision sponsor led, Academy secure 16 to 19, Academy special converter, Academy special sponsor led."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:Academy1619Converter,
+        epr:Academy16To19SponsorLed,
+        epr:AcademyAlternativeProvisionConverter,
+        epr:AcademyAlternativeProvisionSponsorLed,
+        epr:AcademyConverter,
+        epr:AcademySecure16To19,
+        epr:AcademySpecialConverter,
+        epr:AcademySpecialSponsorLed,
+        epr:AcademySponsorLed ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupChildrensCentres
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Children's centres"@en ;
+    skos:definition "The establishment type group for children's centres and their linked sites, which deliver integrated early-childhood services under the statutory framework introduced by the Childcare Act 2006."@en ;
+    skos:scopeNote "Contains 2 types: Children's centre and Children's centre linked site. The statutory duty on local authorities to secure sufficient children's centre provision was removed by the Children and Families Act 2014; many centres have since closed or merged."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:ChildrensCentre,
+        epr:ChildrensCentreLinkedSite ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupColleges
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Colleges"@en ;
+    skos:definition "The establishment type group for further education colleges and sixth form centres, which provide post-16 and adult education regulated under the Further and Higher Education Act 1992."@en ;
+    skos:scopeNote "Contains 2 types: Further education and Sixth form centre. Does not include university technical colleges or studio schools, which appear under Free schools."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:FurtherEducation,
+        epr:SixthFormCentre ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupFreeSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free schools (type group)"@en ;
+    skos:altLabel "Free schools"@en ;
+    skos:definition "The establishment type group for free schools and related academy-programme establishment types introduced under the Education Act 2011, including studio schools and university technical colleges."@en ;
+    skos:scopeNote "Contains 6 types: Free schools, Free schools 16 to 19, Free schools alternative provision, Free schools special, Studio schools, University technical college. These establishments operate as academies under funding agreements but are created as new schools rather than conversions."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:FreeSchool,
+        epr:FreeSchool16To19,
+        epr:FreeSchoolAlternativeProvision,
+        epr:FreeSchoolSpecial,
+        epr:StudioSchool,
+        epr:UniversityTechnicalCollege ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupIndependentSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Independent schools"@en ;
+    skos:definition "The establishment type group for schools that charge fees and are not maintained by a local authority, operating outside the state-funded maintained and academy sectors."@en ;
+    skos:scopeNote "Contains 2 types: City technology college and Other independent school. Note that city technology colleges are state-funded but classified as independent schools in GIAS; independent special schools appear under Non-maintained special schools."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:CityTechnologyCollege,
+        epr:OtherIndependentSchool ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupLaMaintainedSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local authority maintained schools"@en ;
+    skos:definition "The establishment type group for schools maintained by a local authority under Part II of the School Standards and Framework Act 1998, funded through the dedicated schools grant and subject to LA oversight."@en ;
+    skos:scopeNote "Contains 8 types: Community school, Community special school, Foundation school, Foundation special school, Local authority nursery school, Pupil referral unit, Voluntary aided school, Voluntary controlled school."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:CommunitySchool,
+        epr:CommunitySpecialSchool,
+        epr:FoundationSchool,
+        epr:FoundationSpecialSchool,
+        epr:LocalAuthorityNurserySchool,
+        epr:PupilReferralUnit,
+        epr:VoluntaryAidedSchool,
+        epr:VoluntaryControlledSchool ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupNonMaintainedSpecialSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Non-maintained special schools"@en ;
+    skos:definition "The establishment type group for special schools that are not maintained by a local authority, comprising non-maintained special schools approved under s.342 of the Education Act 1996 and other independent special schools."@en ;
+    skos:scopeNote "Contains 2 types: Non-maintained special school and Other independent special school. Non-maintained special schools differ from other independent special schools in that they are approved by the Secretary of State specifically for SEN pupils and operate on a not-for-profit basis."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:NonMaintainedSpecialSchool,
+        epr:OtherIndependentSpecialSchool ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupOnlineProviders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Online providers"@en ;
+    skos:definition "The establishment type group for providers of full-time online education to pupils of compulsory school age, recognised under the DfE online education accreditation scheme."@en ;
+    skos:scopeNote "Contains 1 type: Online provider. The scheme has no primary statutory basis; providers are registered in GIAS under a DfE regulatory framework only."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:OnlineProvider ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupOtherTypes
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Other types"@en ;
+    skos:definition "The establishment type group for establishment types that do not belong to the mainstream maintained, academy, independent, further education or university sectors."@en ;
+    skos:scopeNote "Contains 7 types: British schools overseas, Institution funded by other government department, Miscellaneous, Offshore schools, Secure units, Service children's education, Special post 16 institution."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:BritishSchoolsOverseas,
+        epr:InstitutionFundedByOtherGovernmentDepartment,
+        epr:MiscellaneousEstablishment,
+        epr:OffshoreSchools,
+        epr:SecureUnits,
+        epr:ServiceChildrensEducation,
+        epr:SpecialPost16Institution ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupUniversities
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Universities and higher education"@en ;
+    skos:definition "The establishment type group for higher education institutions providing degree-level and postgraduate education, operating under the Higher Education Act 2004 and Further and Higher Education Act 1992."@en ;
+    skos:scopeNote "Contains 1 type: Higher education institution. Universities are registered in GIAS primarily for the purpose of recording university technical college and academy trust sponsorship relationships."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:HigherEducationInstitution ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:EstablishmentTypeGroupWelshEstablishments
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Welsh establishments"@en ;
+    skos:definition "The establishment type group for schools in Wales that are registered with DfE but governed by Welsh legislation enacted by Senedd Cymru."@en ;
+    skos:scopeNote "Contains 1 type: Welsh establishment. These records appear in GIAS for cross-border data purposes; Welsh school governance is devolved and distinct from the English framework."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:narrower
+        epr:WelshEstablishment ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:Academy1619Converter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy 16-19 converter"@en ;
+    skos:definition "A 16-to-19 education provider - such as a sixth form college or school sixth form - that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en ;
+    skos:scopeNote "Distinct from Academy 16 to 19 sponsor led, which is a newly created 16-to-19 academy rather than a conversion."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:Academy16To19SponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy 16 to 19 sponsor led"@en ;
+    skos:definition "A new 16-to-19 academy established through the sponsor-led route under the Academies Act 2010, where an approved sponsor takes responsibility for the provision from the outset."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:AcademyAlternativeProvisionConverter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy alternative provision converter"@en ;
+    skos:definition "An existing alternative provision establishment - such as a pupil referral unit - that converted to academy status under the Academies Act 2010 while continuing to provide education for pupils unable to attend mainstream school."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:AcademyAlternativeProvisionSponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy alternative provision sponsor led"@en ;
+    skos:definition "A new alternative provision academy created through a sponsor-led route under the Academies Act 2010, established to provide education for pupils who cannot attend mainstream school."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:AcademySecure16To19
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy secure 16 to 19"@en ;
+    skos:definition "An academy providing education within secure residential accommodation for young people aged 16 to 19 who are subject to a custodial sentence or secure order."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:AcademySpecialConverter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy special converter"@en ;
+    skos:definition "A maintained special school that converted to academy status under the Academies Act 2010, continuing to cater wholly or mainly for pupils with special educational needs under a funding agreement with the Secretary of State."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:AcademySpecialSponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy special sponsor led"@en ;
+    skos:definition "A new special academy established through the sponsor-led route under the Academies Act 2010, set up to cater for pupils with special educational needs where an approved sponsor provides strategic oversight."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:AcademySponsorLed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy sponsor led"@en ;
+    skos:definition "An academy established through the sponsor-led route under the Academies Act 2010, typically replacing an underperforming school, with an approved sponsor providing governance and strategic leadership."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:BritishSchoolsOverseas
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "British schools overseas"@en ;
+    skos:definition "A school outside the United Kingdom that provides a British-style curriculum and was subject to voluntary inspection by Ofsted or an approved inspectorate under the Education (British Schools Abroad) Order 1999."@en ;
+    skos:scopeNote "Ofsted inspection of British schools overseas ended in 2021 following revocation of the relevant inspection provisions. Records for schools previously holding BSO status may remain in GIAS."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:ChildrensCentre
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Children's centre"@en ;
+    skos:definition "A facility providing integrated early-childhood services - including early education, childcare, family support, health services and employment advice - established under the statutory framework of the Childcare Act 2006 and Children Act 2004."@en ;
+    skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:ChildrensCentreLinkedSite
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Children's centre linked site"@en ;
+    skos:definition "A site that delivers some early childhood services on behalf of a named children's centre, having previously been registered as a standalone children's centre under the Childcare Act 2006 framework."@en ;
+    skos:scopeNote "Linked sites are operationally dependent on a parent children's centre and do not hold independent registration. They are recorded in GIAS as a separate establishment type to preserve historical registration data."@en ;
+    skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:CityTechnologyCollege
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "City technology college"@en ;
+    skos:definition "A state-funded independent school in an urban area, established under s.105 of the Education Reform Act 1988 with a curriculum emphasis on technology, science and practical skills, jointly funded by central government and private sponsors."@en ;
+    skos:scopeNote "A small, closed cohort: no new CTCs have been created since the early 1990s. Many have since converted to academies. Classified under Independent schools in GIAS despite being state-funded."@en ;
+    skos:broader epr:EstablishmentTypeGroupIndependentSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:CommunitySpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Community special school"@en ;
+    skos:definition "A local-authority-maintained special school established under Schedule 27 of the School Standards and Framework Act 1998 and the Education Act 1996, in which the local authority employs staff and is the admissions authority, catering wholly or mainly for children with special educational needs."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:FoundationSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Foundation school"@en ;
+    skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the governing body is the employer and admissions authority, with land and buildings that may be owned by the governing body or a charitable foundation rather than the local authority."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:FoundationSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Foundation special school"@en ;
+    skos:definition "A maintained special school established under Schedule 27 of the School Standards and Framework Act 1998 and the Education Act 1996, sharing the governance characteristics of a foundation school - including governing body as employer and admissions authority - while catering wholly or mainly for children with special educational needs."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:FreeSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free schools"@en ;
+    skos:definition "A new state-funded school established as an academy under the Academies Act 2010 and Education Act 2011 through the free-school programme, allowing parents, teachers, charities or other groups to set up a school outside local-authority control."@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:FreeSchool16To19
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free schools 16 to 19"@en ;
+    skos:definition "A free school established under the Academies Act 2010 that focuses exclusively on providing education and training to students aged 16 to 19."@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:FreeSchoolAlternativeProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free schools alternative provision"@en ;
+    skos:definition "A free school established under the Academies Act 2010 to provide alternative provision for pupils who are unable to attend mainstream school due to exclusion, illness or other circumstances."@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:FreeSchoolSpecial
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free schools special"@en ;
+    skos:definition "A free school established under the Academies Act 2010 to provide specialist education for pupils with special educational needs and disabilities."@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:FurtherEducation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Further education"@en ;
+    skos:definition "A general further education college or sixth-form college providing post-16 education and training, operating as an incorporated body under the Further and Higher Education Act 1992."@en ;
+    skos:scopeNote "Covers general FE colleges, tertiary colleges and sixth-form colleges registered in GIAS. Does not include school sixth forms, which are part of their parent school establishment record."@en ;
+    skos:broader epr:EstablishmentTypeGroupColleges ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:HigherEducationInstitution
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Higher education institution"@en ;
+    skos:definition "A university or other higher education provider recognised under the Further and Higher Education Act 1992 and the Higher Education Act 2004, offering degree-level and postgraduate qualifications."@en ;
+    skos:scopeNote "Higher education institutions are registered in GIAS primarily to support recording of university sponsorship relationships with academies and UTCs, rather than for regulatory oversight of the HEI itself."@en ;
+    skos:broader epr:EstablishmentTypeGroupUniversities ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:InstitutionFundedByOtherGovernmentDepartment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Institution funded by other government department"@en ;
+    skos:definition "An educational institution whose principal funding comes from a government department other than the Department for Education, and which is recorded in GIAS for cross-government data purposes."@en ;
+    skos:scopeNote "Includes providers such as Ministry of Defence-funded schools or Home Office-related provisions. The specific department and funding basis varies by record."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:LocalAuthorityNurserySchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local authority nursery school"@en ;
+    skos:definition "A nursery school maintained and funded by a local authority under the School Standards and Framework Act 1998, providing early years education for children below compulsory school age."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:MiscellaneousEstablishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Miscellaneous"@en ;
+    skos:definition "A residual establishment type used in GIAS for records that cannot be classified under any more specific establishment-type category."@en ;
+    skos:scopeNote "Use of this type indicates a data quality or classification gap. Records of this type should be reviewed periodically to determine whether a more precise type can be assigned."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:NonMaintainedSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Non-maintained special school"@en ;
+    skos:definition "A special school approved by the Secretary of State under s.342 of the Education Act 1996 that is not maintained by a local authority, operates on a not-for-profit basis, and caters wholly or mainly for children with special educational needs."@en ;
+    skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:OffshoreSchools
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Offshore schools"@en ;
+    skos:definition "A school operating in a Crown Dependency, British Overseas Territory or other non-mainland-UK geography that is registered with GIAS under Ministry of Defence or DfE arrangements."@en ;
+    skos:scopeNote "Distinct from British schools overseas (which operate in foreign countries under the BSO inspection framework) and Welsh establishments (which are governed by devolved Welsh legislation). Offshore schools are subject to varying inspection and regulatory regimes depending on jurisdiction."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:OnlineProvider
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Online provider"@en ;
+    skos:definition "A provider that delivers full-time education entirely online to pupils of compulsory school age, recognised under the DfE online education accreditation scheme."@en ;
+    skos:scopeNote "The scheme operates under a DfE regulatory framework without a primary statutory basis. Providers must meet DfE quality standards to be listed; registration in GIAS does not confer the same status as a maintained school or academy."@en ;
+    skos:broader epr:EstablishmentTypeGroupOnlineProviders ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:OtherIndependentSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Other independent special school"@en ;
+    skos:definition "An independent school that specialises in provision for pupils with special educational needs but is not approved by the Secretary of State under s.342 of the Education Act 1996 as a non-maintained special school."@en ;
+    skos:scopeNote "These schools may be approved by the Secretary of State under s.41 of the Children and Families Act 2014 for the purposes of EHC plan placements, but they are operated on an independent, fee-charging basis."@en ;
+    skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:PupilReferralUnit
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Pupil referral unit"@en ;
+    skos:definition "A local-authority establishment maintained under s.19 of the Education Act 1996 to provide education for children of compulsory school age who are excluded, persistently absent, ill or otherwise unable to attend a mainstream school."@en ;
+    skos:scopeNote "PRUs can convert to alternative provision academies or free schools; those that have done so will appear under the Academies or Free schools type groups instead."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:SecureUnits
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Secure units"@en ;
+    skos:definition "Secure residential accommodation for children and young people that includes an educational function, recorded in GIAS for cross-departmental data purposes."@en ;
+    skos:scopeNote "Secure units are not mainstream educational establishments; they operate under youth justice or welfare frameworks rather than the standard school regulatory regime. Inclusion in GIAS reflects the need to track education provision for children in secure settings."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:ServiceChildrensEducation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Service children's education"@en ;
+    skos:definition "A school operated by the Service Children's Education (SCE) agency on behalf of the Ministry of Defence, providing education for the children of UK armed-forces personnel at bases in the United Kingdom and overseas."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:SixthFormCentre
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sixth form centre"@en ;
+    skos:definition "A centre providing sixth-form education for students aged 16 to 18, operating under the Further and Higher Education Act 1992 and typically sharing facilities with or attached to a maintained school."@en ;
+    skos:scopeNote "Sixth form centres are distinct from standalone sixth-form colleges, which appear under the Further education type. They may serve pupils from multiple feeder schools."@en ;
+    skos:broader epr:EstablishmentTypeGroupColleges ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:SpecialPost16Institution
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Special post 16 institution"@en ;
+    skos:definition "A specialist institution approved under s.41 of the Children and Families Act 2014 to provide education or training for young people over 16 with special educational needs or disabilities, enabling placement via an education, health and care plan."@en ;
+    skos:broader epr:EstablishmentTypeGroupOtherTypes ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:StudioSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Studio schools"@en ;
+    skos:definition "A small academy established under the Academies Act 2010 and Education Act 2011 through the free-school programme, typically for students aged 14 to 19, delivering mainstream qualifications through project-based and work-related learning with employer involvement."@en ;
+    skos:scopeNote "The studio schools programme was discontinued by DfE; no new studio schools have been approved since 2017. Existing studio schools continue to operate as academies."@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:UniversityTechnicalCollege
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "University technical college"@en ;
+    skos:definition "An academy established under the Academies Act 2010 and Education Act 2011 through the free-school programme, for students aged 14 to 19, specialising in technical and vocational subjects with the active involvement of a university and employer sponsors."@en ;
+    skos:broader epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:VoluntaryAidedSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Voluntary aided school"@en ;
+    skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the governing body is the employer and admissions authority, with land and buildings typically owned by a charitable foundation such as a diocese or religious body, which contributes towards capital costs."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:VoluntaryControlledSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Voluntary controlled school"@en ;
+    skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the local authority is the employer and admissions authority; land and buildings are often owned by a voluntary or foundation body, but the school receives full local-authority funding without a capital contribution from the foundation."@en ;
+    skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+
+epr:WelshEstablishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Welsh establishment"@en ;
+    skos:definition "A school or other education provider in Wales that is registered with the Department for Education in GIAS but is governed by Welsh legislation enacted by Senedd Cymru, including the School Standards and Organisation (Wales) Act 2013."@en ;
+    skos:scopeNote "Welsh establishments appear in GIAS for cross-border data-sharing and funding purposes. Their governance, inspection (Estyn, not Ofsted) and regulatory framework differ from English establishments."@en ;
+    skos:broader epr:EstablishmentTypeGroupWelshEstablishments ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:AllThroughPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "All-through"@en ;
+    skos:definition "An education phase covering the full compulsory school age range within a single establishment, spanning both primary and secondary years (typically ages 4 or 5 to 16 or 18)."@en ;
+    skos:scopeNote "All-through schools are not separately defined in statute but are recognised in DfE guidance. The ministerial phase determination under the Education Act 1996 governs the applicable accountability and funding regime."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:MiddlePhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Middle deemed primary"@en ;
+    skos:definition "An education phase assigned to a middle school where the Secretary of State has determined it should be treated as a primary school, typically because the majority of its age range falls within primary years."@en ;
+    skos:scopeNote "The deemed primary or secondary classification is a ministerial determination under the Education Act 1996 s.8 and associated regulations. It affects inspection framework, funding, and teacher pay conditions. Middle schools typically serve ages 8-12 or 9-13."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:MiddleDeemedSecondaryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Middle deemed secondary"@en ;
+    skos:definition "An education phase assigned to a middle school where the Secretary of State has determined it should be treated as a secondary school, typically because the majority of its age range falls within secondary years."@en ;
+    skos:scopeNote "The deemed primary or secondary classification is a ministerial determination under the Education Act 1996 s.8 and associated regulations. It affects inspection framework, funding, and teacher pay conditions. Middle schools typically serve ages 8-12 or 9-13."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:NurseryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Nursery"@en ;
+    skos:definition "An education phase for establishments providing early years education to children below compulsory school age, typically ages 3 to 4."@en ;
+    skos:scopeNote "Nursery schools and nursery classes are separately registerable under the Education Act 2002. A standalone nursery school carries this phase; nursery classes within a primary school do not change the school's phase."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:PrimaryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Primary"@en ;
+    skos:definition "An education phase for establishments providing primary education, broadly covering ages 4 or 5 to 11, within the compulsory school age range defined by the Education Act 1996 s.8."@en ;
+    skos:scopeNote "Includes infant schools (ages 4-7), junior schools (ages 7-11), and combined infant and junior schools. The phase is determined by the Secretary of State and affects Ofsted inspection framework and national curriculum requirements."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:SecondaryPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Secondary"@en ;
+    skos:definition "An education phase for establishments providing secondary education, broadly covering ages 11 to 16, and up to 18 where sixth-form provision is included, within the compulsory school age range defined by the Education Act 1996 s.8."@en ;
+    skos:scopeNote "Includes secondary modern, grammar, and comprehensive schools. The phase affects Ofsted inspection framework, national curriculum key stages 3 and 4, and statutory assessment requirements."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Captured public glossary"@en .
+
+epr:SixteenToNineteenPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "16 to 19"@en ;
+    skos:definition "An education phase for establishments providing post-16 education and training to young people aged 16 to 19, including sixth-form colleges and studio schools."@en ;
+    skos:scopeNote "Applies to establishments whose primary purpose is post-16 provision. In GIAS this phase is recorded for sixth-form colleges and some free schools. Local authorities have duties to secure sufficient 16-19 provision under the Education Act 2002."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+
+epr:NotApplicableEducationPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Not applicable (education phase)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:definition "A classification value indicating that the education phase field is not applicable to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types where a phase classification is conceptually inapplicable, such as further education colleges, higher education institutions, or local authority children's centres. Distinct from the absence of a value: a phase simply does not apply."@en ;
+    skos:broader epr:EducationPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NonSelectiveAdmissions
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Non-selective"@en ;
+    skos:definition "An admissions-policy value indicating that the school does not allocate places through academic selection tests or criteria."@en ;
+    skos:scopeNote "Admissions must comply with the School Admissions Code (statutory under s.84 of the School Standards and Framework Act 1998). Non-selective schools may still apply oversubscription criteria such as looked-after children, siblings, or distance."@en ;
+    skos:broader epr:AdmissionsPolicy ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:SelectiveAdmissions
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Selective"@en ;
+    skos:definition "An admissions-policy value indicating that the school selects all or some pupils by reference to academic ability or aptitude."@en ;
+    skos:scopeNote "Grammar schools selecting wholly by ability are permitted under s.104 of the School Standards and Framework Act 1998. Partial selection by aptitude in certain subjects is permitted for some maintained schools under SSFA 1998. Selective admissions must comply with the School Admissions Code."@en ;
+    skos:broader epr:AdmissionsPolicy ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:NotApplicableAdmissionsPolicy
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Not applicable (admissions policy)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:definition "A classification value indicating that an admissions policy classification does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types not subject to school admissions legislation, such as further education colleges, early years settings, or non-maintained special schools. Distinct from non-selective: the field is conceptually inapplicable, not merely answered in the negative."@en ;
+    skos:broader epr:AdmissionsPolicy ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:BoardingSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Boarding school"@en ;
+    skos:definition "A boarding-provision value indicating that the establishment is registered and operates principally as a boarding school, where pupils reside during term time."@en ;
+    skos:scopeNote "Boarding schools must meet the National Minimum Standards for Boarding Schools and are subject to the Education (Independent School Standards) Regulations 2014. Distinct from HasBoarders: a boarding school's primary identity is as a boarding provision, not merely a day school that also accommodates some boarders."@en ;
+    skos:broader epr:BoardingProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:HasBoarders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Has boarders"@en ;
+    skos:definition "A boarding-provision value indicating that the establishment accommodates some pupils as boarders, but is not primarily classified as a boarding school."@en ;
+    skos:scopeNote "Applies to schools that provide day education as their primary function but also offer boarding for some pupils. Boarding provision in such schools remains subject to the National Minimum Standards for Boarding Schools and the Education (Independent School Standards) Regulations 2014."@en ;
+    skos:broader epr:BoardingProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:NoBoarders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "No boarders"@en ;
+    skos:definition "A boarding-provision value indicating that the establishment does not accommodate any pupils as boarders."@en ;
+    skos:scopeNote "Applies to schools for which the boarding provision field is applicable (i.e. maintained or independent schools), but where no boarding is offered. Distinct from a NotApplicable value, which would indicate the field is irrelevant to the establishment type."@en ;
+    skos:broader epr:BoardingProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:BoysOnlyGenderEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Boys"@en ;
+    skos:definition "A gender-of-entry value indicating that the establishment admits boys only."@en ;
+    skos:scopeNote "Single-sex admission is permitted for maintained and independent schools under the Equality Act 2010 (s.85 and schedule 11). The recorded value reflects the school's admissions policy, not the composition of its current roll."@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:GirlsOnlyGenderEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Girls"@en ;
+    skos:definition "A gender-of-entry value indicating that the establishment admits girls only."@en ;
+    skos:scopeNote "Single-sex admission is permitted for maintained and independent schools under the Equality Act 2010 (s.85 and schedule 11). The recorded value reflects the school's admissions policy, not the composition of its current roll."@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:MixedGenderEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Mixed"@en ;
+    skos:definition "A gender-of-entry value indicating that the establishment admits both boys and girls without restriction on grounds of sex."@en ;
+    skos:scopeNote "The recorded value reflects the school's admissions policy. Mixed schools remain bound by the Equality Act 2010 in respect of their treatment of pupils within the school."@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NotApplicableGenderOfEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Not applicable (gender of entry)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:definition "A classification value indicating that a gender-of-entry classification does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types where a gender-of-entry classification is conceptually inapplicable, such as further education colleges or early years settings. Distinct from mixed gender entry: the field is not applicable, not merely answered as mixed."@en ;
+    skos:broader epr:GenderOfEntry ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:HasNurseryClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Has nursery classes"@en ;
+    skos:definition "A nursery-provision value indicating that the establishment operates one or more nursery classes for children below compulsory school age."@en ;
+    skos:scopeNote "Nursery classes within a school are distinct from a separately registered nursery school. The presence of nursery classes does not change the school's phase classification. Provision of nursery education is addressed by local authorities under the Education Act 2002 s.50."@en ;
+    skos:broader epr:NurseryProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:NoNurseryClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "No nursery classes"@en ;
+    skos:definition "A nursery-provision value indicating that the establishment does not operate any nursery classes."@en ;
+    skos:scopeNote "Applies where the nursery provision field is applicable to the establishment type (e.g. a primary school) but the school has no nursery classes. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
+    skos:broader epr:NurseryProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:NotApplicableNurseryProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Not applicable (nursery provision)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:definition "A classification value indicating that a nursery provision classification does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types where nursery provision is conceptually inapplicable, such as secondary schools, sixth-form colleges, or further education institutions. Distinct from NoNurseryClasses, which applies to establishment types where the field is relevant but no nursery classes are provided."@en ;
+    skos:broader epr:NurseryProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:HasSixthForm
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Has a sixth form"@en ;
+    skos:definition "A sixth-form-provision value indicating that the establishment provides post-16 education as a sixth form, catering to pupils typically in Years 12 and 13."@en ;
+    skos:scopeNote "Sixth-form provision is a separately recorded field in GIAS. The presence of a sixth form does not change the school's phase classification. Local authorities have duties to secure sufficient 16-19 provision under the Education Act 2002."@en ;
+    skos:broader epr:SixthFormProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:NoSixthForm
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Does not have a sixth form"@en ;
+    skos:definition "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en ;
+    skos:scopeNote "Applies where the sixth-form provision field is applicable to the establishment type (e.g. a secondary school) but no post-16 provision is offered. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
+    skos:broader epr:SixthFormProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+
+epr:NotApplicableSixthFormProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Not applicable (sixth-form provision)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:definition "A classification value indicating that a sixth-form provision classification does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types where sixth-form provision is conceptually inapplicable, such as primary schools, nursery schools, or pupil referral units. Distinct from NoSixthForm, which applies to establishment types where the field is relevant but no sixth form is provided."@en ;
+    skos:broader epr:SixthFormProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:HasSpecialClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Has special classes"@en ;
+    skos:definition "A special-class-provision value indicating that the establishment provides one or more specially resourced classes or units for pupils with special educational needs."@en ;
+    skos:scopeNote "Special classes or resourced provision within a mainstream school are distinct from a special school. Such provision is relevant under the Special Educational Needs and Disability Act 2001 and Education Act 1996 Part IV, and may be the basis for a pupil's Education, Health and Care Plan placement."@en ;
+    skos:broader epr:SpecialClassProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NoSpecialClasses
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "No special classes"@en ;
+    skos:definition "A special-class-provision value indicating that the establishment does not provide any specially resourced classes or units for pupils with special educational needs."@en ;
+    skos:scopeNote "Applies where the special-class provision field is applicable to the establishment type but no such provision is offered. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
+    skos:broader epr:SpecialClassProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NotApplicableSpecialClassProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Not applicable (special-class provision)"@en ;
+    skos:altLabel "Not applicable"@en ;
+    skos:definition "A classification value indicating that a special-class provision classification does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types where the concept of resourced SEN classes is inapplicable, such as special schools (where all provision is by definition specialist) or early years settings. Distinct from NoSpecialClasses, which indicates the field is applicable but no such provision exists."@en ;
+    skos:broader epr:SpecialClassProvision ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:ChurchOfEnglandCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Church of England"@en ;
+    skos:definition "A religious-character value indicating that the school has been designated by the Secretary of State as having Church of England character, conferring status as a Church of England school."@en ;
+    skos:scopeNote "Religious character designation is conferred under s.69(3) of the School Standards and Framework Act 1998 Part IV. Church of England schools may be voluntary aided, voluntary controlled, or academy schools with a Church of England academy trust. The designating body is typically the Church of England diocese."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:JewishCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Jewish"@en ;
+    skos:definition "A religious-character value indicating that the school has been designated by the Secretary of State as having Jewish religious character."@en ;
+    skos:scopeNote "Religious character designation is conferred under s.69(3) of the School Standards and Framework Act 1998. The designating body for Jewish schools is typically the Board of Deputies of British Jews or another recognised Jewish educational authority."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:MuslimCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Muslim"@en ;
+    skos:definition "A religious-character value indicating that the school has been designated by the Secretary of State as having Muslim religious character."@en ;
+    skos:scopeNote "Religious character designation is conferred under s.69(3) of the School Standards and Framework Act 1998. Most Muslim-ethos schools are independent or free schools; relatively few hold a formal statutory designation."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NoReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "No religious character"@en ;
+    skos:altLabel "None"@en ;
+    skos:definition "A religious-character value indicating that the school has no religious character designation; it is a non-faith school."@en ;
+    skos:scopeNote "Applies to maintained and independent schools for which a religious character designation under the School Standards and Framework Act 1998 is applicable but has not been conferred. Distinct from NotApplicableReligiousCharacter, which is used where the designation concept does not apply to the establishment type at all."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NotApplicableReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Does not apply (religious character)"@en ;
+    skos:altLabel "Does not apply"@en ;
+    skos:definition "A classification value indicating that the religious character designation field does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types outside the scope of the statutory religious character designation under the School Standards and Framework Act 1998, such as further education colleges. Distinct from NoReligiousCharacter, which indicates the field is applicable but no designation has been conferred."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:OtherReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Other religious character"@en ;
+    skos:altLabel "Other"@en ;
+    skos:definition "A religious-character value indicating that the school has a statutory religious character designation for a faith not represented by the other named values in this scheme."@en ;
+    skos:scopeNote "Used where the Secretary of State has conferred a religious character designation under the School Standards and Framework Act 1998 s.69(3) for a religion or denomination other than Church of England, Roman Catholic, Jewish, or Muslim. Examples include Sikh, Hindu, or other Christian denominations."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:RomanCatholicCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Roman Catholic"@en ;
+    skos:definition "A religious-character value indicating that the school has been designated by the Secretary of State as having Roman Catholic character, conferring status as a Catholic school."@en ;
+    skos:scopeNote "Religious character designation is conferred under s.69(3) of the School Standards and Framework Act 1998. Roman Catholic schools may be voluntary aided or academy schools. The designating body is the relevant Catholic diocese."@en ;
+    skos:broader epr:ReligiousCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:ChristianEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Christian"@en ;
+    skos:definition "A religious-ethos value indicating that the school self-declares a broadly Christian ethos, without specifying a particular denomination."@en ;
+    skos:scopeNote "Religious ethos is a self-declaration by the school or its trust and is not a statutory designation. This value is intentionally broader than Church of England or Roman Catholic character, covering schools that describe a broadly Christian culture. Governed loosely by SSFA 1998 guidance but not a statutory requirement."@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NoReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "No religious ethos"@en ;
+    skos:altLabel "None"@en ;
+    skos:definition "A religious-ethos value indicating that the school does not self-declare any religious ethos."@en ;
+    skos:scopeNote "Religious ethos is a self-declaration and is not a statutory designation. Applies where the ethos field is applicable to the establishment type but the school has declared no religious ethos. Distinct from NotApplicableReligiousEthos, which indicates the field is irrelevant to the establishment type."@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:NotApplicableReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Does not apply (religious ethos)"@en ;
+    skos:altLabel "Does not apply"@en ;
+    skos:definition "A classification value indicating that the religious ethos field does not apply to this type of establishment."@en ;
+    skos:scopeNote "Used for establishment types where recording a religious ethos is not applicable, such as further education colleges or local authority services. Distinct from NoReligiousEthos, which indicates the field is applicable but the school has declared no religious ethos."@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+epr:OtherReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Other religious ethos"@en ;
+    skos:altLabel "Other"@en ;
+    skos:definition "A religious-ethos value indicating that the school self-declares a religious ethos of a faith or denomination not represented by the other named values in this scheme."@en ;
+    skos:scopeNote "Religious ethos is a self-declaration and is not a statutory designation. This value covers schools declaring an ethos such as Jewish, Muslim, Hindu, Sikh, or another faith not captured in the named values."@en ;
+    skos:broader epr:ReligiousEthos ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Definition provenance: Invented review definition"@en .
+
+#################################################################
+# Identity and identifiers
+#################################################################
+
+epr:EstablishmentName
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment name"@en ;
+    skos:altLabel "Establishment Name"@en ;
+    skos:definition "The official name under which the establishment is registered with DfE and by which it is publicly identified in GIAS. This is the legally recognised name and may differ from a trading name or informal short form used locally."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: Name / EstablishmentName; Java: Establishment.name; database: Establishment.EstablishmentName"@en .
+
+epr:UniqueReferenceNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Unique Reference Number"@en ;
+    skos:altLabel "URN"@en ;
+    skos:definition "The unique numerical identifier assigned by DfE when an establishment record is created in GIAS, issued under the Education (School Information) Regulations 2008. Every maintained school, academy, independent school and FE college registered with DfE holds a URN, which remains fixed for the lifetime of the record even if the establishment changes name or type."@en ;
+    skos:scopeNote "URNs in the range 100001-199999 are typically assigned to maintained schools; ranges from 130000 are commonly academies; 200000 and above are typically independent schools. The URN is the primary key for GIAS records and should be used in preference to other identifiers when referencing a specific establishment."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: Urn; Java: Establishment.urn; database: Establishment.URN"@en .
+
+epr:EstablishmentNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment number"@en ;
+    skos:definition "A one-to-four digit number assigned by the local authority to an establishment within its area. It is not globally unique - it is only meaningful together with the three-digit LA number. When combined with the LA number it forms the DfE number (written as \"123/4567\") and the LAESTAB (written without the slash as \"1234567\"), where the establishment number is zero-padded to four digits for display."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    skos:related epr:DfeNumber, epr:LocalAuthority ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: EstablishmentNumber; Java: establishmentNumber; database: Establishment.EstablishmentNumber"@en .
+
+epr:DfeNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "DfE number"@en ;
+    skos:altLabel "Department for Education number"@en ;
+    skos:definition "A composite identifier formed by concatenating the three-digit LA number and the establishment number (zero-padded to four digits), conventionally written with a slash separator (e.g. \"123/4567\"). Used in DfE correspondence, grant letters and official returns to identify a school within its local authority."@en ;
+    skos:scopeNote "The DfE number is derived from its two component fields rather than stored as a single physical column in the Establishment table."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    skos:related epr:EstablishmentNumber, epr:LocalAuthority, epr:Laestab ;
+    epr:status "Preferred"@en .
+
+epr:Laestab
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "LAESTAB"@en ;
+    skos:altLabel "Local authority establishment"@en ;
+    skos:definition "An alternative rendering of the DfE number in which the LA number and establishment number are concatenated without a separator to produce a seven-digit string (e.g. \"1234567\"). Encountered in payroll systems, some data returns and legacy DfE publications."@en ;
+    skos:scopeNote "LAESTAB represents the same composite identifier as DfE number but uses a different format convention. It is not a physical database column and DfeNumber is the preferred target concept. Although LAESTAB is not the preferred concept, it remains a live user-facing search and display identifier in GIAS and should not be treated as obsolete."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    skos:related epr:DfeNumber ;
+    epr:status "Provisional"@en .
+
+epr:UkProviderReferenceNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "UK Provider Reference Number"@en ;
+    skos:altLabel "UKPRN"@en ;
+    skos:definition "An eight-digit identifier issued by the UK Register of Learning Providers (UKRLP), operated by HESA on behalf of the education and training sector. A UKPRN is required by institutions receiving public funding and provides a cross-sector link between GIAS and further- and higher-education data systems."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: UKPRN; Java: ukprn; database: Establishment.UKPRN"@en .
+
+epr:FeHeIdentifier
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "FE/HE identifier"@en ;
+    skos:altLabel "FEHEIdentifier"@en ;
+    skos:definition "A HESA-assigned identifier used in further- and higher-education data returns, distinct from the UKPRN. Recorded in GIAS for FE colleges and HEIs that submit data to HESA."@en ;
+    skos:scopeNote "The FE/HE identifier is a legacy field and may not be populated for all FE/HE providers in GIAS. Where both this identifier and a UKPRN are present, the UKPRN is the preferred cross-sector reference."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Java: feheIdentifier; database: Establishment.FEHEIdentifier"@en .
+
+epr:LocalAuthorityScopedEstablishmentNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local-authority-scoped establishment number"@en ;
+    skos:definition "The pairing of a local authority code with an establishment number that together form a meaningful local identifier. Neither component is globally unique in isolation."@en ;
+    skos:scopeNote "A single establishment identity may carry both a current and a previous scoped establishment number, distinguished by an identifier role. This models academy conversion, rebanding and other scenarios where an establishment acquires a new LA context or number."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    skos:related epr:EstablishmentNumber, epr:LocalAuthority, epr:DfeNumber ;
+    epr:status "Provisional"@en .
+
+epr:IdentifierRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Identifier role"@en ;
+    skos:definition "The temporal role of a local-authority-scoped establishment number, indicating whether it is the current active identity or a previous identity retained for search continuity and lifecycle traceability."@en ;
+    skos:broader epr:EstablishmentIdentity ;
+    skos:narrower epr:CurrentIdentifierRole, epr:PreviousIdentifierRole ;
+    skos:related epr:LocalAuthorityScopedEstablishmentNumber ;
+    epr:status "Provisional"@en .
+
+epr:CurrentIdentifierRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Current"@en ;
+    skos:definition "The scoped establishment number is the establishment's active current identity."@en ;
+    skos:broader epr:IdentifierRole ;
+    epr:status "Provisional"@en .
+
+epr:PreviousIdentifierRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Previous"@en ;
+    skos:definition "The scoped establishment number is a previous identity, retained for search continuity and lifecycle traceability."@en ;
+    skos:broader epr:IdentifierRole ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Classification
+#################################################################
+
+epr:EducationPhase
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Education phase"@en ;
+    skos:altLabel "Phase of education"@en, "Phase of Education"@en ;
+    skos:definition "The broad stage of education provided by an establishment, such as nursery, primary, secondary or 16-to-19. The phase classification determines which cohort-specific fields and inspections framework apply to the establishment."@en ;
+    skos:broader epr:EstablishmentClassification ;
+    skos:narrower
+        epr:AllThroughPhase,
+        epr:MiddleDeemedSecondaryPhase,
+        epr:MiddlePhase,
+        epr:NotApplicableEducationPhase,
+        epr:NurseryPhase,
+        epr:PrimaryPhase,
+        epr:SecondaryPhase,
+        epr:SixteenToNineteenPhase ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: EducationPhaseId; Java: educationPhase; database: Establishment.phaseOfEducation_code"@en .
+
+epr:FurtherEducationType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Further education type"@en ;
+    skos:altLabel "FurtherEducationType"@en ;
+    skos:definition "A coded classification that identifies the specific sub-type of provision for establishments in the further education, higher education or pupil referral unit categories. It sub-divides establishment types that are insufficiently distinguished by the main type field alone."@en ;
+    skos:scopeNote "Shown on the Details tab for pupil referral units, further education establishments and higher education institutions."@en ;
+    skos:broader epr:EstablishmentClassification ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.FurtherEducationType_code"@en .
+
+epr:ProviderType
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Provider type"@en ;
+    skos:definition "A coded classification that identifies the delivery model or operator category for a children's centre or linked site. It serves the same sub-classification role for children's centres that FurtherEducationType serves for FE/HEI/PRU establishments."@en ;
+    skos:scopeNote "Shown on the Details tab for children's centres and children's centre linked sites in place of the school-type label used by other establishment types."@en ;
+    skos:broader epr:EstablishmentClassification ;
+    skos:related epr:EstablishmentType ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Accountability
+#################################################################
+
+epr:LocalAuthority
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local authority"@en ;
+    skos:definition "A county council, metropolitan district council, London borough council or unitary authority in England with education functions under the Education Act 1996. In GIAS, the local authority field records the LA in whose area the establishment is located and provides the three-digit LA number used in the DfE number and LAESTAB."@en ;
+    skos:scopeNote "An establishment's local authority is not always its maintaining authority. Academies and independent schools have a local authority for geographic reference purposes but are not maintained by it. See MaintainingAuthority for the specific maintaining role."@en ;
+    skos:broader epr:EstablishmentAccountability ;
+    skos:related epr:MaintainingAuthority, epr:CommunitySchool ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: LocalAuthorityId; Java: officialGeoInfo.localAuthority; database: Establishment.LA_code -> LocalAuthority.code"@en .
+
+epr:MaintainingAuthority
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Maintaining authority"@en ;
+    skos:definition "A local authority acting in its specific statutory role as the body responsible for maintaining a maintained school under the School Standards and Framework Act 1998 (SSFA 1998), s.21. The maintaining authority funds the school, employs staff in community schools, and is accountable for standards."@en ;
+    skos:scopeNote "Distinct from the LocalAuthority concept: a local authority may be recorded against any establishment for geographic or administrative purposes, but MaintainingAuthority applies only where the LA bears statutory responsibility for the school under SSFA 1998. Academies, independent schools and FE colleges do not have a maintaining authority."@en ;
+    skos:broader epr:EstablishmentAccountability ;
+    skos:related epr:LocalAuthority, epr:CommunitySchool ;
+    epr:status "Provisional"@en .
+
+epr:AcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy trust"@en ;
+    skos:altLabel "Trust"@en ;
+    skos:definition "A charitable company limited by guarantee that enters into a funding agreement with the Secretary of State under the Academies Act 2010 to operate one or more academies or free schools. The trust is accountable for educational standards, financial management and employment of staff at its academies."@en ;
+    skos:scopeNote "Trust flag is an extract or implementation term, not the business concept."@en ;
+    skos:broader epr:EstablishmentAccountability ;
+    skos:related epr:AcademyConverter, epr:EstablishmentGroup ;
+    skos:narrower
+        epr:SingleAcademyTrust,
+        epr:MultiAcademyTrust,
+        epr:SecureSingleAcademyTrust ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Java/database: EstablishmentGroup and GroupLink"@en .
+
+epr:SingleAcademyTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Single-academy trust"@en ;
+    skos:altLabel "Single academy trust"@en, "SAT"@en ;
+    skos:definition "An academy trust constituted under the Academies Act 2010 that holds a funding agreement for exactly one academy. Distinguished from a multi-academy trust (MAT), which holds funding agreements for two or more academies."@en ;
+    skos:broader epr:AcademyTrust ;
+    epr:status "Preferred"@en .
+
+epr:AcademySponsor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy sponsor"@en ;
+    skos:definition "A body - typically a school, university, charity or business - approved by the Secretary of State under the Academies Act 2010 to sponsor one or more academies. A sponsor provides strategic leadership and improvement support, particularly for sponsored academies that have converted from underperforming maintained schools."@en ;
+    skos:scopeNote "Shown on the Details tab for sponsor-led academies and several academy and free school types. Not shown for all academy types."@en ;
+    skos:broader epr:EstablishmentAccountability ;
+    skos:related epr:AcademyTrust ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: SchoolSponsors"@en .
+
+epr:Proprietor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Proprietor"@en ;
+    skos:altLabel "Proprietor's name"@en ;
+    skos:definition "The person or body responsible for the conduct of an independent school under the Education Act 2002, s.94. The proprietor is required to be registered with the Secretary of State under s.98 and is the legal entity to whom registration requirements and inspection duties apply."@en ;
+    skos:broader epr:EstablishmentAccountability ;
+    skos:related epr:OtherIndependentSchool ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Database: IndependentSchools, EstablishmentProprietors; fields: PropsLastName and related Props* columns"@en .
+
+#################################################################
+# Lifecycle
+#################################################################
+
+epr:EstablishmentStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment status"@en ;
+    skos:definition "A coded classification representing the current lifecycle stage of an establishment as recorded in GIAS. GIAS recognises four status values: Open, Closed, Open but proposed to close, and Proposed to open."@en ;
+    skos:broader epr:EstablishmentLifecycle ;
+    skos:narrower
+        epr:ClosedStatus,
+        epr:OpenProposedToCloseStatus,
+        epr:OpenStatus,
+        epr:ProposedToOpenStatus ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: StatusId; Java: status; database: Establishment.status_code"@en .
+
+epr:OpenStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Open"@en ;
+    skos:definition "The establishment is currently open and operating. This is the normal status for an active registered establishment."@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:ClosedStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Closed"@en ;
+    skos:definition "The establishment has closed and is no longer operating. The record is retained in GIAS for historical reference, along with the closed date and reason for closure."@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:OpenProposedToCloseStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Open, but proposed to close"@en ;
+    skos:definition "The establishment is currently open but has been formally proposed for closure through statutory proposals under the School Standards and Framework Act 1998 (schedule 6) or the Education and Inspections Act 2006. The closure has not yet taken effect."@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:ProposedToOpenStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Proposed to open"@en ;
+    skos:definition "The establishment has been approved but has not yet opened. Academy and free school proposals use this status between the signing of the funding agreement and the establishment's first day of operation."@en ;
+    skos:broader epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:OpenDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Open date"@en ;
+    skos:altLabel "Establishment Open Date"@en ;
+    skos:definition "The date on which the establishment first opened or was first registered with DfE in its current form. For academies this is typically the date the funding agreement took effect; for maintained schools it is the date the school first admitted pupils under its current registration."@en ;
+    skos:scopeNote "For online providers (type 49) this field is relabelled Accreditation date on the Details tab. See AccreditationDate."@en ;
+    skos:broader epr:EstablishmentLifecycle ;
+    skos:related epr:AccreditationDate ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: OpenDate; Java: openDate; database: Establishment.OpenDate"@en .
+
+epr:ReasonEstablishmentOpened
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reason establishment opened"@en ;
+    skos:definition "A coded value recording the circumstances under which the establishment came into existence or was registered, such as a new school, a conversion from maintained to academy status, an amalgamation, or a change of age range creating a new registration."@en ;
+    skos:broader epr:EstablishmentLifecycle ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ReasonEstablishmentOpenedId; Java: reasonEstablishmentOpened; database: Establishment.reasonEstablishmentOpened_code"@en .
+
+epr:ClosedDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Closed date"@en ;
+    skos:altLabel "Establishment Close Date"@en ;
+    skos:definition "The date on which the establishment ceased operation and its status was recorded as Closed in GIAS. This marks the end of the establishment's active registration."@en ;
+    skos:scopeNote "For online providers (type 49) this field is relabelled Accreditation date ended on the Details tab. See AccreditationDateEnded."@en ;
+    skos:broader epr:EstablishmentLifecycle ;
+    skos:related epr:AccreditationDateEnded ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: CloseDate; Java: closeDate; database: Establishment.CloseDate"@en .
+
+epr:ReasonEstablishmentClosed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reason establishment closed"@en ;
+    skos:definition "A coded value recording the circumstances under which the establishment closed, such as amalgamation with another school, academy conversion (which closes the predecessor maintained school record), low pupil numbers, or voluntary closure."@en ;
+    skos:broader epr:EstablishmentLifecycle ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ReasonEstablishmentClosedId; Java: reasonEstablishmentClosed; database: Establishment.reasonEstablishmentClosed_code"@en .
+
+#################################################################
+# Record currency and stewardship
+#################################################################
+
+epr:DateLastChangedOrConfirmed
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Date last changed or confirmed"@en ;
+    skos:altLabel "Date last changed/confirmed"@en, "Last Changed Date"@en ;
+    skos:definition "The date on which any field in the GIAS establishment record was last updated, or on which the responsible authority last confirmed the record as current and accurate. Used to assess the currency of data held for an establishment."@en ;
+    skos:scopeNote "Describes the currency and confirmation of the GIAS record rather than the lifecycle of the real-world establishment. It may combine two different business events and requires further analysis."@en ;
+    skos:broader epr:RecordCurrencyAndStewardship ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Frontend: Date last changed/confirmed; extract: Last Changed Date; C#: LastChangedDate; Java: lastChangedDate"@en .
+
+#################################################################
+# Location and contact
+#################################################################
+
+epr:MainAddress
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Main address"@en ;
+    skos:altLabel "Address"@en ;
+    skos:definition "The primary postal address of the establishment as recorded in GIAS, comprising street, locality, address line 3, town, county and postcode."@en ;
+    skos:broader epr:EstablishmentLocationAndContact ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en .
+
+epr:Website
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Website"@en ;
+    skos:altLabel "School Website"@en ;
+    skos:definition "The URL of the establishment's publicly accessible website, as self-reported to GIAS."@en ;
+    skos:broader epr:EstablishmentLocationAndContact ;
+    epr:status "Preferred"@en .
+
+epr:TelephoneNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Telephone number"@en ;
+    skos:altLabel "Telephone"@en ;
+    skos:definition "The main contact telephone number for the establishment, as self-reported to GIAS and publicly displayed."@en ;
+    skos:broader epr:EstablishmentLocationAndContact ;
+    epr:status "Preferred"@en .
+
+epr:UniquePropertyReferenceNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Unique Property Reference Number"@en ;
+    skos:altLabel "UPRN"@en ;
+    skos:definition "The persistent numeric identifier assigned to the establishment's physical address by Ordnance Survey under the Public Sector Mapping Agreement, enabling cross-service geographic linking."@en ;
+    skos:broader epr:EstablishmentLocationAndContact ;
+    epr:status "Preferred"@en .
+
+#################################################################
+# Leadership
+#################################################################
+
+epr:HeadteacherOrPrincipal
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Headteacher or principal"@en ;
+    skos:altLabel "Headteacher/Principal"@en, "Headteacher/Manager"@en ;
+    skos:definition "The name and title of the person with principal leadership responsibility for the establishment. In maintained schools the headteacher is a statutory role under the School Staffing (England) Regulations 2009; for academies the principal role is defined in the funding agreement."@en ;
+    skos:scopeNote "The UI label varies by establishment type. Schools show Headteacher / Principal. Online providers show Headteacher/Manager. Children's centres use the separate CentreManager concept."@en ;
+    skos:broader epr:EstablishmentLeadership ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#/database fields: HeadTitle, HeadFirstName, HeadLastName and HeadPreferredJobTitle"@en .
+
+epr:CentreManager
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Centre manager"@en ;
+    skos:altLabel "Manager"@en ;
+    skos:definition "The name and title of the manager responsible for a children's centre or children's centre linked site, displayed in GIAS under the label 'Manager'."@en ;
+    skos:scopeNote "Children's centres and children's centre linked sites display Manager rather than Headteacher or Principal. The underlying database fields are the same Head* fields used for other establishment types."@en ;
+    skos:broader epr:EstablishmentLeadership ;
+    skos:related epr:HeadteacherOrPrincipal ;
+    epr:status "Provisional"@en .
+
+epr:PreferredJobTitle
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Preferred job title"@en ;
+    skos:altLabel "Headteacher Preferred Job Title"@en ;
+    skos:definition "The job title preferred by the establishment's headteacher or principal, which may differ from the statutory role title - for example, 'Executive Headteacher' or 'Head of School'."@en ;
+    skos:broader epr:EstablishmentLeadership ;
+    skos:related epr:HeadteacherOrPrincipal ;
+    epr:status "Preferred"@en .
+
+#################################################################
+# Education, admissions and provision
+#################################################################
+
+epr:StatutoryAgeRange
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Statutory age range"@en ;
+    skos:altLabel "Age range"@en ;
+    skos:definition "The lowest and highest ages for which the establishment is registered, as recorded under the Education Act 2002 s.28. Changes to the statutory age range require Secretary of State approval."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#/Java/database: StatutoryLowAge and StatutoryHighAge"@en .
+
+epr:GenderOfEntry
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Gender of entry"@en ;
+    skos:altLabel "Gender"@en ;
+    skos:definition "The classification describing which genders the establishment admits: mixed, boys only, girls only, or not applicable."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    skos:narrower
+        epr:BoysOnlyGenderEntry,
+        epr:GirlsOnlyGenderEntry,
+        epr:MixedGenderEntry,
+        epr:NotApplicableGenderOfEntry ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: GenderId; Java: gender; database: Establishment.gender_code"@en .
+
+epr:AdmissionsPolicy
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Admissions policy"@en ;
+    skos:definition "The classification indicating whether the establishment selects pupils by ability or aptitude (selective), does not do so (non-selective), or where the concept is not applicable."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    skos:narrower
+        epr:NonSelectiveAdmissions,
+        epr:NotApplicableAdmissionsPolicy,
+        epr:SelectiveAdmissions ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: AdmissionsPolicyId; database: Establishment.admissionsPolicy_code"@en .
+
+epr:BoardingProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Boarding provision"@en ;
+    skos:altLabel "Boarders"@en ;
+    skos:definition "The classification indicating whether the establishment offers boarding: no boarders, has boarders, or is a boarding school."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    skos:narrower
+        epr:BoardingSchool,
+        epr:HasBoarders,
+        epr:NoBoarders ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ProvisionBoardingId; database: Establishment.boarding_code"@en .
+
+epr:NurseryProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Nursery provision"@en ;
+    skos:definition "The classification indicating whether the establishment has nursery classes, does not have them, or where the field is not applicable."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    skos:narrower
+        epr:HasNurseryClasses,
+        epr:NoNurseryClasses,
+        epr:NotApplicableNurseryProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ProvisionNurseryId; database: Establishment.nurseryProvision_code"@en .
+
+epr:SixthFormProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sixth-form provision"@en ;
+    skos:altLabel "Official sixth form"@en, "Sixth Form"@en, "OfficialSixthForm"@en ;
+    skos:definition "The classification indicating whether the establishment has an official sixth form (post-16 provision), does not have one, or where the field is not applicable."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    skos:narrower
+        epr:HasSixthForm,
+        epr:NoSixthForm,
+        epr:NotApplicableSixthFormProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ProvisionOfficialSixthFormId; Java: SpecialIndicators.officialSixthForm; database: Establishment.officialSixthForm_code"@en .
+
+epr:SpecialClassProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Special-class provision"@en ;
+    skos:altLabel "Special classes"@en ;
+    skos:definition "The classification indicating whether the establishment contains special classes for pupils with SEN within an otherwise mainstream setting, does not have them, or where the field is not applicable."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    skos:narrower
+        epr:HasSpecialClasses,
+        epr:NoSpecialClasses,
+        epr:NotApplicableSpecialClassProvision ;
+    epr:status "Preferred"@en .
+
+epr:Section41Approval
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Section 41 approval"@en ;
+    skos:altLabel "Section 41 approved"@en ;
+    skos:definition "Whether the establishment is approved under s.41 of the Children and Families Act 2014, enabling it to be named in an Education, Health and Care plan. Applies to independent special schools and special post-16 institutions on the Secretary of State's approved list."@en ;
+    skos:broader epr:EducationAdmissionsAndProvision ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: Section41Approved"@en .
+
+#################################################################
+# Capacity and pupil measures
+#################################################################
+
+epr:SchoolCapacity
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "School capacity"@en ;
+    skos:altLabel "Capacity"@en ;
+    skos:definition "The formal registered capacity figure indicating the number of pupil places for which the establishment is organised, as agreed with the local authority or (for academies) specified in the funding agreement."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Java: Characteristics.schoolCapacity; database: Establishment.SchoolCapacity"@en .
+
+epr:PupilCount
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Pupil count"@en ;
+    skos:altLabel "Number of pupils"@en, "Number of Pupils"@en ;
+    skos:definition "The total number of pupils on roll at the establishment as recorded in the DfE school census conducted under the Education (Information About Individual Pupils) (England) Regulations 2013."@en ;
+    skos:scopeNote "The measure is incomplete without its effective or census date."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:related epr:CensusDate ;
+    epr:status "Preferred"@en .
+
+epr:CensusDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Census date"@en ;
+    skos:definition "The statutory date of the DfE school census to which the pupil count and free school meal eligibility figures relate, typically in January each year."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:related epr:PupilCount, epr:PupilsEligibleForFreeSchoolMeals ;
+    epr:status "Preferred"@en .
+
+epr:PupilsEligibleForFreeSchoolMeals
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Pupils eligible for free school meals"@en ;
+    skos:altLabel "Number of pupils eligible for free school meals"@en ;
+    skos:definition "The number of pupils recorded as eligible for free school meals at the census date, based on eligibility criteria under the School Standards and Framework Act 1998 and the Education (Free School Meals) Regulations, extended by Universal Credit entitlement under the Welfare Reform Act 2012."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:related epr:CensusDate, epr:PercentagePupilsEligibleForFreeSchoolMeals ;
+    epr:status "Preferred"@en .
+
+epr:PercentagePupilsEligibleForFreeSchoolMeals
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Percentage of pupils eligible for free school meals"@en ;
+    skos:altLabel "Percentage of Pupils Receiving FSM"@en, "PercentageFSM"@en ;
+    skos:definition "The percentage of pupils on roll who are recorded as eligible for free school meals at the census date, derived from the count of eligible pupils divided by total pupil count."@en ;
+    skos:scopeNote "Receiving FSM is a misleading legacy alias because the measure concerns eligibility claims, not whether pupils received meals."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:related epr:CensusDate, epr:PupilsEligibleForFreeSchoolMeals ;
+    epr:status "Preferred"@en .
+
+epr:SpecialPupilsOnStatementOrEhcPlan
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Special pupils on a SEN statement or EHC plan"@en ;
+    skos:altLabel "Number of special pupils under a SEN statement/EHC plan"@en, "SENStat"@en ;
+    skos:definition "The number of pupils with a special educational needs (SEN) statement or Education, Health and Care (EHC) plan under the Children and Families Act 2014 s.37. EHC plans replaced statements from 2014; legacy statements are being phased out."@en ;
+    skos:scopeNote "Shown for independent special schools and online providers in place of the SEN provision type classification used by maintained schools."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:related epr:SpecialPupilsNotOnStatementOrEhcPlan ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: SENStat"@en .
+
+epr:SpecialPupilsNotOnStatementOrEhcPlan
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Special pupils not on a SEN statement or EHC plan"@en ;
+    skos:altLabel "Number of special pupils not under a SEN statement/EHC plan"@en, "SENNoStat"@en ;
+    skos:definition "The number of pupils in the special school who have SEN needs but do not hold a current SEN statement or Education, Health and Care plan, and are therefore placed without statutory EHC documentation."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:related epr:SpecialPupilsOnStatementOrEhcPlan ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: SENNoStat"@en .
+
+#################################################################
+# Faith context
+#################################################################
+
+epr:ReligiousCharacter
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Religious character"@en ;
+    skos:altLabel "Designated Religious Character"@en ;
+    skos:definition "The statutory religious-character designation assigned to an establishment by the Secretary of State under s.69(3) of the School Standards and Framework Act 1998 (for maintained schools) or specified in the funding agreement (for academies). This is a formal legal designation, distinct from the self-declared religious ethos."@en ;
+    skos:broader epr:FaithContext ;
+    skos:related epr:Diocese, epr:ReligiousEthos ;
+    skos:narrower
+        epr:ChurchOfEnglandCharacter,
+        epr:JewishCharacter,
+        epr:MuslimCharacter,
+        epr:NoReligiousCharacter,
+        epr:NotApplicableReligiousCharacter,
+        epr:OtherReligiousCharacter,
+        epr:RomanCatholicCharacter ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ReligiousCharacterId; Java: Characteristics.religiousCharacter; database: Establishment.religiousCharacter_code"@en .
+
+epr:ReligiousEthos
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Religious ethos"@en ;
+    skos:definition "The religious ethos self-declared by the establishment or trust, recorded in GIAS. Not a statutory designation: it is broader than religious character - for example, 'Christian' covers both Church of England and Roman Catholic schools - and its consistent application across all establishment types is not fully validated."@en ;
+    skos:broader epr:FaithContext ;
+    skos:related epr:ReligiousCharacter ;
+    skos:narrower
+        epr:ChristianEthos,
+        epr:NoReligiousEthos,
+        epr:NotApplicableReligiousEthos,
+        epr:OtherReligiousEthos ;
+    epr:status "Provisional"@en .
+
+epr:Diocese
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Diocese"@en ;
+    skos:definition "The ecclesiastical diocese associated with the establishment. For Church of England schools the relevant body is the Diocesan Board of Education; for Roman Catholic schools it is the Catholic Education Service diocese."@en ;
+    skos:scopeNote "Observed on the Details tab for most school types with a religious character. A database-mapping gap exists for non-maintained special schools (type 08); the underlying configuration should be verified."@en ;
+    skos:broader epr:FaithContext ;
+    skos:related epr:ReligiousCharacter ;
+    epr:status "Preferred"@en .
+
+#################################################################
+# SEN and resourced provision
+#################################################################
+
+epr:TypeOfSenProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Type of SEN provision"@en ;
+    skos:altLabel "SEN1"@en, "SEN2"@en, "SEN3"@en, "SEN4"@en ;
+    skos:definition "Up to four types of special educational needs for which the establishment provides specialist support, drawn from the need types defined in the SEND Code of Practice 2015 (such as Autism, Hearing impairment, Social emotional and mental health)."@en ;
+    skos:scopeNote "Shown for maintained and academy schools. Independent and non-maintained special schools instead show special pupil counts. The database stores up to four SEN types per establishment."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    epr:status "Provisional"@en ;
+    dcterms:source "C#: SEN1Ids to SEN4Ids; Java: senPriority1 to senPriority4; database: EstablishmentToSen1 plus legacy EstablishmentToSen2-4"@en .
+
+epr:TypeOfResourcedProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Type of resourced provision"@en ;
+    skos:altLabel "TypeOfReservedProvision"@en ;
+    skos:definition "The SEN need type for which the establishment's resourced provision is designated. Resourced provision is a unit within a mainstream school providing specialist SEN support funded by the local authority, serving pupils who are not in specialist provision full-time."@en ;
+    skos:scopeNote "The database field name uses Reserved rather than Resourced, a legacy naming difference. The UI label uses resourced."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: TypeOfResourcedProvisionId; Java: SpecialIndicators.typeOfResourcedProvision; database: Establishment.TypeOfReservedProvision"@en .
+
+epr:ResourcedProvisionPupilCount
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Resourced-provision pupil count"@en ;
+    skos:altLabel "Resourced provision number on roll"@en ;
+    skos:definition "The number of pupils currently on roll in the establishment's resourced provision unit, as recorded in GIAS."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:ResourcedProvisionCapacity ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ResourcedProvisionOnRoll; Java: SpecialIndicators.resourcedProvisionOnRoll; database: Establishment.ResourcedProvisionOnRoll"@en .
+
+epr:ResourcedProvisionCapacity
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Resourced-provision capacity"@en ;
+    skos:altLabel "Resourced provision capacity"@en ;
+    skos:definition "The total number of designated places in the establishment's resourced provision unit, as agreed with the local authority and recorded in GIAS."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:ResourcedProvisionPupilCount ;
+    epr:status "Preferred"@en ;
+    dcterms:source "C#: ResourcedProvisionCapacity; Java: SpecialIndicators.resourcedProvisionCapacity; database: Establishment.ResourcedProvisionCapacity"@en .
+
+epr:SenUnitPupilCount
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEN-unit pupil count"@en ;
+    skos:altLabel "SEN Unit number on roll"@en, "Special Educational Needs (SEN) unit number on roll"@en ;
+    skos:definition "The number of pupils currently on roll in the establishment's designated SEN unit, as defined in the SEND Code of Practice 2015 and recorded in GIAS."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:SenUnitCapacity ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Database: Establishment.SenUnitOnRoll"@en .
+
+epr:SenUnitCapacity
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEN-unit capacity"@en ;
+    skos:altLabel "SEN Unit capacity"@en, "Special Educational Needs (SEN) unit capacity"@en ;
+    skos:definition "The total number of designated places in the establishment's SEN unit, a specialist provision for pupils with a specific SEN need within a mainstream school setting."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:SenUnitPupilCount ;
+    epr:status "Preferred"@en ;
+    dcterms:source "Database: Establishment.SenUnitCapacity"@en .
+
+#################################################################
+# Alternative provision characteristics
+#################################################################
+
+epr:TeenageMothersProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Teenage mothers provision"@en ;
+    skos:altLabel "Teenage mothers"@en ;
+    skos:definition "Whether the pupil referral unit, established under s.19 of the Education Act 1996, makes provision specifically for teenage mothers to enable them to continue in education."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: TeenMoth"@en .
+
+epr:TeenageMothersPlaces
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Teenage mothers places"@en ;
+    skos:definition "The number of places designated for teenage mothers in the pupil referral unit, recorded where TeenageMothersProvision is set to yes."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    skos:related epr:TeenageMothersProvision ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: TeenMothPlaces"@en .
+
+epr:ChildcareFacilitiesProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Childcare facilities provision"@en ;
+    skos:definition "Whether the pupil referral unit offers on-site childcare facilities, typically to support teenage parents or other pupils with childcare needs who would otherwise be unable to attend."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: CCF"@en .
+
+epr:SenFacilitiesProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEN facilities"@en ;
+    skos:definition "Whether the pupil referral unit has dedicated facilities to support pupils with special educational needs, enabling it to provide specialist support alongside its alternative provision function."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: SENPRU"@en .
+
+epr:EbdPupilsProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Pupils with EBD"@en ;
+    skos:altLabel "Emotional, behavioural and social difficulties"@en ;
+    skos:definition "Whether the pupil referral unit admits pupils with Emotional and Behavioural Difficulties (EBD). EBD is a legacy classification in GIAS; it has been superseded by Social, Emotional and Mental Health (SEMH) needs in the SEND Code of Practice 2015."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: EBD"@en .
+
+epr:AlternativeProvisionPlaces
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Number of places"@en ;
+    skos:definition "The total number of pupil places at the pupil referral unit, as recorded to support the local authority's duty under s.19 of the Education Act 1996 to provide suitable education for excluded or otherwise absent pupils."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: PlacesPRU"@en .
+
+epr:FullTimeProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Full time provision"@en ;
+    skos:definition "Whether the pupil referral unit provides full-time education for all its pupils, as distinct from part-time or shared provision arrangements."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: FTProv"@en .
+
+epr:PupilsEducatedByOtherProviders
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Pupils educated by other providers"@en ;
+    skos:definition "Whether some or all pupils registered at the pupil referral unit receive part of their education from other providers, reflecting the flexibility permitted under the local authority's alternative provision duty."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: EdByOther"@en .
+
+#################################################################
+# Inspection record
+#################################################################
+
+epr:InspectorateName
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Inspectorate name"@en ;
+    skos:definition "The name of the inspectorate responsible for inspecting the establishment, such as ISI (Independent Schools Inspectorate) for independent schools or the relevant body for British schools overseas. Ofsted is not recorded here; its data appears under External reference."@en ;
+    skos:scopeNote "Shown for independent schools (database field: Inspectorate) and British schools overseas (database field: InspectorateName). Both appear under the same label on the Details tab."@en ;
+    skos:broader epr:InspectionRecord ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database fields: Inspectorate (types 08, 10, 11) and InspectorateName (type 37)"@en .
+
+epr:InspectorateReport
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Inspectorate report"@en ;
+    skos:definition "A URL or reference to the most recent inspection report published by the named non-Ofsted inspectorate, used for British schools overseas inspected under the British Schools Overseas framework."@en ;
+    skos:scopeNote "Shown for British schools overseas. Different from the Ofsted inspection report link held under External reference."@en ;
+    skos:broader epr:InspectionRecord ;
+    skos:related epr:InspectorateName, epr:InspectionReportReference ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: InspectorateReport"@en .
+
+epr:DateOfLastInspectionVisit
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Date of last inspection visit"@en ;
+    skos:altLabel "Date of Last Inspection Visit"@en ;
+    skos:definition "The date on which the most recent inspection visit to a British schools overseas establishment took place, as recorded in GIAS."@en ;
+    skos:scopeNote "Shown for British schools overseas."@en ;
+    skos:broader epr:InspectionRecord ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: DateOfLastInspectionVisit"@en .
+
+epr:DateOfNextInspectionVisit
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Date of next inspection visit"@en ;
+    skos:altLabel "Date of Next Inspection Visit"@en ;
+    skos:definition "The scheduled date of the next inspection visit to a British schools overseas establishment, as recorded in GIAS."@en ;
+    skos:scopeNote "Shown for British schools overseas."@en ;
+    skos:broader epr:InspectionRecord ;
+    skos:related epr:DateOfLastInspectionVisit ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: NextInspectionVisit"@en .
+
+#################################################################
+# Accreditation and quality assurance
+#################################################################
+
+epr:AccreditationDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Accreditation date"@en ;
+    skos:definition "The date on which the online provider was granted accreditation under the DfE online education provider accreditation scheme, enabling it to appear on the DfE approved list."@en ;
+    skos:scopeNote "Online-provider-specific presentation of the OpenDate field. The underlying database field is Establishment.OpenDate."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    skos:related epr:OpenDate ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: Establishment.OpenDate (relabelled for type 49)"@en .
+
+epr:AccreditationExpiryDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Accreditation expiry date"@en ;
+    skos:definition "The date on which the online provider's current accreditation under the DfE scheme expires, after which re-accreditation is required to remain on the approved list."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    skos:related epr:AccreditationDate ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: AccreditationExpiryDate"@en .
+
+epr:AccreditationDateEnded
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Accreditation date ended"@en ;
+    skos:definition "The date on which an online provider's accreditation under the DfE scheme was terminated or withdrawn, before the expiry date, resulting in removal from the approved list."@en ;
+    skos:scopeNote "Online-provider-specific presentation of the CloseDate field. The underlying database field is Establishment.CloseDate."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    skos:related epr:ClosedDate ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: Establishment.CloseDate (relabelled for type 49)"@en .
+
+epr:QualityAssuranceBodyName
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Quality assurance body name"@en ;
+    skos:altLabel "QABName"@en ;
+    skos:definition "The name of the body that carried out quality assurance of the online provider as part of the DfE accreditation process."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    skos:related epr:QualityAssuranceBodyReport ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: QABName"@en .
+
+epr:QualityAssuranceBodyReport
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Quality assurance body report"@en ;
+    skos:altLabel "QABReport"@en ;
+    skos:definition "A URL or reference to the published quality assurance report produced by the quality assurance body as part of the online provider's DfE accreditation assessment."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    skos:related epr:QualityAssuranceBodyName ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: QABReport"@en .
+
+epr:CompaniesHouseNumber
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Companies House number"@en ;
+    skos:altLabel "CHNumber"@en ;
+    skos:definition "The registration number assigned by Companies House, the UK registrar of companies under the Companies Act 2006, for the legal entity operating the online provider."@en ;
+    skos:scopeNote "Currently recorded in GIAS for online providers (via AccreditationRecord) and for academy trusts and other group organisations (via group identity). The same concept applies in both contexts."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: CHNumber"@en .
+
+epr:EstablishmentAccredited
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment accredited"@en ;
+    skos:definition "A flag indicating whether the online provider currently holds valid accreditation under the DfE online education provider scheme and is therefore eligible to appear on the DfE approved list."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    skos:related epr:AccreditationDate, epr:AccreditationExpiryDate ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database field: EstablishmentAccredited"@en .
+
+#################################################################
+# External references
+#################################################################
+
+epr:InspectionReportReference
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Inspection report reference"@en ;
+    skos:altLabel "Ofsted rating and reports"@en ;
+    skos:definition "A link to the Ofsted inspection rating and report published by Ofsted for the establishment. Ofsted inspects schools under the Education Act 2005 and awards grades of Outstanding, Good, Requires improvement or Inadequate."@en ;
+    skos:scopeNote "Distinct from InspectorateReport, which is the inspectorate report link for British schools overseas."@en ;
+    skos:broader epr:ExternalReference ;
+    skos:related epr:InspectorateReport ;
+    epr:status "Provisional"@en .
+
+epr:ExternalServiceReference
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "External service reference"@en ;
+    skos:altLabel "Data from other services"@en ;
+    skos:definition "A link or cross-reference from the GIAS establishment record to related data published and maintained by another DfE or government service, such as Get School Performance data or the schools financial benchmarking service."@en ;
+    skos:broader epr:ExternalReference ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Establishment type hierarchy - intermediate grouping classes
+#################################################################
+
+epr:LaMaintainedSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "LA maintained school"@en ;
+    skos:definition "An intermediate grouping covering all schools maintained by a local authority under the School Standards and Framework Act 1998: community schools, voluntary aided schools, voluntary controlled schools, foundation schools, community special schools, foundation special schools, pupil referral units and LA nursery schools."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupLaMaintainedSchools ;
+    epr:status "Provisional"@en .
+
+epr:LaMainstreamSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "LA mainstream school"@en ;
+    skos:definition "An intermediate grouping covering LA-maintained mainstream schools governed under the School Standards and Framework Act 1998: community schools, voluntary aided schools, voluntary controlled schools and foundation schools."@en ;
+    skos:broader epr:LaMaintainedSchool ;
+    epr:status "Provisional"@en .
+
+epr:LaMaintainedSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "LA maintained special school"@en ;
+    skos:definition "An intermediate grouping covering LA-maintained special schools under the School Standards and Framework Act 1998: community special schools and foundation special schools, providing education for pupils with significant SEN."@en ;
+    skos:broader epr:LaMaintainedSchool ;
+    epr:status "Provisional"@en .
+
+epr:NonMaintainedAndIndependentSpecialSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Non-maintained and independent special school"@en ;
+    skos:definition "An intermediate grouping covering non-maintained special schools (approved by the Secretary of State under s.342 of the Education Act 1996) and other independent special schools. These establishments may be approved under s.41 of the Children and Families Act 2014 to receive pupils with EHC plans."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
+    epr:status "Provisional"@en .
+
+epr:IndependentSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Independent school"@en ;
+    skos:definition "An intermediate grouping covering fee-charging independent schools registered with the DfE under the Education Act 2002, including city technology colleges and other independent schools not in receipt of LA or academy funding."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupIndependentSchools ;
+    epr:status "Provisional"@en .
+
+epr:College
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "College"@en ;
+    skos:definition "An intermediate grouping covering further education establishments registered in GIAS, including further education colleges and sixth form colleges regulated under the Further and Higher Education Act 1992."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupColleges ;
+    epr:status "Provisional"@en .
+
+epr:Academy
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy"@en ;
+    skos:definition "An intermediate grouping covering all academy types established under the Academies Act 2010 pursuant to a funding agreement with the Secretary of State: mainstream, special, alternative provision, 16-19 and secure 16-19."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupAcademies ;
+    epr:status "Provisional"@en .
+
+epr:MainstreamAcademy
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Mainstream academy"@en ;
+    skos:definition "An intermediate grouping for mainstream academies operating under the Academies Act 2010: academy converter (a former maintained school that converted to academy status) and academy sponsor led (a school taken on by an approved sponsor)."@en ;
+    skos:broader epr:Academy ;
+    epr:status "Provisional"@en .
+
+epr:AcademySpecial
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy special school"@en ;
+    skos:definition "An intermediate grouping for academy special schools providing education for pupils with significant SEN: academy special converter and academy special sponsor led, established under the Academies Act 2010."@en ;
+    skos:broader epr:Academy ;
+    epr:status "Provisional"@en .
+
+epr:AcademyAlternativeProvision
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy alternative provision"@en ;
+    skos:definition "An intermediate grouping for academies providing alternative provision for excluded or otherwise absent pupils: academy alternative provision converter and academy alternative provision sponsor led, under the Academies Act 2010."@en ;
+    skos:broader epr:Academy ;
+    epr:status "Provisional"@en .
+
+epr:Academy1619
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy 16 to 19"@en ;
+    skos:definition "An intermediate grouping for academies providing solely 16-to-19 education: academy 16-19 converter and academy 16-to-19 sponsor led, operating under a funding agreement with the Secretary of State."@en ;
+    skos:broader epr:Academy ;
+    epr:status "Provisional"@en .
+
+epr:FreeSchoolEstablishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free school establishment"@en ;
+    skos:definition "An intermediate grouping covering all free school types established under the Academies Act 2010 through a new-provision route (rather than conversion): free school, free school special, free school alternative provision, free school 16 to 19, university technical college and studio school."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupFreeSchools ;
+    epr:status "Provisional"@en .
+
+epr:MainstreamFreeSchool
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Mainstream free school"@en ;
+    skos:definition "An intermediate grouping for mainstream free schools within the free schools family: free school, university technical college (UTC) and studio school."@en ;
+    skos:broader epr:FreeSchoolEstablishment ;
+    epr:status "Provisional"@en .
+
+epr:ChildrensCentreEstablishment
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Children's centre establishment"@en ;
+    skos:definition "An intermediate grouping covering children's centres and children's centre linked sites, providing integrated early childhood services under the Childcare Act 2006 and the Children Act 2004."@en ;
+    skos:broader epr:EstablishmentType ;
+    skos:related epr:EstablishmentTypeGroupChildrensCentres ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Ontology record grouping classes
+#################################################################
+
+epr:ResourcedProvisionMeasure
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Resourced provision measure"@en ;
+    skos:definition "A grouping of the two numeric measures for a resourced provision unit within a mainstream school: the designated capacity and the current pupil count on roll."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:narrower epr:ResourcedProvisionCapacity, epr:ResourcedProvisionPupilCount ;
+    epr:status "Provisional"@en .
+
+epr:SenUnitMeasure
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEN unit measure"@en ;
+    skos:definition "A grouping of the two numeric measures for a designated SEN unit within a mainstream school: the designated capacity and the current pupil count on roll."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:narrower epr:SenUnitCapacity, epr:SenUnitPupilCount ;
+    epr:status "Provisional"@en .
+
+epr:SpecialPupilMeasure
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Special pupil measure"@en ;
+    skos:definition "A grouping of the two pupil-count measures recorded for special schools and online providers: pupils with a current SEN statement or EHC plan, and pupils without such statutory documentation."@en ;
+    skos:broader epr:CapacityAndPupilMeasures ;
+    skos:narrower epr:SpecialPupilsOnStatementOrEhcPlan, epr:SpecialPupilsNotOnStatementOrEhcPlan ;
+    epr:status "Provisional"@en .
+
+epr:OfstedInspectionRecord
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Ofsted inspection record"@en ;
+    skos:definition "A grouping of the Ofsted inspection outcome (grade) and the link to the published Ofsted report for an establishment. Ofsted inspects schools under the Education Act 2005 and awards grades of Outstanding, Good, Requires improvement or Inadequate."@en ;
+    skos:scopeNote "Distinct from InspectionRecord, which covers inspectorates other than Ofsted, such as ISI and those inspecting British schools overseas."@en ;
+    skos:broader epr:ExternalReference ;
+    skos:related epr:InspectionReportReference ;
+    epr:status "Provisional"@en .
+
+epr:AccreditationRecord
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Accreditation record"@en ;
+    skos:definition "A grouping of the accreditation fields specific to online providers under the DfE online education provider accreditation scheme: accreditation date, expiry date, date ended, quality assurance body name and report, Companies House number and accreditation status flag. This accreditation is not currently underpinned by primary legislation."@en ;
+    skos:broader epr:AccreditationAndQualityAssurance ;
+    epr:status "Provisional"@en .
+
+epr:PupilReferralUnitOperationalRecord
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Pupil referral unit operational record"@en ;
+    skos:definition "A grouping of the operational fields specific to pupil referral units established under s.19 of the Education Act 1996, covering: provision for teenage mothers and places, childcare facilities, SEN facilities, EBD pupils, total number of places, full-time provision, and whether pupils are educated by other providers."@en ;
+    skos:broader epr:AlternativeProvisionCharacteristics ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Governance role type values (22 values, v1.2)
+#################################################################
+
+epr:GovernorRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governor"@en ;
+    skos:definition "A governance role in a maintained school governing body."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChairOfGovernorsRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Chair of governors"@en ;
+    skos:definition "The chair of a maintained school governing body."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:HeadteacherExOfficioGovernorRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Headteacher (ex-officio governor)"@en ;
+    skos:definition "Headteacher of a maintained school holding a governor role by virtue of their office. Defined in the School Governance (Constitution) (England) Regulations 2012 (SI 2012/1034). Modelled from the maintained schools governance guide; not separately enumerated in the GIAS governance extract."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:AssociateMemberRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Associate member"@en ;
+    skos:definition "A non-voting participant in a maintained school governing body or committee, as defined in the School Governance (Roles, Procedures and Allowances) (England) Regulations 2013 (SI 2013/1624)."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:LocalGovernorRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local governor"@en ;
+    skos:definition "A member of a local governing body for an individual academy within a multi-academy trust."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChairOfLocalGoverningBodyRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Chair of local governing body"@en ;
+    skos:definition "The chair of a local governing body for an individual academy within a multi-academy trust."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:TrusteeRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Trustee"@en ;
+    skos:definition "A trustee of an academy trust board."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChairOfTrusteesRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Chair of trustees"@en ;
+    skos:definition "The chair of an academy trust board of trustees."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:MemberRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Member"@en ;
+    skos:definition "A member of an academy trust, holding a constitutional oversight role above the trustee board. Members are not appointed for fixed terms; absence of a term-end date is structurally expected for this role."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:AccountingOfficerRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Accounting officer"@en ;
+    skos:definition "The accounting officer of an academy trust, responsible to Parliament for the regularity and propriety of public expenditure."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:ChiefFinancialOfficerRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Chief financial officer"@en ;
+    skos:definition "The chief financial officer of an academy trust."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedLocalGovernorEstablishmentRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Shared local governor (establishment)"@en ;
+    skos:definition "A local governor exercising a shared governance role, recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedLocalGovernorGroupRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Shared local governor (group)"@en ;
+    skos:definition "A local governor exercising a shared governance role, recorded at group level in the GIAS governance extract."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedChairOfLocalGoverningBodyEstablishmentRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Shared chair of local governing body (establishment)"@en ;
+    skos:definition "A shared chair of local governing body recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedChairOfLocalGoverningBodyGroupRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Shared chair of local governing body (group)"@en ;
+    skos:definition "A shared chair of local governing body recorded at group level in the GIAS governance extract."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalLaMaintainedSchoolRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance professional - local authority maintained school"@en ;
+    skos:definition "A governance professional supporting a local authority maintained school governing body."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:LocalGovernanceProfessionalIndividualAcademyRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local governance professional - individual academy or free school"@en ;
+    skos:definition "A governance professional supporting the local governing body of an individual academy or free school."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalSatRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance professional - single-academy trust (SAT)"@en ;
+    skos:definition "A governance professional supporting a single-academy trust board."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalMatRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance professional - multi-academy trust (MAT)"@en ;
+    skos:definition "A governance professional supporting a multi-academy trust board."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:GovernanceProfessionalFederationRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Governance professional - federation"@en ;
+    skos:definition "A governance professional supporting a federated governing body."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedGovernanceProfessionalEstablishmentRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Shared governance professional (establishment)"@en ;
+    skos:definition "A shared governance professional recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+epr:SharedGovernanceProfessionalGroupRole
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Shared governance professional (group)"@en ;
+    skos:definition "A shared governance professional recorded at group level in the GIAS governance extract."@en ;
+    skos:broader epr:GovernanceRoleType ;
+    epr:status "Provisional"@en .
+
+#################################################################
+# Governance appointing body values (18 values, v1.2)
+#################################################################
+
+epr:AppointedByGoverningBoard
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointed by GB/board"@en ;
+    skos:definition "A governance appointment made by the governing board."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByFoundationOrTrust
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointed by foundation/Trust"@en ;
+    skos:definition "A governance appointment made by a foundation body or trust."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ElectedByParents
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Elected by parents"@en ;
+    skos:definition "A governance appointment made by election of the parent body under the School Governance (Constitution) (England) Regulations 2012."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ElectedBySchoolStaff
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Elected by school staff"@en ;
+    skos:definition "A governance appointment made by election of school staff under the School Governance (Constitution) (England) Regulations 2012."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ExOfficioHeadteacher
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Ex-officio by virtue of office as headteacher/principal"@en ;
+    skos:definition "A governance role held by virtue of holding the headteacher or principal position."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByAcademyMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointed by academy members"@en ;
+    skos:definition "A governance appointment made by the academy trust members."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointingBodyNotApplicable
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "N/A"@en ;
+    skos:definition "Appointing body is not applicable for this governance role."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ParentAppointedByGbDueToNoElection
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Parent appointed by GB/board due to no election candidates"@en ;
+    skos:definition "A parent governor appointed by the governing board because there were insufficient election candidates."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:FoundationOrSponsorMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Foundation/sponsor members"@en ;
+    skos:definition "Foundation or sponsor members of the governing body."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:NominatedByLaAppointedByGb
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Nominated by LA and appointed by GB"@en ;
+    skos:definition "A governor nominated by the local authority and appointed by the governing board."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:ExOfficioFoundationGovernor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Ex-officio foundation governor (appointed by foundation by virtue of the office they hold)"@en ;
+    skos:definition "A foundation governor appointed ex-officio by virtue of another office held within the foundation body."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByTrustees
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointed by trustees"@en ;
+    skos:definition "A governance appointment made by the board of trustees."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AppointedByLa
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Appointed by LA"@en ;
+    skos:definition "A governance appointment made by the local authority."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:PersonsAppointedByFoundationOrSponsor
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Persons who are appointed by the foundation body or sponsor (if applicable)"@en ;
+    skos:definition "Persons appointed by the foundation body or sponsor."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:OriginalSignatoryMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Original (signatory) members"@en ;
+    skos:definition "Original signatory members of the academy trust per the model articles of association."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:NominatedByOtherBodyAppointedByGb
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Nominated by other body and appointed by GB"@en ;
+    skos:definition "A governor nominated by another body and appointed by the governing board."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:AdditionalMembersAppointedByMembers
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Any additional members appointed by the members of the academy trust"@en ;
+    skos:definition "Additional members appointed by existing members of the academy trust."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+epr:InterimExecutiveBoard
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Interim Executive Board"@en ;
+    skos:definition "An Interim Executive Board appointed by the Regional Schools Commissioner or successor body."@en ;
+    skos:broader epr:GovernanceAppointingBody ;
+    epr:status "Provisional"@en .
+
+
+
+
+
+

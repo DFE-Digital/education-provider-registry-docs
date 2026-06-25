@@ -1,0 +1,2263 @@
+﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+
+# GIAS 2.0 Establishment Details Conceptual Model
+#
+# Scope: this OWL ontology expresses the first conceptual model slice for the
+# Education Provider Registry data prototype. It covers the public GIAS
+# Establishment Details view for the currently modelled establishment examples.
+#
+# It declares classes and object properties that correspond directly to the
+# entities and relationships shown in the Establishment Details ER diagrams.
+# Class IRIs reuse the shared epr: namespace so that vocabulary concepts and
+# ontology classes are the same resolvable URI.
+#
+#
+# It sits alongside the vocabulary and taxonomy:
+#   establishment-details-vocabulary-skos.ttl
+#   establishment-details-taxonomy-skos.ttl
+
+
+#################################################################
+# Ontology declaration
+#################################################################
+
+epro:establishmentDetailsConceptualModel
+    a owl:Ontology ;
+    dcterms:title "GIAS 2.0 Establishment Details Conceptual Model"@en ;
+    dcterms:description "OWL 2 conceptual model for the Establishment Details slice of the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Establishment Details ER diagrams."@en ;
+    rdfs:comment "This ontology defines the classes and object properties for the Establishment Details slice of the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
+    dcterms:created "2026-06-18"^^xsd:date ;
+    dcterms:modified "2026-06-24"^^xsd:date ;
+    dcterms:publisher "Department for Education"@en ;
+    dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
+    owl:versionInfo "1.2" ;
+    vann:preferredNamespacePrefix "epro" ;
+    vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/ontology/"^^xsd:anyURI ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/taxonomy/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+    rdfs:comment "v0.2: per-type field-applicability rules added as SHACL shapes in establishment-details-shacl.ttl. Accountability relationship rules (which types require LA, academy trust or proprietor) are now expressed in those shapes rather than as open questions."@en ;
+    rdfs:comment "v0.4: field-coverage additions - classes and properties for Ofsted inspection record, PRU operational record, accreditation record (online providers), provider type, manager, academy sponsor SHACL modelling. Ontology already had faith-context classes (ReligiousCharacter, ReligiousEthos, Diocese) and SpecialClassProvision. New additions: OfstedInspectionRecord, PupilReferralUnitOperationalRecord, AccreditationRecord, ProviderType, Manager."@en ;
+    rdfs:comment "v0.5: establishment type class hierarchy added. Each GIAS establishment type is now an OWL class subtype of epr:Establishment, via intermediate group classes (LaMaintainedSchool, Academy, FreeSchoolEstablishment etc.). Intermediate classes defined here; leaf type classes enriched with owl:Class and rdfs:subClassOf in the taxonomy TTL using OWL 2 punning."@en ;
+    rdfs:comment "v0.7: leaf type OWL class declarations moved from the taxonomy TTL into this ontology TTL. The taxonomy TTL is now pure SKOS (skos:Concept, skos:broader etc.). OWL punning is preserved - the same epr: URIs remain valid SKOS concepts in the taxonomy. WIDOCO now receives only this ontology TTL, eliminating the skos:Concept hub node from the WebVOWL graph."@en ;
+    rdfs:comment "v0.8: owl:NamedIndividual declarations added for 8 closed enumerations (31 individuals total): EstablishmentStatus, EducationPhase, AdmissionsPolicy, GenderOfEntry, BoardingProvision, NurseryProvision, SixthFormProvision, SpecialClassProvision. Open-ended value sets (ReligiousCharacter, ReligiousEthos, TypeOfSenProvision) remain as skos:Concept in the vocabulary TTL only."@en ;
+    rdfs:comment "v0.9: PupilReferralUnitOperationalRecord and AccreditationRecord property declarations converted from owl:DatatypeProperty (xsd:boolean/integer/date/string/anyURI ranges) to owl:ObjectProperty with named epr: range classes (15 new classes). Ontology is now entirely ObjectProperty - no DatatypeProperty declarations remain."@en ;
+    rdfs:comment "v1.0: Identifier modelling tightened. (1) hasUprn domain moved from EstablishmentIdentity to MainAddress. (2) FeHeIdentifier added as OWL class with hasFeHeIdentifier property. (3) hasEstablishmentNumber replaced by LocalAuthorityScopedEstablishmentNumber with hasLocalAuthorityContext, hasEstablishmentNumberValue and hasIdentifierRole components. (4) IdentifierRole added with CurrentIdentifierRole and PreviousIdentifierRole named individuals. (5) EstablishmentNumber value SHACL (1-9999) and UKPRN structural max-1 added."@en ;
+    rdfs:comment "v1.1: Establishment group model added. New abstract group superclass EstablishmentGroup; MultiAcademyTrust (subClassOf AcademyTrust), SecureSingleAcademyTrust (subClassOf SingleAcademyTrust), Federation, SchoolSponsor, ChildrensCentreGroup, ChildrensCentreCollaboration, GenericTrust (group org classes); GroupMembership, GroupRelationship, GroupRelationshipType, GroupId, GroupUkprn. AcademyTrust gains dual inheritance: rdfs:subClassOf EstablishmentGroup in addition to existing accountability hierarchy. Named individuals SuccessorMultiAcademyTrust and PredecessorSingleAcademyTrust added for GroupRelationshipType."@en ;
+    rdfs:comment "v1.2: Governance model added. 8 new OWL classes: GovernanceAppointment, GovernanceIdentifier, GovernanceRoleType, GovernanceAppointmentDate, GovernanceTermEndDate, GovernanceAppointingBody, GovernancePerson, GovernancePersonIdentifier. 9 new object properties: hasGovernanceAppointment (domain Establishment), hasGroupGovernanceAppointment (domain AcademyTrust), hasGovernanceIdentifier, hasGovernanceRoleType, hasGovernanceAppointmentDate, hasGovernanceTermEndDate, hasGovernanceAppointingBody, appointmentOf, hasGovernancePersonIdentifier. 22 named individuals for GovernanceRoleType; 18 for GovernanceAppointingBody. GovernanceAppointment and GovernancePerson annotated with dcterms:accessRights as personal-data-carrying classes."@en ;
+    rdfs:comment "v0.6: ontology class local names aligned with vocabulary source of truth. Renames: ContactAndLocation -> EstablishmentLocationAndContact, PostalAddress -> MainAddress, WebsiteUrl -> Website, Manager -> CentreManager, Section41ApprovalStatus -> Section41Approval. Vocabulary entries added for all 14 intermediate OWL classes and for grouping container classes (ResourcedProvisionMeasure, SenUnitMeasure, SpecialPupilMeasure, OfstedInspectionRecord, AccreditationRecord, PupilReferralUnitOperationalRecord)."@en ;
+    epr:status "Provisional"@en .
+
+
+#################################################################
+# Classes - core
+#################################################################
+
+epr:Establishment
+    a owl:Class ;
+    rdfs:label "Establishment"@en ;
+    rdfs:comment "The central concept. A single education provider registered with GIAS."@en .
+
+epr:EstablishmentDetails
+    a owl:Class ;
+    rdfs:label "Establishment details"@en ;
+    rdfs:comment "The set of publicly viewable detail fields for an establishment record."@en .
+
+
+#################################################################
+# Classes - identity and identifiers
+#################################################################
+
+epr:EstablishmentIdentity
+    a owl:Class ;
+    rdfs:label "Establishment identity"@en ;
+    rdfs:comment "The stable identity record of an establishment, grouping its persistent identifiers."@en .
+
+epr:UniqueReferenceNumber
+    a owl:Class ;
+    rdfs:label "Unique Reference Number"@en ;
+    rdfs:comment "The primary GIAS identifier for an establishment. Abbreviated URN."@en .
+
+epr:UkProviderReferenceNumber
+    a owl:Class ;
+    rdfs:label "UK Provider Reference Number"@en ;
+    rdfs:comment "An external cross-sector identifier assigned by the UKPRN register. Not the primary establishment key."@en .
+
+epr:UniquePropertyReferenceNumber
+    a owl:Class ;
+    rdfs:label "Unique Property Reference Number"@en ;
+    rdfs:comment "An Ordnance Survey identifier for the addressable property occupied by the establishment."@en .
+
+epr:EstablishmentNumber
+    a owl:Class ;
+    rdfs:label "Establishment number"@en ;
+    rdfs:comment "A locally assigned number used within a local authority area to identify an establishment."@en .
+
+epr:DfeNumber
+    a owl:Class ;
+    rdfs:label "DfE number"@en ;
+    rdfs:comment "A derived identifier combining local authority code and establishment number. Not independently stored."@en .
+
+epr:FeHeIdentifier
+    a owl:Class ;
+    rdfs:label "FE/HE identifier"@en ;
+    rdfs:comment "An optional identifier for further and higher education providers, recorded in GIAS for FE colleges, sixth form centres and HEIs. Separate from UKPRN."@en .
+
+epr:LocalAuthorityScopedEstablishmentNumber
+    a owl:Class ;
+    rdfs:label "Local-authority-scoped establishment number"@en ;
+    rdfs:comment "The establishment number together with the local authority context that makes it meaningful. Not globally unique without the LA code. Carries a role to distinguish current from previous identity."@en .
+
+epr:IdentifierRole
+    a owl:Class ;
+    rdfs:label "Identifier role"@en ;
+    rdfs:comment "The temporal role of a local-authority-scoped establishment number, distinguishing current from previous LAESTAB-style identity."@en .
+
+
+#################################################################
+# Classes - lifecycle
+#################################################################
+
+epr:EstablishmentLifecycle
+    a owl:Class ;
+    rdfs:label "Establishment lifecycle"@en ;
+    rdfs:comment "The lifecycle record of an establishment, grouping its status and significant dates."@en .
+
+epr:EstablishmentStatus
+    a owl:Class ;
+    rdfs:label "Establishment status"@en ;
+    rdfs:comment "The current lifecycle or operating-state classification of an establishment. Values include open, closed, proposed to open and open proposed to close."@en .
+
+epr:OpenDate
+    a owl:Class ;
+    rdfs:label "Open date"@en ;
+    rdfs:comment "The date on which the establishment opened or was first registered."@en .
+
+epr:ReasonEstablishmentOpened
+    a owl:Class ;
+    rdfs:label "Reason establishment opened"@en ;
+    rdfs:comment "The classification describing why the establishment was opened."@en .
+
+epr:ClosedDate
+    a owl:Class ;
+    rdfs:label "Closed date"@en ;
+    rdfs:comment "The date on which the establishment closed."@en .
+
+epr:ReasonEstablishmentClosed
+    a owl:Class ;
+    rdfs:label "Reason establishment closed"@en ;
+    rdfs:comment "The classification describing why the establishment closed."@en .
+
+
+#################################################################
+# Classes - record currency
+#################################################################
+
+epr:RecordCurrencyAndStewardship
+    a owl:Class ;
+    rdfs:label "Record currency and stewardship"@en ;
+    rdfs:comment "Metadata describing the currency and ownership of the GIAS establishment record itself, distinct from the lifecycle of the real-world establishment."@en .
+
+epr:DateLastChangedOrConfirmed
+    a owl:Class ;
+    rdfs:label "Date last changed or confirmed"@en ;
+    rdfs:comment "The date on which the establishment record was last updated or confirmed as current."@en .
+
+
+#################################################################
+# Classes - classification
+#################################################################
+
+epr:EstablishmentClassification
+    a owl:Class ;
+    rdfs:label "Establishment classification"@en ;
+    rdfs:comment "The classification record grouping the establishment type, type group and education phase for an establishment."@en .
+
+epr:EstablishmentType
+    a owl:Class ;
+    rdfs:label "Establishment type"@en ;
+    rdfs:comment "The legal, operational or policy classification recorded as the establishment's type. An overloaded legacy classification."@en .
+
+epr:EstablishmentTypeGroup
+    a owl:Class ;
+    rdfs:label "Establishment type group"@en ;
+    rdfs:comment "A broad grouping of establishment types used for navigation and reporting."@en .
+
+epr:EducationPhase
+    a owl:Class ;
+    rdfs:label "Education phase"@en ;
+    rdfs:comment "The broad stage of education provided by the establishment."@en .
+
+
+#################################################################
+# Classes - accountability
+#################################################################
+
+epr:EstablishmentAccountability
+    a owl:Class ;
+    rdfs:label "Accountability relationship"@en ;
+    rdfs:comment "A relationship between an establishment and the organisation accountable for it. An establishment may have zero or more accountability relationships of different kinds."@en .
+
+epr:LocalAuthority
+    a owl:Class ;
+    rdfs:label "Local authority"@en ;
+    rdfs:comment "A local government body maintaining or otherwise accountable for an establishment."@en .
+
+epr:AcademyTrust
+    a owl:Class ;
+    rdfs:subClassOf epr:EstablishmentGroup ;
+    rdfs:label "Academy trust"@en ;
+    rdfs:comment "A charitable company limited by guarantee that enters into a funding agreement with the Secretary of State under the Academies Act 2010 to operate one or more academies or free schools. The trust is accountable for educational standards, financial management and employment of staff at its academies. An academy trust is simultaneously an accountability body (holding the funding agreement) and an establishment group (the organisational structure containing its academies)."@en .
+
+epr:SingleAcademyTrust
+    a owl:Class ;
+    rdfs:label "Single academy trust"@en ;
+    rdfs:comment "An academy trust constituted under the Academies Act 2010 that holds a funding agreement for exactly one academy. Distinguished from a multi-academy trust, which holds funding agreements for two or more academies. A SAT can expand into a MAT by taking on a second academy."@en ;
+    rdfs:subClassOf epr:AcademyTrust .
+
+epr:AcademySponsor
+    a owl:Class ;
+    rdfs:label "Academy sponsor"@en ;
+    rdfs:comment "An approved body that sponsors one or more sponsor-led academies."@en .
+
+epr:Proprietor
+    a owl:Class ;
+    rdfs:label "Proprietor"@en ;
+    rdfs:comment "The person or body that owns or operates an independent school."@en .
+
+
+#################################################################
+# Classes - education, admissions and provision
+#################################################################
+
+epr:EducationAdmissionsAndProvision
+    a owl:Class ;
+    rdfs:label "Education, admissions and provision"@en ;
+    rdfs:comment "The group of classification fields describing how an establishment admits pupils and what provision it offers."@en .
+
+epr:StatutoryAgeRange
+    a owl:Class ;
+    rdfs:label "Statutory age range"@en ;
+    rdfs:comment "The lower and upper statutory ages for which the establishment is registered."@en .
+
+epr:GenderOfEntry
+    a owl:Class ;
+    rdfs:label "Gender of entry"@en ;
+    rdfs:comment "The gender admission classification for the establishment."@en .
+
+epr:AdmissionsPolicy
+    a owl:Class ;
+    rdfs:label "Admissions policy"@en ;
+    rdfs:comment "The classification describing how places are allocated - selective or non-selective."@en .
+
+epr:BoardingProvision
+    a owl:Class ;
+    rdfs:label "Boarding provision"@en ;
+    rdfs:comment "The classification describing whether boarding places are offered."@en .
+
+epr:NurseryProvision
+    a owl:Class ;
+    rdfs:label "Nursery provision"@en ;
+    rdfs:comment "The classification describing whether the establishment offers nursery classes."@en .
+
+epr:SixthFormProvision
+    a owl:Class ;
+    rdfs:label "Sixth-form provision"@en ;
+    rdfs:comment "The classification describing whether the establishment has a sixth form."@en .
+
+epr:SpecialClassProvision
+    a owl:Class ;
+    rdfs:label "Special-class provision"@en ;
+    rdfs:comment "The classification describing whether the establishment has special classes."@en .
+
+
+#################################################################
+# Classes - capacity and pupil measures
+#################################################################
+
+epr:CapacityAndPupilMeasures
+    a owl:Class ;
+    rdfs:label "Capacity and pupil measures"@en ;
+    rdfs:comment "The group of numeric measures describing an establishment's capacity and pupil population."@en .
+
+epr:SchoolCapacity
+    a owl:Class ;
+    rdfs:label "School capacity"@en ;
+    rdfs:comment "The total number of pupil places for which the establishment is registered. The name is a legacy field label - it applies to all establishment types."@en .
+
+epr:PupilCount
+    a owl:Class ;
+    rdfs:label "Pupil count"@en ;
+    rdfs:comment "The number of pupils on roll at the establishment at the census date."@en .
+
+epr:PupilsEligibleForFreeSchoolMeals
+    a owl:Class ;
+    rdfs:label "Free school meal measure"@en ;
+    rdfs:comment "The count and percentage of pupils eligible for free school meals. Includes both epr:PupilsEligibleForFreeSchoolMeals and epr:PercentagePupilsEligibleForFreeSchoolMeals."@en .
+
+
+#################################################################
+# Classes - faith context
+#################################################################
+
+epr:FaithContext
+    a owl:Class ;
+    rdfs:label "Faith context"@en ;
+    rdfs:comment "The group of faith-related classification fields for an establishment."@en .
+
+epr:ReligiousCharacter
+    a owl:Class ;
+    rdfs:label "Religious character"@en ;
+    rdfs:comment "The formal religious-character classification designated for an establishment."@en .
+
+epr:ReligiousEthos
+    a owl:Class ;
+    rdfs:label "Religious ethos"@en ;
+    rdfs:comment "The recorded religious-ethos classification associated with an establishment."@en .
+
+epr:Diocese
+    a owl:Class ;
+    rdfs:label "Diocese"@en ;
+    rdfs:comment "The Church of England or Roman Catholic diocese associated with the establishment."@en .
+
+
+#################################################################
+# Classes - SEN and resourced provision
+#################################################################
+
+epr:SenAndResourcedProvision
+    a owl:Class ;
+    rdfs:label "SEN and resourced provision"@en ;
+    rdfs:comment "The group of fields describing special educational needs provision and resourced-provision arrangements."@en .
+
+epr:TypeOfSenProvision
+    a owl:Class ;
+    rdfs:label "Type of SEN provision"@en ;
+    rdfs:comment "The classification describing the type of special educational needs provision offered."@en .
+
+epr:TypeOfResourcedProvision
+    a owl:Class ;
+    rdfs:label "Type of resourced provision"@en ;
+    rdfs:comment "The classification describing the type of resourced provision offered."@en .
+
+epr:ResourcedProvisionMeasure
+    a owl:Class ;
+    rdfs:label "Resourced provision measure"@en ;
+    rdfs:comment "Numeric measures for resourced provision. Corresponds to epr:ResourcedProvisionCapacity and epr:ResourcedProvisionPupilCount in the vocabulary."@en .
+
+epr:SenUnitMeasure
+    a owl:Class ;
+    rdfs:label "SEN unit measure"@en ;
+    rdfs:comment "Numeric measures for the SEN unit. Corresponds to epr:SenUnitCapacity and epr:SenUnitPupilCount in the vocabulary."@en .
+
+
+#################################################################
+# Classes - external references
+#################################################################
+
+epr:ExternalReference
+    a owl:Class ;
+    rdfs:label "External reference"@en ;
+    rdfs:comment "A link from the establishment record to a resource held in an external system or publication."@en .
+
+epr:InspectionReportReference
+    a owl:Class ;
+    rdfs:label "Inspection report reference"@en ;
+    rdfs:comment "A link to an inspection report published by the relevant inspectorate."@en .
+
+epr:ExternalServiceReference
+    a owl:Class ;
+    rdfs:label "External service reference"@en ;
+    rdfs:comment "A link to a record in an external service such as a companies register or accreditation body."@en .
+
+
+#################################################################
+# Object properties - core structure
+#################################################################
+
+epro:hasEstablishmentDetails
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment details"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EstablishmentDetails ;
+    rdfs:comment "Cardinality: exactly 1. Every establishment has exactly one set of details in this slice."@en .
+
+
+#################################################################
+# Object properties - identity and lifecycle
+#################################################################
+
+epro:hasEstablishmentIdentity
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment identity"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EstablishmentIdentity ;
+    rdfs:comment "Cardinality: exactly 1. Every establishment has exactly one identity record."@en .
+
+epro:hasEstablishmentLifecycle
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment lifecycle"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EstablishmentLifecycle ;
+    rdfs:comment "Cardinality: exactly 1. Every establishment has exactly one lifecycle record."@en .
+
+epro:hasRecordCurrency
+    a owl:ObjectProperty ;
+    rdfs:label "has record currency"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:RecordCurrencyAndStewardship ;
+    rdfs:comment "Cardinality: 0..1. An establishment record may have a record-currency block."@en .
+
+epro:identifiedByUrn
+    a owl:ObjectProperty ;
+    rdfs:label "identified by URN"@en ;
+    rdfs:domain epr:EstablishmentIdentity ;
+    rdfs:range epr:UniqueReferenceNumber ;
+    rdfs:comment "Cardinality: exactly 1. Every establishment identity is identified by exactly one URN."@en .
+
+epro:hasUkprn
+    a owl:ObjectProperty ;
+    rdfs:label "has UKPRN"@en ;
+    rdfs:domain epr:EstablishmentIdentity ;
+    rdfs:range epr:UkProviderReferenceNumber ;
+    rdfs:comment "Cardinality: 0..1. An establishment identity may have a UK provider reference number."@en .
+
+epro:hasUprn
+    a owl:ObjectProperty ;
+    rdfs:label "has UPRN"@en ;
+    rdfs:domain epr:MainAddress ;
+    rdfs:range epr:UniquePropertyReferenceNumber ;
+    rdfs:comment "Cardinality: 0..1. An address may carry a unique property reference number. UPRN identifies a property, not an establishment - domain moved from EstablishmentIdentity to MainAddress (v1.0)."@en .
+
+epro:hasLocalAuthorityScopedEstablishmentNumber
+    a owl:ObjectProperty ;
+    rdfs:label "has local-authority-scoped establishment number"@en ;
+    rdfs:domain epr:EstablishmentIdentity ;
+    rdfs:range epr:LocalAuthorityScopedEstablishmentNumber ;
+    rdfs:comment "Cardinality: 0..2. An identity may have a current and/or previous scoped establishment number. Replaces bare epro:hasEstablishmentNumber (v1.0) - establishment number is not globally unique without its LA context."@en .
+
+epro:hasLocalAuthorityContext
+    a owl:ObjectProperty ;
+    rdfs:label "has local authority context"@en ;
+    rdfs:domain epr:LocalAuthorityScopedEstablishmentNumber ;
+    rdfs:range epr:LocalAuthority ;
+    rdfs:comment "Cardinality: exactly 1. Every scoped establishment number must carry exactly one local authority context."@en .
+
+epro:hasEstablishmentNumberValue
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment number value"@en ;
+    rdfs:domain epr:LocalAuthorityScopedEstablishmentNumber ;
+    rdfs:range epr:EstablishmentNumber ;
+    rdfs:comment "Cardinality: exactly 1. Every scoped establishment number carries the one-to-four digit establishment number value."@en .
+
+epro:hasIdentifierRole
+    a owl:ObjectProperty ;
+    rdfs:label "has identifier role"@en ;
+    rdfs:domain epr:LocalAuthorityScopedEstablishmentNumber ;
+    rdfs:range epr:IdentifierRole ;
+    rdfs:comment "Cardinality: exactly 1. Distinguishes current from previous LAESTAB-style identity."@en .
+
+epro:hasFeHeIdentifier
+    a owl:ObjectProperty ;
+    rdfs:label "has FE/HE identifier"@en ;
+    rdfs:domain epr:EstablishmentIdentity ;
+    rdfs:range epr:FeHeIdentifier ;
+    rdfs:comment "Cardinality: 0..1. Present only for further education colleges, sixth form centres and higher education institutions."@en .
+
+epro:derivesDfeNumber
+    a owl:ObjectProperty ;
+    rdfs:label "derives DfE number"@en ;
+    rdfs:domain epr:EstablishmentIdentity ;
+    rdfs:range epr:DfeNumber ;
+    rdfs:comment "Cardinality: 0..1. A DfE number is derived from local-authority code and establishment number, not independently stored."@en .
+
+epro:classifiedByEstablishmentStatus
+    a owl:ObjectProperty ;
+    rdfs:label "classified by establishment status"@en ;
+    rdfs:domain epr:EstablishmentLifecycle ;
+    rdfs:range epr:EstablishmentStatus ;
+    rdfs:comment "Cardinality: exactly 1. Every establishment lifecycle must have an establishment status."@en .
+
+epro:hasOpenDate
+    a owl:ObjectProperty ;
+    rdfs:label "has open date"@en ;
+    rdfs:domain epr:EstablishmentLifecycle ;
+    rdfs:range epr:OpenDate ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasReasonEstablishmentOpened
+    a owl:ObjectProperty ;
+    rdfs:label "has reason establishment opened"@en ;
+    rdfs:domain epr:EstablishmentLifecycle ;
+    rdfs:range epr:ReasonEstablishmentOpened ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasClosedDate
+    a owl:ObjectProperty ;
+    rdfs:label "has closed date"@en ;
+    rdfs:domain epr:EstablishmentLifecycle ;
+    rdfs:range epr:ClosedDate ;
+    rdfs:comment "Cardinality: 0..1. Only present if establishment status is closed."@en .
+
+epro:hasReasonEstablishmentClosed
+    a owl:ObjectProperty ;
+    rdfs:label "has reason establishment closed"@en ;
+    rdfs:domain epr:EstablishmentLifecycle ;
+    rdfs:range epr:ReasonEstablishmentClosed ;
+    rdfs:comment "Cardinality: 0..1. Only present if establishment status is closed."@en .
+
+epro:recordsDateLastChanged
+    a owl:ObjectProperty ;
+    rdfs:label "records date last changed or confirmed"@en ;
+    rdfs:domain epr:RecordCurrencyAndStewardship ;
+    rdfs:range epr:DateLastChangedOrConfirmed ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+
+#################################################################
+# Object properties - classification and accountability
+#################################################################
+
+epro:hasEstablishmentClassification
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment classification"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EstablishmentClassification ;
+    rdfs:comment "Cardinality: exactly 1. Every establishment has exactly one classification record."@en .
+
+epro:hasEstablishmentType
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment type"@en ;
+    rdfs:domain epr:EstablishmentClassification ;
+    rdfs:range epr:EstablishmentType ;
+    rdfs:comment "Cardinality: exactly 1. Every classification record must have an establishment type."@en .
+
+epro:hasEstablishmentTypeGroup
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment type group"@en ;
+    rdfs:domain epr:EstablishmentClassification ;
+    rdfs:range epr:EstablishmentTypeGroup ;
+    rdfs:comment "Cardinality: 0..1. An establishment type may belong to a type group."@en .
+
+epro:hasEducationPhase
+    a owl:ObjectProperty ;
+    rdfs:label "has education phase"@en ;
+    rdfs:domain epr:EstablishmentClassification ;
+    rdfs:range epr:EducationPhase ;
+    rdfs:comment "Cardinality: 0..1. Not all establishment types have an education phase."@en .
+
+epro:hasAccountabilityRelationship
+    a owl:ObjectProperty ;
+    rdfs:label "has accountability relationship"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EstablishmentAccountability ;
+    rdfs:comment "Cardinality: 0..*. An establishment may have zero or more accountability relationships depending on its type."@en .
+
+epro:accountableToLocalAuthority
+    a owl:ObjectProperty ;
+    rdfs:label "accountable to local authority"@en ;
+    rdfs:domain epr:EstablishmentAccountability ;
+    rdfs:range epr:LocalAuthority ;
+    rdfs:comment "Cardinality: 0..1. Present for LA-maintained schools."@en .
+
+epro:accountableToAcademyTrust
+    a owl:ObjectProperty ;
+    rdfs:label "accountable to academy trust"@en ;
+    rdfs:domain epr:EstablishmentAccountability ;
+    rdfs:range epr:AcademyTrust ;
+    rdfs:comment "Cardinality: 0..1. Present for academies and free schools."@en .
+
+epro:accountableToProprietor
+    a owl:ObjectProperty ;
+    rdfs:label "accountable to proprietor"@en ;
+    rdfs:domain epr:EstablishmentAccountability ;
+    rdfs:range epr:Proprietor ;
+    rdfs:comment "Cardinality: 0..1. Present for independent schools."@en .
+
+epro:isSingleAcademyTrust
+    a owl:ObjectProperty ;
+    rdfs:label "is single academy trust"@en ;
+    rdfs:domain epr:AcademyTrust ;
+    rdfs:range epr:SingleAcademyTrust ;
+    rdfs:comment "Cardinality: 0..1. An academy trust may be a single academy trust."@en .
+
+epro:hasAcademySponsor
+    a owl:ObjectProperty ;
+    rdfs:label "has academy sponsor"@en ;
+    rdfs:domain epr:AcademyTrust ;
+    rdfs:range epr:AcademySponsor ;
+    rdfs:comment "Cardinality: 0..1. A sponsor-led academy trust may be associated with an academy sponsor."@en .
+
+
+#################################################################
+# Object properties - education, admissions and provision
+#################################################################
+
+epro:hasEducationAdmissionsAndProvision
+    a owl:ObjectProperty ;
+    rdfs:label "has education, admissions and provision"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EducationAdmissionsAndProvision ;
+    rdfs:comment "Cardinality: 0..1. Not all establishment types have provision classifications."@en .
+
+epro:hasStatutoryAgeRange
+    a owl:ObjectProperty ;
+    rdfs:label "has statutory age range"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:StatutoryAgeRange ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByGenderOfEntry
+    a owl:ObjectProperty ;
+    rdfs:label "classified by gender of entry"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:GenderOfEntry ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByAdmissionsPolicy
+    a owl:ObjectProperty ;
+    rdfs:label "classified by admissions policy"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:AdmissionsPolicy ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByBoardingProvision
+    a owl:ObjectProperty ;
+    rdfs:label "classified by boarding provision"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:BoardingProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByNurseryProvision
+    a owl:ObjectProperty ;
+    rdfs:label "classified by nursery provision"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:NurseryProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedBySixthFormProvision
+    a owl:ObjectProperty ;
+    rdfs:label "classified by sixth-form provision"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:SixthFormProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedBySpecialClassProvision
+    a owl:ObjectProperty ;
+    rdfs:label "classified by special-class provision"@en ;
+    rdfs:domain epr:EducationAdmissionsAndProvision ;
+    rdfs:range epr:SpecialClassProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+
+#################################################################
+# Object properties - capacity and pupil measures
+#################################################################
+
+epro:hasCapacityAndPupilMeasures
+    a owl:ObjectProperty ;
+    rdfs:label "has capacity and pupil measures"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:CapacityAndPupilMeasures ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasSchoolCapacity
+    a owl:ObjectProperty ;
+    rdfs:label "has school capacity"@en ;
+    rdfs:domain epr:CapacityAndPupilMeasures ;
+    rdfs:range epr:SchoolCapacity ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasPupilCount
+    a owl:ObjectProperty ;
+    rdfs:label "has pupil count"@en ;
+    rdfs:domain epr:CapacityAndPupilMeasures ;
+    rdfs:range epr:PupilCount ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasFreeSchoolMealMeasure
+    a owl:ObjectProperty ;
+    rdfs:label "has free school meal measure"@en ;
+    rdfs:domain epr:CapacityAndPupilMeasures ;
+    rdfs:range epr:PupilsEligibleForFreeSchoolMeals ;
+    rdfs:comment "Cardinality: 0..1. Covers both count and percentage; see epr:PupilsEligibleForFreeSchoolMeals and epr:PercentagePupilsEligibleForFreeSchoolMeals in the vocabulary."@en .
+
+
+#################################################################
+# Object properties - faith context
+#################################################################
+
+epro:hasFaithContext
+    a owl:ObjectProperty ;
+    rdfs:label "has faith context"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:FaithContext ;
+    rdfs:comment "Cardinality: 0..1. Not all establishment types have faith classifications."@en .
+
+epro:classifiedByReligiousCharacter
+    a owl:ObjectProperty ;
+    rdfs:label "classified by religious character"@en ;
+    rdfs:domain epr:FaithContext ;
+    rdfs:range epr:ReligiousCharacter ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByReligiousEthos
+    a owl:ObjectProperty ;
+    rdfs:label "classified by religious ethos"@en ;
+    rdfs:domain epr:FaithContext ;
+    rdfs:range epr:ReligiousEthos ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:associatedWithDiocese
+    a owl:ObjectProperty ;
+    rdfs:label "associated with diocese"@en ;
+    rdfs:domain epr:FaithContext ;
+    rdfs:range epr:Diocese ;
+    rdfs:comment "Cardinality: 0..1. Present for Church of England and Roman Catholic establishments."@en .
+
+
+#################################################################
+# Object properties - SEN and resourced provision
+#################################################################
+
+epro:hasSenAndResourcedProvision
+    a owl:ObjectProperty ;
+    rdfs:label "has SEN and resourced provision"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:SenAndResourcedProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByTypeOfSenProvision
+    a owl:ObjectProperty ;
+    rdfs:label "classified by type of SEN provision"@en ;
+    rdfs:domain epr:SenAndResourcedProvision ;
+    rdfs:range epr:TypeOfSenProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByTypeOfResourcedProvision
+    a owl:ObjectProperty ;
+    rdfs:label "classified by type of resourced provision"@en ;
+    rdfs:domain epr:SenAndResourcedProvision ;
+    rdfs:range epr:TypeOfResourcedProvision ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasResourcedProvisionMeasure
+    a owl:ObjectProperty ;
+    rdfs:label "has resourced provision measure"@en ;
+    rdfs:domain epr:SenAndResourcedProvision ;
+    rdfs:range epr:ResourcedProvisionMeasure ;
+    rdfs:comment "Cardinality: 0..1. Covers epr:ResourcedProvisionCapacity and epr:ResourcedProvisionPupilCount."@en .
+
+epro:hasSenUnitMeasure
+    a owl:ObjectProperty ;
+    rdfs:label "has SEN unit measure"@en ;
+    rdfs:domain epr:SenAndResourcedProvision ;
+    rdfs:range epr:SenUnitMeasure ;
+    rdfs:comment "Cardinality: 0..1. Covers epr:SenUnitCapacity and epr:SenUnitPupilCount."@en .
+
+
+#################################################################
+# Object properties - external references
+#################################################################
+
+epro:hasExternalReference
+    a owl:ObjectProperty ;
+    rdfs:label "has external reference"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:ExternalReference ;
+    rdfs:comment "Cardinality: 0..*. An establishment may have zero or more external references."@en .
+
+epro:referencesInspectionReport
+    a owl:ObjectProperty ;
+    rdfs:label "references inspection report"@en ;
+    rdfs:domain epr:ExternalReference ;
+    rdfs:range epr:InspectionReportReference ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:referencesExternalService
+    a owl:ObjectProperty ;
+    rdfs:label "references external service"@en ;
+    rdfs:domain epr:ExternalReference ;
+    rdfs:range epr:ExternalServiceReference ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+
+#################################################################
+# Classes - contact and location
+#################################################################
+
+epr:EstablishmentLocationAndContact
+    a owl:Class ;
+    rdfs:label "Contact and location"@en ;
+    rdfs:comment "The group of fields describing how to contact and locate the establishment physically."@en .
+
+epr:MainAddress
+    a owl:Class ;
+    rdfs:label "Postal address"@en ;
+    rdfs:comment "The physical or postal address at which the establishment is located."@en .
+
+epr:Website
+    a owl:Class ;
+    rdfs:label "Website"@en ;
+    rdfs:comment "The establishment's public website URL."@en .
+
+epr:TelephoneNumber
+    a owl:Class ;
+    rdfs:label "Telephone number"@en ;
+    rdfs:comment "The establishment's main contact telephone number."@en .
+
+epr:HeadteacherOrPrincipal
+    a owl:Class ;
+    rdfs:label "Headteacher or principal"@en ;
+    rdfs:comment "The named person leading the establishment. The GIAS UI label varies by type: Headteacher / Principal for most schools; Manager for children's centres; Headteacher/Manager for online providers. Treated as a single concept in the EPR model."@en .
+
+
+#################################################################
+# Classes - further education sub-classification and Section 41
+#################################################################
+
+epr:FurtherEducationType
+    a owl:Class ;
+    rdfs:label "Further education type"@en ;
+    rdfs:comment "A sub-classification of further education and pupil referral unit establishments. Observed for FE colleges (type 18), higher education institutions (type 29) and pupil referral units (type 14)."@en .
+
+epr:Section41Approval
+    a owl:Class ;
+    rdfs:label "Section 41 approval status"@en ;
+    rdfs:comment "Whether the establishment is approved under Section 41 of the Children and Families Act 2014 to accept placements of pupils with education, health and care plans."@en .
+
+
+#################################################################
+# Classes - inspection detail (non-Ofsted inspectorates and BSO)
+#################################################################
+
+epr:InspectorateName
+    a owl:Class ;
+    rdfs:label "Inspectorate name"@en ;
+    rdfs:comment "The name of the inspectorate body responsible for inspecting the establishment. Used for independent schools and British schools overseas where the inspectorate is not Ofsted."@en .
+
+epr:DateOfLastInspectionVisit
+    a owl:Class ;
+    rdfs:label "Date of last inspection visit"@en ;
+    rdfs:comment "The date of the most recent inspection visit by the named inspectorate. Observed for British schools overseas (type 37) and independent schools."@en .
+
+epr:DateOfNextInspectionVisit
+    a owl:Class ;
+    rdfs:label "Date of next inspection visit"@en ;
+    rdfs:comment "The scheduled date of the next inspection visit. Observed for British schools overseas (type 37)."@en .
+
+
+#################################################################
+# Classes - special pupils SEN measures
+#################################################################
+
+epr:SpecialPupilMeasure
+    a owl:Class ;
+    rdfs:label "Special pupil measure"@en ;
+    rdfs:comment "Numeric measures for pupils with special educational needs. Covers the count of pupils with a SEN statement or education, health and care plan and the count of pupils with SEN needs but without such a plan."@en .
+
+
+#################################################################
+# Object properties - contact and location
+#################################################################
+
+epro:hasEstablishmentLocationAndContact
+    a owl:ObjectProperty ;
+    rdfs:label "has contact and location"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:EstablishmentLocationAndContact ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasMainAddress
+    a owl:ObjectProperty ;
+    rdfs:label "has postal address"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:MainAddress ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasWebsite
+    a owl:ObjectProperty ;
+    rdfs:label "has website URL"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:Website ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasTelephoneNumber
+    a owl:ObjectProperty ;
+    rdfs:label "has telephone number"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:TelephoneNumber ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasHeadteacherOrPrincipal
+    a owl:ObjectProperty ;
+    rdfs:label "has headteacher or principal"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:HeadteacherOrPrincipal ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+
+#################################################################
+# Object properties - further education sub-classification and Section 41
+#################################################################
+
+epro:classifiedByFurtherEducationType
+    a owl:ObjectProperty ;
+    rdfs:label "classified by further education type"@en ;
+    rdfs:domain epr:EstablishmentClassification ;
+    rdfs:range epr:FurtherEducationType ;
+    rdfs:comment "Cardinality: 0..1. Present for further education (type 18), higher education institutions (type 29) and pupil referral units (type 14)."@en .
+
+epro:classifiedBySection41Approval
+    a owl:ObjectProperty ;
+    rdfs:label "classified by Section 41 approval status"@en ;
+    rdfs:domain epr:EstablishmentClassification ;
+    rdfs:range epr:Section41Approval ;
+    rdfs:comment "Cardinality: 0..1. Present for non-maintained special schools, independent special schools, and many academy and free school types."@en .
+
+
+#################################################################
+# Object properties - inspection detail
+#################################################################
+
+epro:recordsInspectorateName
+    a owl:ObjectProperty ;
+    rdfs:label "records inspectorate name"@en ;
+    rdfs:domain epr:InspectionReportReference ;
+    rdfs:range epr:InspectorateName ;
+    rdfs:comment "Cardinality: 0..1. Present where the inspectorate is not Ofsted."@en .
+
+epro:recordsDateOfLastInspectionVisit
+    a owl:ObjectProperty ;
+    rdfs:label "records date of last inspection visit"@en ;
+    rdfs:domain epr:InspectionReportReference ;
+    rdfs:range epr:DateOfLastInspectionVisit ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:recordsDateOfNextInspectionVisit
+    a owl:ObjectProperty ;
+    rdfs:label "records date of next inspection visit"@en ;
+    rdfs:domain epr:InspectionReportReference ;
+    rdfs:range epr:DateOfNextInspectionVisit ;
+    rdfs:comment "Cardinality: 0..1. Observed for British schools overseas (type 37)."@en .
+
+
+#################################################################
+# Object properties - special pupils SEN measures
+#################################################################
+
+epro:hasSpecialPupilMeasure
+    a owl:ObjectProperty ;
+    rdfs:label "has special pupil measure"@en ;
+    rdfs:domain epr:SenAndResourcedProvision ;
+    rdfs:range epr:SpecialPupilMeasure ;
+    rdfs:comment "Cardinality: 0..1. Covers the count of pupils with a SEN statement or EHC plan and the count without."@en .
+
+
+#################################################################
+# Classes - Ofsted inspection record (v0.4)
+#################################################################
+
+epr:OfstedInspectionRecord
+    a owl:Class ;
+    rdfs:label "Ofsted inspection record"@en ;
+    rdfs:comment "A record of the establishment's Ofsted inspection rating and associated report link. Distinct from inspection records held by non-Ofsted inspectorates (e.g. ISI, Ofsted independent school inspectorates) which are modelled under InspectionReportReference."@en .
+
+
+#################################################################
+# Classes - PRU operational record (v0.4)
+#################################################################
+
+epr:PupilReferralUnitOperationalRecord
+    a owl:Class ;
+    rdfs:label "Pupil referral unit operational record"@en ;
+    rdfs:comment "The group of operational fields specific to pupil referral units, covering teenage mothers provision, childcare, SEN facilities, EBD pupils and number of places."@en .
+
+epr:TeenageMothersProvision
+    a owl:Class ;
+    rdfs:label "Teenage mothers provision"@en ;
+    rdfs:comment "Whether the pupil referral unit provides for teenage mothers."@en .
+
+epr:TeenageMothersPlaces
+    a owl:Class ;
+    rdfs:label "Teenage mothers places"@en ;
+    rdfs:comment "The number of places available for teenage mothers in the pupil referral unit."@en .
+
+epr:ChildcareProvision
+    a owl:Class ;
+    rdfs:label "Childcare provision"@en ;
+    rdfs:comment "Whether the pupil referral unit provides childcare facilities."@en .
+
+epr:SenFacilities
+    a owl:Class ;
+    rdfs:label "SEN facilities"@en ;
+    rdfs:comment "Whether the pupil referral unit has facilities for pupils with special educational needs."@en .
+
+epr:PupilsWithEBD
+    a owl:Class ;
+    rdfs:label "Pupils with EBD"@en ;
+    rdfs:comment "Whether the pupil referral unit provides for pupils with emotional and behavioural difficulties."@en .
+
+epr:NumberOfPlaces
+    a owl:Class ;
+    rdfs:label "Number of places"@en ;
+    rdfs:comment "The total number of places in the pupil referral unit."@en .
+
+epr:FullTimeProvision
+    a owl:Class ;
+    rdfs:label "Full time provision"@en ;
+    rdfs:comment "Whether the pupil referral unit offers full-time provision."@en .
+
+epr:PupilsEducatedByOtherProviders
+    a owl:Class ;
+    rdfs:label "Pupils educated by other providers"@en ;
+    rdfs:comment "Whether the pupil referral unit has pupils educated by other providers."@en .
+
+
+#################################################################
+# Classes - accreditation record (v0.4, online providers)
+#################################################################
+
+epr:AccreditationRecord
+    a owl:Class ;
+    rdfs:label "Accreditation record"@en ;
+    rdfs:comment "The group of accreditation fields for online providers, including accreditation dates, quality assurance body, companies house number and accreditation status."@en .
+
+epr:AccreditationDate
+    a owl:Class ;
+    rdfs:label "Accreditation date"@en ;
+    rdfs:comment "The date on which the online provider was accredited."@en .
+
+epr:AccreditationExpiryDate
+    a owl:Class ;
+    rdfs:label "Accreditation expiry date"@en ;
+    rdfs:comment "The date on which the online provider's accreditation expires."@en .
+
+epr:AccreditationDateEnded
+    a owl:Class ;
+    rdfs:label "Accreditation date ended"@en ;
+    rdfs:comment "The date on which the online provider's accreditation was revoked or lapsed."@en .
+
+epr:QualityAssuranceBodyName
+    a owl:Class ;
+    rdfs:label "Quality assurance body name"@en ;
+    rdfs:comment "The name of the quality assurance body responsible for the online provider's accreditation."@en .
+
+epr:QualityAssuranceBodyReport
+    a owl:Class ;
+    rdfs:label "Quality assurance body report"@en ;
+    rdfs:comment "A reference to the quality assurance body's published report for the online provider."@en .
+
+epr:CompaniesHouseNumber
+    a owl:Class ;
+    rdfs:label "Companies House number"@en ;
+    rdfs:comment "A Companies House registration number. Currently scoped to online providers via AccreditationRecord (epro:hasCompaniesHouseNumber) and to establishment groups (epro:hasGroupCompaniesHouseNumber). The same class is reused across both contexts."@en .
+
+epr:AccreditationStatus
+    a owl:Class ;
+    rdfs:label "Accreditation status"@en ;
+    rdfs:comment "Whether the online provider is currently accredited."@en .
+
+
+#################################################################
+# Classes - children's centre specific (v0.4)
+#################################################################
+
+epr:ProviderType
+    a owl:Class ;
+    rdfs:label "Provider type"@en ;
+    rdfs:comment "The classification of provider type for a children's centre establishment."@en .
+
+epr:CentreManager
+    a owl:Class ;
+    rdfs:label "Centre manager"@en ;
+    rdfs:comment "The named manager of a children's centre. Distinct from HeadteacherOrPrincipal - children's centres show the Centre manager role rather than Headteacher/Principal in the GIAS Details view."@en .
+
+
+#################################################################
+# Object properties - Ofsted inspection record (v0.4)
+#################################################################
+
+epro:hasOfstedInspectionRecord
+    a owl:ObjectProperty ;
+    rdfs:label "has Ofsted inspection record"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:OfstedInspectionRecord ;
+    rdfs:comment "Cardinality: 0..1. Present for establishment types that are inspected by Ofsted. Absent for Welsh establishments, BSOs (inspected by other inspectorates), sixth form centres, children's centres and academy secure 16-19."@en .
+
+
+#################################################################
+# Object properties - PRU operational record (v0.4)
+#################################################################
+
+epro:hasPupilReferralUnitOperationalRecord
+    a owl:ObjectProperty ;
+    rdfs:label "has pupil referral unit operational record"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:PupilReferralUnitOperationalRecord ;
+    rdfs:comment "Cardinality: 0..1. Present only for pupil referral units (type 14)."@en .
+
+epro:hasTeenageMothersProvision
+    a owl:ObjectProperty ;
+    rdfs:label "has teenage mothers provision"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:TeenageMothersProvision ;
+    rdfs:comment "Cardinality: 0..1. Whether the PRU provides for teenage mothers."@en .
+
+epro:hasTeenageMothersPlaces
+    a owl:ObjectProperty ;
+    rdfs:label "has teenage mothers places"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:TeenageMothersPlaces ;
+    rdfs:comment "Cardinality: 0..1. Number of places for teenage mothers."@en .
+
+epro:hasChildcareProvision
+    a owl:ObjectProperty ;
+    rdfs:label "has childcare provision"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:ChildcareProvision ;
+    rdfs:comment "Cardinality: 0..1. Whether the PRU provides childcare facilities."@en .
+
+epro:hasSenFacilities
+    a owl:ObjectProperty ;
+    rdfs:label "has SEN facilities"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:SenFacilities ;
+    rdfs:comment "Cardinality: 0..1. Whether the PRU has SEN facilities."@en .
+
+epro:hasPupilsWithEBD
+    a owl:ObjectProperty ;
+    rdfs:label "has pupils with EBD"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:PupilsWithEBD ;
+    rdfs:comment "Cardinality: 0..1. Whether the PRU provides for pupils with emotional and behavioural difficulties."@en .
+
+epro:hasNumberOfPlaces
+    a owl:ObjectProperty ;
+    rdfs:label "has number of places"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:NumberOfPlaces ;
+    rdfs:comment "Cardinality: 0..1. Total number of places in the PRU."@en .
+
+epro:hasFullTimeProvision
+    a owl:ObjectProperty ;
+    rdfs:label "has full time provision"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:FullTimeProvision ;
+    rdfs:comment "Cardinality: 0..1. Whether the PRU offers full-time provision."@en .
+
+epro:hasPupilsEducatedByOtherProviders
+    a owl:ObjectProperty ;
+    rdfs:label "has pupils educated by other providers"@en ;
+    rdfs:domain epr:PupilReferralUnitOperationalRecord ;
+    rdfs:range epr:PupilsEducatedByOtherProviders ;
+    rdfs:comment "Cardinality: 0..1. Whether the PRU has pupils educated by other providers."@en .
+
+
+#################################################################
+# Object properties - accreditation record (v0.4)
+#################################################################
+
+epro:hasAccreditationRecord
+    a owl:ObjectProperty ;
+    rdfs:label "has accreditation record"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:AccreditationRecord ;
+    rdfs:comment "Cardinality: 0..1. Present only for online providers (type 49)."@en .
+
+epro:hasAccreditationDate
+    a owl:ObjectProperty ;
+    rdfs:label "has accreditation date"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:AccreditationDate ;
+    rdfs:comment "Cardinality: 0..1. The date the online provider was accredited."@en .
+
+epro:hasAccreditationExpiryDate
+    a owl:ObjectProperty ;
+    rdfs:label "has accreditation expiry date"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:AccreditationExpiryDate ;
+    rdfs:comment "Cardinality: 0..1. The date the accreditation expires."@en .
+
+epro:hasAccreditationDateEnded
+    a owl:ObjectProperty ;
+    rdfs:label "has accreditation date ended"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:AccreditationDateEnded ;
+    rdfs:comment "Cardinality: 0..1. The date the accreditation ended if it was revoked or lapsed."@en .
+
+epro:hasQualityAssuranceBodyName
+    a owl:ObjectProperty ;
+    rdfs:label "has quality assurance body name"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:QualityAssuranceBodyName ;
+    rdfs:comment "Cardinality: 0..1. The name of the quality assurance body for the online provider."@en .
+
+epro:hasQualityAssuranceBodyReport
+    a owl:ObjectProperty ;
+    rdfs:label "has quality assurance body report"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:QualityAssuranceBodyReport ;
+    rdfs:comment "Cardinality: 0..1. URL of the quality assurance body report for the online provider."@en .
+
+epro:hasCompaniesHouseNumber
+    a owl:ObjectProperty ;
+    rdfs:label "has companies house number"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:CompaniesHouseNumber ;
+    rdfs:comment "Cardinality: 0..1. The Companies House registration number for the online provider."@en .
+
+epro:hasAccreditationStatus
+    a owl:ObjectProperty ;
+    rdfs:label "has accreditation status"@en ;
+    rdfs:domain epr:AccreditationRecord ;
+    rdfs:range epr:AccreditationStatus ;
+    rdfs:comment "Cardinality: 0..1. Whether the online provider is currently accredited."@en .
+
+
+#################################################################
+# Object properties - children's centre specific (v0.4)
+#################################################################
+
+epro:classifiedByProviderType
+    a owl:ObjectProperty ;
+    rdfs:label "classified by provider type"@en ;
+    rdfs:domain epr:EstablishmentClassification ;
+    rdfs:range epr:ProviderType ;
+    rdfs:comment "Cardinality: 0..1. Present for children's centres (types 47 and 48)."@en .
+
+epro:hasCentreManager
+    a owl:ObjectProperty ;
+    rdfs:label "has centre manager"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:CentreManager ;
+    rdfs:comment "Cardinality: 0..1. Present for children's centres (types 47 and 48). Distinct from hasHeadteacherOrPrincipal - children's centres show a centre manager role."@en .
+
+
+#################################################################
+# Object properties - establishment groups (v1.1)
+#################################################################
+
+epro:hasMembership
+    a owl:ObjectProperty ;
+    rdfs:label "has membership"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:GroupMembership ;
+    rdfs:comment "Cardinality: 0..*. An establishment may belong to one or more groups. Each membership is recorded as a GroupMembership instance."@en .
+
+epro:memberOf
+    a owl:ObjectProperty ;
+    rdfs:label "member of"@en ;
+    rdfs:domain epr:GroupMembership ;
+    rdfs:range epr:EstablishmentGroup ;
+    rdfs:comment "Cardinality: exactly 1. Each membership record links to one establishment group."@en .
+
+epro:identifiedByGroupId
+    a owl:ObjectProperty ;
+    rdfs:label "identified by group identifier"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupId ;
+    rdfs:comment "Cardinality: 0..1. The business-facing GIAS group identifier for the group."@en .
+
+epro:hasGroupUkprn
+    a owl:ObjectProperty ;
+    rdfs:label "has group UKPRN"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupUkprn ;
+    rdfs:comment "Cardinality: 0..1. UKPRN assigned to the group organisation by UKRLP."@en .
+
+epro:hasGroupCompaniesHouseNumber
+    a owl:ObjectProperty ;
+    rdfs:label "has group Companies House number"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:CompaniesHouseNumber ;
+    rdfs:comment "Cardinality: 0..1. Companies House registration for the group legal entity."@en .
+
+epro:hasGroupRelationship
+    a owl:ObjectProperty ;
+    rdfs:label "has group relationship"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupRelationship ;
+    rdfs:comment "Cardinality: 0..*. A group may have one or more recorded relationships to other groups."@en .
+
+epro:relatesTo
+    a owl:ObjectProperty ;
+    rdfs:label "relates to"@en ;
+    rdfs:domain epr:GroupRelationship ;
+    rdfs:range epr:EstablishmentGroup ;
+    rdfs:comment "Cardinality: exactly 1. The other group in this group relationship."@en .
+
+epro:classifiedByGroupRelationshipType
+    a owl:ObjectProperty ;
+    rdfs:label "classified by group relationship type"@en ;
+    rdfs:domain epr:GroupRelationship ;
+    rdfs:range epr:GroupRelationshipType ;
+    rdfs:comment "Cardinality: exactly 1."@en .
+
+
+#################################################################
+# Object properties - governance (v1.2)
+#################################################################
+
+epro:hasGovernanceAppointment
+    a owl:ObjectProperty ;
+    rdfs:label "has governance appointment"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:GovernanceAppointment ;
+    rdfs:comment "Cardinality: 0..*. An establishment may have zero or more governance appointment records."@en .
+
+epro:hasGroupGovernanceAppointment
+    a owl:ObjectProperty ;
+    rdfs:label "has group governance appointment"@en ;
+    rdfs:domain epr:AcademyTrust ;
+    rdfs:range epr:GovernanceAppointment ;
+    rdfs:comment "Cardinality: 0..*. Domain restricted to AcademyTrust - all 28,692 UID-based group governance rows are MAT type. No other EstablishmentGroup type produces group-scoped governance rows in the GIAS data."@en .
+
+epro:hasGovernanceIdentifier
+    a owl:ObjectProperty ;
+    rdfs:label "has governance identifier"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:GovernanceIdentifier ;
+    rdfs:comment "Cardinality: exactly 1. Every governance appointment has exactly one GID."@en .
+
+epro:hasGovernanceRoleType
+    a owl:ObjectProperty ;
+    rdfs:label "has governance role type"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:GovernanceRoleType ;
+    rdfs:comment "Cardinality: exactly 1."@en .
+
+epro:hasGovernanceAppointmentDate
+    a owl:ObjectProperty ;
+    rdfs:label "has appointment date"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:GovernanceAppointmentDate ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasGovernanceTermEndDate
+    a owl:ObjectProperty ;
+    rdfs:label "has term end date"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:GovernanceTermEndDate ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasGovernanceAppointingBody
+    a owl:ObjectProperty ;
+    rdfs:label "has appointing body"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:GovernanceAppointingBody ;
+    rdfs:comment "Cardinality: 0..1. Not typically populated for Accounting Officer and Chief Financial Officer roles."@en .
+
+epro:appointmentOf
+    a owl:ObjectProperty ;
+    rdfs:label "appointment of"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:GovernancePerson ;
+    rdfs:comment "Cardinality: 0..1. Links to the GovernancePerson when person matching has been completed. Absent for unmatched appointment stubs."@en .
+
+epro:hasGovernancePersonIdentifier
+    a owl:ObjectProperty ;
+    rdfs:label "has governance person identifier"@en ;
+    rdfs:domain epr:GovernancePerson ;
+    rdfs:range epr:GovernancePersonIdentifier ;
+    rdfs:comment "Cardinality: 0..*. May have multiple identifiers where previous-surname alias hashes are generated."@en .
+
+
+#################################################################
+# Classes - establishment type hierarchy
+#
+# Intermediate OWL classes grouping establishment types by their
+# SHACL shape family. Leaf type classes (CommunitySchool etc.)
+# are declared below in their own section.
+#################################################################
+
+epr:LaMaintainedSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "LA maintained school"@en ;
+    rdfs:comment "Any school maintained by a local authority: community schools, voluntary schools, foundation schools, community and foundation special schools, pupil referral units, and local authority nursery schools."@en .
+
+epr:LaMainstreamSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMaintainedSchool ;
+    rdfs:label "LA mainstream school"@en ;
+    rdfs:comment "LA maintained mainstream schools: community school, voluntary aided school, voluntary controlled school, foundation school."@en .
+
+epr:LaMaintainedSpecialSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMaintainedSchool ;
+    rdfs:label "LA maintained special school"@en ;
+    rdfs:comment "LA maintained special schools: community special school, foundation special school."@en .
+
+epr:NonMaintainedAndIndependentSpecialSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Non-maintained and independent special school"@en ;
+    rdfs:comment "Non-maintained special schools and other independent special schools approved under section 342 of the Education Act 1996."@en .
+
+epr:IndependentSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Independent school"@en ;
+    rdfs:comment "Independent schools: city technology colleges and other independent schools."@en .
+
+epr:College
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "College"@en ;
+    rdfs:comment "Further education establishments: further education colleges and sixth form centres."@en .
+
+epr:Academy
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Academy"@en ;
+    rdfs:comment "All academy types: mainstream, special, alternative provision, 16-19, and secure 16-19."@en .
+
+epr:MainstreamAcademy
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy ;
+    rdfs:label "Mainstream academy"@en ;
+    rdfs:comment "Mainstream academies: academy sponsor led and academy converter."@en .
+
+epr:AcademySpecial
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy ;
+    rdfs:label "Academy special school"@en ;
+    rdfs:comment "Academy special schools: academy special sponsor led and academy special converter."@en .
+
+epr:AcademyAlternativeProvision
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy ;
+    rdfs:label "Academy alternative provision"@en ;
+    rdfs:comment "Academy alternative provision establishments: academy alternative provision converter and academy alternative provision sponsor led."@en .
+
+epr:Academy1619
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy ;
+    rdfs:label "Academy 16 to 19"@en ;
+    rdfs:comment "Academy 16-19 establishments: academy 16-19 converter and academy 16 to 19 sponsor led."@en .
+
+epr:FreeSchoolEstablishment
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Free school establishment"@en ;
+    rdfs:comment "All free school types: mainstream free schools, free school special, free school alternative provision, and free school 16 to 19."@en .
+
+epr:MainstreamFreeSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:FreeSchoolEstablishment ;
+    rdfs:label "Mainstream free school"@en ;
+    rdfs:comment "Mainstream free schools: free school, university technical college, studio school."@en .
+
+epr:ChildrensCentreEstablishment
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Children's centre establishment"@en ;
+    rdfs:comment "Children's centres and children's centre linked sites."@en .
+
+
+#################################################################
+# Classes - establishment type leaf classes (v0.7)
+#
+# OWL class declarations for the 41 GIAS leaf establishment types,
+# moved here from the taxonomy TTL. The taxonomy TTL retains the
+# skos:Concept declarations and SKOS hierarchy (skos:broader).
+# OWL 2 punning is preserved across both files.
+#################################################################
+
+# LA maintained mainstream schools
+epr:CommunitySchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMainstreamSchool ;
+    rdfs:label "Community school"@en ;
+    rdfs:comment "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the local authority employs all staff, owns the land and buildings, and acts as the admissions authority."@en .
+
+epr:VoluntaryAidedSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMainstreamSchool ;
+    rdfs:label "Voluntary aided school"@en ;
+    rdfs:comment "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the governing body is the employer and admissions authority, with land and buildings typically owned by a charitable foundation such as a diocese or religious body, which contributes towards capital costs."@en .
+
+epr:VoluntaryControlledSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMainstreamSchool ;
+    rdfs:label "Voluntary controlled school"@en ;
+    rdfs:comment "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the local authority is the employer and admissions authority; land and buildings are often owned by a voluntary or foundation body, but the school receives full local-authority funding without a capital contribution from the foundation."@en .
+
+epr:FoundationSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMainstreamSchool ;
+    rdfs:label "Foundation school"@en ;
+    rdfs:comment "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the governing body is the employer and admissions authority, with land and buildings that may be owned by the governing body or a charitable foundation rather than the local authority."@en .
+
+# LA maintained special schools
+epr:CommunitySpecialSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMaintainedSpecialSchool ;
+    rdfs:label "Community special school"@en ;
+    rdfs:comment "A local-authority-maintained special school established under Schedule 27 of the School Standards and Framework Act 1998 and the Education Act 1996, in which the local authority employs staff and is the admissions authority, catering wholly or mainly for children with special educational needs."@en .
+
+epr:FoundationSpecialSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMaintainedSpecialSchool ;
+    rdfs:label "Foundation special school"@en ;
+    rdfs:comment "A maintained special school established under Schedule 27 of the School Standards and Framework Act 1998 and the Education Act 1996, sharing the governance characteristics of a foundation school - including governing body as employer and admissions authority - while catering wholly or mainly for children with special educational needs."@en .
+
+# LA maintained - other
+epr:PupilReferralUnit
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMaintainedSchool ;
+    rdfs:label "Pupil referral unit"@en ;
+    rdfs:comment "A local-authority establishment maintained under s.19 of the Education Act 1996 to provide education for children of compulsory school age who are excluded, persistently absent, ill or otherwise unable to attend a mainstream school."@en .
+
+epr:LocalAuthorityNurserySchool
+    a owl:Class ;
+    rdfs:subClassOf epr:LaMaintainedSchool ;
+    rdfs:label "Local authority nursery school"@en ;
+    rdfs:comment "A nursery school maintained and funded by a local authority under the School Standards and Framework Act 1998, providing early years education for children below compulsory school age."@en .
+
+# Non-maintained and independent special schools
+epr:NonMaintainedSpecialSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:NonMaintainedAndIndependentSpecialSchool ;
+    rdfs:label "Non-maintained special school"@en ;
+    rdfs:comment "A special school approved by the Secretary of State under s.342 of the Education Act 1996 that is not maintained by a local authority, operates on a not-for-profit basis, and caters wholly or mainly for children with special educational needs."@en .
+
+epr:OtherIndependentSpecialSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:NonMaintainedAndIndependentSpecialSchool ;
+    rdfs:label "Other independent special school"@en ;
+    rdfs:comment "An independent school that specialises in provision for pupils with special educational needs but is not approved by the Secretary of State under s.342 of the Education Act 1996 as a non-maintained special school."@en .
+
+# Independent schools
+epr:CityTechnologyCollege
+    a owl:Class ;
+    rdfs:subClassOf epr:IndependentSchool ;
+    rdfs:label "City technology college"@en ;
+    rdfs:comment "A state-funded independent school in an urban area, established under s.105 of the Education Reform Act 1988 with a curriculum emphasis on technology, science and practical skills, jointly funded by central government and private sponsors."@en .
+
+epr:OtherIndependentSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:IndependentSchool ;
+    rdfs:label "Other independent school"@en ;
+    rdfs:comment "An independent school registered with the Secretary of State that does not fall into a more specific independent-school category; it charges fees and is not maintained or funded by a local authority or the academy programme."@en .
+
+# Colleges
+epr:FurtherEducation
+    a owl:Class ;
+    rdfs:subClassOf epr:College ;
+    rdfs:label "Further education"@en ;
+    rdfs:comment "A general further education college or sixth-form college providing post-16 education and training, operating as an incorporated body under the Further and Higher Education Act 1992."@en .
+
+epr:SixthFormCentre
+    a owl:Class ;
+    rdfs:subClassOf epr:College ;
+    rdfs:label "Sixth form centre"@en ;
+    rdfs:comment "A centre providing sixth-form education for students aged 16 to 18, operating under the Further and Higher Education Act 1992 and typically sharing facilities with or attached to a maintained school."@en .
+
+# Universities and higher education
+epr:HigherEducationInstitution
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Higher education institution"@en ;
+    rdfs:comment "A university or other higher education provider recognised under the Further and Higher Education Act 1992 and the Higher Education Act 2004, offering degree-level and postgraduate qualifications."@en .
+
+# Welsh establishments
+epr:WelshEstablishment
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Welsh establishment"@en ;
+    rdfs:comment "A school or other education provider in Wales that is registered with the Department for Education in GIAS but is governed by Welsh legislation enacted by Senedd Cymru, including the School Standards and Organisation (Wales) Act 2013."@en .
+
+# Other types
+epr:SecureUnits
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Secure units"@en ;
+    rdfs:comment "Secure residential accommodation for children and young people that includes an educational function, recorded in GIAS for cross-departmental data purposes."@en .
+
+epr:OffshoreSchools
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Offshore schools"@en ;
+    rdfs:comment "A school operating in a Crown Dependency, British Overseas Territory or other non-mainland-UK geography that is registered with GIAS under Ministry of Defence or DfE arrangements."@en .
+
+epr:ServiceChildrensEducation
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Service children's education"@en ;
+    rdfs:comment "A school operated by the Service Children's Education (SCE) agency on behalf of the Ministry of Defence, providing education for the children of UK armed-forces personnel at bases in the United Kingdom and overseas."@en .
+
+epr:MiscellaneousEstablishment
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Miscellaneous"@en ;
+    rdfs:comment "A residual establishment type used in GIAS for records that cannot be classified under any more specific establishment-type category."@en .
+
+epr:SpecialPost16Institution
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Special post 16 institution"@en ;
+    rdfs:comment "A specialist institution approved under s.41 of the Children and Families Act 2014 to provide education or training for young people over 16 with special educational needs or disabilities, enabling placement via an education, health and care plan."@en .
+
+epr:BritishSchoolsOverseas
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "British schools overseas"@en ;
+    rdfs:comment "A school outside the United Kingdom that provides a British-style curriculum and was subject to voluntary inspection by Ofsted or an approved inspectorate under the Education (British Schools Abroad) Order 1999."@en .
+
+epr:InstitutionFundedByOtherGovernmentDepartment
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Institution funded by other government department"@en ;
+    rdfs:comment "An educational institution whose principal funding comes from a government department other than the Department for Education, and which is recorded in GIAS for cross-government data purposes."@en .
+
+# Academies
+epr:AcademySponsorLed
+    a owl:Class ;
+    rdfs:subClassOf epr:MainstreamAcademy ;
+    rdfs:label "Academy sponsor led"@en ;
+    rdfs:comment "An academy established through the sponsor-led route under the Academies Act 2010, typically replacing an underperforming school, with an approved sponsor providing governance and strategic leadership."@en .
+
+epr:AcademySpecialSponsorLed
+    a owl:Class ;
+    rdfs:subClassOf epr:AcademySpecial ;
+    rdfs:label "Academy special sponsor led"@en ;
+    rdfs:comment "A new special academy established through the sponsor-led route under the Academies Act 2010, set up to cater for pupils with special educational needs where an approved sponsor provides strategic oversight."@en .
+
+epr:AcademyConverter
+    a owl:Class ;
+    rdfs:subClassOf epr:MainstreamAcademy ;
+    rdfs:label "Academy converter"@en ;
+    rdfs:comment "A maintained school or other eligible institution that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en .
+
+epr:AcademyAlternativeProvisionConverter
+    a owl:Class ;
+    rdfs:subClassOf epr:AcademyAlternativeProvision ;
+    rdfs:label "Academy alternative provision converter"@en ;
+    rdfs:comment "An existing alternative provision establishment - such as a pupil referral unit - that converted to academy status under the Academies Act 2010 while continuing to provide education for pupils unable to attend mainstream school."@en .
+
+epr:AcademyAlternativeProvisionSponsorLed
+    a owl:Class ;
+    rdfs:subClassOf epr:AcademyAlternativeProvision ;
+    rdfs:label "Academy alternative provision sponsor led"@en ;
+    rdfs:comment "A new alternative provision academy created through a sponsor-led route under the Academies Act 2010, established to provide education for pupils who cannot attend mainstream school."@en .
+
+epr:AcademySpecialConverter
+    a owl:Class ;
+    rdfs:subClassOf epr:AcademySpecial ;
+    rdfs:label "Academy special converter"@en ;
+    rdfs:comment "A maintained special school that converted to academy status under the Academies Act 2010, continuing to cater wholly or mainly for pupils with special educational needs under a funding agreement with the Secretary of State."@en .
+
+epr:Academy1619Converter
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy1619 ;
+    rdfs:label "Academy 16-19 converter"@en ;
+    rdfs:comment "A 16-to-19 education provider - such as a sixth form college or school sixth form - that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en .
+
+epr:Academy16To19SponsorLed
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy1619 ;
+    rdfs:label "Academy 16 to 19 sponsor led"@en ;
+    rdfs:comment "A new 16-to-19 academy established through the sponsor-led route under the Academies Act 2010, where an approved sponsor takes responsibility for the provision from the outset."@en .
+
+epr:AcademySecure16To19
+    a owl:Class ;
+    rdfs:subClassOf epr:Academy ;
+    rdfs:label "Academy secure 16 to 19"@en ;
+    rdfs:comment "An academy providing education within secure residential accommodation for young people aged 16 to 19 who are subject to a custodial sentence or secure order."@en .
+
+# Free schools
+epr:FreeSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:MainstreamFreeSchool ;
+    rdfs:label "Free schools"@en ;
+    rdfs:comment "A new state-funded school established as an academy under the Academies Act 2010 and Education Act 2011 through the free-school programme, allowing parents, teachers, charities or other groups to set up a school outside local-authority control."@en .
+
+epr:FreeSchoolSpecial
+    a owl:Class ;
+    rdfs:subClassOf epr:FreeSchoolEstablishment ;
+    rdfs:label "Free schools special"@en ;
+    rdfs:comment "A free school established under the Academies Act 2010 to provide specialist education for pupils with special educational needs and disabilities."@en .
+
+epr:FreeSchoolAlternativeProvision
+    a owl:Class ;
+    rdfs:subClassOf epr:FreeSchoolEstablishment ;
+    rdfs:label "Free schools alternative provision"@en ;
+    rdfs:comment "A free school established under the Academies Act 2010 to provide alternative provision for pupils who are unable to attend mainstream school due to exclusion, illness or other circumstances."@en .
+
+epr:FreeSchool16To19
+    a owl:Class ;
+    rdfs:subClassOf epr:FreeSchoolEstablishment ;
+    rdfs:label "Free schools 16 to 19"@en ;
+    rdfs:comment "A free school established under the Academies Act 2010 that focuses exclusively on providing education and training to students aged 16 to 19."@en .
+
+epr:UniversityTechnicalCollege
+    a owl:Class ;
+    rdfs:subClassOf epr:MainstreamFreeSchool ;
+    rdfs:label "University technical college"@en ;
+    rdfs:comment "An academy established under the Academies Act 2010 and Education Act 2011 through the free-school programme, for students aged 14 to 19, specialising in technical and vocational subjects with the active involvement of a university and employer sponsors."@en .
+
+epr:StudioSchool
+    a owl:Class ;
+    rdfs:subClassOf epr:MainstreamFreeSchool ;
+    rdfs:label "Studio schools"@en ;
+    rdfs:comment "A small academy established under the Academies Act 2010 and Education Act 2011 through the free-school programme, typically for students aged 14 to 19, delivering mainstream qualifications through project-based and work-related learning with employer involvement."@en .
+
+# Children's centres
+epr:ChildrensCentre
+    a owl:Class ;
+    rdfs:subClassOf epr:ChildrensCentreEstablishment ;
+    rdfs:label "Children's centre"@en ;
+    rdfs:comment "A facility providing integrated early-childhood services - including early education, childcare, family support, health services and employment advice - established under the statutory framework of the Childcare Act 2006 and Children Act 2004."@en .
+
+epr:ChildrensCentreLinkedSite
+    a owl:Class ;
+    rdfs:subClassOf epr:ChildrensCentreEstablishment ;
+    rdfs:label "Children's centre linked site"@en ;
+    rdfs:comment "A site that delivers some early childhood services on behalf of a named children's centre, having previously been registered as a standalone children's centre under the Childcare Act 2006 framework."@en .
+
+# Online providers
+epr:OnlineProvider
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Online provider"@en ;
+    rdfs:comment "A provider that delivers full-time education entirely online to pupils of compulsory school age, recognised under the DfE online education accreditation scheme."@en .
+
+
+#################################################################
+# Classes - establishment groups (v1.1)
+#################################################################
+
+epr:EstablishmentGroup
+    a owl:Class ;
+    rdfs:label "Establishment group"@en ;
+    rdfs:comment "An organisation or governance structure to which one or more establishments belong. Covers academy trusts, federations, school sponsors and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility. Academy trusts are both establishment groups and accountability bodies - see epr:AcademyTrust."@en .
+
+epr:MultiAcademyTrust
+    a owl:Class ;
+    rdfs:subClassOf epr:AcademyTrust ;
+    rdfs:label "Multi-academy trust"@en ;
+    rdfs:comment "A single legal academy-trust entity operating two or more academies, free schools, UTCs or studio schools. It has a master funding agreement with the Secretary of State and a supplemental funding agreement for each individual academy. Incorporated under the Companies Act 2006. Governed by a board of trustees. Source: GOV.UK academy trust governance guide."@en .
+
+epr:SecureSingleAcademyTrust
+    a owl:Class ;
+    rdfs:subClassOf epr:SingleAcademyTrust ;
+    rdfs:label "Secure single-academy trust"@en ;
+    rdfs:comment "A single-academy trust operating a secure 16-to-19 academy providing education within secure residential accommodation for young people aged 16 to 19 subject to a custodial sentence or secure order."@en .
+
+epr:Federation
+    a owl:Class ;
+    rdfs:subClassOf epr:EstablishmentGroup ;
+    rdfs:label "Federation"@en ;
+    rdfs:comment "A statutory arrangement in which two or more maintained schools, including maintained nursery schools, share a single federated governing body. Each member school retains its own URN, establishment number, admissions arrangements and Ofsted inspection identity. Some governance and funding arrangements may be shared or pooled under federation rules. Applicable only to maintained schools. Source: School Governance (Federations) Regulations 2012."@en .
+
+epr:SchoolSponsor
+    a owl:Class ;
+    rdfs:subClassOf epr:EstablishmentGroup ;
+    rdfs:label "School sponsor"@en ;
+    rdfs:comment "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. Supports governance, leadership and educational improvement. Source: Academies Act 2010."@en .
+
+epr:ChildrensCentreGroup
+    a owl:Class ;
+    rdfs:subClassOf epr:EstablishmentGroup ;
+    rdfs:label "Children's centres group"@en ;
+    rdfs:comment "An operational cluster of children's centres with a lead-centre arrangement."@en .
+
+epr:ChildrensCentreCollaboration
+    a owl:Class ;
+    rdfs:subClassOf epr:EstablishmentGroup ;
+    rdfs:label "Children's centres collaboration"@en ;
+    rdfs:comment "A cross-group collaboration arrangement between children's centres."@en .
+
+epr:GenericTrust
+    a owl:Class ;
+    rdfs:subClassOf epr:EstablishmentGroup ;
+    rdfs:label "Trust"@en ;
+    rdfs:comment "A generic trust group type (EstablishmentGroupType code 02). Distinct from AcademyTrust. Rarely used in current data; retained for completeness."@en .
+
+epr:GroupMembership
+    a owl:Class ;
+    rdfs:label "Group membership"@en ;
+    rdfs:comment "A dated record of an establishment's membership of an establishment group, trust, federation, sponsor arrangement or children's centre collaboration. Maps to GroupLink in the current GIAS schema. An establishment may have membership in more than one group simultaneously."@en .
+
+epr:GroupRelationship
+    a owl:Class ;
+    rdfs:label "Group relationship"@en ;
+    rdfs:comment "A recorded relationship between two establishment groups, for example where a single-academy trust is the predecessor to a newly formed multi-academy trust. Maps to GroupRelationsLink."@en .
+
+epr:GroupRelationshipType
+    a owl:Class ;
+    rdfs:label "Group relationship type"@en ;
+    rdfs:comment "The classification of a group-to-group relationship, for example predecessor SAT or successor MAT."@en .
+
+epr:GroupId
+    a owl:Class ;
+    rdfs:label "Group identifier"@en ;
+    rdfs:comment "The business-facing GIAS group identifier, distinct from the internal surrogate key."@en .
+
+epr:GroupUkprn
+    a owl:Class ;
+    rdfs:label "Group UKPRN"@en ;
+    rdfs:comment "A UKRLP provider reference number assigned to the group organisation. Sourced from UKRLP by matching on Companies House number."@en .
+
+
+#################################################################
+# Classes - governance (v1.2)
+#################################################################
+
+epr:GovernanceAppointment
+    a owl:Class ;
+    rdfs:label "Governance appointment"@en ;
+    rdfs:comment "A record of one named person holding one governance role at one establishment or group during a defined period. Identified by the GIAS Governance Identifier (GID). Carries the role type, appointment date, optional term-end date and appointing body. Personal-data-carrying class: contains person-name fields (Title, Forename 1, Forename 2, Surname)."@en ;
+    dcterms:accessRights "Personal data - access controls required. Person-name fields are encrypted at the logical model layer."@en .
+
+epr:GovernanceIdentifier
+    a owl:Class ;
+    rdfs:label "Governance identifier (GID)"@en ;
+    rdfs:comment "The GIAS-assigned identifier for a governance appointment record. Unique per governance row. Not a person identifier - one physical person may have multiple GIDs across different roles and establishments."@en .
+
+epr:GovernanceRoleType
+    a owl:Class ;
+    rdfs:label "Governance role type"@en ;
+    rdfs:comment "The classification of the governance role held. Closed enumeration of 22 values: 20 from the GIAS governance extract, plus headteacher ex-officio governor (SI 2012/1034) and associate member (SI 2013/1624) from the maintained schools governance guide."@en .
+
+epr:GovernanceAppointmentDate
+    a owl:Class ;
+    rdfs:label "Appointment date"@en ;
+    rdfs:comment "The date on which the governance appointment took effect."@en .
+
+epr:GovernanceTermEndDate
+    a owl:Class ;
+    rdfs:label "Term end date"@en ;
+    rdfs:comment "The date on which the governance appointment ended or is due to end. Optional - absence does not confirm a current appointment without business-rule validation. Structural absence for Member role is expected."@en .
+
+epr:GovernanceAppointingBody
+    a owl:Class ;
+    rdfs:label "Appointing body"@en ;
+    rdfs:comment "The body or mechanism responsible for appointing the governor, trustee or member. Closed enumeration of 18 values derived from the GIAS governance extract Appointing body field. RSC value retired."@en .
+
+epr:GovernancePerson
+    a owl:Class ;
+    rdfs:label "Governance person"@en ;
+    rdfs:comment "A named individual who holds or has held a formal governance role at an establishment, establishment group or trust. Covers governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals. One GovernancePerson may be linked from multiple GovernanceAppointment records. Personal-data-carrying class - requires access-control annotation."@en ;
+    dcterms:accessRights "Personal data - access controls required. Contains GovernancePersonIdentifier (pseudonymous hash derived from date of birth, surname and forename1). Raw date of birth not stored in EPR."@en .
+
+epr:GovernancePersonIdentifier
+    a owl:Class ;
+    rdfs:label "Governance person identifier"@en ;
+    rdfs:comment "A pseudonymous identifier for a GovernancePerson, derived by hashing normalised date of birth, surname and forename1. Deterministic but not reversible to recover the raw date of birth. Previous-surname alias hashes generated where StaffRecordEnc.prevSurname is populated. Pseudonymous personal data under UK GDPR."@en .
+
+
+#################################################################
+# Named individuals - closed enumeration values (v0.8, v1.0)
+#
+# Classification values for closed, stable enumerations that
+# carry semantic weight. Declared as owl:NamedIndividual so they
+# appear in WebVOWL and support OWL reasoning.
+#
+# Open-ended value sets (ReligiousCharacter, ReligiousEthos,
+# TypeOfSenProvision, establishment type codes) remain as
+# skos:Concept in the vocabulary TTL only.
+#
+
+# Identifier role (2 values, v1.0)
+epr:CurrentIdentifierRole
+    a owl:NamedIndividual, epr:IdentifierRole ;
+    rdfs:label "Current"@en ;
+    rdfs:comment "The scoped establishment number is the establishment's active current identity."@en .
+
+epr:PreviousIdentifierRole
+    a owl:NamedIndividual, epr:IdentifierRole ;
+    rdfs:label "Previous"@en ;
+    rdfs:comment "The scoped establishment number is a previous identity, retained for search continuity and lifecycle traceability."@en .
+
+# Group relationship type (2 values, v1.1)
+epr:SuccessorMultiAcademyTrust
+    a owl:NamedIndividual, epr:GroupRelationshipType ;
+    rdfs:label "Successor MAT"@en ;
+    rdfs:comment "A group relationship type value indicating that the group is the multi-academy trust formed when a single-academy trust expanded or merged."@en .
+
+epr:PredecessorSingleAcademyTrust
+    a owl:NamedIndividual, epr:GroupRelationshipType ;
+    rdfs:label "Predecessor SAT"@en ;
+    rdfs:comment "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en .
+# The same epr: URIs also carry skos:Concept in the vocabulary
+# TTL - valid OWL 2 punning.
+#################################################################
+
+# Establishment status (4 values)
+epr:OpenStatus
+    a owl:NamedIndividual, epr:EstablishmentStatus ;
+    rdfs:label "Open"@en ;
+    rdfs:comment "The establishment is currently open and operating. This is the normal status for an active registered establishment."@en .
+
+epr:ClosedStatus
+    a owl:NamedIndividual, epr:EstablishmentStatus ;
+    rdfs:label "Closed"@en ;
+    rdfs:comment "The establishment has closed and is no longer operating. The record is retained in GIAS for historical reference, along with the closed date and reason for closure."@en .
+
+epr:OpenProposedToCloseStatus
+    a owl:NamedIndividual, epr:EstablishmentStatus ;
+    rdfs:label "Open, but proposed to close"@en ;
+    rdfs:comment "The establishment is currently open but has been formally proposed for closure through statutory proposals under the School Standards and Framework Act 1998 (schedule 6) or the Education and Inspections Act 2006. The closure has not yet taken effect."@en .
+
+epr:ProposedToOpenStatus
+    a owl:NamedIndividual, epr:EstablishmentStatus ;
+    rdfs:label "Proposed to open"@en ;
+    rdfs:comment "The establishment has been approved but has not yet opened. Academy and free school proposals use this status between the signing of the funding agreement and the establishment's first day of operation."@en .
+
+# Education phase (8 values)
+epr:NurseryPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "Nursery"@en ;
+    rdfs:comment "An education phase for establishments providing early years education to children below compulsory school age, typically ages 3 to 4."@en .
+
+epr:PrimaryPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "Primary"@en ;
+    rdfs:comment "An education phase for establishments providing primary education, broadly covering ages 4 or 5 to 11, within the compulsory school age range defined by the Education Act 1996 s.8."@en .
+
+epr:MiddlePhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "Middle deemed primary"@en ;
+    rdfs:comment "An education phase assigned to a middle school where the Secretary of State has determined it should be treated as a primary school, typically because the majority of its age range falls within primary years."@en .
+
+epr:MiddleDeemedSecondaryPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "Middle deemed secondary"@en ;
+    rdfs:comment "An education phase assigned to a middle school where the Secretary of State has determined it should be treated as a secondary school, typically because the majority of its age range falls within secondary years."@en .
+
+epr:SecondaryPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "Secondary"@en ;
+    rdfs:comment "An education phase for establishments providing secondary education, broadly covering ages 11 to 16, and up to 18 where sixth-form provision is included, within the compulsory school age range defined by the Education Act 1996 s.8."@en .
+
+epr:AllThroughPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "All-through"@en ;
+    rdfs:comment "An education phase covering the full compulsory school age range within a single establishment, spanning both primary and secondary years (typically ages 4 or 5 to 16 or 18)."@en .
+
+epr:SixteenToNineteenPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "16 to 19"@en ;
+    rdfs:comment "An education phase for establishments providing post-16 education and training to young people aged 16 to 19, including sixth-form colleges and studio schools."@en .
+
+epr:NotApplicableEducationPhase
+    a owl:NamedIndividual, epr:EducationPhase ;
+    rdfs:label "Not applicable (education phase)"@en ;
+    rdfs:comment "A classification value indicating that the education phase field is not applicable to this type of establishment."@en .
+
+# Admissions policy (3 values)
+epr:SelectiveAdmissions
+    a owl:NamedIndividual, epr:AdmissionsPolicy ;
+    rdfs:label "Selective"@en ;
+    rdfs:comment "An admissions-policy value indicating that the school selects all or some pupils by reference to academic ability or aptitude."@en .
+
+epr:NonSelectiveAdmissions
+    a owl:NamedIndividual, epr:AdmissionsPolicy ;
+    rdfs:label "Non-selective"@en ;
+    rdfs:comment "An admissions-policy value indicating that the school does not allocate places through academic selection tests or criteria."@en .
+
+epr:NotApplicableAdmissionsPolicy
+    a owl:NamedIndividual, epr:AdmissionsPolicy ;
+    rdfs:label "Not applicable (admissions policy)"@en ;
+    rdfs:comment "A classification value indicating that an admissions policy classification does not apply to this type of establishment."@en .
+
+# Gender of entry (4 values)
+epr:BoysOnlyGenderEntry
+    a owl:NamedIndividual, epr:GenderOfEntry ;
+    rdfs:label "Boys"@en ;
+    rdfs:comment "A gender-of-entry value indicating that the establishment admits boys only."@en .
+
+epr:GirlsOnlyGenderEntry
+    a owl:NamedIndividual, epr:GenderOfEntry ;
+    rdfs:label "Girls"@en ;
+    rdfs:comment "A gender-of-entry value indicating that the establishment admits girls only."@en .
+
+epr:MixedGenderEntry
+    a owl:NamedIndividual, epr:GenderOfEntry ;
+    rdfs:label "Mixed"@en ;
+    rdfs:comment "A gender-of-entry value indicating that the establishment admits both boys and girls without restriction on grounds of sex."@en .
+
+epr:NotApplicableGenderOfEntry
+    a owl:NamedIndividual, epr:GenderOfEntry ;
+    rdfs:label "Not applicable (gender of entry)"@en ;
+    rdfs:comment "A classification value indicating that a gender-of-entry classification does not apply to this type of establishment."@en .
+
+# Boarding provision (3 values)
+epr:BoardingSchool
+    a owl:NamedIndividual, epr:BoardingProvision ;
+    rdfs:label "Boarding school"@en ;
+    rdfs:comment "A boarding-provision value indicating that the establishment is registered and operates principally as a boarding school, where pupils reside during term time."@en .
+
+epr:HasBoarders
+    a owl:NamedIndividual, epr:BoardingProvision ;
+    rdfs:label "Has boarders"@en ;
+    rdfs:comment "A boarding-provision value indicating that the establishment accommodates some pupils as boarders, but is not primarily classified as a boarding school."@en .
+
+epr:NoBoarders
+    a owl:NamedIndividual, epr:BoardingProvision ;
+    rdfs:label "No boarders"@en ;
+    rdfs:comment "A boarding-provision value indicating that the establishment does not accommodate any pupils as boarders."@en .
+
+# Nursery provision (3 values)
+epr:HasNurseryClasses
+    a owl:NamedIndividual, epr:NurseryProvision ;
+    rdfs:label "Has nursery classes"@en ;
+    rdfs:comment "A nursery-provision value indicating that the establishment operates one or more nursery classes for children below compulsory school age."@en .
+
+epr:NoNurseryClasses
+    a owl:NamedIndividual, epr:NurseryProvision ;
+    rdfs:label "No nursery classes"@en ;
+    rdfs:comment "A nursery-provision value indicating that the establishment does not operate any nursery classes."@en .
+
+epr:NotApplicableNurseryProvision
+    a owl:NamedIndividual, epr:NurseryProvision ;
+    rdfs:label "Not applicable (nursery provision)"@en ;
+    rdfs:comment "A classification value indicating that a nursery provision classification does not apply to this type of establishment."@en .
+
+# Sixth-form provision (3 values)
+epr:HasSixthForm
+    a owl:NamedIndividual, epr:SixthFormProvision ;
+    rdfs:label "Has a sixth form"@en ;
+    rdfs:comment "A sixth-form-provision value indicating that the establishment provides post-16 education as a sixth form, catering to pupils typically in Years 12 and 13."@en .
+
+epr:NoSixthForm
+    a owl:NamedIndividual, epr:SixthFormProvision ;
+    rdfs:label "Does not have a sixth form"@en ;
+    rdfs:comment "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en .
+
+epr:NotApplicableSixthFormProvision
+    a owl:NamedIndividual, epr:SixthFormProvision ;
+    rdfs:label "Not applicable (sixth-form provision)"@en ;
+    rdfs:comment "A classification value indicating that a sixth-form provision classification does not apply to this type of establishment."@en .
+
+# Special-class provision (3 values)
+epr:HasSpecialClasses
+    a owl:NamedIndividual, epr:SpecialClassProvision ;
+    rdfs:label "Has special classes"@en ;
+    rdfs:comment "A special-class-provision value indicating that the establishment provides one or more specially resourced classes or units for pupils with special educational needs."@en .
+
+epr:NoSpecialClasses
+    a owl:NamedIndividual, epr:SpecialClassProvision ;
+    rdfs:label "No special classes"@en ;
+    rdfs:comment "A special-class-provision value indicating that the establishment does not provide any specially resourced classes or units for pupils with special educational needs."@en .
+
+epr:NotApplicableSpecialClassProvision
+    a owl:NamedIndividual, epr:SpecialClassProvision ;
+    rdfs:label "Not applicable (special-class provision)"@en ;
+    rdfs:comment "A classification value indicating that a special-class provision classification does not apply to this type of establishment."@en .
+
+# Governance role type (22 values, v1.2)
+epr:GovernorRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Governor"@en ;
+    rdfs:comment "A governance role in a maintained school governing body."@en .
+
+epr:ChairOfGovernorsRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Chair of governors"@en ;
+    rdfs:comment "The chair of a maintained school governing body."@en .
+
+epr:HeadteacherExOfficioGovernorRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Headteacher (ex-officio governor)"@en ;
+    rdfs:comment "Headteacher of a maintained school holding a governor role by virtue of their office, as defined in the School Governance (Constitution) (England) Regulations 2012 (SI 2012/1034). Modelled from the maintained schools governance guide; not separately enumerated in the GIAS governance extract."@en .
+
+epr:AssociateMemberRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Associate member"@en ;
+    rdfs:comment "A non-voting participant in a maintained school governing body or committee, as defined in the School Governance (Roles, Procedures and Allowances) (England) Regulations 2013 (SI 2013/1624)."@en .
+
+epr:LocalGovernorRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Local governor"@en ;
+    rdfs:comment "A member of a local governing body for an individual academy within a multi-academy trust."@en .
+
+epr:ChairOfLocalGoverningBodyRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Chair of local governing body"@en ;
+    rdfs:comment "The chair of a local governing body for an individual academy within a multi-academy trust."@en .
+
+epr:TrusteeRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Trustee"@en ;
+    rdfs:comment "A trustee of an academy trust board."@en .
+
+epr:ChairOfTrusteesRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Chair of trustees"@en ;
+    rdfs:comment "The chair of an academy trust board of trustees."@en .
+
+epr:MemberRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Member"@en ;
+    rdfs:comment "A member of an academy trust, holding a constitutional oversight role above the trustee board. Absence of term-end date is structurally expected for this role."@en .
+
+epr:AccountingOfficerRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Accounting officer"@en ;
+    rdfs:comment "The accounting officer of an academy trust, responsible to Parliament for the regularity and propriety of public expenditure."@en .
+
+epr:ChiefFinancialOfficerRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Chief financial officer"@en ;
+    rdfs:comment "The chief financial officer of an academy trust."@en .
+
+epr:SharedLocalGovernorEstablishmentRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Shared local governor (establishment)"@en ;
+    rdfs:comment "A local governor exercising a shared governance role recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en .
+
+epr:SharedLocalGovernorGroupRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Shared local governor (group)"@en ;
+    rdfs:comment "A local governor exercising a shared governance role recorded at group level in the GIAS governance extract."@en .
+
+epr:SharedChairOfLocalGoverningBodyEstablishmentRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Shared chair of local governing body (establishment)"@en ;
+    rdfs:comment "A shared chair of local governing body recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en .
+
+epr:SharedChairOfLocalGoverningBodyGroupRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Shared chair of local governing body (group)"@en ;
+    rdfs:comment "A shared chair of local governing body recorded at group level in the GIAS governance extract."@en .
+
+epr:GovernanceProfessionalLaMaintainedSchoolRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Governance professional - local authority maintained school"@en ;
+    rdfs:comment "A governance professional supporting a local authority maintained school governing body."@en .
+
+epr:LocalGovernanceProfessionalIndividualAcademyRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Local governance professional - individual academy or free school"@en ;
+    rdfs:comment "A governance professional supporting the local governing body of an individual academy or free school."@en .
+
+epr:GovernanceProfessionalSatRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Governance professional - single-academy trust (SAT)"@en ;
+    rdfs:comment "A governance professional supporting a single-academy trust board."@en .
+
+epr:GovernanceProfessionalMatRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Governance professional - multi-academy trust (MAT)"@en ;
+    rdfs:comment "A governance professional supporting a multi-academy trust board."@en .
+
+epr:GovernanceProfessionalFederationRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Governance professional - federation"@en ;
+    rdfs:comment "A governance professional supporting a federated governing body."@en .
+
+epr:SharedGovernanceProfessionalEstablishmentRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Shared governance professional (establishment)"@en ;
+    rdfs:comment "A shared governance professional recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en .
+
+epr:SharedGovernanceProfessionalGroupRole
+    a owl:NamedIndividual, epr:GovernanceRoleType ;
+    rdfs:label "Shared governance professional (group)"@en ;
+    rdfs:comment "A shared governance professional recorded at group level in the GIAS governance extract."@en .
+
+# Governance appointing body (18 values, v1.2)
+epr:AppointedByGoverningBoard
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Appointed by GB/board"@en ;
+    rdfs:comment "Appointed by the governing board."@en .
+
+epr:AppointedByFoundationOrTrust
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Appointed by foundation/Trust"@en ;
+    rdfs:comment "Appointed by a foundation body or trust."@en .
+
+epr:ElectedByParents
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Elected by parents"@en ;
+    rdfs:comment "Elected by the parent body under the School Governance (Constitution) (England) Regulations 2012."@en .
+
+epr:ElectedBySchoolStaff
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Elected by school staff"@en ;
+    rdfs:comment "Elected by school staff under the School Governance (Constitution) (England) Regulations 2012."@en .
+
+epr:ExOfficioHeadteacher
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Ex-officio by virtue of office as headteacher/principal"@en ;
+    rdfs:comment "Appointed ex-officio by virtue of holding the headteacher or principal role."@en .
+
+epr:AppointedByAcademyMembers
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Appointed by academy members"@en ;
+    rdfs:comment "Appointed by the academy trust members."@en .
+
+epr:AppointingBodyNotApplicable
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "N/A"@en ;
+    rdfs:comment "Appointing body is not applicable for this governance role."@en .
+
+epr:ParentAppointedByGbDueToNoElection
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Parent appointed by GB/board due to no election candidates"@en ;
+    rdfs:comment "Parent governor appointed by the governing board due to insufficient election candidates."@en .
+
+epr:FoundationOrSponsorMembers
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Foundation/sponsor members"@en ;
+    rdfs:comment "Foundation or sponsor members of the governing body."@en .
+
+epr:NominatedByLaAppointedByGb
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Nominated by LA and appointed by GB"@en ;
+    rdfs:comment "Nominated by the local authority and appointed by the governing board."@en .
+
+epr:ExOfficioFoundationGovernor
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Ex-officio foundation governor (appointed by foundation by virtue of the office they hold)"@en ;
+    rdfs:comment "Foundation governor appointed ex-officio by virtue of another office held within the foundation body."@en .
+
+epr:AppointedByTrustees
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Appointed by trustees"@en ;
+    rdfs:comment "Appointed by the board of trustees."@en .
+
+epr:AppointedByLa
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Appointed by LA"@en ;
+    rdfs:comment "Appointed by the local authority."@en .
+
+epr:PersonsAppointedByFoundationOrSponsor
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Persons who are appointed by the foundation body or sponsor (if applicable)"@en ;
+    rdfs:comment "Persons appointed by the foundation body or sponsor."@en .
+
+epr:OriginalSignatoryMembers
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Original (signatory) members"@en ;
+    rdfs:comment "Original signatory members of the academy trust per the model articles of association."@en .
+
+epr:NominatedByOtherBodyAppointedByGb
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Nominated by other body and appointed by GB"@en ;
+    rdfs:comment "Nominated by another body and appointed by the governing board."@en .
+
+epr:AdditionalMembersAppointedByMembers
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Any additional members appointed by the members of the academy trust"@en ;
+    rdfs:comment "Additional members appointed by existing members of the academy trust."@en .
+
+epr:InterimExecutiveBoard
+    a owl:NamedIndividual, epr:GovernanceAppointingBody ;
+    rdfs:label "Interim Executive Board"@en ;
+    rdfs:comment "An Interim Executive Board appointed by the Regional Schools Commissioner or successor body."@en .
+
+

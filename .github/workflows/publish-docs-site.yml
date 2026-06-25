@@ -8,6 +8,8 @@ on:
       - ".github/workflows/publish-docs-site.yml"
       - "docs-site/**"
       - "features/**"
+      - "business-domain/**"
+      - "models/**"
   workflow_dispatch:
 
 permissions:
@@ -30,6 +32,40 @@ jobs:
         shell: pwsh
         run: ./docs-site/scripts/generate-feature-pages.ps1
 
+      - name: Copy business domain pages
+        shell: pwsh
+        run: ./docs-site/scripts/copy-business-domain-pages.ps1
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Generate vocabulary pages from Turtle
+        shell: pwsh
+        run: ./docs-site/scripts/generate-vocabulary-pages.ps1
+
+      - name: Generate taxonomy page from Turtle
+        shell: pwsh
+        run: ./docs-site/scripts/generate-taxonomy-pages.ps1
+
+      - name: Generate field rules page from SHACL
+        shell: pwsh
+        run: ./docs-site/scripts/generate-shacl-rules-page.ps1
+
+      - name: Generate data quality rules page from SHACL
+        shell: pwsh
+        run: ./docs-site/scripts/generate-data-quality-rules-page.ps1
+
+      - name: Generate per-type field rules page from SHACL
+        shell: pwsh
+        run: ./docs-site/scripts/generate-establishment-type-rules-page.ps1
+
+      - name: Copy model markdown pages
+        shell: pwsh
+        run: ./docs-site/scripts/copy-model-pages.ps1
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -40,6 +76,35 @@ jobs:
       - name: Compile Nanoc site
         working-directory: docs-site
         run: bundle exec nanoc compile
+
+      - name: Cache WIDOCO
+        uses: actions/cache@v4
+        with:
+          path: widoco.jar
+          key: widoco-1.4.25
+
+      - name: Download WIDOCO
+        run: |
+          if [ ! -f widoco.jar ]; then
+            curl -L -o widoco.jar \
+              https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar
+          fi
+
+      - name: Generate ontology documentation
+        run: |
+          java -jar widoco.jar \
+            -ontFile models/establishment-details-conceptual-model.ttl \
+            -outFolder docs-site/output/ontology \
+            -lang en \
+            -includeAnnotationProperties \
+            -webVowl \
+            -noPlaceHolderText \
+            -rewriteAll
+          mv docs-site/output/ontology/doc/* docs-site/output/ontology/
+          rm -rf docs-site/output/ontology/doc
+          if [ ! -f docs-site/output/ontology/index.html ]; then
+            cp docs-site/output/ontology/index-en.html docs-site/output/ontology/index.html
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
