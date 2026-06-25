@@ -14,9 +14,9 @@
 # in that group unless a more specific shape overrides them.
 #
 # Sits alongside:
-#   establishment-details-conceptual-model.ttl  (OWL ontology)
-#   establishment-details-taxonomy-skos.ttl     (SKOS taxonomy)
-#   establishment-details-vocabulary-skos.ttl   (SKOS vocabulary)
+#   education-provider-ontology.ttl  (OWL ontology)
+#   education-provider-taxonomy.ttl     (SKOS taxonomy)
+#   education-provider-vocabulary.ttl   (SKOS vocabulary)
 #
 # All shapes are provisional. Rules for "Other types" (secure units, offshore
 # schools, service children's education, miscellaneous, British schools overseas,

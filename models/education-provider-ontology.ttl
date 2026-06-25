@@ -21,8 +21,8 @@
 #
 #
 # It sits alongside the vocabulary and taxonomy:
-#   establishment-details-vocabulary-skos.ttl
-#   establishment-details-taxonomy-skos.ttl
+#   education-provider-vocabulary.ttl
+#   education-provider-taxonomy.ttl
 
 
 #################################################################
@@ -45,7 +45,7 @@ epro:establishmentDetailsConceptualModel
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/taxonomy/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
-    rdfs:comment "v0.2: per-type field-applicability rules added as SHACL shapes in establishment-details-shacl.ttl. Accountability relationship rules (which types require LA, academy trust or proprietor) are now expressed in those shapes rather than as open questions."@en ;
+    rdfs:comment "v0.2: per-type field-applicability rules added as SHACL shapes in education-provider-shacl.ttl. Accountability relationship rules (which types require LA, academy trust or proprietor) are now expressed in those shapes rather than as open questions."@en ;
     rdfs:comment "v0.4: field-coverage additions - classes and properties for Ofsted inspection record, PRU operational record, accreditation record (online providers), provider type, manager, academy sponsor SHACL modelling. Ontology already had faith-context classes (ReligiousCharacter, ReligiousEthos, Diocese) and SpecialClassProvision. New additions: OfstedInspectionRecord, PupilReferralUnitOperationalRecord, AccreditationRecord, ProviderType, Manager."@en ;
     rdfs:comment "v0.5: establishment type class hierarchy added. Each GIAS establishment type is now an OWL class subtype of epr:Establishment, via intermediate group classes (LaMaintainedSchool, Academy, FreeSchoolEstablishment etc.). Intermediate classes defined here; leaf type classes enriched with owl:Class and rdfs:subClassOf in the taxonomy TTL using OWL 2 punning."@en ;
     rdfs:comment "v0.7: leaf type OWL class declarations moved from the taxonomy TTL into this ontology TTL. The taxonomy TTL is now pure SKOS (skos:Concept, skos:broader etc.). OWL punning is preserved - the same epr: URIs remain valid SKOS concepts in the taxonomy. WIDOCO now receives only this ontology TTL, eliminating the skos:Concept hub node from the WebVOWL graph."@en ;

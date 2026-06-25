@@ -11,9 +11,9 @@
 #
 # Scope: value-level constraints on EPR establishment fields.
 # This file constrains datatypes, ranges and cardinality for properties
-# already defined in establishment-details-conceptual-model.ttl.
+# already defined in education-provider-ontology.ttl.
 #
-# It is separate from establishment-details-shacl.ttl, which constrains
+# It is separate from education-provider-shacl.ttl, which constrains
 # structural shape (which fields are required, optional or not applicable
 # per establishment type). Both files can be validated together or
 # independently.
@@ -24,10 +24,10 @@
 # named vocabulary properties - see deferred items at the end of this file.
 #
 # Sits alongside:
-#   establishment-details-conceptual-model.ttl  (OWL ontology - v0.3)
-#   establishment-details-shacl.ttl             (structural SHACL - v0.2)
-#   establishment-details-taxonomy-skos.ttl     (SKOS taxonomy)
-#   establishment-details-vocabulary-skos.ttl   (SKOS vocabulary)
+#   education-provider-ontology.ttl  (OWL ontology - v0.3)
+#   education-provider-shacl.ttl             (structural SHACL - v0.2)
+#   education-provider-taxonomy.ttl     (SKOS taxonomy)
+#   education-provider-vocabulary.ttl   (SKOS vocabulary)
 
 
 #################################################################
@@ -333,7 +333,7 @@ epr:StatutoryAgeRangeShape
 # Deferred - pending vocabulary data property definitions
 #
 # The following fields require data properties to be defined in
-# establishment-details-vocabulary-skos.ttl before SHACL constraints
+# education-provider-vocabulary.ttl before SHACL constraints
 # can be expressed for their values:
 #
 # - PupilsEligibleForFreeSchoolMeals (count):

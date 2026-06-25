@@ -93,7 +93,7 @@ jobs:
       - name: Generate ontology documentation
         run: |
           java -jar widoco.jar \
-            -ontFile models/establishment-details-conceptual-model.ttl \
+            -ontFile models/education-provider-ontology.ttl \
             -outFolder docs-site/output/ontology \
             -lang en \
             -includeAnnotationProperties \
