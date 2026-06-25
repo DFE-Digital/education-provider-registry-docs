@@ -192,7 +192,7 @@ $taxons = $concepts | Where-Object { -not $_.IsTopConcept } | Sort-Object Prefer
 $treeHtml = $facets | ForEach-Object { New-TaxonomyTreeHtml -LocalName $_.LocalName }
 
 $lines = @(
-    "# Establishment Details Taxonomy",
+    "# Education Provider Registry Taxonomy",
     "",
     "This page is generated from `models/education-provider-taxonomy.ttl`.",
     "",

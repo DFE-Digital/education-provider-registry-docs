@@ -7,7 +7,7 @@
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 
-# GIAS 2.0 Establishment Details - SHACL Shapes
+# Education Provider Registry - SHACL Shapes
 #
 # Scope: field-applicability constraints for the ~39 GIAS establishment types.
 # Shapes are organised by type group. Rules within a group apply to every type
@@ -30,7 +30,7 @@
 
 <https://dfe-digital.github.io/education-provider-registry-docs/shapes/>
     a owl:Ontology ;
-    dcterms:title "GIAS 2.0 Establishment Details SHACL Shapes"@en ;
+    dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
     dcterms:modified "2026-06-25"^^xsd:date ;

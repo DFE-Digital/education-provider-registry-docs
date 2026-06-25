@@ -4,9 +4,9 @@ This folder contains machine-readable semantic model files for the Education Pro
 
 ## Files
 
-- `education-provider-vocabulary.ttl` - a SKOS vocabulary for Establishment Details concepts, including preferred labels, alternative labels, definitions, relationships, statuses and source notes.
-- `education-provider-taxonomy.ttl` - a SKOS taxonomy for Establishment Details classifications, expressed as facets and narrower taxons evidenced by the current modelling work.
-- `education-provider-ontology.ttl` - an OWL 2 ontology defining the classes, properties and named individuals for the Establishment Details model. WIDOCO generates browsable documentation and a WebVOWL graph from this file.
+- `education-provider-vocabulary.ttl` - a SKOS vocabulary for Education Provider Registry concepts, including preferred labels, alternative labels, definitions, relationships, statuses and source notes.
+- `education-provider-taxonomy.ttl` - a SKOS taxonomy for Education Provider Registry classifications, expressed as facets and narrower taxons evidenced by the current modelling work.
+- `education-provider-ontology.ttl` - an OWL 2 ontology defining the classes, properties and named individuals for the Education Provider Registry model. WIDOCO generates browsable documentation and a WebVOWL graph from this file.
 
 ## SKOS
 
