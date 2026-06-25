@@ -3093,3 +3093,19 @@ epr:BritishSchoolsOverseasShape
 # in this version.
 
 
+#################################################################
+# Governance constraints
+#################################################################
+
+# hasGroupGovernanceAppointment is OWL-domain EstablishmentGroup (conceptual model).
+# Current GIAS data constraint: all 28,692 UID-based group governance rows are MAT type.
+# This SHACL shape enforces the current data constraint without narrowing the OWL domain.
+
+epr:GroupGovernanceAppointmentSubjectShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf epro:hasGroupGovernanceAppointment ;
+    sh:class epr:AcademyTrust ;
+    sh:name "Group governance appointment subject"@en ;
+    sh:message "The subject of hasGroupGovernanceAppointment must be an AcademyTrust. All 28,692 UID-based group governance rows in the current GIAS data are MAT type. If federation or other group-type governance is introduced, update this constraint."@en .
+
+
