@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "establishment-details-taxonomy-skos.ttl")),
+    [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "taxonomy"))
 )
 
@@ -194,7 +194,7 @@ $treeHtml = $facets | ForEach-Object { New-TaxonomyTreeHtml -LocalName $_.LocalN
 $lines = @(
     "# Establishment Details Taxonomy",
     "",
-    "This page is generated from `models/establishment-details-taxonomy-skos.ttl`.",
+    "This page is generated from `models/education-provider-taxonomy.ttl`.",
     "",
     "The taxonomy is a faceted SKOS taxonomy. Facets are represented as top concepts, and taxons sit beneath those facets using `skos:broader` relationships.",
     "",

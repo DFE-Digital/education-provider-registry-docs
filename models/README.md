@@ -4,9 +4,9 @@ This folder contains machine-readable semantic model files for the Education Pro
 
 ## Files
 
-- `establishment-details-vocabulary-skos.ttl` - a SKOS vocabulary for Establishment Details concepts, including preferred labels, alternative labels, definitions, relationships, statuses and source notes.
-- `establishment-details-taxonomy-skos.ttl` - a SKOS taxonomy for Establishment Details classifications, expressed as facets and narrower taxons evidenced by the current modelling work.
-- `establishment-details-conceptual-model.ttl` - an OWL 2 ontology defining the classes, properties and named individuals for the Establishment Details model. WIDOCO generates browsable documentation and a WebVOWL graph from this file.
+- `education-provider-vocabulary.ttl` - a SKOS vocabulary for Establishment Details concepts, including preferred labels, alternative labels, definitions, relationships, statuses and source notes.
+- `education-provider-taxonomy.ttl` - a SKOS taxonomy for Establishment Details classifications, expressed as facets and narrower taxons evidenced by the current modelling work.
+- `education-provider-ontology.ttl` - an OWL 2 ontology defining the classes, properties and named individuals for the Establishment Details model. WIDOCO generates browsable documentation and a WebVOWL graph from this file.
 
 ## SKOS
 
@@ -34,7 +34,7 @@ The persistent concept identifier is:
 https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/EstablishmentLifecycle/
 ```
 
-The GitHub link to a line in `establishment-details-vocabulary-skos.ttl` is useful for review and navigation, but it should not be treated as the canonical identifier because line numbers can change as the file evolves.
+The GitHub link to a line in `education-provider-vocabulary.ttl` is useful for review and navigation, but it should not be treated as the canonical identifier because line numbers can change as the file evolves.
 
 The taxonomy file uses `skos:relatedMatch` to link taxonomy concepts to vocabulary concepts when there is a matching published vocabulary concept. Not every taxon has a vocabulary concept, so absence of a link is intentional rather than a publication error.
 

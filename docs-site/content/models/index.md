@@ -15,8 +15,8 @@ The model is split across three layers. The vocabulary and taxonomy define terms
 | [Establishment field rules by type](./establishment-field-rules-by-type/) | Markdown | Complete field list per establishment type - all applicable shapes combined into one view per type |
 | [Establishment type field rules](./establishment-type-field-rules/) | Markdown | Per-shape structural rules - which fields are required, optional or not applicable, grouped by SHACL shape |
 | [Establishment data quality rules](./establishment-data-quality-rules/) | Markdown | Value-level rules - datatypes, numeric ranges and cardinality constraints for identity, lifecycle and measure fields |
-| [SHACL shapes (source)](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment-details-shacl.ttl) | SHACL/Turtle | Machine-readable structural rules - source for the field rules page above |
-| [Data quality SHACL shapes (source)](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment-details-data-quality-shacl.ttl) | SHACL/Turtle | Machine-readable value-level rules - source for the data quality rules page above |
+| [SHACL shapes (source)](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-shacl.ttl) | SHACL/Turtle | Machine-readable structural rules - source for the field rules page above |
+| [Data quality SHACL shapes (source)](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-data-quality-shacl.ttl) | SHACL/Turtle | Machine-readable value-level rules - source for the data quality rules page above |
 
 ## How the layers relate
 
@@ -36,9 +36,9 @@ The Turtle source files are in `models/` in the repository. The vocabulary, taxo
 
 | File | Description |
 | --- | --- |
-| `establishment-details-vocabulary-skos.ttl` | SKOS vocabulary source |
-| `establishment-details-taxonomy-skos.ttl` | SKOS taxonomy source |
-| `establishment-details-conceptual-model.ttl` | OWL ontology source - WIDOCO generates the ontology docs and WebVOWL graph from this file |
-| `establishment-details-shacl.ttl` | SHACL shapes source - field rules page is generated from this file during the build |
+| `education-provider-vocabulary.ttl` | SKOS vocabulary source |
+| `education-provider-taxonomy.ttl` | SKOS taxonomy source |
+| `education-provider-ontology.ttl` | OWL ontology source - WIDOCO generates the ontology docs and WebVOWL graph from this file |
+| `education-provider-shacl.ttl` | SHACL shapes source - field rules page is generated from this file during the build |
 
 

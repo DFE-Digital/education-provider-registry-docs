@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "establishment-details-vocabulary-skos.ttl")),
+    [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "vocabulary"))
 )
 
@@ -138,7 +138,7 @@ function Format-ConceptLinks {
 
 foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
     $canonicalUri = "https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/$($concept.LocalName)/"
-    $sourceTtl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment-details-vocabulary-skos.ttl"
+    $sourceTtl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-vocabulary.ttl"
 
     $lines = @(
         "# $($concept.PreferredLabel)",
@@ -185,7 +185,7 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
 $indexLines = @(
     "# Vocabulary",
     "",
-    "This index is generated from `models/establishment-details-vocabulary-skos.ttl`.",
+    "This index is generated from `models/education-provider-vocabulary.ttl`.",
     "",
     "| Concept | Compact identifier | Status | Definition |",
     "| --- | --- | --- | --- |"
