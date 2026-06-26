@@ -38,7 +38,7 @@ epro:establishmentDetailsConceptualModel
     dcterms:modified "2026-06-26"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.3" ;
+    owl:versionInfo "1.4" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> ;
@@ -56,6 +56,7 @@ epro:establishmentDetailsConceptualModel
     rdfs:comment "v1.2: Governance model added. 8 new OWL classes: GovernanceAppointment, GovernanceIdentifier, GovernanceRoleType, GovernanceAppointmentDate, GovernanceTermEndDate, GovernanceAppointingBody, GovernancePerson, GovernancePersonIdentifier. 9 new object properties: hasGovernanceAppointment (domain Establishment), hasGroupGovernanceAppointment (domain EstablishmentGroup; AcademyTrust-only enforced in SHACL), hasGovernanceIdentifier, hasGovernanceRoleType, hasGovernanceAppointmentDate, hasGovernanceTermEndDate, hasGovernanceAppointingBody, appointmentOf, hasGovernancePersonIdentifier. 22 named individuals for GovernanceRoleType; 18 for GovernanceAppointingBody. GovernanceAppointment and GovernancePerson annotated with dcterms:accessRights as personal-data-carrying classes."@en ;
     rdfs:comment "v1.3: Administrative geography model added. New class epr:AdministrativeGeography groups 6 ONS statistical and administrative area classifications as sub-classes: GovernmentOfficeRegion, UrbanRuralClassification, AdministrativeWard, ParliamentaryConstituency, LowerLayerSuperOutputArea, MiddleLayerSuperOutputArea. New object property epro:hasAdministrativeGeography links Establishment to AdministrativeGeography (0..1). Sub-properties classifiedByGovernmentOfficeRegion, classifiedByUrbanRuralClassification, classifiedByAdministrativeWard, classifiedByParliamentaryConstituency, classifiedByLowerLayerSuperOutputArea, classifiedByMiddleLayerSuperOutputArea added. New class epr:Country added to MainAddress for British schools overseas and other non-England establishments; new property epro:hasCountry (domain MainAddress, range Country, 0..1). epr:LocalAuthority rdfs:comment updated to make the geographic reference role explicit alongside the accountability role."@en ;
     rdfs:comment "v0.6: ontology class local names aligned with vocabulary source of truth. Renames: ContactAndLocation -> EstablishmentLocationAndContact, PostalAddress -> MainAddress, WebsiteUrl -> Website, Manager -> CentreManager, Section41ApprovalStatus -> Section41Approval. Vocabulary entries added for all 14 intermediate OWL classes and for grouping container classes (ResourcedProvisionMeasure, SenUnitMeasure, SpecialPupilMeasure, OfstedInspectionRecord, AccreditationRecord, PupilReferralUnitOperationalRecord)."@en ;
+    rdfs:comment "v1.4: UI field coverage gaps addressed. New classes: InspectorateReport (inspection detail), GroupUniqueIdentifier, GroupMembershipDate, GroupStatus, GroupOpenDate, GroupIncorporatedOnDate, GroupClosedDate (establishment group lifecycle). New object properties: recordsInspectorateReport (on InspectionReportReference), sharedWith (on GovernanceAppointment, range Establishment — covers shared local governor roles), hasGroupUniqueIdentifier, hasGroupMembershipDate, hasGroupStatus, hasGroupOpenDate, hasGroupIncorporatedOnDate, hasGroupClosedDate, hasLocalAuthorityForGroup (establishment group properties; hasLocalAuthorityForGroup SHACL-scoped to children's centre group types)."@en ;
     epr:status "Provisional"@en .
 
 
@@ -940,6 +941,11 @@ epr:DateOfNextInspectionVisit
     rdfs:label "Date of next inspection visit"@en ;
     rdfs:comment "The scheduled date of the next inspection visit. Observed for British schools overseas (type 37)."@en .
 
+epr:InspectorateReport
+    a owl:Class ;
+    rdfs:label "Inspectorate report"@en ;
+    rdfs:comment "A URL reference to the most recent inspection report published by the named non-Ofsted inspectorate. Used for British schools overseas inspected under the British Schools Overseas framework. Distinct from the Ofsted inspection report link held under OfstedInspectionRecord."@en .
+
 
 #################################################################
 # Classes - special pupils SEN measures
@@ -1130,6 +1136,13 @@ epro:recordsDateOfNextInspectionVisit
     rdfs:domain epr:InspectionReportReference ;
     rdfs:range epr:DateOfNextInspectionVisit ;
     rdfs:comment "Cardinality: 0..1. Observed for British schools overseas (type 37)."@en .
+
+epro:recordsInspectorateReport
+    a owl:ObjectProperty ;
+    rdfs:label "records inspectorate report"@en ;
+    rdfs:domain epr:InspectionReportReference ;
+    rdfs:range epr:InspectorateReport ;
+    rdfs:comment "Cardinality: 0..1. Present for British schools overseas (type 37) inspected under the British Schools Overseas framework."@en .
 
 
 #################################################################
@@ -1484,6 +1497,55 @@ epro:classifiedByGroupRelationshipType
     rdfs:range epr:GroupRelationshipType ;
     rdfs:comment "Cardinality: exactly 1."@en .
 
+epro:hasGroupUniqueIdentifier
+    a owl:ObjectProperty ;
+    rdfs:label "has group unique identifier"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupUniqueIdentifier ;
+    rdfs:comment "Cardinality: exactly 1. Every group has exactly one GIAS internal group UID."@en .
+
+epro:hasGroupMembershipDate
+    a owl:ObjectProperty ;
+    rdfs:label "has group membership date"@en ;
+    rdfs:domain epr:GroupMembership ;
+    rdfs:range epr:GroupMembershipDate ;
+    rdfs:comment "Cardinality: 0..1. The date the establishment joined this group."@en .
+
+epro:hasGroupStatus
+    a owl:ObjectProperty ;
+    rdfs:label "has group status"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupStatus ;
+    rdfs:comment "Cardinality: exactly 1."@en .
+
+epro:hasGroupOpenDate
+    a owl:ObjectProperty ;
+    rdfs:label "has group open date"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupOpenDate ;
+    rdfs:comment "Cardinality: 0..1. Used for non-trust group types. SHACL constraint: mutually exclusive with hasGroupIncorporatedOnDate."@en .
+
+epro:hasGroupIncorporatedOnDate
+    a owl:ObjectProperty ;
+    rdfs:label "has group incorporated on date"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupIncorporatedOnDate ;
+    rdfs:comment "Cardinality: 0..1. Used for trust group types (MAT, SAT, SSAT). SHACL constraint: mutually exclusive with hasGroupOpenDate."@en .
+
+epro:hasGroupClosedDate
+    a owl:ObjectProperty ;
+    rdfs:label "has group closed date"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:GroupClosedDate ;
+    rdfs:comment "Cardinality: 0..1. Populated when the group has closed."@en .
+
+epro:hasLocalAuthorityForGroup
+    a owl:ObjectProperty ;
+    rdfs:label "has local authority for group"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:LocalAuthority ;
+    rdfs:comment "Cardinality: 0..1. SHACL constraint scopes this to ChildrensCentreGroup and ChildrensCentreCollaboration only; not populated for any other group type."@en .
+
 
 #################################################################
 # Object properties - governance (v1.2)
@@ -1551,6 +1613,13 @@ epro:hasGovernancePersonIdentifier
     rdfs:domain epr:GovernancePerson ;
     rdfs:range epr:GovernancePersonIdentifier ;
     rdfs:comment "Cardinality: 0..*. May have multiple identifiers where previous-surname alias hashes are generated."@en .
+
+epro:sharedWith
+    a owl:ObjectProperty ;
+    rdfs:label "shared with"@en ;
+    rdfs:domain epr:GovernanceAppointment ;
+    rdfs:range epr:Establishment ;
+    rdfs:comment "Cardinality: 0..1. Links a shared governance appointment to the partner establishment with which the governor is shared. Present for governance role types with a 'Shared' prefix (e.g. Shared Local Governor, Shared Chair of LGB). The GovernanceRoleType named individuals enumerate these roles; this property expresses the structural link to the other establishment. Displayed as the 'Shared with' field on the GIAS Governance tab for academy types."@en .
 
 
 #################################################################
@@ -1990,6 +2059,36 @@ epr:GroupUkprn
     a owl:Class ;
     rdfs:label "Group UKPRN"@en ;
     rdfs:comment "A UKRLP provider reference number assigned to the group organisation. Sourced from UKRLP by matching on Companies House number."@en .
+
+epr:GroupUniqueIdentifier
+    a owl:Class ;
+    rdfs:label "Group unique identifier (UID)"@en ;
+    rdfs:comment "The internal GIAS numeric group identifier, analogous to URN for establishments. Primary identifier for a group within GIAS. Distinct from GroupId, which is the business-facing identifier carrying a TR or SP prefix."@en .
+
+epr:GroupMembershipDate
+    a owl:Class ;
+    rdfs:label "Group membership date"@en ;
+    rdfs:comment "The date on which an establishment joined an establishment group. Maps to GroupLink.effectiveDate in the GIAS schema. Displayed in the linked-establishment list on group pages."@en .
+
+epr:GroupStatus
+    a owl:Class ;
+    rdfs:label "Group status"@en ;
+    rdfs:comment "The lifecycle status of the establishment group. Analogous to EstablishmentStatus for establishments. Typical values: Open, Closed."@en .
+
+epr:GroupOpenDate
+    a owl:Class ;
+    rdfs:label "Group open date"@en ;
+    rdfs:comment "The date on which the group was established. Used for federation, school sponsor, children's centre group and collaboration group types. Not used for trust types (MAT, SAT, SSAT), which use GroupIncorporatedOnDate instead."@en .
+
+epr:GroupIncorporatedOnDate
+    a owl:Class ;
+    rdfs:label "Group incorporated on date"@en ;
+    rdfs:comment "The Companies Act incorporation date for trust group types (MAT, SAT, SSAT). Distinct from GroupOpenDate, used for non-trust group types. The two must not be collapsed."@en .
+
+epr:GroupClosedDate
+    a owl:Class ;
+    rdfs:label "Group closed date"@en ;
+    rdfs:comment "The date on which the group closed. Populated when GroupStatus transitions to Closed."@en .
 
 
 #################################################################

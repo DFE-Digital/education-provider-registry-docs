@@ -509,7 +509,13 @@ epr:EstablishmentGroupMembership
         epr:GroupRelationship,
         epr:GroupRelationshipType,
         epr:GroupId,
-        epr:GroupUkprn ;
+        epr:GroupUkprn,
+        epr:GroupUniqueIdentifier,
+        epr:GroupMembershipDate,
+        epr:GroupStatus,
+        epr:GroupOpenDate,
+        epr:GroupIncorporatedOnDate,
+        epr:GroupClosedDate ;
     epr:status "Provisional"@en .
 
 epr:EstablishmentGroup
@@ -598,6 +604,7 @@ epr:GroupMembership
     skos:prefLabel "Group membership"@en ;
     skos:definition "A dated record of an establishment's membership of an establishment group, trust, federation, sponsor arrangement or children's centre collaboration. An establishment may have membership in more than one group simultaneously."@en ;
     skos:scopeNote "Maps to GroupLink in the current GIAS schema. Contains the establishment (via URN), the group (via group ID), and an effective date."@en ;
+    skos:narrower epr:GroupMembershipDate ;
     skos:broader epr:EstablishmentGroupMembership ;
     epr:status "Provisional"@en .
 
@@ -652,6 +659,66 @@ epr:GroupUkprn
     skos:prefLabel "Group UKPRN"@en ;
     skos:definition "A UK Provider Reference Number assigned to the group organisation by the UKRLP register. Sourced from UKRLP by matching on Companies House number."@en ;
     skos:broader epr:EstablishmentGroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:GroupUniqueIdentifier
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group unique identifier (UID)"@en ;
+    skos:altLabel "UID"@en ;
+    skos:definition "The internal GIAS numeric group identifier, analogous to URN for establishments. Primary identifier for a group within GIAS. Displayed on group detail pages."@en ;
+    skos:scopeNote "Distinct from GroupId, which is the business-facing identifier carrying a TR or SP prefix. The UID is the GIAS surrogate key for the group record."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    skos:related epr:GroupId ;
+    epr:status "Provisional"@en .
+
+epr:GroupMembershipDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group membership date"@en ;
+    skos:definition "The date on which an establishment joined an establishment group. Displayed in the linked-establishment list on group detail pages."@en ;
+    skos:scopeNote "Maps to GroupLink.effectiveDate in the GIAS schema."@en ;
+    skos:broader epr:GroupMembership ;
+    epr:status "Provisional"@en .
+
+epr:GroupStatus
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group status"@en ;
+    skos:definition "The lifecycle status of the establishment group, indicating whether the group is currently active or has closed. Analogous to EstablishmentStatus for establishments."@en ;
+    skos:scopeNote "Displayed on group detail pages for all group types. Typical values: Open, Closed."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    skos:related epr:EstablishmentStatus ;
+    epr:status "Provisional"@en .
+
+epr:GroupOpenDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group open date"@en ;
+    skos:definition "The date on which the group was established. Displayed on group detail pages for federation, school sponsor, children's centre group and collaboration group types."@en ;
+    skos:scopeNote "Not used for trust group types (MAT, SAT, SSAT), which use GroupIncorporatedOnDate instead. The two concepts must not be collapsed."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    skos:related epr:GroupIncorporatedOnDate ;
+    epr:status "Provisional"@en .
+
+epr:GroupIncorporatedOnDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Incorporated on date"@en ;
+    skos:altLabel "Group incorporated on date"@en ;
+    skos:definition "The Companies Act incorporation date for trust group types (MAT, SAT, SSAT). Displayed on group detail pages as 'Incorporated on (open date)'."@en ;
+    skos:scopeNote "Distinct from GroupOpenDate, which is used for non-trust group types. Trust types are incorporated under the Companies Act 2006 and receive a formal incorporation date, which differs semantically from the operational open date of non-trust groups."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    skos:related epr:GroupOpenDate ;
+    epr:status "Provisional"@en .
+
+epr:GroupClosedDate
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group closed date"@en ;
+    skos:definition "The date on which the group closed. Populated when GroupStatus transitions to Closed. Displayed on group detail pages for closed groups of all types."@en ;
+    skos:broader epr:EstablishmentGroupMembership ;
+    skos:related epr:GroupStatus ;
     epr:status "Provisional"@en .
 
 epr:GovernanceAppointments
