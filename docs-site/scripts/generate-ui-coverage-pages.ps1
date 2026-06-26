@@ -162,10 +162,6 @@ foreach ($tabKey in $tabs.Keys) {
     # Build type set for this tab (union of all types across all fields on this tab)
     $tabTypeCodes = @($allCodes | Where-Object { $code = $_; $fields | Where-Object { $_.Types -contains $code } })
 
-    # Header row — use abbreviated codes
-    $headerCells = @("| Field") + @($tabTypeCodes | ForEach-Object { "| $_" }) + @("| epr: concept |")
-    $sepCells    = @("| ---") + @($tabTypeCodes | ForEach-Object { "| :---: " }) + @("| --- |")
-
     $lines = @(
         "# $($tabInfo.Heading)",
         "",
@@ -173,46 +169,33 @@ foreach ($tabKey in $tabs.Keys) {
         "",
         "Source: <$sourceTtl>",
         "",
-        "Tick (✓) indicates the field is displayed for that establishment type. Blank = not shown.",
-        "Type codes follow the GIAS establishment type classification.",
+        "Each section lists the fields visible on this tab for that establishment type.",
         "",
         "---",
-        "",
-        ($headerCells -join ""),
-        ($sepCells -join "")
+        ""
     )
 
-    foreach ($field in $fields) {
-        $typeSet = @{}
-        foreach ($t in $field.Types) { $typeSet[$t] = $true }
+    foreach ($code in $tabTypeCodes) {
+        $typeLabel  = $typeMeta[$code]
+        $applicable = @($fields | Where-Object { $_.Types -contains $code })
 
-        $cells = @("| $(Escape-Md $field.Label)")
-        foreach ($code in $tabTypeCodes) {
-            if ($typeSet.ContainsKey($code)) {
-                $cells += "| ✓"
-            }
-            else {
-                $cells += "|"
+        $lines += "## $typeLabel (type $code)"
+        $lines += ""
+        if ($applicable.Count -gt 0) {
+            $lines += "| Field | ``epr:`` concept |"
+            $lines += "| --- | --- |"
+            foreach ($field in $applicable) {
+                $lines += "| $(Escape-Md $field.Label) | ``epr:$($field.LocalName)`` |"
             }
         }
-        $cells += "| ``epr:$($field.LocalName)`` |"
-        $lines += ($cells -join "")
+        else {
+            $lines += "_No fields on this tab for this establishment type._"
+        }
+        $lines += ""
     }
 
     $lines += @(
-        "",
         "---",
-        "",
-        "## Establishment type key",
-        "",
-        "| Code | Establishment type |",
-        "| --- | --- |"
-    )
-    foreach ($code in $tabTypeCodes) {
-        $lines += "| $code | $($typeMeta[$code]) |"
-    }
-
-    $lines += @(
         "",
         "## Notes",
         "",

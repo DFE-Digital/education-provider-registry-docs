@@ -4,55 +4,277 @@ This page is generated from `models/provider-field-coverage.ttl` — do not edit
 
 Source: <https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/provider-field-coverage.ttl>
 
-Tick (✓) indicates the field is displayed for that establishment type. Blank = not shown.
+Each section lists the fields visible on this tab for that establishment type.
 
 ---
 
-| Field | 01 | 02 | 03 | 05 | 06 | 07 | 12 | 14 | 15 | 28 | 33 | 34 | 35 | 36 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | `epr:` concept |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
-| Appointed by | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `epr:GovernanceAppointingBody` |
-| Date appointment ended | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `epr:GovernanceTermEndDate` |
-| Date of appointment | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `epr:GovernanceAppointmentDate` |
-| Governance role | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `epr:GovernanceRoleType` |
-| Governance role identifier (GID) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `epr:GovernanceIdentifier` |
-| Name | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `epr:GovernancePerson` |
-| Shared with |  |  |  |  |  |  |  |  |  |  | ✓ | ✓ | ✓ |  |  |  |  |  |  |  |  |  | ✓ | `epr:GovernanceAppointment` |
+## Community school (type 01)
 
----
-
-## Establishment type key
-
-| Code | Establishment type |
+| Field | `epr:` concept |
 | --- | --- |
-| 01 | Community school |
-| 02 | Voluntary aided school |
-| 03 | Voluntary controlled school |
-| 05 | Foundation school |
-| 06 | City technology college |
-| 07 | Community special school |
-| 12 | Foundation special school |
-| 14 | Pupil referral unit |
-| 15 | Local authority nursery school |
-| 28 | Academy sponsor led |
-| 33 | Academy special sponsor led |
-| 34 | Academy converter |
-| 35 | Free schools |
-| 36 | Free schools special |
-| 38 | Free schools alternative provision |
-| 39 | Free schools 16 to 19 |
-| 40 | University technical college |
-| 41 | Studio schools |
-| 42 | Academy AP converter |
-| 43 | Academy AP sponsor led |
-| 44 | Academy special converter |
-| 45 | Academy 16-19 converter |
-| 46 | Academy 16 to 19 sponsor led |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Voluntary aided school (type 02)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Voluntary controlled school (type 03)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Foundation school (type 05)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## City technology college (type 06)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Community special school (type 07)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Foundation special school (type 12)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Pupil referral unit (type 14)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Local authority nursery school (type 15)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy sponsor led (type 28)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy special sponsor led (type 33)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+| Shared with | `epr:GovernanceAppointment` |
+
+## Academy converter (type 34)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+| Shared with | `epr:GovernanceAppointment` |
+
+## Free schools (type 35)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+| Shared with | `epr:GovernanceAppointment` |
+
+## Free schools special (type 36)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Free schools alternative provision (type 38)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Free schools 16 to 19 (type 39)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## University technical college (type 40)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Studio schools (type 41)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy AP converter (type 42)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy AP sponsor led (type 43)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy special converter (type 44)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy 16-19 converter (type 45)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+
+## Academy 16 to 19 sponsor led (type 46)
+
+| Field | `epr:` concept |
+| --- | --- |
+| Appointed by | `epr:GovernanceAppointingBody` |
+| Date appointment ended | `epr:GovernanceTermEndDate` |
+| Date of appointment | `epr:GovernanceAppointmentDate` |
+| Governance role | `epr:GovernanceRoleType` |
+| Governance role identifier (GID) | `epr:GovernanceIdentifier` |
+| Name | `epr:GovernancePerson` |
+| Shared with | `epr:GovernanceAppointment` |
+
+---
 
 ## Notes
 
 - Evidence source: observed GIAS public page rendering, June 2026.
-  One representative establishment per type.
-- Types 09, 17, 22, 23 and 98 are excluded: no sample rows in the June 2026 extracts.
-- Re-generate by running `scripts/generate-ui-coverage-pages.ps1`.
+  One representative establishment per type. Closed establishments may
+  render fewer fields than open establishments of the same type.
+- Types 09, 17, 22, 23 and 98 are not included: no sample establishments
+  were available in the June 2026 extracts.
+- The model source file is `models/provider-field-coverage.ttl`.
+  Update that file and re-run the generator to rebuild this page.
 
 [Back to UI coverage index](../)
