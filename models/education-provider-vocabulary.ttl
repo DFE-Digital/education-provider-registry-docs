@@ -135,7 +135,12 @@ epr:administrativeGeography
         epr:AdministrativeWard,
         epr:ParliamentaryConstituency,
         epr:LowerLayerSuperOutputArea,
-        epr:MiddleLayerSuperOutputArea .
+        epr:MiddleLayerSuperOutputArea,
+        epr:DistrictAdministrative,
+        epr:GssLocalAuthorityCode,
+        epr:OsGridReference,
+        epr:Easting,
+        epr:Northing .
 
 epr:leadership
     a skos:Collection ;
@@ -2140,7 +2145,10 @@ epr:AdministrativeGeography
         epr:AdministrativeWard,
         epr:ParliamentaryConstituency,
         epr:LowerLayerSuperOutputArea,
-        epr:MiddleLayerSuperOutputArea ;
+        epr:MiddleLayerSuperOutputArea,
+        epr:DistrictAdministrative,
+        epr:GssLocalAuthorityCode,
+        epr:OsGridReference ;
     epr:status "Provisional"@en ;
     dcterms:source "GIAS field group: REGION; UI tab: REGIONAL (Location)"@en .
 
@@ -2200,6 +2208,56 @@ epr:MiddleLayerSuperOutputArea
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.msoa_code → MSOA; derived via GeoData"@en .
+
+epr:DistrictAdministrative
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Administrative district"@en ;
+    skos:definition "The administrative district in which the establishment is located. Displayed on the establishment location tab in GIAS."@en ;
+    skos:scopeNote "In two-tier areas (county plus district) this is a distinct council below the county. In unitary authority areas, metropolitan districts and London boroughs the district and local authority are the same body, so this will match the LocalAuthority value. Included for consistency with GIAS UI display."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.districtAdministrative_code → DistrictAdministrative"@en .
+
+epr:GssLocalAuthorityCode
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "GSS local authority code"@en ;
+    skos:altLabel "Government Statistical Service local authority code"@en ;
+    skos:definition "The ONS Government Statistical Service code for the local authority in whose area the establishment is located. A machine-readable identifier (for example E08000007 for Stockport) used for cross-referencing with ONS statistical datasets and published geographies. Displayed on the establishment location tab in GIAS."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.GssLaCode_code → GSSLACode"@en .
+
+epr:OsGridReference
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "OS grid reference"@en ;
+    skos:altLabel "National Grid reference"@en ;
+    skos:definition "The Ordnance Survey National Grid reference for the establishment's location, expressed as easting and northing values in the OSGB36 coordinate reference system. Both values are displayed on the establishment location tab in GIAS."@en ;
+    skos:scopeNote "Derived from the establishment's postcode. Enables map display and proximity calculations. The easting and northing are displayed as separate fields in the GIAS UI."@en ;
+    skos:narrower epr:Easting, epr:Northing ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Easting, Establishment.Northing"@en .
+
+epr:Easting
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Easting"@en ;
+    skos:definition "The easting component of the OS National Grid reference, in metres east of the grid origin."@en ;
+    skos:broader epr:OsGridReference ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Easting"@en .
+
+epr:Northing
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Northing"@en ;
+    skos:definition "The northing component of the OS National Grid reference, in metres north of the grid origin."@en ;
+    skos:broader epr:OsGridReference ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Northing"@en .
 
 #################################################################
 # Leadership

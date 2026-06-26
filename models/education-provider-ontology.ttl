@@ -877,6 +877,34 @@ epr:MiddleLayerSuperOutputArea
     rdfs:label "Middle-layer Super Output Area"@en ;
     rdfs:comment "The MSOA for the establishment's postcode. Mid-level statistical geography. In GIAS: Establishment.msoa_code → MSOA."@en .
 
+epr:DistrictAdministrative
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Administrative district"@en ;
+    rdfs:comment "The administrative district for the establishment's postcode. Displayed on the establishment location tab in GIAS. In two-tier areas this is a district council below county level; in unitary authority, metropolitan and London borough areas the district and local authority are the same body. In GIAS: Establishment.districtAdministrative_code → DistrictAdministrative."@en .
+
+epr:GssLocalAuthorityCode
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "GSS local authority code"@en ;
+    rdfs:comment "The ONS Government Statistical Service code for the local authority in whose area the establishment is located (for example E08000007). A standard machine-readable identifier used for cross-referencing with ONS statistical datasets. Displayed on the establishment location tab in GIAS. In GIAS: Establishment.GssLaCode_code → GSSLACode."@en .
+
+epr:OsGridReference
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "OS grid reference"@en ;
+    rdfs:comment "The Ordnance Survey National Grid reference for the establishment's location, comprising easting and northing values in the OSGB36 coordinate reference system. Derived from the establishment's postcode. Both easting and northing are displayed on the establishment location tab in GIAS."@en .
+
+epr:Easting
+    a owl:Class ;
+    rdfs:label "Easting"@en ;
+    rdfs:comment "The easting component of the OS National Grid reference, in metres east of the grid origin."@en .
+
+epr:Northing
+    a owl:Class ;
+    rdfs:label "Northing"@en ;
+    rdfs:comment "The northing component of the OS National Grid reference, in metres north of the grid origin."@en .
+
 
 #################################################################
 # Classes - further education sub-classification and Section 41
@@ -1022,6 +1050,41 @@ epro:classifiedByMiddleLayerSuperOutputArea
     rdfs:domain epr:AdministrativeGeography ;
     rdfs:range epr:MiddleLayerSuperOutputArea ;
     rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByDistrictAdministrative
+    a owl:ObjectProperty ;
+    rdfs:label "classified by administrative district"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:DistrictAdministrative ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasGssLocalAuthorityCode
+    a owl:ObjectProperty ;
+    rdfs:label "has GSS local authority code"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:GssLocalAuthorityCode ;
+    rdfs:comment "Cardinality: 0..1. The ONS GSS code for the geographic local authority."@en .
+
+epro:hasOsGridReference
+    a owl:ObjectProperty ;
+    rdfs:label "has OS grid reference"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:OsGridReference ;
+    rdfs:comment "Cardinality: 0..1. Easting and northing in OSGB36, derived from the establishment's postcode."@en .
+
+epro:hasEasting
+    a owl:ObjectProperty ;
+    rdfs:label "has easting"@en ;
+    rdfs:domain epr:OsGridReference ;
+    rdfs:range epr:Easting ;
+    rdfs:comment "Cardinality: exactly 1."@en .
+
+epro:hasNorthing
+    a owl:ObjectProperty ;
+    rdfs:label "has northing"@en ;
+    rdfs:domain epr:OsGridReference ;
+    rdfs:range epr:Northing ;
+    rdfs:comment "Cardinality: exactly 1."@en .
 
 
 #################################################################
