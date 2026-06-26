@@ -35,10 +35,10 @@ epro:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-06-24"^^xsd:date ;
+    dcterms:modified "2026-06-26"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.2" ;
+    owl:versionInfo "1.3" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> ;
@@ -54,6 +54,7 @@ epro:establishmentDetailsConceptualModel
     rdfs:comment "v1.0: Identifier modelling tightened. (1) hasUprn domain moved from EstablishmentIdentity to MainAddress. (2) FeHeIdentifier added as OWL class with hasFeHeIdentifier property. (3) hasEstablishmentNumber replaced by LocalAuthorityScopedEstablishmentNumber with hasLocalAuthorityContext, hasEstablishmentNumberValue and hasIdentifierRole components. (4) IdentifierRole added with CurrentIdentifierRole and PreviousIdentifierRole named individuals. (5) EstablishmentNumber value SHACL (1-9999) and UKPRN structural max-1 added."@en ;
     rdfs:comment "v1.1: Establishment group model added. New abstract group superclass EstablishmentGroup; MultiAcademyTrust (subClassOf AcademyTrust), SecureSingleAcademyTrust (subClassOf SingleAcademyTrust), Federation, SchoolSponsor, ChildrensCentreGroup, ChildrensCentreCollaboration, GenericTrust (group org classes); GroupMembership, GroupRelationship, GroupRelationshipType, GroupId, GroupUkprn. AcademyTrust gains dual inheritance: rdfs:subClassOf EstablishmentGroup in addition to existing accountability hierarchy. Named individuals SuccessorMultiAcademyTrust and PredecessorSingleAcademyTrust added for GroupRelationshipType."@en ;
     rdfs:comment "v1.2: Governance model added. 8 new OWL classes: GovernanceAppointment, GovernanceIdentifier, GovernanceRoleType, GovernanceAppointmentDate, GovernanceTermEndDate, GovernanceAppointingBody, GovernancePerson, GovernancePersonIdentifier. 9 new object properties: hasGovernanceAppointment (domain Establishment), hasGroupGovernanceAppointment (domain EstablishmentGroup; AcademyTrust-only enforced in SHACL), hasGovernanceIdentifier, hasGovernanceRoleType, hasGovernanceAppointmentDate, hasGovernanceTermEndDate, hasGovernanceAppointingBody, appointmentOf, hasGovernancePersonIdentifier. 22 named individuals for GovernanceRoleType; 18 for GovernanceAppointingBody. GovernanceAppointment and GovernancePerson annotated with dcterms:accessRights as personal-data-carrying classes."@en ;
+    rdfs:comment "v1.3: Administrative geography model added. New class epr:AdministrativeGeography groups 6 ONS statistical and administrative area classifications as sub-classes: GovernmentOfficeRegion, UrbanRuralClassification, AdministrativeWard, ParliamentaryConstituency, LowerLayerSuperOutputArea, MiddleLayerSuperOutputArea. New object property epro:hasAdministrativeGeography links Establishment to AdministrativeGeography (0..1). Sub-properties classifiedByGovernmentOfficeRegion, classifiedByUrbanRuralClassification, classifiedByAdministrativeWard, classifiedByParliamentaryConstituency, classifiedByLowerLayerSuperOutputArea, classifiedByMiddleLayerSuperOutputArea added. New class epr:Country added to MainAddress for British schools overseas and other non-England establishments; new property epro:hasCountry (domain MainAddress, range Country, 0..1). epr:LocalAuthority rdfs:comment updated to make the geographic reference role explicit alongside the accountability role."@en ;
     rdfs:comment "v0.6: ontology class local names aligned with vocabulary source of truth. Renames: ContactAndLocation -> EstablishmentLocationAndContact, PostalAddress -> MainAddress, WebsiteUrl -> Website, Manager -> CentreManager, Section41ApprovalStatus -> Section41Approval. Vocabulary entries added for all 14 intermediate OWL classes and for grouping container classes (ResourcedProvisionMeasure, SenUnitMeasure, SpecialPupilMeasure, OfstedInspectionRecord, AccreditationRecord, PupilReferralUnitOperationalRecord)."@en ;
     epr:status "Provisional"@en .
 
@@ -210,7 +211,7 @@ epr:EstablishmentAccountability
 epr:LocalAuthority
     a owl:Class ;
     rdfs:label "Local authority"@en ;
-    rdfs:comment "A local government body maintaining or otherwise accountable for an establishment."@en .
+    rdfs:comment "A local government body that serves two distinct roles for an establishment: (1) the geographic local authority in whose area the establishment is located — this scopes the establishment number within the DfE number and applies to all establishment types including academies and independent schools; (2) the body maintaining or otherwise accountable for LA-maintained schools. For academies and independent schools only the geographic reference role applies; they are not maintained by the local authority."@en .
 
 epr:AcademyTrust
     a owl:Class ;
@@ -820,6 +821,62 @@ epr:HeadteacherOrPrincipal
     rdfs:label "Headteacher or principal"@en ;
     rdfs:comment "The named person leading the establishment. The GIAS UI label varies by type: Headteacher / Principal for most schools; Manager for children's centres; Headteacher/Manager for online providers. Treated as a single concept in the EPR model."@en .
 
+epr:Country
+    a owl:Class ;
+    rdfs:label "Country"@en ;
+    rdfs:comment "The country of the establishment's main address. Relevant for British schools overseas and other establishments located outside England. Distinct from the County text field in the address. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch; the target model uses this class to clarify the concept as country of location rather than nationality."@en .
+
+
+#################################################################
+# Classes - administrative geography (v1.3)
+#
+# Administrative and statistical area classifications derived from
+# an establishment's postcode location, principally via the GeoData
+# lookup table. Grouped under epr:AdministrativeGeography as a peer
+# of epr:EstablishmentLocationAndContact on epr:Establishment.
+#################################################################
+
+epr:AdministrativeGeography
+    a owl:Class ;
+    rdfs:label "Administrative geography"@en ;
+    rdfs:comment "The administrative and statistical area classifications assigned to an establishment based on its postcode location. These are derived from the postcode via the GeoData lookup table or an equivalent postcode-to-area service. Covers ONS government office region, urban/rural classification, administrative ward, parliamentary constituency, lower-layer super output area and middle-layer super output area."@en .
+
+epr:GovernmentOfficeRegion
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Government Office Region"@en ;
+    rdfs:comment "The ONS Government Office Region for the establishment's postcode. England has 9 GORs. In GIAS: Establishment.GOR_code → GovernmentOfficeRegion."@en .
+
+epr:UrbanRuralClassification
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Urban/rural classification"@en ;
+    rdfs:comment "The ONS urban/rural classification for the establishment's postcode. Values include urban city and town, rural village, rural hamlet and isolated dwelling. In GIAS: Establishment.UrbanRural_code → UrbanRural."@en .
+
+epr:AdministrativeWard
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Administrative ward"@en ;
+    rdfs:comment "The administrative ward for the establishment's postcode, derived via GeoData. In GIAS: Establishment.administrativeWard_code → AdministrativeWard."@en .
+
+epr:ParliamentaryConstituency
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Parliamentary constituency"@en ;
+    rdfs:comment "The parliamentary constituency for the establishment's postcode, derived via GeoData. In GIAS: Establishment.parliamentaryConstituency_code → ParliamentaryConstituency."@en .
+
+epr:LowerLayerSuperOutputArea
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Lower-layer Super Output Area"@en ;
+    rdfs:comment "The LSOA for the establishment's postcode. Small-area statistical geography; the key link to deprivation data such as IDACI. In GIAS: Establishment.lsoa_code → LSOA."@en .
+
+epr:MiddleLayerSuperOutputArea
+    a owl:Class ;
+    rdfs:subClassOf epr:AdministrativeGeography ;
+    rdfs:label "Middle-layer Super Output Area"@en ;
+    rdfs:comment "The MSOA for the establishment's postcode. Mid-level statistical geography. In GIAS: Establishment.msoa_code → MSOA."@en .
+
 
 #################################################################
 # Classes - further education sub-classification and Section 41
@@ -903,6 +960,67 @@ epro:hasHeadteacherOrPrincipal
     rdfs:label "has headteacher or principal"@en ;
     rdfs:domain epr:EstablishmentLocationAndContact ;
     rdfs:range epr:HeadteacherOrPrincipal ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:hasCountry
+    a owl:ObjectProperty ;
+    rdfs:label "has country"@en ;
+    rdfs:domain epr:MainAddress ;
+    rdfs:range epr:Country ;
+    rdfs:comment "Cardinality: 0..1. Present for British schools overseas and establishments located outside England."@en .
+
+
+#################################################################
+# Object properties - administrative geography (v1.3)
+#################################################################
+
+epro:hasAdministrativeGeography
+    a owl:ObjectProperty ;
+    rdfs:label "has administrative geography"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:AdministrativeGeography ;
+    rdfs:comment "Cardinality: 0..1. Links an establishment to its administrative and statistical area classifications, derived from its postcode location."@en .
+
+epro:classifiedByGovernmentOfficeRegion
+    a owl:ObjectProperty ;
+    rdfs:label "classified by Government Office Region"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:GovernmentOfficeRegion ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByUrbanRuralClassification
+    a owl:ObjectProperty ;
+    rdfs:label "classified by urban/rural classification"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:UrbanRuralClassification ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByAdministrativeWard
+    a owl:ObjectProperty ;
+    rdfs:label "classified by administrative ward"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:AdministrativeWard ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByParliamentaryConstituency
+    a owl:ObjectProperty ;
+    rdfs:label "classified by parliamentary constituency"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:ParliamentaryConstituency ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByLowerLayerSuperOutputArea
+    a owl:ObjectProperty ;
+    rdfs:label "classified by Lower-layer Super Output Area"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:LowerLayerSuperOutputArea ;
+    rdfs:comment "Cardinality: 0..1."@en .
+
+epro:classifiedByMiddleLayerSuperOutputArea
+    a owl:ObjectProperty ;
+    rdfs:label "classified by Middle-layer Super Output Area"@en ;
+    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:range epr:MiddleLayerSuperOutputArea ;
     rdfs:comment "Cardinality: 0..1."@en .
 
 
