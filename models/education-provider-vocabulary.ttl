@@ -50,7 +50,8 @@ epr:establishmentDetailsVocabulary
         epr:AccreditationAndQualityAssurance,
         epr:ExternalReference,
         epr:EstablishmentGroupMembership,
-        epr:GovernanceAppointments .
+        epr:GovernanceAppointments,
+        epr:AdministrativeGeography .
 
 #################################################################
 # Thematic collections
@@ -121,7 +122,20 @@ epr:locationAndContact
         epr:MainAddress,
         epr:Website,
         epr:TelephoneNumber,
-        epr:UniquePropertyReferenceNumber .
+        epr:UniquePropertyReferenceNumber,
+        epr:Country .
+
+epr:administrativeGeography
+    a skos:Collection ;
+    skos:prefLabel "Administrative geography"@en ;
+    skos:member
+        epr:AdministrativeGeography,
+        epr:GovernmentOfficeRegion,
+        epr:UrbanRuralClassification,
+        epr:AdministrativeWard,
+        epr:ParliamentaryConstituency,
+        epr:LowerLayerSuperOutputArea,
+        epr:MiddleLayerSuperOutputArea .
 
 epr:leadership
     a skos:Collection ;
@@ -2068,8 +2082,19 @@ epr:MainAddress
     skos:altLabel "Address"@en ;
     skos:definition "The primary postal address of the establishment as recorded in GIAS, comprising street, locality, address line 3, town, county and postcode."@en ;
     skos:broader epr:EstablishmentLocationAndContact ;
+    skos:narrower epr:Country ;
     epr:status "Preferred"@en ;
     dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en .
+
+epr:Country
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Country"@en ;
+    skos:definition "The country of the establishment's main address. Relevant for British schools overseas and other establishments located outside England."@en ;
+    skos:scopeNote "Distinct from the County text field in the address, which records the county within England. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch. The target model treats this as country of location. Future iterations should consider migrating to ISO 3166-1 alpha-2 codes to replace the legacy code list and unify handling with EstablishmentGroup.GroupCountry_code."@en ;
+    skos:broader epr:MainAddress ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Country_code → Nationality.code (legacy table name)"@en .
 
 epr:Website
     a skos:Concept ;
@@ -2097,6 +2122,84 @@ epr:UniquePropertyReferenceNumber
     skos:definition "The persistent numeric identifier assigned to the establishment's physical address by Ordnance Survey under the Public Sector Mapping Agreement, enabling cross-service geographic linking."@en ;
     skos:broader epr:EstablishmentLocationAndContact ;
     epr:status "Preferred"@en .
+
+#################################################################
+# Administrative geography (v1.3)
+#################################################################
+
+epr:AdministrativeGeography
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Administrative geography"@en ;
+    skos:definition "The administrative and statistical area classifications assigned to an establishment based on its postcode location. These are derived from the postcode via the GeoData lookup table or an equivalent postcode-to-area service."@en ;
+    skos:scopeNote "Distinct from the postal address (MainAddress). GIAS stores these as separate field groups: ADDRESS for postal address fields and REGION for administrative geography codes. The target model follows the same separation. Administrative geography applies to all establishment types; values are derived from postcode and not independently editable."@en ;
+    skos:narrower
+        epr:GovernmentOfficeRegion,
+        epr:UrbanRuralClassification,
+        epr:AdministrativeWard,
+        epr:ParliamentaryConstituency,
+        epr:LowerLayerSuperOutputArea,
+        epr:MiddleLayerSuperOutputArea ;
+    epr:status "Provisional"@en ;
+    dcterms:source "GIAS field group: REGION; UI tab: REGIONAL (Location)"@en .
+
+epr:GovernmentOfficeRegion
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Government Office Region"@en ;
+    skos:altLabel "GOR"@en ;
+    skos:definition "The ONS Government Office Region in which the establishment is located. England has 9 GORs, used for regional policy, statistics and reporting."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.GOR_code → GovernmentOfficeRegion"@en .
+
+epr:UrbanRuralClassification
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Urban/rural classification"@en ;
+    skos:definition "The ONS urban/rural classification for the establishment's postcode. Indicates whether the establishment is in an urban city, town, rural village, rural hamlet or isolated dwelling."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.UrbanRural_code → UrbanRural"@en .
+
+epr:AdministrativeWard
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Administrative ward"@en ;
+    skos:definition "The administrative ward in which the establishment's postcode falls, derived from the GeoData postcode-to-area lookup."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.administrativeWard_code → AdministrativeWard; derived via GeoData"@en .
+
+epr:ParliamentaryConstituency
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Parliamentary constituency"@en ;
+    skos:definition "The parliamentary constituency in which the establishment's postcode falls, derived from the GeoData postcode-to-area lookup."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.parliamentaryConstituency_code → ParliamentaryConstituency; derived via GeoData"@en .
+
+epr:LowerLayerSuperOutputArea
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Lower-layer Super Output Area"@en ;
+    skos:altLabel "LSOA"@en ;
+    skos:definition "The ONS Lower-layer Super Output Area in which the establishment's postcode falls. Small-area statistical geography covering approximately 400-1200 households. The key link to deprivation indices such as IDACI (Income Deprivation Affecting Children Index)."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.lsoa_code → LSOA; derived via GeoData"@en .
+
+epr:MiddleLayerSuperOutputArea
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Middle-layer Super Output Area"@en ;
+    skos:altLabel "MSOA"@en ;
+    skos:definition "The ONS Middle-layer Super Output Area in which the establishment's postcode falls. Mid-level statistical geography grouping 4-6 LSOAs, used for neighbourhood-level analysis."@en ;
+    skos:broader epr:AdministrativeGeography ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.msoa_code → MSOA; derived via GeoData"@en .
 
 #################################################################
 # Leadership
