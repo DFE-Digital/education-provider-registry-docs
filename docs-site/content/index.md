@@ -23,4 +23,10 @@ The Markdown files in `business-domain/` remain the source of truth for business
 
 The Turtle files in `models/` remain the source of truth for model artefacts.
 
+## GIAS UI Field Coverage
+
+- [UI field coverage](./ui-coverage/) - which GIAS UI fields are visible for each of the 41 establishment types, across the Details, Location, Governance and Links tabs
+
+Coverage data is encoded in `models/provider-field-coverage.ttl` and pages are generated from that file.
+
 The pages on this site are generated or copied views for easier reading and linking.
