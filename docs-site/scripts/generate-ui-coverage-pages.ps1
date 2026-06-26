@@ -141,7 +141,7 @@ $tabs = [ordered]@{
     "detailsTab"    = @{ Title = "Details tab"; Slug = "details";    Heading = "Establishments — Details tab field coverage" }
     "locationTab"   = @{ Title = "Location tab"; Slug = "location";  Heading = "Location tab field coverage" }
     "governanceTab" = @{ Title = "Governance tab"; Slug = "governance"; Heading = "Governance tab field coverage" }
-    "linksTab"      = @{ Title = "Links tab"; Slug = "groups";       Heading = "Links tab (groups) field coverage" }
+
 }
 
 $sourceTtl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/provider-field-coverage.ttl"

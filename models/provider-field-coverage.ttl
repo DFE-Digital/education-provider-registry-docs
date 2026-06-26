@@ -7,8 +7,10 @@
 # Provider Field Coverage
 #
 # This file is the single source of truth for which GIAS UI fields are visible
-# for each establishment type on each of the four public tabs:
-#   Details, Location, Governance, Links (groups)
+# for each establishment type on each of the three public tabs currently modelled:
+#   Details, Location, Governance
+# Note: the Links tab (establishment-to-establishment predecessor/successor links)
+# and the Groups tab (group membership) are deferred to a future modelling session.
 #
 # Source evidence: docs/data/extract-data — observed GIAS public page rendering,
 # June 2026. One representative establishment per type.
@@ -88,10 +90,7 @@ epr:governanceTab
     rdfs:label "Governance"@en ;
     rdfs:comment "The Governance tab on a GIAS establishment page."@en .
 
-epr:linksTab
-    a epr:UITab ;
-    rdfs:label "Links"@en ;
-    rdfs:comment "The Links tab on a GIAS establishment page, showing group membership information."@en .
+
 
 epr:UITab
     a rdfs:Class ;
@@ -794,101 +793,3 @@ epr:GovernanceAppointment
     epr:shownOnTab epr:governanceTab ;
     epr:uiLabel "Shared with"@en ;
     epr:applicableToEstablishmentType "33", "34", "35", "46" .
-
-
-#################################################################
-# LINKS TAB (group membership)
-# Shows group membership information for establishments.
-# All establishment types can in principle have group memberships,
-# but availability depends on instance data, not type alone.
-# Type codes listed are those where group links are routinely
-# populated and displayed in the extract evidence.
-#################################################################
-
-epr:EstablishmentGroup
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Group type"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-        "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
-
-epr:GroupUniqueIdentifier
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Unique group identifier (UID)"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-        "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
-
-epr:GroupId
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Group identifier (ID)"@en ;
-    epr:applicableToEstablishmentType
-        "28", "33", "34", "35", "36", "39", "40", "41", "42",
-        "43", "44", "45", "46", "57" .
-
-epr:GroupUkprn
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "UK provider reference number (UKPRN)"@en ;
-    epr:applicableToEstablishmentType
-        "28", "33", "34", "35", "36", "39", "40", "41", "42",
-        "43", "44", "45", "46", "57" .
-
-epr:GroupMembershipDate
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Joined date"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-        "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
-
-epr:GroupStatus
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Group status"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-        "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
-
-epr:GroupOpenDate
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Open date"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "24", "25", "26", "27", "29", "30",
-        "31", "32", "37", "47", "48", "56" .
-
-epr:GroupIncorporatedOnDate
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Incorporated on (open date)"@en ;
-    epr:applicableToEstablishmentType
-        "28", "33", "34", "35", "36", "38", "39", "40", "41",
-        "42", "43", "44", "45", "46", "49", "57" .
-
-epr:GroupClosedDate
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Group closed date"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-        "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
-
-# Company number — shown for trust group types (MAT, SAT, SSAT)
-epr:GroupCompaniesHouseNumber
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Company number"@en ;
-    epr:applicableToEstablishmentType
-        "28", "33", "34", "35", "36", "39", "40", "41", "42",
-        "43", "44", "45", "46", "57" .
-
-# Local authority — children's centre group types only
-epr:LocalAuthority
-    epr:shownOnTab epr:linksTab ;
-    epr:uiLabel "Local authority (LA)"@en ;
-    epr:applicableToEstablishmentType "47", "48" .
