@@ -25,7 +25,7 @@ The Turtle files in `models/` remain the source of truth for model artefacts.
 
 ## GIAS UI Field Coverage
 
-- [UI field coverage](./ui-coverage/) - which GIAS UI fields are visible for each of the 41 establishment types, across the Details, Location, Governance and Links tabs
+- [UI field coverage](./ui-coverage/) - which GIAS UI fields are visible for each of the 41 establishment types, across the Details, Location and Governance tabs
 
 Coverage data is encoded in `models/provider-field-coverage.ttl` and pages are generated from that file.
 

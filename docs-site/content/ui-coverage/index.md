@@ -8,6 +8,7 @@ They are generated from `models/provider-field-coverage.ttl`, which is the singl
 | [Details tab](./details/) | 66 |
 | [Location tab](./location/) | 11 |
 | [Governance tab](./governance/) | 7 |
-| [Links tab](./groups/) | 11 |
 
 Source TTL: <https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/provider-field-coverage.ttl>
+
+The Links tab (predecessor/successor establishment links) and Groups tab (group membership) are deferred pending further modelling.
