@@ -30,7 +30,7 @@ This is a tactical private beta integration decision, not the final public beta 
 
 The ADF implementation must:
 
-- support the private beta read-model load
+- support the private beta read-model load;
 - include freshness monitoring, reconciliation and failure visibility;
 - avoid exposing the legacy database directly to the GIAS 2.0 frontend, frontend backend API or read API;
 - remain replaceable before public beta if the BAU migration into CIP enables a better low-latency integration pattern.
