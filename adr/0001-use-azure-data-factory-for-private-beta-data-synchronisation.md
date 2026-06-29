@@ -26,11 +26,11 @@ ADF can support a small staleness window through scheduled or incremental moveme
 
 Use Azure Data Factory to synchronise data from GIAS BAU into the GIAS 2.0 read model for private beta.
 
-Treat this as a tactical private beta integration decision, not the final public beta or live data movement architecture.
+This is a tactical private beta integration decision, not the final public beta or live data movement architecture. There are likely review milestones for review if the infrastructure is migrated or the canonical sources of data change.
 
 The ADF implementation must:
 
-- support the private beta read-model load;
+- support the private beta read-model load
 - include freshness monitoring, reconciliation and failure visibility;
 - avoid exposing the legacy database directly to the GIAS 2.0 frontend, frontend backend API or read API;
 - remain replaceable before public beta if the BAU migration into CIP enables a better low-latency integration pattern.
@@ -40,9 +40,9 @@ The ADF implementation must:
 | Option | Assessment |
 | --- | --- |
 | Azure Data Factory now | Works with the current T1/CIP constraint and is already proven for BAU archive movement. It can be implemented now and can support private beta. It may not meet future public beta freshness expectations. |
-| Airbyte now | Preferred direction for lower-latency CDC-style synchronisation, but currently blocked by the restriction on connecting CIP environments to old T1 environments. |
+| Airbyte now | Preferred direction for lower-latency CDC-style synchronisation but currently blocked by the shared global scope in the T1 tenancy. |
 | Wait for BAU migration into CIP before building synchronisation | Avoids tactical rework, but blocks private beta progress and delays read-model validation. |
-| Build a bespoke integration now | Could be tailored to the target model, but would add delivery risk and may duplicate capability that ADF already provides for the current environment constraint. |
+| Build a bespoke integration now | Could be tailored to the target model, but would add delivery risk and may duplicate capability that ADF already provides for the current environment constraint. The work would appear to be undifferentiated with little opportunity to return value for being bespoke. |
 
 ## Consequences
 
@@ -60,6 +60,7 @@ The ADF implementation must:
 - The private beta architecture may carry a known staleness window.
 - Read API and frontend users may see data that lags BAU changes unless freshness is made visible and supportable.
 - Work invested in ADF mappings, monitoring and support may need to be migrated to Airbyte or another CDC-style mechanism later.
+- The portfolio currently has no established ways of working with Azure Data Factories and will need to build infrastructure as code modules for it. There are currently no good ways of managing business continuity for Data Factories shared widely in the Department.
 
 ### Mitigations
 
