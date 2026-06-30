@@ -14,7 +14,9 @@ The `.feature` files in `features/` remain the source of truth for agreed behavi
 
 The Markdown files in `business-domain/` remain the source of truth for business-domain documentation.
 
-## Data Model Artefacts
+## Data Model Artefacts (DfE internal)
+
+These sections are password-protected, contact the GIAS transform team for access.
 
 - [Vocabulary](./vocabulary/) - SKOS terms and definitions
 - [Taxonomy](./taxonomy/) - classification values and establishment type hierarchy
