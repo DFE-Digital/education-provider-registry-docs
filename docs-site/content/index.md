@@ -14,13 +14,12 @@ The `.feature` files in `features/` remain the source of truth for agreed behavi
 
 The Markdown files in `business-domain/` remain the source of truth for business-domain documentation.
 
-## Data Model Artefacts (DfE internal)
+## Prototype Data Model Artefacts (DfE internal)
 
 These sections are password-protected, contact the GIAS transform team for access.
 
 - [Data model artefacts](./models/) - model index including field rules, data quality rules and SHACL shapes
 
-The Turtle files in `models/` remain the source of truth for model artefacts.
 
 ## GIAS UI Field Coverage
 
