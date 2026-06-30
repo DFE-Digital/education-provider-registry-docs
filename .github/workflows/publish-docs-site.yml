@@ -106,6 +106,25 @@ jobs:
             cp docs-site/output/ontology/index-en.html docs-site/output/ontology/index.html
           fi
 
+      - name: Set up Node.js for staticrypt
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Protect internal sections with password
+        env:
+          DOCS_PASSWORD: ${{ secrets.DOCS_SITE_PASSWORD }}
+        run: |
+          npm install -g staticrypt
+          for section in vocabulary taxonomy models ontology; do
+            find "docs-site/output/$section" -name "*.html" | while IFS= read -r file; do
+              staticrypt "$file" \
+                --password "$DOCS_PASSWORD" \
+                --directory "$(dirname "$file")" \
+                --no-remember
+            done
+          done
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
