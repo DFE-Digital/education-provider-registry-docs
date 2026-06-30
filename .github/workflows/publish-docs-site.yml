@@ -128,7 +128,9 @@ jobs:
                 --password "$DOCS_PASSWORD" \
                 --directory "$TMPDIR_ENC" \
                 --no-remember \
-                --short
+                --short \
+                --template-color-primary "#ffffff" \
+                --template-color-secondary "#1d70b8"
               cp "$TMPDIR_ENC/$(basename "$file")" "$file"
             done < <(find "docs-site/output/$section" -name "*.html")
           done
