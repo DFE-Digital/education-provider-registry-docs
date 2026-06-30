@@ -129,8 +129,8 @@ jobs:
                 --directory "$TMPDIR_ENC" \
                 --no-remember \
                 --short \
-                --template-color-primary "#ffffff" \
-                --template-color-secondary "#1d70b8"
+                --template "docs-site/staticrypt-template.html" \
+                --template-color-primary "#1d70b8"
               cp "$TMPDIR_ENC/$(basename "$file")" "$file"
             done < <(find "docs-site/output/$section" -name "*.html")
           done
