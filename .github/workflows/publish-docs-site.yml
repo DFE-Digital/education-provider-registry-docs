@@ -115,15 +115,23 @@ jobs:
         env:
           DOCS_PASSWORD: ${{ secrets.DOCS_SITE_PASSWORD }}
         run: |
-          npm install -g staticrypt
+          set -e
+          if [ -z "$DOCS_PASSWORD" ]; then
+            echo "Error: DOCS_SITE_PASSWORD secret is not set in this repository."
+            exit 1
+          fi
+          npm install -g staticrypt@3
+          TMPDIR_ENC=$(mktemp -d)
           for section in vocabulary taxonomy models ontology; do
-            find "docs-site/output/$section" -name "*.html" | while IFS= read -r file; do
+            while IFS= read -r file; do
               staticrypt "$file" \
                 --password "$DOCS_PASSWORD" \
-                --directory "$(dirname "$file")" \
+                --directory "$TMPDIR_ENC" \
                 --no-remember
-            done
+              cp "$TMPDIR_ENC/$(basename "$file")" "$file"
+            done < <(find "docs-site/output/$section" -name "*.html")
           done
+          rm -rf "$TMPDIR_ENC"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
