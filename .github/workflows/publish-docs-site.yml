@@ -137,19 +137,6 @@ jobs:
             done < <(find "docs-site/output/$section" -name "*.html")
           done
 
-          # ontology: remember enabled so iframes and webvowl sub-pages auto-decrypt
-          # from localStorage once the user enters the password on the main page
-          while IFS= read -r file; do
-            staticrypt "$file" \
-              --password "$DOCS_PASSWORD" \
-              --directory "$TMPDIR_ENC" \
-              --remember 1 \
-              --short \
-              --template "docs-site/staticrypt-template.html" \
-              --template-color-primary "#1d70b8"
-            cp "$TMPDIR_ENC/$(basename "$file")" "$file"
-          done < <(find "docs-site/output/ontology" -name "*.html")
-
           rm -rf "$TMPDIR_ENC"
 
       - name: Configure Pages
