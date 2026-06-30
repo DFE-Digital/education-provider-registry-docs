@@ -127,7 +127,8 @@ jobs:
               staticrypt "$file" \
                 --password "$DOCS_PASSWORD" \
                 --directory "$TMPDIR_ENC" \
-                --no-remember
+                --no-remember \
+                --short
               cp "$TMPDIR_ENC/$(basename "$file")" "$file"
             done < <(find "docs-site/output/$section" -name "*.html")
           done
