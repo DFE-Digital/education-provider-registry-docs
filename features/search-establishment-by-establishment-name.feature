@@ -6,15 +6,15 @@ Feature: SearchEstablishmentByName
 
 @search-name-no-results
 Scenario: No Establishment results returned
-  Given the search term returns no establishment results
-  When the user searches for establishment by name
+  Given an establishment search has been made
+  When no establishments match the search term
   Then an error is returned indicating no establishment were found
 
 @search-name-multiple-results
 Scenario: Some Establishment results returned
-  Given the search term returns some establishment results
-  When the user searches for establishment by name
-  Then some establishments are returned
+  Given an establishment search has been made
+  When one or more establishment names match the search term
+  Then the matching estbablishments are returned
 
 @search-name-case-insensitive
 Scenario Outline: Search is case insensitive
@@ -33,3 +33,9 @@ Scenario: Establishments with special characters in their name can be searched
   Given an establishment named "O'Brien Academy" exists
   When the user searches for "'"
   Then the establishment "O'Brien Academy" is returned
+
+@search-name-space
+Scenario: Establishments with spaces in their name can be searched
+  Given an establishment named "Sutton Grammar" exists
+  When the user searches for " "
+  Then the establishment "Sutton Grammar" is returned
