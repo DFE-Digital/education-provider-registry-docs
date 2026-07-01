@@ -60,7 +60,7 @@ graph LR
 
 All examples use the following prefixes.
 
-```turtle
+```
 @prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
 @prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -82,7 +82,7 @@ The trust is declared as a named individual (`inst:sat-2045`) of type `epr:Singl
 - **Companies House number** — the trust's company registration number
 - **Incorporation date** — when the trust company was incorporated
 
-```turtle
+```
 inst:sat-2045
     a epr:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
@@ -119,7 +119,7 @@ inst:sat-2045
 
 The academy's accountability relationship uses `epro:accountableToAcademyTrust`, pointing to the trust named individual. This is the primary governance link — the trust is the body responsible for the academy.
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
@@ -135,7 +135,7 @@ inst:137377
 
 Separately from the accountability relationship, the academy also has a group membership record. The `epr:GroupMembership` class is a reified relationship — it separates the fact of membership (the accountability relationship) from the dated record of when the academy joined the trust. This allows the join date to be recorded without complicating the accountability structure.
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
@@ -157,7 +157,7 @@ A complete snapshot showing the trust named individual alongside the academy's a
 
 Trust (`inst:sat-2045`):
 
-```turtle
+```
 inst:sat-2045
     a epr:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
@@ -190,7 +190,7 @@ inst:sat-2045
 
 Academy (`inst:137377`):
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 

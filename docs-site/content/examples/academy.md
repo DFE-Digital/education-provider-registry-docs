@@ -68,7 +68,7 @@ graph LR
 
 All examples use the following prefixes.
 
-```turtle
+```
 @prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
 @prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -84,7 +84,7 @@ All examples use the following prefixes.
 
 The identity block for an academy is identical in structure to a community school. The local authority context (`inst:la-873`) is present in the LAESTAB number because Cambridgeshire is the geographic local authority, but the LA plays no accountability role for this establishment.
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
@@ -129,7 +129,7 @@ inst:la-873
 
 The establishment type is `epr:AcademyConverter`. The accountability relationship uses `epro:accountableToAcademyTrust` pointing to the single-academy trust (`inst:sat-2045`). There is no `accountableToLocalAuthority` property — academies are not LA-maintained.
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
@@ -149,7 +149,7 @@ inst:137377
 
 ## Example 3 — Location, contact and administrative geography
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
@@ -199,7 +199,7 @@ inst:137377
 
 Abbey College is non-selective, mixed, no boarding, and has a sixth form. The sixth form is represented by the `epr:HasSixthForm` named individual (contrasting with `epr:NoSixthForm` in the community school example).
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
@@ -228,7 +228,7 @@ The establishment also has a `epr:GroupMembership` linking it to the trust, whic
 
 Trust (`inst:sat-2045`):
 
-```turtle
+```
 inst:sat-2045
     a epr:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
@@ -261,7 +261,7 @@ inst:sat-2045
 
 Group membership linking the academy to its trust:
 
-```turtle
+```
 inst:137377
     a epr:AcademyConverter ;
 
