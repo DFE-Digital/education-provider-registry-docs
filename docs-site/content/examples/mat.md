@@ -280,4 +280,81 @@ inst:146279
 
 ---
 
+## Example 6 — Trust board governance
+
+Trust-level governance appointments are recorded on the trust entity using `epro:hasGroupGovernanceAppointment`. A MAT typically has a small number of company members (who hold the trust to account) and a larger board of trustees (who govern the trust day to day). Members and trustees are distinct roles in the EPR governance model.
+
+**All names below are anonymised.** The five-person trust board shown is realistic in composition for a growing MAT — two members, a chair of trustees, and two further trustees — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
+
+`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated in the ontology with `dcterms:accessRights "Personal data - access controls required"`. They carry personal names and are subject to access-control restrictions in the EPR system.
+
+```
+inst:mat-2044
+    a epr:MultiAcademyTrust ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:MemberRole ;
+        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mr David Harrison"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:MemberRole ;
+        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mrs Susan Morgan"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:ChairOfTrusteesRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2017-09-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Ms Rachel Davies"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:TrusteeRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2018-01-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mr Thomas Lee"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:TrusteeRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2020-04-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mrs Claire Watson"@en
+        ]
+    ] .
+```
+
+---
+
 **See also:** [Community school example](../community-school/) · [Academy example](../academy/) · [Single-academy trust example](../sat/)

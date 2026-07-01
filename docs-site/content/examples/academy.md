@@ -277,4 +277,71 @@ inst:137377
 
 ---
 
+## Example 6 — Governance (Local Governing Body)
+
+Governance appointments are recorded on the establishment using `epro:hasGovernanceAppointment`. Each appointment is a blank node of type `epr:GovernanceAppointment`, carrying a role type (`epro:hasGovernanceRoleType`), an appointing body (`epro:hasGovernanceAppointingBody`), an optional appointment date, and a link to the person via `epro:appointmentOf`.
+
+**All names below are anonymised.** The four-person LGB shown is realistic in composition for a secondary academy in a single-academy trust — one chair of the local governing body, the headteacher ex-officio, one parent governor, and one co-opted governor — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
+
+`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated in the ontology with `dcterms:accessRights "Personal data - access controls required"`. They carry personal names and are subject to access-control restrictions in the EPR system.
+
+```
+inst:137377
+    a epr:AcademyConverter ;
+
+    epro:hasGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:ChairOfLocalGoverningBodyRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByFoundationOrTrust ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2020-04-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Ms Sarah Fletcher"@en
+        ]
+    ] ;
+
+    epro:hasGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:HeadteacherExOfficioGovernorRole ;
+        epro:hasGovernanceAppointingBody epr:ExOfficioHeadteacher ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mr Andrew Clarke"@en
+        ]
+    ] ;
+
+    epro:hasGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:LocalGovernorRole ;
+        epro:hasGovernanceAppointingBody epr:ElectedByParents ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2021-09-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mr James Collins"@en
+        ]
+    ] ;
+
+    epro:hasGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:LocalGovernorRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByFoundationOrTrust ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2022-01-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Dr Laura Bennett"@en
+        ]
+    ] .
+```
+
+---
+
 **See also:** [Community school example](../community-school/) · [SAT example (trust view)](../sat/) · [Multi-academy trust example](../mat/)

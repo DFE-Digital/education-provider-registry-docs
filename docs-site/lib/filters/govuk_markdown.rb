@@ -3,6 +3,7 @@ require "govuk_markdown"
 
 Nanoc::Filter.define(:govuk_markdown) do |content, _params|
   mermaid_blocks = {}
+  code_blocks = {}
 
   content = content.gsub(/^```mermaid\s*\n(.*?)^```\s*$/m) do
     mermaid_source = Regexp.last_match(1).rstrip
@@ -15,7 +16,24 @@ Nanoc::Filter.define(:govuk_markdown) do |content, _params|
     placeholder
   end
 
+  content = content.gsub(/^```([a-zA-Z]*)\s*\n(.*?)^```\s*$/m) do
+    lang = Regexp.last_match(1)
+    code_source = Regexp.last_match(2).chomp
+    placeholder = "CODE_BLOCK_#{code_blocks.length}"
+    lang_attr = lang.empty? ? "" : %( class="language-#{lang}")
+    code_blocks[placeholder] = %(<pre><code#{lang_attr}>#{CGI.escapeHTML(code_source)}</code></pre>)
+    placeholder
+  end
+
   html = GovukMarkdown.render(content, { headings_start_with: "l" })
+
+  code_blocks.each do |placeholder, block|
+    html = html.gsub(%r{<p class="govuk-body-m">\s*#{placeholder}(.*?)</p>}m) do
+      trailing_content = Regexp.last_match(1).to_s.strip
+      trailing_content.empty? ? block : "#{block}\n<p class=\"govuk-body-m\">#{trailing_content}</p>"
+    end
+    html = html.gsub(placeholder, block)
+  end
 
   mermaid_blocks.each do |placeholder, block|
     html = html.gsub(%r{<p class="govuk-body-m">\s*#{placeholder}(.*?)</p>}m) do
