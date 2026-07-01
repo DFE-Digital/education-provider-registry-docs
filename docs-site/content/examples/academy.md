@@ -117,7 +117,6 @@ inst:137377
         epro:classifiedByEstablishmentStatus epr:OpenStatus
     ] .
 
-# Local authority as a named resource — geographic context only for academies
 inst:la-873
     a epr:LocalAuthority ;
     rdfs:label "Cambridgeshire"@en ;
@@ -174,7 +173,7 @@ inst:137377
 
         epro:hasHeadteacherOrPrincipal [
             a epr:HeadteacherOrPrincipal ;
-            rdfs:label "Mr Andrew Clarke"@en        # anonymised
+            rdfs:label "Mr Andrew Clarke"@en
         ]
     ] ;
 
@@ -227,8 +226,9 @@ The trust is a named individual (`inst:sat-2045`) of type `epr:SingleAcademyTrus
 
 The establishment also has a `epr:GroupMembership` linking it to the trust, which records when the academy joined. For a SAT, this is the same trust as in the accountability relationship — both point to `inst:sat-2045`.
 
+Trust (`inst:sat-2045`):
+
 ```turtle
-# The single-academy trust as a named individual
 inst:sat-2045
     a epr:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
@@ -257,8 +257,11 @@ inst:sat-2045
         a epr:GroupIncorporatedOnDate ;
         rdfs:label "2011-08-15"^^xsd:date
     ] .
+```
 
-# Group membership — links the academy to the trust with a join date
+Group membership linking the academy to its trust:
+
+```turtle
 inst:137377
     a epr:AcademyConverter ;
 
@@ -267,7 +270,7 @@ inst:137377
         epro:memberOf inst:sat-2045 ;
         epro:hasGroupMembershipDate [
             a epr:GroupMembershipDate ;
-            rdfs:label "2011-09-01"^^xsd:date    # approximate conversion date
+            rdfs:label "2011-09-01"^^xsd:date
         ]
     ] .
 ```

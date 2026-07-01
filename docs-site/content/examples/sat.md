@@ -144,7 +144,7 @@ inst:137377
         epro:memberOf inst:sat-2045 ;
         epro:hasGroupMembershipDate [
             a epr:GroupMembershipDate ;
-            rdfs:label "2011-09-01"^^xsd:date    # approximate conversion date
+            rdfs:label "2011-09-01"^^xsd:date
         ]
     ] .
 ```
@@ -155,8 +155,9 @@ inst:137377
 
 A complete snapshot showing the trust named individual alongside the academy's accountability and membership, as they would appear together in a single Turtle serialisation.
 
+Trust (`inst:sat-2045`):
+
 ```turtle
-# ── Trust ──────────────────────────────────────────────────────
 inst:sat-2045
     a epr:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
@@ -185,8 +186,11 @@ inst:sat-2045
         a epr:GroupIncorporatedOnDate ;
         rdfs:label "2011-08-15"^^xsd:date
     ] .
+```
 
-# ── Academy ────────────────────────────────────────────────────
+Academy (`inst:137377`):
+
+```turtle
 inst:137377
     a epr:AcademyConverter ;
 
