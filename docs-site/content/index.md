@@ -14,6 +14,10 @@ The `.feature` files in `features/` remain the source of truth for agreed behavi
 
 The Markdown files in `business-domain/` remain the source of truth for business-domain documentation.
 
+## Ontology examples
+
+- [Worked examples](./examples/) - how to represent a real establishment using the EPR ontology, with five focused Turtle snippets covering identity, classification, location, provision and governance
+
 ## Prototype Data Model Artefacts (DfE internal)
 
 These sections are password-protected, contact the GIAS transform team for access.
