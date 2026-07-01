@@ -16,7 +16,7 @@ The Markdown files in `business-domain/` remain the source of truth for business
 
 ## Ontology examples
 
-- [Worked examples](./examples/) - how to represent a real establishment using the EPR ontology, with five focused Turtle snippets covering identity, classification, location, provision and governance
+- [Worked examples](./examples/) - four examples showing how to represent community schools, academies, single-academy trusts and multi-academy trusts in the EPR ontology, with focused Turtle snippets for each type
 
 ## Prototype Data Model Artefacts (DfE internal)
 
