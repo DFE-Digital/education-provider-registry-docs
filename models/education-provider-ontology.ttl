@@ -1022,8 +1022,9 @@ epro:hasAddress
 epro:hasRegisteredAddress
     a owl:ObjectProperty ;
     rdfs:label "has registered address"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
     rdfs:range epr:Address ;
-    rdfs:comment "Cardinality: 0..1. The registered or administrative postal address of an establishment or group. No domain restriction — usable on both epr:EstablishmentLocationAndContact (for establishments, mapped from GIAS Establishment.Street etc.) and epr:EstablishmentGroup (for trusts and groups, mapped from EstablishmentGroup.GroupStreet etc.). May differ from the main site address. Added v1.5."@en .
+    rdfs:comment "Cardinality: 0..1. The registered postal address of a group or trust as a legal entity. Mapped from GIAS EstablishmentGroup.GroupStreet, GroupLocality, GroupAddress3, GroupTown, GroupPostcode. Establishments do not carry a registered address directly — their postal address is accessed via epro:hasMainSite → epro:hasAddress. Added v1.5."@en .
 
 epro:hasContactAddress
     a owl:ObjectProperty ;
