@@ -82,7 +82,7 @@ graph LR
 
 All examples use the following prefixes.
 
-```turtle
+```
 @prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
 @prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -100,7 +100,7 @@ Every establishment has exactly one `epr:EstablishmentIdentity` and one `epr:Est
 
 This example is drawn from **Argyle Primary School**, URN 100008, a community primary school in Camden. All personal names in these examples are anonymised.
 
-```turtle
+```
 inst:100008
     a epr:CommunitySchool ;
 
@@ -147,7 +147,7 @@ An establishment's type, type group and education phase are grouped under `epr:E
 
 The accountability relationship records which body is responsible for the establishment. For a community school this is the local authority that maintains it.
 
-```turtle
+```
 inst:100008
     a epr:CommunitySchool ;
 
@@ -169,7 +169,7 @@ inst:100008
 
 Contact details, the postal address and the headteacher or principal are grouped under `epr:EstablishmentLocationAndContact`. Administrative geography — derived from the establishment's postcode via the GeoData lookup table — is a peer group on the establishment itself, not nested under location.
 
-```turtle
+```
 inst:100008
     a epr:CommunitySchool ;
 
@@ -219,7 +219,7 @@ inst:100008
 
 Statutory age range, gender of entry, admissions policy, boarding provision and sixth-form provision are grouped under `epr:EducationAdmissionsAndProvision`. Each classification points to an `owl:NamedIndividual` from the closed enumeration declared in the ontology.
 
-```turtle
+```
 inst:100008
     a epr:CommunitySchool ;
 
@@ -243,11 +243,11 @@ inst:100008
 
 Each governance appointment is a separate `epr:GovernanceAppointment` instance linked to the establishment via `epro:hasGovernanceAppointment`. The appointment records the role type, appointing body, governance identifier (GID), appointment date and term end date. The appointment is linked to a `epr:GovernancePerson` via `epro:appointmentOf`.
 
-`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated with `dcterms:accessRights` in the ontology as personal-data-carrying classes. **All names below are anonymised.** In a production deployment these records would not appear in a public serialisation without a separate access decision.
+`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated with `dcterms:accessRights` in the ontology as personal-data-carrying classes. In a production deployment these records would not appear in a public serialisation without a separate access decision.
 
-The governing body shown is a realistic but fictional eight-person composition for a community primary school: one chair, the headteacher ex-officio, two parent governors, one staff governor, one local authority governor, and two co-opted governors.
+**All governor names below are anonymised.** The eight-person governing body is realistic in composition for a community primary school — one chair, the headteacher ex-officio, two parent governors, one staff governor, one local authority governor, and two co-opted governors — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
 
-```turtle
+```
 inst:100008
     a epr:CommunitySchool ;
 

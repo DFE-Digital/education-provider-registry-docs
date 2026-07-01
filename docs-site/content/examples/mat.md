@@ -61,7 +61,7 @@ graph LR
 
 All examples use the following prefixes.
 
-```turtle
+```
 @prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
 @prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -77,7 +77,7 @@ All examples use the following prefixes.
 
 The trust is a named individual (`inst:mat-2044`) of type `epr:MultiAcademyTrust`. It carries the group UID (the GIAS internal identifier), the Group ID (the trust register identifier), the UKPRN assigned to the trust organisation, the Companies House number, and the date the trust was incorporated.
 
-```turtle
+```
 inst:mat-2044
     a epr:MultiAcademyTrust ;
     rdfs:label "Abbey Academies Trust"@en ;
@@ -114,7 +114,7 @@ inst:mat-2044
 
 Bourne Abbey Church of England Primary Academy was the founding member of the trust. Its identity structure is the same as any academy — URN, UKPRN, and the LAESTAB number scoped to Lincolnshire (LA code 925). The local authority appears here as geographic context only.
 
-```turtle
+```
 inst:136354
     a epr:AcademyConverter ;
 
@@ -159,7 +159,7 @@ inst:la-925
 
 The accountability relationship points to the MAT (`inst:mat-2044`). Religious character (`epr:ChurchOfEnglandCharacter`) is a SKOS concept from the open-ended vocabulary — it uses the same `epr:` namespace but is a `skos:Concept`, not an `owl:NamedIndividual`. This means it is represented differently from closed-enumeration values like `epr:PrimaryPhase`.
 
-```turtle
+```
 inst:136354
     a epr:AcademyConverter ;
 
@@ -182,7 +182,7 @@ inst:136354
 
 Primary academy, mixed, non-selective, no boarding, no sixth form. The age range (2–11) reflects the school's early years provision.
 
-```turtle
+```
 inst:136354
     a epr:AcademyConverter ;
 
@@ -235,7 +235,7 @@ The three members of Abbey Academies Trust joined at different times as the trus
 
 Bourne Abbey Church of England Primary Academy (URN 136354) — founding member, joined December 2010:
 
-```turtle
+```
 inst:136354
     a epr:AcademyConverter ;
     epro:hasGroupMembership [
@@ -250,7 +250,7 @@ inst:136354
 
 Bourne Elsea Park Church of England Primary Academy (URN 140214) — joined September 2014:
 
-```turtle
+```
 inst:140214
     a epr:AcademyConverter ;
     epro:hasGroupMembership [
@@ -265,7 +265,7 @@ inst:140214
 
 Colsterworth Church of England Primary School (URN 146279) — joined September 2018:
 
-```turtle
+```
 inst:146279
     a epr:AcademyConverter ;
     epro:hasGroupMembership [
