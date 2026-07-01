@@ -35,10 +35,10 @@ epro:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-06-26"^^xsd:date ;
+    dcterms:modified "2026-07-01"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.4" ;
+    owl:versionInfo "1.5" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> ;
@@ -57,6 +57,7 @@ epro:establishmentDetailsConceptualModel
     rdfs:comment "v1.3: Administrative geography model added. New class epr:AdministrativeGeography groups 6 ONS statistical and administrative area classifications as sub-classes: GovernmentOfficeRegion, UrbanRuralClassification, AdministrativeWard, ParliamentaryConstituency, LowerLayerSuperOutputArea, MiddleLayerSuperOutputArea. New object property epro:hasAdministrativeGeography links Establishment to AdministrativeGeography (0..1). Sub-properties classifiedByGovernmentOfficeRegion, classifiedByUrbanRuralClassification, classifiedByAdministrativeWard, classifiedByParliamentaryConstituency, classifiedByLowerLayerSuperOutputArea, classifiedByMiddleLayerSuperOutputArea added. New class epr:Country added to MainAddress for British schools overseas and other non-England establishments; new property epro:hasCountry (domain MainAddress, range Country, 0..1). epr:LocalAuthority rdfs:comment updated to make the geographic reference role explicit alongside the accountability role."@en ;
     rdfs:comment "v0.6: ontology class local names aligned with vocabulary source of truth. Renames: ContactAndLocation -> EstablishmentLocationAndContact, PostalAddress -> MainAddress, WebsiteUrl -> Website, Manager -> CentreManager, Section41ApprovalStatus -> Section41Approval. Vocabulary entries added for all 14 intermediate OWL classes and for grouping container classes (ResourcedProvisionMeasure, SenUnitMeasure, SpecialPupilMeasure, OfstedInspectionRecord, AccreditationRecord, PupilReferralUnitOperationalRecord)."@en ;
     rdfs:comment "v1.4: UI field coverage gaps addressed. New classes: InspectorateReport (inspection detail), GroupUniqueIdentifier, GroupMembershipDate, GroupStatus, GroupOpenDate, GroupIncorporatedOnDate, GroupClosedDate (establishment group lifecycle). New object properties: recordsInspectorateReport (on InspectionReportReference), sharedWith (on GovernanceAppointment, range Establishment — covers shared local governor roles), hasGroupUniqueIdentifier, hasGroupMembershipDate, hasGroupStatus, hasGroupOpenDate, hasGroupIncorporatedOnDate, hasGroupClosedDate, hasLocalAuthorityForGroup (establishment group properties; hasLocalAuthorityForGroup SHACL-scoped to children's centre group types)."@en ;
+    rdfs:comment "v1.5: Site and address model separated. New classes: epr:Site (physical location where education is delivered, carries site name via rdfs:label, UPRN, OS grid reference, and a postal address), epr:Address (postal or correspondence address, independent of any physical site). New object properties: epro:hasMainSite (EstablishmentLocationAndContact → Site, 0..1), epro:hasAdditionalSite (EstablishmentLocationAndContact → Site, 0..*; SHACL-scoped to 3 permitted establishment types), epro:hasAddress (Site → Address, 0..1), epro:hasRegisteredAddress (no domain restriction — used on both EstablishmentLocationAndContact and EstablishmentGroup, range Address, 0..1), epro:hasContactAddress (EstablishmentGroup → Address, 0..1). Deprecated: epr:MainAddress, epro:hasMainAddress. Domain updated: epro:hasUprn domain changed from MainAddress to Site; epro:hasCountry domain changed from MainAddress to Address; epro:hasOsGridReference domain extended to union of AdministrativeGeography and Site."@en ;
     epr:status "Provisional"@en .
 
 
@@ -436,9 +437,9 @@ epro:hasUkprn
 epro:hasUprn
     a owl:ObjectProperty ;
     rdfs:label "has UPRN"@en ;
-    rdfs:domain epr:MainAddress ;
+    rdfs:domain epr:Site ;
     rdfs:range epr:UniquePropertyReferenceNumber ;
-    rdfs:comment "Cardinality: 0..1. An address may carry a unique property reference number. UPRN identifies a property, not an establishment - domain moved from EstablishmentIdentity to MainAddress (v1.0)."@en .
+    rdfs:comment "Cardinality: 0..1. UPRN identifies a physical property, not a postal address — domain updated from epr:MainAddress to epr:Site in v1.5. A UPRN is issued by Ordnance Survey to uniquely identify a land and property unit; it belongs on the physical site record, not on the address."@en .
 
 epro:hasLocalAuthorityScopedEstablishmentNumber
     a owl:ObjectProperty ;
@@ -804,8 +805,8 @@ epr:EstablishmentLocationAndContact
 
 epr:MainAddress
     a owl:Class ;
-    rdfs:label "Postal address"@en ;
-    rdfs:comment "The physical or postal address at which the establishment is located."@en .
+    rdfs:label "Main address (superseded)"@en ;
+    rdfs:comment "Superseded in v1.5 by epr:Address and epr:Site. Previously used as the establishment's single address concept, conflating a physical site with a postal address. Retained in the vocabulary with status Superseded. Use epro:hasRegisteredAddress → epr:Address for the establishment's administrative address and epro:hasMainSite → epr:Site for the principal physical site."@en .
 
 epr:Website
     a owl:Class ;
@@ -825,7 +826,29 @@ epr:HeadteacherOrPrincipal
 epr:Country
     a owl:Class ;
     rdfs:label "Country"@en ;
-    rdfs:comment "The country of the establishment's main address. Relevant for British schools overseas and other establishments located outside England. Distinct from the County text field in the address. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch; the target model uses this class to clarify the concept as country of location rather than nationality."@en .
+    rdfs:comment "The country of an address. Relevant for British schools overseas and other establishments located outside England. Distinct from the County text field in the address. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch; the target model uses this class to clarify the concept as country of location rather than nationality."@en .
+
+
+#################################################################
+# Classes - site and address (v1.5)
+#
+# Sites and addresses are independent concepts. A site is a
+# physical location where education is delivered. An address is a
+# postal or correspondence locator. A site has an address; an
+# establishment may also carry a registered address independently
+# of any site (e.g. an administrative postal address that differs
+# from the teaching location).
+#################################################################
+
+epr:Site
+    a owl:Class ;
+    rdfs:label "Site"@en ;
+    rdfs:comment "A physical location at which an establishment operates. The site name is carried as rdfs:label. A site carries a UPRN (identifying the physical property), OS grid coordinates, and a postal address (via epro:hasAddress). Distinct from epr:Address — a site is where education is delivered; an address locates an entity for administrative and correspondence purposes. Added v1.5."@en .
+
+epr:Address
+    a owl:Class ;
+    rdfs:label "Address"@en ;
+    rdfs:comment "A postal or correspondence address. An independent concept from epr:Site — an address locates an establishment, site, or group for administrative and correspondence purposes. An establishment may have a registered address that differs from its principal teaching site. A trust or group has a registered address (and optionally a contact address) as a legal entity. Added v1.5."@en .
 
 
 #################################################################
@@ -970,10 +993,44 @@ epro:hasEstablishmentLocationAndContact
 
 epro:hasMainAddress
     a owl:ObjectProperty ;
-    rdfs:label "has postal address"@en ;
+    rdfs:label "has main address (superseded)"@en ;
     rdfs:domain epr:EstablishmentLocationAndContact ;
     rdfs:range epr:MainAddress ;
-    rdfs:comment "Cardinality: 0..1."@en .
+    rdfs:comment "Superseded in v1.5. Use epro:hasRegisteredAddress → epr:Address for the establishment's postal address and epro:hasMainSite → epr:Site for the principal physical site."@en .
+
+epro:hasMainSite
+    a owl:ObjectProperty ;
+    rdfs:label "has main site"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:Site ;
+    rdfs:comment "Cardinality: 0..1. The principal physical site of an establishment — the location where education is primarily delivered. The site name is rdfs:label on the epr:Site instance. Mapped from GIAS Establishment.siteName, Street, Locality, Address3, Town, Postcode, UPRN. Added v1.5."@en .
+
+epro:hasAdditionalSite
+    a owl:ObjectProperty ;
+    rdfs:label "has additional site"@en ;
+    rdfs:domain epr:EstablishmentLocationAndContact ;
+    rdfs:range epr:Site ;
+    rdfs:comment "Cardinality: 0..*. An additional physical site at which the establishment operates. Mapped from GIAS EstablishmentAdditionalAddresses (record_number, siteName, street, locality, address3, town, postcode, uprn, easting, northing). Application-level constraint (SHACL): permitted only for Other independent school (type 11), Other independent special school (type 10), and Non-maintained special school (type 08). Added v1.5."@en .
+
+epro:hasAddress
+    a owl:ObjectProperty ;
+    rdfs:label "has address"@en ;
+    rdfs:domain epr:Site ;
+    rdfs:range epr:Address ;
+    rdfs:comment "Cardinality: 0..1. The postal address of a site. Separates the physical location concept (epr:Site) from its postal address (epr:Address). Added v1.5."@en .
+
+epro:hasRegisteredAddress
+    a owl:ObjectProperty ;
+    rdfs:label "has registered address"@en ;
+    rdfs:range epr:Address ;
+    rdfs:comment "Cardinality: 0..1. The registered or administrative postal address of an establishment or group. No domain restriction — usable on both epr:EstablishmentLocationAndContact (for establishments, mapped from GIAS Establishment.Street etc.) and epr:EstablishmentGroup (for trusts and groups, mapped from EstablishmentGroup.GroupStreet etc.). May differ from the main site address. Added v1.5."@en .
+
+epro:hasContactAddress
+    a owl:ObjectProperty ;
+    rdfs:label "has contact address"@en ;
+    rdfs:domain epr:EstablishmentGroup ;
+    rdfs:range epr:Address ;
+    rdfs:comment "Cardinality: 0..1. The contact or correspondence address of a group or trust, where this differs from the registered address. Mapped from GIAS EstablishmentGroup.GroupContactStreet, GroupContactLocality, GroupContactAddress3, GroupContactTown, GroupContactPostcode, GroupContactUPRN. Added v1.5."@en .
 
 epro:hasWebsite
     a owl:ObjectProperty ;
@@ -999,9 +1056,9 @@ epro:hasHeadteacherOrPrincipal
 epro:hasCountry
     a owl:ObjectProperty ;
     rdfs:label "has country"@en ;
-    rdfs:domain epr:MainAddress ;
+    rdfs:domain epr:Address ;
     rdfs:range epr:Country ;
-    rdfs:comment "Cardinality: 0..1. Present for British schools overseas and establishments located outside England."@en .
+    rdfs:comment "Cardinality: 0..1. Present for British schools overseas and establishments located outside England. Domain updated from epr:MainAddress to epr:Address in v1.5."@en .
 
 
 #################################################################
@@ -1074,9 +1131,12 @@ epro:hasGssLocalAuthorityCode
 epro:hasOsGridReference
     a owl:ObjectProperty ;
     rdfs:label "has OS grid reference"@en ;
-    rdfs:domain epr:AdministrativeGeography ;
+    rdfs:domain [
+        a owl:Class ;
+        owl:unionOf ( epr:AdministrativeGeography epr:Site )
+    ] ;
     rdfs:range epr:OsGridReference ;
-    rdfs:comment "Cardinality: 0..1. Easting and northing in OSGB36, derived from the establishment's postcode."@en .
+    rdfs:comment "Cardinality: 0..1. Easting and northing in OSGB36. On epr:AdministrativeGeography: derived from the establishment's postcode. On epr:Site: stored directly from GIAS EstablishmentAdditionalAddresses.easting and northing columns. Domain extended from AdministrativeGeography to union of AdministrativeGeography and Site in v1.5."@en .
 
 epro:hasEasting
     a owl:ObjectProperty ;
