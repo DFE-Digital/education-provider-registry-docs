@@ -2099,7 +2099,7 @@ epr:GovernanceAppointment
     a owl:Class ;
     rdfs:label "Governance appointment"@en ;
     rdfs:comment "A record of one named person holding one governance role at one establishment or group during a defined period. Identified by the GIAS Governance Identifier (GID). Carries the role type, appointment date, optional term-end date and appointing body. Personal-data-carrying class: contains person-name fields (Title, Forename 1, Forename 2, Surname)."@en ;
-    dcterms:accessRights "Personal data - access controls required. Person-name fields are encrypted at the logical model layer."@en .
+    dcterms:accessRights "Personal data (publicly accessible). Person name fields (title, forename, surname) are published in the GIAS public CSV extract and accessible to anonymous users. No EPR access controls required for appointment records."@en .
 
 epr:GovernanceIdentifier
     a owl:Class ;
@@ -2129,8 +2129,8 @@ epr:GovernanceAppointingBody
 epr:GovernancePerson
     a owl:Class ;
     rdfs:label "Governance person"@en ;
-    rdfs:comment "A named individual who holds or has held a formal governance role at an establishment, establishment group or trust. Covers governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals. One GovernancePerson may be linked from multiple GovernanceAppointment records. Personal-data-carrying class - requires access-control annotation."@en ;
-    dcterms:accessRights "Personal data - access controls required. Contains GovernancePersonIdentifier (pseudonymous hash derived from date of birth, surname and forename1). Raw date of birth not stored in EPR."@en .
+    rdfs:comment "A named individual who holds or has held a formal governance role at an establishment, establishment group or trust. Covers governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals. One GovernancePerson may be linked from multiple GovernanceAppointment records. Personal-data-carrying class: name (rdfs:label) is publicly accessible; GovernancePersonIdentifier carries pseudonymous personal data that is not publicly accessible."@en ;
+    dcterms:accessRights "Personal data. Name (rdfs:label) is publicly accessible — published in the GIAS public CSV extract and accessible to anonymous users. GovernancePersonIdentifier is pseudonymous personal data (hash derived from date of birth, surname and forename1) and is not publicly accessible; access controls apply to this attribute only. Raw date of birth not stored in EPR."@en .
 
 epr:GovernancePersonIdentifier
     a owl:Class ;

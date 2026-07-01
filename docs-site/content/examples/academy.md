@@ -283,7 +283,7 @@ Governance appointments are recorded on the establishment using `epro:hasGoverna
 
 **All names below are anonymised.** The four-person LGB shown is realistic in composition for a secondary academy in a single-academy trust — one chair of the local governing body, the headteacher ex-officio, one parent governor, and one co-opted governor — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
 
-`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated in the ontology with `dcterms:accessRights "Personal data - access controls required"`. They carry personal names and are subject to access-control restrictions in the EPR system.
+Governor names are personal data (PII) under UK GDPR but are **publicly accessible by design** — they are published in the GIAS public CSV extract and accessible to anonymous users. No EPR access controls are applied to appointment records or person names. The `GovernancePersonIdentifier` (a pseudonymous hash derived from date of birth) is a separate attribute that is not publicly accessible and carries its own access controls.
 
 ```
 inst:137377
