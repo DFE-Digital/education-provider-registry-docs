@@ -147,7 +147,6 @@ inst:136354
         epro:classifiedByEstablishmentStatus epr:OpenStatus
     ] .
 
-# Geographic local authority — not the accountable body
 inst:la-925
     a epr:LocalAuthority ;
     rdfs:label "Lincolnshire"@en ;
@@ -207,7 +206,7 @@ inst:136354
 
         epro:hasHeadteacherOrPrincipal [
             a epr:HeadteacherOrPrincipal ;
-            rdfs:label "Mrs Catherine Harrison"@en    # anonymised
+            rdfs:label "Mrs Catherine Harrison"@en
         ]
     ] ;
 
@@ -234,8 +233,9 @@ Each member academy has a `epr:GroupMembership` record carrying the date it join
 
 The three members of Abbey Academies Trust joined at different times as the trust grew. The founding member (URN 136354) joined at trust formation in December 2010; the second academy joined in September 2014; the third in September 2018.
 
+Bourne Abbey Church of England Primary Academy (URN 136354) — founding member, joined December 2010:
+
 ```turtle
-# Founding member — joined at trust formation
 inst:136354
     a epr:AcademyConverter ;
     epro:hasGroupMembership [
@@ -246,8 +246,11 @@ inst:136354
             rdfs:label "2010-12-01"^^xsd:date
         ]
     ] .
+```
 
-# Second member academy
+Bourne Elsea Park Church of England Primary Academy (URN 140214) — joined September 2014:
+
+```turtle
 inst:140214
     a epr:AcademyConverter ;
     epro:hasGroupMembership [
@@ -258,8 +261,11 @@ inst:140214
             rdfs:label "2014-09-01"^^xsd:date
         ]
     ] .
+```
 
-# Third member academy
+Colsterworth Church of England Primary School (URN 146279) — joined September 2018:
+
+```turtle
 inst:146279
     a epr:AcademyConverter ;
     epro:hasGroupMembership [

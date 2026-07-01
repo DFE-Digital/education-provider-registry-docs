@@ -133,7 +133,6 @@ inst:100008
         epro:classifiedByEstablishmentStatus epr:OpenStatus
     ] .
 
-# Local authority as a named resource — shared by identity and accountability
 inst:la-202
     a epr:LocalAuthority ;
     rdfs:label "Camden"@en ;
@@ -194,7 +193,7 @@ inst:100008
 
         epro:hasHeadteacherOrPrincipal [
             a epr:HeadteacherOrPrincipal ;
-            rdfs:label "Ms Jane Smith"@en        # anonymised
+            rdfs:label "Ms Jane Smith"@en
         ]
     ] ;
 
@@ -252,7 +251,6 @@ The governing body shown is a realistic but fictional eight-person composition f
 inst:100008
     a epr:CommunitySchool ;
 
-    # Chair of governors
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:ChairOfGovernorsRole ;
@@ -263,7 +261,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr Robert Johnson"@en ]
     ] ;
 
-    # Headteacher — ex-officio governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:HeadteacherExOfficioGovernorRole ;
@@ -273,7 +270,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Ms Jane Smith"@en ]
     ] ;
 
-    # Parent governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:GovernorRole ;
@@ -284,7 +280,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mrs Mary Brown"@en ]
     ] ;
 
-    # Parent governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:GovernorRole ;
@@ -295,7 +290,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr David Wilson"@en ]
     ] ;
 
-    # Staff governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:GovernorRole ;
@@ -306,7 +300,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Ms Sarah Davies"@en ]
     ] ;
 
-    # Local authority governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:GovernorRole ;
@@ -317,7 +310,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr Thomas Evans"@en ]
     ] ;
 
-    # Co-opted governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:GovernorRole ;
@@ -328,7 +320,6 @@ inst:100008
         epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mrs Patricia Moore"@en ]
     ] ;
 
-    # Co-opted governor
     epro:hasGovernanceAppointment [
         a epr:GovernanceAppointment ;
         epro:hasGovernanceRoleType       epr:GovernorRole ;
