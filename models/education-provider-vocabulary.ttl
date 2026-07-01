@@ -119,6 +119,8 @@ epr:locationAndContact
     a skos:Collection ;
     skos:prefLabel "Location and contact"@en ;
     skos:member
+        epr:Site,
+        epr:Address,
         epr:MainAddress,
         epr:Website,
         epr:TelephoneNumber,
@@ -2144,27 +2146,49 @@ epr:DateLastChangedOrConfirmed
     dcterms:source "Frontend: Date last changed/confirmed; extract: Last Changed Date; C#: LastChangedDate; Java: lastChangedDate"@en .
 
 #################################################################
-# Location and contact
+# Location and contact (v1.5: Site and Address added)
 #################################################################
+
+epr:Site
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Site"@en ;
+    skos:definition "A physical location at which an establishment operates. A site has a name, a UPRN, OS grid coordinates, and a postal address. Distinct from an address — a site is a physical place where education is delivered; an address locates an entity for administrative and correspondence purposes."@en ;
+    skos:scopeNote "In GIAS, the principal site is defined by the main establishment address fields (siteName, Street, Locality, Address3, Town, Postcode, UPRN). Additional sites are held in EstablishmentAdditionalAddresses, restricted to three establishment types: Other independent school, Other independent special school, Non-maintained special school."@en ;
+    skos:broader epr:EstablishmentLocationAndContact ;
+    epr:status "Provisional"@en ;
+    dcterms:modified "2026-07-01"^^xsd:date .
+
+epr:Address
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Address"@en ;
+    skos:definition "A postal or correspondence address. An independent concept from epr:Site — an address locates an establishment, site, or group for administrative and correspondence purposes. An establishment may have a registered address that differs from its principal teaching site. A trust or group carries a registered address and optionally a separate contact address as a legal entity."@en ;
+    skos:scopeNote "For establishments, the registered address is mapped from GIAS Establishment.Street, Locality, Address3, Town, Postcode and County. For groups and trusts, the registered address is mapped from EstablishmentGroup.GroupStreet etc. and the contact address from GroupContactStreet etc. Address is not the same as a site — UPRN belongs on the site, not the address."@en ;
+    skos:broader epr:EstablishmentLocationAndContact ;
+    skos:narrower epr:Country ;
+    epr:status "Provisional"@en ;
+    dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en ;
+    dcterms:modified "2026-07-01"^^xsd:date .
 
 epr:MainAddress
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Main address"@en ;
-    skos:altLabel "Address"@en ;
     skos:definition "The primary postal address of the establishment as recorded in GIAS, comprising street, locality, address line 3, town, county and postcode."@en ;
     skos:broader epr:EstablishmentLocationAndContact ;
-    skos:narrower epr:Country ;
-    epr:status "Preferred"@en ;
+    skos:exactMatch epr:Address ;
+    epr:status "Superseded"@en ;
+    skos:scopeNote "Superseded in v1.5 by epr:Address and epr:Site. The concept conflated the postal address and the physical location. Use epr:Address for postal and correspondence addresses; use epr:Site for the physical location where education is delivered."@en ;
     dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en .
 
 epr:Country
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Country"@en ;
-    skos:definition "The country of the establishment's main address. Relevant for British schools overseas and other establishments located outside England."@en ;
+    skos:definition "The country of an address. Relevant for British schools overseas and other establishments located outside England."@en ;
     skos:scopeNote "Distinct from the County text field in the address, which records the county within England. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch. The target model treats this as country of location. Future iterations should consider migrating to ISO 3166-1 alpha-2 codes to replace the legacy code list and unify handling with EstablishmentGroup.GroupCountry_code."@en ;
-    skos:broader epr:MainAddress ;
+    skos:broader epr:Address ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Country_code → Nationality.code (legacy table name)"@en .
 
@@ -2191,8 +2215,9 @@ epr:UniquePropertyReferenceNumber
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Unique Property Reference Number"@en ;
     skos:altLabel "UPRN"@en ;
-    skos:definition "The persistent numeric identifier assigned to the establishment's physical address by Ordnance Survey under the Public Sector Mapping Agreement, enabling cross-service geographic linking."@en ;
-    skos:broader epr:EstablishmentLocationAndContact ;
+    skos:definition "The persistent numeric identifier assigned to a physical site by Ordnance Survey under the Public Sector Mapping Agreement, enabling cross-service geographic linking."@en ;
+    skos:broader epr:Site ;
+    skos:scopeNote "UPRN identifies a physical property (a site), not a postal address. Updated from broader epr:EstablishmentLocationAndContact to epr:Site in v1.5 to reflect that UPRN belongs on the physical location record."@en ;
     epr:status "Preferred"@en .
 
 #################################################################
