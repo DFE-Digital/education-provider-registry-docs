@@ -211,6 +211,69 @@ inst:137377
 
 ---
 
+## Example 5 — Trust board governance
+
+Trust-level governance appointments (members and trustees) are recorded on the trust entity — not on the academy establishment — using `epro:hasGroupGovernanceAppointment`. The appointing body for trustees is `epr:AppointedByAcademyMembers`; for members (the company members of the charitable company), the appointing body is `epr:AppointingBodyNotApplicable` because there is no external appointing mechanism.
+
+**All names below are anonymised.** The three-person trust board shown is realistic in composition for a small SAT — two members and a chair of trustees who is also the executive principal — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
+
+`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated in the ontology with `dcterms:accessRights "Personal data - access controls required"`. They carry personal names and are subject to access-control restrictions in the EPR system.
+
+```
+inst:sat-2045
+    a epr:SingleAcademyTrust ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:MemberRole ;
+        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mrs Elizabeth Wilson"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:MemberRole ;
+        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mr David Richardson"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:ChairOfTrusteesRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2018-09-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Mr Robert Jenkins"@en
+        ]
+    ] ;
+
+    epro:hasGroupGovernanceAppointment [
+        a epr:GovernanceAppointment ;
+        epro:hasGovernanceRoleType       epr:TrusteeRole ;
+        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
+        epro:hasGovernanceAppointmentDate [
+            a epr:GovernanceAppointmentDate ;
+            rdfs:label "2019-04-01"^^xsd:date
+        ] ;
+        epro:appointmentOf [
+            a epr:GovernancePerson ;
+            rdfs:label "Ms Karen Patel"@en
+        ]
+    ] .
+```
+
+---
+
 ## SAT vs MAT
 
 Both SATs and MATs use identical object properties (`epro:accountableToAcademyTrust`, `epro:memberOf`, `epro:hasGroupMembership`). The difference is in the OWL class of the trust (`epr:SingleAcademyTrust` vs `epr:MultiAcademyTrust`) and the cardinality of members. In a SAT there is always exactly one member academy; in a MAT there are two or more.
