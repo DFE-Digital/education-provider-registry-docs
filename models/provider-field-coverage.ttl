@@ -275,15 +275,6 @@ epr:TelephoneNumber
 # DETAILS TAB — inspection
 #################################################################
 
-epr:OfstedInspectionRecord
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Ofsted rating and reports"@en ;
-    epr:applicableToEstablishmentType
-        "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
-        "14", "15", "18", "26", "28", "29", "32", "33", "34", "35",
-        "36", "38", "39", "40", "41", "42", "43", "44", "45", "46",
-        "47", "48" .
-
 epr:ExternalServiceReference
     epr:shownOnTab epr:detailsTab ;
     epr:uiLabel "Data from other services"@en ;

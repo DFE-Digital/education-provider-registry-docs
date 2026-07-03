@@ -290,13 +290,6 @@ epr:LaMaintainedSchoolGroupShape
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for LA maintained schools."@en ;
-    ] ;
-
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "LA maintained schools must have an Ofsted inspection record."@en ;
     ] .
 
 
@@ -568,12 +561,6 @@ epr:PupilReferralUnitShape
         sh:message "Pupil referral units must have a further education type classification."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Pupil referral units must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasSenAndResourcedProvision ;
@@ -635,12 +622,6 @@ epr:LocalAuthorityNurserySchoolShape
         sh:message "LA nursery schools must have a free school meal measure."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "LA nursery schools must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -796,12 +777,6 @@ epr:NonMaintainedSpecialSchoolGroupShape
         sh:message "Non-maintained special schools must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Non-maintained special schools must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path ( epro:hasExternalReference epro:referencesInspectionReport epro:recordsInspectorateName ) ;
@@ -998,12 +973,6 @@ epr:IndependentSchoolGroupShape
         sh:message "Independent schools must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Independent schools must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path ( epro:hasExternalReference epro:referencesInspectionReport epro:recordsInspectorateName ) ;
@@ -1200,12 +1169,6 @@ epr:MainstreamAcademyGroupShape
         sh:message "Mainstream academies must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Mainstream academies must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -1332,12 +1295,6 @@ epr:AcademySpecialShape
         sh:message "Academy special schools must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Academy special schools must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -1500,12 +1457,6 @@ epr:AcademyAlternativeProvisionShape
         sh:message "Academy alternative provision establishments must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Academy alternative provision establishments must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -1667,12 +1618,6 @@ epr:Academy1619Shape
         sh:message "Academy 16-19 establishments must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Academy 16-19 establishments must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -1867,12 +1812,6 @@ epr:AcademySecure16To19Shape
         sh:message "Section 41 approval is not shown in the restricted public Details view for academy secure 16 to 19."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:maxCount 0 ;
-        sh:name "Ofsted rating and reports (not applicable in public view)"@en ;
-        sh:message "Ofsted inspection record is not shown in the restricted public Details view for academy secure 16 to 19."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasSenAndResourcedProvision ;
@@ -2027,12 +1966,6 @@ epr:MainstreamFreeSchoolGroupShape
         sh:message "Mainstream free schools must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Mainstream free schools must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -2154,12 +2087,6 @@ epr:FreeSchoolSpecialShape
         sh:message "Free school specials must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Free school specials must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -2319,12 +2246,6 @@ epr:FreeSchoolAlternativeProvisionShape
         sh:message "Free school alternative provision establishments must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Free school alternative provision establishments must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -2484,12 +2405,6 @@ epr:FreeSchool16To19Shape
         sh:message "Free school 16 to 19 establishments must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Free school 16 to 19 establishments must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -2825,12 +2740,6 @@ epr:HigherEducationInstitutionShape
         sh:message "Higher education institutions must have a further education type classification."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Higher education institutions must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ;
@@ -2950,12 +2859,6 @@ epr:ChildrensCentreGroupShape
         sh:message "Section 41 approval is not applicable for children's centres."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Children's centres must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path ( epro:hasContactAndLocation epro:hasManager ) ;
@@ -3073,12 +2976,6 @@ epr:OnlineProviderShape
         sh:message "Section 41 approval is not applicable for online providers."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Online providers must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -3203,12 +3100,6 @@ epr:WelshEstablishmentShape
         sh:message "Welsh establishments must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:maxCount 0 ;
-        sh:name "Ofsted rating and reports (not applicable)"@en ;
-        sh:message "Welsh establishments are not inspected by Ofsted."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -3319,12 +3210,6 @@ epr:SpecialPost16Shape
         sh:message "Special post-16 institutions must have a Section 41 approval status."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "Special post-16 institutions must have an Ofsted inspection record."@en ;
-    ] ;
 
     sh:property [
         sh:path epro:hasFaithContext ;
@@ -3428,12 +3313,6 @@ epr:BritishSchoolsOverseasShape
         sh:message "British schools overseas must have a free school meal measure."@en ;
     ] ;
 
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:maxCount 0 ;
-        sh:name "Ofsted rating and reports (not applicable)"@en ;
-        sh:message "British schools overseas are not inspected by Ofsted - they use a named inspectorate instead."@en ;
-    ] ;
 
     sh:property [
         sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ;
@@ -3499,7 +3378,6 @@ epr:SecureUnitsShape
     sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for secure units."@en ] ;
     sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for secure units."@en ] ;
     sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for secure units."@en ] ;
-    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for secure units."@en ] ;
     sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for secure units."@en ] ;
 
     sh:property [
@@ -3551,7 +3429,6 @@ epr:OffshoreSchoolsShape
     sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for offshore schools."@en ] ;
-    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for offshore schools."@en ] ;
 
     sh:property [
@@ -3645,13 +3522,6 @@ epr:ServiceChildrensEducationShape
         sh:minCount 1 ;
         sh:name "Number of pupils eligible for free school meals"@en ;
         sh:message "SCE establishments must have a free school meal measure."@en ;
-    ] ;
-
-    sh:property [
-        sh:path epro:hasOfstedInspectionRecord ;
-        sh:minCount 1 ;
-        sh:name "Ofsted rating and reports"@en ;
-        sh:message "SCE establishments must have an Ofsted inspection record."@en ;
     ] .
 
 
@@ -3676,7 +3546,6 @@ epr:MiscellaneousEstablishmentShape
     sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for miscellaneous establishments."@en ] ;
-    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for miscellaneous establishments."@en ] ;
 
     sh:property [
@@ -3729,7 +3598,6 @@ epr:InstitutionFundedByOtherGovernmentDepartmentShape
     sh:property [ sh:path epro:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path epro:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path ( epro:hasEstablishmentClassification epro:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for other-department institutions."@en ] ;
-    sh:property [ sh:path epro:hasOfstedInspectionRecord ; sh:maxCount 0 ; sh:name "Ofsted rating and reports (not applicable)"@en ; sh:message "Ofsted inspection is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path ( epro:hasCapacityAndPupilMeasures epro:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for other-department institutions."@en ] ;
 
     sh:property [

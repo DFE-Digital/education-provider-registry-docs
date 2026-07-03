@@ -463,7 +463,7 @@ epr:InspectionRecord
     skos:topConceptOf epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Inspection record"@en ;
     skos:definition "The non-Ofsted inspectorate name, inspection report link and inspection visit dates recorded for an establishment. Applies to independent schools and British schools overseas inspected by bodies such as ISI or the British Schools Overseas inspectorate."@en ;
-    skos:scopeNote "Shown for independent schools (inspectorate name only) and British schools overseas (inspectorate name, report and visit dates). Ofsted links appear under External reference rather than here."@en ;
+    skos:scopeNote "Shown for independent schools (inspectorate name only) and British schools overseas (inspectorate name, report and visit dates)."@en ;
     skos:narrower
         epr:DateOfLastInspectionVisit,
         epr:DateOfNextInspectionVisit,
@@ -493,7 +493,7 @@ epr:ExternalReference
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:topConceptOf epr:establishmentDetailsVocabulary ;
     skos:prefLabel "External reference"@en ;
-    skos:definition "Links from the GIAS establishment record to related information owned and published by other services, including the Ofsted inspection report reference and other external service references."@en ;
+    skos:definition "Links from the establishment record to related information owned and published by other services, including inspection report references and other external service references."@en ;
     skos:narrower
         epr:ExternalServiceReference,
         epr:InspectionReportReference ;
@@ -2902,9 +2902,7 @@ epr:InspectionReportReference
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Inspection report reference"@en ;
-    skos:altLabel "Ofsted rating and reports"@en ;
-    skos:definition "A link to the Ofsted inspection rating and report published by Ofsted for the establishment. Ofsted inspects schools under the Education Act 2005 and awards grades of Outstanding, Good, Requires improvement or Inadequate."@en ;
-    skos:scopeNote "Distinct from InspectorateReport, which is the inspectorate report link for British schools overseas."@en ;
+    skos:definition "A reference to an inspection report published by the relevant non-Ofsted inspectorate. Groups the inspectorate name, report URL and visit dates for establishments inspected by bodies other than Ofsted, such as ISI (independent schools) or the British Schools Overseas inspectorate."@en ;
     skos:broader epr:ExternalReference ;
     skos:related epr:InspectorateReport ;
     epr:status "Provisional"@en .
@@ -3070,16 +3068,6 @@ epr:SpecialPupilMeasure
     skos:definition "A grouping of the two pupil-count measures recorded for special schools and online providers: pupils with a current SEN statement or EHC plan, and pupils without such statutory documentation."@en ;
     skos:broader epr:CapacityAndPupilMeasures ;
     skos:narrower epr:SpecialPupilsOnStatementOrEhcPlan, epr:SpecialPupilsNotOnStatementOrEhcPlan ;
-    epr:status "Provisional"@en .
-
-epr:OfstedInspectionRecord
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Ofsted inspection record"@en ;
-    skos:definition "A grouping of the Ofsted inspection outcome (grade) and the link to the published Ofsted report for an establishment. Ofsted inspects schools under the Education Act 2005 and awards grades of Outstanding, Good, Requires improvement or Inadequate."@en ;
-    skos:scopeNote "Distinct from InspectionRecord, which covers inspectorates other than Ofsted, such as ISI and those inspecting British schools overseas."@en ;
-    skos:broader epr:ExternalReference ;
-    skos:related epr:InspectionReportReference ;
     epr:status "Provisional"@en .
 
 epr:AccreditationRecord
