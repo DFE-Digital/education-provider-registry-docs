@@ -38,7 +38,7 @@ epro:establishmentDetailsConceptualModel
     dcterms:modified "2026-07-01"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.5" ;
+    owl:versionInfo "1.6" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> ;
@@ -57,6 +57,7 @@ epro:establishmentDetailsConceptualModel
     rdfs:comment "v1.3: Administrative geography model added. New class epr:AdministrativeGeography groups 6 ONS statistical and administrative area classifications as sub-classes: GovernmentOfficeRegion, UrbanRuralClassification, AdministrativeWard, ParliamentaryConstituency, LowerLayerSuperOutputArea, MiddleLayerSuperOutputArea. New object property epro:hasAdministrativeGeography links Establishment to AdministrativeGeography (0..1). Sub-properties classifiedByGovernmentOfficeRegion, classifiedByUrbanRuralClassification, classifiedByAdministrativeWard, classifiedByParliamentaryConstituency, classifiedByLowerLayerSuperOutputArea, classifiedByMiddleLayerSuperOutputArea added. New class epr:Country added to MainAddress for British schools overseas and other non-England establishments; new property epro:hasCountry (domain MainAddress, range Country, 0..1). epr:LocalAuthority rdfs:comment updated to make the geographic reference role explicit alongside the accountability role."@en ;
     rdfs:comment "v0.6: ontology class local names aligned with vocabulary source of truth. Renames: ContactAndLocation -> EstablishmentLocationAndContact, PostalAddress -> MainAddress, WebsiteUrl -> Website, Manager -> CentreManager, Section41ApprovalStatus -> Section41Approval. Vocabulary entries added for all 14 intermediate OWL classes and for grouping container classes (ResourcedProvisionMeasure, SenUnitMeasure, SpecialPupilMeasure, OfstedInspectionRecord, AccreditationRecord, PupilReferralUnitOperationalRecord)."@en ;
     rdfs:comment "v1.4: UI field coverage gaps addressed. New classes: InspectorateReport (inspection detail), GroupUniqueIdentifier, GroupMembershipDate, GroupStatus, GroupOpenDate, GroupIncorporatedOnDate, GroupClosedDate (establishment group lifecycle). New object properties: recordsInspectorateReport (on InspectionReportReference), sharedWith (on GovernanceAppointment, range Establishment — covers shared local governor roles), hasGroupUniqueIdentifier, hasGroupMembershipDate, hasGroupStatus, hasGroupOpenDate, hasGroupIncorporatedOnDate, hasGroupClosedDate, hasLocalAuthorityForGroup (establishment group properties; hasLocalAuthorityForGroup SHACL-scoped to children's centre group types)."@en ;
+    rdfs:comment "v1.6: OfstedInspectionRecord class and hasOfstedInspectionRecord object property removed. EPR does not hold Ofsted inspection data. All SHACL property shapes referencing hasOfstedInspectionRecord removed. epr:InspectorateReport rdfs:comment updated to remove the now-stale reference to OfstedInspectionRecord."@en ;
     rdfs:comment "v1.5: Site and address model separated. New classes: epr:Site (physical location where education is delivered, carries site name via rdfs:label, UPRN, OS grid reference, and a postal address), epr:Address (postal or correspondence address, independent of any physical site). New object properties: epro:hasMainSite (EstablishmentLocationAndContact → Site, 0..1), epro:hasAdditionalSite (EstablishmentLocationAndContact → Site, 0..*; SHACL-scoped to 3 permitted establishment types), epro:hasAddress (Site → Address, 0..1), epro:hasRegisteredAddress (no domain restriction — used on both EstablishmentLocationAndContact and EstablishmentGroup, range Address, 0..1), epro:hasContactAddress (EstablishmentGroup → Address, 0..1). Deprecated: epr:MainAddress, epro:hasMainAddress. Domain updated: epro:hasUprn domain changed from MainAddress to Site; epro:hasCountry domain changed from MainAddress to Address; epro:hasOsGridReference domain extended to union of AdministrativeGeography and Site."@en ;
     epr:status "Provisional"@en .
 
@@ -967,7 +968,7 @@ epr:DateOfNextInspectionVisit
 epr:InspectorateReport
     a owl:Class ;
     rdfs:label "Inspectorate report"@en ;
-    rdfs:comment "A URL reference to the most recent inspection report published by the named non-Ofsted inspectorate. Used for British schools overseas inspected under the British Schools Overseas framework. Distinct from the Ofsted inspection report link held under OfstedInspectionRecord."@en .
+    rdfs:comment "A URL reference to the most recent inspection report published by the named non-Ofsted inspectorate. Used for British schools overseas inspected under the British Schools Overseas framework."@en .
 
 
 #################################################################
@@ -1219,16 +1220,6 @@ epro:hasSpecialPupilMeasure
 
 
 #################################################################
-# Classes - Ofsted inspection record (v0.4)
-#################################################################
-
-epr:OfstedInspectionRecord
-    a owl:Class ;
-    rdfs:label "Ofsted inspection record"@en ;
-    rdfs:comment "A record of the establishment's Ofsted inspection rating and associated report link. Distinct from inspection records held by non-Ofsted inspectorates (e.g. ISI, Ofsted independent school inspectorates) which are modelled under InspectionReportReference."@en .
-
-
-#################################################################
 # Classes - PRU operational record (v0.4)
 #################################################################
 
@@ -1336,18 +1327,6 @@ epr:CentreManager
     a owl:Class ;
     rdfs:label "Centre manager"@en ;
     rdfs:comment "The named manager of a children's centre. Distinct from HeadteacherOrPrincipal - children's centres show the Centre manager role rather than Headteacher/Principal in the GIAS Details view."@en .
-
-
-#################################################################
-# Object properties - Ofsted inspection record (v0.4)
-#################################################################
-
-epro:hasOfstedInspectionRecord
-    a owl:ObjectProperty ;
-    rdfs:label "has Ofsted inspection record"@en ;
-    rdfs:domain epr:Establishment ;
-    rdfs:range epr:OfstedInspectionRecord ;
-    rdfs:comment "Cardinality: 0..1. Present for establishment types that are inspected by Ofsted. Absent for Welsh establishments, BSOs (inspected by other inspectorates), sixth form centres, children's centres and academy secure 16-19."@en .
 
 
 #################################################################

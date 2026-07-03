@@ -66,7 +66,7 @@ The SHACL does not use phase to drive different attribute sets. The meaningful a
 
 A Pupil Referral Unit is modelled as a **type of establishment** — it is a subclass of `epr:Establishment` in the type hierarchy. It is not a sub-entity or a part of another establishment.
 
-What makes PRUs distinct is that the ontology also has a separate `PupilReferralUnitOperationalRecord` class, attached to an establishment via `hasPupilReferralUnitOperationalRecord`. This class carries PRU-specific operational data — capacity, places for different pupil types, managed move figures, and whether the establishment is classified as a PRU. This is a type-specific detail record, analogous to the `OfstedInspectionRecord` or `AccreditationRecord` patterns used elsewhere.
+What makes PRUs distinct is that the ontology also has a separate `PupilReferralUnitOperationalRecord` class, attached to an establishment via `hasPupilReferralUnitOperationalRecord`. This class carries PRU-specific operational data — capacity, places for different pupil types, managed move figures, and whether the establishment is classified as a PRU. This is a type-specific detail record, analogous to the `AccreditationRecord` pattern used for online providers.
 
 So: PRU is a type of establishment (an OWL subtype), and the operational record captures the PRU-specific attributes that do not exist on other establishment types.
 
