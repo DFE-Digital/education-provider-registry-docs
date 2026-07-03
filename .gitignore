@@ -8,6 +8,7 @@
 /docs-site/content/business-domain/*.md
 /docs-site/content/models/*.md
 !/docs-site/content/models/index.md
+!/docs-site/content/models/provider-registry-questions-and-answers.md
 /docs-site/content/taxonomy/*.md
 !/docs-site/content/taxonomy/.gitkeep
 /docs-site/content/vocabulary/*.md
