@@ -1,13 +1,24 @@
 param(
     [string]$CoveragePath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "provider-field-coverage.ttl")),
+    [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
     [string]$OutputRoot   = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "ui-coverage"))
 )
 
 $ErrorActionPreference = "Stop"
 
 $resolvedCoveragePath = Resolve-Path -LiteralPath $CoveragePath
+$resolvedVocabularyPath = Resolve-Path -LiteralPath $VocabularyPath
 $resolvedOutputRoot   = New-Item -ItemType Directory -Force -Path $OutputRoot
 $ttl = Get-Content -LiteralPath $resolvedCoveragePath -Raw
+$vocabularyTtl = Get-Content -LiteralPath $resolvedVocabularyPath -Raw
+
+$vocabularyConcepts = @{}
+[regex]::Matches(
+    $vocabularyTtl,
+    '(?ms)^epr:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept\s*;'
+) | ForEach-Object {
+    $vocabularyConcepts[$_.Groups[1].Value] = $true
+}
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -16,7 +27,7 @@ $ttl = Get-Content -LiteralPath $resolvedCoveragePath -Raw
 function Get-PredicateText {
     param([string]$Block, [string]$Predicate)
     $escapedPredicate = [regex]::Escape($Predicate)
-    $pattern = "(?ms)$escapedPredicate\s+((?:""(?:[^""\\]|\\.)*""(?:@[a-zA-Z-]+|\^\^\S+)?|[^;"".\r\n]+)+)\s*(?:;|\.)"
+    $pattern = "(?ms)$escapedPredicate\s+(.*?)(?=\s*;\s*(?:\r?\n|$)|\s*\.\s*(?:\r?\n|$))"
     $match = [regex]::Match($Block, $pattern)
     if ($match.Success) { return $match.Groups[1].Value.Trim() }
     return ""
@@ -52,6 +63,16 @@ function Escape-Md {
     return $v -replace '\|', '\|'
 }
 
+function Format-VocabularyConcept {
+    param([string]$LocalName)
+
+    if ($vocabularyConcepts.ContainsKey($LocalName)) {
+        return ('[`epr:{0}`](../../vocabulary/{0}/)' -f $LocalName)
+    }
+
+    return ('`epr:{0}`' -f $LocalName)
+}
+
 # ---------------------------------------------------------------------------
 # Parse all coverage blocks from the TTL
 # Each block: epr:LocalName\n    epr:shownOnTab ...\n    epr:uiLabel ...\n    epr:applicableToEstablishmentType ...
@@ -62,8 +83,7 @@ $blockMatches = [regex]::Matches($ttl, $blockPattern)
 
 $allFields = foreach ($m in $blockMatches) {
     $localName = $m.Groups[1].Value
-    # Reconstruct the full block text including the first predicate line
-    $block = "epr:shownOnTab epr:" + [regex]::Match($ttl.Substring($m.Index), 'epr:(\w+Tab)').Groups[1].Value + " ;" + $m.Groups[2].Value
+    $block = $m.Value
 
     $tab   = Get-TabRef -Block $block
     $label = Get-FirstLiteral -Block $block -Predicate "epr:uiLabel"
@@ -83,8 +103,10 @@ if ($allFields.Count -eq 0) {
     throw "No coverage blocks found in $resolvedCoveragePath"
 }
 
+Write-Host "Parsed UI coverage tabs: $((@($allFields.Tab | Sort-Object -Unique) -join ', '))"
+
 # ---------------------------------------------------------------------------
-# Canonical type list — ordered by code
+# Canonical type list - ordered by code
 # ---------------------------------------------------------------------------
 
 $typeMeta = [ordered]@{
@@ -138,7 +160,7 @@ $allCodes = @($typeMeta.Keys)
 # ---------------------------------------------------------------------------
 
 $tabs = [ordered]@{
-    "detailsTab"    = @{ Title = "Details tab"; Slug = "details";    Heading = "Establishments — Details tab field coverage" }
+    "detailsTab"    = @{ Title = "Details tab"; Slug = "details";    Heading = "Establishments - Details tab field coverage" }
     "locationTab"   = @{ Title = "Location tab"; Slug = "location";  Heading = "Location tab field coverage" }
     "governanceTab" = @{ Title = "Governance tab"; Slug = "governance"; Heading = "Governance tab field coverage" }
 
@@ -165,7 +187,7 @@ foreach ($tabKey in $tabs.Keys) {
     $lines = @(
         "# $($tabInfo.Heading)",
         "",
-        "This page is generated from ``models/provider-field-coverage.ttl`` — do not edit directly.",
+        "This page is generated from ``models/provider-field-coverage.ttl`` - do not edit directly.",
         "",
         "Source: <$sourceTtl>",
         "",
@@ -185,7 +207,7 @@ foreach ($tabKey in $tabs.Keys) {
             $lines += "| Field | ``epr:`` concept |"
             $lines += "| --- | --- |"
             foreach ($field in $applicable) {
-                $lines += "| $(Escape-Md $field.Label) | ``epr:$($field.LocalName)`` |"
+                $lines += "| $(Escape-Md $field.Label) | $(Format-VocabularyConcept $field.LocalName) |"
             }
         }
         else {

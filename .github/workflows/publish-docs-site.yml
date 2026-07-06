@@ -55,6 +55,10 @@ jobs:
         shell: pwsh
         run: ./docs-site/scripts/generate-taxonomy-pages.ps1
 
+      - name: Generate UI coverage pages from Turtle
+        shell: pwsh
+        run: ./docs-site/scripts/generate-ui-coverage-pages.ps1
+
       - name: Generate field rules page from SHACL
         shell: pwsh
         run: ./docs-site/scripts/generate-shacl-rules-page.ps1
