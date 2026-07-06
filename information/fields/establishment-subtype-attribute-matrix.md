@@ -16,10 +16,12 @@ The matrix is a modelling artefact, not a direct database export or physical dat
 
 The matrix contains:
 
-- 58 attributes.
+- 41 leaf attributes and single business relationships.
 - A universal establishment baseline.
 - 28 subtype or subtype-group columns.
-- Individual attributes, relationships and grouped business concepts.
+- Individual attributes and single business relationships.
+
+The matrix is intentionally flat. Structural concepts that only group other fields, such as `Capacity and pupil measures`, `Establishment identity` and `SEN and resourced provision`, are defined in the vocabulary and ontology but are not repeated as matrix rows.
 
 The subtype columns consolidate establishment types that have similar attribute requirements. Specialist subtypes remain separate where their requirements differ materially.
 
