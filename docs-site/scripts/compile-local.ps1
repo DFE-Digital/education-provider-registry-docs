@@ -97,6 +97,7 @@ function Set-NanocWindowsCompatibility {
 & (Join-Path $PSScriptRoot "copy-information-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-vocabulary-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-taxonomy-pages.ps1")
+& (Join-Path $PSScriptRoot "generate-ui-coverage-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-shacl-rules-page.ps1")
 & (Join-Path $PSScriptRoot "generate-data-quality-rules-page.ps1")
 & (Join-Path $PSScriptRoot "generate-establishment-type-rules-page.ps1")
