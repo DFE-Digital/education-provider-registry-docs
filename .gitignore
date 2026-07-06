@@ -6,6 +6,8 @@
 /docs-site/content/features/*.md
 !/docs-site/content/features/.gitkeep
 /docs-site/content/business-domain/*.md
+/docs-site/content/information/fields/*.md
+/docs-site/content/information/fields/*.csv
 /docs-site/content/models/*.md
 !/docs-site/content/models/index.md
 !/docs-site/content/models/provider-registry-questions-and-answers.md

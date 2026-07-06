@@ -27,4 +27,8 @@ These sections are password-protected, contact the GIAS transform team for acces
 
 Coverage data is encoded in `models/provider-field-coverage.ttl` and pages are generated from that file.
 
+## Establishment Field Information
+
+- [Establishment subtype attribute matrix](./information/fields/establishment-subtype-attribute-matrix/) - context, methodology and cell meanings, with a CSV download
+
 The pages on this site are generated or copied views for easier reading and linking.

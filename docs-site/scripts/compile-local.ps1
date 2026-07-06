@@ -94,6 +94,7 @@ function Set-NanocWindowsCompatibility {
 
 & (Join-Path $PSScriptRoot "generate-feature-pages.ps1")
 & (Join-Path $PSScriptRoot "copy-business-domain-pages.ps1")
+& (Join-Path $PSScriptRoot "copy-information-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-vocabulary-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-taxonomy-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-shacl-rules-page.ps1")
@@ -123,6 +124,8 @@ try {
     else {
         Invoke-Native -Description "Nanoc compile" -Command { bundle exec nanoc compile }
     }
+
+    & (Join-Path $PSScriptRoot "copy-information-assets.ps1")
 }
 finally {
     Pop-Location
