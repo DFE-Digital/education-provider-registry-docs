@@ -29,6 +29,6 @@ Coverage data is encoded in `models/provider-field-coverage.ttl` and pages are g
 
 ## Establishment Field Information
 
-- [Establishment subtype attribute matrix](./information/fields/establishment-subtype-attribute-matrix/) - context, methodology and cell meanings, with a CSV download
+- [Establishment subtype attribute matrix](./models/establishment-subtype-attribute-matrix/) - context, methodology and cell meanings, with a CSV download
 
 The pages on this site are generated or copied views for easier reading and linking.
