@@ -17,13 +17,12 @@ The matrix is a modelling artefact, not a direct database export or physical dat
 The matrix contains:
 
 - 41 leaf attributes and single business relationships.
-- A universal establishment baseline.
-- 28 subtype or subtype-group columns.
+- 41 numbered establishment-type columns.
 - Individual attributes and single business relationships.
 
 The matrix is intentionally flat. Structural concepts that only group other fields, such as `Capacity and pupil measures`, `Establishment identity` and `SEN and resourced provision`, are defined in the vocabulary and ontology but are not repeated as matrix rows.
 
-The subtype columns consolidate establishment types that have similar attribute requirements. Specialist subtypes remain separate where their requirements differ materially.
+Each active establishment type has its own column, labelled with its GIAS type code and name. Types that currently share the same attribute rules still appear separately, making the matrix directly usable without first resolving a type to a broader rule profile.
 
 ## Cell Meanings
 
@@ -34,7 +33,7 @@ The subtype columns consolidate establishment types that have similar attribute 
 | `not applicable` | The attribute does not apply to that subtype under the current proposed model. This is different from an applicable value being missing. |
 | Blank | No explicit subtype rule is asserted. A blank must not be interpreted automatically as optional or not applicable. The universal rule may apply, evidence may be insufficient, or the attribute may still require review. |
 
-The `Universal establishment` column is the baseline. Subtype columns add or refine rules where an attribute varies by subtype.
+Every type column contains the effective rule after applying the universal baseline and the relevant broader and specialist rule profiles. Blank cells therefore mean that no explicit rule was asserted at any applicable level.
 
 ## Methodology
 
@@ -45,9 +44,10 @@ The matrix was produced by:
 3. Observing the fields displayed on current public establishment pages.
 4. Cross-checking those observations against backend field-to-type configuration and display-policy behaviour.
 5. Normalising legacy fields and UI labels into business attributes.
-6. Grouping establishment types with materially similar attribute patterns.
-7. Recording explicit applicability rules as `required`, `optional` or `not applicable`.
-8. Leaving cells blank where no explicit rule was supported.
+6. Defining shared rule profiles for establishment types with materially similar attribute patterns.
+7. Applying the universal, broader and specialist profiles to each numbered establishment type.
+8. Recording the resulting effective rule as `required`, `optional` or `not applicable`.
+9. Leaving cells blank where no explicit rule was supported at any applicable level.
 
 ## Interpretation
 
@@ -59,6 +59,6 @@ It does not prove that:
 - Every optional attribute is editable by every user.
 - A blank means optional.
 - Public visibility, editability and applicability are the same rule.
-- The subtype groups should become physical database entities.
+- The shared rule profiles should become physical database entities.
 
 The matrix is iterative and should be refined as business decisions, user-centred design and validation rules mature.
