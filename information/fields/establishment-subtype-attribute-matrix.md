@@ -16,9 +16,9 @@ The matrix is a modelling artefact, not a direct database export or physical dat
 
 The matrix contains:
 
-- 41 leaf attributes and single business relationships.
-- 41 numbered establishment-type columns.
-- Individual attributes and single business relationships.
+- One row for each of the 41 establishment attributes being assessed, such as URN, open date and local authority.
+- One column for each of the 41 active establishment types, labelled with its GIAS type code and name.
+- A value at each intersection showing whether that attribute is required, optional or not applicable for that establishment type. A blank means that no rule has yet been confirmed.
 
 The matrix is intentionally flat. Structural concepts that only group other fields, such as `Capacity and pupil measures`, `Establishment identity` and `SEN and resourced provision`, are defined in the vocabulary and ontology but are not repeated as matrix rows.
 
