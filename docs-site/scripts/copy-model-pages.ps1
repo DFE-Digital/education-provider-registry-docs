@@ -8,6 +8,11 @@ $ErrorActionPreference = "Stop"
 $resolvedModelsPath = Resolve-Path -LiteralPath $ModelsPath
 $resolvedOutputRoot = New-Item -ItemType Directory -Force -Path $OutputRoot
 
+$staleMatrixCsv = Join-Path $resolvedOutputRoot "establishment-subtype-attribute-matrix.csv"
+if (Test-Path -LiteralPath $staleMatrixCsv) {
+    Remove-Item -LiteralPath $staleMatrixCsv -Force
+}
+
 $markdownFiles = Get-ChildItem -LiteralPath $resolvedModelsPath -Filter "*.md" |
     Where-Object { $_.Name -ne "README.md" -and $_.Name -ne "index.md" -and $_.Name -ne "establishment-type-field-rules.md" }
 
