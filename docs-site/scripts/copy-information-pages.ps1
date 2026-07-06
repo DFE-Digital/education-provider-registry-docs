@@ -1,6 +1,6 @@
 param(
     [string]$InformationPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "information" "fields")),
-    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" (Join-Path "information" "fields")))
+    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "models"))
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,4 +24,4 @@ if (Test-Path -LiteralPath $staleCsv) {
     Remove-Item -LiteralPath $staleCsv -Force
 }
 
-Write-Host "Copied establishment subtype attribute matrix context to $resolvedOutputRoot"
+Write-Host "Copied establishment subtype attribute matrix context into the models section at $resolvedOutputRoot"
