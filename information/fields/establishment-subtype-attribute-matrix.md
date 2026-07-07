@@ -16,7 +16,7 @@ The matrix is a modelling artefact, not a direct database export or physical dat
 
 The matrix contains:
 
-- One row for each of the 41 establishment attributes being assessed, such as URN, open date and local authority.
+- One row for each of the 42 establishment attributes being assessed, such as establishment name, URN, open date and local authority.
 - One column for each of the 41 active establishment types, labelled with its GIAS type code and name.
 - A value at each intersection showing whether that attribute is required, optional or not applicable for that establishment type. A blank means that no rule has yet been confirmed.
 
@@ -48,6 +48,8 @@ The matrix was produced by:
 7. Applying the universal, broader and specialist profiles to each numbered establishment type.
 8. Recording the resulting effective rule as `required`, `optional` or `not applicable`.
 9. Leaving cells blank where no explicit rule was supported at any applicable level.
+
+The observed Details-tab evidence is not limited to fields positioned inside the UI tabs. `Establishment name` is displayed as page-level identity outside those tabs, so it is included as a universally required attribute even though it was outside the `div#school-dashboard` and `dt` elements used by the Details-tab field extraction.
 
 ## Interpretation
 
