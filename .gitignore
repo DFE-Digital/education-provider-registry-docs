@@ -15,6 +15,7 @@
 !/docs-site/content/taxonomy/.gitkeep
 /docs-site/content/vocabulary/*.md
 !/docs-site/content/vocabulary/.gitkeep
+!/docs-site/content/vocabulary/references.md
 /docs-site/vendor/bundle
 /docs-site/vendor/bundle-cache
 /docs-site/vendor/bundle-home
