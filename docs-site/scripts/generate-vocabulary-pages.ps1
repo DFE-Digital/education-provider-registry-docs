@@ -215,7 +215,7 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
     $lines = @(
         "# $($concept.PreferredLabel)",
         "",
-        "[Back to vocabulary index](../) | [Real-world references for all vocabulary concepts](../references/)",
+        "[Back to vocabulary index](../)",
         "",
         "| Property | Value |",
         "| --- | --- |",
