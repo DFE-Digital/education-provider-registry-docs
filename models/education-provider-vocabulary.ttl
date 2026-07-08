@@ -26,6 +26,11 @@ epr:status
     rdfs:label "Vocabulary status"@en ;
     rdfs:comment "The review status assigned to a concept in the working GIAS 2.0 vocabulary."@en .
 
+epr:legislation
+    a rdf:Property ;
+    rdfs:label "Legislation"@en ;
+    rdfs:comment "The Act of Parliament or Statutory Instrument that creates or defines this concept in English law. Value is a legislation.gov.uk URI."@en .
+
 epr:establishmentDetailsVocabulary
     a skos:ConceptScheme ;
     dcterms:title "Education Provider Registry Vocabulary"@en ;
