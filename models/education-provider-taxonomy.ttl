@@ -443,8 +443,7 @@ epr:CommunitySpecialSchool
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Community special school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/send-special-educational-needs-and-disability-in-the-early-years> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/schedule/27> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/54> ;
     dcterms:source "Type code 07"@en ;
     epr:status "Provisional"@en .
 
