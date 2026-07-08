@@ -404,7 +404,7 @@ epr:CommunitySchool
     skos:prefLabel "Community school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/community-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/part/II> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/20> ;
     dcterms:source "Type code 01"@en ;
     epr:status "Provisional"@en .
 
@@ -414,7 +414,7 @@ epr:VoluntaryAidedSchool
     skos:prefLabel "Voluntary aided school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/faith-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/part/II> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/20> ;
     dcterms:source "Type code 02"@en ;
     epr:status "Provisional"@en .
 
@@ -424,7 +424,7 @@ epr:VoluntaryControlledSchool
     skos:prefLabel "Voluntary controlled school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/faith-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/part/II> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/20> ;
     dcterms:source "Type code 03"@en ;
     epr:status "Provisional"@en .
 
@@ -434,7 +434,7 @@ epr:FoundationSchool
     skos:prefLabel "Foundation school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/foundation-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/part/II> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/20> ;
     dcterms:source "Type code 05"@en ;
     epr:status "Provisional"@en .
 

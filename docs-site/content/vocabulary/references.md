@@ -16,10 +16,10 @@ Each vocabulary concept is classified as one of:
 
 | Term | Category | Reference |
 |---|---|---|
-| Community school | Real-world | [https://www.gov.uk/types-of-school/community-schools](https://www.gov.uk/types-of-school/community-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/part/II](https://www.legislation.gov.uk/ukpga/1998/31/part/II) |
-| Voluntary aided school | Real-world | [https://www.gov.uk/types-of-school/faith-schools](https://www.gov.uk/types-of-school/faith-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/part/II](https://www.legislation.gov.uk/ukpga/1998/31/part/II) |
-| Voluntary controlled school | Real-world | [https://www.gov.uk/types-of-school/faith-schools](https://www.gov.uk/types-of-school/faith-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/part/II](https://www.legislation.gov.uk/ukpga/1998/31/part/II) |
-| Foundation school | Real-world | [https://www.gov.uk/types-of-school/foundation-schools](https://www.gov.uk/types-of-school/foundation-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/part/II](https://www.legislation.gov.uk/ukpga/1998/31/part/II) |
+| Community school | Real-world | [https://www.gov.uk/types-of-school/community-schools](https://www.gov.uk/types-of-school/community-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
+| Voluntary aided school | Real-world | [https://www.gov.uk/types-of-school/faith-schools](https://www.gov.uk/types-of-school/faith-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
+| Voluntary controlled school | Real-world | [https://www.gov.uk/types-of-school/faith-schools](https://www.gov.uk/types-of-school/faith-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
+| Foundation school | Real-world | [https://www.gov.uk/types-of-school/foundation-schools](https://www.gov.uk/types-of-school/foundation-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
 | Community special school | Real-world | [https://www.legislation.gov.uk/ukpga/1998/31/section/54](https://www.legislation.gov.uk/ukpga/1998/31/section/54) |
 | Foundation special school | Real-world | [https://www.gov.uk/types-of-school/foundation-schools](https://www.gov.uk/types-of-school/foundation-schools)<br>[https://www.legislation.gov.uk/ukpga/1996/56/section/316A](https://www.legislation.gov.uk/ukpga/1996/56/section/316A) |
 | Pupil referral unit | Real-world | [https://www.gov.uk/types-of-school/pupil-referral-units](https://www.gov.uk/types-of-school/pupil-referral-units)<br>[https://www.legislation.gov.uk/ukpga/1996/56/section/19](https://www.legislation.gov.uk/ukpga/1996/56/section/19) |
