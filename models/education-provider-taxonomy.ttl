@@ -443,7 +443,7 @@ epr:CommunitySpecialSchool
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Community special school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/54> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/20> ;
     dcterms:source "Type code 07"@en ;
     epr:status "Provisional"@en .
 
@@ -453,7 +453,7 @@ epr:FoundationSpecialSchool
     skos:prefLabel "Foundation special school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/foundation-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/316A> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/20> ;
     dcterms:source "Type code 12"@en ;
     epr:status "Provisional"@en .
 
