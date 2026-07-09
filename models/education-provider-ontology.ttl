@@ -1809,7 +1809,7 @@ epr:PupilReferralUnit
     rdfs:label "Pupil referral unit"@en ;
     rdfs:comment "A local-authority establishment maintained under s.19 of the Education Act 1996 to provide education for children of compulsory school age who are excluded, persistently absent, ill or otherwise unable to attend a mainstream school."@en .
 
-epr:LocalAuthorityNurserySchool
+epr:MaintainedNurserySchool
     a owl:Class ;
     rdfs:subClassOf epr:LaMaintainedSchool ;
     rdfs:label "Local authority nursery school"@en ;

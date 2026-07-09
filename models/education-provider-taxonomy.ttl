@@ -298,7 +298,7 @@ epr:EstablishmentTypeGroupLaMaintainedSchools
         epr:CommunitySpecialSchool,
         epr:FoundationSpecialSchool,
         epr:PupilReferralUnit,
-        epr:LocalAuthorityNurserySchool ;
+        epr:MaintainedNurserySchool ;
     epr:status "Provisional"@en .
 
 epr:EstablishmentTypeGroupNonMaintainedSpecialSchools
@@ -469,7 +469,7 @@ epr:PupilReferralUnit
     dcterms:source "Type code 14"@en ;
     epr:status "Provisional"@en .
 
-epr:LocalAuthorityNurserySchool
+epr:MaintainedNurserySchool
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Maintained nursery school"@en ;
