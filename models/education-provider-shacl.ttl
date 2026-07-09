@@ -595,11 +595,11 @@ epr:PupilReferralUnitShape
 # Specific shape - Local authority nursery school
 #################################################################
 
-epr:LocalAuthorityNurserySchoolShape
+epr:MaintainedNurserySchoolShape
     a sh:NodeShape ;
     rdfs:label "Local authority nursery school shape"@en ;
     rdfs:comment "Rules for LA nursery schools. Education phase, admissions policy, nursery and sixth-form provision are all required."@en ;
-    sh:targetClass epr:LocalAuthorityNurserySchool ;
+    sh:targetClass epr:MaintainedNurserySchool ;
 
     sh:property [
         sh:path ( epro:hasEstablishmentClassification epro:hasEducationPhase ) ;

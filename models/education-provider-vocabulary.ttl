@@ -989,7 +989,7 @@ epr:EstablishmentTypeGroupLaMaintainedSchools
         epr:CommunitySpecialSchool,
         epr:FoundationSchool,
         epr:FoundationSpecialSchool,
-        epr:LocalAuthorityNurserySchool,
+        epr:MaintainedNurserySchool,
         epr:PupilReferralUnit,
         epr:VoluntaryAidedSchool,
         epr:VoluntaryControlledSchool ;
@@ -1268,7 +1268,7 @@ epr:InstitutionFundedByOtherGovernmentDepartment
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from local domain notes"@en .
 
-epr:LocalAuthorityNurserySchool
+epr:MaintainedNurserySchool
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Maintained nursery school"@en ;
