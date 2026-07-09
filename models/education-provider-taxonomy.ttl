@@ -651,85 +651,41 @@ epr:InstitutionFundedByOtherGovernmentDepartment
 # Establishment-type taxons - group 10: academies
 #################################################################
 
-epr:AcademySponsorLed
+epr:MainstreamAcademy
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy sponsor led"@en ;
+    skos:prefLabel "Mainstream academy"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/academies> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 28"@en ;
-    epr:status "Provisional"@en .
+    epr:status "Preferred"@en .
 
-epr:AcademySpecialSponsorLed
+epr:AcademySpecial
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy special sponsor led"@en ;
+    skos:prefLabel "Academy special school"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/academies> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 33"@en ;
-    epr:status "Provisional"@en .
+    epr:status "Preferred"@en .
 
-epr:AcademyConverter
+epr:AcademyAlternativeProvision
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy converter"@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/types-of-school/academies> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 34"@en ;
-    epr:status "Provisional"@en .
-
-epr:AcademyAlternativeProvisionConverter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy alternative provision converter"@en ;
+    skos:prefLabel "Academy alternative provision"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/alternative-provision> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 42"@en ;
-    epr:status "Provisional"@en .
+    epr:status "Preferred"@en .
 
-epr:AcademyAlternativeProvisionSponsorLed
+epr:Academy1619
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy alternative provision sponsor led"@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/alternative-provision> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 43"@en ;
-    epr:status "Provisional"@en .
-
-epr:AcademySpecialConverter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy special converter"@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/types-of-school/academies> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 44"@en ;
-    epr:status "Provisional"@en .
-
-epr:Academy1619Converter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy 16-19 converter"@en ;
+    skos:prefLabel "Academy 16 to 19"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     rdfs:isDefinedBy <https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 45"@en ;
-    epr:status "Provisional"@en .
-
-epr:Academy16To19SponsorLed
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Academy 16 to 19 sponsor led"@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
-    dcterms:source "Type code 46"@en ;
-    epr:status "Provisional"@en .
+    epr:status "Preferred"@en .
 
 epr:AcademySecure16To19
     a skos:Concept ;
