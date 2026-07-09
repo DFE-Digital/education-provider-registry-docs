@@ -59,6 +59,7 @@ epro:establishmentDetailsConceptualModel
     rdfs:comment "v1.4: UI field coverage gaps addressed. New classes: InspectorateReport (inspection detail), GroupUniqueIdentifier, GroupMembershipDate, GroupStatus, GroupOpenDate, GroupIncorporatedOnDate, GroupClosedDate (establishment group lifecycle). New object properties: recordsInspectorateReport (on InspectionReportReference), sharedWith (on GovernanceAppointment, range Establishment — covers shared local governor roles), hasGroupUniqueIdentifier, hasGroupMembershipDate, hasGroupStatus, hasGroupOpenDate, hasGroupIncorporatedOnDate, hasGroupClosedDate, hasLocalAuthorityForGroup (establishment group properties; hasLocalAuthorityForGroup SHACL-scoped to children's centre group types)."@en ;
     rdfs:comment "v1.6: OfstedInspectionRecord class and hasOfstedInspectionRecord object property removed. EPR does not hold Ofsted inspection data. All SHACL property shapes referencing hasOfstedInspectionRecord removed. epr:InspectorateReport rdfs:comment updated to remove the now-stale reference to OfstedInspectionRecord."@en ;
     rdfs:comment "v1.5: Site and address model separated. New classes: epr:Site (physical location where education is delivered, carries site name via rdfs:label, UPRN, OS grid reference, and a postal address), epr:Address (postal or correspondence address, independent of any physical site). New object properties: epro:hasMainSite (EstablishmentLocationAndContact → Site, 0..1), epro:hasAdditionalSite (EstablishmentLocationAndContact → Site, 0..*; SHACL-scoped to 3 permitted establishment types), epro:hasAddress (Site → Address, 0..1), epro:hasRegisteredAddress (no domain restriction — used on both EstablishmentLocationAndContact and EstablishmentGroup, range Address, 0..1), epro:hasContactAddress (EstablishmentGroup → Address, 0..1). Deprecated: epr:MainAddress, epro:hasMainAddress. Domain updated: epro:hasUprn domain changed from MainAddress to Site; epro:hasCountry domain changed from MainAddress to Address; epro:hasOsGridReference domain extended to union of AdministrativeGeography and Site."@en ;
+    rdfs:comment "v1.7: Organisation and Person superclasses added. New classes: epr:Organisation (superclass of Establishment, EstablishmentGroup, LocalAuthority), epr:Person (superclass of GovernancePerson). Removed classes: epr:AcademySponsor, epr:Proprietor, epr:SchoolSponsor (SchoolSponsor was a GIAS legacy group type — sponsor is a role, not a group type). Removed property: epro:hasAcademySponsor. Added properties: epro:hasProprietor (domain Establishment, range Organisation|Person), epro:sponsoredBy (domain Establishment, range Organisation). Updated: epro:accountableToProprietor range changed from epr:Proprietor to union of epr:Organisation and epr:Person. epr:EstablishmentGroup rdfs:comment updated to remove reference to school sponsors as a group type."@en ;
     epr:status "Provisional"@en .
 
 
@@ -66,8 +67,19 @@ epro:establishmentDetailsConceptualModel
 # Classes - core
 #################################################################
 
+epr:Organisation
+    a owl:Class ;
+    rdfs:label "Organisation"@en ;
+    rdfs:comment "A structured group of people working together to achieve shared goals or a specific purpose. In EPR this includes education establishments, establishment groups, local authorities, and other bodies with a role in the provision or oversight of education."@en .
+
+epr:Person
+    a owl:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "A natural person with a role in the education system."@en .
+
 epr:Establishment
     a owl:Class ;
+    rdfs:subClassOf epr:Organisation ;
     rdfs:label "Establishment"@en ;
     rdfs:comment "The central concept. A single education provider registered with GIAS."@en .
 
@@ -213,6 +225,7 @@ epr:EstablishmentAccountability
 
 epr:LocalAuthority
     a owl:Class ;
+    rdfs:subClassOf epr:Organisation ;
     rdfs:label "Local authority"@en ;
     rdfs:comment "A local government body that serves two distinct roles for an establishment: (1) the geographic local authority in whose area the establishment is located — this scopes the establishment number within the DfE number and applies to all establishment types including academies and independent schools; (2) the body maintaining or otherwise accountable for LA-maintained schools. For academies and independent schools only the geographic reference role applies; they are not maintained by the local authority."@en .
 
@@ -227,17 +240,6 @@ epr:SingleAcademyTrust
     rdfs:label "Single academy trust"@en ;
     rdfs:comment "An academy trust constituted under the Academies Act 2010 that holds a funding agreement for exactly one academy. Distinguished from a multi-academy trust, which holds funding agreements for two or more academies. A SAT can expand into a MAT by taking on a second academy."@en ;
     rdfs:subClassOf epr:AcademyTrust .
-
-epr:AcademySponsor
-    a owl:Class ;
-    rdfs:label "Academy sponsor"@en ;
-    rdfs:comment "An approved body that sponsors one or more sponsor-led academies."@en .
-
-epr:Proprietor
-    a owl:Class ;
-    rdfs:label "Proprietor"@en ;
-    rdfs:comment "The person or body that owns or operates an independent school."@en .
-
 
 #################################################################
 # Classes - education, admissions and provision
@@ -584,8 +586,22 @@ epro:accountableToProprietor
     a owl:ObjectProperty ;
     rdfs:label "accountable to proprietor"@en ;
     rdfs:domain epr:EstablishmentAccountability ;
-    rdfs:range epr:Proprietor ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( epr:Organisation epr:Person ) ] ;
     rdfs:comment "Cardinality: 0..1. Present for independent schools."@en .
+
+epro:hasProprietor
+    a owl:ObjectProperty ;
+    rdfs:label "has proprietor"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( epr:Organisation epr:Person ) ] ;
+    rdfs:comment "The person or organisation that owns or operates this independent school. Cardinality: 0..1."@en .
+
+epro:sponsoredBy
+    a owl:ObjectProperty ;
+    rdfs:label "sponsored by"@en ;
+    rdfs:domain epr:Establishment ;
+    rdfs:range epr:Organisation ;
+    rdfs:comment "The organisation approved by the Secretary of State to sponsor this academy or free school under the Academies Act 2010. Cardinality: 0..1."@en .
 
 epro:isSingleAcademyTrust
     a owl:ObjectProperty ;
@@ -593,13 +609,6 @@ epro:isSingleAcademyTrust
     rdfs:domain epr:AcademyTrust ;
     rdfs:range epr:SingleAcademyTrust ;
     rdfs:comment "Cardinality: 0..1. An academy trust may be a single academy trust."@en .
-
-epro:hasAcademySponsor
-    a owl:ObjectProperty ;
-    rdfs:label "has academy sponsor"@en ;
-    rdfs:domain epr:AcademyTrust ;
-    rdfs:range epr:AcademySponsor ;
-    rdfs:comment "Cardinality: 0..1. A sponsor-led academy trust may be associated with an academy sponsor."@en .
 
 
 #################################################################
@@ -1994,8 +2003,9 @@ epr:OnlineProvider
 
 epr:EstablishmentGroup
     a owl:Class ;
+    rdfs:subClassOf epr:Organisation ;
     rdfs:label "Establishment group"@en ;
-    rdfs:comment "An organisation or governance structure to which one or more establishments belong. Covers academy trusts, federations, school sponsors and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility. Academy trusts are both establishment groups and accountability bodies - see epr:AcademyTrust."@en .
+    rdfs:comment "An organisation or governance structure to which one or more establishments belong. Covers academy trusts, federations and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility. Academy trusts are both establishment groups and accountability bodies — see epr:AcademyTrust."@en .
 
 epr:MultiAcademyTrust
     a owl:Class ;
@@ -2014,12 +2024,6 @@ epr:Federation
     rdfs:subClassOf epr:EstablishmentGroup ;
     rdfs:label "Federation"@en ;
     rdfs:comment "A statutory arrangement in which two or more maintained schools, including maintained nursery schools, share a single federated governing body. Each member school retains its own URN, establishment number, admissions arrangements and Ofsted inspection identity. Some governance and funding arrangements may be shared or pooled under federation rules. Applicable only to maintained schools. Source: School Governance (Federations) Regulations 2012."@en .
-
-epr:SchoolSponsor
-    a owl:Class ;
-    rdfs:subClassOf epr:EstablishmentGroup ;
-    rdfs:label "School sponsor"@en ;
-    rdfs:comment "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. Supports governance, leadership and educational improvement. Source: Academies Act 2010."@en .
 
 epr:ChildrensCentreGroup
     a owl:Class ;
@@ -2132,6 +2136,7 @@ epr:GovernanceAppointingBody
 
 epr:GovernancePerson
     a owl:Class ;
+    rdfs:subClassOf epr:Person ;
     rdfs:label "Governance person"@en ;
     rdfs:comment "A named individual who holds or has held a formal governance role at an establishment, establishment group or trust. Covers governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals. One GovernancePerson may be linked from multiple GovernanceAppointment records. Personal-data-carrying class: name (rdfs:label) is publicly accessible; GovernancePersonIdentifier carries pseudonymous personal data that is not publicly accessible."@en ;
     dcterms:accessRights "Personal data. Name (rdfs:label) is publicly accessible — published in the GIAS public CSV extract and accessible to anonymous users. GovernancePersonIdentifier is pseudonymous personal data (hash derived from date of birth, surname and forename1) and is not publicly accessible; access controls apply to this attribute only. Raw date of birth not stored in EPR."@en .

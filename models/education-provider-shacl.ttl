@@ -1232,7 +1232,7 @@ epr:MainstreamAcademyGroupShape
     ] ;
 
     sh:property [
-        sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust epro:hasAcademySponsor ) ;
+        sh:path epro:sponsoredBy ;
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Mainstream academies must have an academy sponsor relationship."@en ;
@@ -1358,7 +1358,7 @@ epr:AcademySpecialShape
     ] ;
 
     sh:property [
-        sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust epro:hasAcademySponsor ) ;
+        sh:path epro:sponsoredBy ;
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Academy special schools must have an academy sponsor relationship. Note: type 44 (Academy special converter) shows 'Single-academy trust' in the UI - see design decision in shacl-open-items.md."@en ;
@@ -1704,7 +1704,7 @@ epr:Academy1619Shape
     ] ;
 
     sh:property [
-        sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust epro:hasAcademySponsor ) ;
+        sh:path epro:sponsoredBy ;
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Academy 16-19 establishments must have an academy sponsor relationship. Note: type 45 (Academy 16-19 converter) shows 'Single-academy trust' in the UI - see design decision in shacl-open-items.md."@en ;
@@ -2175,7 +2175,7 @@ epr:FreeSchoolSpecialShape
     ] ;
 
     sh:property [
-        sh:path ( epro:hasAccountabilityRelationship epro:accountableToAcademyTrust epro:hasAcademySponsor ) ;
+        sh:path epro:sponsoredBy ;
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Free school specials must have an academy sponsor relationship."@en ;
