@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
     [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
     [string]$ReferencesDocPath = (Join-Path (Join-Path (Join-Path $PSScriptRoot "..\..\..") (Join-Path "docs" (Join-Path "transformation" (Join-Path "data" "modelling")))) "vocabulary-real-world-references.md"),
@@ -143,7 +143,7 @@ if (Test-Path -LiteralPath $TaxonomyPath) {
     Write-Host "Built citation lookup from taxonomy: $($citationLookup.Count) concepts with citations"
 }
 else {
-    Write-Warning "Taxonomy file not found at $TaxonomyPath — citation attributes will not be shown on vocab pages"
+    Write-Warning "Taxonomy file not found at $TaxonomyPath - citation attributes will not be shown on vocab pages"
 }
 
 $conceptMatches = [regex]::Matches(
@@ -284,7 +284,7 @@ if (Test-Path -LiteralPath $ReferencesDocPath) {
     Write-Host "Copied real-world references doc to content/vocabulary/references.md"
 }
 else {
-    Write-Warning "References doc not found at $ReferencesDocPath — references page will not be generated"
+    Write-Warning "References doc not found at $ReferencesDocPath - references page will not be generated"
 }
 
 Write-Host "Generated $($concepts.Count) vocabulary concept pages in $resolvedOutputRoot"
