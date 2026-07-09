@@ -20,6 +20,7 @@ The model is split across three layers. The vocabulary and taxonomy define terms
 | [Data quality SHACL shapes (source)](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-data-quality-shacl.ttl) | SHACL/Turtle | Machine-readable value-level rules - source for the data quality rules page above |
 | [Establishment subtype attribute matrix](./establishment-subtype-attribute-matrix/) | Markdown and CSV | Context and methodology for the matrix of each establishment subtype against its attributes, with the CSV available from the page. |
 | [Provider registry questions and answers](./provider-registry-questions-and-answers/) | Markdown | Questions raised about the EPR data model and ontology, with answers drawn from the model artefacts. |
+| [EPR model divergence from GIAS](./epr-gias-model-divergence/) | Markdown | Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 data model, with reasons for each decision. |
 
 ## How the layers relate
 
