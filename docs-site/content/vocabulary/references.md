@@ -61,9 +61,9 @@ Each vocabulary concept is classified as one of:
 
 | Term | Category | Reference |
 |---|---|---|
-| [Academy route](../AcademyRoute/) | Real-world (limited) | Academies Act 2010 distinguishes converter and sponsor-led routes; "academy route" as a named grouping is an EPR 2.0 model concept. [https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Converter](../ConverterRoute/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Sponsor led](../SponsorLedRoute/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+| [Academy route](../AcademyRoute/) | Real-world (limited) | [https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies](https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies) |
+| [Converter](../ConverterRoute/) | Real-world | [https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies](https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies) |
+| [Sponsor led](../SponsorLedRoute/) | Real-world | [https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies](https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies) |
 
 ### Free Schools
 
