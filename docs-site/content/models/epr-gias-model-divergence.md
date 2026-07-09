@@ -51,19 +51,3 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 **EPR target:** 5 primary academy types plus an `epr:AcademyRoute` classification (Converter or SponsorLed) expressed via `epro:hasAcademyRoute`.
 
 **Reason:** The route by which an academy was established is a property of how it came to exist, not of what it fundamentally is. The 8-type leaf structure duplicated type definitions and required further leaf types for any new route variant. Separating type from route makes the model extensible and reduces duplication.
-
----
-
-## 6. SHACL sponsor constraint path updated
-
-**GIAS legacy SHACL path:**
-```
-epro:hasAccountabilityRelationship epro:accountableToAcademyTrust epro:hasAcademySponsor
-```
-
-**EPR target path:**
-```
-epro:sponsoredBy
-```
-
-**Reason:** The sponsor is now directly on the establishment. The multi-hop path through the accountability chain and the trust is no longer needed.
