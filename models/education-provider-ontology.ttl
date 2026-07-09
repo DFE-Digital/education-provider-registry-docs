@@ -1142,12 +1142,8 @@ epro:hasGssLocalAuthorityCode
 epro:hasOsGridReference
     a owl:ObjectProperty ;
     rdfs:label "has OS grid reference"@en ;
-    rdfs:domain [
-        a owl:Class ;
-        owl:unionOf ( epr:AdministrativeGeography epr:Site )
-    ] ;
     rdfs:range epr:OsGridReference ;
-    rdfs:comment "Cardinality: 0..1. Easting and northing in OSGB36. On epr:AdministrativeGeography: derived from the establishment's postcode. On epr:Site: stored directly from GIAS EstablishmentAdditionalAddresses.easting and northing columns. Domain extended from AdministrativeGeography to union of AdministrativeGeography and Site in v1.5."@en .
+    rdfs:comment "Cardinality: 0..1. Easting and northing in OSGB36. Used on epr:AdministrativeGeography (derived from the establishment's postcode) and on epr:Site (stored directly from GIAS EstablishmentAdditionalAddresses). No domain restriction — attachment is constrained by SHACL."@en .
 
 epro:hasEasting
     a owl:ObjectProperty ;
