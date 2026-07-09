@@ -496,9 +496,8 @@ epr:OtherIndependentSpecialSchool
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Other independent special school"@en ;
+    skos:scopeNote "GIAS construct. Residual category for independent schools providing special education that are not non-maintained special schools. The 'other' qualifier has no equivalent in legislation or GOV.UK guidance."@en ;
     skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/independent-special-schools-and-colleges> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2014/6/section/41> ;
     dcterms:source "Type code 10"@en ;
     epr:status "Provisional"@en .
 
