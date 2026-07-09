@@ -38,6 +38,8 @@ epr:establishmentDetailsVocabulary
     dcterms:created "2026-06-16"^^xsd:date ;
     epr:status "Provisional"@en ;
     skos:hasTopConcept
+        epr:Organisation,
+        epr:Person,
         epr:Establishment,
         epr:EstablishmentIdentity,
         epr:EstablishmentClassification,
@@ -276,6 +278,32 @@ epr:governanceConcepts
         epr:GovernanceAppointingBody .
 
 #################################################################
+# Top concepts — Organisation and Person
+#################################################################
+
+epr:Organisation
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Organisation"@en ;
+    skos:definition "A structured group of people working together to achieve shared goals or a specific purpose. In EPR, Organisation is the common superclass for education establishments, establishment groups, local authorities and other bodies with a role in the provision or oversight of education."@en ;
+    skos:narrower
+        epr:Establishment,
+        epr:EstablishmentGroup,
+        epr:LocalAuthority ;
+    epr:status "Provisional"@en .
+
+epr:Person
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:topConceptOf epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Person"@en ;
+    skos:definition "A natural person with a role in the education system. In EPR this includes individuals holding governance roles at establishments and groups, and individuals who are proprietors of independent schools."@en ;
+    skos:narrower
+        epr:GovernancePerson ;
+    epr:status "Provisional"@en .
+
+#################################################################
 # Top concepts
 #################################################################
 
@@ -509,7 +537,7 @@ epr:EstablishmentGroupMembership
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:topConceptOf epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment group membership"@en ;
-    skos:definition "The organisations and governance structures that group establishments together, and the membership relationships between establishments and those groups. Covers academy trusts, federations, school sponsors and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility."@en ;
+    skos:definition "The organisations and governance structures that group establishments together, and the membership relationships between establishments and those groups. Covers academy trusts, federations and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility."@en ;
     skos:narrower
         epr:EstablishmentGroup,
         epr:GroupMembership,
@@ -529,17 +557,16 @@ epr:EstablishmentGroup
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment group"@en ;
-    skos:definition "An organisation or governance structure to which one or more establishments belong. Includes academy trusts, federations, school sponsors and children's centre groups."@en ;
+    skos:definition "An organisation or governance structure to which one or more establishments belong. Includes academy trusts, federations and children's centre groups."@en ;
     skos:scopeNote "Distinct from the accountability relationship, which records which body is legally responsible for the establishment. Academy trusts are both establishment groups and accountability bodies simultaneously."@en ;
     skos:narrower
         epr:MultiAcademyTrust,
         epr:SecureSingleAcademyTrust,
         epr:Federation,
-        epr:SchoolSponsor,
         epr:ChildrensCentreGroup,
         epr:ChildrensCentreCollaboration,
         epr:GenericTrust ;
-    skos:related epr:EstablishmentAccountability ;
+    skos:related epr:EstablishmentAccountability, epr:Organisation ;
     skos:broader epr:EstablishmentGroupMembership ;
     epr:status "Provisional"@en .
 
@@ -576,10 +603,9 @@ epr:SchoolSponsor
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "School sponsor"@en ;
     skos:definition "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. The sponsor supports governance, leadership and educational improvement of the sponsored academies. Source: Academies Act 2010."@en ;
-    skos:scopeNote "School sponsors are distinct from AcademySponsor in the accountability layer, which records which sponsor is accountable for a specific academy. SchoolSponsor here is the group organisation itself."@en ;
+    skos:scopeNote "Legacy GIAS group type 05. In the target EPR model the sponsoring body is modelled as an epr:Organisation linked to an epr:Establishment via epro:sponsoredBy. Sponsor is a role an organisation plays, not a type of establishment group."@en ;
     skos:broader epr:EstablishmentGroup ;
-    skos:related epr:AcademySponsor ;
-    epr:status "Provisional"@en .
+    epr:status "Legacy"@en .
 
 epr:ChildrensCentreGroup
     a skos:Concept ;
@@ -798,6 +824,7 @@ epr:GovernancePerson
     skos:definition "A named individual who holds or has held a formal governance role at an establishment, establishment group or trust. Covers governors, trustees, members, local governors, accounting officers, chief financial officers and governance professionals. One GovernancePerson may be linked from multiple GovernanceAppointment records."@en ;
     skos:scopeNote "GovernancePerson covers the full range of governance role types. Personal data - requires access-control treatment. Policy purpose: identify individuals who govern in more than one context (national database of governors)."@en ;
     skos:broader epr:GovernanceAppointments ;
+    skos:related epr:Person ;
     epr:status "Provisional"@en .
 
 epr:GovernancePersonIdentifier
@@ -1950,9 +1977,9 @@ epr:AcademySponsor
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy sponsor"@en ;
     skos:definition "A body - typically a school, university, charity or business - approved by the Secretary of State under the Academies Act 2010 to sponsor one or more academies. A sponsor provides strategic leadership and improvement support, particularly for sponsored academies that have converted from underperforming maintained schools."@en ;
-    skos:scopeNote "Shown on the Details tab for sponsor-led academies and several academy and free school types. Not shown for all academy types."@en ;
+    skos:scopeNote "Shown on the Details tab for sponsor-led academies and several academy and free school types. In the target EPR model the sponsor is an epr:Organisation linked to the establishment via epro:sponsoredBy. The epr:AcademySponsor OWL class has been removed; the concept is retained here as a vocabulary entry for the GIAS UI field."@en ;
     skos:broader epr:EstablishmentAccountability ;
-    skos:related epr:AcademyTrust ;
+    skos:related epr:AcademyTrust, epr:Organisation ;
     epr:status "Provisional"@en ;
     dcterms:source "Database field: SchoolSponsors"@en .
 
@@ -1962,8 +1989,9 @@ epr:Proprietor
     skos:prefLabel "Proprietor"@en ;
     skos:altLabel "Proprietor's name"@en ;
     skos:definition "The person or body responsible for the conduct of an independent school under the Education Act 2002, s.94. The proprietor is required to be registered with the Secretary of State under s.98 and is the legal entity to whom registration requirements and inspection duties apply."@en ;
+    skos:scopeNote "In the target EPR model the proprietor relationship is expressed via epro:hasProprietor on epr:Establishment, with range epr:Organisation (for a company or charity) or epr:Person (for an individual). The epr:Proprietor OWL class has been removed; the concept is retained here as a vocabulary entry for the GIAS UI field."@en ;
     skos:broader epr:EstablishmentAccountability ;
-    skos:related epr:OtherIndependentSchool ;
+    skos:related epr:OtherIndependentSchool, epr:Organisation, epr:Person ;
     epr:status "Preferred"@en ;
     dcterms:source "Database: IndependentSchools, EstablishmentProprietors; fields: PropsLastName and related Props* columns"@en .
 

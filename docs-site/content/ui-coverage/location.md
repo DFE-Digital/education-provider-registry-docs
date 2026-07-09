@@ -1,4 +1,4 @@
-﻿# Location tab field coverage
+# Location tab field coverage
 
 This page is generated from `models/provider-field-coverage.ttl` - do not edit directly.
 
