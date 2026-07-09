@@ -683,8 +683,7 @@ epr:Academy1619
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Academy 16 to 19"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> ;
     epr:status "Preferred"@en .
 
 epr:AcademySecure16To19
@@ -693,8 +692,7 @@ epr:AcademySecure16To19
     skos:prefLabel "Academy secure 16 to 19"@en ;
     skos:scopeNote "Real-world (limited). Named within academy type listings but no dedicated GOV.UK guidance page. Secure 16-19 academies (young people in custodial settings aged 16–19 under a funding agreement) are a real concept. Restricted public Details view: only 17 fields publicly visible."@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
-    dcterms:references <https://www.gov.uk/types-of-school/academies> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> ;
     dcterms:source "Type code 57"@en ;
     epr:status "Provisional"@en .
 
