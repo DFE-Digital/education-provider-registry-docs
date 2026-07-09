@@ -1,4 +1,4 @@
-﻿# Establishments - Details tab field coverage
+# Establishments - Details tab field coverage
 
 This page is generated from `models/provider-field-coverage.ttl` - do not edit directly.
 
