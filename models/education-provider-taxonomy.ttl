@@ -706,7 +706,7 @@ epr:FreeSchool
     skos:prefLabel "Free schools"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/free-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
+
     dcterms:source "Type code 35"@en ;
     epr:status "Provisional"@en .
 
@@ -716,7 +716,7 @@ epr:FreeSchoolSpecial
     skos:prefLabel "Free schools special"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/free-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
+
     dcterms:source "Type code 36"@en ;
     epr:status "Provisional"@en .
 
@@ -726,7 +726,7 @@ epr:FreeSchoolAlternativeProvision
     skos:prefLabel "Free schools alternative provision"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/alternative-provision> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
+
     dcterms:source "Type code 38"@en ;
     epr:status "Provisional"@en .
 
@@ -736,7 +736,7 @@ epr:FreeSchool16To19
     skos:prefLabel "Free schools 16 to 19"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
+
     dcterms:source "Type code 39"@en ;
     epr:status "Provisional"@en .
 
@@ -747,7 +747,7 @@ epr:UniversityTechnicalCollege
     skos:altLabel "UTC"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/university-technical-colleges> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
+
     dcterms:source "Type code 40"@en ;
     epr:status "Provisional"@en .
 
@@ -757,7 +757,7 @@ epr:StudioSchool
     skos:prefLabel "Studio schools"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/studio-schools> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
+
     dcterms:source "Type code 41"@en ;
     epr:status "Provisional"@en .
 
@@ -1219,7 +1219,8 @@ epr:SchoolSponsor
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
     dcterms:source "Group type code 05"@en ;
-    epr:status "Provisional"@en .
+    epr:status "Legacy"@en ;
+    skos:scopeNote "GIAS group type 05. In the target EPR model, the sponsoring body is modelled as an epr:Organisation linked via epro:sponsoredBy on epr:Establishment. Sponsor is a role an organisation plays, not a type of establishment group."@en .
 
 epr:MultiAcademyTrust
     a skos:Concept ;

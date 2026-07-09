@@ -42,7 +42,7 @@ Yes, provider organisation linkage is represented — but it is split between tw
 
 - `epro:accountableToLocalAuthority` → `epr:LocalAuthority` (all establishment types where LA is the maintaining body)
 - `epro:accountableToAcademyTrust` → `epr:AcademyTrust` (academies and free schools)
-- `epro:accountableToProprietor` → `epr:Proprietor` (independent schools)
+- `epro:accountableToProprietor` → `epr:Organisation` or `epr:Person` (independent schools — the proprietor may be a company, charity, or natural person)
 
 These represent the legal accountability relationship — who is responsible for the school in a statutory or funding-agreement sense.
 
@@ -104,7 +104,7 @@ Establishment
 
 ### What types of groups are recorded and is the parent entity of a group a type of organisation? It appears that a group is a type of organisation as it has a Group Identifier and a UKPRN.
 
-Correct observation. `EstablishmentGroup` is organisation-like in the model — it carries identifiers (Group ID, Group UKPRN), addresses (registered address, contact address), status, lifecycle dates, governance appointments, and a Companies House number where applicable. There is no generic `Organisation` superclass in the current ontology, but establishment groups map strongly to organisation concepts in external data models.
+Correct observation. `EstablishmentGroup` is organisation-like in the model — it carries identifiers (Group ID, Group UKPRN), addresses (registered address, contact address), status, lifecycle dates, governance appointments, and a Companies House number where applicable. `EstablishmentGroup` is a subclass of `epr:Organisation`, which is the common superclass for all organisation-like things in the EPR ontology.
 
 The group types currently modelled as OWL subclasses of `EstablishmentGroup` are:
 
@@ -117,9 +117,8 @@ The group types currently modelled as OWL subclasses of `EstablishmentGroup` are
 | `epr:GenericTrust` | Trust (non-academy) |
 | `epr:ChildrensCentreGroup` | Children's Centre Group |
 | `epr:ChildrensCentreCollaboration` | Children's Centre Collaboration |
-| `epr:SchoolSponsor` | School sponsor |
 
-Note that `AcademyTrust` has dual inheritance — it is both a subclass of `EstablishmentGroup` (organisational structure role) and sits in the accountability hierarchy (accountability body role). This dual role is the key modelling point for trusts.
+Note that `AcademyTrust` has dual inheritance — it is both a subclass of `EstablishmentGroup` (organisational structure role) and sits in the accountability hierarchy (accountability body role). This dual role is the key modelling point for trusts. `epr:SchoolSponsor` was previously listed here as a GIAS group type (code 05); it has been removed as an OWL class — sponsors are now modelled as `epr:Organisation` instances linked via `epro:sponsoredBy` on `epr:Establishment`.
 
 ---
 

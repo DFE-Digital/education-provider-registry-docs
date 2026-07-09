@@ -69,12 +69,12 @@ Each vocabulary concept is classified as one of:
 
 | Term | Category | Reference |
 |---|---|---|
-| [Free schools](../FreeSchool/) | Real-world | [https://www.gov.uk/types-of-school/free-schools](https://www.gov.uk/types-of-school/free-schools)<br>[https://www.legislation.gov.uk/ukpga/2011/21/contents](https://www.legislation.gov.uk/ukpga/2011/21/contents) |
-| [Free schools special](../FreeSchoolSpecial/) | Real-world | [https://www.gov.uk/types-of-school/free-schools](https://www.gov.uk/types-of-school/free-schools)<br>[https://www.legislation.gov.uk/ukpga/2011/21/contents](https://www.legislation.gov.uk/ukpga/2011/21/contents) |
-| [Free schools alternative provision](../FreeSchoolAlternativeProvision/) | Real-world | [https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision)<br>[https://www.legislation.gov.uk/ukpga/2011/21/contents](https://www.legislation.gov.uk/ukpga/2011/21/contents) |
-| [Free schools 16 to 19](../FreeSchool16To19/) | Real-world | [https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students](https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students)<br>[https://www.legislation.gov.uk/ukpga/2011/21/contents](https://www.legislation.gov.uk/ukpga/2011/21/contents) |
-| [University technical college](../UniversityTechnicalCollege/) | Real-world | [https://www.gov.uk/types-of-school/university-technical-colleges](https://www.gov.uk/types-of-school/university-technical-colleges)<br>[https://www.legislation.gov.uk/ukpga/2011/21/contents](https://www.legislation.gov.uk/ukpga/2011/21/contents) |
-| [Studio schools](../StudioSchool/) | Real-world | [https://www.gov.uk/types-of-school/studio-schools](https://www.gov.uk/types-of-school/studio-schools)<br>[https://www.legislation.gov.uk/ukpga/2011/21/contents](https://www.legislation.gov.uk/ukpga/2011/21/contents) |
+| [Free schools](../FreeSchool/) | Real-world | [https://www.gov.uk/types-of-school/free-schools](https://www.gov.uk/types-of-school/free-schools) |
+| [Free schools special](../FreeSchoolSpecial/) | Real-world | [https://www.gov.uk/types-of-school/free-schools](https://www.gov.uk/types-of-school/free-schools) |
+| [Free schools alternative provision](../FreeSchoolAlternativeProvision/) | Real-world | [https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision) |
+| [Free schools 16 to 19](../FreeSchool16To19/) | Real-world | [https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students](https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students) |
+| [University technical college](../UniversityTechnicalCollege/) | Real-world | [https://www.gov.uk/types-of-school/university-technical-colleges](https://www.gov.uk/types-of-school/university-technical-colleges) |
+| [Studio schools](../StudioSchool/) | Real-world | [https://www.gov.uk/types-of-school/studio-schools](https://www.gov.uk/types-of-school/studio-schools) |
 
 ### Children's Centres
 
