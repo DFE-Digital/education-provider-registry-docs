@@ -463,7 +463,8 @@ epr:PupilReferralUnit
     skos:prefLabel "Pupil referral unit"@en ;
     skos:altLabel "PRU"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
-    rdfs:isDefinedBy <https://www.gov.uk/types-of-school/pupil-referral-units> ;
+    rdfs:isDefinedBy <https://www.gov.uk/guidance/pupil-referral-units-converting-to-alternative-provision-academies> ;
+    dcterms:references <https://www.gov.uk/government/publications/alternative-provision> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/19> ;
     dcterms:source "Type code 14"@en ;
     epr:status "Provisional"@en .
@@ -471,9 +472,9 @@ epr:PupilReferralUnit
 epr:LocalAuthorityNurserySchool
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Local authority nursery school"@en ;
+    skos:prefLabel "Maintained nursery school"@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
-    rdfs:isDefinedBy <https://www.gov.uk/types-of-school/local-authority-maintained-schools> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/22> ;
     dcterms:source "Type code 15"@en ;
     epr:status "Provisional"@en .
 
@@ -686,7 +687,7 @@ epr:AcademyAlternativeProvisionConverter
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Academy alternative provision converter"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/alternative-provision> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/alternative-provision> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
     dcterms:source "Type code 42"@en ;
     epr:status "Provisional"@en .
@@ -696,7 +697,7 @@ epr:AcademyAlternativeProvisionSponsorLed
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Academy alternative provision sponsor led"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/alternative-provision> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/alternative-provision> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
     dcterms:source "Type code 43"@en ;
     epr:status "Provisional"@en .
@@ -771,7 +772,7 @@ epr:FreeSchoolAlternativeProvision
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Free schools alternative provision"@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/alternative-provision> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/alternative-provision> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2011/21/contents> ;
     dcterms:source "Type code 38"@en ;
     epr:status "Provisional"@en .
@@ -816,7 +817,7 @@ epr:ChildrensCentre
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Children's centre"@en ;
     skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
-    rdfs:isDefinedBy <https://www.gov.uk/sure-start-childrens-centres> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/collections/sure-start-childrens-centres> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2006/21/contents> ;
     dcterms:source "Type code 47"@en ;
     epr:status "Provisional"@en .
@@ -1031,7 +1032,7 @@ epr:HasBoarders
     skos:prefLabel "Has boarders"@en ;
     skos:scopeNote "Real-world (limited). A school with some boarding places but not a full boarding school. The concept is real but GOV.UK does not separate 'has boarders' from boarding schools as a distinct classification."@en ;
     skos:broader epr:BoardingProvision ;
-    dcterms:references <https://www.gov.uk/boarding-schools> ;
+    dcterms:references <https://www.gov.uk/government/publications/boarding-schools-national-minimum-standards> ;
     epr:status "Provisional"@en .
 
 epr:BoardingSchool
@@ -1039,7 +1040,7 @@ epr:BoardingSchool
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Boarding school"@en ;
     skos:broader epr:BoardingProvision ;
-    rdfs:isDefinedBy <https://www.gov.uk/boarding-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/boarding-schools-national-minimum-standards> ;
     epr:status "Provisional"@en .
 
 #################################################################
@@ -1243,7 +1244,7 @@ epr:Federation
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Federation"@en ;
     skos:broader epr:EstablishmentGroupType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/school-federations> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2012/1026/contents> ;
     dcterms:source "Group type code 01"@en ;
     epr:status "Provisional"@en .
@@ -1262,7 +1263,7 @@ epr:SchoolSponsor
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "School sponsor"@en ;
     skos:broader epr:EstablishmentGroupType ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/academy-sponsors-guidance> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
     dcterms:source "Group type code 05"@en ;
     epr:status "Provisional"@en .
@@ -1273,7 +1274,7 @@ epr:MultiAcademyTrust
     skos:prefLabel "Multi-academy trust"@en ;
     skos:altLabel "MAT"@en ;
     skos:broader epr:EstablishmentGroupType ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/multi-academy-trusts-establishing-and-developing-your-trust> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
     dcterms:source "Group type code 06"@en ;
     epr:status "Provisional"@en .
@@ -1302,7 +1303,7 @@ epr:SingleAcademyTrust
     skos:prefLabel "Single-academy trust"@en ;
     skos:altLabel "SAT"@en ;
     skos:broader epr:EstablishmentGroupType ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/academy-trust-performance-and-development> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
     dcterms:source "Group type code 10"@en ;
     epr:status "Provisional"@en .
@@ -1386,7 +1387,7 @@ epr:GovernorRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Governor"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/contents> ;
     epr:status "Provisional"@en .
 
@@ -1395,7 +1396,7 @@ epr:ChairOfGovernorsRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Chair of governors"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/contents> ;
     epr:status "Provisional"@en .
 
@@ -1404,6 +1405,7 @@ epr:HeadteacherExOfficioGovernorRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Headteacher (ex-officio governor)"@en ;
     skos:broader epr:GovernanceRoleType ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/contents> ;
     epr:status "Provisional"@en .
 
@@ -1412,6 +1414,7 @@ epr:AssociateMemberRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Associate member"@en ;
     skos:broader epr:GovernanceRoleType ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2013/1624/contents> ;
     epr:status "Provisional"@en .
 
@@ -1420,7 +1423,7 @@ epr:LocalGovernorRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Local governor"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:ChairOfLocalGoverningBodyRole
@@ -1428,7 +1431,7 @@ epr:ChairOfLocalGoverningBodyRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Chair of local governing body"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:TrusteeRole
@@ -1436,7 +1439,7 @@ epr:TrusteeRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Trustee"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2006/46/contents> ;
     epr:status "Provisional"@en .
 
@@ -1445,7 +1448,7 @@ epr:ChairOfTrusteesRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Chair of trustees"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:MemberRole
@@ -1453,7 +1456,7 @@ epr:MemberRole
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Member"@en ;
     skos:broader epr:GovernanceRoleType ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:AccountingOfficerRole
@@ -1597,7 +1600,7 @@ epr:AppointedByGoverningBoard
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Appointed by GB/board"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:AppointedByFoundationOrTrust
@@ -1605,7 +1608,7 @@ epr:AppointedByFoundationOrTrust
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Appointed by foundation/Trust"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:ElectedByParents
@@ -1613,7 +1616,7 @@ epr:ElectedByParents
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Elected by parents"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/contents> ;
     epr:status "Provisional"@en .
 
@@ -1622,7 +1625,7 @@ epr:ElectedBySchoolStaff
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Elected by school staff"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/contents> ;
     epr:status "Provisional"@en .
 
@@ -1639,7 +1642,7 @@ epr:AppointedByAcademyMembers
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Appointed by academy members"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:AppointingBodyNotApplicable
@@ -1663,7 +1666,7 @@ epr:FoundationOrSponsorMembers
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Foundation/sponsor members"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:NominatedByLaAppointedByGb
@@ -1671,7 +1674,7 @@ epr:NominatedByLaAppointedByGb
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Nominated by LA and appointed by GB"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:ExOfficioFoundationGovernor
@@ -1679,7 +1682,7 @@ epr:ExOfficioFoundationGovernor
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Ex-officio foundation governor (appointed by foundation by virtue of the office they hold)"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:AppointedByTrustees
@@ -1687,7 +1690,7 @@ epr:AppointedByTrustees
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Appointed by trustees"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:AppointedByLa
@@ -1695,7 +1698,7 @@ epr:AppointedByLa
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Appointed by LA"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:PersonsAppointedByFoundationOrSponsor
@@ -1703,7 +1706,7 @@ epr:PersonsAppointedByFoundationOrSponsor
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Persons who are appointed by the foundation body or sponsor (if applicable)"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:OriginalSignatoryMembers
@@ -1711,7 +1714,7 @@ epr:OriginalSignatoryMembers
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Original (signatory) members"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:NominatedByOtherBodyAppointedByGb
@@ -1719,7 +1722,7 @@ epr:NominatedByOtherBodyAppointedByGb
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Nominated by other body and appointed by GB"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-maintained-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-structures-and-roles> ;
     epr:status "Provisional"@en .
 
 epr:AdditionalMembersAppointedByMembers
@@ -1727,7 +1730,7 @@ epr:AdditionalMembersAppointedByMembers
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Any additional members appointed by the members of the academy trust"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-academies> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
     epr:status "Provisional"@en .
 
 epr:InterimExecutiveBoard
@@ -1735,7 +1738,7 @@ epr:InterimExecutiveBoard
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Interim Executive Board"@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/intervene-in-a-failing-school> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/schools-causing-concern--2> ;
     epr:status "Provisional"@en .
 
 
