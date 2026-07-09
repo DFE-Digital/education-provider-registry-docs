@@ -1712,6 +1712,11 @@ epr:Academy
     rdfs:label "Academy"@en ;
     rdfs:comment "All academy types: mainstream, special, alternative provision, 16-19, and secure 16-19."@en .
 
+epr:AcademyRoute
+    a owl:Class ;
+    rdfs:label "Academy route"@en ;
+    rdfs:comment "The route by which an academy was established: Converter (voluntary conversion) or Sponsor led (appointment of an approved sponsor)."@en .
+
 epr:MainstreamAcademy
     a owl:Class ;
     rdfs:subClassOf epr:Academy ;
@@ -1739,6 +1744,7 @@ epr:Academy1619
 epro:hasAcademyRoute
     a owl:ObjectProperty ;
     rdfs:domain epr:Academy ;
+    rdfs:range epr:AcademyRoute ;
     rdfs:label "has academy route"@en ;
     rdfs:comment "The route by which this academy was established: epr:ConverterRoute (voluntary conversion from an existing school or provider) or epr:SponsorLedRoute (appointment of an approved sponsor for new or replacement provision). Not applicable to Academy secure 16 to 19."@en .
 
@@ -2335,6 +2341,17 @@ epr:NotApplicableSpecialClassProvision
     a owl:NamedIndividual, epr:SpecialClassProvision ;
     rdfs:label "Not applicable (special-class provision)"@en ;
     rdfs:comment "A classification value indicating that a special-class provision classification does not apply to this type of establishment."@en .
+
+# Academy route (2 values)
+epr:ConverterRoute
+    a owl:NamedIndividual, epr:AcademyRoute ;
+    rdfs:label "Converter"@en ;
+    rdfs:comment "An academy established through the voluntary conversion route under the Academies Act 2010."@en .
+
+epr:SponsorLedRoute
+    a owl:NamedIndividual, epr:AcademyRoute ;
+    rdfs:label "Sponsor led"@en ;
+    rdfs:comment "An academy established through the sponsor-led route under the Academies Act 2010."@en .
 
 # Governance role type (22 values, v1.2)
 epr:GovernorRole
