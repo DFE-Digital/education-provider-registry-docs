@@ -51,18 +51,19 @@ Each vocabulary concept is classified as one of:
 
 | Term | Category | Reference |
 |---|---|---|
-| [Academy converter](../AcademyConverter/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy sponsor led](../AcademySponsorLed/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+| [Mainstream academy](../MainstreamAcademy/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
 | [Academy special school](../AcademySpecial/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy special converter](../AcademySpecialConverter/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy special sponsor led](../AcademySpecialSponsorLed/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy 16 to 19](../Academy1619/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy 16-19 converter](../Academy1619Converter/) | Real-world | [https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students](https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy 16 to 19 sponsor led](../Academy16To19SponsorLed/) | Real-world | [https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students](https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
 | [Academy alternative provision](../AcademyAlternativeProvision/) | Real-world | [https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy alternative provision converter](../AcademyAlternativeProvisionConverter/) | Real-world | [https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy alternative provision sponsor led](../AcademyAlternativeProvisionSponsorLed/) | Real-world | [https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+| [Academy 16 to 19](../Academy1619/) | Real-world | [https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students](https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
 | [Academy secure 16 to 19](../AcademySecure16To19/) | Real-world (limited) | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies) — named within academy listings; no dedicated GOV.UK page for this sub-type<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+
+### Academy Route
+
+| Term | Category | Reference |
+|---|---|---|
+| [Academy route](../AcademyRoute/) | Real-world (limited) | Academies Act 2010 distinguishes converter and sponsor-led routes; "academy route" as a named grouping is an EPR 2.0 model concept. [https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+| [Converter](../ConverterRoute/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+| [Sponsor led](../SponsorLedRoute/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
 
 ### Free Schools
 

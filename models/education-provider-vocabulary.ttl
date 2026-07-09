@@ -866,15 +866,6 @@ epr:EstablishmentTypeGroup
     skos:related epr:EstablishmentType ;
     epr:status "Preferred"@en .
 
-epr:AcademyConverter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy converter"@en ;
-    skos:definition "A maintained school or other eligible institution that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en ;
-    skos:scopeNote "This is an establishment type, not a trust type. The converting school retains its existing character but leaves local-authority maintenance on conversion."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    skos:related epr:AcademyTrust ;
-    epr:status "Preferred"@en .
 
 epr:CommunitySchool
     a skos:Concept ;
@@ -905,18 +896,14 @@ epr:EstablishmentTypeGroupAcademies
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Academies"@en ;
     skos:definition "The establishment type group for all academy establishments: state-funded schools operating outside local-authority maintenance under a funding agreement with the Secretary of State, established under the Academies Act 2010."@en ;
-    skos:scopeNote "Contains 9 types: Academy converter, Academy sponsor led, Academy 16-19 converter, Academy 16 to 19 sponsor led, Academy alternative provision converter, Academy alternative provision sponsor led, Academy secure 16 to 19, Academy special converter, Academy special sponsor led."@en ;
+    skos:scopeNote "Contains 5 types: Mainstream academy, Academy special school, Academy alternative provision, Academy 16 to 19, Academy secure 16 to 19. Mainstream academies, academy special schools, academy alternative provision and academy 16 to 19 establishments each record an academy route value (Converter or Sponsor led) indicating how they were established."@en ;
     skos:broader epr:EstablishmentType ;
     skos:narrower
-        epr:Academy1619Converter,
-        epr:Academy16To19SponsorLed,
-        epr:AcademyAlternativeProvisionConverter,
-        epr:AcademyAlternativeProvisionSponsorLed,
-        epr:AcademyConverter,
-        epr:AcademySecure16To19,
-        epr:AcademySpecialConverter,
-        epr:AcademySpecialSponsorLed,
-        epr:AcademySponsorLed ;
+        epr:MainstreamAcademy,
+        epr:AcademySpecial,
+        epr:AcademyAlternativeProvision,
+        epr:Academy1619,
+        epr:AcademySecure16To19 ;
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
 
@@ -1063,75 +1050,11 @@ epr:EstablishmentTypeGroupWelshEstablishments
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
 
-epr:Academy1619Converter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy 16-19 converter"@en ;
-    skos:definition "A 16-to-19 education provider - such as a sixth form college or school sixth form - that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en ;
-    skos:scopeNote "Distinct from Academy 16 to 19 sponsor led, which is a newly created 16-to-19 academy rather than a conversion."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
-
-epr:Academy16To19SponsorLed
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy 16 to 19 sponsor led"@en ;
-    skos:definition "A new 16-to-19 academy established through the sponsor-led route under the Academies Act 2010, where an approved sponsor takes responsibility for the provision from the outset."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
-
-epr:AcademyAlternativeProvisionConverter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy alternative provision converter"@en ;
-    skos:definition "An existing alternative provision establishment - such as a pupil referral unit - that converted to academy status under the Academies Act 2010 while continuing to provide education for pupils unable to attend mainstream school."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
-
-epr:AcademyAlternativeProvisionSponsorLed
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy alternative provision sponsor led"@en ;
-    skos:definition "A new alternative provision academy created through a sponsor-led route under the Academies Act 2010, established to provide education for pupils who cannot attend mainstream school."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
-
 epr:AcademySecure16To19
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy secure 16 to 19"@en ;
     skos:definition "An academy providing education within secure residential accommodation for young people aged 16 to 19 who are subject to a custodial sentence or secure order."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
-
-epr:AcademySpecialConverter
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy special converter"@en ;
-    skos:definition "A maintained special school that converted to academy status under the Academies Act 2010, continuing to cater wholly or mainly for pupils with special educational needs under a funding agreement with the Secretary of State."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
-
-epr:AcademySpecialSponsorLed
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy special sponsor led"@en ;
-    skos:definition "A new special academy established through the sponsor-led route under the Academies Act 2010, set up to cater for pupils with special educational needs where an approved sponsor provides strategic oversight."@en ;
-    skos:broader epr:EstablishmentTypeGroupAcademies ;
-    epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
-
-epr:AcademySponsorLed
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy sponsor led"@en ;
-    skos:definition "An academy established through the sponsor-led route under the Academies Act 2010, typically replacing an underperforming school, with an approved sponsor providing governance and strategic leadership."@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en .
@@ -2991,33 +2914,73 @@ epr:MainstreamAcademy
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Mainstream academy"@en ;
-    skos:definition "An intermediate grouping for mainstream academies operating under the Academies Act 2010: academy converter (a former maintained school that converted to academy status) and academy sponsor led (a school taken on by an approved sponsor)."@en ;
-    skos:broader epr:Academy ;
-    epr:status "Provisional"@en .
+    skos:definition "A mainstream academy operating under the Academies Act 2010, providing general education outside local-authority maintenance under a funding agreement with the Secretary of State."@en ;
+    skos:scopeNote "Mainstream academies are established via one of two routes, recorded as a separate academy route value: Converter (an existing maintained school that voluntarily converted) or Sponsor led (a school taken on by or established with an approved sponsor)."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    skos:related epr:AcademyTrust, epr:ConverterRoute, epr:SponsorLedRoute ;
+    epr:legacyGiasLabel "Academy converter"@en, "Academy sponsor led"@en ;
+    epr:status "Preferred"@en .
 
 epr:AcademySpecial
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy special school"@en ;
-    skos:definition "An intermediate grouping for academy special schools providing education for pupils with significant SEN: academy special converter and academy special sponsor led, established under the Academies Act 2010."@en ;
-    skos:broader epr:Academy ;
-    epr:status "Provisional"@en .
+    skos:definition "An academy providing education wholly or mainly for pupils with special educational needs, established under the Academies Act 2010 under a funding agreement with the Secretary of State."@en ;
+    skos:scopeNote "Academy special schools are established via one of two routes, recorded as a separate academy route value: Converter (an existing maintained special school that converted) or Sponsor led (new or takeover provision with an approved sponsor)."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    skos:related epr:ConverterRoute, epr:SponsorLedRoute ;
+    epr:legacyGiasLabel "Academy special converter"@en, "Academy special sponsor led"@en ;
+    epr:status "Preferred"@en .
 
 epr:AcademyAlternativeProvision
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy alternative provision"@en ;
-    skos:definition "An intermediate grouping for academies providing alternative provision for excluded or otherwise absent pupils: academy alternative provision converter and academy alternative provision sponsor led, under the Academies Act 2010."@en ;
-    skos:broader epr:Academy ;
-    epr:status "Provisional"@en .
+    skos:definition "An academy providing alternative provision for pupils who cannot attend mainstream school, established under the Academies Act 2010 under a funding agreement with the Secretary of State."@en ;
+    skos:scopeNote "Academy alternative provision establishments are established via one of two routes, recorded as a separate academy route value: Converter (an existing alternative provision establishment, such as a pupil referral unit, that converted) or Sponsor led (new provision with an approved sponsor)."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    skos:related epr:ConverterRoute, epr:SponsorLedRoute ;
+    epr:legacyGiasLabel "Academy alternative provision converter"@en, "Academy alternative provision sponsor led"@en ;
+    epr:status "Preferred"@en .
 
 epr:Academy1619
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy 16 to 19"@en ;
-    skos:definition "An intermediate grouping for academies providing solely 16-to-19 education: academy 16-19 converter and academy 16-to-19 sponsor led, operating under a funding agreement with the Secretary of State."@en ;
-    skos:broader epr:Academy ;
-    epr:status "Provisional"@en .
+    skos:definition "An academy providing education solely for students aged 16 to 19, established under the Academies Act 2010 under a funding agreement with the Secretary of State."@en ;
+    skos:scopeNote "Academy 16 to 19 establishments are established via one of two routes, recorded as a separate academy route value: Converter (an existing 16-to-19 provider, such as a sixth form college, that converted) or Sponsor led (new provision with an approved sponsor)."@en ;
+    skos:broader epr:EstablishmentTypeGroupAcademies ;
+    skos:related epr:ConverterRoute, epr:SponsorLedRoute ;
+    epr:legacyGiasLabel "Academy 16-19 converter"@en, "Academy 16 to 19 sponsor led"@en ;
+    epr:status "Preferred"@en .
+
+epr:AcademyRoute
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy route"@en ;
+    skos:definition "The route by which an academy was established under the Academies Act 2010: Converter (an existing school or provider that voluntarily converted) or Sponsor led (a school taken on by or established with an approved sponsor)."@en ;
+    skos:narrower epr:ConverterRoute, epr:SponsorLedRoute ;
+    epr:status "Preferred"@en .
+
+epr:ConverterRoute
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Converter"@en ;
+    skos:definition "An academy established through the voluntary conversion route, where an existing school or provider chose to convert to academy status under the Academies Act 2010."@en ;
+    skos:scopeNote "Converter academies retain their existing character but leave local-authority maintenance on conversion. Applies to mainstream academies, academy special schools, academy alternative provision and academy 16 to 19 establishments."@en ;
+    skos:broader epr:AcademyRoute ;
+    epr:legacyGiasLabel "Academy converter"@en, "Academy special converter"@en, "Academy alternative provision converter"@en, "Academy 16-19 converter"@en ;
+    epr:status "Preferred"@en .
+
+epr:SponsorLedRoute
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsor led"@en ;
+    skos:definition "An academy established through the sponsor-led route, where an approved sponsor was appointed to govern new or replacement provision under the Academies Act 2010."@en ;
+    skos:scopeNote "Sponsor-led academies are typically replacements for underperforming schools or newly created provision. Applies to mainstream academies, academy special schools, academy alternative provision and academy 16 to 19 establishments."@en ;
+    skos:broader epr:AcademyRoute ;
+    epr:legacyGiasLabel "Academy sponsor led"@en, "Academy special sponsor led"@en, "Academy alternative provision sponsor led"@en, "Academy 16 to 19 sponsor led"@en ;
+    epr:status "Preferred"@en .
 
 epr:FreeSchoolEstablishment
     a skos:Concept ;

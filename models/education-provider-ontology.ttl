@@ -1716,25 +1716,31 @@ epr:MainstreamAcademy
     a owl:Class ;
     rdfs:subClassOf epr:Academy ;
     rdfs:label "Mainstream academy"@en ;
-    rdfs:comment "Mainstream academies: academy sponsor led and academy converter."@en .
+    rdfs:comment "A mainstream academy under the Academies Act 2010. Academy route (Converter or Sponsor led) is recorded as a separate epro:hasAcademyRoute value."@en .
 
 epr:AcademySpecial
     a owl:Class ;
     rdfs:subClassOf epr:Academy ;
     rdfs:label "Academy special school"@en ;
-    rdfs:comment "Academy special schools: academy special sponsor led and academy special converter."@en .
+    rdfs:comment "An academy special school under the Academies Act 2010. Academy route (Converter or Sponsor led) is recorded as a separate epro:hasAcademyRoute value."@en .
 
 epr:AcademyAlternativeProvision
     a owl:Class ;
     rdfs:subClassOf epr:Academy ;
     rdfs:label "Academy alternative provision"@en ;
-    rdfs:comment "Academy alternative provision establishments: academy alternative provision converter and academy alternative provision sponsor led."@en .
+    rdfs:comment "An academy alternative provision establishment under the Academies Act 2010. Academy route (Converter or Sponsor led) is recorded as a separate epro:hasAcademyRoute value."@en .
 
 epr:Academy1619
     a owl:Class ;
     rdfs:subClassOf epr:Academy ;
     rdfs:label "Academy 16 to 19"@en ;
-    rdfs:comment "Academy 16-19 establishments: academy 16-19 converter and academy 16 to 19 sponsor led."@en .
+    rdfs:comment "An academy 16 to 19 establishment under the Academies Act 2010. Academy route (Converter or Sponsor led) is recorded as a separate epro:hasAcademyRoute value."@en .
+
+epro:hasAcademyRoute
+    a owl:ObjectProperty ;
+    rdfs:domain epr:Academy ;
+    rdfs:label "has academy route"@en ;
+    rdfs:comment "The route by which this academy was established: epr:ConverterRoute (voluntary conversion from an existing school or provider) or epr:SponsorLedRoute (appointment of an approved sponsor for new or replacement provision). Not applicable to Academy secure 16 to 19."@en .
 
 epr:FreeSchoolEstablishment
     a owl:Class ;
@@ -1912,54 +1918,6 @@ epr:InstitutionFundedByOtherGovernmentDepartment
     rdfs:comment "An educational institution whose principal funding comes from a government department other than the Department for Education, and which is recorded in GIAS for cross-government data purposes."@en .
 
 # Academies
-epr:AcademySponsorLed
-    a owl:Class ;
-    rdfs:subClassOf epr:MainstreamAcademy ;
-    rdfs:label "Academy sponsor led"@en ;
-    rdfs:comment "An academy established through the sponsor-led route under the Academies Act 2010, typically replacing an underperforming school, with an approved sponsor providing governance and strategic leadership."@en .
-
-epr:AcademySpecialSponsorLed
-    a owl:Class ;
-    rdfs:subClassOf epr:AcademySpecial ;
-    rdfs:label "Academy special sponsor led"@en ;
-    rdfs:comment "A new special academy established through the sponsor-led route under the Academies Act 2010, set up to cater for pupils with special educational needs where an approved sponsor provides strategic oversight."@en .
-
-epr:AcademyConverter
-    a owl:Class ;
-    rdfs:subClassOf epr:MainstreamAcademy ;
-    rdfs:label "Academy converter"@en ;
-    rdfs:comment "A maintained school or other eligible institution that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en .
-
-epr:AcademyAlternativeProvisionConverter
-    a owl:Class ;
-    rdfs:subClassOf epr:AcademyAlternativeProvision ;
-    rdfs:label "Academy alternative provision converter"@en ;
-    rdfs:comment "An existing alternative provision establishment - such as a pupil referral unit - that converted to academy status under the Academies Act 2010 while continuing to provide education for pupils unable to attend mainstream school."@en .
-
-epr:AcademyAlternativeProvisionSponsorLed
-    a owl:Class ;
-    rdfs:subClassOf epr:AcademyAlternativeProvision ;
-    rdfs:label "Academy alternative provision sponsor led"@en ;
-    rdfs:comment "A new alternative provision academy created through a sponsor-led route under the Academies Act 2010, established to provide education for pupils who cannot attend mainstream school."@en .
-
-epr:AcademySpecialConverter
-    a owl:Class ;
-    rdfs:subClassOf epr:AcademySpecial ;
-    rdfs:label "Academy special converter"@en ;
-    rdfs:comment "A maintained special school that converted to academy status under the Academies Act 2010, continuing to cater wholly or mainly for pupils with special educational needs under a funding agreement with the Secretary of State."@en .
-
-epr:Academy1619Converter
-    a owl:Class ;
-    rdfs:subClassOf epr:Academy1619 ;
-    rdfs:label "Academy 16-19 converter"@en ;
-    rdfs:comment "A 16-to-19 education provider - such as a sixth form college or school sixth form - that converted to academy status under the Academies Act 2010, entering into a funding agreement with the Secretary of State."@en .
-
-epr:Academy16To19SponsorLed
-    a owl:Class ;
-    rdfs:subClassOf epr:Academy1619 ;
-    rdfs:label "Academy 16 to 19 sponsor led"@en ;
-    rdfs:comment "A new 16-to-19 academy established through the sponsor-led route under the Academies Act 2010, where an approved sponsor takes responsibility for the provision from the outset."@en .
-
 epr:AcademySecure16To19
     a owl:Class ;
     rdfs:subClassOf epr:Academy ;

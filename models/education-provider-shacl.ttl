@@ -1054,14 +1054,12 @@ epr:IndependentSchoolGroupShape
 
 #################################################################
 # Group shape - Mainstream academies
-#
-# Covers: Academy sponsor led, Academy converter
 #################################################################
 
 epr:MainstreamAcademyGroupShape
     a sh:NodeShape ;
     rdfs:label "Mainstream academy group shape"@en ;
-    rdfs:comment "Rules for mainstream academy types. Academy trust is required; education phase, gender of entry, admissions policy, boarding, nursery and sixth-form provision are all required."@en ;
+    rdfs:comment "Rules for mainstream academies. Academy trust is required; academy route, education phase, gender of entry, admissions policy, boarding, nursery and sixth-form provision are all required."@en ;
     sh:targetClass epr:MainstreamAcademy ;
 
     sh:property [
@@ -1238,13 +1236,20 @@ epr:MainstreamAcademyGroupShape
         sh:minCount 1 ;
         sh:name "Academy sponsor"@en ;
         sh:message "Mainstream academies must have an academy sponsor relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path epro:hasAcademyRoute ;
+        sh:in ( epr:ConverterRoute epr:SponsorLedRoute ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Academy route"@en ;
+        sh:message "Mainstream academies must have an academy route value of Converter or Sponsor led."@en ;
     ] .
 
 
 #################################################################
 # Specific shape - Academy special schools
-#
-# Covers: Academy special sponsor led, Academy special converter
 #################################################################
 
 epr:AcademySpecialShape
@@ -1406,6 +1411,15 @@ epr:AcademySpecialShape
         sh:maxCount 1 ;
         sh:name "School capacity"@en ;
         sh:message "An academy special school may have at most one school capacity."@en ;
+    ] ;
+
+    sh:property [
+        sh:path epro:hasAcademyRoute ;
+        sh:in ( epr:ConverterRoute epr:SponsorLedRoute ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Academy route"@en ;
+        sh:message "Academy special schools must have an academy route value of Converter or Sponsor led."@en ;
     ] .
 
 
@@ -1568,13 +1582,20 @@ epr:AcademyAlternativeProvisionShape
         sh:maxCount 1 ;
         sh:name "School capacity"@en ;
         sh:message "An academy alternative provision establishment may have at most one school capacity."@en ;
+    ] ;
+
+    sh:property [
+        sh:path epro:hasAcademyRoute ;
+        sh:in ( epr:ConverterRoute epr:SponsorLedRoute ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Academy route"@en ;
+        sh:message "Academy alternative provision establishments must have an academy route value of Converter or Sponsor led."@en ;
     ] .
 
 
 #################################################################
 # Specific shape - Academy 16-19
-#
-# Covers: Academy 16-19 converter, Academy 16 to 19 sponsor led
 #################################################################
 
 epr:Academy1619Shape
@@ -1736,6 +1757,15 @@ epr:Academy1619Shape
         sh:maxCount 1 ;
         sh:name "School capacity"@en ;
         sh:message "An academy 16-19 establishment may have at most one school capacity."@en ;
+    ] ;
+
+    sh:property [
+        sh:path epro:hasAcademyRoute ;
+        sh:in ( epr:ConverterRoute epr:SponsorLedRoute ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Academy route"@en ;
+        sh:message "Academy 16 to 19 establishments must have an academy route value of Converter or Sponsor led."@en ;
     ] .
 
 
