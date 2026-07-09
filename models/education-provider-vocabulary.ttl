@@ -1271,7 +1271,8 @@ epr:InstitutionFundedByOtherGovernmentDepartment
 epr:LocalAuthorityNurserySchool
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Local authority nursery school"@en ;
+    skos:prefLabel "Maintained nursery school"@en ;
+    epr:legacyGiasLabel "Local authority nursery school"@en ;
     skos:definition "A nursery school maintained and funded by a local authority under the School Standards and Framework Act 1998, providing early years education for children below compulsory school age."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;

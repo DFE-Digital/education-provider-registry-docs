@@ -22,8 +22,8 @@ Each vocabulary concept is classified as one of:
 | Foundation school | Real-world | [https://www.gov.uk/types-of-school/foundation-schools](https://www.gov.uk/types-of-school/foundation-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
 | Community special school | Real-world | [https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
 | Foundation special school | Real-world | [https://www.gov.uk/types-of-school/foundation-schools](https://www.gov.uk/types-of-school/foundation-schools)<br>[https://www.legislation.gov.uk/ukpga/1998/31/section/20](https://www.legislation.gov.uk/ukpga/1998/31/section/20) |
-| Pupil referral unit | Real-world | [https://www.gov.uk/types-of-school/pupil-referral-units](https://www.gov.uk/types-of-school/pupil-referral-units)<br>[https://www.legislation.gov.uk/ukpga/1996/56/section/19](https://www.legislation.gov.uk/ukpga/1996/56/section/19) |
-| Local authority nursery school | Real-world | [https://www.gov.uk/types-of-school/local-authority-maintained-schools](https://www.gov.uk/types-of-school/local-authority-maintained-schools) |
+| Pupil referral unit | Real-world | [https://www.gov.uk/guidance/pupil-referral-units-converting-to-alternative-provision-academies](https://www.gov.uk/guidance/pupil-referral-units-converting-to-alternative-provision-academies)<br>[https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision)<br>[https://www.legislation.gov.uk/ukpga/1996/56/section/19](https://www.legislation.gov.uk/ukpga/1996/56/section/19) |
+| Maintained nursery school | Real-world (limited) | [https://www.legislation.gov.uk/ukpga/1998/31/section/22](https://www.legislation.gov.uk/ukpga/1998/31/section/22) |
 
 ### Non-Maintained and Independent Special Schools
 

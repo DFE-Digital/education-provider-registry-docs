@@ -165,7 +165,8 @@ $concepts = foreach ($match in $conceptMatches) {
     [pscustomobject]@{
         LocalName         = $localName
         PreferredLabel    = $preferredLabel
-        AlternativeLabels = @(Get-Literals -Block $block -Predicate "skos:altLabel")
+        AlternativeLabels   = @(Get-Literals -Block $block -Predicate "skos:altLabel")
+        LegacyGiasLabels    = @(Get-Literals -Block $block -Predicate "epr:legacyGiasLabel")
         Definition        = (Get-Literals -Block $block -Predicate "skos:definition" | Select-Object -First 1)
         ScopeNotes        = @(Get-Literals -Block $block -Predicate "skos:scopeNote")
         Status            = (Get-Literals -Block $block -Predicate "epr:status" | Select-Object -First 1)
@@ -223,6 +224,7 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
         "| Compact identifier | ``epr:$($concept.LocalName)`` |",
         "| Preferred label | $(Escape-MarkdownTableCell $concept.PreferredLabel) |",
         "| Alternative labels | $(Escape-MarkdownTableCell (Join-Values $concept.AlternativeLabels)) |",
+        "| Legacy GIAS label | $(Escape-MarkdownTableCell (Join-Values $concept.LegacyGiasLabels)) |",
         "| Status | $(Escape-MarkdownTableCell $concept.Status) |",
         "| Broader concepts | $(Escape-MarkdownTableCell (Format-ConceptLinks -LocalNames $concept.Broader -ConceptLookup $conceptLookup)) |",
         "| Related concepts | $(Escape-MarkdownTableCell (Format-ConceptLinks -LocalNames $concept.Related -ConceptLookup $conceptLookup)) |",
