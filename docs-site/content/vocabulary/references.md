@@ -54,8 +54,8 @@ Each vocabulary concept is classified as one of:
 | [Mainstream academy](../MainstreamAcademy/) | Real-world | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
 | [Academy special school](../AcademySpecial/) | Real-world | [https://www.gov.uk/government/publications/send-code-of-practice-0-to-25](https://www.gov.uk/government/publications/send-code-of-practice-0-to-25)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents)<br>[https://www.legislation.gov.uk/ukpga/2014/6/section/41](https://www.legislation.gov.uk/ukpga/2014/6/section/41) |
 | [Academy alternative provision](../AcademyAlternativeProvision/) | Real-world | [https://www.gov.uk/government/publications/alternative-provision](https://www.gov.uk/government/publications/alternative-provision)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy 16 to 19](../Academy1619/) | Real-world | [https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students](https://www.gov.uk/guidance/16-to-19-education-financial-support-for-students)<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
-| [Academy secure 16 to 19](../AcademySecure16To19/) | Real-world (limited) | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies) — named within academy listings; no dedicated GOV.UK page for this sub-type<br>[https://www.legislation.gov.uk/ukpga/2010/32/contents](https://www.legislation.gov.uk/ukpga/2010/32/contents) |
+| [Academy 16 to 19](../Academy1619/) | Real-world | [https://www.legislation.gov.uk/ukpga/2010/32/section/1B](https://www.legislation.gov.uk/ukpga/2010/32/section/1B) |
+| [Academy secure 16 to 19](../AcademySecure16To19/) | Real-world (limited) | [https://www.legislation.gov.uk/ukpga/2010/32/section/1B](https://www.legislation.gov.uk/ukpga/2010/32/section/1B) |
 
 ### Academy Route
 
