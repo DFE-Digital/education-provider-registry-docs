@@ -665,8 +665,8 @@ epr:AcademySpecial
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Academy special school"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
-    rdfs:isDefinedBy <https://www.gov.uk/types-of-school/academies> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents>, <https://www.legislation.gov.uk/ukpga/2014/6/section/41> ;
     epr:status "Preferred"@en .
 
 epr:AcademyAlternativeProvision
