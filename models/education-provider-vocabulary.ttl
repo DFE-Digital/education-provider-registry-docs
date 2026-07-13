@@ -579,7 +579,8 @@ epr:MultiAcademyTrust
     skos:scopeNote "An academy trust operating two or more academies. Distinct from a single-academy trust, which operates exactly one academy. A SAT can convert to a MAT by adding an academy."@en ;
     skos:broader epr:AcademyTrust ;
     skos:related epr:SingleAcademyTrust ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#multi-academy-trust> .
 
 epr:SecureSingleAcademyTrust
     a skos:Concept ;
@@ -587,7 +588,8 @@ epr:SecureSingleAcademyTrust
     skos:prefLabel "Secure single-academy trust"@en ;
     skos:definition "A single-academy trust operating a secure 16-to-19 academy providing education within secure residential accommodation for young people aged 16 to 19 subject to a custodial sentence or secure order."@en ;
     skos:broader epr:SingleAcademyTrust ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#secure-single-academy-trust> .
 
 epr:Federation
     a skos:Concept ;
@@ -596,7 +598,8 @@ epr:Federation
     skos:definition "A formal statutory arrangement in which two or more maintained schools are governed by a single federated governing body. Each member school retains its own URN, establishment number, admissions arrangements and Ofsted inspection identity. Some governance and funding arrangements may be shared or pooled under federation rules. Applicable only to maintained schools, including maintained nursery schools; academy grouping uses the trust model. Source: School Governance (Federations) Regulations 2012."@en ;
     skos:scopeNote "Federations apply only to maintained schools. An academy cannot join a federation - academies are grouped through the trust model instead. This distinction is confirmed as a business rule."@en ;
     skos:broader epr:EstablishmentGroup ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#federation> .
 
 epr:SchoolSponsor
     a skos:Concept ;
@@ -605,7 +608,8 @@ epr:SchoolSponsor
     skos:definition "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. The sponsor supports governance, leadership and educational improvement of the sponsored academies. Source: Academies Act 2010."@en ;
     skos:scopeNote "Legacy GIAS group type 05. In the target EPR model the sponsoring body is modelled as an epr:Organisation linked to an epr:Establishment via epro:sponsoredBy. Sponsor is a role an organisation plays, not a type of establishment group."@en ;
     skos:broader epr:EstablishmentGroup ;
-    epr:status "Legacy"@en .
+    epr:status "Legacy"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#school-sponsor> .
 
 epr:ChildrensCentreGroup
     a skos:Concept ;
@@ -613,7 +617,8 @@ epr:ChildrensCentreGroup
     skos:prefLabel "Children's centres group"@en ;
     skos:definition "An operational cluster of children's centres with a lead-centre arrangement, registered as a group in GIAS."@en ;
     skos:broader epr:EstablishmentGroup ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centres-group> .
 
 epr:ChildrensCentreCollaboration
     a skos:Concept ;
@@ -621,7 +626,8 @@ epr:ChildrensCentreCollaboration
     skos:prefLabel "Children's centres collaboration"@en ;
     skos:definition "A cross-group collaboration arrangement between children's centres, registered as a group in GIAS."@en ;
     skos:broader epr:EstablishmentGroup ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centres-collaboration> .
 
 epr:GenericTrust
     a skos:Concept ;
@@ -788,7 +794,8 @@ epr:GovernanceIdentifier
     skos:definition "The GIAS-assigned identifier for a governance appointment record. Unique per governance row. Not a person identifier - one physical person may have multiple GIDs across different roles and establishments."@en ;
     skos:scopeNote "GID identifies the appointment record, not the individual. Matching individuals across GIDs is not supported by this identifier alone. Source: GIAS governance extract."@en ;
     skos:broader epr:GovernanceAppointments ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governance-identifier-gid> .
 
 epr:GovernanceRoleType
     a skos:Concept ;
@@ -902,7 +909,8 @@ epr:CommunitySchool
     skos:scopeNote "The most common LA-maintained school type. Governing bodies set the ethos but the local authority retains greater control than in foundation or voluntary schools."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     skos:related epr:LocalAuthority, epr:MaintainingAuthority ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#community-school> .
 
 epr:OtherIndependentSchool
     a skos:Concept ;
@@ -912,7 +920,8 @@ epr:OtherIndependentSchool
     skos:scopeNote "Distinct from Other independent special school, which is an independent school approved to cater for pupils with special educational needs. City technology colleges are also classified separately within this group."@en ;
     skos:broader epr:EstablishmentTypeGroupIndependentSchools ;
     skos:related epr:Proprietor ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#other-independent-school> .
 
 #################################################################
 # Reviewed taxonomy value vocabulary concepts
@@ -1084,7 +1093,8 @@ epr:AcademySecure16To19
     skos:definition "An academy providing education within secure residential accommodation for young people aged 16 to 19 who are subject to a custodial sentence or secure order."@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-secure-16-to-19> .
 
 epr:BritishSchoolsOverseas
     a skos:Concept ;
@@ -1094,7 +1104,8 @@ epr:BritishSchoolsOverseas
     skos:scopeNote "Ofsted inspection of British schools overseas ended in 2021 following revocation of the relevant inspection provisions. Records for schools previously holding BSO status may remain in GIAS."@en ;
     skos:broader epr:EstablishmentTypeGroupOtherTypes ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#british-schools-overseas> .
 
 epr:ChildrensCentre
     a skos:Concept ;
@@ -1103,7 +1114,8 @@ epr:ChildrensCentre
     skos:definition "A facility providing integrated early-childhood services - including early education, childcare, family support, health services and employment advice - established under the statutory framework of the Childcare Act 2006 and Children Act 2004."@en ;
     skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centre> .
 
 epr:ChildrensCentreLinkedSite
     a skos:Concept ;
@@ -1113,7 +1125,8 @@ epr:ChildrensCentreLinkedSite
     skos:scopeNote "Linked sites are operationally dependent on a parent children's centre and do not hold independent registration. They are recorded in GIAS as a separate establishment type to preserve historical registration data."@en ;
     skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centre-linked-site> .
 
 epr:CityTechnologyCollege
     a skos:Concept ;
@@ -1123,7 +1136,8 @@ epr:CityTechnologyCollege
     skos:scopeNote "A small, closed cohort: no new CTCs have been created since the early 1990s. Many have since converted to academies. Classified under Independent schools in GIAS despite being state-funded."@en ;
     skos:broader epr:EstablishmentTypeGroupIndependentSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#city-technology-college> .
 
 epr:CommunitySpecialSchool
     a skos:Concept ;
@@ -1132,7 +1146,8 @@ epr:CommunitySpecialSchool
     skos:definition "A local-authority-maintained special school established under Schedule 27 of the School Standards and Framework Act 1998 and the Education Act 1996, in which the local authority employs staff and is the admissions authority, catering wholly or mainly for children with special educational needs."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#community-special-school> .
 
 epr:FoundationSchool
     a skos:Concept ;
@@ -1141,7 +1156,8 @@ epr:FoundationSchool
     skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the governing body is the employer and admissions authority, with land and buildings that may be owned by the governing body or a charitable foundation rather than the local authority."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#foundation-school> .
 
 epr:FoundationSpecialSchool
     a skos:Concept ;
@@ -1150,7 +1166,8 @@ epr:FoundationSpecialSchool
     skos:definition "A maintained special school established under Schedule 27 of the School Standards and Framework Act 1998 and the Education Act 1996, sharing the governance characteristics of a foundation school - including governing body as employer and admissions authority - while catering wholly or mainly for children with special educational needs."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#foundation-special-school> .
 
 epr:FreeSchool
     a skos:Concept ;
@@ -1159,7 +1176,8 @@ epr:FreeSchool
     skos:definition "A new state-funded school established as an academy under the Academies Act 2010 and Education Act 2011 through the free-school programme, allowing parents, teachers, charities or other groups to set up a school outside local-authority control."@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#free-schools> .
 
 epr:FreeSchool16To19
     a skos:Concept ;
@@ -1168,7 +1186,8 @@ epr:FreeSchool16To19
     skos:definition "A free school established under the Academies Act 2010 that focuses exclusively on providing education and training to students aged 16 to 19."@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#free-schools-16-to-19> .
 
 epr:FreeSchoolAlternativeProvision
     a skos:Concept ;
@@ -1177,7 +1196,8 @@ epr:FreeSchoolAlternativeProvision
     skos:definition "A free school established under the Academies Act 2010 to provide alternative provision for pupils who are unable to attend mainstream school due to exclusion, illness or other circumstances."@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#free-schools-alternative-provision> .
 
 epr:FreeSchoolSpecial
     a skos:Concept ;
@@ -1186,7 +1206,8 @@ epr:FreeSchoolSpecial
     skos:definition "A free school established under the Academies Act 2010 to provide specialist education for pupils with special educational needs and disabilities."@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#free-schools-special> .
 
 epr:FurtherEducation
     a skos:Concept ;
@@ -1196,7 +1217,8 @@ epr:FurtherEducation
     skos:scopeNote "Covers general FE colleges, tertiary colleges and sixth-form colleges registered in GIAS. Does not include school sixth forms, which are part of their parent school establishment record."@en ;
     skos:broader epr:EstablishmentTypeGroupColleges ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#further-education> .
 
 epr:HigherEducationInstitution
     a skos:Concept ;
@@ -1206,7 +1228,8 @@ epr:HigherEducationInstitution
     skos:scopeNote "Higher education institutions are registered in GIAS primarily to support recording of university sponsorship relationships with academies and UTCs, rather than for regulatory oversight of the HEI itself."@en ;
     skos:broader epr:EstablishmentTypeGroupUniversities ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#higher-education-institution> .
 
 epr:InstitutionFundedByOtherGovernmentDepartment
     a skos:Concept ;
@@ -1216,7 +1239,8 @@ epr:InstitutionFundedByOtherGovernmentDepartment
     skos:scopeNote "Includes providers such as Ministry of Defence-funded schools or Home Office-related provisions. The specific department and funding basis varies by record."@en ;
     skos:broader epr:EstablishmentTypeGroupOtherTypes ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#institution-funded-by-other-government-department> .
 
 epr:MaintainedNurserySchool
     a skos:Concept ;
@@ -1226,7 +1250,8 @@ epr:MaintainedNurserySchool
     skos:definition "A nursery school maintained and funded by a local authority under the School Standards and Framework Act 1998, providing early years education for children below compulsory school age."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#maintained-nursery-school> .
 
 epr:MiscellaneousEstablishment
     a skos:Concept ;
@@ -1236,7 +1261,8 @@ epr:MiscellaneousEstablishment
     skos:scopeNote "Use of this type indicates a data quality or classification gap. Records of this type should be reviewed periodically to determine whether a more precise type can be assigned."@en ;
     skos:broader epr:EstablishmentTypeGroupOtherTypes ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#miscellaneous> .
 
 epr:NonMaintainedSpecialSchool
     a skos:Concept ;
@@ -1245,7 +1271,8 @@ epr:NonMaintainedSpecialSchool
     skos:definition "A special school approved by the Secretary of State under s.342 of the Education Act 1996 that is not maintained by a local authority, operates on a not-for-profit basis, and caters wholly or mainly for children with special educational needs."@en ;
     skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#non-maintained-special-school> .
 
 epr:OffshoreSchools
     a skos:Concept ;
@@ -1275,7 +1302,8 @@ epr:OtherIndependentSpecialSchool
     skos:scopeNote "These schools may be approved by the Secretary of State under s.41 of the Children and Families Act 2014 for the purposes of EHC plan placements, but they are operated on an independent, fee-charging basis."@en ;
     skos:broader epr:EstablishmentTypeGroupNonMaintainedSpecialSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#other-independent-special-school> .
 
 epr:PupilReferralUnit
     a skos:Concept ;
@@ -1304,7 +1332,8 @@ epr:ServiceChildrensEducation
     skos:definition "A school operated by the Service Children's Education (SCE) agency on behalf of the Ministry of Defence, providing education for the children of UK armed-forces personnel at bases in the United Kingdom and overseas."@en ;
     skos:broader epr:EstablishmentTypeGroupOtherTypes ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#service-childrens-education> .
 
 epr:SixthFormCentre
     a skos:Concept ;
@@ -1323,7 +1352,8 @@ epr:SpecialPost16Institution
     skos:definition "A specialist institution approved under s.41 of the Children and Families Act 2014 to provide education or training for young people over 16 with special educational needs or disabilities, enabling placement via an education, health and care plan."@en ;
     skos:broader epr:EstablishmentTypeGroupOtherTypes ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#special-post-16-institution> .
 
 epr:StudioSchool
     a skos:Concept ;
@@ -1333,7 +1363,8 @@ epr:StudioSchool
     skos:scopeNote "The studio schools programme was discontinued by DfE; no new studio schools have been approved since 2017. Existing studio schools continue to operate as academies."@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#studio-schools> .
 
 epr:UniversityTechnicalCollege
     a skos:Concept ;
@@ -1342,7 +1373,8 @@ epr:UniversityTechnicalCollege
     skos:definition "An academy established under the Academies Act 2010 and Education Act 2011 through the free-school programme, for students aged 14 to 19, specialising in technical and vocational subjects with the active involvement of a university and employer sponsors."@en ;
     skos:broader epr:EstablishmentTypeGroupFreeSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#university-technical-college> .
 
 epr:VoluntaryAidedSchool
     a skos:Concept ;
@@ -1351,7 +1383,8 @@ epr:VoluntaryAidedSchool
     skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the governing body is the employer and admissions authority, with land and buildings typically owned by a charitable foundation such as a diocese or religious body, which contributes towards capital costs."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#voluntary-aided-school> .
 
 epr:VoluntaryControlledSchool
     a skos:Concept ;
@@ -1360,7 +1393,8 @@ epr:VoluntaryControlledSchool
     skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the local authority is the employer and admissions authority; land and buildings are often owned by a voluntary or foundation body, but the school receives full local-authority funding without a capital contribution from the foundation."@en ;
     skos:broader epr:EstablishmentTypeGroupLaMaintainedSchools ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from local domain notes"@en .
+    dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#voluntary-controlled-school> .
 
 epr:WelshEstablishment
     a skos:Concept ;
@@ -1370,7 +1404,8 @@ epr:WelshEstablishment
     skos:scopeNote "Welsh establishments appear in GIAS for cross-border data-sharing and funding purposes. Their governance, inspection (Estyn, not Ofsted) and regulatory framework differ from English establishments."@en ;
     skos:broader epr:EstablishmentTypeGroupWelshEstablishments ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#welsh-establishment> .
 
 epr:AllThroughPhase
     a skos:Concept ;
@@ -1410,7 +1445,8 @@ epr:NurseryPhase
     skos:scopeNote "Nursery schools and nursery classes are separately registerable under the Education Act 2002. A standalone nursery school carries this phase; nursery classes within a primary school do not change the school's phase."@en ;
     skos:broader epr:EducationPhase ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nursery> .
 
 epr:PrimaryPhase
     a skos:Concept ;
@@ -1420,7 +1456,8 @@ epr:PrimaryPhase
     skos:scopeNote "Includes infant schools (ages 4-7), junior schools (ages 7-11), and combined infant and junior schools. The phase is determined by the Secretary of State and affects Ofsted inspection framework and national curriculum requirements."@en ;
     skos:broader epr:EducationPhase ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#primary> .
 
 epr:SecondaryPhase
     a skos:Concept ;
@@ -1430,7 +1467,8 @@ epr:SecondaryPhase
     skos:scopeNote "Includes secondary modern, grammar, and comprehensive schools. The phase affects Ofsted inspection framework, national curriculum key stages 3 and 4, and statutory assessment requirements."@en ;
     skos:broader epr:EducationPhase ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Captured public glossary"@en .
+    dcterms:source "Definition provenance: Captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#secondary> .
 
 epr:SixteenToNineteenPhase
     a skos:Concept ;
@@ -1440,7 +1478,8 @@ epr:SixteenToNineteenPhase
     skos:scopeNote "Applies to establishments whose primary purpose is post-16 provision. In GIAS this phase is recorded for sixth-form colleges and some free schools. Local authorities have duties to secure sufficient 16-19 provision under the Education Act 2002."@en ;
     skos:broader epr:EducationPhase ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
+    dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#16-to-19> .
 
 epr:NotApplicableEducationPhase
     a skos:Concept ;
@@ -1461,7 +1500,8 @@ epr:NonSelectiveAdmissions
     skos:scopeNote "Admissions must comply with the School Admissions Code (statutory under s.84 of the School Standards and Framework Act 1998). Non-selective schools may still apply oversubscription criteria such as looked-after children, siblings, or distance."@en ;
     skos:broader epr:AdmissionsPolicy ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#non-selective> .
 
 epr:SelectiveAdmissions
     a skos:Concept ;
@@ -1471,7 +1511,8 @@ epr:SelectiveAdmissions
     skos:scopeNote "Grammar schools selecting wholly by ability are permitted under s.104 of the School Standards and Framework Act 1998. Partial selection by aptitude in certain subjects is permitted for some maintained schools under SSFA 1998. Selective admissions must comply with the School Admissions Code."@en ;
     skos:broader epr:AdmissionsPolicy ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#selective> .
 
 epr:NotApplicableAdmissionsPolicy
     a skos:Concept ;
@@ -1492,7 +1533,8 @@ epr:BoardingSchool
     skos:scopeNote "Boarding schools must meet the National Minimum Standards for Boarding Schools and are subject to the Education (Independent School Standards) Regulations 2014. Distinct from HasBoarders: a boarding school's primary identity is as a boarding provision, not merely a day school that also accommodates some boarders."@en ;
     skos:broader epr:BoardingProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#boarding-school> .
 
 epr:HasBoarders
     a skos:Concept ;
@@ -1512,7 +1554,8 @@ epr:NoBoarders
     skos:scopeNote "Applies to schools for which the boarding provision field is applicable (i.e. maintained or independent schools), but where no boarding is offered. Distinct from a NotApplicable value, which would indicate the field is irrelevant to the establishment type."@en ;
     skos:broader epr:BoardingProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#no-boarders> .
 
 epr:BoysOnlyGenderEntry
     a skos:Concept ;
@@ -1522,7 +1565,8 @@ epr:BoysOnlyGenderEntry
     skos:scopeNote "Single-sex admission is permitted for maintained and independent schools under the Equality Act 2010 (s.85 and schedule 11). The recorded value reflects the school's admissions policy, not the composition of its current roll."@en ;
     skos:broader epr:GenderOfEntry ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
+    dcterms:source "Definition provenance: Invented review definition"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#boys> .
 
 epr:GirlsOnlyGenderEntry
     a skos:Concept ;
@@ -1532,7 +1576,8 @@ epr:GirlsOnlyGenderEntry
     skos:scopeNote "Single-sex admission is permitted for maintained and independent schools under the Equality Act 2010 (s.85 and schedule 11). The recorded value reflects the school's admissions policy, not the composition of its current roll."@en ;
     skos:broader epr:GenderOfEntry ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
+    dcterms:source "Definition provenance: Invented review definition"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#girls> .
 
 epr:MixedGenderEntry
     a skos:Concept ;
@@ -1563,7 +1608,8 @@ epr:HasNurseryClasses
     skos:scopeNote "Nursery classes within a school are distinct from a separately registered nursery school. The presence of nursery classes does not change the school's phase classification. Provision of nursery education is addressed by local authorities under the Education Act 2002 s.50."@en ;
     skos:broader epr:NurseryProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nursery-classes> .
 
 epr:NoNurseryClasses
     a skos:Concept ;
@@ -1573,7 +1619,8 @@ epr:NoNurseryClasses
     skos:scopeNote "Applies where the nursery provision field is applicable to the establishment type (e.g. a primary school) but the school has no nursery classes. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
     skos:broader epr:NurseryProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#no-nursery-classes> .
 
 epr:NotApplicableNurseryProvision
     a skos:Concept ;
@@ -1594,7 +1641,8 @@ epr:HasSixthForm
     skos:scopeNote "Sixth-form provision is a separately recorded field in GIAS. The presence of a sixth form does not change the school's phase classification. Local authorities have duties to secure sufficient 16-19 provision under the Education Act 2002."@en ;
     skos:broader epr:SixthFormProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sixth-form> .
 
 epr:NoSixthForm
     a skos:Concept ;
@@ -1604,7 +1652,8 @@ epr:NoSixthForm
     skos:scopeNote "Applies where the sixth-form provision field is applicable to the establishment type (e.g. a secondary school) but no post-16 provision is offered. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
     skos:broader epr:SixthFormProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en .
+    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#no-sixth-form> .
 
 epr:NotApplicableSixthFormProvision
     a skos:Concept ;
@@ -1840,7 +1889,8 @@ epr:FeHeIdentifier
     skos:scopeNote "The FE/HE identifier is a legacy field and may not be populated for all FE/HE providers in GIAS. Where both this identifier and a UKPRN are present, the UKPRN is the preferred cross-sector reference."@en ;
     skos:broader epr:EstablishmentIdentity ;
     epr:status "Provisional"@en ;
-    dcterms:source "Java: feheIdentifier; database: Establishment.FEHEIdentifier"@en .
+    dcterms:source "Java: feheIdentifier; database: Establishment.FEHEIdentifier"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#fe-he-identifier> .
 
 epr:LocalAuthorityScopedEstablishmentNumber
     a skos:Concept ;
@@ -1970,7 +2020,8 @@ epr:SingleAcademyTrust
     skos:altLabel "Single academy trust"@en, "SAT"@en ;
     skos:definition "An academy trust constituted under the Academies Act 2010 that holds a funding agreement for exactly one academy. Distinguished from a multi-academy trust (MAT), which holds funding agreements for two or more academies."@en ;
     skos:broader epr:AcademyTrust ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#single-academy-trust> .
 
 epr:AcademySponsor
     a skos:Concept ;
@@ -2209,7 +2260,8 @@ epr:GovernmentOfficeRegion
     skos:definition "The ONS Government Office Region in which the establishment is located. England has 9 GORs, used for regional policy, statistics and reporting."@en ;
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.GOR_code → GovernmentOfficeRegion"@en .
+    dcterms:source "Database: Establishment.GOR_code → GovernmentOfficeRegion"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#government-office-region> .
 
 epr:UrbanRuralClassification
     a skos:Concept ;
@@ -2218,7 +2270,8 @@ epr:UrbanRuralClassification
     skos:definition "The ONS urban/rural classification for the establishment's postcode. Indicates whether the establishment is in an urban city, town, rural village, rural hamlet or isolated dwelling."@en ;
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.UrbanRural_code → UrbanRural"@en .
+    dcterms:source "Database: Establishment.UrbanRural_code → UrbanRural"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#urban-rural-classification> .
 
 epr:AdministrativeWard
     a skos:Concept ;
@@ -2227,7 +2280,8 @@ epr:AdministrativeWard
     skos:definition "The administrative ward in which the establishment's postcode falls, derived from the GeoData postcode-to-area lookup."@en ;
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.administrativeWard_code → AdministrativeWard; derived via GeoData"@en .
+    dcterms:source "Database: Establishment.administrativeWard_code → AdministrativeWard; derived via GeoData"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#administrative-ward> .
 
 epr:ParliamentaryConstituency
     a skos:Concept ;
@@ -2236,7 +2290,8 @@ epr:ParliamentaryConstituency
     skos:definition "The parliamentary constituency in which the establishment's postcode falls, derived from the GeoData postcode-to-area lookup."@en ;
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.parliamentaryConstituency_code → ParliamentaryConstituency; derived via GeoData"@en .
+    dcterms:source "Database: Establishment.parliamentaryConstituency_code → ParliamentaryConstituency; derived via GeoData"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#parliamentary-constituency> .
 
 epr:LowerLayerSuperOutputArea
     a skos:Concept ;
@@ -2276,7 +2331,8 @@ epr:GssLocalAuthorityCode
     skos:definition "The ONS Government Statistical Service code for the local authority in whose area the establishment is located. A machine-readable identifier (for example E08000007 for Stockport) used for cross-referencing with ONS statistical datasets and published geographies. Displayed on the establishment location tab in GIAS."@en ;
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.GssLaCode_code → GSSLACode"@en .
+    dcterms:source "Database: Establishment.GssLaCode_code → GSSLACode"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#gss-local-authority-code> .
 
 epr:OsGridReference
     a skos:Concept ;
@@ -2448,7 +2504,8 @@ epr:Section41Approval
     skos:definition "Whether the establishment is approved under s.41 of the Children and Families Act 2014, enabling it to be named in an Education, Health and Care plan. Applies to independent special schools and special post-16 institutions on the Secretary of State's approved list."@en ;
     skos:broader epr:EducationAdmissionsAndProvision ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database field: Section41Approved"@en .
+    dcterms:source "Database field: Section41Approved"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#section-41-approval> .
 
 #################################################################
 # Capacity and pupil measures
@@ -2549,7 +2606,8 @@ epr:ReligiousCharacter
         epr:OtherReligiousCharacter,
         epr:RomanCatholicCharacter ;
     epr:status "Preferred"@en ;
-    dcterms:source "C#: ReligiousCharacterId; Java: Characteristics.religiousCharacter; database: Establishment.religiousCharacter_code"@en .
+    dcterms:source "C#: ReligiousCharacterId; Java: Characteristics.religiousCharacter; database: Establishment.religiousCharacter_code"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#religious-character> .
 
 epr:ReligiousEthos
     a skos:Concept ;
@@ -2563,7 +2621,8 @@ epr:ReligiousEthos
         epr:NoReligiousEthos,
         epr:NotApplicableReligiousEthos,
         epr:OtherReligiousEthos ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#religious-ethos> .
 
 epr:Diocese
     a skos:Concept ;
@@ -2573,7 +2632,8 @@ epr:Diocese
     skos:scopeNote "Observed on the Details tab for most school types with a religious character. A database-mapping gap exists for non-maintained special schools (type 08); the underlying configuration should be verified."@en ;
     skos:broader epr:FaithContext ;
     skos:related epr:ReligiousCharacter ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#diocese> .
 
 #################################################################
 # SEN and resourced provision
@@ -2588,7 +2648,8 @@ epr:TypeOfSenProvision
     skos:scopeNote "Shown for maintained and academy schools. Independent and non-maintained special schools instead show special pupil counts. The database stores up to four SEN types per establishment."@en ;
     skos:broader epr:SenAndResourcedProvision ;
     epr:status "Provisional"@en ;
-    dcterms:source "C#: SEN1Ids to SEN4Ids; Java: senPriority1 to senPriority4; database: EstablishmentToSen1 plus legacy EstablishmentToSen2-4"@en .
+    dcterms:source "C#: SEN1Ids to SEN4Ids; Java: senPriority1 to senPriority4; database: EstablishmentToSen1 plus legacy EstablishmentToSen2-4"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#type-of-sen-provision> .
 
 epr:TypeOfResourcedProvision
     a skos:Concept ;
@@ -2839,7 +2900,8 @@ epr:CompaniesHouseNumber
     skos:scopeNote "Currently recorded in GIAS for online providers (via AccreditationRecord) and for academy trusts and other group organisations (via group identity). The same concept applies in both contexts."@en ;
     skos:broader epr:AccreditationAndQualityAssurance ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database field: CHNumber"@en .
+    dcterms:source "Database field: CHNumber"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#companies-house-number> .
 
 epr:EstablishmentAccredited
     a skos:Concept ;
@@ -2947,7 +3009,8 @@ epr:MainstreamAcademy
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     skos:related epr:AcademyTrust, epr:ConverterRoute, epr:SponsorLedRoute ;
     epr:legacyGiasLabel "Academy converter"@en, "Academy sponsor led"@en ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#mainstream-academy> .
 
 epr:AcademySpecial
     a skos:Concept ;
@@ -2958,7 +3021,8 @@ epr:AcademySpecial
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     skos:related epr:ConverterRoute, epr:SponsorLedRoute ;
     epr:legacyGiasLabel "Academy special converter"@en, "Academy special sponsor led"@en ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-special-school> .
 
 epr:AcademyAlternativeProvision
     a skos:Concept ;
@@ -2969,7 +3033,8 @@ epr:AcademyAlternativeProvision
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     skos:related epr:ConverterRoute, epr:SponsorLedRoute ;
     epr:legacyGiasLabel "Academy alternative provision converter"@en, "Academy alternative provision sponsor led"@en ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-alternative-provision> .
 
 epr:Academy1619
     a skos:Concept ;
@@ -2980,7 +3045,8 @@ epr:Academy1619
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     skos:related epr:ConverterRoute, epr:SponsorLedRoute ;
     epr:legacyGiasLabel "Academy 16-19 converter"@en, "Academy 16 to 19 sponsor led"@en ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-16-to-19> .
 
 epr:AcademyRoute
     a skos:Concept ;
@@ -2988,7 +3054,8 @@ epr:AcademyRoute
     skos:prefLabel "Academy route"@en ;
     skos:definition "The route by which an academy was established under the Academies Act 2010: Converter (an existing school or provider that voluntarily converted) or Sponsor led (a school taken on by or established with an approved sponsor)."@en ;
     skos:narrower epr:ConverterRoute, epr:SponsorLedRoute ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-route> .
 
 epr:ConverterRoute
     a skos:Concept ;
@@ -2998,7 +3065,8 @@ epr:ConverterRoute
     skos:scopeNote "Converter academies retain their existing character but leave local-authority maintenance on conversion. Applies to mainstream academies, academy special schools, academy alternative provision and academy 16 to 19 establishments."@en ;
     skos:broader epr:AcademyRoute ;
     epr:legacyGiasLabel "Academy converter"@en, "Academy special converter"@en, "Academy alternative provision converter"@en, "Academy 16-19 converter"@en ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#converter> .
 
 epr:SponsorLedRoute
     a skos:Concept ;
@@ -3008,7 +3076,8 @@ epr:SponsorLedRoute
     skos:scopeNote "Sponsor-led academies are typically replacements for underperforming schools or newly created provision. Applies to mainstream academies, academy special schools, academy alternative provision and academy 16 to 19 establishments."@en ;
     skos:broader epr:AcademyRoute ;
     epr:legacyGiasLabel "Academy sponsor led"@en, "Academy special sponsor led"@en, "Academy alternative provision sponsor led"@en, "Academy 16 to 19 sponsor led"@en ;
-    epr:status "Preferred"@en .
+    epr:status "Preferred"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sponsor-led> .
 
 epr:FreeSchoolEstablishment
     a skos:Concept ;
@@ -3093,7 +3162,8 @@ epr:GovernorRole
     skos:prefLabel "Governor"@en ;
     skos:definition "A governance role in a maintained school governing body."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governor> .
 
 epr:ChairOfGovernorsRole
     a skos:Concept ;
@@ -3101,7 +3171,8 @@ epr:ChairOfGovernorsRole
     skos:prefLabel "Chair of governors"@en ;
     skos:definition "The chair of a maintained school governing body."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#chair-of-governors> .
 
 epr:HeadteacherExOfficioGovernorRole
     a skos:Concept ;
@@ -3109,7 +3180,8 @@ epr:HeadteacherExOfficioGovernorRole
     skos:prefLabel "Headteacher (ex-officio governor)"@en ;
     skos:definition "Headteacher of a maintained school holding a governor role by virtue of their office. Defined in the School Governance (Constitution) (England) Regulations 2012 (SI 2012/1034). Modelled from the maintained schools governance guide; not separately enumerated in the GIAS governance extract."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#headteacher-ex-officio-governor> .
 
 epr:AssociateMemberRole
     a skos:Concept ;
@@ -3117,7 +3189,8 @@ epr:AssociateMemberRole
     skos:prefLabel "Associate member"@en ;
     skos:definition "A non-voting participant in a maintained school governing body or committee, as defined in the School Governance (Roles, Procedures and Allowances) (England) Regulations 2013 (SI 2013/1624)."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#associate-member> .
 
 epr:LocalGovernorRole
     a skos:Concept ;
@@ -3125,7 +3198,8 @@ epr:LocalGovernorRole
     skos:prefLabel "Local governor"@en ;
     skos:definition "A member of a local governing body for an individual academy within a multi-academy trust."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#local-governor> .
 
 epr:ChairOfLocalGoverningBodyRole
     a skos:Concept ;
@@ -3133,7 +3207,8 @@ epr:ChairOfLocalGoverningBodyRole
     skos:prefLabel "Chair of local governing body"@en ;
     skos:definition "The chair of a local governing body for an individual academy within a multi-academy trust."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#chair-of-local-governing-body> .
 
 epr:TrusteeRole
     a skos:Concept ;
@@ -3141,7 +3216,8 @@ epr:TrusteeRole
     skos:prefLabel "Trustee"@en ;
     skos:definition "A trustee of an academy trust board."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#trustee> .
 
 epr:ChairOfTrusteesRole
     a skos:Concept ;
@@ -3149,7 +3225,8 @@ epr:ChairOfTrusteesRole
     skos:prefLabel "Chair of trustees"@en ;
     skos:definition "The chair of an academy trust board of trustees."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#chair-of-trustees> .
 
 epr:MemberRole
     a skos:Concept ;
@@ -3165,7 +3242,8 @@ epr:AccountingOfficerRole
     skos:prefLabel "Accounting officer"@en ;
     skos:definition "The accounting officer of an academy trust, responsible to Parliament for the regularity and propriety of public expenditure."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#accounting-officer> .
 
 epr:ChiefFinancialOfficerRole
     a skos:Concept ;
@@ -3173,7 +3251,8 @@ epr:ChiefFinancialOfficerRole
     skos:prefLabel "Chief financial officer"@en ;
     skos:definition "The chief financial officer of an academy trust."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#chief-financial-officer> .
 
 epr:SharedLocalGovernorEstablishmentRole
     a skos:Concept ;
@@ -3181,7 +3260,8 @@ epr:SharedLocalGovernorEstablishmentRole
     skos:prefLabel "Shared local governor (establishment)"@en ;
     skos:definition "A local governor exercising a shared governance role, recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#shared-local-governor-establishment> .
 
 epr:SharedLocalGovernorGroupRole
     a skos:Concept ;
@@ -3189,7 +3269,8 @@ epr:SharedLocalGovernorGroupRole
     skos:prefLabel "Shared local governor (group)"@en ;
     skos:definition "A local governor exercising a shared governance role, recorded at group level in the GIAS governance extract."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#shared-local-governor-group> .
 
 epr:SharedChairOfLocalGoverningBodyEstablishmentRole
     a skos:Concept ;
@@ -3197,7 +3278,8 @@ epr:SharedChairOfLocalGoverningBodyEstablishmentRole
     skos:prefLabel "Shared chair of local governing body (establishment)"@en ;
     skos:definition "A shared chair of local governing body recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#shared-chair-of-local-governing-body-establishment> .
 
 epr:SharedChairOfLocalGoverningBodyGroupRole
     a skos:Concept ;
@@ -3205,7 +3287,8 @@ epr:SharedChairOfLocalGoverningBodyGroupRole
     skos:prefLabel "Shared chair of local governing body (group)"@en ;
     skos:definition "A shared chair of local governing body recorded at group level in the GIAS governance extract."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#shared-chair-of-local-governing-body-group> .
 
 epr:GovernanceProfessionalLaMaintainedSchoolRole
     a skos:Concept ;
@@ -3221,7 +3304,8 @@ epr:LocalGovernanceProfessionalIndividualAcademyRole
     skos:prefLabel "Local governance professional - individual academy or free school"@en ;
     skos:definition "A governance professional supporting the local governing body of an individual academy or free school."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#local-governance-professional-individual-academy-or-free-school> .
 
 epr:GovernanceProfessionalSatRole
     a skos:Concept ;
@@ -3229,7 +3313,8 @@ epr:GovernanceProfessionalSatRole
     skos:prefLabel "Governance professional - single-academy trust (SAT)"@en ;
     skos:definition "A governance professional supporting a single-academy trust board."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governance-professional-single-academy-trust-sat> .
 
 epr:GovernanceProfessionalMatRole
     a skos:Concept ;
@@ -3237,7 +3322,8 @@ epr:GovernanceProfessionalMatRole
     skos:prefLabel "Governance professional - multi-academy trust (MAT)"@en ;
     skos:definition "A governance professional supporting a multi-academy trust board."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governance-professional-multi-academy-trust-mat> .
 
 epr:GovernanceProfessionalFederationRole
     a skos:Concept ;
@@ -3245,7 +3331,8 @@ epr:GovernanceProfessionalFederationRole
     skos:prefLabel "Governance professional - federation"@en ;
     skos:definition "A governance professional supporting a federated governing body."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governance-professional-federation> .
 
 epr:SharedGovernanceProfessionalEstablishmentRole
     a skos:Concept ;
@@ -3253,7 +3340,8 @@ epr:SharedGovernanceProfessionalEstablishmentRole
     skos:prefLabel "Shared governance professional (establishment)"@en ;
     skos:definition "A shared governance professional recorded at establishment level in the GIAS governance extract. Modelled as group-scoped in EPR."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#shared-governance-professional-establishment> .
 
 epr:SharedGovernanceProfessionalGroupRole
     a skos:Concept ;
@@ -3261,7 +3349,8 @@ epr:SharedGovernanceProfessionalGroupRole
     skos:prefLabel "Shared governance professional (group)"@en ;
     skos:definition "A shared governance professional recorded at group level in the GIAS governance extract."@en ;
     skos:broader epr:GovernanceRoleType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#shared-governance-professional-group> .
 
 #################################################################
 # Governance appointing body values (18 values, v1.2)
@@ -3273,7 +3362,8 @@ epr:AppointedByGoverningBoard
     skos:prefLabel "Appointed by GB/board"@en ;
     skos:definition "A governance appointment made by the governing board."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-gb-board> .
 
 epr:AppointedByFoundationOrTrust
     a skos:Concept ;
@@ -3281,7 +3371,8 @@ epr:AppointedByFoundationOrTrust
     skos:prefLabel "Appointed by foundation/Trust"@en ;
     skos:definition "A governance appointment made by a foundation body or trust."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-foundation-trust> .
 
 epr:ElectedByParents
     a skos:Concept ;
@@ -3289,7 +3380,8 @@ epr:ElectedByParents
     skos:prefLabel "Elected by parents"@en ;
     skos:definition "A governance appointment made by election of the parent body under the School Governance (Constitution) (England) Regulations 2012."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#elected-by-parents> .
 
 epr:ElectedBySchoolStaff
     a skos:Concept ;
@@ -3297,7 +3389,8 @@ epr:ElectedBySchoolStaff
     skos:prefLabel "Elected by school staff"@en ;
     skos:definition "A governance appointment made by election of school staff under the School Governance (Constitution) (England) Regulations 2012."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#elected-by-school-staff> .
 
 epr:ExOfficioHeadteacher
     a skos:Concept ;
@@ -3313,7 +3406,8 @@ epr:AppointedByAcademyMembers
     skos:prefLabel "Appointed by academy members"@en ;
     skos:definition "A governance appointment made by the academy trust members."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-academy-members> .
 
 epr:AppointingBodyNotApplicable
     a skos:Concept ;
@@ -3321,7 +3415,8 @@ epr:AppointingBodyNotApplicable
     skos:prefLabel "N/A"@en ;
     skos:definition "Appointing body is not applicable for this governance role."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#n-a> .
 
 epr:ParentAppointedByGbDueToNoElection
     a skos:Concept ;
@@ -3337,7 +3432,8 @@ epr:FoundationOrSponsorMembers
     skos:prefLabel "Foundation/sponsor members"@en ;
     skos:definition "Foundation or sponsor members of the governing body."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#foundation-sponsor-members> .
 
 epr:NominatedByLaAppointedByGb
     a skos:Concept ;
@@ -3345,7 +3441,8 @@ epr:NominatedByLaAppointedByGb
     skos:prefLabel "Nominated by LA and appointed by GB"@en ;
     skos:definition "A governor nominated by the local authority and appointed by the governing board."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nominated-by-la-and-appointed-by-gb> .
 
 epr:ExOfficioFoundationGovernor
     a skos:Concept ;
@@ -3361,7 +3458,8 @@ epr:AppointedByTrustees
     skos:prefLabel "Appointed by trustees"@en ;
     skos:definition "A governance appointment made by the board of trustees."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-trustees> .
 
 epr:AppointedByLa
     a skos:Concept ;
@@ -3369,7 +3467,8 @@ epr:AppointedByLa
     skos:prefLabel "Appointed by LA"@en ;
     skos:definition "A governance appointment made by the local authority."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-la> .
 
 epr:PersonsAppointedByFoundationOrSponsor
     a skos:Concept ;
@@ -3385,7 +3484,8 @@ epr:OriginalSignatoryMembers
     skos:prefLabel "Original (signatory) members"@en ;
     skos:definition "Original signatory members of the academy trust per the model articles of association."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#original-signatory-members> .
 
 epr:NominatedByOtherBodyAppointedByGb
     a skos:Concept ;
@@ -3393,7 +3493,8 @@ epr:NominatedByOtherBodyAppointedByGb
     skos:prefLabel "Nominated by other body and appointed by GB"@en ;
     skos:definition "A governor nominated by another body and appointed by the governing board."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nominated-by-other-body-and-appointed-by-gb> .
 
 epr:AdditionalMembersAppointedByMembers
     a skos:Concept ;
@@ -3409,7 +3510,8 @@ epr:InterimExecutiveBoard
     skos:prefLabel "Interim Executive Board"@en ;
     skos:definition "An Interim Executive Board appointed by the Regional Schools Commissioner or successor body."@en ;
     skos:broader epr:GovernanceAppointingBody ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#interim-executive-board> .
 
 
 

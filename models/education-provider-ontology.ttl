@@ -1769,7 +1769,7 @@ epr:ChildrensCentreEstablishment
     a owl:Class ;
     rdfs:subClassOf epr:Establishment ;
     rdfs:label "Children's centre establishment"@en ;
-    rdfs:comment "Children's centres and children's centre linked sites."@en .
+    rdfs:comment "Children's centres."@en .
 
 
 #################################################################
@@ -1978,12 +1978,6 @@ epr:ChildrensCentre
     rdfs:subClassOf epr:ChildrensCentreEstablishment ;
     rdfs:label "Children's centre"@en ;
     rdfs:comment "A facility providing integrated early-childhood services - including early education, childcare, family support, health services and employment advice - established under the statutory framework of the Childcare Act 2006 and Children Act 2004."@en .
-
-epr:ChildrensCentreLinkedSite
-    a owl:Class ;
-    rdfs:subClassOf epr:ChildrensCentreEstablishment ;
-    rdfs:label "Children's centre linked site"@en ;
-    rdfs:comment "A site that delivers some early childhood services on behalf of a named children's centre, having previously been registered as a standalone children's centre under the Childcare Act 2006 framework."@en .
 
 # Online providers
 epr:OnlineProvider
@@ -2283,7 +2277,7 @@ epr:NotApplicableGenderOfEntry
 epr:BoardingSchool
     a owl:NamedIndividual, epr:BoardingProvision ;
     rdfs:label "Boarding school"@en ;
-    rdfs:comment "A boarding-provision value indicating that the establishment is registered and operates principally as a boarding school, where pupils reside during term time."@en .
+    rdfs:comment "A boarding-provision value indicating that the establishment is classified as operating principally as a boarding school, where pupils reside during term time. This is a GIAS operational classification; both BoardingSchool and HasBoarders trigger the same statutory obligations under Children Act 1989 s.87."@en .
 
 epr:HasBoarders
     a owl:NamedIndividual, epr:BoardingProvision ;
@@ -2298,7 +2292,7 @@ epr:NoBoarders
 # Nursery provision (3 values)
 epr:HasNurseryClasses
     a owl:NamedIndividual, epr:NurseryProvision ;
-    rdfs:label "Has nursery classes"@en ;
+    rdfs:label "Nursery classes"@en ;
     rdfs:comment "A nursery-provision value indicating that the establishment operates one or more nursery classes for children below compulsory school age."@en .
 
 epr:NoNurseryClasses
@@ -2314,12 +2308,12 @@ epr:NotApplicableNurseryProvision
 # Sixth-form provision (3 values)
 epr:HasSixthForm
     a owl:NamedIndividual, epr:SixthFormProvision ;
-    rdfs:label "Has a sixth form"@en ;
+    rdfs:label "Sixth form"@en ;
     rdfs:comment "A sixth-form-provision value indicating that the establishment provides post-16 education as a sixth form, catering to pupils typically in Years 12 and 13."@en .
 
 epr:NoSixthForm
     a owl:NamedIndividual, epr:SixthFormProvision ;
-    rdfs:label "Does not have a sixth form"@en ;
+    rdfs:label "No sixth form"@en ;
     rdfs:comment "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en .
 
 epr:NotApplicableSixthFormProvision
