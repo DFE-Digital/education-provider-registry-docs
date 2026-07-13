@@ -779,7 +779,6 @@ epr:ChildrensCentreLinkedSite
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Children's centre linked site"@en ;
     skos:scopeNote "GIAS construct (type code 48). A satellite address at which some services were delivered on behalf of a named children's centre. In the EPR model, linked sites are not a distinct establishment type — they are represented as epr:Site instances associated with an epr:ChildrensCentre establishment. The epr:ChildrensCentreLinkedSite OWL class has been removed from the ontology."@en ;
-    skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
     dcterms:source "Type code 48"@en ;
     epr:status "Legacy"@en .
 
@@ -1219,7 +1218,6 @@ epr:SchoolSponsor
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "School sponsor"@en ;
-    skos:broader epr:EstablishmentGroupType ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/5A> ;
     dcterms:source "Group type code 05"@en ;
