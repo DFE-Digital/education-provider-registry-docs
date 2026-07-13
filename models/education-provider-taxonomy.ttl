@@ -769,6 +769,7 @@ epr:ChildrensCentre
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Children's centre"@en ;
     skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/sure-start-childrens-centres> ;
     epr:legislation <https://www.legislation.gov.uk/ukpga/2006/21/section/5A> ;
     dcterms:source "Type code 47"@en ;
     epr:status "Provisional"@en .
