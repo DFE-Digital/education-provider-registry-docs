@@ -665,7 +665,7 @@ epr:AcademySpecial
     skos:prefLabel "Academy special school"@en ;
     skos:broader epr:EstablishmentTypeGroupAcademies ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/contents>, <https://www.legislation.gov.uk/ukpga/2014/6/section/41> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1A>, <https://www.legislation.gov.uk/ukpga/2014/6/section/41> ;
     epr:status "Preferred"@en .
 
 epr:AcademyAlternativeProvision
@@ -823,6 +823,7 @@ epr:MiddlePhase
     skos:prefLabel "Middle deemed primary"@en ;
     skos:scopeNote "Real-world (limited). Middle schools are real (Education Act 1980) but 'middle deemed primary' is an administrative classification under the statutory framework, not a term used in GOV.UK guidance."@en ;
     skos:broader epr:EducationPhase ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/5>, <https://www.legislation.gov.uk/uksi/2002/1983/regulation/4/made> ;
     dcterms:references <https://www.gov.uk/national-curriculum> ;
     epr:status "Provisional"@en .
 
@@ -832,6 +833,7 @@ epr:MiddleDeemedSecondaryPhase
     skos:prefLabel "Middle deemed secondary"@en ;
     skos:scopeNote "Real-world (limited). Middle schools are real (Education Act 1980) but 'middle deemed secondary' is an administrative classification under the statutory framework, not a term used in GOV.UK guidance."@en ;
     skos:broader epr:EducationPhase ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/5>, <https://www.legislation.gov.uk/uksi/2002/1983/regulation/3/made>, <https://www.legislation.gov.uk/uksi/2007/2324/part/1/made> ;
     dcterms:references <https://www.gov.uk/national-curriculum> ;
     epr:status "Provisional"@en .
 
@@ -1200,7 +1202,7 @@ epr:Federation
     skos:prefLabel "Federation"@en ;
     skos:broader epr:EstablishmentGroupType ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
-    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1035/contents> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2002/32/section/24>, <https://www.legislation.gov.uk/uksi/2012/1035/regulation/6> ;
     dcterms:source "Group type code 01"@en ;
     epr:status "Provisional"@en .
 
