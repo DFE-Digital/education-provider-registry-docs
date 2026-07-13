@@ -3121,14 +3121,6 @@ epr:MainstreamFreeSchool
     skos:broader epr:FreeSchoolEstablishment ;
     epr:status "Provisional"@en .
 
-epr:ChildrensCentreEstablishment
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Children's centre establishment"@en ;
-    skos:definition "An intermediate grouping covering children's centres and children's centre linked sites, providing integrated early childhood services under the Childcare Act 2006 and the Children Act 2004."@en ;
-    skos:broader epr:EstablishmentType ;
-    skos:related epr:EstablishmentTypeGroupChildrensCentres ;
-    epr:status "Provisional"@en .
 
 #################################################################
 # Ontology record grouping classes

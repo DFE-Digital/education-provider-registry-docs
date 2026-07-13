@@ -1765,13 +1765,6 @@ epr:MainstreamFreeSchool
     rdfs:label "Mainstream free school"@en ;
     rdfs:comment "Mainstream free schools: free school, university technical college, studio school."@en .
 
-epr:ChildrensCentreEstablishment
-    a owl:Class ;
-    rdfs:subClassOf epr:Establishment ;
-    rdfs:label "Children's centre establishment"@en ;
-    rdfs:comment "Children's centres."@en .
-
-
 #################################################################
 # Classes - establishment type leaf classes (v0.7)
 #
@@ -1975,7 +1968,7 @@ epr:StudioSchool
 # Children's centres
 epr:ChildrensCentre
     a owl:Class ;
-    rdfs:subClassOf epr:ChildrensCentreEstablishment ;
+    rdfs:subClassOf epr:Establishment ;
     rdfs:label "Children's centre"@en ;
     rdfs:comment "A facility providing integrated early-childhood services - including early education, childcare, family support, health services and employment advice - established under the statutory framework of the Childcare Act 2006 and Children Act 2004."@en .
 

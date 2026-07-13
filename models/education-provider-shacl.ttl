@@ -2787,9 +2787,9 @@ epr:HigherEducationInstitutionShape
 
 epr:ChildrensCentreGroupShape
     a sh:NodeShape ;
-    rdfs:label "Children's centre group shape"@en ;
-    rdfs:comment "Rules for children's centres and linked sites. LA accountability is required; most school provision fields are not applicable. Education phase is present in the GIAS record and is retained."@en ;
-    sh:targetClass epr:ChildrensCentreEstablishment ;
+    rdfs:label "Children's centre shape"@en ;
+    rdfs:comment "Rules for children's centres. LA accountability is required; most school provision fields are not applicable. Education phase is present in the GIAS record and is retained."@en ;
+    sh:targetClass epr:ChildrensCentre ;
 
     sh:property [
         sh:path ( epro:hasAccountabilityRelationship epro:accountableToLocalAuthority ) ;
