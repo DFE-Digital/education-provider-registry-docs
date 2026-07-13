@@ -949,8 +949,8 @@ epr:EstablishmentTypeGroupChildrensCentres
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Children's centres"@en ;
-    skos:definition "The establishment type group for children's centres and their linked sites, which deliver integrated early-childhood services under the statutory framework introduced by the Childcare Act 2006."@en ;
-    skos:scopeNote "Contains 2 types: Children's centre and Children's centre linked site. The statutory duty on local authorities to secure sufficient children's centre provision was removed by the Children and Families Act 2014; many centres have since closed or merged."@en ;
+    skos:definition "The establishment type group for children's centres, which deliver integrated early-childhood services under the statutory framework introduced by the Childcare Act 2006."@en ;
+    skos:scopeNote "Contains 1 active EPR type: Children's centre (type code 47). Children's centre linked site (type code 48) is retained as a Legacy concept for historical GIAS data but is not modelled as an EPR establishment type — linked sites are represented as epr:Site instances attached to a children's centre establishment. The statutory duty on local authorities to secure sufficient children's centre provision was removed by the Children and Families Act 2014; many centres have since closed or merged."@en ;
     skos:broader epr:EstablishmentType ;
     skos:narrower
         epr:ChildrensCentre,
