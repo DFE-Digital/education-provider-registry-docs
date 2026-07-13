@@ -44,6 +44,16 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 ---
 
+## 6. Children's centre linked site removed as an establishment type
+
+**GIAS 1.0:** `Children's centre linked site` is GIAS establishment type code 48. It is stored in the establishments table alongside all other establishment types, giving it the same structural status as, for example, a community school or an academy.
+
+**EPR target:** `epr:ChildrensCentreLinkedSite` is removed as an OWL class. The SKOS concept is retained in the vocabulary and taxonomy, marked Legacy. A children's centre linked site is represented as an `epr:Site` instance linked to an `epr:ChildrensCentreEstablishment` via `epro:hasAdditionalSite`.
+
+**Reason:** A children's centre linked site is a satellite address at which some services are delivered on behalf of a named children's centre. It has no independent registration, governance structure, designated headship, funding agreement, or accountability body of its own — all attributes that define an establishment as a distinct education provider in the EPR model. Every other establishment type in the EPR hierarchy has at least one of these attributes. Modelling a linked site as an OWL class equivalent to an establishment type incorrectly implies it is a first-class provider. Representing it as `epr:Site` on `epr:ChildrensCentreEstablishment` is semantically accurate: it is a physical location associated with an establishment, not an establishment in its own right.
+
+---
+
 ## 5. Academy type hierarchy flattened — 8 leaf types replaced by 5 types + route property
 
 **GIAS 1.0:** 8 distinct academy establishment types, including separate types for converter and sponsor-led variants (e.g. type 28 Academy sponsor led, type 34 Academy special school sponsor led).

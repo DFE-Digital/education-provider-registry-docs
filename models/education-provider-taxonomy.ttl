@@ -377,11 +377,10 @@ epr:EstablishmentTypeGroupChildrensCentres
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Children's centres"@en ;
-    skos:definition "The GIAS establishment type group covering children's centres and linked sites."@en ;
+    skos:definition "The GIAS establishment type group covering children's centres."@en ;
     skos:broader epr:EstablishmentType ;
     skos:narrower
-        epr:ChildrensCentre,
-        epr:ChildrensCentreLinkedSite ;
+        epr:ChildrensCentre ;
     epr:status "Provisional"@en .
 
 epr:EstablishmentTypeGroupOnlineProviders
@@ -779,10 +778,10 @@ epr:ChildrensCentreLinkedSite
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
     skos:prefLabel "Children's centre linked site"@en ;
-    skos:scopeNote "GIAS construct. A site delivering services on behalf of a named children's centre. This operational distinction is recorded in GIAS but not defined on GOV.UK."@en ;
+    skos:scopeNote "GIAS construct (type code 48). A satellite address at which some services were delivered on behalf of a named children's centre. In the EPR model, linked sites are not a distinct establishment type — they are represented as epr:Site instances linked to an epr:ChildrensCentreEstablishment via epro:hasAdditionalSite. The epr:ChildrensCentreLinkedSite OWL class has been removed from the ontology."@en ;
     skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
     dcterms:source "Type code 48"@en ;
-    epr:status "Provisional"@en .
+    epr:status "Legacy"@en .
 
 #################################################################
 # Establishment-type taxons - group 13: online providers
@@ -1003,7 +1002,7 @@ epr:BoardingSchool
 epr:HasNurseryClasses
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Has nursery classes"@en ;
+    skos:prefLabel "Nursery classes"@en ;
     skos:broader epr:NurseryProvision ;
     epr:status "Provisional"@en .
 
@@ -1030,14 +1029,14 @@ epr:NotApplicableNurseryProvision
 epr:HasSixthForm
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Has a sixth form"@en ;
+    skos:prefLabel "Sixth form"@en ;
     skos:broader epr:SixthFormProvision ;
     epr:status "Provisional"@en .
 
 epr:NoSixthForm
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Does not have a sixth form"@en ;
+    skos:prefLabel "No sixth form"@en ;
     skos:broader epr:SixthFormProvision ;
     epr:status "Provisional"@en .
 
