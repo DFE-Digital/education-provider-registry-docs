@@ -176,6 +176,7 @@ $concepts = foreach ($match in $conceptMatches) {
         IsDefinedBy       = if ($null -ne $citations) { $citations.IsDefinedBy } else { @() }
         Legislation       = if ($null -ne $citations) { $citations.Legislation } else { @() }
         References        = if ($null -ne $citations) { $citations.References } else { @() }
+        SeeAlso           = @(Get-UriValues -Block $block -Predicate "rdfs:seeAlso")
     }
 }
 
@@ -213,6 +214,15 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
     $canonicalUri = "https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/$($concept.LocalName)/"
     $sourceTtl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-vocabulary.ttl"
 
+    $rawRefsLinks = Format-UriLinks $concept.References
+    $evidenceLinks = ($concept.SeeAlso |
+        Where-Object { $_ -match '/vocabulary/references/' } |
+        ForEach-Object { "[See evidence for $($concept.PreferredLabel)]($_)" }) -join "<br>"
+    $refsPartsList = @()
+    if (![string]::IsNullOrWhiteSpace($rawRefsLinks)) { $refsPartsList += $rawRefsLinks }
+    if (![string]::IsNullOrWhiteSpace($evidenceLinks)) { $refsPartsList += $evidenceLinks }
+    $refsCell = $refsPartsList -join "<br>"
+
     $lines = @(
         "# $($concept.PreferredLabel)",
         "",
@@ -230,7 +240,7 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
         "| Related concepts | $(Escape-MarkdownTableCell (Format-ConceptLinks -LocalNames $concept.Related -ConceptLookup $conceptLookup)) |",
         "| Defined by | $(Escape-MarkdownTableCell (Format-UriLinks $concept.IsDefinedBy)) |",
         "| Legislation | $(Escape-MarkdownTableCell (Format-UriLinks $concept.Legislation)) |",
-        "| References | $(Escape-MarkdownTableCell (Format-UriLinks $concept.References)) |",
+        "| References | $(Escape-MarkdownTableCell $refsCell) |",
         "",
         "## Definition",
         "",
@@ -277,11 +287,48 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
 
 Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "index.md") -Value $indexLines -Encoding UTF8
 
-# Copy the real-world references doc into the vocabulary content section
+# Copy the real-world references doc into the vocabulary content section,
+# then hyperlink each concept term in the first column to its vocabulary page.
 if (Test-Path -LiteralPath $ReferencesDocPath) {
     $referencesContent = Get-Content -LiteralPath $ReferencesDocPath -Raw
+
+    # Build anchor → concept local-name map from rdfs:seeAlso on each concept.
+    # Where multiple concepts share an anchor (e.g. compound rows) the first
+    # concept alphabetically wins — but compound-term rows are skipped below.
+    $anchorToConceptName = @{}
+    foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
+        foreach ($uri in $concept.SeeAlso) {
+            if ($uri -match '#([^/]+)$') {
+                $anchor = $Matches[1]
+                if (-not $anchorToConceptName.ContainsKey($anchor)) {
+                    $anchorToConceptName[$anchor] = $concept.LocalName
+                }
+            }
+        }
+    }
+
+    # Replace  <a id="ANCHOR"></a>TERM  with  <a id="ANCHOR"></a>[TERM](../ConceptName/)
+    # in the markdown table rows. Skip compound terms that contain " / " (no single target).
+    $referencesContent = [regex]::Replace(
+        $referencesContent,
+        '(<a id="([^"]+)"></a>)([^|/\r\n]+?)(\s*)(?=\|)',
+        {
+            param($m)
+            $tag    = $m.Groups[1].Value
+            $anchor = $m.Groups[2].Value
+            $term   = $m.Groups[3].Value
+            $pad    = $m.Groups[4].Value
+            if ($anchorToConceptName.ContainsKey($anchor)) {
+                $cn = $anchorToConceptName[$anchor]
+                "${tag}[$term](../$cn/)$pad"
+            } else {
+                $m.Value
+            }
+        }
+    )
+
     Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "references.md") -Value $referencesContent -Encoding UTF8
-    Write-Host "Copied real-world references doc to content/vocabulary/references.md"
+    Write-Host "Copied and hyperlinked real-world references doc ($($anchorToConceptName.Count) anchors mapped)"
 }
 else {
     Write-Warning "References doc not found at $ReferencesDocPath - references page will not be generated"
