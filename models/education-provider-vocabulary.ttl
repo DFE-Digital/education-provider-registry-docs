@@ -607,7 +607,6 @@ epr:SchoolSponsor
     skos:prefLabel "School sponsor"@en ;
     skos:definition "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. The sponsor supports governance, leadership and educational improvement of the sponsored academies. Source: Academies Act 2010."@en ;
     skos:scopeNote "Legacy GIAS group type 05. In the target EPR model the sponsoring body is modelled as an epr:Organisation linked to an epr:Establishment via epro:sponsoredBy. Sponsor is a role an organisation plays, not a type of establishment group."@en ;
-    skos:broader epr:EstablishmentGroup ;
     epr:status "Legacy"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#school-sponsor> .
 
@@ -949,12 +948,10 @@ epr:EstablishmentTypeGroupChildrensCentres
     a skos:Concept ;
     skos:inScheme epr:establishmentDetailsVocabulary ;
     skos:prefLabel "Children's centres"@en ;
-    skos:definition "The establishment type group for children's centres and their linked sites, which deliver integrated early-childhood services under the statutory framework introduced by the Childcare Act 2006."@en ;
-    skos:scopeNote "Contains 2 types: Children's centre and Children's centre linked site. The statutory duty on local authorities to secure sufficient children's centre provision was removed by the Children and Families Act 2014; many centres have since closed or merged."@en ;
+    skos:definition "The establishment type group for children's centres, which deliver integrated early-childhood services under the statutory framework introduced by the Childcare Act 2006."@en ;
+    skos:scopeNote "Contains 1 active EPR type: Children's centre (type code 47). Children's centre linked site (type code 48) is retained as a Legacy concept for historical GIAS data but is not modelled as an EPR establishment type — linked sites are represented as epr:Site instances attached to a children's centre establishment. The statutory duty on local authorities to secure sufficient children's centre provision was removed by the Children and Families Act 2014; many centres have since closed or merged."@en ;
     skos:broader epr:EstablishmentType ;
-    skos:narrower
-        epr:ChildrensCentre,
-        epr:ChildrensCentreLinkedSite ;
+    skos:narrower epr:ChildrensCentre ;
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from `docs/data`"@en .
 
@@ -1125,8 +1122,7 @@ epr:ChildrensCentreLinkedSite
     skos:prefLabel "Children's centre linked site"@en ;
     skos:definition "A site that delivers some early childhood services on behalf of a named children's centre, having previously been registered as a standalone children's centre under the Childcare Act 2006 framework."@en ;
     skos:scopeNote "Linked sites are operationally dependent on a parent children's centre and do not hold independent registration. They are recorded in GIAS as a separate establishment type to preserve historical registration data."@en ;
-    skos:broader epr:EstablishmentTypeGroupChildrensCentres ;
-    epr:status "Preferred"@en ;
+    epr:status "Legacy"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centre-linked-site> .
 
@@ -3121,14 +3117,6 @@ epr:MainstreamFreeSchool
     skos:broader epr:FreeSchoolEstablishment ;
     epr:status "Provisional"@en .
 
-epr:ChildrensCentreEstablishment
-    a skos:Concept ;
-    skos:inScheme epr:establishmentDetailsVocabulary ;
-    skos:prefLabel "Children's centre establishment"@en ;
-    skos:definition "An intermediate grouping covering children's centres and children's centre linked sites, providing integrated early childhood services under the Childcare Act 2006 and the Children Act 2004."@en ;
-    skos:broader epr:EstablishmentType ;
-    skos:related epr:EstablishmentTypeGroupChildrensCentres ;
-    epr:status "Provisional"@en .
 
 #################################################################
 # Ontology record grouping classes
