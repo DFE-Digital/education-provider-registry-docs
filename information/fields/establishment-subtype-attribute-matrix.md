@@ -40,14 +40,16 @@ Every type column contains the effective rule after applying the universal basel
 The matrix was produced by:
 
 1. Analysing current GIAS establishment data and establishment types.
-2. Sampling representative establishments across populated types.
-3. Observing the fields displayed on current public establishment pages.
-4. Cross-checking those observations against backend field-to-type configuration and display-policy behaviour.
+2. Analysing the C# GIAS frontend code that renders establishment Details pages.
+3. Cross-checking the C# render paths against backend field-to-type configuration and display-policy behaviour.
+4. Fetching up to 10 sample URNs for each populated establishment type and observing the fields displayed on current public establishment pages.
 5. Normalising legacy fields and UI labels into business attributes.
 6. Defining shared rule profiles for establishment types with materially similar attribute patterns.
 7. Applying the universal, broader and specialist profiles to each numbered establishment type.
 8. Recording the resulting effective rule as `required`, `optional` or `not applicable`.
 9. Leaving cells blank where no explicit rule was supported at any applicable level.
+
+The C# code does not provide a complete hard-coded rule table for every field and establishment type. It defines render points, labels and conditional display paths. The actual fields shown for a record can also be driven by record data, group relationships, display-policy responses and whether a value or relationship exists for the sampled establishment.
 
 The observed Details-tab evidence is not limited to fields positioned inside the UI tabs. `Establishment name` is displayed as page-level identity outside those tabs, so it is included as a universally required attribute even though it was outside the `div#school-dashboard` and `dt` elements used by the Details-tab field extraction.
 

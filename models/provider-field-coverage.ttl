@@ -501,7 +501,8 @@ epr:SingleAcademyTrust
 epr:AcademySponsor
     epr:shownOnTab epr:detailsTab ;
     epr:uiLabel "Academy sponsor"@en ;
-    epr:applicableToEstablishmentType "33", "34", "35", "36", "46" .
+    epr:applicableToEstablishmentType
+        "33", "34", "35", "36", "38", "39", "40", "42", "43", "46" .
 
 
 #################################################################
