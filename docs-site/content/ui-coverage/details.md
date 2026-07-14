@@ -1,4 +1,4 @@
-# Establishments - Details tab field coverage
+﻿# Establishments - Details tab field coverage
 
 This page is generated from `models/provider-field-coverage.ttl` - do not edit directly.
 
@@ -930,6 +930,7 @@ Each section lists the fields visible on this tab for that establishment type.
 
 | Field | `epr:` concept |
 | --- | --- |
+| Academy sponsor | [`epr:AcademySponsor`](../../vocabulary/AcademySponsor/) |
 | Address | [`epr:MainAddress`](../../vocabulary/MainAddress/) |
 | Admissions policy | [`epr:AdmissionsPolicy`](../../vocabulary/AdmissionsPolicy/) |
 | Age range | [`epr:StatutoryAgeRange`](../../vocabulary/StatutoryAgeRange/) |
@@ -970,6 +971,7 @@ Each section lists the fields visible on this tab for that establishment type.
 
 | Field | `epr:` concept |
 | --- | --- |
+| Academy sponsor | [`epr:AcademySponsor`](../../vocabulary/AcademySponsor/) |
 | Address | [`epr:MainAddress`](../../vocabulary/MainAddress/) |
 | Admissions policy | [`epr:AdmissionsPolicy`](../../vocabulary/AdmissionsPolicy/) |
 | Age range | [`epr:StatutoryAgeRange`](../../vocabulary/StatutoryAgeRange/) |
@@ -1012,6 +1014,7 @@ Each section lists the fields visible on this tab for that establishment type.
 
 | Field | `epr:` concept |
 | --- | --- |
+| Academy sponsor | [`epr:AcademySponsor`](../../vocabulary/AcademySponsor/) |
 | Academy trust | [`epr:AcademyTrust`](../../vocabulary/AcademyTrust/) |
 | Address | [`epr:MainAddress`](../../vocabulary/MainAddress/) |
 | Admissions policy | [`epr:AdmissionsPolicy`](../../vocabulary/AdmissionsPolicy/) |
@@ -1096,6 +1099,7 @@ Each section lists the fields visible on this tab for that establishment type.
 
 | Field | `epr:` concept |
 | --- | --- |
+| Academy sponsor | [`epr:AcademySponsor`](../../vocabulary/AcademySponsor/) |
 | Address | [`epr:MainAddress`](../../vocabulary/MainAddress/) |
 | Admissions policy | [`epr:AdmissionsPolicy`](../../vocabulary/AdmissionsPolicy/) |
 | Age range | [`epr:StatutoryAgeRange`](../../vocabulary/StatutoryAgeRange/) |
@@ -1136,6 +1140,7 @@ Each section lists the fields visible on this tab for that establishment type.
 
 | Field | `epr:` concept |
 | --- | --- |
+| Academy sponsor | [`epr:AcademySponsor`](../../vocabulary/AcademySponsor/) |
 | Address | [`epr:MainAddress`](../../vocabulary/MainAddress/) |
 | Admissions policy | [`epr:AdmissionsPolicy`](../../vocabulary/AdmissionsPolicy/) |
 | Age range | [`epr:StatutoryAgeRange`](../../vocabulary/StatutoryAgeRange/) |
