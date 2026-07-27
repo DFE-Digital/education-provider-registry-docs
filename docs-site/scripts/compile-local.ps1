@@ -96,6 +96,14 @@ function Set-NanocWindowsCompatibility {
 & (Join-Path $PSScriptRoot "copy-business-domain-pages.ps1")
 & (Join-Path $PSScriptRoot "copy-information-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-vocabulary-pages.ps1")
+& (Join-Path $PSScriptRoot "generate-vocabulary-pages.ps1") `
+    -VocabularyPath (Join-Path (Join-Path $docsSiteRoot "..") "models\governance\governance-vocabulary.ttl") `
+    -OutputRoot (Join-Path $docsSiteRoot "content\models\governance\vocabulary") `
+    -VocabularyPrefix "gov" `
+    -VocabularyTitle "Governance vocabulary" `
+    -SourceTtlLabel "models/governance/governance-vocabulary.ttl" `
+    -SourceTtlUrl "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-vocabulary.ttl" `
+    -ReferencesDocPath (Join-Path (Join-Path (Join-Path $docsSiteRoot "..") "docs\transformation\data\modelling\people\vocabulary") "governance-real-world-references.md")
 & (Join-Path $PSScriptRoot "generate-taxonomy-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-ui-coverage-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-shacl-rules-page.ps1")

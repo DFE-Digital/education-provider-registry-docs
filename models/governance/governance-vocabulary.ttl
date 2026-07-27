@@ -1,0 +1,164 @@
+@prefix gov: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Governance vocabulary
+#
+# Scope: a flat, provisional vocabulary of nouns in the governance subdomain.
+# This file intentionally does not assert skos:broader, skos:narrower or
+# taxonomy facets. Definitions are working business definitions and require
+# domain review before promotion to a canonical EPR vocabulary.
+
+gov:status
+    a rdf:Property ;
+    rdfs:label "Vocabulary status"@en ;
+    rdfs:comment "The review status assigned to a governance vocabulary concept."@en .
+
+gov:governanceVocabulary
+    a skos:ConceptScheme ;
+    dcterms:title "Governance Vocabulary"@en ;
+    dcterms:description "Flat provisional vocabulary of nouns in the governance subdomain."@en ;
+    dcterms:created "2026-07-27"^^xsd:date ;
+    gov:status "Provisional"@en .
+
+gov:governanceConcepts
+    a skos:Collection ;
+    skos:inScheme gov:governanceVocabulary ;
+    skos:prefLabel "Governance concepts"@en ;
+    skos:member
+        gov:Academy,
+        gov:AcademyTrust,
+        gov:AcademyTrustMember,
+        gov:AcademyTrustee,
+        gov:AccountingOfficer,
+        gov:Appointment,
+        gov:AppointingBody,
+        gov:Attendance,
+        gov:Board,
+        gov:BoardMember,
+        gov:BoardMembership,
+        gov:BoardOfDirectors,
+        gov:Chair,
+        gov:ChangeHistory,
+        gov:Clerk,
+        gov:CompanyDirector,
+        gov:Committee,
+        gov:CommitteeChair,
+        gov:CommitteeMembership,
+        gov:CompaniesHouseLegalEntity,
+        gov:Confirmation,
+        gov:Constitution,
+        gov:ConstitutionPosition,
+        gov:CoOptedGovernor,
+        gov:Declaration,
+        gov:DeclarationOfInterest,
+        gov:Director,
+        gov:Establishment,
+        gov:ExOfficioGovernor,
+        gov:Federation,
+        gov:FoundationGovernor,
+        gov:GoverningBoard,
+        gov:GoverningBody,
+        gov:Governor,
+        gov:GovernorType,
+        gov:Governance,
+        gov:GovernanceProfessional,
+        gov:HistoricalAppointment,
+        gov:HistoricalMember,
+        gov:HistoricalRecord,
+        gov:LocalAuthority,
+        gov:LocalAuthorityGovernor,
+        gov:LocalGoverningBody,
+        gov:LocalGovernor,
+        gov:LocalGoverningBodyMember,
+        gov:Meeting,
+        gov:Member,
+        gov:Membership,
+        gov:Noticeboard,
+        gov:OfficeHolder,
+        gov:ParentGovernor,
+        gov:Person,
+        gov:Principal,
+        gov:Role,
+        gov:RoleAssignment,
+        gov:School,
+        gov:StaffGovernor,
+        gov:TermOfOffice,
+        gov:Training,
+        gov:TrainingRecord,
+        gov:Trustee,
+        gov:TrustBoard,
+        gov:TrustMember,
+        gov:Vacancy,
+        gov:ViceChair .
+
+# Flat concepts
+
+gov:Academy a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Academy"@en ; skos:definition "An academy establishment operating under an academy trust's funding and governance arrangements."@en ; gov:status "Provisional"@en .
+gov:AcademyTrust a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Academy trust"@en ; skos:definition "The trust organisation accountable for one or more academy establishments."@en ; gov:status "Provisional"@en .
+gov:AcademyTrustMember a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Academy trust member"@en ; skos:definition "A person or body holding membership of an academy trust as a company member."@en ; gov:status "Provisional"@en .
+gov:AcademyTrustee a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Academy trustee"@en ; skos:definition "A person serving as a trustee and director of an academy trust."@en ; gov:status "Provisional"@en .
+gov:AccountingOfficer a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Accounting officer"@en ; skos:definition "The person accountable for the proper use, control and stewardship of an academy trust's resources."@en ; gov:status "Provisional"@en .
+gov:Appointment a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Appointment"@en ; skos:definition "The act or resulting arrangement by which a person takes a governance position or role."@en ; gov:status "Provisional"@en .
+gov:AppointingBody a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Appointing body"@en ; skos:definition "The body or mechanism that appoints or elects a governance role-holder."@en ; gov:status "Provisional"@en .
+gov:Attendance a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Attendance"@en ; skos:definition "A record of a person's participation at a governance meeting or activity."@en ; gov:status "Provisional"@en .
+gov:Board a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Board"@en ; skos:definition "A body of people responsible for collective governance or oversight."@en ; gov:status "Provisional"@en .
+gov:BoardMember a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Board member"@en ; skos:definition "A person who is a member of a governance board."@en ; gov:status "Provisional"@en .
+gov:BoardMembership a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Board membership"@en ; skos:definition "The relationship between a person and a governance board."@en ; gov:status "Provisional"@en .
+gov:BoardOfDirectors a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Board of directors"@en ; skos:definition "The directors acting collectively as the governing board of a company or trust."@en ; gov:status "Provisional"@en .
+gov:Chair a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Chair"@en ; skos:definition "The office-holder who chairs a governance board, body or committee."@en ; gov:status "Provisional"@en .
+gov:ChangeHistory a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Change history"@en ; skos:definition "A record of changes to a governance person, membership, appointment, role or related record."@en ; gov:status "Provisional"@en .
+gov:Clerk a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Clerk"@en ; skos:definition "A person providing administrative and procedural support to a governing body or board."@en ; gov:status "Provisional"@en .
+gov:CompanyDirector a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Company director"@en ; skos:definition "A person appointed to direct and manage a company under company law."@en ; gov:status "Provisional"@en .
+gov:Committee a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Committee"@en ; skos:definition "A body established to undertake governance work or delegated responsibilities."@en ; gov:status "Provisional"@en .
+gov:CommitteeChair a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Committee chair"@en ; skos:definition "The office-holder who chairs a governance committee."@en ; gov:status "Provisional"@en .
+gov:CommitteeMembership a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Committee membership"@en ; skos:definition "The relationship between a person and a governance committee."@en ; gov:status "Provisional"@en .
+gov:CompaniesHouseLegalEntity a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Companies House legal entity"@en ; skos:definition "A legal entity registered with Companies House and relevant to a governance arrangement."@en ; gov:status "Provisional"@en .
+gov:Confirmation a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Confirmation"@en ; skos:definition "A formal confirmation of a governance person's details, appointment or required declaration."@en ; gov:status "Provisional"@en .
+gov:Constitution a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Constitution"@en ; skos:definition "The defined composition, responsibilities and arrangements of a governing body."@en ; gov:status "Provisional"@en .
+gov:ConstitutionPosition a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Constitution position"@en ; skos:definition "A position provided for in the constitution of a governing body, whether occupied or vacant."@en ; gov:status "Provisional"@en .
+gov:CoOptedGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Co-opted governor"@en ; skos:definition "A governor appointed by a governing body through a co-option route."@en ; gov:status "Provisional"@en .
+gov:Declaration a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Declaration"@en ; skos:definition "A formal statement made by a governance person or body."@en ; gov:status "Provisional"@en .
+gov:DeclarationOfInterest a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Declaration of interest"@en ; skos:definition "A statement of an interest that may relate to a person's governance responsibilities."@en ; gov:status "Provisional"@en .
+gov:Director a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Director"@en ; skos:definition "A person holding a director office in a company or trust."@en ; gov:status "Provisional"@en .
+gov:Establishment a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Establishment"@en ; skos:definition "An education establishment whose governance is represented in the domain."@en ; gov:status "Provisional"@en .
+gov:ExOfficioGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Ex-officio governor"@en ; skos:definition "A governor who holds membership by virtue of holding another specified office."@en ; gov:status "Provisional"@en .
+gov:Federation a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Federation"@en ; skos:definition "A statutory arrangement in which two or more maintained schools share a governing body."@en ; gov:status "Provisional"@en .
+gov:FoundationGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Foundation governor"@en ; skos:definition "A governor appointed through a foundation or other foundation body route."@en ; gov:status "Provisional"@en .
+gov:GoverningBoard a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Governing board"@en ; skos:definition "The board responsible for the governance of an academy, school or other education establishment."@en ; gov:status "Provisional"@en .
+gov:GoverningBody a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Governing body"@en ; skos:definition "The body constituted to govern a maintained school or other education establishment."@en ; gov:status "Provisional"@en .
+gov:Governor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Governor"@en ; skos:definition "A person appointed, elected or otherwise holding a governance role in an education context."@en ; gov:status "Provisional"@en .
+gov:GovernorType a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Governor type"@en ; skos:definition "A classification describing the type or route of a governor's governance role."@en ; gov:status "Provisional"@en .
+gov:Governance a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Governance"@en ; skos:definition "The direction, oversight and accountability of an education organisation or governing body."@en ; gov:status "Provisional"@en .
+gov:GovernanceProfessional a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Governance professional"@en ; skos:definition "A person providing professional procedural and governance support to a governing body or board."@en ; gov:status "Provisional"@en .
+gov:HistoricalAppointment a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Historical appointment"@en ; skos:definition "An appointment that has ended or is retained as a record of past governance."@en ; gov:status "Provisional"@en .
+gov:HistoricalMember a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Historical member"@en ; skos:definition "A person retained as having held membership of a governing body in the past."@en ; gov:status "Provisional"@en .
+gov:HistoricalRecord a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Historical record"@en ; skos:definition "A record retained to describe a past governance state or event."@en ; gov:status "Provisional"@en .
+gov:LocalAuthority a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local authority"@en ; skos:definition "A local government body that may maintain an establishment or appoint a governor."@en ; gov:status "Provisional"@en .
+gov:LocalAuthorityGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local authority governor"@en ; skos:definition "A governor nominated or appointed through a local authority route."@en ; gov:status "Provisional"@en .
+gov:LocalGoverningBody a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local governing body"@en ; skos:definition "A governing body responsible for local governance of an academy or group of establishments."@en ; gov:status "Provisional"@en .
+gov:LocalGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local governor"@en ; skos:definition "A person holding a governance role at the local governing-body level of an academy or group."@en ; gov:status "Provisional"@en .
+gov:LocalGoverningBodyMember a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local governing body member"@en ; skos:definition "A person who is a member of a local governing body."@en ; gov:status "Provisional"@en .
+gov:Meeting a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Meeting"@en ; skos:definition "A convened activity at which a governing body, board or committee conducts governance business."@en ; gov:status "Provisional"@en .
+gov:Member a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Member"@en ; skos:definition "A person or body holding membership of an organisation, board or governing body."@en ; gov:status "Provisional"@en .
+gov:Membership a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Membership"@en ; skos:definition "The relationship by which a person or body belongs to an organisation, board or governing body."@en ; gov:status "Provisional"@en .
+gov:Noticeboard a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Noticeboard"@en ; skos:definition "A shared governance communication space for publishing notices or updates."@en ; gov:status "Provisional"@en .
+gov:OfficeHolder a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Office-holder"@en ; skos:definition "A person holding a named office or responsibility within a governing body or organisation."@en ; gov:status "Provisional"@en .
+gov:ParentGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Parent governor"@en ; skos:definition "A governor elected or appointed to represent parents or carers."@en ; gov:status "Provisional"@en .
+gov:Person a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Person"@en ; skos:definition "A natural person who participates in or is relevant to a governance arrangement."@en ; gov:status "Provisional"@en .
+gov:Principal a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Principal"@en ; skos:definition "The senior executive leader of an academy or other education establishment."@en ; gov:status "Provisional"@en .
+gov:Role a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Role"@en ; skos:definition "A defined responsibility or capacity held by a person or body in a governance context."@en ; gov:status "Provisional"@en .
+gov:RoleAssignment a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Role assignment"@en ; skos:definition "The association of a person or body with a governance role for a period or purpose."@en ; gov:status "Provisional"@en .
+gov:School a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "School"@en ; skos:definition "An education establishment providing schooling and subject to a governance arrangement."@en ; gov:status "Provisional"@en .
+gov:StaffGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Staff governor"@en ; skos:definition "A governor elected or appointed to represent staff at an establishment."@en ; gov:status "Provisional"@en .
+gov:TermOfOffice a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Term of office"@en ; skos:definition "The period during which a person holds a governance appointment or office."@en ; gov:status "Provisional"@en .
+gov:Training a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Training"@en ; skos:definition "Learning undertaken to develop governance knowledge, skills or assurance."@en ; gov:status "Provisional"@en .
+gov:TrainingRecord a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Training record"@en ; skos:definition "A record of governance training undertaken or assigned to a person."@en ; gov:status "Provisional"@en .
+gov:Trustee a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Trustee"@en ; skos:definition "A person responsible for governing and holding fiduciary duties for a trust."@en ; gov:status "Provisional"@en .
+gov:TrustBoard a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Trust board"@en ; skos:definition "The board responsible for governing a trust."@en ; gov:status "Provisional"@en .
+gov:TrustMember a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Trust member"@en ; skos:definition "A person or body holding membership of a trust."@en ; gov:status "Provisional"@en .
+gov:Vacancy a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Vacancy"@en ; skos:definition "An unoccupied constitution position or governance role."@en ; gov:status "Provisional"@en .
+gov:ViceChair a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Vice chair"@en ; skos:definition "The office-holder who deputises for or supports a chair."@en ; gov:status "Provisional"@en .
