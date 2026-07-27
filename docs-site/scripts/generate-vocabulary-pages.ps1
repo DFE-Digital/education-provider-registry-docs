@@ -2,7 +2,12 @@
     [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
     [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
     [string]$ReferencesDocPath = (Join-Path (Join-Path (Join-Path $PSScriptRoot "..\..\..") (Join-Path "docs" (Join-Path "transformation" (Join-Path "data" "modelling")))) "vocabulary-real-world-references.md"),
-    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "vocabulary"))
+    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "vocabulary")),
+    [string]$VocabularyPrefix = "epr",
+    [string]$VocabularyTitle = "Vocabulary",
+    [string]$SourceTtlLabel = "models/education-provider-vocabulary.ttl",
+    [string]$SourceTtlUrl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-vocabulary.ttl",
+    [switch]$SkipReferences
 )
 
 $ErrorActionPreference = "Stop"
@@ -10,6 +15,7 @@ $ErrorActionPreference = "Stop"
 $resolvedVocabularyPath = Resolve-Path -LiteralPath $VocabularyPath
 $resolvedOutputRoot = New-Item -ItemType Directory -Force -Path $OutputRoot
 $ttl = Get-Content -LiteralPath $resolvedVocabularyPath -Raw
+$escapedVocabularyPrefix = [regex]::Escape($VocabularyPrefix)
 
 function Get-PredicateText {
     param(
@@ -55,7 +61,7 @@ function Get-Refs {
         return @()
     }
 
-    return [regex]::Matches($predicateText, 'epr:([A-Za-z][A-Za-z0-9]*)') |
+    return [regex]::Matches($predicateText, "${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)") |
         ForEach-Object {
             $_.Groups[1].Value
         }
@@ -115,13 +121,13 @@ function Format-UriLinks {
 
 # Build citation lookup from the taxonomy TTL (rdfs:isDefinedBy, epr:legislation, dcterms:references)
 $citationLookup = @{}
-if (Test-Path -LiteralPath $TaxonomyPath) {
+if (-not $SkipReferences -and (Test-Path -LiteralPath $TaxonomyPath)) {
     $resolvedTaxonomyPath = Resolve-Path -LiteralPath $TaxonomyPath
     $taxonomyTtl = Get-Content -LiteralPath $resolvedTaxonomyPath -Raw
 
     $taxonMatches = [regex]::Matches(
         $taxonomyTtl,
-        "(?ms)^epr:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept\s*;\s*(.*?)(?=^\S|\z)"
+        "(?ms)^${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)\s+a\s+skos:Concept\s*;\s*(.*?)(?=^\S|\z)"
     )
 
     foreach ($match in $taxonMatches) {
@@ -142,13 +148,13 @@ if (Test-Path -LiteralPath $TaxonomyPath) {
 
     Write-Host "Built citation lookup from taxonomy: $($citationLookup.Count) concepts with citations"
 }
-else {
+elseif (-not $SkipReferences) {
     Write-Warning "Taxonomy file not found at $TaxonomyPath - citation attributes will not be shown on vocab pages"
 }
 
 $conceptMatches = [regex]::Matches(
     $ttl,
-    "(?ms)^epr:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept\s*;\s*(.*?)(?=^\S|\z)"
+    "(?ms)^${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)\s+a\s+skos:Concept\s*;\s*(.*?)(?=^\S|\z)"
 )
 
 $concepts = foreach ($match in $conceptMatches) {
@@ -166,10 +172,10 @@ $concepts = foreach ($match in $conceptMatches) {
         LocalName         = $localName
         PreferredLabel    = $preferredLabel
         AlternativeLabels   = @(Get-Literals -Block $block -Predicate "skos:altLabel")
-        LegacyGiasLabels    = @(Get-Literals -Block $block -Predicate "epr:legacyGiasLabel")
+        LegacyGiasLabels    = @(Get-Literals -Block $block -Predicate "${VocabularyPrefix}:legacyGiasLabel")
         Definition        = (Get-Literals -Block $block -Predicate "skos:definition" | Select-Object -First 1)
         ScopeNotes        = @(Get-Literals -Block $block -Predicate "skos:scopeNote")
-        Status            = (Get-Literals -Block $block -Predicate "epr:status" | Select-Object -First 1)
+        Status            = (Get-Literals -Block $block -Predicate "${VocabularyPrefix}:status" | Select-Object -First 1)
         Broader           = @(Get-Refs -Block $block -Predicate "skos:broader")
         Related           = @(Get-Refs -Block $block -Predicate "skos:related")
         Sources           = @(Get-Literals -Block $block -Predicate "dcterms:source")
@@ -205,14 +211,14 @@ function Format-ConceptLinks {
             "[$label](../$_/)"
         }
         else {
-            "``epr:$($_)``"
+            "``${VocabularyPrefix}:$($_)``"
         }
     }) -join "<br>"
 }
 
 foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
     $canonicalUri = "https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/$($concept.LocalName)/"
-    $sourceTtl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-vocabulary.ttl"
+    $sourceTtl = $SourceTtlUrl
 
     $rawRefsLinks = Format-UriLinks $concept.References
     $evidenceLinks = ($concept.SeeAlso |
@@ -231,7 +237,7 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
         "| Property | Value |",
         "| --- | --- |",
         "| Canonical URI | <$canonicalUri> |",
-        "| Compact identifier | ``epr:$($concept.LocalName)`` |",
+        "| Compact identifier | ``${VocabularyPrefix}:$($concept.LocalName)`` |",
         "| Preferred label | $(Escape-MarkdownTableCell $concept.PreferredLabel) |",
         "| Alternative labels | $(Escape-MarkdownTableCell (Join-Values $concept.AlternativeLabels)) |",
         "| Legacy GIAS label | $(Escape-MarkdownTableCell (Join-Values $concept.LegacyGiasLabels)) |",
@@ -263,18 +269,18 @@ foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
         "",
         "## Source",
         "",
-        "Source TTL: <$sourceTtl>"
+        "Source TTL: [$SourceTtlLabel]($sourceTtl)"
     )
 
     Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "$($concept.LocalName).md") -Value $lines -Encoding UTF8
 }
 
 $indexLines = @(
-    "# Vocabulary",
+    "# $VocabularyTitle",
     "",
-    "This index is generated from `models/education-provider-vocabulary.ttl`.",
+    "This index is generated from ``$SourceTtlLabel``.",
     "",
-    "See also: [Real-world references for all vocabulary concepts](references/)",
+    $(if ($SkipReferences) { "" } else { "See also: [Real-world references for all vocabulary concepts](references/)" }),
     "",
     "| Concept | Compact identifier | Status | Definition |",
     "| --- | --- | --- | --- |"
@@ -282,14 +288,14 @@ $indexLines = @(
 
 foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
     $definition = Escape-MarkdownTableCell $concept.Definition
-    $indexLines += "| [$($concept.PreferredLabel)](./$($concept.LocalName)/) | ``epr:$($concept.LocalName)`` | $(Escape-MarkdownTableCell $concept.Status) | $definition |"
+    $indexLines += "| [$($concept.PreferredLabel)](./$($concept.LocalName)/) | ``${VocabularyPrefix}:$($concept.LocalName)`` | $(Escape-MarkdownTableCell $concept.Status) | $definition |"
 }
 
 Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "index.md") -Value $indexLines -Encoding UTF8
 
 # Copy the real-world references doc into the vocabulary content section,
 # then hyperlink each concept term in the first column to its vocabulary page.
-if (Test-Path -LiteralPath $ReferencesDocPath) {
+if (-not $SkipReferences -and (Test-Path -LiteralPath $ReferencesDocPath)) {
     $referencesContent = Get-Content -LiteralPath $ReferencesDocPath -Raw
 
     # Build anchor → concept local-name map from rdfs:seeAlso on each concept.
