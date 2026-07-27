@@ -1,0 +1,157 @@
+@prefix gov: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Governance taxonomy
+#
+# This taxonomy classifies the flat concepts in governance-vocabulary.ttl.
+# It is deliberately faceted: a concept may appear in more than one facet and
+# the facets must not be read as a single inheritance tree. Appointment type,
+# role, appointing body and administrative scope remain distinct dimensions.
+
+gov:governanceTaxonomy
+    a skos:ConceptScheme ;
+    dcterms:title "Governance Taxonomy"@en ;
+    dcterms:description "Faceted taxonomy for classifying governance concepts in the Education Provider Registry."@en ;
+    dcterms:created "2026-07-27"^^xsd:date ;
+    dcterms:modified "2026-07-27"^^xsd:date ;
+    gov:status "Provisional"@en ;
+    skos:hasTopConcept
+        gov:ActorAndUserType,
+        gov:OrganisationAndBoardScope,
+        gov:GovernanceParticipantType,
+        gov:AppointmentType,
+        gov:RoleAndOfficeResponsibility,
+        gov:CommitteeResponsibility,
+        gov:ConstitutionPositionType,
+        gov:AppointmentAndTermStatus,
+        gov:HistoricalRecordStatus,
+        gov:ComplianceAndDeclarationStatus,
+        gov:TrainingAndAssuranceRecordType,
+        gov:CollaborationAndDocumentType .
+
+gov:governanceTaxonomyFacets
+    a skos:Collection ;
+    skos:prefLabel "Governance taxonomy facets"@en ;
+    skos:member
+        gov:ActorAndUserType,
+        gov:OrganisationAndBoardScope,
+        gov:GovernanceParticipantType,
+        gov:AppointmentType,
+        gov:RoleAndOfficeResponsibility,
+        gov:CommitteeResponsibility,
+        gov:ConstitutionPositionType,
+        gov:AppointmentAndTermStatus,
+        gov:HistoricalRecordStatus,
+        gov:ComplianceAndDeclarationStatus,
+        gov:TrainingAndAssuranceRecordType,
+        gov:CollaborationAndDocumentType .
+
+#################################################################
+# Facets
+#################################################################
+
+gov:ActorAndUserType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Actor and user type"@en ;
+    skos:definition "The kind of person or actor participating in or administering governance."@en ;
+    skos:narrower gov:Person, gov:Member ; gov:status "Provisional"@en .
+
+gov:OrganisationAndBoardScope
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Organisation and board scope"@en ;
+    skos:definition "The organisation, establishment or governing body to which governance data relates."@en ;
+    skos:narrower gov:Establishment, gov:School, gov:Academy, gov:AcademyTrust, gov:TrustBoard, gov:Board, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:Federation, gov:LocalAuthority, gov:CompaniesHouseLegalEntity ;
+    gov:status "Provisional"@en .
+
+gov:GovernanceParticipantType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Governance participant type"@en ;
+    skos:definition "The participant capacity in which a person contributes to governance."@en ;
+    skos:narrower gov:Governor, gov:BoardMember, gov:LocalGoverningBodyMember, gov:Trustee, gov:AcademyTrustee, gov:AcademyTrustMember, gov:TrustMember, gov:CompanyDirector, gov:Director, gov:Clerk, gov:GovernanceProfessional, gov:Principal ;
+    gov:status "Provisional"@en .
+
+gov:AppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Appointment type"@en ;
+    skos:definition "The type of governance appointment or membership arrangement held by a participant."@en ;
+    skos:narrower gov:Appointment, gov:Membership, gov:BoardMembership, gov:CommitteeMembership, gov:RoleAssignment ;
+    gov:status "Provisional"@en .
+
+gov:RoleAndOfficeResponsibility
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Role and office-holder responsibility"@en ;
+    skos:definition "A named responsibility or office held by a governance participant."@en ;
+    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:AccountingOfficer ;
+    gov:status "Provisional"@en .
+
+gov:CommitteeResponsibility
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Committee responsibility"@en ;
+    skos:definition "A committee and the membership or chairing responsibilities associated with it."@en ;
+    skos:narrower gov:Committee, gov:CommitteeMembership, gov:CommitteeChair ;
+    gov:status "Provisional"@en .
+
+gov:ConstitutionPositionType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Constitution position type"@en ;
+    skos:definition "A constitution-defined position, including whether the position is occupied or vacant."@en ;
+    skos:narrower gov:Constitution, gov:ConstitutionPosition, gov:Vacancy ;
+    gov:status "Provisional"@en .
+
+gov:AppointmentAndTermStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Appointment and term status"@en ;
+    skos:definition "The time-bound appointment information used to describe a governance position."@en ;
+    skos:narrower gov:TermOfOffice, gov:Appointment ;
+    gov:status "Provisional"@en .
+
+gov:HistoricalRecordStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Historical record status"@en ;
+    skos:definition "A classification for governance records retained after a membership, appointment or state has ended."@en ;
+    skos:narrower gov:HistoricalRecord, gov:HistoricalMember, gov:HistoricalAppointment, gov:ChangeHistory ;
+    gov:status "Provisional"@en .
+
+gov:ComplianceAndDeclarationStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Compliance and declaration status"@en ;
+    skos:definition "Declarations and confirmations supporting governance assurance and compliance."@en ;
+    skos:narrower gov:Declaration, gov:DeclarationOfInterest, gov:Confirmation ;
+    gov:status "Provisional"@en .
+
+gov:TrainingAndAssuranceRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Training and assurance record type"@en ;
+    skos:definition "Learning and evidence records used to support governance capability and assurance."@en ;
+    skos:narrower gov:Training, gov:TrainingRecord ;
+    gov:status "Provisional"@en .
+
+gov:CollaborationAndDocumentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Collaboration and document type"@en ;
+    skos:definition "Governance activities and shared communication artefacts."@en ;
+    skos:narrower gov:Meeting, gov:Attendance, gov:Noticeboard ;
+    gov:status "Provisional"@en .
+
+#################################################################
+# Administrative permission scope
+#################################################################
+
+# Administrative permission concepts are not currently present in the flat
+# vocabulary. They are intentionally not invented here; this facet will be
+# added when the vocabulary has reviewed terms for board, trust and service
+# administration scopes.
