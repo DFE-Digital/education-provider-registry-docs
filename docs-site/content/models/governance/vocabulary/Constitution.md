@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2012/1034/regulation/13/made](https://www.legislation.gov.uk/uksi/2012/1034/regulation/13/made) |
+| References | [See evidence for Constitution](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#constitution) |
 
 ## Definition
 

@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2012/1034/regulation/18/made](https://www.legislation.gov.uk/uksi/2012/1034/regulation/18/made) |
+| References | [See evidence for Term of office](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#term-of-office) |
 
 ## Definition
 

@@ -1,157 +1,848 @@
 @prefix gov: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 # Governance taxonomy
 #
-# This taxonomy classifies the flat concepts in governance-vocabulary.ttl.
-# It is deliberately faceted: a concept may appear in more than one facet and
-# the facets must not be read as a single inheritance tree. Appointment type,
-# role, appointing body and administrative scope remain distinct dimensions.
+# Scope: controlled classifications used by the governance business domain.
+#
+# The flat governance vocabulary defines business nouns. This taxonomy defines
+# the values used to classify instances of those concepts. Person, organisation,
+# membership, appointment, term, role assignment, record and event concepts are
+# therefore not used as taxonomy values.
+#
+# The taxonomy is informed by GovernorHub's externally observable business
+# model and authoritative real-world governance sources. It is not a copy of
+# GovernorHub's private implementation or product administration model.
+#
+# Facets are independent. In particular, appointment type, appointing party,
+# governance role, constitution position category and lifecycle status must not
+# be treated as interchangeable classifications.
+
+gov:evidenceStatus
+    a rdf:Property ;
+    rdfs:label "Evidence status"@en ;
+    rdfs:comment "The evidence status supporting a taxonomic assertion."@en .
+
+gov:valueControl
+    a rdf:Property ;
+    rdfs:label "Value control"@en ;
+    rdfs:comment "Whether a classification value is fixed, configurable or unresolved in the observed source."@en .
 
 gov:governanceTaxonomy
     a skos:ConceptScheme ;
     dcterms:title "Governance Taxonomy"@en ;
-    dcterms:description "Faceted taxonomy for classifying governance concepts in the Education Provider Registry."@en ;
+    dcterms:description "Faceted taxonomy of controlled governance classifications, informed by GovernorHub and authoritative real-world governance sources."@en ;
     dcterms:created "2026-07-27"^^xsd:date ;
-    dcterms:modified "2026-07-27"^^xsd:date ;
+    dcterms:modified "2026-07-28"^^xsd:date ;
     gov:status "Provisional"@en ;
     skos:hasTopConcept
-        gov:ActorAndUserType,
-        gov:OrganisationAndBoardScope,
-        gov:GovernanceParticipantType,
-        gov:AppointmentType,
-        gov:RoleAndOfficeResponsibility,
-        gov:CommitteeResponsibility,
-        gov:ConstitutionPositionType,
-        gov:AppointmentAndTermStatus,
-        gov:HistoricalRecordStatus,
-        gov:ComplianceAndDeclarationStatus,
-        gov:TrainingAndAssuranceRecordType,
-        gov:CollaborationAndDocumentType .
+        gov:GovernanceBodyType,
+        gov:GovernanceParticipantCapacity,
+        gov:GovernanceAppointmentType,
+        gov:AppointingPartyType,
+        gov:GovernanceRoleType,
+        gov:CommitteeRoleType,
+        gov:ConstitutionPositionCategory,
+        gov:ConstitutionPositionOccupancy,
+        gov:MembershipStatus,
+        gov:AppointmentStatus,
+        gov:TermStatus,
+        gov:HistoricalRecordProvenance,
+        gov:DeclarationOutcome,
+        gov:ConfirmationStatus,
+        gov:AssuranceRecordType .
+
+#################################################################
+# Facet collection
+#################################################################
 
 gov:governanceTaxonomyFacets
     a skos:Collection ;
     skos:prefLabel "Governance taxonomy facets"@en ;
     skos:member
-        gov:ActorAndUserType,
-        gov:OrganisationAndBoardScope,
-        gov:GovernanceParticipantType,
-        gov:AppointmentType,
-        gov:RoleAndOfficeResponsibility,
-        gov:CommitteeResponsibility,
-        gov:ConstitutionPositionType,
-        gov:AppointmentAndTermStatus,
-        gov:HistoricalRecordStatus,
-        gov:ComplianceAndDeclarationStatus,
-        gov:TrainingAndAssuranceRecordType,
-        gov:CollaborationAndDocumentType .
+        gov:GovernanceBodyType,
+        gov:GovernanceParticipantCapacity,
+        gov:GovernanceAppointmentType,
+        gov:AppointingPartyType,
+        gov:GovernanceRoleType,
+        gov:CommitteeRoleType,
+        gov:ConstitutionPositionCategory,
+        gov:ConstitutionPositionOccupancy,
+        gov:MembershipStatus,
+        gov:AppointmentStatus,
+        gov:TermStatus,
+        gov:HistoricalRecordProvenance,
+        gov:DeclarationOutcome,
+        gov:ConfirmationStatus,
+        gov:AssuranceRecordType .
 
 #################################################################
 # Facets
 #################################################################
 
-gov:ActorAndUserType
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:GovernanceBodyType
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Actor and user type"@en ;
-    skos:definition "The kind of person or actor participating in or administering governance."@en ;
-    skos:narrower gov:Person, gov:Member ; gov:status "Provisional"@en .
-
-gov:OrganisationAndBoardScope
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
-    skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Organisation and board scope"@en ;
-    skos:definition "The organisation, establishment or governing body to which governance data relates."@en ;
-    skos:narrower gov:Establishment, gov:School, gov:Academy, gov:AcademyTrust, gov:TrustBoard, gov:Board, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:Federation, gov:LocalAuthority, gov:CompaniesHouseLegalEntity ;
+    skos:prefLabel "Governance body type"@en ;
+    skos:definition "The classification of a body through which collective governance responsibilities are exercised."@en ;
+    skos:scopeNote "An Academy Trust or School is an organisation governed by a body; it is not itself a governance-body type."@en ;
+    skos:narrower
+        gov:MaintainedSchoolGoverningBodyType,
+        gov:FederationGoverningBodyType,
+        gov:TrustBoardGovernanceBodyType,
+        gov:LocalGoverningBodyType,
+        gov:CommitteeGovernanceBodyType,
+        gov:InterimExecutiveBoardType ;
     gov:status "Provisional"@en .
 
-gov:GovernanceParticipantType
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:GovernanceParticipantCapacity
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Governance participant type"@en ;
-    skos:definition "The participant capacity in which a person contributes to governance."@en ;
-    skos:narrower gov:Governor, gov:BoardMember, gov:LocalGoverningBodyMember, gov:Trustee, gov:AcademyTrustee, gov:AcademyTrustMember, gov:TrustMember, gov:CompanyDirector, gov:Director, gov:Clerk, gov:GovernanceProfessional, gov:Principal ;
+    skos:prefLabel "Governance participant capacity"@en ;
+    skos:definition "The legal or governance capacity in which a person participates in a governance arrangement."@en ;
+    skos:scopeNote "A person may hold several capacities at the same time. Capacity does not replace the person's appointment, membership or role assignment."@en ;
+    skos:narrower
+        gov:GovernorCapacity,
+        gov:LocalGovernorCapacity,
+        gov:AcademyTrustMemberCapacity,
+        gov:AcademyTrusteeCapacity,
+        gov:CompanyDirectorCapacity,
+        gov:ClerkCapacity,
+        gov:GovernanceProfessionalCapacity ;
     gov:status "Provisional"@en .
 
-gov:AppointmentType
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:GovernanceAppointmentType
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Appointment type"@en ;
-    skos:definition "The type of governance appointment or membership arrangement held by a participant."@en ;
-    skos:narrower gov:Appointment, gov:Membership, gov:BoardMembership, gov:CommitteeMembership, gov:RoleAssignment ;
+    skos:prefLabel "Governance appointment type"@en ;
+    skos:altLabel "Governor type"@en ;
+    skos:definition "The category or route through which a person holds a governance appointment."@en ;
+    skos:scopeNote "This facet classifies an appointment. It does not identify the appointing party, an office such as Chair, or a Constitution position."@en ;
+    skos:narrower
+        gov:ParentGovernorAppointmentType,
+        gov:StaffGovernorAppointmentType,
+        gov:CoOptedGovernorAppointmentType,
+        gov:FoundationGovernorAppointmentType,
+        gov:LocalAuthorityGovernorAppointmentType,
+        gov:ExOfficioGovernorAppointmentType ;
     gov:status "Provisional"@en .
 
-gov:RoleAndOfficeResponsibility
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:AppointingPartyType
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Role and office-holder responsibility"@en ;
-    skos:definition "A named responsibility or office held by a governance participant."@en ;
-    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:AccountingOfficer ;
+    skos:prefLabel "Appointing party type"@en ;
+    skos:altLabel "Appointing body type"@en ;
+    skos:definition "The classification of the party that appoints or nominates a person to a governance appointment."@en ;
+    skos:scopeNote "GovernorHub documents an Appointed by field but does not publish its complete value set. These values are grounded in real-world governance rules; their mapping to GovernorHub remains unresolved."@en ;
+    skos:narrower
+        gov:LocalAuthorityAppointingParty,
+        gov:GoverningBodyAppointingParty,
+        gov:FoundationBodyAppointingParty,
+        gov:AcademyTrustMembersAppointingParty ;
     gov:status "Provisional"@en .
 
-gov:CommitteeResponsibility
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:GovernanceRoleType
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Committee responsibility"@en ;
-    skos:definition "A committee and the membership or chairing responsibilities associated with it."@en ;
-    skos:narrower gov:Committee, gov:CommitteeMembership, gov:CommitteeChair ;
+    skos:prefLabel "Governance role type"@en ;
+    skos:definition "A named office or responsibility assigned independently from a person's governance appointment type."@en ;
+    skos:scopeNote "Principal and other employment positions are not treated as governance roles solely because their holders attend or support governance."@en ;
+    skos:narrower
+        gov:ChairRole,
+        gov:ViceChairRole,
+        gov:ClerkRole,
+        gov:GovernanceProfessionalRole,
+        gov:AccountingOfficerRole ;
     gov:status "Provisional"@en .
 
-gov:ConstitutionPositionType
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:CommitteeRoleType
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Constitution position type"@en ;
-    skos:definition "A constitution-defined position, including whether the position is occupied or vacant."@en ;
-    skos:narrower gov:Constitution, gov:ConstitutionPosition, gov:Vacancy ;
+    skos:prefLabel "Committee role type"@en ;
+    skos:definition "A named office or responsibility held within the scope of a governance committee."@en ;
+    skos:scopeNote "Committee membership is a relationship, not a role value. Committee Admin is a product permission and is outside this business taxonomy."@en ;
+    skos:narrower
+        gov:CommitteeChairRole,
+        gov:CommitteeViceChairRole ;
     gov:status "Provisional"@en .
 
-gov:AppointmentAndTermStatus
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:ConstitutionPositionCategory
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Appointment and term status"@en ;
-    skos:definition "The time-bound appointment information used to describe a governance position."@en ;
-    skos:narrower gov:TermOfOffice, gov:Appointment ;
+    skos:prefLabel "Constitution position category"@en ;
+    skos:definition "The category of a position required or permitted by a governance body's constitution."@en ;
+    skos:scopeNote "A Constitution position category and an appointment type may have similar labels, but they classify different things."@en ;
+    skos:narrower
+        gov:ParentGovernorConstitutionPositionCategory,
+        gov:StaffGovernorConstitutionPositionCategory,
+        gov:CoOptedGovernorConstitutionPositionCategory,
+        gov:FoundationGovernorConstitutionPositionCategory,
+        gov:LocalAuthorityGovernorConstitutionPositionCategory,
+        gov:ExOfficioGovernorConstitutionPositionCategory ;
     gov:status "Provisional"@en .
 
-gov:HistoricalRecordStatus
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:ConstitutionPositionOccupancy
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Historical record status"@en ;
-    skos:definition "A classification for governance records retained after a membership, appointment or state has ended."@en ;
-    skos:narrower gov:HistoricalRecord, gov:HistoricalMember, gov:HistoricalAppointment, gov:ChangeHistory ;
+    skos:prefLabel "Constitution position occupancy"@en ;
+    skos:definition "Whether a Constitution position is currently filled by a qualifying appointment."@en ;
+    skos:scopeNote "Vacancy is derived from a Constitution position not being filled; it is not a property of a person."@en ;
+    skos:narrower
+        gov:FilledConstitutionPosition,
+        gov:VacantConstitutionPosition ;
     gov:status "Provisional"@en .
 
-gov:ComplianceAndDeclarationStatus
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:MembershipStatus
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Compliance and declaration status"@en ;
-    skos:definition "Declarations and confirmations supporting governance assurance and compliance."@en ;
-    skos:narrower gov:Declaration, gov:DeclarationOfInterest, gov:Confirmation ;
+    skos:prefLabel "Membership status"@en ;
+    skos:definition "The lifecycle classification of a person's membership of a governance body."@en ;
+    skos:narrower
+        gov:CurrentMembershipStatus,
+        gov:EndedMembershipStatus ;
     gov:status "Provisional"@en .
 
-gov:TrainingAndAssuranceRecordType
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:AppointmentStatus
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Training and assurance record type"@en ;
-    skos:definition "Learning and evidence records used to support governance capability and assurance."@en ;
-    skos:narrower gov:Training, gov:TrainingRecord ;
+    skos:prefLabel "Appointment status"@en ;
+    skos:definition "The lifecycle classification of a governance appointment."@en ;
+    skos:scopeNote "Renewal is a business action, not a status. Public evidence does not establish a formal GovernorHub stored state set."@en ;
+    skos:narrower
+        gov:CurrentAppointmentStatus,
+        gov:PreviousAppointmentStatus,
+        gov:EndedAppointmentStatus ;
     gov:status "Provisional"@en .
 
-gov:CollaborationAndDocumentType
-    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+gov:TermStatus
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
-    skos:prefLabel "Collaboration and document type"@en ;
-    skos:definition "Governance activities and shared communication artefacts."@en ;
-    skos:narrower gov:Meeting, gov:Attendance, gov:Noticeboard ;
+    skos:prefLabel "Term status"@en ;
+    skos:definition "The lifecycle classification of a term of office."@en ;
+    skos:scopeNote "Term statuses are date-derived candidate classifications rather than confirmed GovernorHub stored values."@en ;
+    skos:narrower
+        gov:FutureTermStatus,
+        gov:CurrentTermStatus,
+        gov:ExpiredTermStatus,
+        gov:EndedEarlyTermStatus ;
+    gov:status "Provisional"@en .
+
+gov:HistoricalRecordProvenance
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Historical record provenance"@en ;
+    skos:definition "The origin or subsequent correction provenance of a retained historical governance representation."@en ;
+    skos:scopeNote "Historical Member and Historical Appointment are views of ended relationships, not types of person or appointment."@en ;
+    skos:narrower
+        gov:AutomaticallyCreatedHistoricalRecord,
+        gov:ManuallyCreatedHistoricalRecord,
+        gov:BackfilledHistoricalRecord,
+        gov:CorrectedHistoricalRecord ;
+    gov:status "Provisional"@en .
+
+gov:DeclarationOutcome
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Declaration outcome"@en ;
+    skos:definition "The substantive outcome recorded for a declaration of interests."@en ;
+    skos:narrower
+        gov:InterestDeclaredOutcome,
+        gov:NothingToDeclareOutcome ;
+    gov:status "Provisional"@en .
+
+gov:ConfirmationStatus
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Confirmation status"@en ;
+    skos:definition "The validity or reversal state of a declaration or assurance confirmation."@en ;
+    skos:scopeNote "These values must not be reused as appointment, membership or training statuses."@en ;
+    skos:narrower
+        gov:ConfirmedConfirmationStatus,
+        gov:ExpiredConfirmationStatus,
+        gov:NotConfirmedConfirmationStatus,
+        gov:UnconfirmedConfirmationStatus ;
+    gov:status "Provisional"@en .
+
+gov:AssuranceRecordType
+    a skos:Concept ;
+    skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Assurance record type"@en ;
+    skos:definition "The classification of evidence or activity records used to support governance assurance."@en ;
+    skos:scopeNote "The values remain distinct because their subjects, lifecycles, evidence and sensitivity differ."@en ;
+    skos:narrower
+        gov:DeclarationOfInterestRecordType,
+        gov:ConfirmationRecordType,
+        gov:TrainingRecordType,
+        gov:TrainingBookingRecordType,
+        gov:TrainingAttendanceRecordType,
+        gov:TrainingCertificateRecordType,
+        gov:DbsCheckRecordType ;
     gov:status "Provisional"@en .
 
 #################################################################
-# Administrative permission scope
+# Governance body type
 #################################################################
 
-# Administrative permission concepts are not currently present in the flat
-# vocabulary. They are intentionally not invented here; this facet will be
-# added when the vocabulary has reviewed terms for board, trust and service
-# administration scopes.
+gov:MaintainedSchoolGoverningBodyType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Maintained school governing body"@en ;
+    skos:definition "A governing body constituted to govern a maintained school."@en ;
+    skos:broader gov:GovernanceBodyType ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:FederationGoverningBodyType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Federation governing body"@en ;
+    skos:definition "A single governing body shared by two or more maintained schools in a statutory federation."@en ;
+    skos:broader gov:GovernanceBodyType ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-federations> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:TrustBoardGovernanceBodyType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Trust board"@en ;
+    skos:definition "The accountable governance body of an academy trust."@en ;
+    skos:broader gov:GovernanceBodyType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/586814-the-trust-board>,
+        <https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Configurable label"@en ; gov:status "Provisional"@en .
+
+gov:LocalGoverningBodyType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local governing body"@en ;
+    skos:definition "A delegated local governance body established by an academy trust."@en ;
+    skos:broader gov:GovernanceBodyType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/586814-the-trust-board> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Configurable label"@en ; gov:status "Provisional"@en .
+
+gov:CommitteeGovernanceBodyType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governance committee"@en ;
+    skos:definition "A committee established to undertake governance work or delegated responsibilities."@en ;
+    skos:broader gov:GovernanceBodyType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657733-creating-a-committee> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Configurable"@en ; gov:status "Provisional"@en .
+
+gov:InterimExecutiveBoardType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Interim Executive Board"@en ;
+    skos:definition "A temporary governing body established under statutory intervention powers."@en ;
+    skos:broader gov:GovernanceBodyType ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/ukpga/2006/40/section/65> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Governance participant capacity
+#################################################################
+
+gov:GovernorCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governor"@en ;
+    skos:definition "The capacity of participating in the governance of a school through its governing body."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/586879-the-governing-board-membership> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:LocalGovernorCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local governor"@en ;
+    skos:definition "The capacity of participating in governance through a local governing body established by an academy trust."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Trust-defined"@en ; gov:status "Provisional"@en .
+
+gov:AcademyTrustMemberCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy trust member"@en ;
+    skos:definition "The constitutional company-member capacity held in an academy trust."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:AcademyTrusteeCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy trustee"@en ;
+    skos:definition "The charity-trustee capacity held by a member of an academy trust's trust board."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:CompanyDirectorCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Company director"@en ;
+    skos:definition "The company-law director capacity held by an academy trustee."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/ukpga/2006/46/section/250>,
+        <https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub equivalence unresolved"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ClerkCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Clerk capacity"@en ;
+    skos:definition "The capacity of providing procedural and administrative support to a governance body."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657553-assigning-or-creating-a-role> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:GovernanceProfessionalCapacity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governance professional capacity"@en ;
+    skos:definition "The professional capacity of supporting effective governance administration and procedure."@en ;
+    skos:broader gov:GovernanceParticipantCapacity ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value control unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Governance appointment type
+#################################################################
+
+gov:ParentGovernorAppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Parent governor"@en ;
+    skos:definition "An appointment type for a governor elected or appointed through the parent category."@en ;
+    skos:broader gov:GovernanceAppointmentType ; skos:related gov:ParentGovernor ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/586879-the-governing-board-membership> ;
+    gov:evidenceStatus "Documented GovernorHub example"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:StaffGovernorAppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Staff governor"@en ;
+    skos:definition "An appointment type for a governor serving through the staff category."@en ;
+    skos:broader gov:GovernanceAppointmentType ; skos:related gov:StaffGovernor ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/586879-the-governing-board-membership> ;
+    gov:evidenceStatus "Documented GovernorHub example"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:CoOptedGovernorAppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Co-opted governor"@en ;
+    skos:definition "An appointment type for a governor appointed through co-option."@en ;
+    skos:broader gov:GovernanceAppointmentType ; skos:related gov:CoOptedGovernor ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3154492-how-to-add-update-renew-or-remove-an-appointment-or-term-of-office> ;
+    gov:evidenceStatus "Documented GovernorHub example"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:FoundationGovernorAppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Foundation governor"@en ;
+    skos:definition "An appointment type for a governor appointed through a foundation body."@en ;
+    skos:broader gov:GovernanceAppointmentType ; skos:related gov:FoundationGovernor ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:LocalAuthorityGovernorAppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local authority governor"@en ;
+    skos:definition "An appointment type for a governor nominated by the local authority and appointed by the governing body."@en ;
+    skos:broader gov:GovernanceAppointmentType ; skos:related gov:LocalAuthorityGovernor ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/8/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:ExOfficioGovernorAppointmentType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Ex-officio governor"@en ;
+    skos:definition "An appointment type held by virtue of another specified office."@en ;
+    skos:broader gov:GovernanceAppointmentType ; skos:related gov:ExOfficioGovernor ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Appointing party type
+#################################################################
+
+gov:LocalAuthorityAppointingParty
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local authority"@en ;
+    skos:definition "A local authority acting as an appointing or nominating party."@en ;
+    skos:broader gov:AppointingPartyType ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/8/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:GoverningBodyAppointingParty
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governing body"@en ;
+    skos:definition "A governing body acting as the party that makes an appointment."@en ;
+    skos:broader gov:AppointingPartyType ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/contents> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:FoundationBodyAppointingParty
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Foundation body"@en ;
+    skos:definition "A foundation or other qualifying body acting as an appointing party."@en ;
+    skos:broader gov:AppointingPartyType ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:AcademyTrustMembersAppointingParty
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy trust members"@en ;
+    skos:definition "The members of an academy trust acting collectively as an appointing party."@en ;
+    skos:broader gov:AppointingPartyType ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide/academy-trust-governance-guide> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Governance and committee roles
+#################################################################
+
+gov:ChairRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Chair"@en ; skos:definition "The role responsible for chairing a governance body."@en ;
+    skos:broader gov:GovernanceRoleType ; skos:related gov:Chair ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657553-assigning-or-creating-a-role> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ViceChairRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Vice chair"@en ; skos:definition "The role responsible for deputising for or supporting a governance-body chair."@en ;
+    skos:broader gov:GovernanceRoleType ; skos:related gov:ViceChair ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657553-assigning-or-creating-a-role> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ClerkRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Clerk role"@en ; skos:definition "The assigned role providing procedural and administrative support to a governance body."@en ;
+    skos:broader gov:GovernanceRoleType ; skos:related gov:Clerk ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657553-assigning-or-creating-a-role> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:GovernanceProfessionalRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governance professional role"@en ; skos:definition "A role providing professional governance advice, procedure and administration."@en ;
+    skos:broader gov:GovernanceRoleType ; skos:related gov:GovernanceProfessional ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub value control unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:AccountingOfficerRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Accounting officer"@en ; skos:definition "The academy-trust role accountable for regularity, propriety and value for money."@en ;
+    skos:broader gov:GovernanceRoleType ; skos:related gov:AccountingOfficer ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025> ;
+    gov:evidenceStatus "Documented real-world fact; not established as a GovernorHub role value"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:CommitteeChairRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Committee chair"@en ; skos:definition "The role responsible for chairing a governance committee."@en ;
+    skos:broader gov:CommitteeRoleType ; skos:related gov:CommitteeChair ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657733-creating-a-committee> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:CommitteeViceChairRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Committee vice chair"@en ; skos:definition "The role responsible for deputising for or supporting a committee chair."@en ;
+    skos:broader gov:CommitteeRoleType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/1657733-creating-a-committee> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Constitution position classifications
+#################################################################
+
+gov:ParentGovernorConstitutionPositionCategory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Parent governor position"@en ;
+    skos:definition "A Constitution position in the Parent Governor category."@en ;
+    skos:broader gov:ConstitutionPositionCategory ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3151419-how-to-edit-the-constitution> ;
+    gov:evidenceStatus "Documented GovernorHub example"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:StaffGovernorConstitutionPositionCategory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Staff governor position"@en ;
+    skos:definition "A Constitution position in the Staff Governor category."@en ;
+    skos:broader gov:ConstitutionPositionCategory ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3151419-how-to-edit-the-constitution> ;
+    gov:evidenceStatus "Documented GovernorHub example"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:CoOptedGovernorConstitutionPositionCategory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Co-opted governor position"@en ;
+    skos:definition "A Constitution position in the Co-opted Governor category."@en ;
+    skos:broader gov:ConstitutionPositionCategory ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3151419-how-to-edit-the-constitution> ;
+    gov:evidenceStatus "Documented GovernorHub example"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:FoundationGovernorConstitutionPositionCategory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Foundation governor position"@en ;
+    skos:definition "A Constitution position in the Foundation Governor category."@en ;
+    skos:broader gov:ConstitutionPositionCategory ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub category mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:LocalAuthorityGovernorConstitutionPositionCategory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local authority governor position"@en ;
+    skos:definition "A Constitution position in the Local Authority Governor category."@en ;
+    skos:broader gov:ConstitutionPositionCategory ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/8/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub category mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:ExOfficioGovernorConstitutionPositionCategory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Ex-officio governor position"@en ;
+    skos:definition "A Constitution position occupied by virtue of another specified office."@en ;
+    skos:broader gov:ConstitutionPositionCategory ;
+    rdfs:isDefinedBy <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9/made> ;
+    gov:evidenceStatus "Documented real-world fact; GovernorHub category mapping unresolved"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:FilledConstitutionPosition
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Filled"@en ;
+    skos:definition "A Constitution position currently filled by a qualifying governance appointment."@en ;
+    skos:broader gov:ConstitutionPositionOccupancy ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3151358-what-does-the-constitution-tab-show> ;
+    gov:evidenceStatus "Documented behaviour; derived classification"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:VacantConstitutionPosition
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Vacant"@en ;
+    skos:definition "A Constitution position not currently filled by a qualifying governance appointment."@en ;
+    skos:broader gov:ConstitutionPositionOccupancy ; skos:related gov:Vacancy ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3151463-fill-a-vacancy-in-the-constitution> ;
+    gov:evidenceStatus "Documented behaviour; derived classification"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Membership, appointment and term status
+#################################################################
+
+gov:CurrentMembershipStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Current membership"@en ;
+    skos:definition "A governance-body membership that has not ended at the relevant date."@en ;
+    skos:broader gov:MembershipStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/11470214-changing-and-recording-of-appointment-details> ;
+    gov:evidenceStatus "Documented view; lifecycle interpretation inferred"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+gov:EndedMembershipStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Ended membership"@en ;
+    skos:definition "A governance-body membership that has ended at the relevant date."@en ;
+    skos:broader gov:MembershipStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/4942072-how-to-remove-someone-from-an-account-and-create-an-historic-record> ;
+    gov:evidenceStatus "Documented behaviour; lifecycle interpretation inferred"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+gov:CurrentAppointmentStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Current appointment"@en ;
+    skos:definition "A governance appointment treated as current at the relevant date."@en ;
+    skos:broader gov:AppointmentStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/11470214-changing-and-recording-of-appointment-details> ;
+    gov:evidenceStatus "Inference from documented behaviour"@en ; gov:valueControl "Unknown"@en ; gov:status "Provisional"@en .
+
+gov:PreviousAppointmentStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Previous appointment"@en ;
+    skos:definition "An earlier governance appointment retained after a later appointment or change."@en ;
+    skos:broader gov:AppointmentStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/11470214-changing-and-recording-of-appointment-details> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Derived or stored unresolved"@en ; gov:status "Provisional"@en .
+
+gov:EndedAppointmentStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Ended appointment"@en ;
+    skos:definition "A governance appointment that ended before or on the relevant date."@en ;
+    skos:broader gov:AppointmentStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/11470214-changing-and-recording-of-appointment-details> ;
+    gov:evidenceStatus "Documented behaviour"@en ; gov:valueControl "Derived or stored unresolved"@en ; gov:status "Provisional"@en .
+
+gov:FutureTermStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Future term"@en ;
+    skos:definition "A term of office whose start date is later than the relevant date."@en ;
+    skos:broader gov:TermStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3154492-how-to-add-update-renew-or-remove-an-appointment-or-term-of-office> ;
+    gov:evidenceStatus "Date-derived modelling hypothesis"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+gov:CurrentTermStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Current term"@en ;
+    skos:definition "A term of office whose effective period includes the relevant date."@en ;
+    skos:broader gov:TermStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3154492-how-to-add-update-renew-or-remove-an-appointment-or-term-of-office> ;
+    gov:evidenceStatus "Date-derived inference"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+gov:ExpiredTermStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Expired term"@en ;
+    skos:definition "A term of office whose planned end date is before the relevant date."@en ;
+    skos:broader gov:TermStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/4942072-how-to-remove-someone-from-an-account-and-create-an-historic-record> ;
+    gov:evidenceStatus "Documented removal reason; date-derived classification"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+gov:EndedEarlyTermStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Ended early"@en ;
+    skos:definition "A term of office that ended before its planned end date."@en ;
+    skos:broader gov:TermStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3154492-how-to-add-update-renew-or-remove-an-appointment-or-term-of-office> ;
+    gov:evidenceStatus "Modelling inference from editable term and leaving dates"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Historical record provenance
+#################################################################
+
+gov:AutomaticallyCreatedHistoricalRecord
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Automatically created"@en ;
+    skos:definition "A historical representation created automatically when an eligible membership is ended."@en ;
+    skos:broader gov:HistoricalRecordProvenance ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/4942072-how-to-remove-someone-from-an-account-and-create-an-historic-record> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ManuallyCreatedHistoricalRecord
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Manually created"@en ;
+    skos:definition "A historical representation entered directly by an authorised administrator."@en ;
+    skos:broader gov:HistoricalRecordProvenance ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/4948906-how-to-add-a-new-historical-member-record> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:BackfilledHistoricalRecord
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Backfilled"@en ;
+    skos:definition "A historical representation reconstructed from available earlier product information."@en ;
+    skos:broader gov:HistoricalRecordProvenance ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/4946510-how-to-edit-historical-member-records> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:CorrectedHistoricalRecord
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Corrected"@en ;
+    skos:definition "A historical representation whose recorded information has subsequently been corrected."@en ;
+    skos:broader gov:HistoricalRecordProvenance ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/4946510-how-to-edit-historical-member-records> ;
+    gov:evidenceStatus "Documented edit behaviour; correction interpretation inferred"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Declaration and confirmation classifications
+#################################################################
+
+gov:InterestDeclaredOutcome
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Interest declared"@en ;
+    skos:definition "The declaration outcome in which one or more interests have been recorded."@en ;
+    skos:broader gov:DeclarationOutcome ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174427-declarations-of-interest-for-clerks-and-admins> ;
+    gov:evidenceStatus "Documented behaviour"@en ; gov:valueControl "Derived"@en ; gov:status "Provisional"@en .
+
+gov:NothingToDeclareOutcome
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Nothing to Declare"@en ;
+    skos:definition "The positive declaration outcome in which a person confirms that they have no interests to declare."@en ;
+    skos:broader gov:DeclarationOutcome ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174427-declarations-of-interest-for-clerks-and-admins> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ConfirmedConfirmationStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Confirmed"@en ;
+    skos:definition "A confirmation completed within its current validity period."@en ;
+    skos:broader gov:ConfirmationStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174427-declarations-of-interest-for-clerks-and-admins>,
+        <https://help.governorhub.com/en/articles/9745261-how-do-i-evidence-chase-and-record-kcsie-and-other-custom-confirmations> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ExpiredConfirmationStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Expired"@en ;
+    skos:definition "A confirmation whose validity period has elapsed."@en ;
+    skos:broader gov:ConfirmationStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174427-declarations-of-interest-for-clerks-and-admins>,
+        <https://help.governorhub.com/en/articles/9745261-how-do-i-evidence-chase-and-record-kcsie-and-other-custom-confirmations> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:NotConfirmedConfirmationStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Not confirmed"@en ;
+    skos:definition "No currently valid confirmation is recorded."@en ;
+    skos:broader gov:ConfirmationStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/9745261-how-do-i-evidence-chase-and-record-kcsie-and-other-custom-confirmations> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:UnconfirmedConfirmationStatus
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Unconfirmed"@en ;
+    skos:definition "A previously recorded confirmation that has been reversed."@en ;
+    skos:broader gov:ConfirmationStatus ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174427-declarations-of-interest-for-clerks-and-admins> ;
+    gov:evidenceStatus "Documented behaviour; state/event boundary unresolved"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+#################################################################
+# Assurance record type
+#################################################################
+
+gov:DeclarationOfInterestRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Declaration of interest"@en ;
+    skos:definition "A declaration record containing declared interests or a positive Nothing to Declare outcome."@en ;
+    skos:broader gov:AssuranceRecordType ; skos:related gov:DeclarationOfInterest ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174427-declarations-of-interest-for-clerks-and-admins> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:ConfirmationRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Confirmation record"@en ;
+    skos:definition "A dated record that a person or authorised administrator confirmed an assurance statement."@en ;
+    skos:broader gov:AssuranceRecordType ; skos:related gov:Confirmation ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/9745261-how-do-i-evidence-chase-and-record-kcsie-and-other-custom-confirmations> ;
+    gov:evidenceStatus "Inference from documented behaviour"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:TrainingRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Training record"@en ;
+    skos:definition "A record of training undertaken or manually recorded for a governance participant."@en ;
+    skos:broader gov:AssuranceRecordType ; skos:related gov:TrainingRecord ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/5106646-recording-details-of-your-governor-training-courses> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:TrainingBookingRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Training booking"@en ;
+    skos:definition "A reservation for a future governance training activity."@en ;
+    skos:broader gov:AssuranceRecordType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/5106646-recording-details-of-your-governor-training-courses> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:TrainingAttendanceRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Training attendance"@en ;
+    skos:definition "A recorded attendance outcome for a governance training activity."@en ;
+    skos:broader gov:AssuranceRecordType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/5106646-recording-details-of-your-governor-training-courses> ;
+    gov:evidenceStatus "Documented fact; attendance/completion boundary partially unresolved"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:TrainingCertificateRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Training certificate"@en ;
+    skos:definition "A document providing evidence of governance training completion."@en ;
+    skos:broader gov:AssuranceRecordType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/5106646-recording-details-of-your-governor-training-courses> ;
+    gov:evidenceStatus "Documented fact"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .
+
+gov:DbsCheckRecordType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "DBS check record"@en ;
+    skos:definition "A sensitive assurance record containing supplied DBS check details and review information."@en ;
+    skos:broader gov:AssuranceRecordType ;
+    rdfs:isDefinedBy <https://help.governorhub.com/en/articles/3174410-recording-dbs-certificate-details> ;
+    gov:evidenceStatus "Documented product record; authority and target modelling unresolved"@en ; gov:valueControl "Fixed"@en ; gov:status "Provisional"@en .

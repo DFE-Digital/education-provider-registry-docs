@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2013/1624/regulation/11/made](https://www.legislation.gov.uk/uksi/2013/1624/regulation/11/made) |
+| References | [See evidence for Clerk](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#clerk) |
 
 ## Definition
 

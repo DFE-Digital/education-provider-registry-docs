@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/types-of-school](https://www.gov.uk/types-of-school) |
+| Legislation | [https://www.legislation.gov.uk/ukpga/1996/56/section/4](https://www.legislation.gov.uk/ukpga/1996/56/section/4) |
+| References | [See evidence for School](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#school) |
 
 ## Definition
 

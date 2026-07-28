@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/ukpga/2018/12/section/3](https://www.legislation.gov.uk/ukpga/2018/12/section/3) |
+| References | [See evidence for Person](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#person) |
 
 ## Definition
 

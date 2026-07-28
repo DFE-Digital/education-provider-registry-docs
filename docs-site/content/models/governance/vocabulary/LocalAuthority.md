@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/understand-how-your-council-works/types-of-council](https://www.gov.uk/understand-how-your-council-works/types-of-council) |
+| Legislation | [https://www.legislation.gov.uk/ukpga/1972/70/section/270](https://www.legislation.gov.uk/ukpga/1972/70/section/270) |
+| References | [See evidence for Local authority](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#local-authority) |
 
 ## Definition
 

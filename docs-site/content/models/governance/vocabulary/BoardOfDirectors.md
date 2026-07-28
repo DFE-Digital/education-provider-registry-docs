@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025) |
+| Legislation | [https://www.legislation.gov.uk/ukpga/2006/46/section/154](https://www.legislation.gov.uk/ukpga/2006/46/section/154) |
+| References | [See evidence for Board of directors](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#board-of-directors) |
 
 ## Definition
 

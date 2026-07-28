@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies) |
+| Legislation | [https://www.legislation.gov.uk/ukpga/2010/32/section/1](https://www.legislation.gov.uk/ukpga/2010/32/section/1) |
+| References | [See evidence for Academy](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#academy) |
 
 ## Definition
 
