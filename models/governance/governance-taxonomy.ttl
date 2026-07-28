@@ -165,7 +165,7 @@ gov:AppointmentBasis
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Appointment basis"@en ;
     skos:definition "The basis on which a governance participant holds their position: a statutory governance appointment, a paid operational employment role, or a role whose employment arrangement varies. This is an orthogonal classification, applied alongside a concept's primary facet, and is only assigned where the evidence in academy-trust-governance-real-world-rules.md and the Academy Trust Handbook supports it - it is not applied to organisation, record, process or legal-capacity concepts, or to concepts with no direct evidence either way."@en ;
-    skos:narrower gov:StatutoryGovernanceAppointment, gov:OperationalEmploymentRole, gov:MixedOrVariableBasis ;
+    skos:narrower gov:StatutoryGovernanceAppointment, gov:OperationalEmploymentRole, gov:ProfessionalSupportRole ;
     gov:status "Provisional"@en .
 
 #################################################################
@@ -387,13 +387,13 @@ gov:Director
 gov:Clerk
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Clerk"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:MixedOrVariableBasis ;
+    skos:broader gov:GovernanceParticipantType, gov:ProfessionalSupportRole ;
     gov:status "Provisional"@en .
 
 gov:GovernanceProfessional
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Governance professional"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:MixedOrVariableBasis ;
+    skos:broader gov:GovernanceParticipantType, gov:ProfessionalSupportRole ;
     gov:status "Provisional"@en .
 
 gov:Principal
@@ -483,7 +483,7 @@ gov:ChiefFinancialOfficer
 gov:CompanySecretary
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Company secretary"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility, gov:MixedOrVariableBasis ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:ProfessionalSupportRole ;
     gov:status "Provisional"@en .
 
 gov:Committee
@@ -602,9 +602,9 @@ gov:OperationalEmploymentRole
     skos:broader gov:AppointmentBasis ;
     gov:status "Provisional"@en .
 
-gov:MixedOrVariableBasis
+gov:ProfessionalSupportRole
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
-    skos:prefLabel "Mixed or variable basis"@en ;
-    skos:definition "A role whose employment arrangement can vary between a trust employee and an external or contracted professional, per the \"typically paid, but employment arrangement can vary\" evidence in academy-trust-governance-real-world-rules.md."@en ;
+    skos:prefLabel "Professional support role"@en ;
+    skos:definition "A professional role that supports governance administration or compliance, provided either by a trust employee or an external/contracted professional, per the \"typically paid, but employment arrangement can vary\" evidence in academy-trust-governance-real-world-rules.md."@en ;
     skos:broader gov:AppointmentBasis ;
     gov:status "Provisional"@en .
