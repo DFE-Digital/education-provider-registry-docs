@@ -592,7 +592,9 @@ epr:SecureSingleAcademyTrust
     skos:definition "A single-academy trust operating a secure 16-to-19 academy providing education within secure residential accommodation for young people aged 16 to 19 subject to a custodial sentence or secure order."@en ;
     skos:broader epr:SingleAcademyTrust ;
     epr:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#secure-single-academy-trust> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#secure-single-academy-trust> ;
+    rdfs:isDefinedBy <https://assets.publishing.service.gov.uk/media/5bd820c1ed915d78aaef7e93/secure-schools-how-to-apply-guide.pdf>, <https://www.gov.uk/government/publications/secure-schools-governance-handbook> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> .
 
 epr:Federation
     a skos:Concept ;
