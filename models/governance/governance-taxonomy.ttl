@@ -15,13 +15,14 @@ gov:governanceTaxonomy
     dcterms:title "Governance Taxonomy"@en ;
     dcterms:description "Faceted taxonomy for classifying governance concepts in the Education Provider Registry."@en ;
     dcterms:created "2026-07-27"^^xsd:date ;
-    dcterms:modified "2026-07-27"^^xsd:date ;
+    dcterms:modified "2026-07-28"^^xsd:date ;
     gov:status "Provisional"@en ;
     skos:hasTopConcept
         gov:ActorAndUserType,
         gov:OrganisationAndBoardScope,
         gov:GovernanceParticipantType,
         gov:AppointmentType,
+        gov:AppointingBodyType,
         gov:RoleAndOfficeResponsibility,
         gov:CommitteeResponsibility,
         gov:ConstitutionPositionType,
@@ -29,7 +30,8 @@ gov:governanceTaxonomy
         gov:HistoricalRecordStatus,
         gov:ComplianceAndDeclarationStatus,
         gov:TrainingAndAssuranceRecordType,
-        gov:CollaborationAndDocumentType .
+        gov:CollaborationAndDocumentType,
+        gov:AdministrativePermissionScope .
 
 gov:governanceTaxonomyFacets
     a skos:Collection ;
@@ -39,6 +41,7 @@ gov:governanceTaxonomyFacets
         gov:OrganisationAndBoardScope,
         gov:GovernanceParticipantType,
         gov:AppointmentType,
+        gov:AppointingBodyType,
         gov:RoleAndOfficeResponsibility,
         gov:CommitteeResponsibility,
         gov:ConstitutionPositionType,
@@ -46,7 +49,8 @@ gov:governanceTaxonomyFacets
         gov:HistoricalRecordStatus,
         gov:ComplianceAndDeclarationStatus,
         gov:TrainingAndAssuranceRecordType,
-        gov:CollaborationAndDocumentType .
+        gov:CollaborationAndDocumentType,
+        gov:AdministrativePermissionScope .
 
 #################################################################
 # Facets
@@ -64,7 +68,7 @@ gov:OrganisationAndBoardScope
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Organisation and board scope"@en ;
     skos:definition "The organisation, establishment or governing body to which governance data relates."@en ;
-    skos:narrower gov:Establishment, gov:School, gov:Academy, gov:AcademyTrust, gov:TrustBoard, gov:Board, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:Federation, gov:LocalAuthority, gov:CompaniesHouseLegalEntity ;
+    skos:narrower gov:Establishment, gov:School, gov:Academy, gov:AcademyTrust, gov:TrustBoard, gov:Board, gov:BoardOfDirectors, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:InterimExecutiveBoard, gov:Federation, gov:LocalAuthority, gov:CompaniesHouseLegalEntity ;
     gov:status "Provisional"@en .
 
 gov:GovernanceParticipantType
@@ -72,7 +76,7 @@ gov:GovernanceParticipantType
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Governance participant type"@en ;
     skos:definition "The participant capacity in which a person contributes to governance."@en ;
-    skos:narrower gov:Governor, gov:BoardMember, gov:LocalGoverningBodyMember, gov:Trustee, gov:AcademyTrustee, gov:AcademyTrustMember, gov:TrustMember, gov:CompanyDirector, gov:Director, gov:Clerk, gov:GovernanceProfessional, gov:Principal ;
+    skos:narrower gov:Governor, gov:GovernorType, gov:CoOptedGovernor, gov:ExOfficioGovernor, gov:FoundationGovernor, gov:LocalAuthorityGovernor, gov:LocalGovernor, gov:ParentGovernor, gov:StaffGovernor, gov:BoardMember, gov:LocalGoverningBodyMember, gov:Trustee, gov:AcademyTrustee, gov:AcademyTrustMember, gov:TrustMember, gov:CompanyDirector, gov:Director, gov:Clerk, gov:GovernanceProfessional, gov:Principal ;
     gov:status "Provisional"@en .
 
 gov:AppointmentType
@@ -81,6 +85,14 @@ gov:AppointmentType
     skos:prefLabel "Appointment type"@en ;
     skos:definition "The type of governance appointment or membership arrangement held by a participant."@en ;
     skos:narrower gov:Appointment, gov:Membership, gov:BoardMembership, gov:CommitteeMembership, gov:RoleAssignment ;
+    gov:status "Provisional"@en .
+
+gov:AppointingBodyType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Appointing body type"@en ;
+    skos:definition "The body or mechanism that appointed, nominated or elected a governance participant, kept independent of the appointment's type and of any role subsequently assigned to the participant."@en ;
+    skos:narrower gov:AppointingBody ;
     gov:status "Provisional"@en .
 
 gov:RoleAndOfficeResponsibility
@@ -151,7 +163,10 @@ gov:CollaborationAndDocumentType
 # Administrative permission scope
 #################################################################
 
-# Administrative permission concepts are not currently present in the flat
-# vocabulary. They are intentionally not invented here; this facet will be
-# added when the vocabulary has reviewed terms for board, trust and service
-# administration scopes.
+gov:AdministrativePermissionScope
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Administrative permission scope"@en ;
+    skos:definition "The board, committee, trust, governor-service or clerking context within which a user holds administrative rights to maintain governance records."@en ;
+    skos:narrower gov:AdminRights, gov:BoardAdmin, gov:CommitteeAdmin, gov:TrustAdmin, gov:GovernorServiceAdmin, gov:ClerkingAdmin, gov:CentralAdmin ;
+    gov:status "Provisional"@en .
