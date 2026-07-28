@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
+| Defined by | [https://help.governorhub.com/en/](https://help.governorhub.com/en/) |
 | Legislation |  |
-| References |  |
+| References | [See evidence for Training record](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#training-record) |
 
 ## Definition
 

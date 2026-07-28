@@ -105,6 +105,13 @@ function Set-NanocWindowsCompatibility {
     -SourceTtlUrl "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-vocabulary.ttl" `
     -ReferencesDocPath (Join-Path (Join-Path (Join-Path $docsSiteRoot "..") "models\governance") "governance-real-world-references.md")
 & (Join-Path $PSScriptRoot "generate-taxonomy-pages.ps1")
+& (Join-Path $PSScriptRoot "generate-taxonomy-pages.ps1") `
+    -TaxonomyPath (Join-Path (Join-Path $docsSiteRoot "..") "models\governance\governance-taxonomy.ttl") `
+    -OutputRoot (Join-Path $docsSiteRoot "content\models\governance\taxonomy") `
+    -CompactPrefix "gov" `
+    -TaxonomyScheme "gov:governanceTaxonomy" `
+    -PageTitle "Governance Taxonomy" `
+    -SourceLabel "models/governance/governance-taxonomy.ttl"
 & (Join-Path $PSScriptRoot "generate-ui-coverage-pages.ps1")
 & (Join-Path $PSScriptRoot "generate-shacl-rules-page.ps1")
 & (Join-Path $PSScriptRoot "generate-data-quality-rules-page.ps1")

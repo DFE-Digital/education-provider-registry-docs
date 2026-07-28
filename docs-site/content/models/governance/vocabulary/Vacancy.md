@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2012/1034/schedule/1/made](https://www.legislation.gov.uk/uksi/2012/1034/schedule/1/made) |
+| References | [See evidence for Vacancy](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#vacancy) |
 
 ## Definition
 

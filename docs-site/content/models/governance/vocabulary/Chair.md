@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025) |
+| Legislation | [https://www.legislation.gov.uk/uksi/2013/1624/regulation/7/made](https://www.legislation.gov.uk/uksi/2013/1624/regulation/7/made) |
+| References | [See evidence for Chair](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#chair) |
 
 ## Definition
 

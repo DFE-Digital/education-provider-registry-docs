@@ -1,6 +1,10 @@
 ﻿param(
     [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
-    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "taxonomy"))
+    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "taxonomy")),
+    [string]$CompactPrefix = "epr",
+    [string]$TaxonomyScheme = "epr:establishmentDetailsTaxonomy",
+    [string]$PageTitle = "Education Provider Registry Taxonomy",
+    [string]$SourceLabel = "models/education-provider-taxonomy.ttl"
 )
 
 $ErrorActionPreference = "Stop"
@@ -53,7 +57,7 @@ function Get-Refs {
         return @()
     }
 
-    return [regex]::Matches($predicateText, 'epr:([A-Za-z][A-Za-z0-9]*)') |
+    return [regex]::Matches($predicateText, ([regex]::Escape($CompactPrefix) + ':([A-Za-z][A-Za-z0-9]*)')) |
         ForEach-Object {
             $_.Groups[1].Value
         }
@@ -70,7 +74,7 @@ function Get-VocabularyRefs {
         return @()
     }
 
-    return [regex]::Matches($predicateText, 'eprv:([A-Za-z][A-Za-z0-9]*)') |
+    return [regex]::Matches($predicateText, ([regex]::Escape($CompactPrefix) + 'v:([A-Za-z][A-Za-z0-9]*)')) |
         ForEach-Object {
             $_.Groups[1].Value
         }
@@ -98,7 +102,7 @@ function Html-Encode {
 
 $conceptMatches = [regex]::Matches(
     $ttl,
-    "(?ms)^epr:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept[^\n]*\r?\n(.*?)(?=^\S|\z)"
+    "(?ms)^$([regex]::Escape($CompactPrefix)):([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept[^\n]*\r?\n(.*?)(?=^\S|\z)"
 )
 
 $concepts = foreach ($match in $conceptMatches) {
@@ -114,10 +118,10 @@ $concepts = foreach ($match in $conceptMatches) {
         LocalName = $localName
         PreferredLabel = $preferredLabel
         Definition = (Get-Literals -Block $block -Predicate "skos:definition" | Select-Object -First 1)
-        Status = (Get-Literals -Block $block -Predicate "epr:status" | Select-Object -First 1)
+        Status = (Get-Literals -Block $block -Predicate "${CompactPrefix}:status" | Select-Object -First 1)
         Broader = @(Get-Refs -Block $block -Predicate "skos:broader")
         VocabularyMatches = @(Get-VocabularyRefs -Block $block -Predicate "skos:relatedMatch")
-        IsTopConcept = $block -match 'skos:topConceptOf\s+epr:establishmentDetailsTaxonomy'
+        IsTopConcept = $block -match ('skos:topConceptOf\s+' + [regex]::Escape($TaxonomyScheme))
     }
 }
 
@@ -152,7 +156,7 @@ function New-TaxonomyTreeHtml {
     else {
         Html-Encode $concept.PreferredLabel
     }
-    $identifier = Html-Encode "epr:$($concept.LocalName)"
+    $identifier = Html-Encode "${CompactPrefix}:$($concept.LocalName)"
     $hasChildren = $childrenByParent.ContainsKey($LocalName) -and $childrenByParent[$LocalName].Count -gt 0
 
     if (-not $hasChildren) {
@@ -192,9 +196,9 @@ $taxons = $concepts | Where-Object { -not $_.IsTopConcept } | Sort-Object Prefer
 $treeHtml = $facets | ForEach-Object { New-TaxonomyTreeHtml -LocalName $_.LocalName }
 
 $lines = @(
-    "# Education Provider Registry Taxonomy",
+    "# $PageTitle",
     "",
-    "This page is generated from `models/education-provider-taxonomy.ttl`.",
+    "This page is generated from ``$SourceLabel``.",
     "",
     "The taxonomy is a faceted SKOS taxonomy. Facets are represented as top concepts, and taxons sit beneath those facets using `skos:broader` relationships.",
     "",
@@ -218,7 +222,7 @@ $lines += @(
 )
 
 foreach ($facet in $facets) {
-    $lines += "| $($facet.PreferredLabel) | ``epr:$($facet.LocalName)`` | $(Escape-MarkdownTableCell (Format-VocabularyConceptLinks -LocalNames $facet.VocabularyMatches)) | $(Escape-MarkdownTableCell $facet.Definition) |"
+    $lines += "| $($facet.PreferredLabel) | ``${CompactPrefix}:$($facet.LocalName)`` | $(Escape-MarkdownTableCell (Format-VocabularyConceptLinks -LocalNames $facet.VocabularyMatches)) | $(Escape-MarkdownTableCell $facet.Definition) |"
 }
 
 $lines += @(
@@ -239,7 +243,7 @@ foreach ($taxon in $taxons) {
         }
     }) -join "<br>"
 
-    $lines += "| $($taxon.PreferredLabel) | ``epr:$($taxon.LocalName)`` | $(Escape-MarkdownTableCell (Format-VocabularyConceptLinks -LocalNames $taxon.VocabularyMatches)) | $(Escape-MarkdownTableCell $broaderLabels) | $(Escape-MarkdownTableCell $taxon.Status) |"
+    $lines += "| $($taxon.PreferredLabel) | ``${CompactPrefix}:$($taxon.LocalName)`` | $(Escape-MarkdownTableCell (Format-VocabularyConceptLinks -LocalNames $taxon.VocabularyMatches)) | $(Escape-MarkdownTableCell $broaderLabels) | $(Escape-MarkdownTableCell $taxon.Status) |"
 }
 
 Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "index.md") -Value $lines -Encoding UTF8

@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/running-a-limited-company/becoming-a-company-director](https://www.gov.uk/running-a-limited-company/becoming-a-company-director) |
+| Legislation | [https://www.legislation.gov.uk/ukpga/2006/46/section/250](https://www.legislation.gov.uk/ukpga/2006/46/section/250) |
+| References | [See evidence for Director](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#director) |
 
 ## Definition
 

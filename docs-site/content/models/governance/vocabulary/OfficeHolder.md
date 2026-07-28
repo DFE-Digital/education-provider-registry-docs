@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/ukpga/2006/46/section/1173](https://www.legislation.gov.uk/ukpga/2006/46/section/1173) |
+| References | [See evidence for Office-holder](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#office-holder) |
 
 ## Definition
 

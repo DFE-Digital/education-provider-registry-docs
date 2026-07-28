@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2012/1034/regulation/8/made](https://www.legislation.gov.uk/uksi/2012/1034/regulation/8/made)<br>[https://www.legislation.gov.uk/uksi/2012/1034/regulation/16/made](https://www.legislation.gov.uk/uksi/2012/1034/regulation/16/made) |
+| References | [See evidence for Appointing body](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#appointing-body) |
 
 ## Definition
 
