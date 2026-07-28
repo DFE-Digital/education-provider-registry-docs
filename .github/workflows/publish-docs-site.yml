@@ -67,6 +67,17 @@ jobs:
         shell: pwsh
         run: ./docs-site/scripts/generate-taxonomy-pages.ps1
 
+      - name: Generate governance taxonomy page from Turtle
+        shell: pwsh
+        run: |
+          ./docs-site/scripts/generate-taxonomy-pages.ps1 `
+            -TaxonomyPath "models/governance/governance-taxonomy.ttl" `
+            -OutputRoot "docs-site/content/models/governance/taxonomy" `
+            -CompactPrefix "gov" `
+            -TaxonomyScheme "gov:governanceTaxonomy" `
+            -PageTitle "Governance Taxonomy" `
+            -SourceLabel "models/governance/governance-taxonomy.ttl"
+
       - name: Generate UI coverage pages from Turtle
         shell: pwsh
         run: ./docs-site/scripts/generate-ui-coverage-pages.ps1

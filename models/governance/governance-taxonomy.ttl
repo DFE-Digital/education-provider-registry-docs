@@ -165,3 +165,414 @@ gov:CollaborationAndDocumentType
 # vocabulary. They are intentionally not invented here; this facet will be
 # added when the vocabulary has reviewed terms for board, trust and service
 # administration scopes.
+#################################################################
+# Taxons
+#
+# Each taxon reuses the identifier of the governance-vocabulary.ttl
+# concept it classifies, and adds skos:broader to place it beneath
+# its facet(s). A handful of taxons sit under more than one facet
+# where the taxonomy's own faceting rules call for it (see the
+# header note on Appointment, CommitteeMembership and CommitteeChair).
+#################################################################
+
+gov:Person
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Person"@en ;
+    skos:broader gov:ActorAndUserType ;
+    gov:status "Provisional"@en .
+
+gov:Member
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Member"@en ;
+    skos:broader gov:ActorAndUserType ;
+    gov:status "Provisional"@en .
+
+gov:Establishment
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Establishment"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:School
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "School"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:Academy
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:AcademyTrust
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy trust"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:TrustBoard
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Trust board"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:Board
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Board"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:BoardOfDirectors
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Board of directors"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:GoverningBoard
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governing board"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:GoverningBody
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governing body"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:LocalGoverningBody
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local governing body"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:InterimExecutiveBoard
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Interim Executive Board"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:Federation
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Federation"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:LocalAuthority
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local authority"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:CompaniesHouseLegalEntity
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Companies House legal entity"@en ;
+    skos:broader gov:OrganisationAndBoardScope ;
+    gov:status "Provisional"@en .
+
+gov:Governor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:GovernorType
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governor type"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:CoOptedGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Co-opted governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:ExOfficioGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Ex-officio governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:FoundationGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Foundation governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:LocalAuthorityGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local authority governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:LocalGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:ParentGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Parent governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:StaffGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Staff governor"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:BoardMember
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Board member"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:LocalGoverningBodyMember
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Local governing body member"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:Trustee
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Trustee"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:AcademyTrustee
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy trustee"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:AcademyTrustMember
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Academy trust member"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:TrustMember
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Trust member"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:CompanyDirector
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Company director"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:Director
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Director"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:Clerk
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Clerk"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:GovernanceProfessional
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Governance professional"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:Principal
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Principal"@en ;
+    skos:broader gov:GovernanceParticipantType ;
+    gov:status "Provisional"@en .
+
+gov:Appointment
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Appointment"@en ;
+    skos:broader gov:AppointmentType, gov:AppointmentAndTermStatus ;
+    gov:status "Provisional"@en .
+
+gov:Membership
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Membership"@en ;
+    skos:broader gov:AppointmentType ;
+    gov:status "Provisional"@en .
+
+gov:BoardMembership
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Board membership"@en ;
+    skos:broader gov:AppointmentType ;
+    gov:status "Provisional"@en .
+
+gov:CommitteeMembership
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Committee membership"@en ;
+    skos:broader gov:AppointmentType, gov:CommitteeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:RoleAssignment
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Role assignment"@en ;
+    skos:broader gov:AppointmentType ;
+    gov:status "Provisional"@en .
+
+gov:AppointingBody
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Appointing body"@en ;
+    skos:broader gov:AppointingBodyType ;
+    gov:status "Provisional"@en .
+
+gov:Role
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Role"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:OfficeHolder
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Office-holder"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:Chair
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Chair"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:ViceChair
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Vice chair"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:CommitteeChair
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Committee chair"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:CommitteeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:AccountingOfficer
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Accounting officer"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:ChiefFinancialOfficer
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Chief financial officer"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:CompanySecretary
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Company secretary"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:Committee
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Committee"@en ;
+    skos:broader gov:CommitteeResponsibility ;
+    gov:status "Provisional"@en .
+
+gov:Constitution
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Constitution"@en ;
+    skos:broader gov:ConstitutionPositionType ;
+    gov:status "Provisional"@en .
+
+gov:ConstitutionPosition
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Constitution position"@en ;
+    skos:broader gov:ConstitutionPositionType ;
+    gov:status "Provisional"@en .
+
+gov:Vacancy
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Vacancy"@en ;
+    skos:broader gov:ConstitutionPositionType ;
+    gov:status "Provisional"@en .
+
+gov:TermOfOffice
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Term of office"@en ;
+    skos:broader gov:AppointmentAndTermStatus ;
+    gov:status "Provisional"@en .
+
+gov:HistoricalRecord
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Historical record"@en ;
+    skos:broader gov:HistoricalRecordStatus ;
+    gov:status "Provisional"@en .
+
+gov:HistoricalMember
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Historical member"@en ;
+    skos:broader gov:HistoricalRecordStatus ;
+    gov:status "Provisional"@en .
+
+gov:HistoricalAppointment
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Historical appointment"@en ;
+    skos:broader gov:HistoricalRecordStatus ;
+    gov:status "Provisional"@en .
+
+gov:ChangeHistory
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Change history"@en ;
+    skos:broader gov:HistoricalRecordStatus ;
+    gov:status "Provisional"@en .
+
+gov:Declaration
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Declaration"@en ;
+    skos:broader gov:ComplianceAndDeclarationStatus ;
+    gov:status "Provisional"@en .
+
+gov:DeclarationOfInterest
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Declaration of interest"@en ;
+    skos:broader gov:ComplianceAndDeclarationStatus ;
+    gov:status "Provisional"@en .
+
+gov:Confirmation
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Confirmation"@en ;
+    skos:broader gov:ComplianceAndDeclarationStatus ;
+    gov:status "Provisional"@en .
+
+gov:Training
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Training"@en ;
+    skos:broader gov:TrainingAndAssuranceRecordType ;
+    gov:status "Provisional"@en .
+
+gov:TrainingRecord
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Training record"@en ;
+    skos:broader gov:TrainingAndAssuranceRecordType ;
+    gov:status "Provisional"@en .
+
+gov:Meeting
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Meeting"@en ;
+    skos:broader gov:CollaborationAndDocumentType ;
+    gov:status "Provisional"@en .
+
+gov:Attendance
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Attendance"@en ;
+    skos:broader gov:CollaborationAndDocumentType ;
+    gov:status "Provisional"@en .
+
+gov:Noticeboard
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Noticeboard"@en ;
+    skos:broader gov:CollaborationAndDocumentType ;
+    gov:status "Provisional"@en .
