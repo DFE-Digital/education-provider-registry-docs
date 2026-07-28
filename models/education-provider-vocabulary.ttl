@@ -646,7 +646,8 @@ epr:GenericTrust
     skos:prefLabel "Trust"@en ;
     skos:definition "A generic trust group type (EstablishmentGroupType code 02), distinct from an academy trust. Rarely used in current GIAS data; retained for completeness."@en ;
     skos:broader epr:EstablishmentGroup ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#trust-generic-code-02> .
 
 epr:GroupMembership
     a skos:Concept ;
@@ -665,7 +666,8 @@ epr:GroupRelationship
     skos:definition "A recorded relationship between two establishment groups, for example where a single-academy trust is the predecessor to a newly formed multi-academy trust. Used to preserve conversion history."@en ;
     skos:scopeNote "Maps to GroupRelationsLink in the current GIAS schema. Currently used primarily to record SAT-to-MAT conversion history."@en ;
     skos:broader epr:EstablishmentGroupMembership ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#grouprelationship-grouprelationshiptype> .
 
 epr:GroupRelationshipType
     a skos:Concept ;
@@ -676,7 +678,8 @@ epr:GroupRelationshipType
         epr:SuccessorMultiAcademyTrust,
         epr:PredecessorSingleAcademyTrust ;
     skos:broader epr:EstablishmentGroupMembership ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#grouprelationship-grouprelationshiptype> .
 
 epr:SuccessorMultiAcademyTrust
     a skos:Concept ;
@@ -684,7 +687,8 @@ epr:SuccessorMultiAcademyTrust
     skos:prefLabel "Successor MAT"@en ;
     skos:definition "A group relationship type value indicating that the group is the multi-academy trust formed when a single-academy trust expanded or merged."@en ;
     skos:broader epr:GroupRelationshipType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#successor-mat-predecessor-sat> .
 
 epr:PredecessorSingleAcademyTrust
     a skos:Concept ;
@@ -692,7 +696,8 @@ epr:PredecessorSingleAcademyTrust
     skos:prefLabel "Predecessor SAT"@en ;
     skos:definition "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en ;
     skos:broader epr:GroupRelationshipType ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#successor-mat-predecessor-sat> .
 
 epr:GroupId
     a skos:Concept ;
@@ -721,7 +726,8 @@ epr:GroupUniqueIdentifier
     skos:scopeNote "Distinct from GroupId, which is the business-facing identifier carrying a TR or SP prefix. The UID is the GIAS surrogate key for the group record."@en ;
     skos:broader epr:EstablishmentGroupMembership ;
     skos:related epr:GroupId ;
-    epr:status "Provisional"@en .
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#group-uid> .
 
 epr:GroupMembershipDate
     a skos:Concept ;
@@ -2793,7 +2799,9 @@ epr:TypeOfResourcedProvision
     skos:scopeNote "The database field name uses Reserved rather than Resourced, a legacy naming difference. The UI label uses resourced."@en ;
     skos:broader epr:SenAndResourcedProvision ;
     epr:status "Preferred"@en ;
-    dcterms:source "C#: TypeOfResourcedProvisionId; Java: SpecialIndicators.typeOfResourcedProvision; database: Establishment.TypeOfReservedProvision"@en .
+    dcterms:source "C#: TypeOfResourcedProvisionId; Java: SpecialIndicators.typeOfResourcedProvision; database: Establishment.TypeOfReservedProvision"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#resourced-provision> ;
+    rdfs:isDefinedBy <https://explore-education-statistics.service.gov.uk/methodology/special-educational-needs-in-england>, <https://www.gov.uk/government/consultations/send-reform-putting-children-and-young-people-first/send-reform-putting-children-and-young-people-first-html-version> .
 
 epr:ResourcedProvisionPupilCount
     a skos:Concept ;
