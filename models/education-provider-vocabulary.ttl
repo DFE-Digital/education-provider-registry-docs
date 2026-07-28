@@ -2490,7 +2490,8 @@ epr:Easting
     skos:definition "The easting component of the OS National Grid reference, in metres east of the grid origin."@en ;
     skos:broader epr:OsGridReference ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.Easting"@en .
+    dcterms:source "Database: Establishment.Easting"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#os-grid-reference-easting-northing> .
 
 epr:Northing
     a skos:Concept ;
@@ -2499,7 +2500,8 @@ epr:Northing
     skos:definition "The northing component of the OS National Grid reference, in metres north of the grid origin."@en ;
     skos:broader epr:OsGridReference ;
     epr:status "Provisional"@en ;
-    dcterms:source "Database: Establishment.Northing"@en .
+    dcterms:source "Database: Establishment.Northing"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#os-grid-reference-easting-northing> .
 
 #################################################################
 # Leadership
