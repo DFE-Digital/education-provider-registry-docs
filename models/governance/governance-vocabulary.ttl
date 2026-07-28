@@ -69,6 +69,7 @@ gov:governanceConcepts
         gov:HistoricalAppointment,
         gov:HistoricalMember,
         gov:HistoricalRecord,
+        gov:InterimExecutiveBoard,
         gov:LocalAuthority,
         gov:LocalAuthorityGovernor,
         gov:LocalGoverningBody,
@@ -137,6 +138,7 @@ gov:GovernanceProfessional a skos:Concept ; skos:inScheme gov:governanceVocabula
 gov:HistoricalAppointment a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Historical appointment"@en ; skos:definition "An appointment that has ended or is retained as a record of past governance."@en ; gov:status "Provisional"@en .
 gov:HistoricalMember a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Historical member"@en ; skos:definition "A person retained as having held membership of a governing body in the past."@en ; gov:status "Provisional"@en .
 gov:HistoricalRecord a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Historical record"@en ; skos:definition "A record retained to describe a past governance state or event."@en ; gov:status "Provisional"@en .
+gov:InterimExecutiveBoard a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Interim Executive Board"@en ; skos:definition "A governing body consisting wholly or partly of interim executive members, established by a local authority under s.65 of the Education and Inspections Act 2006 with the Secretary of State's consent." @en ; gov:status "Provisional"@en .
 gov:LocalAuthority a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local authority"@en ; skos:definition "A local government body that may maintain an establishment or appoint a governor."@en ; gov:status "Provisional"@en .
 gov:LocalAuthorityGovernor a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local authority governor"@en ; skos:definition "A governor nominated or appointed through a local authority route."@en ; gov:status "Provisional"@en .
 gov:LocalGoverningBody a skos:Concept ; skos:inScheme gov:governanceVocabulary ; skos:prefLabel "Local governing body"@en ; skos:definition "A governing body responsible for local governance of an academy or group of establishments."@en ; gov:status "Provisional"@en .

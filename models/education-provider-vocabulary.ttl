@@ -201,7 +201,10 @@ epr:senAndResourcedProvision
         epr:ResourcedProvisionPupilCount,
         epr:ResourcedProvisionCapacity,
         epr:SenUnitPupilCount,
-        epr:SenUnitCapacity .
+        epr:SenUnitCapacity,
+        epr:EhcPlan,
+        epr:StatementOfSen,
+        epr:SenUnit .
 
 epr:alternativeProvisionCharacteristics
     a skos:Collection ;
@@ -465,10 +468,13 @@ epr:SenAndResourcedProvision
     skos:prefLabel "SEN and resourced provision"@en ;
     skos:definition "The types of SEN provision offered, resourced-provision type, and numeric measures (capacity and pupil count on roll) for any resourced provision or SEN unit within the establishment, as defined in the SEND Code of Practice 2015."@en ;
     skos:narrower
+        epr:EhcPlan,
         epr:ResourcedProvisionCapacity,
         epr:ResourcedProvisionPupilCount,
+        epr:SenUnit,
         epr:SenUnitCapacity,
         epr:SenUnitPupilCount,
+        epr:StatementOfSen,
         epr:TypeOfResourcedProvision,
         epr:TypeOfSenProvision ;
     epr:status "Provisional"@en .
@@ -2789,6 +2795,44 @@ epr:TypeOfSenProvision
     dcterms:source "C#: SEN1Ids to SEN4Ids; Java: senPriority1 to senPriority4; database: EstablishmentToSen1 plus legacy EstablishmentToSen2-4"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#type-of-sen-provision> ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+epr:EhcPlan
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "EHC plan"@en ;
+    skos:altLabel "Education, Health and Care plan"@en ;
+    skos:definition "A legal document setting out a child or young person's special educational needs and the special educational, health and social care provision required to meet them, prepared and maintained by the local authority under s.37 of the Children and Families Act 2014."@en ;
+    skos:scopeNote "Referenced in GIAS by the pupil counts recorded against SpecialPupilsOnStatementOrEhcPlan and SpecialPupilsNotOnStatementOrEhcPlan; not itself a displayed count field."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:StatementOfSen, epr:SpecialPupilsOnStatementOrEhcPlan ;
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#ehc-plan> ;
+    rdfs:isDefinedBy <https://www.gov.uk/children-with-special-educational-needs/extra-SEN-help> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2014/6/section/37> .
+
+epr:StatementOfSen
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "Statement of SEN"@en ;
+    skos:definition "The predecessor legal document to the EHC plan, made and maintained by a local authority under s.324 of the Education Act 1996 to record a child's special educational needs. Excluded in England from 1 September 2014 by Schedule 3 to the Children and Families Act 2014; existing statements were transitioned to EHC plans and no new statements can be issued in England."@en ;
+    skos:scopeNote "Historical term, retained in GIAS pupil-count fields alongside EHC plan (SpecialPupilsOnStatementOrEhcPlan, SpecialPupilsNotOnStatementOrEhcPlan) for continuity."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:EhcPlan, epr:SpecialPupilsOnStatementOrEhcPlan ;
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#statement-of-sen> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/324> .
+
+epr:SenUnit
+    a skos:Concept ;
+    skos:inScheme epr:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEN unit"@en ;
+    skos:definition "A special provision within a mainstream school where pupils with SEN are taught mainly within separate classes for at least half of the time, distinguished from resourced provision by that proportion of time spent outside mainstream classes."@en ;
+    skos:scopeNote "Its numeric measures (capacity and pupil count on roll) are recorded separately as SenUnitCapacity and SenUnitPupilCount. DfE's 2026 SEND reform consultation proposes replacing 'SEN unit', 'resourced provision' and 'pupil support unit' with a single new term 'Inclusion Bases'."@en ;
+    skos:broader epr:SenAndResourcedProvision ;
+    skos:related epr:SenUnitCapacity, epr:SenUnitPupilCount, epr:TypeOfResourcedProvision ;
+    epr:status "Provisional"@en ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sen-unit> ;
+    rdfs:isDefinedBy <https://explore-education-statistics.service.gov.uk/methodology/special-educational-needs-in-england>, <https://www.gov.uk/government/consultations/send-reform-putting-children-and-young-people-first/send-reform-putting-children-and-young-people-first-html-version> .
 
 epr:TypeOfResourcedProvision
     a skos:Concept ;
