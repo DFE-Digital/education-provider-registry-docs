@@ -98,7 +98,7 @@ gov:RoleAndOfficeResponsibility
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Role and office-holder responsibility"@en ;
     skos:definition "A named responsibility or office held by a governance participant."@en ;
-    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:AccountingOfficer ;
+    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:AccountingOfficer, gov:ChiefFinancialOfficer, gov:CompanySecretary ;
     gov:status "Provisional"@en .
 
 gov:CommitteeResponsibility
