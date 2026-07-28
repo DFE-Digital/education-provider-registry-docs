@@ -1,6 +1,5 @@
 ﻿param(
     [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
-    [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
     [string]$ReferencesDocPath = (Join-Path (Join-Path (Join-Path $PSScriptRoot "..\..\..") (Join-Path "docs" (Join-Path "transformation" (Join-Path "data" "modelling")))) "vocabulary-real-world-references.md"),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "vocabulary")),
     [string]$VocabularyPrefix = "epr",
@@ -119,39 +118,6 @@ function Format-UriLinks {
     }) -join "<br>"
 }
 
-# Build citation lookup from the taxonomy TTL (rdfs:isDefinedBy, epr:legislation, dcterms:references)
-$citationLookup = @{}
-if (-not $SkipReferences -and (Test-Path -LiteralPath $TaxonomyPath)) {
-    $resolvedTaxonomyPath = Resolve-Path -LiteralPath $TaxonomyPath
-    $taxonomyTtl = Get-Content -LiteralPath $resolvedTaxonomyPath -Raw
-
-    $taxonMatches = [regex]::Matches(
-        $taxonomyTtl,
-        "(?ms)^${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)\s+a\s+skos:Concept\s*;\s*(.*?)(?=^\S|\z)"
-    )
-
-    foreach ($match in $taxonMatches) {
-        $localName = $match.Groups[1].Value
-        $block = $match.Groups[2].Value
-        $isDefinedBy = @(Get-UriValues -Block $block -Predicate "rdfs:isDefinedBy")
-        $legislation  = @(Get-UriValues -Block $block -Predicate "epr:legislation")
-        $references   = @(Get-UriValues -Block $block -Predicate "dcterms:references")
-
-        if ($isDefinedBy.Count -gt 0 -or $legislation.Count -gt 0 -or $references.Count -gt 0) {
-            $citationLookup[$localName] = @{
-                IsDefinedBy = $isDefinedBy
-                Legislation = $legislation
-                References  = $references
-            }
-        }
-    }
-
-    Write-Host "Built citation lookup from taxonomy: $($citationLookup.Count) concepts with citations"
-}
-elseif (-not $SkipReferences) {
-    Write-Warning "Taxonomy file not found at $TaxonomyPath - citation attributes will not be shown on vocab pages"
-}
-
 $conceptMatches = [regex]::Matches(
     $ttl,
     "(?ms)^${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)\s+a\s+skos:Concept\s*;\s*(.*?)(?=^\S|\z)"
@@ -166,8 +132,6 @@ $concepts = foreach ($match in $conceptMatches) {
         $preferredLabel = $localName
     }
 
-    $citations = if ($citationLookup.ContainsKey($localName)) { $citationLookup[$localName] } else { $null }
-
     [pscustomobject]@{
         LocalName         = $localName
         PreferredLabel    = $preferredLabel
@@ -179,9 +143,9 @@ $concepts = foreach ($match in $conceptMatches) {
         Broader           = @(Get-Refs -Block $block -Predicate "skos:broader")
         Related           = @(Get-Refs -Block $block -Predicate "skos:related")
         Sources           = @(Get-Literals -Block $block -Predicate "dcterms:source")
-        IsDefinedBy       = if ($null -ne $citations) { $citations.IsDefinedBy } else { @() }
-        Legislation       = if ($null -ne $citations) { $citations.Legislation } else { @() }
-        References        = if ($null -ne $citations) { $citations.References } else { @() }
+        IsDefinedBy       = @(Get-UriValues -Block $block -Predicate "rdfs:isDefinedBy")
+        Legislation       = @(Get-UriValues -Block $block -Predicate "${VocabularyPrefix}:legislation")
+        References        = @(Get-UriValues -Block $block -Predicate "dcterms:references")
         SeeAlso           = @(Get-UriValues -Block $block -Predicate "rdfs:seeAlso")
     }
 }
