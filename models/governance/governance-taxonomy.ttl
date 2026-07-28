@@ -352,12 +352,14 @@ gov:Trustee
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Trustee"@en ;
     skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:related gov:CompanyDirector, gov:Director ;
     gov:status "Provisional"@en .
 
 gov:AcademyTrustee
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy trustee"@en ;
     skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:related gov:CompanyDirector, gov:Director ;
     gov:status "Provisional"@en .
 
 gov:AcademyTrustMember
@@ -376,12 +378,14 @@ gov:CompanyDirector
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Company director"@en ;
     skos:broader gov:GovernanceParticipantType ;
+    skos:related gov:Trustee, gov:AcademyTrustee ;
     gov:status "Provisional"@en .
 
 gov:Director
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Director"@en ;
     skos:broader gov:GovernanceParticipantType ;
+    skos:related gov:Trustee, gov:AcademyTrustee ;
     gov:status "Provisional"@en .
 
 gov:Clerk
