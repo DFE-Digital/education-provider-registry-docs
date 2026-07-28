@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2012/1034/contents](https://www.legislation.gov.uk/uksi/2012/1034/contents)<br>[https://www.legislation.gov.uk/ukpga/2002/32/section/19](https://www.legislation.gov.uk/ukpga/2002/32/section/19) |
+| References | [See evidence for Governor](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#governor) |
 
 ## Definition
 

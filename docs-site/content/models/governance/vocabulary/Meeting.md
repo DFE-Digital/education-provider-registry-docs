@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/uksi/2013/1624/regulation/14/made](https://www.legislation.gov.uk/uksi/2013/1624/regulation/14/made) |
+| References | [See evidence for Meeting](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#meeting) |
 
 ## Definition
 

@@ -13,8 +13,8 @@
 | Broader concepts |  |
 | Related concepts |  |
 | Defined by |  |
-| Legislation |  |
-| References |  |
+| Legislation | [https://www.legislation.gov.uk/ukpga/2002/32/section/24](https://www.legislation.gov.uk/ukpga/2002/32/section/24)<br>[https://www.legislation.gov.uk/uksi/2012/1035/contents](https://www.legislation.gov.uk/uksi/2012/1035/contents) |
+| References | [See evidence for Federation](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#federation) |
 
 ## Definition
 
