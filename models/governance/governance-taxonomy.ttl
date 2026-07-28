@@ -30,7 +30,8 @@ gov:governanceTaxonomy
         gov:HistoricalRecordStatus,
         gov:ComplianceAndDeclarationStatus,
         gov:TrainingAndAssuranceRecordType,
-        gov:CollaborationAndDocumentType .
+        gov:CollaborationAndDocumentType,
+        gov:AppointmentBasis .
 
 gov:governanceTaxonomyFacets
     a skos:Collection ;
@@ -48,7 +49,8 @@ gov:governanceTaxonomyFacets
         gov:HistoricalRecordStatus,
         gov:ComplianceAndDeclarationStatus,
         gov:TrainingAndAssuranceRecordType,
-        gov:CollaborationAndDocumentType .
+        gov:CollaborationAndDocumentType,
+        gov:AppointmentBasis .
 
 #################################################################
 # Facets
@@ -156,6 +158,14 @@ gov:CollaborationAndDocumentType
     skos:prefLabel "Collaboration and document type"@en ;
     skos:definition "Governance activities and shared communication artefacts."@en ;
     skos:narrower gov:Meeting, gov:Attendance, gov:Noticeboard ;
+    gov:status "Provisional"@en .
+
+gov:AppointmentBasis
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:topConceptOf gov:governanceTaxonomy ;
+    skos:prefLabel "Appointment basis"@en ;
+    skos:definition "The basis on which a governance participant holds their position: a statutory governance appointment, a paid operational employment role, or a role whose employment arrangement varies. This is an orthogonal classification, applied alongside a concept's primary facet, and is only assigned where the evidence in academy-trust-governance-real-world-rules.md and the Academy Trust Handbook supports it - it is not applied to organisation, record, process or legal-capacity concepts, or to concepts with no direct evidence either way."@en ;
+    skos:narrower gov:StatutoryGovernanceAppointment, gov:OperationalEmploymentRole, gov:MixedOrVariableBasis ;
     gov:status "Provisional"@en .
 
 #################################################################
@@ -275,7 +285,7 @@ gov:CompaniesHouseLegalEntity
 gov:Governor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:GovernorType
@@ -287,79 +297,79 @@ gov:GovernorType
 gov:CoOptedGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Co-opted governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:ExOfficioGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Ex-officio governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:FoundationGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Foundation governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:LocalAuthorityGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Local authority governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:LocalGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Local governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:ParentGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Parent governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:StaffGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Staff governor"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:BoardMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Board member"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:LocalGoverningBodyMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Local governing body member"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:Trustee
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Trustee"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:AcademyTrustee
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy trustee"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:AcademyTrustMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy trust member"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:TrustMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Trust member"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:CompanyDirector
@@ -377,19 +387,19 @@ gov:Director
 gov:Clerk
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Clerk"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:MixedOrVariableBasis ;
     gov:status "Provisional"@en .
 
 gov:GovernanceProfessional
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Governance professional"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:MixedOrVariableBasis ;
     gov:status "Provisional"@en .
 
 gov:Principal
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Principal"@en ;
-    skos:broader gov:GovernanceParticipantType ;
+    skos:broader gov:GovernanceParticipantType, gov:OperationalEmploymentRole ;
     gov:status "Provisional"@en .
 
 gov:Appointment
@@ -443,37 +453,37 @@ gov:OfficeHolder
 gov:Chair
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Chair"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:ViceChair
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Vice chair"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:CommitteeChair
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Committee chair"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility, gov:CommitteeResponsibility ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:CommitteeResponsibility, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:AccountingOfficer
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Accounting officer"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:OperationalEmploymentRole ;
     gov:status "Provisional"@en .
 
 gov:ChiefFinancialOfficer
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Chief financial officer"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:OperationalEmploymentRole ;
     gov:status "Provisional"@en .
 
 gov:CompanySecretary
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Company secretary"@en ;
-    skos:broader gov:RoleAndOfficeResponsibility ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:MixedOrVariableBasis ;
     gov:status "Provisional"@en .
 
 gov:Committee
@@ -576,4 +586,25 @@ gov:Noticeboard
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Noticeboard"@en ;
     skos:broader gov:CollaborationAndDocumentType ;
+    gov:status "Provisional"@en .
+
+gov:StatutoryGovernanceAppointment
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Statutory governance appointment"@en ;
+    skos:definition "A governance position that is usually unpaid and held under the statutory governor, trustee, member or chair framework, per the \"usually unpaid governance roles\" evidence in academy-trust-governance-real-world-rules.md."@en ;
+    skos:broader gov:AppointmentBasis ;
+    gov:status "Provisional"@en .
+
+gov:OperationalEmploymentRole
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Operational employment role"@en ;
+    skos:definition "A paid operational or executive position at the trust or school, not itself a governance appointment even where the same person may separately hold one, per the \"typically paid operational roles\" evidence in academy-trust-governance-real-world-rules.md."@en ;
+    skos:broader gov:AppointmentBasis ;
+    gov:status "Provisional"@en .
+
+gov:MixedOrVariableBasis
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Mixed or variable basis"@en ;
+    skos:definition "A role whose employment arrangement can vary between a trust employee and an external or contracted professional, per the \"typically paid, but employment arrangement can vary\" evidence in academy-trust-governance-real-world-rules.md."@en ;
+    skos:broader gov:AppointmentBasis ;
     gov:status "Provisional"@en .
