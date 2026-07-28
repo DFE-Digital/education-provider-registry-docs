@@ -624,7 +624,9 @@ epr:ChildrensCentreGroup
     skos:definition "An operational cluster of children's centres with a lead-centre arrangement, registered as a group in GIAS."@en ;
     skos:broader epr:EstablishmentGroup ;
     epr:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centres-group> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centres-group> ;
+    rdfs:isDefinedBy <https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/379470/Children_27s_20centre_20inspection_20handbook.pdf>, <https://www.gov.uk/government/publications/sure-start-childrens-centres> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2006/21/section/5A> .
 
 epr:ChildrensCentreCollaboration
     a skos:Concept ;
@@ -633,7 +635,8 @@ epr:ChildrensCentreCollaboration
     skos:definition "A cross-group collaboration arrangement between children's centres, registered as a group in GIAS."@en ;
     skos:broader epr:EstablishmentGroup ;
     epr:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centres-collaboration> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#childrens-centres-collaboration> ;
+    rdfs:isDefinedBy <https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/379470/Children_27s_20centre_20inspection_20handbook.pdf> .
 
 epr:GenericTrust
     a skos:Concept ;
@@ -1105,7 +1108,8 @@ epr:AcademySecure16To19
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-secure-16-to-19> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> .
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> .
 
 epr:BritishSchoolsOverseas
     a skos:Concept ;
@@ -1256,7 +1260,8 @@ epr:HigherEducationInstitution
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#higher-education-institution> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2017/29/section/83> .
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2017/29/section/83> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> .
 
 epr:InstitutionFundedByOtherGovernmentDepartment
     a skos:Concept ;
@@ -1279,7 +1284,8 @@ epr:MaintainedNurserySchool
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#maintained-nursery-school> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/22> .
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/22> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> .
 
 epr:MiscellaneousEstablishment
     a skos:Concept ;
@@ -1314,7 +1320,8 @@ epr:OffshoreSchools
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#offshore-schools> ;
-    dcterms:references <https://www.gov.uk/guidance/get-information-about-schools> .
+    dcterms:references <https://www.gov.uk/guidance/get-information-about-schools> ;
+    rdfs:isDefinedBy <https://www.gov.uk/guidance/get-information-about-schools> .
 
 epr:OnlineProvider
     a skos:Concept ;
@@ -1326,7 +1333,8 @@ epr:OnlineProvider
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#online-provider> ;
-    dcterms:references <https://www.gov.uk/guidance/apply-for-online-education-accreditation> .
+    dcterms:references <https://www.gov.uk/guidance/apply-for-online-education-accreditation> ;
+    rdfs:isDefinedBy <https://www.gov.uk/guidance/apply-for-online-education-accreditation>, <https://reports.ofsted.gov.uk/search?level_1_types=1&level_2_types=2> .
 
 epr:OtherIndependentSpecialSchool
     a skos:Concept ;
@@ -1363,7 +1371,8 @@ epr:SecureUnits
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#secure-units> ;
-    dcterms:references <https://www.gov.uk/government/collections/youth-justice-statistics> .
+    dcterms:references <https://www.gov.uk/government/collections/youth-justice-statistics> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/collections/youth-justice-statistics> .
 
 epr:ServiceChildrensEducation
     a skos:Concept ;
@@ -1386,7 +1395,8 @@ epr:SixthFormCentre
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from local domain notes"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sixth-form-centre> ;
-    dcterms:references <https://www.gov.uk/further-education-courses/types-of-further-education> .
+    dcterms:references <https://www.gov.uk/further-education-courses/types-of-further-education> ;
+    rdfs:isDefinedBy <https://www.gov.uk/further-education-courses/types-of-further-education> .
 
 epr:SpecialPost16Institution
     a skos:Concept ;
@@ -1468,7 +1478,8 @@ epr:AllThroughPhase
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#all-through> ;
-    dcterms:references <https://www.gov.uk/national-curriculum> .
+    dcterms:references <https://www.gov.uk/national-curriculum> ;
+    rdfs:isDefinedBy <https://www.gov.uk/national-curriculum> .
 
 epr:MiddlePhase
     a skos:Concept ;
@@ -1506,7 +1517,8 @@ epr:NurseryPhase
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from `docs/data`"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nursery> ;
-    rdfs:isDefinedBy <https://www.gov.uk/early-years-foundation-stage> .
+    rdfs:isDefinedBy <https://www.gov.uk/early-years-foundation-stage> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/4> .
 
 epr:PrimaryPhase
     a skos:Concept ;
@@ -1518,7 +1530,8 @@ epr:PrimaryPhase
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#primary> ;
-    rdfs:isDefinedBy <https://www.gov.uk/national-curriculum> .
+    rdfs:isDefinedBy <https://www.gov.uk/national-curriculum> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/2> .
 
 epr:SecondaryPhase
     a skos:Concept ;
@@ -1530,7 +1543,8 @@ epr:SecondaryPhase
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#secondary> ;
-    rdfs:isDefinedBy <https://www.gov.uk/national-curriculum> .
+    rdfs:isDefinedBy <https://www.gov.uk/national-curriculum> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1996/56/section/2> .
 
 epr:SixteenToNineteenPhase
     a skos:Concept ;
@@ -1566,7 +1580,8 @@ epr:NonSelectiveAdmissions
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#non-selective> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/school-admissions-code--2> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/school-admissions-code--2> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2006/40/section/39>, <https://www.legislation.gov.uk/ukpga/1998/31/section/99> .
 
 epr:SelectiveAdmissions
     a skos:Concept ;
@@ -1603,7 +1618,8 @@ epr:BoardingSchool
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#boarding-school> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/boarding-schools-national-minimum-standards> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/boarding-schools-national-minimum-standards> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1989/41/section/87>, <https://www.legislation.gov.uk/ukpga/1996/56/section/579>, <https://www.legislation.gov.uk/uksi/2014/3283/regulation/2> .
 
 epr:HasBoarders
     a skos:Concept ;
@@ -1664,7 +1680,8 @@ epr:MixedGenderEntry
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Invented review definition"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#mixed> ;
-    dcterms:references <https://www.gov.uk/government/publications/school-admissions-code--2> .
+    dcterms:references <https://www.gov.uk/government/publications/school-admissions-code--2> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/15/schedule/11> .
 
 epr:NotApplicableGenderOfEntry
     a skos:Concept ;
@@ -1687,7 +1704,8 @@ epr:HasNurseryClasses
     skos:broader epr:NurseryProvision ;
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nursery-classes> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nursery-classes> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2> .
 
 epr:NoNurseryClasses
     a skos:Concept ;
@@ -1720,7 +1738,8 @@ epr:HasSixthForm
     skos:broader epr:SixthFormProvision ;
     epr:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sixth-form> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sixth-form> ;
+    rdfs:isDefinedBy <https://www.gov.uk/guidance/16-to-19-funding-how-it-works>, <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> .
 
 epr:NoSixthForm
     a skos:Concept ;
@@ -1917,7 +1936,9 @@ epr:UniqueReferenceNumber
     skos:broader epr:EstablishmentIdentity ;
     epr:status "Preferred"@en ;
     dcterms:source "C#: Urn; Java: Establishment.urn; database: Establishment.URN"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#unique-reference-number-urn> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#unique-reference-number-urn> ;
+    rdfs:isDefinedBy <https://get-information-schools.service.gov.uk/glossary> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2020/894/regulation/2/made> .
 
 epr:EstablishmentNumber
     a skos:Concept ;
@@ -1950,7 +1971,8 @@ epr:Laestab
     skos:broader epr:EstablishmentIdentity ;
     skos:related epr:DfeNumber ;
     epr:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#laestab-dfe-number> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#laestab-dfe-number> ;
+    rdfs:isDefinedBy <https://get-information-schools.service.gov.uk/glossary> .
 
 epr:UkProviderReferenceNumber
     a skos:Concept ;
@@ -1961,7 +1983,8 @@ epr:UkProviderReferenceNumber
     skos:broader epr:EstablishmentIdentity ;
     epr:status "Preferred"@en ;
     dcterms:source "C#: UKPRN; Java: ukprn; database: Establishment.UKPRN"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#uk-provider-reference-number-ukprn> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#uk-provider-reference-number-ukprn> ;
+    rdfs:isDefinedBy <https://www.ukrlp.co.uk/ukrlp/ukrlp_util.page_pls_staticPage?x=&pv_page=FAQ>, <https://guidance.submit-learner-data.service.gov.uk/25-26/ilr/entity/LearningProvider/field/UKPRN> .
 
 epr:FeHeIdentifier
     a skos:Concept ;
@@ -2312,7 +2335,8 @@ epr:UniquePropertyReferenceNumber
     skos:broader epr:Site ;
     skos:scopeNote "UPRN identifies a physical property (a site), not a postal address. Updated from broader epr:EstablishmentLocationAndContact to epr:Site in v1.5 to reflect that UPRN belongs on the physical location record."@en ;
     epr:status "Preferred"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#unique-property-reference-number-uprn> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#unique-property-reference-number-uprn> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information>, <https://alphagov.github.io/data-standards-authority/standards/UPRN/> .
 
 #################################################################
 # Administrative geography (v1.3)
@@ -2347,7 +2371,8 @@ epr:GovernmentOfficeRegion
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.GOR_code → GovernmentOfficeRegion"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#government-office-region> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#government-office-region> ;
+    rdfs:isDefinedBy <https://www.ons.gov.uk/methodology/geography/ukgeographies/administrativegeography/england> .
 
 epr:UrbanRuralClassification
     a skos:Concept ;
@@ -2357,7 +2382,8 @@ epr:UrbanRuralClassification
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.UrbanRural_code → UrbanRural"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#urban-rural-classification> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#urban-rural-classification> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/collections/rural-urban-classification> .
 
 epr:AdministrativeWard
     a skos:Concept ;
@@ -2367,7 +2393,8 @@ epr:AdministrativeWard
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.administrativeWard_code → AdministrativeWard; derived via GeoData"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#administrative-ward> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#administrative-ward> ;
+    rdfs:isDefinedBy <https://www.ons.gov.uk/methodology/geography/ukgeographies/administrativegeography/england> .
 
 epr:ParliamentaryConstituency
     a skos:Concept ;
@@ -2377,7 +2404,8 @@ epr:ParliamentaryConstituency
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.parliamentaryConstituency_code → ParliamentaryConstituency; derived via GeoData"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#parliamentary-constituency> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#parliamentary-constituency> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1986/56/section/1> .
 
 epr:LowerLayerSuperOutputArea
     a skos:Concept ;
@@ -2388,7 +2416,8 @@ epr:LowerLayerSuperOutputArea
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.lsoa_code → LSOA; derived via GeoData"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#lower-layer-super-output-area-lsoa> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#lower-layer-super-output-area-lsoa> ;
+    rdfs:isDefinedBy <https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies> .
 
 epr:MiddleLayerSuperOutputArea
     a skos:Concept ;
@@ -2399,7 +2428,8 @@ epr:MiddleLayerSuperOutputArea
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.msoa_code → MSOA; derived via GeoData"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#middle-layer-super-output-area-msoa> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#middle-layer-super-output-area-msoa> ;
+    rdfs:isDefinedBy <https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies> .
 
 epr:DistrictAdministrative
     a skos:Concept ;
@@ -2410,7 +2440,8 @@ epr:DistrictAdministrative
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.districtAdministrative_code → DistrictAdministrative"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#district-administrative> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#district-administrative> ;
+    rdfs:isDefinedBy <https://www.ons.gov.uk/methodology/geography/ukgeographies/administrativegeography/england> .
 
 epr:GssLocalAuthorityCode
     a skos:Concept ;
@@ -2421,7 +2452,8 @@ epr:GssLocalAuthorityCode
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.GssLaCode_code → GSSLACode"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#gss-local-authority-code> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#gss-local-authority-code> ;
+    rdfs:isDefinedBy <https://www.ons.gov.uk/methodology/geography/geographicalproducts/namescodesandlookups/namesandcodeslistings> .
 
 epr:OsGridReference
     a skos:Concept ;
@@ -2434,7 +2466,8 @@ epr:OsGridReference
     skos:broader epr:AdministrativeGeography ;
     epr:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Easting, Establishment.Northing"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#os-grid-reference-easting-northing> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#os-grid-reference-easting-northing> ;
+    rdfs:isDefinedBy <https://docs.os.uk/more-than-maps/a-guide-to-coordinate-systems-in-great-britain/transverse-mercator-map-projections/the-national-grid-reference-convention>, <https://docs.os.uk/more-than-maps/a-guide-to-coordinate-systems-in-great-britain/ordnance-survey-coordinate-systems> .
 
 epr:Easting
     a skos:Concept ;
@@ -2595,7 +2628,9 @@ epr:Section41Approval
     skos:broader epr:EducationAdmissionsAndProvision ;
     epr:status "Provisional"@en ;
     dcterms:source "Database field: Section41Approved"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#section-41-approval> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#section-41-approval> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/independent-special-schools-and-colleges> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2014/6/section/41> .
 
 #################################################################
 # Capacity and pupil measures
@@ -2697,7 +2732,8 @@ epr:ReligiousCharacter
         epr:RomanCatholicCharacter ;
     epr:status "Preferred"@en ;
     dcterms:source "C#: ReligiousCharacterId; Java: Characteristics.religiousCharacter; database: Establishment.religiousCharacter_code"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#religious-character> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#religious-character> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/69> .
 
 epr:ReligiousEthos
     a skos:Concept ;
@@ -2712,7 +2748,9 @@ epr:ReligiousEthos
         epr:NotApplicableReligiousEthos,
         epr:OtherReligiousEthos ;
     epr:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#religious-ethos> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#religious-ethos> ;
+    rdfs:isDefinedBy <https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/865049/BRANDED_independent_school_registration_guidance_21_August_2019Ms.pdf>, <https://www.gov.uk/government/publications/independent-school-inspection-toolkit-operating-guide-and-information/operating-guide-for-standard-inspections-of-non-association-independent-schools-for-use-from-january-2026> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/15/schedule/11/paragraph/5>, <https://www.legislation.gov.uk/uksi/2014/3283/schedule/made> .
 
 epr:Diocese
     a skos:Concept ;
@@ -2723,7 +2761,9 @@ epr:Diocese
     skos:broader epr:FaithContext ;
     skos:related epr:ReligiousCharacter ;
     epr:status "Preferred"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#diocese> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#diocese> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/142>, <https://www.legislation.gov.uk/uksi/1998/2535/made>, <https://www.legislation.gov.uk/uksi/2012/1034/schedule/3>, <https://www.legislation.gov.uk/ukcm/2021/1> .
 
 #################################################################
 # SEN and resourced provision
@@ -2739,7 +2779,8 @@ epr:TypeOfSenProvision
     skos:broader epr:SenAndResourcedProvision ;
     epr:status "Provisional"@en ;
     dcterms:source "C#: SEN1Ids to SEN4Ids; Java: senPriority1 to senPriority4; database: EstablishmentToSen1 plus legacy EstablishmentToSen2-4"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#type-of-sen-provision> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#type-of-sen-provision> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
 
 epr:TypeOfResourcedProvision
     a skos:Concept ;
@@ -2991,7 +3032,9 @@ epr:CompaniesHouseNumber
     skos:broader epr:AccreditationAndQualityAssurance ;
     epr:status "Provisional"@en ;
     dcterms:source "Database field: CHNumber"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#companies-house-number> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#companies-house-number> ;
+    rdfs:isDefinedBy <https://find-and-update.company-information.service.gov.uk> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/1066> .
 
 epr:EstablishmentAccredited
     a skos:Concept ;
@@ -3143,7 +3186,8 @@ epr:Academy1619
     epr:legacyGiasLabel "Academy 16-19 converter"@en, "Academy 16 to 19 sponsor led"@en ;
     epr:status "Preferred"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-16-to-19> ;
-    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> .
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> .
 
 epr:AcademyRoute
     a skos:Concept ;
@@ -3152,7 +3196,8 @@ epr:AcademyRoute
     skos:definition "The route by which an academy was established under the Academies Act 2010: Converter (an existing school or provider that voluntarily converted) or Sponsor led (a school taken on by or established with an approved sponsor)."@en ;
     skos:narrower epr:ConverterRoute, epr:SponsorLedRoute ;
     epr:status "Preferred"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-route> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#academy-route> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies> .
 
 epr:ConverterRoute
     a skos:Concept ;
@@ -3163,7 +3208,9 @@ epr:ConverterRoute
     skos:broader epr:AcademyRoute ;
     epr:legacyGiasLabel "Academy converter"@en, "Academy special converter"@en, "Academy alternative provision converter"@en, "Academy 16-19 converter"@en ;
     epr:status "Preferred"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#converter> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#converter> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies> .
 
 epr:SponsorLedRoute
     a skos:Concept ;
@@ -3174,7 +3221,9 @@ epr:SponsorLedRoute
     skos:broader epr:AcademyRoute ;
     epr:legacyGiasLabel "Academy sponsor led"@en, "Academy special sponsor led"@en, "Academy alternative provision sponsor led"@en, "Academy 16 to 19 sponsor led"@en ;
     epr:status "Preferred"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sponsor-led> .
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#sponsor-led> ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2010/32/crossheading/conversion-of-schools-into-academies> .
 
 epr:FreeSchoolEstablishment
     a skos:Concept ;
@@ -3338,7 +3387,8 @@ epr:MemberRole
     skos:broader epr:GovernanceRoleType ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#member-of-academy-trust> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/112> .
 
 epr:AccountingOfficerRole
     a skos:Concept ;
@@ -3404,7 +3454,8 @@ epr:GovernanceProfessionalLaMaintainedSchoolRole
     skos:broader epr:GovernanceRoleType ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governance-professional-la-maintained-school> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-handbook> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-handbook> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2013/1624/contents> .
 
 epr:LocalGovernanceProfessionalIndividualAcademyRole
     a skos:Concept ;
@@ -3444,7 +3495,8 @@ epr:GovernanceProfessionalFederationRole
     skos:broader epr:GovernanceRoleType ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#governance-professional-federation> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-handbook> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-handbook> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1035/contents>, <https://www.legislation.gov.uk/uksi/2013/1624/contents> .
 
 epr:SharedGovernanceProfessionalEstablishmentRole
     a skos:Concept ;
@@ -3476,7 +3528,8 @@ epr:AppointedByGoverningBoard
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-gb-board> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/11> .
 
 epr:AppointedByFoundationOrTrust
     a skos:Concept ;
@@ -3486,7 +3539,8 @@ epr:AppointedByFoundationOrTrust
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-foundation-trust> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9> .
 
 epr:ElectedByParents
     a skos:Concept ;
@@ -3567,7 +3621,8 @@ epr:NominatedByLaAppointedByGb
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nominated-by-la-and-appointed-by-gb> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/8> .
 
 epr:ExOfficioFoundationGovernor
     a skos:Concept ;
@@ -3577,7 +3632,8 @@ epr:ExOfficioFoundationGovernor
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#ex-officio-foundation-governor> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9> .
 
 epr:AppointedByTrustees
     a skos:Concept ;
@@ -3597,7 +3653,8 @@ epr:AppointedByLa
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#appointed-by-la> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/8> .
 
 epr:PersonsAppointedByFoundationOrSponsor
     a skos:Concept ;
@@ -3607,7 +3664,8 @@ epr:PersonsAppointedByFoundationOrSponsor
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#persons-appointed-by-the-foundation-or-sponsor> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/9> .
 
 epr:OriginalSignatoryMembers
     a skos:Concept ;
@@ -3627,7 +3685,8 @@ epr:NominatedByOtherBodyAppointedByGb
     skos:broader epr:GovernanceAppointingBody ;
     epr:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/references/#nominated-by-other-body-and-appointed-by-gb> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide> ;
+    epr:legislation <https://www.legislation.gov.uk/uksi/2012/1034/regulation/10>, <https://www.legislation.gov.uk/uksi/2012/1034/schedule/3> .
 
 epr:AdditionalMembersAppointedByMembers
     a skos:Concept ;
