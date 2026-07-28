@@ -51,6 +51,18 @@ jobs:
         shell: pwsh
         run: ./docs-site/scripts/generate-vocabulary-pages.ps1
 
+      - name: Generate governance vocabulary pages from Turtle
+        shell: pwsh
+        run: |
+          ./docs-site/scripts/generate-vocabulary-pages.ps1 `
+            -VocabularyPath "models/governance/governance-vocabulary.ttl" `
+            -OutputRoot "docs-site/content/models/governance/vocabulary" `
+            -VocabularyPrefix "gov" `
+            -VocabularyTitle "Governance vocabulary" `
+            -SourceTtlLabel "models/governance/governance-vocabulary.ttl" `
+            -SourceTtlUrl "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-vocabulary.ttl" `
+            -ReferencesDocPath "models/governance/governance-real-world-references.md"
+
       - name: Generate taxonomy page from Turtle
         shell: pwsh
         run: ./docs-site/scripts/generate-taxonomy-pages.ps1

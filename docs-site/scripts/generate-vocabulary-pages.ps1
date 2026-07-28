@@ -1,6 +1,6 @@
 ﻿param(
     [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
-    [string]$ReferencesDocPath = (Join-Path (Join-Path (Join-Path $PSScriptRoot "..\..\..") (Join-Path "docs" (Join-Path "transformation" (Join-Path "data" "modelling")))) "vocabulary-real-world-references.md"),
+    [string]$ReferencesDocPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "vocabulary-real-world-references.md")),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "vocabulary")),
     [string]$VocabularyPrefix = "epr",
     [string]$VocabularyTitle = "Vocabulary",
