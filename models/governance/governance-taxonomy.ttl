@@ -59,7 +59,8 @@ gov:ActorAndUserType
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Actor and user type"@en ;
     skos:definition "The kind of person or actor participating in or administering governance."@en ;
-    skos:narrower gov:Person, gov:Member ; gov:status "Provisional"@en .
+    skos:narrower gov:Person, gov:Member ;
+    gov:status "Provisional"@en .
 
 gov:OrganisationAndBoardScope
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
