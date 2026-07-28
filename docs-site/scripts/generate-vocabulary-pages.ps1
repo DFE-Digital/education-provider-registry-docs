@@ -262,10 +262,14 @@ Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "index.md") -Value $inde
 if (-not $SkipReferences -and (Test-Path -LiteralPath $ReferencesDocPath)) {
     $referencesContent = Get-Content -LiteralPath $ReferencesDocPath -Raw
 
-    # Build anchor → concept local-name map from rdfs:seeAlso on each concept.
-    # Where multiple concepts share an anchor (e.g. compound rows) the first
-    # concept alphabetically wins — but compound-term rows are skipped below.
+    # Build anchor → concept local-name map from rdfs:seeAlso on each concept,
+    # and count how many distinct concepts share each anchor. A term's own label
+    # may legitimately contain a "/" (e.g. "Appointed by GB/board", "LAESTAB / DfE
+    # number") without being a compound row - the only reliable signal for "this
+    # anchor covers more than one concept and has no single link target" is that
+    # more than one concept's rdfs:seeAlso resolves to it.
     $anchorToConceptName = @{}
+    $anchorConceptCount = @{}
     foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
         foreach ($uri in $concept.SeeAlso) {
             if ($uri -match '#([^/]+)$') {
@@ -273,22 +277,29 @@ if (-not $SkipReferences -and (Test-Path -LiteralPath $ReferencesDocPath)) {
                 if (-not $anchorToConceptName.ContainsKey($anchor)) {
                     $anchorToConceptName[$anchor] = $concept.LocalName
                 }
+                if ($anchorConceptCount.ContainsKey($anchor)) {
+                    $anchorConceptCount[$anchor] = $anchorConceptCount[$anchor] + 1
+                } else {
+                    $anchorConceptCount[$anchor] = 1
+                }
             }
         }
     }
 
     # Replace  <a id="ANCHOR"></a>TERM  with  <a id="ANCHOR"></a>[TERM](../ConceptName/)
-    # in the markdown table rows. Skip compound terms that contain " / " (no single target).
+    # in the markdown table rows. Skip only anchors shared by more than one concept
+    # (genuine compound rows, e.g. "GroupRelationship / GroupRelationshipType") -
+    # a "/" in the term text alone is not a reason to skip.
     $referencesContent = [regex]::Replace(
         $referencesContent,
-        '(<a id="([^"]+)"></a>)([^|/\r\n]+?)(\s*)(?=\|)',
+        '(<a id="([^"]+)"></a>)([^|\r\n]+?)(\s*)(?=\|)',
         {
             param($m)
             $tag    = $m.Groups[1].Value
             $anchor = $m.Groups[2].Value
             $term   = $m.Groups[3].Value
             $pad    = $m.Groups[4].Value
-            if ($anchorToConceptName.ContainsKey($anchor)) {
+            if ($anchorToConceptName.ContainsKey($anchor) -and $anchorConceptCount[$anchor] -eq 1 -and $term -notmatch '\]\(') {
                 $cn = $anchorToConceptName[$anchor]
                 "${tag}[$term](../$cn/)$pad"
             } else {
