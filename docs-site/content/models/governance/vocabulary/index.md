@@ -46,6 +46,7 @@ See also: [Real-world references for all vocabulary concepts](references/)
 | [Historical appointment](./HistoricalAppointment/) | `gov:HistoricalAppointment` | Provisional | An appointment that has ended or is retained as a record of past governance. |
 | [Historical member](./HistoricalMember/) | `gov:HistoricalMember` | Provisional | A person retained as having held membership of a governing body in the past. |
 | [Historical record](./HistoricalRecord/) | `gov:HistoricalRecord` | Provisional | A record retained to describe a past governance state or event. |
+| [Interim Executive Board](./InterimExecutiveBoard/) | `gov:InterimExecutiveBoard` | Provisional | A governing body consisting wholly or partly of interim executive members, established by a local authority under s.65 of the Education and Inspections Act 2006 with the Secretary of State's consent. |
 | [Local authority](./LocalAuthority/) | `gov:LocalAuthority` | Provisional | A local government body that may maintain an establishment or appoint a governor. |
 | [Local authority governor](./LocalAuthorityGovernor/) | `gov:LocalAuthorityGovernor` | Provisional | A governor nominated or appointed through a local authority route. |
 | [Local governing body](./LocalGoverningBody/) | `gov:LocalGoverningBody` | Provisional | A governing body responsible for local governance of an academy or group of establishments. |

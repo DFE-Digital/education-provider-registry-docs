@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
+| Defined by | [https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025) |
 | Legislation |  |
-| References |  |
+| References | [See evidence for Role](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#role) |
 
 ## Definition
 

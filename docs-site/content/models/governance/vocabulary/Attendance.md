@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
-| Legislation |  |
-| References |  |
+| Defined by | [https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide](https://www.gov.uk/government/publications/maintained-schools-governance-guide/maintained-schools-governance-guide) |
+| Legislation | [https://www.legislation.gov.uk/uksi/2012/1034/schedule/4/made](https://www.legislation.gov.uk/uksi/2012/1034/schedule/4/made) |
+| References | [See evidence for Attendance](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#attendance) |
 
 ## Definition
 

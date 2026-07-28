@@ -12,9 +12,9 @@
 | Status | Provisional |
 | Broader concepts |  |
 | Related concepts |  |
-| Defined by |  |
+| Defined by | [https://www.gov.uk/types-of-school/academies](https://www.gov.uk/types-of-school/academies)<br>[https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025) |
 | Legislation |  |
-| References |  |
+| References | [See evidence for Academy trust](https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/references/#academy-trust) |
 
 ## Definition
 
