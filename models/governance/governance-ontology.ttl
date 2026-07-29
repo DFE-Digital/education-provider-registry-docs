@@ -67,16 +67,25 @@ govo:governanceConceptualModel
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/taxonomy/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> ;
-    rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model."@en .
+    rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model - each declared here as a minimal owl:Class type stub (label + a comment pointing back to the canonical definition) so WIDOCO/WebVOWL, which only render entities typed within this file, show them as connected nodes rather than dropping them."@en .
 
 
 #################################################################
 # Classes - governance people
 #
 # Person already belongs to the main Education Provider Registry
-# vocabulary and ontology (epr:Person) and is referenced directly by
-# URI rather than redeclared here.
+# vocabulary and ontology (epr:Person). It is not redefined here - the
+# declaration below is a minimal type stub only, needed because WIDOCO/
+# WebVOWL only render entities explicitly typed owl:Class within this
+# file; without it, epr:Person would be invisible in this ontology's own
+# graph despite being used in rdfs:subClassOf below. The canonical label
+# and definition live in education-provider-ontology.ttl.
 #################################################################
+
+epr:Person
+    a owl:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:Person). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
 
 gov:GovernancePerson
     a owl:Class ;
@@ -175,12 +184,43 @@ govo:hasGovernanceBody
 # Establishment, Academy, AcademyTrust, Federation and LocalAuthority
 # already belong to the main Education Provider Registry vocabulary and
 # ontology (epr:Establishment, epr:Academy, epr:AcademyTrust,
-# epr:Federation, epr:LocalAuthority in education-provider-ontology.ttl)
-# and are referenced directly by URI rather than redeclared here.
+# epr:Federation, epr:LocalAuthority in education-provider-ontology.ttl).
+# They are not redefined here - the declarations below are minimal type
+# stubs only, needed because WIDOCO/WebVOWL only render entities
+# explicitly typed owl:Class within this file; without them, these
+# classes would be invisible in this ontology's own graph despite being
+# used in rdfs:subClassOf/rdfs:comment above and below. The canonical
+# labels and definitions live in education-provider-ontology.ttl.
 # CompaniesHouseLegalEntity and School remain gov:-specific: School has
 # no equivalent generic epr: concept, and CompaniesHouseLegalEntity is a
 # governance-specific anchor for company-law reconciliation.
 #################################################################
+
+epr:Establishment
+    a owl:Class ;
+    rdfs:label "Establishment"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:Establishment). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
+
+epr:Academy
+    a owl:Class ;
+    rdfs:subClassOf epr:Establishment ;
+    rdfs:label "Academy"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:Academy). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
+
+epr:AcademyTrust
+    a owl:Class ;
+    rdfs:label "Academy trust"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:AcademyTrust). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
+
+epr:Federation
+    a owl:Class ;
+    rdfs:label "Federation"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:Federation). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
+
+epr:LocalAuthority
+    a owl:Class ;
+    rdfs:label "Local authority"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:LocalAuthority). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
 
 gov:School
     a owl:Class ;
