@@ -2,6 +2,7 @@
     [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "taxonomy")),
     [string]$CompactPrefix = "epr",
+    [string[]]$ExtraPrefixes = @(),
     [string]$TaxonomyScheme = "epr:establishmentDetailsTaxonomy",
     [string]$PageTitle = "Education Provider Registry Taxonomy",
     [string]$SourceLabel = "models/education-provider-taxonomy.ttl"
@@ -100,14 +101,23 @@ function Html-Encode {
     return [System.Net.WebUtility]::HtmlEncode($Value)
 }
 
+# ExtraPrefixes lets this taxonomy classify concepts that belong to another
+# vocabulary/ontology (referenced by URI, not redefined) - e.g. the
+# governance taxonomy classifies epr:Establishment, epr:Person etc.
+# alongside its own gov: concepts. Detected blocks record which prefix they
+# came from so identifiers and status lookups stay prefix-correct.
+$allPrefixes = @($CompactPrefix) + $ExtraPrefixes
+$prefixAlternation = ($allPrefixes | ForEach-Object { [regex]::Escape($_) }) -join '|'
+
 $conceptMatches = [regex]::Matches(
     $ttl,
-    "(?ms)^$([regex]::Escape($CompactPrefix)):([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept[^\n]*\r?\n(.*?)(?=^\S|\z)"
+    "(?ms)^($prefixAlternation):([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept[^\n]*\r?\n(.*?)(?=^\S|\z)"
 )
 
 $concepts = foreach ($match in $conceptMatches) {
-    $localName = $match.Groups[1].Value
-    $block = $match.Groups[2].Value
+    $prefix = $match.Groups[1].Value
+    $localName = $match.Groups[2].Value
+    $block = $match.Groups[3].Value
     $preferredLabel = (Get-Literals -Block $block -Predicate "skos:prefLabel" | Select-Object -First 1)
 
     if ([string]::IsNullOrWhiteSpace($preferredLabel)) {
@@ -115,10 +125,11 @@ $concepts = foreach ($match in $conceptMatches) {
     }
 
     [pscustomobject]@{
+        Prefix = $prefix
         LocalName = $localName
         PreferredLabel = $preferredLabel
         Definition = (Get-Literals -Block $block -Predicate "skos:definition" | Select-Object -First 1)
-        Status = (Get-Literals -Block $block -Predicate "${CompactPrefix}:status" | Select-Object -First 1)
+        Status = (Get-Literals -Block $block -Predicate "${prefix}:status" | Select-Object -First 1)
         Broader = @(Get-Refs -Block $block -Predicate "skos:broader")
         VocabularyMatches = @(Get-VocabularyRefs -Block $block -Predicate "skos:relatedMatch")
         IsTopConcept = $block -match ('skos:topConceptOf\s+' + [regex]::Escape($TaxonomyScheme))
@@ -156,7 +167,7 @@ function New-TaxonomyTreeHtml {
     else {
         Html-Encode $concept.PreferredLabel
     }
-    $identifier = Html-Encode "${CompactPrefix}:$($concept.LocalName)"
+    $identifier = Html-Encode "$($concept.Prefix):$($concept.LocalName)"
     $hasChildren = $childrenByParent.ContainsKey($LocalName) -and $childrenByParent[$LocalName].Count -gt 0
 
     if (-not $hasChildren) {
@@ -243,7 +254,7 @@ foreach ($taxon in $taxons) {
         }
     }) -join "<br>"
 
-    $lines += "| $($taxon.PreferredLabel) | ``${CompactPrefix}:$($taxon.LocalName)`` | $(Escape-MarkdownTableCell (Format-VocabularyConceptLinks -LocalNames $taxon.VocabularyMatches)) | $(Escape-MarkdownTableCell $broaderLabels) | $(Escape-MarkdownTableCell $taxon.Status) |"
+    $lines += "| $($taxon.PreferredLabel) | ``$($taxon.Prefix):$($taxon.LocalName)`` | $(Escape-MarkdownTableCell (Format-VocabularyConceptLinks -LocalNames $taxon.VocabularyMatches)) | $(Escape-MarkdownTableCell $broaderLabels) | $(Escape-MarkdownTableCell $taxon.Status) |"
 }
 
 Set-Content -LiteralPath (Join-Path $resolvedOutputRoot "index.md") -Value $lines -Encoding UTF8

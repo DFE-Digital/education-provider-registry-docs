@@ -1,7 +1,8 @@
-@prefix gov: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+@prefix gov: <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
 
 # Governance taxonomy
 #
@@ -9,6 +10,12 @@
 # It is deliberately faceted: a concept may appear in more than one facet and
 # the facets must not be read as a single inheritance tree. Appointment type,
 # role, appointing body and administrative scope remain distinct dimensions.
+#
+# Six OrganisationAndBoardScope / ActorAndUserType members (Academy,
+# AcademyTrust, Establishment, Federation, LocalAuthority, Person) are epr:
+# concepts, not gov: concepts - they already belong to the main Education
+# Provider Registry vocabulary and are classified here by URI reference
+# rather than redefined. All other facet members are gov: concepts.
 
 gov:governanceTaxonomy
     a skos:ConceptScheme ;
@@ -61,7 +68,7 @@ gov:ActorAndUserType
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Actor and user type"@en ;
     skos:definition "The kind of person or actor participating in or administering governance."@en ;
-    skos:narrower gov:Person, gov:Member ;
+    skos:narrower epr:Person, gov:Member ;
     gov:status "Provisional"@en .
 
 gov:OrganisationAndBoardScope
@@ -69,7 +76,7 @@ gov:OrganisationAndBoardScope
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Organisation and board scope"@en ;
     skos:definition "The organisation, establishment or governing body to which governance data relates."@en ;
-    skos:narrower gov:Establishment, gov:School, gov:Academy, gov:AcademyTrust, gov:TrustBoard, gov:Board, gov:BoardOfDirectors, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:InterimExecutiveBoard, gov:Federation, gov:LocalAuthority, gov:CompaniesHouseLegalEntity ;
+    skos:narrower epr:Establishment, gov:School, epr:Academy, epr:AcademyTrust, gov:TrustBoard, gov:Board, gov:BoardOfDirectors, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:InterimExecutiveBoard, epr:Federation, epr:LocalAuthority, gov:CompaniesHouseLegalEntity ;
     gov:status "Provisional"@en .
 
 gov:GovernanceParticipantType
@@ -186,7 +193,7 @@ gov:AppointmentBasis
 # header note on Appointment, CommitteeMembership and CommitteeChair).
 #################################################################
 
-gov:Person
+epr:Person
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Person"@en ;
     skos:broader gov:ActorAndUserType ;
@@ -198,7 +205,7 @@ gov:Member
     skos:broader gov:ActorAndUserType ;
     gov:status "Provisional"@en .
 
-gov:Establishment
+epr:Establishment
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Establishment"@en ;
     skos:broader gov:OrganisationAndBoardScope ;
@@ -210,13 +217,13 @@ gov:School
     skos:broader gov:OrganisationAndBoardScope ;
     gov:status "Provisional"@en .
 
-gov:Academy
+epr:Academy
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy"@en ;
     skos:broader gov:OrganisationAndBoardScope ;
     gov:status "Provisional"@en .
 
-gov:AcademyTrust
+epr:AcademyTrust
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy trust"@en ;
     skos:broader gov:OrganisationAndBoardScope ;
@@ -264,13 +271,13 @@ gov:InterimExecutiveBoard
     skos:broader gov:OrganisationAndBoardScope ;
     gov:status "Provisional"@en .
 
-gov:Federation
+epr:Federation
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Federation"@en ;
     skos:broader gov:OrganisationAndBoardScope ;
     gov:status "Provisional"@en .
 
-gov:LocalAuthority
+epr:LocalAuthority
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Local authority"@en ;
     skos:broader gov:OrganisationAndBoardScope ;

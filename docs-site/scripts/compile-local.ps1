@@ -100,6 +100,7 @@ function Set-NanocWindowsCompatibility {
     -VocabularyPath (Join-Path (Join-Path $docsSiteRoot "..") "models\governance\governance-vocabulary.ttl") `
     -OutputRoot (Join-Path $docsSiteRoot "content\models\governance\vocabulary") `
     -VocabularyPrefix "gov" `
+    -CanonicalUriBase "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/" `
     -VocabularyTitle "Governance vocabulary" `
     -SourceTtlLabel "models/governance/governance-vocabulary.ttl" `
     -SourceTtlUrl "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-vocabulary.ttl" `
@@ -109,6 +110,7 @@ function Set-NanocWindowsCompatibility {
     -TaxonomyPath (Join-Path (Join-Path $docsSiteRoot "..") "models\governance\governance-taxonomy.ttl") `
     -OutputRoot (Join-Path $docsSiteRoot "content\models\governance\taxonomy") `
     -CompactPrefix "gov" `
+    -ExtraPrefixes @("epr") `
     -TaxonomyScheme "gov:governanceTaxonomy" `
     -PageTitle "Governance Taxonomy" `
     -SourceLabel "models/governance/governance-taxonomy.ttl"
