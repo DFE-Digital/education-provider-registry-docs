@@ -57,17 +57,18 @@ govo:governanceConceptualModel
     dcterms:description "OWL 2 conceptual model for the governance subdomain of the Education Provider Registry - people, governance bodies, appointments, roles, appointing mechanisms, constitutions and compliance/assurance records."@en ;
     rdfs:comment "This ontology defines classes and object properties for the governance subdomain. It covers governance people and their pseudonymous identifiers, governance bodies (governing body, trust board, local governing body, interim executive board, committee), governance appointments (with role type, appointing body and appointment basis), constitutions and constitution positions, legal capacities (company director), compliance and assurance records (declarations, training) and collaboration records (meetings, attendance). Class IRIs are shared with the SKOS governance vocabulary and taxonomy so that concepts, taxon values and ontology classes resolve to the same URI. Object properties are defined in the /models/governance/ontology/ namespace."@en ;
     dcterms:created "2026-07-28"^^xsd:date ;
-    dcterms:modified "2026-07-28"^^xsd:date ;
+    dcterms:modified "2026-07-29"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.1" ;
+    owl:versionInfo "0.2" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/taxonomy/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> ;
-    rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model - each declared here as a minimal owl:Class type stub (label + a comment pointing back to the canonical definition) so WIDOCO/WebVOWL, which only render entities typed within this file, show them as connected nodes rather than dropping them."@en .
+    rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model - each declared here as a minimal owl:Class type stub (label + a comment pointing back to the canonical definition) so WIDOCO/WebVOWL, which only render entities typed within this file, show them as connected nodes rather than dropping them."@en ;
+    rdfs:comment "v0.2: two changes from testing the ontology against the Medlock/Co-operative Academies Trust worked example (see models/governance worked examples). (1) govo:hasGovernanceAppointment no longer asserts rdfs:domain gov:GovernanceBody - Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the epr:AcademyTrust legal entity, not implying Trust Board membership. (2) New object property govo:isCommitteeOf (domain gov:Committee, range gov:GovernanceBody) to record that a committee (e.g. an Academy Community Council) is delegated from a parent governance body, distinct from the committee's own governance scope over an academy (govo:hasGovernanceBody)."@en .
 
 
 #################################################################
@@ -152,6 +153,13 @@ gov:Committee
     rdfs:subClassOf gov:GovernanceBody ;
     rdfs:label "Committee"@en ;
     rdfs:comment "A sub-body of a governing body or trust board with delegated responsibility for a specific area (e.g. finance, pay, standards). Members are drawn from, or co-opted alongside, the parent body's membership."@en .
+
+govo:isCommitteeOf
+    a owl:ObjectProperty ;
+    rdfs:label "is committee of"@en ;
+    rdfs:domain gov:Committee ;
+    rdfs:range gov:GovernanceBody ;
+    rdfs:comment "Cardinality: 0..1 (added v0.2, from the Medlock/Co-operative Academies Trust worked example: the Trust's Academy Community Council is a committee of the Trust Board, distinct from the Committee's own governance scope over an academy - see govo:hasGovernanceBody). A Committee delegated by a parent GovernanceBody uses this property to record that delegation."@en .
 
 gov:Board
     a owl:Class ;
@@ -252,9 +260,8 @@ gov:GovernanceAppointment
 govo:hasGovernanceAppointment
     a owl:ObjectProperty ;
     rdfs:label "has governance appointment"@en ;
-    rdfs:domain gov:GovernanceBody ;
     rdfs:range gov:GovernanceAppointment ;
-    rdfs:comment "Cardinality: 0..*. A governance body may have zero or more governance appointment records."@en .
+    rdfs:comment "Cardinality: 0..*. No rdfs:domain is asserted deliberately (relaxed v0.2, after the Medlock/Co-operative Academies Trust worked example showed Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the epr:AcademyTrust legal entity, not against a GovernanceBody - board membership is not implied for Academy Trust Members). Both gov:GovernanceBody and epr:AcademyTrust (and other governed organisations) use this property; constraining domain to one would cause an OWL reasoner to incorrectly infer subject type."@en .
 
 govo:appointmentOf
     a owl:ObjectProperty ;
