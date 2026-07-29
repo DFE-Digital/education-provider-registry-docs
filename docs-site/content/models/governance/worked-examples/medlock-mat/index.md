@@ -24,7 +24,7 @@ title: Governance Ontology — Co-operative Academies Trust / Co-op Academy Medl
 
 **Evidence and anonymisation.** This example maps a bounded, sourced internal investigation ("Governance Model With Worked MAT Example: Co-op Academy Medlock") onto the governance ontology. That investigation draws on The Co-operative Academies Trust's and Co-op Academy Medlock's own published governance pages (Members, Trust Board, Academy Community Council), the Academy Trust Handbook 2025, and a separate historical GIAS/Companies House reconciliation. It is not itself GIAS or Companies House data, and is not published in this repository.
 
-Person names below are shown as initials, exactly as the source investigation anonymised them (e.g. `RG`, `TC`) - this example does not use, and has not gone back to, the Trust's full published names. **Sarah Lay** is the one full name used, because the source investigation names her specifically to illustrate a real data-quality point (see Example 6). This page does not show the full roster - 6 Academy Trust Members, 10 Trust Board people and 11 Academy Community Council Members are evidenced in the source - only a representative subset covering each distinct modelling pattern.
+Person names below are shown as initials, exactly as the source investigation anonymised them (e.g. `RG`, `TC`) - this example does not use, and has not gone back to, the Trust's full published names. This page does not show the full roster - 6 Academy Trust Members, 10 Trust Board people and 11 Academy Community Council Members are evidenced in the source - only a representative subset covering each distinct modelling pattern.
 
 ---
 
@@ -52,8 +52,8 @@ flowchart LR
 
     AT -->|govo:hasGovernanceAppointment| O1["Accounting Officer<br/>OperationalEmploymentRole"]
     AT -->|govo:hasGovernanceAppointment| O2["Chief Financial Officer<br/>OperationalEmploymentRole"]
-    TB -->|govo:hasGovernanceAppointment| P1["Sarah Lay — GovernanceProfessional<br/>ProfessionalSupportRole"]
-    AT -->|govo:hasGovernanceAppointment| P2["Sarah Lay — CompanySecretary<br/>ProfessionalSupportRole"]
+    TB -->|govo:hasGovernanceAppointment| P1["SL — GovernanceProfessional<br/>ProfessionalSupportRole"]
+    AT -->|govo:hasGovernanceAppointment| P2["SL — CompanySecretary<br/>ProfessionalSupportRole"]
 ```
 
 ---
@@ -177,7 +177,7 @@ inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-coopgroup-member .
 ```
 
-*(4 further Academy Trust Members are evidenced in the source and not shown here.)*
+*(3 further Academy Trust Members - `GGM`, `KN`, `HT` - are evidenced in the source and not shown here.)*
 
 ---
 
@@ -225,7 +225,7 @@ ginst:roleassignment-tc-vicechair
     govo:assignsRole gov:ViceChair .
 ```
 
-*(7 further Trustees are evidenced in the source and not shown here.)*
+*(8 further Trustees - `APM`, `MA`, `RW`, `GG-T`, `SB`, `CC`, `SFC`, `MW` - are evidenced in the source and not shown here.)*
 
 ---
 
@@ -277,7 +277,7 @@ ginst:medlock-acc
 
 ## Example 6 — Operational and professional support appointments
 
-Accounting Officer and Chief Financial Officer are paid operational roles held directly against the Academy Trust, not Trust Board appointments - `govo:hasAppointmentBasis gov:OperationalEmploymentRole` marks this. The source does not name these two post-holders. Governance Professional and Company Secretary are two **separate** appointments that happen to be held by the same person (`Sarah Lay`) - a real data-quality point the source investigation makes explicitly, and exactly what having two `GovernanceAppointment` records for one `GovernancePerson` is for.
+Accounting Officer and Chief Financial Officer are paid operational roles held directly against the Academy Trust, not Trust Board appointments - `govo:hasAppointmentBasis gov:OperationalEmploymentRole` marks this. The source does not name these two post-holders. Governance Professional and Company Secretary are two **separate** appointments that happen to be held by the same person (`SL`) - a real data-quality point the source investigation makes explicitly, and exactly what having two `GovernanceAppointment` records for one `GovernancePerson` is for.
 
 ```
 ginst:appointment-ao
@@ -298,13 +298,13 @@ ginst:appointment-cfo
 inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-cfo .
 
-ginst:person-sarah-lay
+ginst:person-sl
     a gov:GovernancePerson ;
-    rdfs:label "Sarah Lay"@en .
+    rdfs:label "SL"@en .
 
 ginst:appointment-sl-governanceprofessional
     a gov:GovernanceAppointment ;
-    govo:appointmentOf ginst:person-sarah-lay ;
+    govo:appointmentOf ginst:person-sl ;
     govo:hasRoleType gov:GovernanceProfessional ;
     govo:hasAppointmentBasis gov:ProfessionalSupportRole ;
     rdfs:comment "Governance Professional supporting the Trust Board."@en .
@@ -314,7 +314,7 @@ ginst:coop-trust-board
 
 ginst:appointment-sl-companysecretary
     a gov:GovernanceAppointment ;
-    govo:appointmentOf ginst:person-sarah-lay ;
+    govo:appointmentOf ginst:person-sl ;
     govo:hasRoleType gov:CompanySecretary ;
     govo:hasAppointmentBasis gov:ProfessionalSupportRole ;
     rdfs:comment "Company Secretary - the Companies House legal-company office. A separate appointment from Governance Professional above, held by the same person; the two must not be merged into one appointment record."@en .
@@ -340,7 +340,7 @@ inst:coop-academies-trust
 | Community Council Member | 11 CCMs across 5 appointing categories | `govo:hasRoleType gov:LocalGoverningBodyMember` | Candidate - no CCM-specific role type exists; reused the closest generic value |
 | CCM appointing category | community / staff / sponsor / parent / ex-officio | `govo:hasAppointingBody` (`gov:ElectedByStaff`, `gov:ExOfficioAppointment`, `gov:AppointedByFoundationOrTrust`, `gov:ElectedByParents`, `gov:AppointedByGoverningBody`) | Candidate - source gives category labels, not the appointing mechanism |
 | Accounting Officer / Chief Financial Officer | 1 + 1, paid employees | `govo:hasRoleType` + `govo:hasAppointmentBasis gov:OperationalEmploymentRole` | Direct |
-| Governance Professional / Company Secretary | Sarah Lay holds both, as distinct appointments | Two `gov:GovernanceAppointment` records, `govo:hasAppointmentBasis gov:ProfessionalSupportRole` | Direct |
+| Governance Professional / Company Secretary | SL holds both, as distinct appointments | Two `gov:GovernanceAppointment` records, `govo:hasAppointmentBasis gov:ProfessionalSupportRole` | Direct |
 | Corporate Academy Trust Member | Co-op Group, represented by DKW | Not modelled | Gap - `govo:appointmentOf` range is `gov:GovernancePerson` (natural persons only) |
 | Constitution / Constitution Position / Vacancy | No evidence in the source | Not modelled | Not evidenced |
 | Declaration of Interest / Confirmation / Training Record / Meeting / Attendance | No evidence in the source | Not modelled | Not evidenced |
