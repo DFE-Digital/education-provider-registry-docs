@@ -32,7 +32,7 @@ Person names throughout are shown as initials, exactly as the source investigati
 
 This section is the structure as evidenced, before any ontology is applied.
 
-### Sources published by the Trust
+### Sources
 
 | Source | Publisher | What it evidences | Observed |
 |---|---|---|---|
@@ -40,8 +40,9 @@ This section is the structure as evidenced, before any ontology is applied.
 | [Trust Board](https://www.coopacademies.co.uk/trust-board) | Co-op Academies Trust | Ten published Trust Board people, their appointment route, and Chair/Vice-Chair roles | 27 July 2026 |
 | [Co-op Academy Medlock: Academy Community Council](https://www.medlock.coopacademies.co.uk/governance) | Co-op Academy Medlock | Eleven published current Community Council Members, their categories, appointment routes and Chair role | 27 July 2026 |
 | [Trust governance](https://www.coopacademies.co.uk/governance/) | Co-op Academies Trust | Academy Community Councils are committees of the Trust Board; Community Council Members take the place of governors in this Trust's structure | 27 July 2026 |
+| [Companies House: company 07747126](https://find-and-update.company-information.service.gov.uk/company/07747126) | Companies House | Confirms The Co-operative Academies Trust is an active private company limited by guarantee - the same legal entity as GIAS UID 2777, not a second organisation | 24 July 2026 |
 
-The Accounting Officer, Chief Financial Officer, Governance Professional and Company Secretary shown below are not named on these four pages - they come from separate secondary evidence (a historical GIAS/Companies House reconciliation, and the [Academy Trust Handbook 2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025)), included here because they are real appointments against the same Academy Trust, not because the Trust's own governance pages name them.
+The Accounting Officer, Chief Financial Officer, Governance Professional and Company Secretary shown below are not named in any of these sources - they come from separate secondary evidence (a historical GIAS reconciliation, and the [Academy Trust Handbook 2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025)), included here because they are real appointments against the same Academy Trust, not because the Trust's own governance pages name them.
 
 ### Structure
 
@@ -49,7 +50,7 @@ Adapted from the source investigation's own instance-level mapping, trimmed to a
 
 ```mermaid
 flowchart LR
-    AT["Academy Trust / Legal Entity<br/>The Co-operative Academies Trust<br/>Company limited by guarantee"]
+    AT["Academy Trust / Legal Entity<br/>The Co-operative Academies Trust<br/>Company limited by guarantee<br/>Companies House 07747126"]
 
     AT -->|"governed through"| TB["Governance Body<br/>Trust Board"]
     AT -->|"operates"| E["Co-op Academy Medlock<br/>URN 150612"]
