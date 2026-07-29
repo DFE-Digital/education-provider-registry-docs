@@ -115,6 +115,16 @@ jobs:
         shell: pwsh
         run: ./docs-site/scripts/copy-information-assets.ps1
 
+      - name: Cache vendored JS/CSS assets
+        uses: actions/cache@v4
+        with:
+          path: docs-site/output/assets/vendor
+          key: vendor-assets-mermaid-11.14.0-hljs-11
+
+      - name: Download vendored JS/CSS assets
+        shell: pwsh
+        run: ./docs-site/scripts/download-vendor-assets.ps1
+
       - name: Cache WIDOCO
         uses: actions/cache@v4
         with:
@@ -179,13 +189,18 @@ jobs:
 
           # models: no remember-me (simple password gate, no session storage)
           #
-          # The governance ontology docs and WebVOWL graph viewer are excluded:
-          # WIDOCO/WebVOWL load their content via client-side JS fetches to
-          # sibling .html files (sections/*.html, webvowl's own pages etc).
-          # Encrypting those individually breaks the page, because the
-          # authenticated shell's AJAX calls hit another password gate
-          # instead of real content. The main /ontology/ page has the same
-          # structure and is deliberately unprotected for the same reason.
+          # Excluded from per-file encryption:
+          # - governance/ontology: WIDOCO/WebVOWL load their content via
+          #   client-side JS fetches to sibling .html files (sections/*.html,
+          #   webvowl's own pages etc). Encrypting those individually breaks
+          #   the page, because the authenticated shell's AJAX calls hit
+          #   another password gate instead of real content. The main
+          #   /ontology/ page has the same structure and is deliberately
+          #   unprotected for the same reason.
+          # - governance/worked-examples: the governance section index page
+          #   (models/governance/) stays password-protected, which is
+          #   sufficient gating - worked examples underneath it don't need
+          #   their own additional password gate.
           for section in models; do
             while IFS= read -r file; do
               staticrypt "$file" \
@@ -196,7 +211,7 @@ jobs:
                 --template "docs-site/staticrypt-template.html" \
                 --template-color-primary "#1d70b8"
               cp "$TMPDIR_ENC/$(basename "$file")" "$file"
-            done < <(find "docs-site/output/$section" -path "*/governance/ontology" -prune -o -name "*.html" -print)
+            done < <(find "docs-site/output/$section" \( -path "*/governance/ontology" -o -path "*/governance/worked-examples" \) -prune -o -name "*.html" -print)
           done
 
           rm -rf "$TMPDIR_ENC"
