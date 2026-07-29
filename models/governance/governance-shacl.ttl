@@ -1,0 +1,84 @@
+@prefix gov:     <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
+@prefix govo:    <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Governance SHACL Shapes
+#
+# Scope: constrains who may hold a GovernanceAppointment
+# (govo:appointmentOf), where OWL/RDFS cannot express the constraint
+# because it is conditional on a sibling property's value.
+#
+# governance-ontology.ttl v0.3 widened govo:appointmentOf's range from
+# gov:GovernancePerson to gov:GovernanceParticipant, to admit corporate
+# Academy Trust Members (e.g. the Co-op Group in the Medlock worked
+# example - see models/governance/worked-examples). That widening is
+# deliberately broader than the real-world rule: company law lets an
+# Academy Trust Member or Trust Member be a natural person or a
+# corporate body, but a Trustee, Governor, Chair or any other statutory
+# office-holder must be a natural person (Academy Trust Handbook;
+# charity trustees are personally accountable and subject to
+# disqualification checks that presuppose a natural person). OWL/RDFS
+# cannot express "the range of appointmentOf depends on the value of
+# hasRoleType on the same node" - that needs SHACL.
+#
+# Sits alongside:
+#   governance-ontology.ttl   (OWL ontology)
+#   governance-taxonomy.ttl   (SKOS taxonomy)
+#   governance-vocabulary.ttl (SKOS vocabulary)
+
+
+#################################################################
+# Shapes graph declaration
+#################################################################
+
+<https://dfe-digital.github.io/education-provider-registry-docs/models/governance/shapes/>
+    a owl:Ontology ;
+    dcterms:title "Governance SHACL Shapes"@en ;
+    dcterms:description "SHACL node shapes constraining governance appointments - principally, which GovernanceRoleType values may be held by a corporate governance participant rather than a natural person."@en ;
+    dcterms:created "2026-07-29"^^xsd:date ;
+    dcterms:modified "2026-07-29"^^xsd:date ;
+    dcterms:publisher "Department for Education"@en ;
+    dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
+    owl:versionInfo "0.1" ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> ;
+    gov:status "Provisional"@en ;
+    rdfs:comment "v0.1: initial shape. GovernanceAppointmentParticipantShape enforces that only Academy Trust Member / Trust Member appointments may resolve govo:appointmentOf to a gov:CorporateGovernanceParticipant; every other GovernanceRoleType must resolve to a gov:GovernancePerson. Added alongside governance-ontology.ttl v0.3, which widened govo:appointmentOf's range to admit corporate participants - see that file's v0.3 comment for why the OWL range alone is not a strong enough constraint."@en .
+
+
+#################################################################
+# Shapes - governance appointment participant type
+#################################################################
+
+gov:GovernanceAppointmentParticipantShape
+    a sh:NodeShape ;
+    rdfs:label "Governance appointment participant type shape"@en ;
+    rdfs:comment "Every GovernanceAppointment's appointmentOf must either (a) have a role type that is one of the Membership roles that company law permits to be corporate (Academy Trust Member, Trust Member), in which case any GovernanceParticipant is allowed, or (b) resolve to a natural person (gov:GovernancePerson). This rules out, for example, a corporate body being asserted as a Trustee or Chair."@en ;
+    sh:targetClass gov:GovernanceAppointment ;
+
+    sh:or (
+        [
+            sh:path govo:hasRoleType ;
+            sh:in ( gov:AcademyTrustMember gov:TrustMember ) ;
+        ]
+        [
+            sh:path govo:appointmentOf ;
+            sh:class gov:GovernancePerson ;
+            sh:minCount 1 ;
+            sh:name "Appointment of (natural person)"@en ;
+            sh:message "Only an Academy Trust Member or Trust Member appointment may be held by a corporate governance participant. Every other governance role type (Trustee, Governor and its subtypes, Chair/Vice-Chair/Committee Chair, Accounting Officer, Chief Financial Officer, Principal, Clerk, Governance Professional, Company Secretary, Board Member, Local Governing Body Member) must resolve govo:appointmentOf to a gov:GovernancePerson."@en ;
+        ]
+    ) ;
+
+    sh:property [
+        sh:path govo:appointmentOf ;
+        sh:class gov:GovernanceParticipant ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Appointment of"@en ;
+        sh:message "Every governance appointment must have exactly one appointmentOf, resolving to a gov:GovernanceParticipant (a gov:GovernancePerson or, for Member roles only, a gov:CorporateGovernanceParticipant)."@en ;
+    ] .

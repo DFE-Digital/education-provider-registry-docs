@@ -14,7 +14,7 @@ title: Governance Ontology — Co-operative Academies Trust / Co-op Academy Medl
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
 | **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
-| **Governance ontology version** | 0.2 |
+| **Governance ontology version** | 0.3 |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -99,7 +99,7 @@ flowchart LR
     MED -->|govo:hasGovernanceBody| ACC
 
     AT -->|govo:hasGovernanceAppointment| M1["RG — AcademyTrustMember"]
-    AT -->|govo:hasGovernanceAppointment| M2["Co-op Group — AcademyTrustMember<br/>(corporate member — gap, see below)"]
+    AT -->|govo:hasGovernanceAppointment| M2["Co-op Group — AcademyTrustMember<br/>(gov:CorporateGovernanceParticipant)"]
 
     TB -->|govo:hasGovernanceAppointment| T1["RG — Trustee<br/>+ LegalCapacity: CompanyDirector<br/>+ RoleAssignment: Chair"]
     TB -->|govo:hasGovernanceAppointment| T2["TC — Trustee<br/>+ LegalCapacity: CompanyDirector<br/>+ RoleAssignment: ViceChair"]
@@ -188,6 +188,8 @@ inst:medlock
 
 Members relate to the Academy Trust legal entity directly - they are not automatically Trustees or Trust Board members. `RG` (below) separately holds a Trustee appointment (Example 4): two distinct relationships for one person, not one interchangeable role. This is also why `govo:hasGovernanceAppointment`'s `rdfs:domain` was relaxed in v0.2 - a v0.1 reader would have wrongly inferred that a Member appointment implies its subject is a `gov:GovernanceBody`.
 
+A Member of a company limited by guarantee - which is what an Academy Trust legally is - need not be a natural person: the Co-op Group is itself a corporate Academy Trust Member, represented at meetings by `DKW`. v0.2 had no way to model this (`govo:appointmentOf`'s range was `gov:GovernancePerson` only); v0.3 added `gov:GovernanceParticipant` as a superclass of `gov:GovernancePerson`, and `gov:CorporateGovernanceParticipant` as a sibling class for corporate bodies, then widened `govo:appointmentOf`'s range to `gov:GovernanceParticipant`. That widening is deliberately not open to every role: a Trustee, Governor or other office-holder must still be a natural person, a rule enforced by `gov:GovernanceAppointmentParticipantShape` in `governance-shacl.ttl`, not by this ontology's OWL/RDFS alone (see "What this example found" below).
+
 ```
 ginst:person-rg
     a gov:GovernancePerson ;
@@ -216,11 +218,17 @@ ginst:appointment-pg-member
 inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-pg-member .
 
+ginst:coop-group
+    a gov:CorporateGovernanceParticipant ;
+    rdfs:label "Co-op Group"@en ;
+    rdfs:comment "Corporate Academy Trust Member. Represented at meetings by DKW - that representative relationship is not itself modelled (a further gap; see 'What this example found' below)."@en .
+
 ginst:appointment-coopgroup-member
     a gov:GovernanceAppointment ;
+    govo:appointmentOf ginst:coop-group ;
     govo:hasRoleType gov:AcademyTrustMember ;
     govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
-    rdfs:comment "Corporate Academy Trust Member: the Co-op Group, represented by DKW. govo:appointmentOf is deliberately omitted here - its range is gov:GovernancePerson (natural persons only), and this ontology has no class for a corporate member. A gap surfaced by this example, not yet resolved - see 'What this example found' below."@en .
+    rdfs:comment "Corporate Academy Trust Member: the Co-op Group, represented by DKW. govo:appointmentOf resolves to a gov:CorporateGovernanceParticipant, not a gov:GovernancePerson - only permitted for Academy Trust Member / Trust Member role types (v0.3; see gov:GovernanceAppointmentParticipantShape in governance-shacl.ttl)."@en .
 
 inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-coopgroup-member .
@@ -384,7 +392,7 @@ inst:coop-academies-trust
 | CCM appointing category | community / staff / sponsor / parent / ex-officio | `govo:hasAppointingBody` (`gov:ElectedByStaff`, `gov:ExOfficioAppointment`, `gov:AppointedByFoundationOrTrust`, `gov:ElectedByParents`, `gov:AppointedByGoverningBody`) | Candidate - source gives category labels, not the appointing mechanism |
 | Accounting Officer / Chief Financial Officer | 1 + 1, paid employees | `govo:hasRoleType` + `govo:hasAppointmentBasis gov:OperationalEmploymentRole` | Direct |
 | Governance Professional / Company Secretary | SL holds both, as distinct appointments | Two `gov:GovernanceAppointment` records, `govo:hasAppointmentBasis gov:ProfessionalSupportRole` | Direct |
-| Corporate Academy Trust Member | Co-op Group, represented by DKW | Not modelled | Gap - `govo:appointmentOf` range is `gov:GovernancePerson` (natural persons only) |
+| Corporate Academy Trust Member | Co-op Group, represented by DKW | `gov:GovernanceAppointment` with `govo:appointmentOf` resolving to a `gov:CorporateGovernanceParticipant` | Direct, once `govo:appointmentOf`'s range was widened to `gov:GovernanceParticipant` (v0.3) and constrained by role type in `governance-shacl.ttl`. The Co-op Group's own representative relationship to `DKW` remains not modelled |
 | Constitution / Constitution Position / Vacancy | No evidence in the source | Not modelled | Not evidenced |
 | Declaration of Interest / Confirmation / Training Record / Meeting / Attendance | No evidence in the source | Not modelled | Not evidenced |
 
@@ -396,8 +404,10 @@ Testing the governance ontology against this real, sourced investigation changed
 
 - **`govo:isCommitteeOf` added.** v0.1 had no way to say a committee is delegated from a parent governance body - only `govo:hasGovernanceBody`, which expresses a *different* relationship (a committee's own governance scope over an academy). The Academy Community Council needed both.
 - **`govo:hasGovernanceAppointment`'s domain relaxed.** v0.1 restricted it to `gov:GovernanceBody`. Academy Trust Members, the Accounting Officer and the Chief Financial Officer are appointments against the Academy Trust legal entity directly - modelling them as Trust Board appointments would have wrongly implied board membership.
+- **`gov:GovernanceParticipant` added, and `govo:appointmentOf`'s range widened (v0.3).** v0.2 left one gap open: `govo:appointmentOf` only accepted `gov:GovernancePerson`, so the Co-op Group's corporate Academy Trust Membership had no home - Example 3 modelled the appointment with `govo:appointmentOf` deliberately omitted rather than force-fitting the Co-op Group as a person. A Member of a company limited by guarantee (what an Academy Trust legally is) can be a natural person or a corporate body under the Companies Act 2006 - the same reason a company's shareholders can include other companies. v0.3 closed this by adding `gov:GovernanceParticipant` as a superclass of `gov:GovernancePerson`, adding `gov:CorporateGovernanceParticipant` as a sibling class, and widening `govo:appointmentOf`'s range accordingly.
+- **New `governance-shacl.ttl`, alongside the ontology.** Widening `govo:appointmentOf`'s range on its own would have been too permissive - a Trustee, Governor or any other office-holder must still be a natural person (Academy Trust Handbook; trustees are personally accountable and subject to disqualification checks that presuppose a natural person), and only Academy Trust Member / Trust Member appointments may be corporate. That constraint is conditional on a sibling property's value (`govo:hasRoleType`), which OWL/RDFS cannot express as a class range. `gov:GovernanceAppointmentParticipantShape` enforces it in SHACL instead.
 
-One gap remains open, not yet resolved: **the Co-op Group's corporate Academy Trust Membership has no home.** `govo:appointmentOf` only accepts a `gov:GovernancePerson` (a natural person); this ontology has no class for an organisation holding a governance appointment. Example 3 shows the appointment with `govo:appointmentOf` deliberately omitted rather than force-fitting the Co-op Group as a person.
+A further gap remains open, not yet resolved: **the Co-op Group's own representative relationship to `DKW` is not modelled.** `gov:CorporateGovernanceParticipant` records that the Co-op Group holds the Membership, but nothing in the ontology yet expresses that a natural person represents a corporate participant at meetings.
 
 ---
 
