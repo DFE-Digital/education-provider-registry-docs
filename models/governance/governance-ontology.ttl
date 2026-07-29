@@ -60,7 +60,7 @@ govo:governanceConceptualModel
     dcterms:modified "2026-07-29"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.2" ;
+    owl:versionInfo "0.3" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -68,7 +68,8 @@ govo:governanceConceptualModel
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/taxonomy/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> ;
     rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model - each declared here as a minimal owl:Class type stub (label + a comment pointing back to the canonical definition) so WIDOCO/WebVOWL, which only render entities typed within this file, show them as connected nodes rather than dropping them."@en ;
-    rdfs:comment "v0.2: two changes from testing the ontology against the Medlock/Co-operative Academies Trust worked example (see models/governance worked examples). (1) govo:hasGovernanceAppointment no longer asserts rdfs:domain gov:GovernanceBody - Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the epr:AcademyTrust legal entity, not implying Trust Board membership. (2) New object property govo:isCommitteeOf (domain gov:Committee, range gov:GovernanceBody) to record that a committee (e.g. an Academy Community Council) is delegated from a parent governance body, distinct from the committee's own governance scope over an academy (govo:hasGovernanceBody)."@en .
+    rdfs:comment "v0.2: two changes from testing the ontology against the Medlock/Co-operative Academies Trust worked example (see models/governance worked examples). (1) govo:hasGovernanceAppointment no longer asserts rdfs:domain gov:GovernanceBody - Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the epr:AcademyTrust legal entity, not implying Trust Board membership. (2) New object property govo:isCommitteeOf (domain gov:Committee, range gov:GovernanceBody) to record that a committee (e.g. an Academy Community Council) is delegated from a parent governance body, distinct from the committee's own governance scope over an academy (govo:hasGovernanceBody)."@en ;
+    rdfs:comment "v0.3: closes the corporate-Member gap found in the Medlock/Co-operative Academies Trust worked example (the Co-op Group holds an Academy Trust Membership as a corporate body, represented by a natural person, DKW). New class gov:GovernanceParticipant, superclass of gov:GovernancePerson (unchanged) and new class gov:CorporateGovernanceParticipant (a corporate body able to hold an Academy Trust Membership - subclass of epr:Organisation, for which a type stub is added here on the established WIDOCO/WebVOWL pattern). govo:appointmentOf range widened from gov:GovernancePerson to gov:GovernanceParticipant. This is deliberately not a blanket loosening: real-world governance rules restrict which GovernanceRoleType values a corporate body may hold (a Trustee, Governor or office-holder must be a natural person; only Academy Trust Member / Trust Member may be corporate) - that constraint is not expressible in OWL/RDFS alone (it is conditional on a sibling property's value) and is instead enforced in governance-shacl.ttl."@en .
 
 
 #################################################################
@@ -88,12 +89,28 @@ epr:Person
     rdfs:label "Person"@en ;
     rdfs:comment "Defined in the main Education Provider Registry ontology (epr:Person). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
 
+epr:Organisation
+    a owl:Class ;
+    rdfs:label "Organisation"@en ;
+    rdfs:comment "Defined in the main Education Provider Registry ontology (epr:Organisation). Declared here as a type stub only, so it renders correctly in this ontology's own WebVOWL graph - not a redefinition."@en .
+
+gov:GovernanceParticipant
+    a owl:Class ;
+    rdfs:label "Governance participant"@en ;
+    rdfs:comment "Whoever holds a GovernanceAppointment (via govo:appointmentOf): a natural person (gov:GovernancePerson) or, for the small set of GovernanceRoleType values where company law permits it (Academy Trust Member, Trust Member), a corporate body (gov:CorporateGovernanceParticipant). Added v0.3, from the Medlock/Co-operative Academies Trust worked example: the Co-op Group holds an Academy Trust Membership as a corporate Member, not a natural person. Which GovernanceRoleType values may resolve to a corporate participant is a business rule conditional on govo:hasRoleType, not expressible as an OWL/RDFS range restriction on this class alone - see governance-shacl.ttl."@en .
+
 gov:GovernancePerson
     a owl:Class ;
-    rdfs:subClassOf epr:Person ;
+    rdfs:subClassOf epr:Person, gov:GovernanceParticipant ;
     rdfs:label "Governance person"@en ;
     rdfs:comment "A named individual who holds or has held one or more governance appointments. One GovernancePerson may be linked from multiple GovernanceAppointment records (e.g. a Trustee who is also Chair, or a person governing more than one establishment). Personal-data-carrying class: name is publicly accessible; GovernancePersonIdentifier carries pseudonymous personal data that is not."@en ;
     dcterms:accessRights "Personal data. Name is publicly accessible. GovernancePersonIdentifier is pseudonymous personal data and is not publicly accessible; access controls apply to that attribute only. Raw date of birth is not intended to be stored directly on this class - see GovernancePersonIdentifier."@en .
+
+gov:CorporateGovernanceParticipant
+    a owl:Class ;
+    rdfs:subClassOf epr:Organisation, gov:GovernanceParticipant ;
+    rdfs:label "Corporate governance participant"@en ;
+    rdfs:comment "A corporate body (a company, another Academy Trust, a foundation, a diocese etc.) holding a governance appointment in its own right rather than as a natural person - e.g. a corporate Academy Trust Member. Added v0.3. Not personal data itself, but is typically represented at meetings by a natural person (see the worked example's DKW, representative of the Co-op Group) - that representative relationship is not yet modelled and is a further gap, not covered by this class."@en .
 
 gov:Member
     a owl:Class ;
@@ -267,8 +284,8 @@ govo:appointmentOf
     a owl:ObjectProperty ;
     rdfs:label "appointment of"@en ;
     rdfs:domain gov:GovernanceAppointment ;
-    rdfs:range gov:GovernancePerson ;
-    rdfs:comment "Cardinality: exactly 1."@en .
+    rdfs:range gov:GovernanceParticipant ;
+    rdfs:comment "Cardinality: exactly 1. Range widened v0.3 from gov:GovernancePerson to gov:GovernanceParticipant, to admit corporate Academy Trust Members (see gov:CorporateGovernanceParticipant) without weakening the constraint for every other GovernanceRoleType, which must still resolve to a natural person - see governance-shacl.ttl for that role-type-conditional constraint, which OWL/RDFS cannot express here."@en .
 
 govo:hasRoleType
     a owl:ObjectProperty ;
