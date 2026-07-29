@@ -58,6 +58,7 @@ jobs:
             -VocabularyPath "models/governance/governance-vocabulary.ttl" `
             -OutputRoot "docs-site/content/models/governance/vocabulary" `
             -VocabularyPrefix "gov" `
+            -CanonicalUriBase "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/" `
             -VocabularyTitle "Governance vocabulary" `
             -SourceTtlLabel "models/governance/governance-vocabulary.ttl" `
             -SourceTtlUrl "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-vocabulary.ttl" `
@@ -74,6 +75,7 @@ jobs:
             -TaxonomyPath "models/governance/governance-taxonomy.ttl" `
             -OutputRoot "docs-site/content/models/governance/taxonomy" `
             -CompactPrefix "gov" `
+            -ExtraPrefixes @("epr") `
             -TaxonomyScheme "gov:governanceTaxonomy" `
             -PageTitle "Governance Taxonomy" `
             -SourceLabel "models/governance/governance-taxonomy.ttl"
@@ -140,6 +142,22 @@ jobs:
           rm -rf docs-site/output/ontology/doc
           if [ ! -f docs-site/output/ontology/index.html ]; then
             cp docs-site/output/ontology/index-en.html docs-site/output/ontology/index.html
+          fi
+
+      - name: Generate governance ontology documentation
+        run: |
+          java -jar widoco.jar \
+            -ontFile models/governance/governance-ontology.ttl \
+            -outFolder docs-site/output/models/governance/ontology \
+            -lang en \
+            -includeAnnotationProperties \
+            -webVowl \
+            -noPlaceHolderText \
+            -rewriteAll
+          mv docs-site/output/models/governance/ontology/doc/* docs-site/output/models/governance/ontology/
+          rm -rf docs-site/output/models/governance/ontology/doc
+          if [ ! -f docs-site/output/models/governance/ontology/index.html ]; then
+            cp docs-site/output/models/governance/ontology/index-en.html docs-site/output/models/governance/ontology/index.html
           fi
 
       - name: Set up Node.js for staticrypt

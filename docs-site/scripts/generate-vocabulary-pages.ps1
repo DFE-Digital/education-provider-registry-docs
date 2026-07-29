@@ -3,6 +3,7 @@
     [string]$ReferencesDocPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "vocabulary-real-world-references.md")),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "vocabulary")),
     [string]$VocabularyPrefix = "epr",
+    [string]$CanonicalUriBase = "https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/",
     [string]$VocabularyTitle = "Vocabulary",
     [string]$SourceTtlLabel = "models/education-provider-vocabulary.ttl",
     [string]$SourceTtlUrl = "https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-vocabulary.ttl",
@@ -181,7 +182,7 @@ function Format-ConceptLinks {
 }
 
 foreach ($concept in $concepts | Sort-Object PreferredLabel, LocalName) {
-    $canonicalUri = "https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/$($concept.LocalName)/"
+    $canonicalUri = "$CanonicalUriBase$($concept.LocalName)/"
     $sourceTtl = $SourceTtlUrl
 
     $rawRefsLinks = Format-UriLinks $concept.References
