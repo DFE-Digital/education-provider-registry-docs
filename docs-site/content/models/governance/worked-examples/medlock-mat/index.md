@@ -22,13 +22,69 @@ title: Governance Ontology — Co-operative Academies Trust / Co-op Academy Medl
 
 ---
 
-**Evidence and anonymisation.** This example maps a bounded, sourced internal investigation ("Governance Model With Worked MAT Example: Co-op Academy Medlock") onto the governance ontology. That investigation draws on The Co-operative Academies Trust's and Co-op Academy Medlock's own published governance pages (Members, Trust Board, Academy Community Council), the Academy Trust Handbook 2025, and a separate historical GIAS/Companies House reconciliation. It is not itself GIAS or Companies House data, and is not published in this repository.
+**Evidence and anonymisation.** This page is in two parts. **Section 1** is the real-world governance structure as documented in a bounded, sourced internal investigation ("Governance Model With Worked MAT Example: Co-op Academy Medlock") - what the Trust itself publishes, independent of any ontology. **Section 2** maps that same structure onto `governance-ontology.ttl`. Neither section is itself GIAS or Companies House data, and the source investigation is not published in this repository.
 
-Person names below are shown as initials, exactly as the source investigation anonymised them (e.g. `RG`, `TC`) - this example does not use, and has not gone back to, the Trust's full published names. This page does not show the full roster - 6 Academy Trust Members, 10 Trust Board people and 11 Academy Community Council Members are evidenced in the source - only a representative subset covering each distinct modelling pattern.
+Person names throughout are shown as initials, exactly as the source investigation anonymised them (e.g. `RG`, `TC`) - this example does not use, and has not gone back to, the Trust's full published names. Both sections show the same representative **subset** of people, not the full roster - 6 Academy Trust Members, 10 Trust Board people and 11 Academy Community Council Members are evidenced in the source - so that Section 1 and Section 2 stay directly comparable. Left out: 3 further Academy Trust Members (`GGM`, `KN`, `HT`), 8 further Trustees (`APM`, `MA`, `RW`, `GG-T`, `SB`, `CC`, `SFC`, `MW`) and 9 further Community Council Members.
 
 ---
 
-## Structure
+## Section 1 — The real-world governance structure
+
+This section is the structure as evidenced, before any ontology is applied.
+
+### Sources published by the Trust
+
+| Source | Publisher | What it evidences | Observed |
+|---|---|---|---|
+| [Our Members](https://www.coopacademies.co.uk/our-members) | Co-op Academies Trust | Six published Academy Trust Members, including the Co-op Group as a corporate Member and its representative | 27 July 2026 |
+| [Trust Board](https://www.coopacademies.co.uk/trust-board) | Co-op Academies Trust | Ten published Trust Board people, their appointment route, and Chair/Vice-Chair roles | 27 July 2026 |
+| [Co-op Academy Medlock: Academy Community Council](https://www.medlock.coopacademies.co.uk/governance) | Co-op Academy Medlock | Eleven published current Community Council Members, their categories, appointment routes and Chair role | 27 July 2026 |
+| [Trust governance](https://www.coopacademies.co.uk/governance/) | Co-op Academies Trust | Academy Community Councils are committees of the Trust Board; Community Council Members take the place of governors in this Trust's structure | 27 July 2026 |
+
+The Accounting Officer, Chief Financial Officer, Governance Professional and Company Secretary shown below are not named on these four pages - they come from separate secondary evidence (a historical GIAS/Companies House reconciliation, and the [Academy Trust Handbook 2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025)), included here because they are real appointments against the same Academy Trust, not because the Trust's own governance pages name them.
+
+### Structure
+
+Adapted from the source investigation's own instance-level mapping, trimmed to a representative subset of people for readability - the same subset modelled in Section 2 below.
+
+```mermaid
+flowchart LR
+    AT["Academy Trust / Legal Entity<br/>The Co-operative Academies Trust<br/>Company limited by guarantee"]
+
+    AT -->|"governed through"| TB["Governance Body<br/>Trust Board"]
+    AT -->|"operates"| E["Co-op Academy Medlock<br/>URN 150612"]
+
+    AT --> AM["Academy Trust Memberships"]
+    AM --> COOP["Co-op Group<br/>Corporate Academy Trust Member"]
+    COOP --> DKW["DKW<br/>Corporate Member representative"]
+    AM --> RG["RG<br/>Academy Trust Member<br/>Academy Trustee<br/>Chair of Trust Board"]
+    AM --> PG["PG<br/>Independent Academy Trust Member"]
+
+    TB -->|"has Academy Trustee"| RG
+    TB -->|"has Academy Trustee"| TC["TC<br/>Academy Trustee<br/>Vice-Chair of Trust Board"]
+    TB -->|"Trustees hold"| CAP["Legal capacities<br/>Charity Trustee + Company Director"]
+
+    TB -->|"has committee"| ACC["Governance Body<br/>Academy Community Council"]
+    ACC -->|"has governance scope over"| E
+    ACC -->|"has Community Council Member"| HR["HR<br/>Sponsor CCM<br/>Chair of ACC"]
+    ACC -->|"has Community Council Member"| JB["JB<br/>Ex-officio CCM<br/>Headteacher"]
+
+    AT --> OA["Operational appointments"]
+    OA --> AO["Accounting Officer<br/>typically paid employee"]
+    OA --> CFO["Chief Financial Officer<br/>typically paid employee"]
+    TB --> GP["Governance Professional<br/>SL"]
+    AT --> CS["Company Secretary appointment<br/>SL<br/>separate from governance-professional appointment"]
+```
+
+The diagram represents the real-world Academy Trust, not registry records. GIAS UID `2777`, Companies House number `07747126` and URN `150612` are identifiers and evidence, not model entities in their own right. RG demonstrates two distinct relationships for one person - Academy Trust Member and Academy Trustee (Chair) - not one interchangeable role. `SL` demonstrates the same pattern for Governance Professional and Company Secretary.
+
+---
+
+## Section 2 — Modelled in the governance ontology
+
+The same people, bodies and appointments from Section 1, expressed in Turtle using `governance-ontology.ttl` (`gov:`/`govo:`).
+
+### Structure
 
 ```mermaid
 flowchart LR
@@ -56,11 +112,9 @@ flowchart LR
     AT -->|govo:hasGovernanceAppointment| P2["SL — CompanySecretary<br/>ProfessionalSupportRole"]
 ```
 
----
+### Namespace prefixes
 
-## Namespace prefixes
-
-All examples on this page use the following prefixes.
+All examples in this section use the following prefixes.
 
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
@@ -75,9 +129,7 @@ All examples on this page use the following prefixes.
 @prefix ginst: <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/instance/> .
 ```
 
----
-
-## Example 1 — Legal entity, academy and trust board identity
+### Example 1 — Legal entity, academy and trust board identity
 
 The Academy Trust is one legal entity carrying two registry identifiers (GIAS UID and Companies House number) - not two organisations. `epr:AcademyTrust` and `epr:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); `epro:hasGroupUniqueIdentifier` and `epro:hasGroupCompaniesHouseNumber` are reused, unmodified, from `education-provider-ontology.ttl`.
 
@@ -116,9 +168,7 @@ inst:coop-academies-trust
     govo:hasGovernanceBody ginst:coop-trust-board .
 ```
 
----
-
-## Example 2 — Academy Community Council as a committee of the Trust Board
+### Example 2 — Academy Community Council as a committee of the Trust Board
 
 The Trust's own published pages call Medlock's delegated local governance body an **Academy Community Council**, a committee of the Trust Board - not a separate legal entity, and not the same as the historic GIAS "Local Governing Body" label for the same academy. This needs two distinct relationships: the committee's delegation *from* the Trust Board, and its governance scope *over* the academy. The first did not have a property in v0.1 - `govo:isCommitteeOf` was added in v0.2 directly because of this example.
 
@@ -133,9 +183,7 @@ inst:medlock
     govo:hasGovernanceBody ginst:medlock-acc .
 ```
 
----
-
-## Example 3 — Academy Trust Membership
+### Example 3 — Academy Trust Membership
 
 Members relate to the Academy Trust legal entity directly - they are not automatically Trustees or Trust Board members. `RG` (below) separately holds a Trustee appointment (Example 4): two distinct relationships for one person, not one interchangeable role. This is also why `govo:hasGovernanceAppointment`'s `rdfs:domain` was relaxed in v0.2 - a v0.1 reader would have wrongly inferred that a Member appointment implies its subject is a `gov:GovernanceBody`.
 
@@ -179,9 +227,7 @@ inst:coop-academies-trust
 
 *(3 further Academy Trust Members - `GGM`, `KN`, `HT` - are evidenced in the source and not shown here.)*
 
----
-
-## Example 4 — Trustee appointments, legal capacity and Chair role assignment
+### Example 4 — Trustee appointments, legal capacity and Chair role assignment
 
 Academy Trustees are simultaneously charity trustees and, as a matter of company law, company directors - `govo:hasLegalCapacity` exists specifically to express this without inventing a second appointment. Chair and Vice-Chair are responsibilities layered onto a Trustee appointment, not separate appointment types - `gov:RoleAssignment` with `govo:layeredOn` expresses that layering.
 
@@ -227,9 +273,7 @@ ginst:roleassignment-tc-vicechair
 
 *(8 further Trustees - `APM`, `MA`, `RW`, `GG-T`, `SB`, `CC`, `SFC`, `MW` - are evidenced in the source and not shown here.)*
 
----
-
-## Example 5 — Academy Community Council membership
+### Example 5 — Academy Community Council membership
 
 Eleven Community Council Members are evidenced, across five appointing categories the Trust publishes (community, staff, sponsor, parent, ex-officio). No role type in the taxonomy is named specifically for a Community Council Member, so this example reuses `gov:LocalGoverningBodyMember` - the closest existing value - and maps the Trust's category labels onto the closest `AppointingBody` individuals. Both mappings are candidates, not direct evidence: the source gives category labels, not the underlying appointing mechanism.
 
@@ -273,9 +317,7 @@ ginst:medlock-acc
 
 *(9 further Community Council Members - community, staff and parent categories - are evidenced in the source and not shown here.)*
 
----
-
-## Example 6 — Operational and professional support appointments
+### Example 6 — Operational and professional support appointments
 
 Accounting Officer and Chief Financial Officer are paid operational roles held directly against the Academy Trust, not Trust Board appointments - `govo:hasAppointmentBasis gov:OperationalEmploymentRole` marks this. The source does not name these two post-holders. Governance Professional and Company Secretary are two **separate** appointments that happen to be held by the same person (`SL`) - a real data-quality point the source investigation makes explicitly, and exactly what having two `GovernanceAppointment` records for one `GovernancePerson` is for.
 
