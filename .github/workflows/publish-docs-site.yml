@@ -178,6 +178,14 @@ jobs:
           TMPDIR_ENC=$(mktemp -d)
 
           # models: no remember-me (simple password gate, no session storage)
+          #
+          # The governance ontology docs and WebVOWL graph viewer are excluded:
+          # WIDOCO/WebVOWL load their content via client-side JS fetches to
+          # sibling .html files (sections/*.html, webvowl's own pages etc).
+          # Encrypting those individually breaks the page, because the
+          # authenticated shell's AJAX calls hit another password gate
+          # instead of real content. The main /ontology/ page has the same
+          # structure and is deliberately unprotected for the same reason.
           for section in models; do
             while IFS= read -r file; do
               staticrypt "$file" \
@@ -188,7 +196,7 @@ jobs:
                 --template "docs-site/staticrypt-template.html" \
                 --template-color-primary "#1d70b8"
               cp "$TMPDIR_ENC/$(basename "$file")" "$file"
-            done < <(find "docs-site/output/$section" -name "*.html")
+            done < <(find "docs-site/output/$section" -path "*/governance/ontology" -prune -o -name "*.html" -print)
           done
 
           rm -rf "$TMPDIR_ENC"
