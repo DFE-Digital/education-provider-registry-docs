@@ -115,7 +115,7 @@
         padding: 0.15rem 0;
       }
     </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/default.min.css">
+    <link rel="stylesheet" href="/education-provider-registry-docs/assets/vendor/highlight-default.min.css">
   </head>
   <body>
     <header>
@@ -124,17 +124,22 @@
     <main>
       <%= yield %>
     </main>
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.14.0/+esm";
-
+    <!--
+      Self-hosted, not loaded from a CDN: staticrypt reveals password-protected
+      pages via document.write(), and Chromium browsers (Edge included) block
+      parser-blocking scripts from a different origin when injected that way,
+      which silently broke mermaid diagrams and code highlighting on every
+      protected page. See docs-site/scripts/download-vendor-assets.ps1.
+    -->
+    <script src="/education-provider-registry-docs/assets/vendor/mermaid.min.js"></script>
+    <script>
       mermaid.initialize({
         startOnLoad: true,
         securityLevel: "loose"
       });
     </script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/gherkin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/turtle.min.js"></script>
+    <script src="/education-provider-registry-docs/assets/vendor/highlight.min.js"></script>
+    <script src="/education-provider-registry-docs/assets/vendor/highlight-gherkin.min.js"></script>
     <script>
       hljs.highlightAll();
     </script>

@@ -144,6 +144,7 @@ try {
     }
 
     & (Join-Path $PSScriptRoot "copy-information-assets.ps1")
+    & (Join-Path $PSScriptRoot "download-vendor-assets.ps1")
 }
 finally {
     Pop-Location
