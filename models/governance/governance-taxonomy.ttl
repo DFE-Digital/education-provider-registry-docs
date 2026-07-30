@@ -84,7 +84,7 @@ gov:GovernanceParticipantType
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Governance participant type"@en ;
     skos:definition "The participant capacity in which a person contributes to governance."@en ;
-    skos:narrower gov:Governor, gov:GovernorType, gov:CoOptedGovernor, gov:ExOfficioGovernor, gov:FoundationGovernor, gov:LocalAuthorityGovernor, gov:LocalGovernor, gov:ParentGovernor, gov:StaffGovernor, gov:AssociateGovernor, gov:BoardMember, gov:LocalGoverningBodyMember, gov:Trustee, gov:AcademyTrustee, gov:AcademyTrustMember, gov:TrustMember, gov:CompanyDirector, gov:Director, gov:CharityTrustee, gov:Clerk, gov:GovernanceProfessional, gov:Principal ;
+    skos:narrower gov:Governor, gov:GovernorType, gov:CoOptedGovernor, gov:ExOfficioGovernor, gov:FoundationGovernor, gov:LocalAuthorityGovernor, gov:LocalGovernor, gov:ParentGovernor, gov:PartnershipGovernor, gov:StaffGovernor, gov:AssociateGovernor, gov:BoardMember, gov:LocalGoverningBodyMember, gov:Trustee, gov:AcademyTrustee, gov:AcademyTrustMember, gov:TrustMember, gov:CompanyDirector, gov:Director, gov:CharityTrustee, gov:Clerk, gov:GovernanceProfessional, gov:Principal ;
     gov:status "Provisional"@en .
 
 gov:AppointmentType
@@ -334,6 +334,12 @@ gov:LocalGovernor
 gov:ParentGovernor
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Parent governor"@en ;
+    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    gov:status "Provisional"@en .
+
+gov:PartnershipGovernor
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Partnership governor"@en ;
     skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
