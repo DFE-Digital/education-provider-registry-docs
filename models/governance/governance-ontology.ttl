@@ -60,7 +60,7 @@ govo:governanceConceptualModel
     dcterms:modified "2026-07-30"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.4" ;
+    owl:versionInfo "0.5" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -70,7 +70,8 @@ govo:governanceConceptualModel
     rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model - each declared here as a minimal owl:Class type stub (label + a comment pointing back to the canonical definition) so WIDOCO/WebVOWL, which only render entities typed within this file, show them as connected nodes rather than dropping them."@en ;
     rdfs:comment "v0.2: two changes from testing the ontology against the Medlock/Co-operative Academies Trust worked example (see models/governance worked examples). (1) govo:hasGovernanceAppointment no longer asserts rdfs:domain gov:GovernanceBody - Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the epr:AcademyTrust legal entity, not implying Trust Board membership. (2) New object property govo:isCommitteeOf (domain gov:Committee, range gov:GovernanceBody) to record that a committee (e.g. an Academy Community Council) is delegated from a parent governance body, distinct from the committee's own governance scope over an academy (govo:hasGovernanceBody)."@en ;
     rdfs:comment "v0.3: closes the corporate-Member gap found in the Medlock/Co-operative Academies Trust worked example (the Co-op Group holds an Academy Trust Membership as a corporate body, represented by a natural person, DKW). New class gov:GovernanceParticipant, superclass of gov:GovernancePerson (unchanged) and new class gov:CorporateGovernanceParticipant (a corporate body able to hold an Academy Trust Membership - subclass of epr:Organisation, for which a type stub is added here on the established WIDOCO/WebVOWL pattern). govo:appointmentOf range widened from gov:GovernancePerson to gov:GovernanceParticipant. This is deliberately not a blanket loosening: real-world governance rules restrict which GovernanceRoleType values a corporate body may hold (a Trustee, Governor or office-holder must be a natural person; only Academy Trust Member / Trust Member may be corporate) - that constraint is not expressible in OWL/RDFS alone (it is conditional on a sibling property's value) and is instead enforced in governance-shacl.ttl. gov:Member's rdfs:subClassOf also widened from epr:Person to gov:GovernanceParticipant, for consistency with governance-vocabulary.ttl's own definition of Member as 'a person or body holding membership' - the ontology class had never actually allowed the corporate case its own vocabulary definition already described."@en ;
-    rdfs:comment "v0.4: new GovernanceRoleType individual gov:AssociateGovernor, found not to exist while modelling the Frank Barnes School worked example (a community special school). SI 2012/1034 reg 12 defines an associate member as appointed to a committee, not the governing body, and explicitly not a governor; SI 2013/1624 reg 24 restricts their vote to committee business the governing body grants, never at the governing body itself, and never below age 18. Deliberately not placed under gov:GovernorType, since the statute itself excludes associates from that category. GovernanceRoleType's closed enumeration is now 24 individuals."@en .
+    rdfs:comment "v0.4: new GovernanceRoleType individual gov:AssociateGovernor, found not to exist while modelling the Frank Barnes School worked example (a community special school). SI 2012/1034 reg 12 defines an associate member as appointed to a committee, not the governing body, and explicitly not a governor; SI 2013/1624 reg 24 restricts their vote to committee business the governing body grants, never at the governing body itself, and never below age 18. Deliberately not placed under gov:GovernorType, since the statute itself excludes associates from that category. GovernanceRoleType's closed enumeration is now 24 individuals."@en ;
+    rdfs:comment "v0.5: new object property govo:isDelegatedBy (domain and range gov:GovernanceBody), found missing while modelling the Manor High School worked example (an academy converter). gov:LocalGoverningBody's own class comment already described it as a body to which an academy trust board delegates governance functions, but no property could assert that delegation - govo:isCommitteeOf covers the equivalent relationship only for gov:Committee, a sibling class LocalGoverningBody does not belong to. govo:isCommitteeOf is now declared rdfs:subPropertyOf govo:isDelegatedBy, so the general relationship has one property and Committee-specific delegation remains expressible via the more specific one."@en .
 
 
 #################################################################
@@ -172,12 +173,20 @@ gov:Committee
     rdfs:label "Committee"@en ;
     rdfs:comment "A sub-body of a governing body or trust board with delegated responsibility for a specific area (e.g. finance, pay, standards). Members are drawn from, or co-opted alongside, the parent body's membership."@en .
 
+govo:isDelegatedBy
+    a owl:ObjectProperty ;
+    rdfs:label "is delegated by"@en ;
+    rdfs:domain gov:GovernanceBody ;
+    rdfs:range gov:GovernanceBody ;
+    rdfs:comment "Cardinality: 0..1. A GovernanceBody whose governance functions derive from a parent GovernanceBody's delegation, rather than from its own independent statutory footing - e.g. a Local Governing Body's functions derive from the Academy Trust Board's scheme of delegation. Distinct from a body's own governance scope over an academy (govo:hasGovernanceBody). govo:isCommitteeOf is a Committee-specific sub-property of this - use isDelegatedBy directly for delegated bodies that are not Committees, such as gov:LocalGoverningBody."@en .
+
 govo:isCommitteeOf
     a owl:ObjectProperty ;
+    rdfs:subPropertyOf govo:isDelegatedBy ;
     rdfs:label "is committee of"@en ;
     rdfs:domain gov:Committee ;
     rdfs:range gov:GovernanceBody ;
-    rdfs:comment "Cardinality: 0..1 (added v0.2, from the Medlock/Co-operative Academies Trust worked example: the Trust's Academy Community Council is a committee of the Trust Board, distinct from the Committee's own governance scope over an academy - see govo:hasGovernanceBody). A Committee delegated by a parent GovernanceBody uses this property to record that delegation."@en .
+    rdfs:comment "Cardinality: 0..1 (added v0.2, from the Medlock/Co-operative Academies Trust worked example: the Trust's Academy Community Council is a committee of the Trust Board, distinct from the Committee's own governance scope over an academy - see govo:hasGovernanceBody). A Committee delegated by a parent GovernanceBody uses this property to record that delegation. Sub-property of the more general govo:isDelegatedBy (added v0.5), which also covers non-Committee delegated bodies such as gov:LocalGoverningBody."@en .
 
 gov:Board
     a owl:Class ;
