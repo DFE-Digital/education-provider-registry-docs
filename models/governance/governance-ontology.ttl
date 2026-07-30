@@ -60,7 +60,7 @@ govo:governanceConceptualModel
     dcterms:modified "2026-07-30"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.9" ;
+    owl:versionInfo "0.10" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -75,7 +75,8 @@ govo:governanceConceptualModel
     rdfs:comment "v0.6: two changes from comparing all three governance worked examples side by side. (1) gov:AppointmentBasis split: new individual gov:DelegatedGovernanceAppointment for Academy Trust constitutional appointments (Trustee, Academy Trust Member, Local Governing Body member, Trust committee member), separating them from gov:StatutoryGovernanceAppointment, now restricted to true SI 2012/1034 / SI 2013/1624 maintained-school appointments. Academy Community Council and Local Governing Body appointments had been using StatutoryGovernanceAppointment despite both bodies' own class comments stating they are not statutory - Frank Barnes' true maintained-school governing body and committee appointments are unaffected and remain StatutoryGovernanceAppointment. (2) new GovernanceRoleType individual gov:SpecialistResponsibility, a single generic value for named subject/portfolio responsibilities (Curriculum, Sustainability etc.) that recurred across the Medlock and Manor High examples with no matching value - deliberately one value covering an open-ended, school-invented set of labels, rather than a named individual per topic. GovernanceRoleType's closed enumeration is now 25 individuals; AppointmentBasis is now 4."@en ;
     rdfs:comment "v0.7: gov:GoverningBody's comment updated to state explicitly that it also covers a federation of maintained schools' single shared governing body (Education Act 2002 ss.24-27), found while modelling the Eileen Wade/Milton Ernest Federation worked example - one GoverningBody instance with govo:hasGovernanceBody asserted from the Federation and from each member establishment. No structural change: govo:hasGovernanceBody's own comment already named epr:Federation as a valid subject; only GoverningBody's comment had been scoped to a single school and hadn't caught up."@en ;
     rdfs:comment "v0.8: new GovernanceRoleType individual gov:CommitteeViceChair, found missing while modelling the Millfield First and Nursery School worked example (a maintained community school with named committee Vice-Chairs, distinct from the Governing Body's own Vice-Chair). Mirrors gov:CommitteeChair exactly, as its counterpart for Vice-Chair. GovernanceRoleType's closed enumeration is now 26 individuals."@en ;
-    rdfs:comment "v0.9: new LegalCapacity individual gov:CharityTrustee, found missing while modelling the Cheltenham College worked example (an independent school whose Council is its own historic charitable governing body, not a company limited by guarantee). gov:CompanyDirector's own comment already stated 'Academy Trustee = Charity Trustee + Company Director', but no individual existed for the Charity Trustee half on its own - every previous worked example only needed it alongside CompanyDirector, since every Trustee so far has been an academy trust's. Cheltenham's Council members hold charity trustee status with no company-director capacity at all. LegalCapacity's closed enumeration is now 3 individuals. Retrofitted onto every existing Trustee/Director appointment in the Medlock, OAK Multi Academy Trust/Brookside Primary and Green School Trust worked examples, alongside their existing CompanyDirector capacity, for consistency with this rule."@en .
+    rdfs:comment "v0.9: new LegalCapacity individual gov:CharityTrustee, found missing while modelling the Cheltenham College worked example (an independent school whose Council is its own historic charitable governing body, not a company limited by guarantee). gov:CompanyDirector's own comment already stated 'Academy Trustee = Charity Trustee + Company Director', but no individual existed for the Charity Trustee half on its own - every previous worked example only needed it alongside CompanyDirector, since every Trustee so far has been an academy trust's. Cheltenham's Council members hold charity trustee status with no company-director capacity at all. LegalCapacity's closed enumeration is now 3 individuals. Retrofitted onto every existing Trustee/Director appointment in the Medlock, OAK Multi Academy Trust/Brookside Primary and Green School Trust worked examples, alongside their existing CompanyDirector capacity, for consistency with this rule."@en ;
+    rdfs:comment "v0.10: new GovernanceRoleType individual gov:PartnershipGovernor and new AppointingBody individual gov:NominatedByPartner (SI 2012/1034 reg 10 and Sch.3), found missing while modelling the Aldgate School worked example (a voluntary aided school whose published board includes a governor described only as 'other-body nomination'). gov:Governor's own vocabulary citation had named 'partnership' as one of the six governor categories regs 6-11 define since v0.1, but no individual was ever implemented for it - the only one of the six missing. GovernorType's classification is now eight sub-types; GovernanceRoleType's enumeration is now 27; AppointingBody's is now 9."@en .
 
 
 #################################################################
@@ -306,7 +307,7 @@ govo:hasRoleType
     rdfs:label "has role type"@en ;
     rdfs:domain gov:GovernanceAppointment ;
     rdfs:range gov:GovernanceRoleType ;
-    rdfs:comment "Cardinality: exactly 1. Value is one of the 26 GovernanceRoleType named individuals."@en .
+    rdfs:comment "Cardinality: exactly 1. Value is one of the 27 GovernanceRoleType named individuals."@en .
 
 govo:hasAppointingBody
     a owl:ObjectProperty ;
@@ -477,7 +478,7 @@ gov:GovernorType
     a owl:Class ;
     rdfs:subClassOf gov:GovernanceRoleType ;
     rdfs:label "Governor type"@en ;
-    rdfs:comment "The classification field distinguishing which of the seven governor sub-types (co-opted, ex-officio, foundation, local authority, local, parent, staff) a Governor appointment is."@en .
+    rdfs:comment "The classification field distinguishing which of the eight governor sub-types (co-opted, ex-officio, foundation, local authority, local, parent, partnership, staff) a Governor appointment is."@en .
 
 
 #################################################################
@@ -487,9 +488,9 @@ gov:GovernorType
 gov:GovernanceRoleType
     a owl:Class ;
     rdfs:label "Governance role type"@en ;
-    rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 26 named individuals, covering governor sub-types, associate membership, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
+    rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 27 named individuals, covering governor sub-types, associate membership, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
 
-# Governor and subtypes (8 individuals)
+# Governor and subtypes (9 individuals)
 gov:Governor
     a owl:NamedIndividual, gov:GovernanceRoleType ;
     rdfs:label "Governor"@en .
@@ -517,6 +518,11 @@ gov:LocalGovernor
 gov:ParentGovernor
     a owl:NamedIndividual, gov:GovernanceRoleType ;
     rdfs:label "Parent governor"@en .
+
+gov:PartnershipGovernor
+    a owl:NamedIndividual, gov:GovernanceRoleType ;
+    rdfs:label "Partnership governor"@en ;
+    rdfs:comment "School Governance (Constitution) (England) Regulations 2012 reg 10: nominated by a qualifying business or community partner (or, for a school with a religious character, appointed to preserve and develop that character) and appointed by the governing body from eligible nominees under Sch.3. Named in gov:Governor's own vocabulary citation ('regs 6-11 define each category of governor - parent, staff, local authority, foundation, partnership, co-opted') since v0.1, but never implemented as a GovernanceRoleType individual until found missing while modelling the Aldgate School worked example."@en .
 
 gov:StaffGovernor
     a owl:NamedIndividual, gov:GovernanceRoleType ;
@@ -661,7 +667,7 @@ gov:CharityTrustee
 gov:AppointingBody
     a owl:Class ;
     rdfs:label "Appointing body"@en ;
-    rdfs:comment "The body or mechanism that appoints or elects a statutory governance role-holder. Applies to statutory governance appointments; not typically populated for operational employment or professional support roles - see AppointmentBasis. Closed enumeration of 8 named individuals grounded in SI 2012/1034 regs 6-11."@en .
+    rdfs:comment "The body or mechanism that appoints or elects a statutory governance role-holder. Applies to statutory governance appointments; not typically populated for operational employment or professional support roles - see AppointmentBasis. Closed enumeration of 9 named individuals grounded in SI 2012/1034 regs 6-11."@en .
 
 gov:AppointedByGoverningBody
     a owl:NamedIndividual, gov:AppointingBody ;
@@ -695,6 +701,11 @@ gov:AppointedByAcademyMembers
 gov:AppointedByTrustees
     a owl:NamedIndividual, gov:AppointingBody ;
     rdfs:label "Appointed by trustees"@en .
+
+gov:NominatedByPartner
+    a owl:NamedIndividual, gov:AppointingBody ;
+    rdfs:label "Nominated by partner"@en ;
+    rdfs:comment "SI 2012/1034 Sch.3: nomination sought from a qualifying business or community partner (or, for a school with a religious character, the diocesan or other religious authority), with the governing body appointing from eligible nominees - the mechanism specific to gov:PartnershipGovernor. Added alongside PartnershipGovernor, from the Aldgate School worked example."@en .
 
 
 #################################################################
