@@ -125,7 +125,7 @@ All examples in this section use the following prefixes.
 
 Manor High School is a secondary academy converter, operated by OAK Multi Academy Trust. `epr:MainstreamAcademy` is the specific leaf type (not the generic `epr:Establishment` or `epr:Academy` stub); `epro:hasAcademyRoute` records that it converted from an existing school rather than being sponsored into being.
 
-`ginst:oak-trust-board` is declared here only as the body Manor's Local Governing Body is delegated by (Example 2) - this investigation is scoped to Manor High's own local governance and doesn't cover OAK's Members, Trustees or central operational appointments. OAK's own Trust-level detail is covered by a separate worked example, not yet published on this site.
+`ginst:oak-trust-board` is declared here only as the body Manor's Local Governing Body is delegated by (Example 2) - this investigation is scoped to Manor High's own local governance and doesn't cover OAK's Members, Trustees or central operational appointments. OAK's own Trust-level detail - the same `inst:oak-mat` and `ginst:oak-trust-board` instances - is covered by the [OAK Multi Academy Trust / Brookside Primary School worked example](../oak-brookside/).
 
 ```
 inst:manor-high
@@ -367,7 +367,7 @@ ginst:manor-lgb
 | Chair of Governors | JJ | `gov:RoleAssignment` + `govo:layeredOn` (Local Governing Body appointment) + `govo:assignsRole gov:Chair` | Direct |
 | Governor responsibilities | Curriculum (ZB), Sustainability Governor (SB) | `gov:RoleAssignment` + `govo:layeredOn` (governor appointment) + `govo:assignsRole gov:SpecialistResponsibility`, specific topic recorded in the `rdfs:comment` | Direct - one generic value covers any named subject/portfolio responsibility |
 | Governance Professional | MB, Clerk to Governors | `govo:hasRoleType gov:GovernanceProfessional`, `govo:hasAppointmentBasis gov:ProfessionalSupportRole` | Direct |
-| Academy Trust Members, Trustees, central operational appointments | Not evidenced in this investigation | Not modelled | Out of scope - covered by a separate OAK MAT worked example, not yet published on this site |
+| Academy Trust Members, Trustees, central operational appointments | Not evidenced in this investigation | Not modelled | Out of scope - covered by the [OAK Multi Academy Trust / Brookside Primary School worked example](../oak-brookside/) |
 
 ---
 
