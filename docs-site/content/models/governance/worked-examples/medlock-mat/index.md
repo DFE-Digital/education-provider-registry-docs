@@ -40,8 +40,9 @@ This section is the structure as evidenced, before any ontology is applied.
 | [Co-op Academy Medlock: Academy Community Council](https://www.medlock.coopacademies.co.uk/governance) | Co-op Academy Medlock | Eleven published current Community Council Members, their categories, appointment routes and Chair role | 27 July 2026 |
 | [Trust governance](https://www.coopacademies.co.uk/governance/) | Co-op Academies Trust | Academy Community Councils are committees of the Trust Board; Community Council Members take the place of governors in this Trust's structure | 27 July 2026 |
 | [Companies House: company 07747126](https://find-and-update.company-information.service.gov.uk/company/07747126) | Companies House | Confirms The Co-operative Academies Trust is an active private company limited by guarantee - the same legal entity as GIAS UID 2777, not a second organisation | 24 July 2026 |
+| [Companies House: filed accounts, "Annual Report and Financial Statements for year ended 31 August 2025"](https://find-and-update.company-information.service.gov.uk/company/07747126/filing-history) | The Co-operative Academies Trust (filed with Companies House) | Names the Trust's Accounting Officer and Chief Finance Officer, under "Trust Senior Leadership Team" | Filed 12 February 2026; observed 30 July 2026 |
 
-The Accounting Officer, Chief Financial Officer, Governance Professional and Company Secretary shown below are not named in any of these sources - they come from separate secondary evidence (a historical GIAS reconciliation, and the [Academy Trust Handbook 2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025)), included here because they are real appointments against the same Academy Trust, not because the Trust's own governance pages name them.
+The Governance Professional and Company Secretary shown below are not named in any of these sources - they come from separate secondary evidence (a historical GIAS reconciliation, and the [Academy Trust Handbook 2025](https://www.gov.uk/government/publications/academy-trust-handbook/academy-trust-handbook-2025-effective-from-1-september-2025)), included here because they are real appointments against the same Academy Trust, not because the Trust's own governance pages name them. The Accounting Officer and Chief Financial Officer, by contrast, are named in the Trust's own filed annual accounts (see Example 6).
 
 ### Structure
 
@@ -66,12 +67,12 @@ flowchart LR
 
     TB -->|"has committee"| ACC["Governance Body<br/>Academy Community Council"]
     ACC -->|"has governance scope over"| E
-    ACC -->|"has Community Council Member"| HR["HR<br/>Sponsor CCM<br/>Chair of ACC"]
+    ACC -->|"has Community Council Member"| HR["HR<br/>Sponsor CCM<br/>Committee Chair of ACC"]
     ACC -->|"has Community Council Member"| JB["JB<br/>Ex-officio CCM<br/>Headteacher"]
 
     AT --> OA["Operational appointments"]
-    OA --> AO["Accounting Officer<br/>typically paid employee"]
-    OA --> CFO["Chief Financial Officer<br/>typically paid employee"]
+    OA --> AO["CT<br/>Accounting Officer (also CEO)"]
+    OA --> CFO["IB<br/>Chief Financial Officer (also Deputy CEO)"]
     TB --> GP["Governance Professional<br/>SL"]
     AT --> CS["Company Secretary appointment<br/>SL<br/>separate from governance-professional appointment"]
 ```
@@ -103,11 +104,11 @@ flowchart LR
     TB -->|govo:hasGovernanceAppointment| T1["RG — Trustee<br/>+ LegalCapacity: CompanyDirector<br/>+ RoleAssignment: Chair"]
     TB -->|govo:hasGovernanceAppointment| T2["TC — Trustee<br/>+ LegalCapacity: CompanyDirector<br/>+ RoleAssignment: ViceChair"]
 
-    ACC -->|govo:hasGovernanceAppointment| C1["HR — LocalGoverningBodyMember<br/>+ RoleAssignment: Chair of ACC"]
+    ACC -->|govo:hasGovernanceAppointment| C1["HR — LocalGoverningBodyMember<br/>+ RoleAssignment: CommitteeChair"]
     ACC -->|govo:hasGovernanceAppointment| C2["JB — LocalGoverningBodyMember<br/>(ex officio, headteacher)"]
 
-    AT -->|govo:hasGovernanceAppointment| O1["Accounting Officer<br/>OperationalEmploymentRole"]
-    AT -->|govo:hasGovernanceAppointment| O2["Chief Financial Officer<br/>OperationalEmploymentRole"]
+    AT -->|govo:hasGovernanceAppointment| O1["CT — AccountingOfficer<br/>OperationalEmploymentRole"]
+    AT -->|govo:hasGovernanceAppointment| O2["IB — ChiefFinancialOfficer<br/>OperationalEmploymentRole"]
     TB -->|govo:hasGovernanceAppointment| P1["SL — GovernanceProfessional<br/>ProfessionalSupportRole"]
     AT -->|govo:hasGovernanceAppointment| P2["SL — CompanySecretary<br/>ProfessionalSupportRole"]
 ```
@@ -304,8 +305,8 @@ ginst:medlock-acc
 ginst:roleassignment-hr-chairacc
     a gov:RoleAssignment ;
     govo:layeredOn ginst:appointment-hr-ccm ;
-    govo:assignsRole gov:Chair ;
-    rdfs:comment "HR chairs the Academy Community Council."@en .
+    govo:assignsRole gov:CommitteeChair ;
+    rdfs:comment "HR chairs the Academy Community Council - gov:CommitteeChair, not gov:Chair, since this is a committee chairing responsibility layered onto a committee-membership appointment, not chairing the Trust Board itself (see RG's Chair of Trustees, Example 4, for that case)."@en .
 
 ginst:person-jb
     a gov:GovernancePerson ;
@@ -327,23 +328,33 @@ ginst:medlock-acc
 
 ### Example 6 — Operational and professional support appointments
 
-Accounting Officer and Chief Financial Officer are paid operational roles held directly against the Academy Trust, not Trust Board appointments - `govo:hasAppointmentBasis gov:OperationalEmploymentRole` marks this. The source does not name these two post-holders. Governance Professional and Company Secretary are two **separate** appointments that happen to be held by the same person (`SL`) - a real data-quality point the source investigation makes explicitly, and exactly what having two `GovernanceAppointment` records for one `GovernancePerson` is for.
+Accounting Officer and Chief Financial Officer are paid operational roles held directly against the Academy Trust, not Trust Board appointments - `govo:hasAppointmentBasis gov:OperationalEmploymentRole` marks this. The original source investigation didn't name these two post-holders, but the Trust's own filed Companies House accounts do, under "Trust Senior Leadership Team" - `CT` (also CEO) as Accounting Officer, and `IB` (also Deputy CEO) as Chief Finance Officer. Governance Professional and Company Secretary are two **separate** appointments that happen to be held by the same person (`SL`) - a real data-quality point the source investigation makes explicitly, and exactly what having two `GovernanceAppointment` records for one `GovernancePerson` is for.
 
 ```
+ginst:person-ct
+    a gov:GovernancePerson ;
+    rdfs:label "CT"@en .
+
 ginst:appointment-ao
     a gov:GovernanceAppointment ;
+    govo:appointmentOf ginst:person-ct ;
     govo:hasRoleType gov:AccountingOfficer ;
     govo:hasAppointmentBasis gov:OperationalEmploymentRole ;
-    rdfs:comment "Accounting Officer. Not named in the source investigation - govo:appointmentOf is deliberately omitted rather than invented."@en .
+    rdfs:comment "Accounting Officer. Not named in the original source investigation, but named in the Trust's own filed Companies House accounts (Annual Report and Financial Statements, year ended 31 August 2025, filed 12 February 2026) as CT, who is also the Trust's Chief Executive Officer - the same dual CEO/Accounting Officer pattern the Academy Trust Handbook expects."@en .
 
 inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-ao .
 
+ginst:person-ib
+    a gov:GovernancePerson ;
+    rdfs:label "IB"@en .
+
 ginst:appointment-cfo
     a gov:GovernanceAppointment ;
+    govo:appointmentOf ginst:person-ib ;
     govo:hasRoleType gov:ChiefFinancialOfficer ;
     govo:hasAppointmentBasis gov:OperationalEmploymentRole ;
-    rdfs:comment "Chief Financial Officer. Not named in the source investigation."@en .
+    rdfs:comment "Chief Financial Officer. Named in the Trust's own filed Companies House accounts as IB, who is also the Trust's Deputy Chief Executive Officer - a dual title the accounts state directly, not itself modelled as a separate appointment here."@en .
 
 inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-cfo .
@@ -386,7 +397,7 @@ inst:coop-academies-trust
 | Academy Trust Membership | 6 Members, including a corporate member | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AcademyTrustMember`) attached directly to `epr:AcademyTrust` | Direct |
 | Trustee Appointment | 9 Trustees, 1 Chair of Trustees | `govo:hasRoleType gov:Trustee`, `govo:hasAppointingBody gov:AppointedByAcademyMembers` | Direct |
 | Legal Capacity (Director) | Trustees are also company directors | `govo:hasLegalCapacity gov:CompanyDirector` | Direct |
-| Role Assignment (Chair / Vice-Chair) | Chair of Trustees, Vice-Chair of Trust Board, Chair of ACC | `gov:RoleAssignment` + `govo:layeredOn` + `govo:assignsRole` | Direct |
+| Role Assignment (Chair / Vice-Chair / Committee Chair) | Chair of Trustees, Vice-Chair of Trust Board, Chair of ACC | `gov:RoleAssignment` + `govo:layeredOn` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair` at Trust Board level; `gov:CommitteeChair` for the ACC, a committee) | Direct |
 | Community Council Member | 11 CCMs across 5 appointing categories | `govo:hasRoleType gov:LocalGoverningBodyMember` | Candidate - no CCM-specific role type exists; reused the closest generic value |
 | CCM appointing category | community / staff / sponsor / parent / ex-officio | `govo:hasAppointingBody` (`gov:ElectedByStaff`, `gov:ExOfficioAppointment`, `gov:AppointedByFoundationOrTrust`, `gov:ElectedByParents`, `gov:AppointedByGoverningBody`) | Candidate - source gives category labels, not the appointing mechanism |
 | Accounting Officer / Chief Financial Officer | 1 + 1, paid employees | `govo:hasRoleType` + `govo:hasAppointmentBasis gov:OperationalEmploymentRole` | Direct |
