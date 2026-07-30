@@ -57,10 +57,10 @@ govo:governanceConceptualModel
     dcterms:description "OWL 2 conceptual model for the governance subdomain of the Education Provider Registry - people, governance bodies, appointments, roles, appointing mechanisms, constitutions and compliance/assurance records."@en ;
     rdfs:comment "This ontology defines classes and object properties for the governance subdomain. It covers governance people and their pseudonymous identifiers, governance bodies (governing body, trust board, local governing body, interim executive board, committee), governance appointments (with role type, appointing body and appointment basis), constitutions and constitution positions, legal capacities (company director), compliance and assurance records (declarations, training) and collaboration records (meetings, attendance). Class IRIs are shared with the SKOS governance vocabulary and taxonomy so that concepts, taxon values and ontology classes resolve to the same URI. Object properties are defined in the /models/governance/ontology/ namespace."@en ;
     dcterms:created "2026-07-28"^^xsd:date ;
-    dcterms:modified "2026-07-29"^^xsd:date ;
+    dcterms:modified "2026-07-30"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.3" ;
+    owl:versionInfo "0.4" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -69,7 +69,8 @@ govo:governanceConceptualModel
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> ;
     rdfs:comment "v0.1: initial governance ontology. Core classes for governance person, governance body (and its subtypes), governance appointment, governance role type (23 named individuals), appointing body (8 named individuals derived from SI 2012/1034), appointment basis (3 named individuals, punned with the AppointmentBasis taxonomy facet), legal capacity (company director/director, punned as automatic capacities rather than independent role types), term of office, constitution/constitution position/vacancy, committee, role assignment (Chair-type responsibilities layered onto a base appointment), declarations, training and collaboration records. 23 object properties. Reuses gov: URIs from governance-vocabulary.ttl and governance-taxonomy.ttl via OWL 2 punning, and epr: URIs from education-provider-ontology.ttl for the six organisational/person classes (Academy, AcademyTrust, Establishment, Federation, LocalAuthority, Person) that already belong to the main Education Provider Registry model - each declared here as a minimal owl:Class type stub (label + a comment pointing back to the canonical definition) so WIDOCO/WebVOWL, which only render entities typed within this file, show them as connected nodes rather than dropping them."@en ;
     rdfs:comment "v0.2: two changes from testing the ontology against the Medlock/Co-operative Academies Trust worked example (see models/governance worked examples). (1) govo:hasGovernanceAppointment no longer asserts rdfs:domain gov:GovernanceBody - Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the epr:AcademyTrust legal entity, not implying Trust Board membership. (2) New object property govo:isCommitteeOf (domain gov:Committee, range gov:GovernanceBody) to record that a committee (e.g. an Academy Community Council) is delegated from a parent governance body, distinct from the committee's own governance scope over an academy (govo:hasGovernanceBody)."@en ;
-    rdfs:comment "v0.3: closes the corporate-Member gap found in the Medlock/Co-operative Academies Trust worked example (the Co-op Group holds an Academy Trust Membership as a corporate body, represented by a natural person, DKW). New class gov:GovernanceParticipant, superclass of gov:GovernancePerson (unchanged) and new class gov:CorporateGovernanceParticipant (a corporate body able to hold an Academy Trust Membership - subclass of epr:Organisation, for which a type stub is added here on the established WIDOCO/WebVOWL pattern). govo:appointmentOf range widened from gov:GovernancePerson to gov:GovernanceParticipant. This is deliberately not a blanket loosening: real-world governance rules restrict which GovernanceRoleType values a corporate body may hold (a Trustee, Governor or office-holder must be a natural person; only Academy Trust Member / Trust Member may be corporate) - that constraint is not expressible in OWL/RDFS alone (it is conditional on a sibling property's value) and is instead enforced in governance-shacl.ttl. gov:Member's rdfs:subClassOf also widened from epr:Person to gov:GovernanceParticipant, for consistency with governance-vocabulary.ttl's own definition of Member as 'a person or body holding membership' - the ontology class had never actually allowed the corporate case its own vocabulary definition already described."@en .
+    rdfs:comment "v0.3: closes the corporate-Member gap found in the Medlock/Co-operative Academies Trust worked example (the Co-op Group holds an Academy Trust Membership as a corporate body, represented by a natural person, DKW). New class gov:GovernanceParticipant, superclass of gov:GovernancePerson (unchanged) and new class gov:CorporateGovernanceParticipant (a corporate body able to hold an Academy Trust Membership - subclass of epr:Organisation, for which a type stub is added here on the established WIDOCO/WebVOWL pattern). govo:appointmentOf range widened from gov:GovernancePerson to gov:GovernanceParticipant. This is deliberately not a blanket loosening: real-world governance rules restrict which GovernanceRoleType values a corporate body may hold (a Trustee, Governor or office-holder must be a natural person; only Academy Trust Member / Trust Member may be corporate) - that constraint is not expressible in OWL/RDFS alone (it is conditional on a sibling property's value) and is instead enforced in governance-shacl.ttl. gov:Member's rdfs:subClassOf also widened from epr:Person to gov:GovernanceParticipant, for consistency with governance-vocabulary.ttl's own definition of Member as 'a person or body holding membership' - the ontology class had never actually allowed the corporate case its own vocabulary definition already described."@en ;
+    rdfs:comment "v0.4: new GovernanceRoleType individual gov:AssociateGovernor, found not to exist while modelling the Frank Barnes School worked example (a community special school). SI 2012/1034 reg 12 defines an associate member as appointed to a committee, not the governing body, and explicitly not a governor; SI 2013/1624 reg 24 restricts their vote to committee business the governing body grants, never at the governing body itself, and never below age 18. Deliberately not placed under gov:GovernorType, since the statute itself excludes associates from that category. GovernanceRoleType's closed enumeration is now 24 individuals."@en .
 
 
 #################################################################
@@ -292,7 +293,7 @@ govo:hasRoleType
     rdfs:label "has role type"@en ;
     rdfs:domain gov:GovernanceAppointment ;
     rdfs:range gov:GovernanceRoleType ;
-    rdfs:comment "Cardinality: exactly 1. Value is one of the 23 GovernanceRoleType named individuals."@en .
+    rdfs:comment "Cardinality: exactly 1. Value is one of the 24 GovernanceRoleType named individuals."@en .
 
 govo:hasAppointingBody
     a owl:ObjectProperty ;
@@ -473,7 +474,7 @@ gov:GovernorType
 gov:GovernanceRoleType
     a owl:Class ;
     rdfs:label "Governance role type"@en ;
-    rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 23 named individuals, covering governor sub-types, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
+    rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 24 named individuals, covering governor sub-types, associate membership, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
 
 # Governor and subtypes (8 individuals)
 gov:Governor
@@ -507,6 +508,12 @@ gov:ParentGovernor
 gov:StaffGovernor
     a owl:NamedIndividual, gov:GovernanceRoleType ;
     rdfs:label "Staff governor"@en .
+
+# Associate member (1 individual - not a governor)
+gov:AssociateGovernor
+    a owl:NamedIndividual, gov:GovernanceRoleType ;
+    rdfs:label "Associate governor"@en ;
+    rdfs:comment "A person appointed by a governing body as a member of a committee, not of the governing body itself - School Governance (Constitution) (England) Regulations 2012, reg 12: 'a person who is appointed by the governing body as a member of any committee established by them but who is not a governor'. Deliberately not a gov:GovernorType individual, and not layered under Governor in this enumeration, because the statute itself excludes an associate from that category. Voting rights (SI 2013/1624 reg 24) exist only on committee business the governing body specifically grants, never at the governing body itself, and never below age 18. A gov:GovernanceAppointment with this role type should attach to a gov:Committee, not to the governing gov:GoverningBody/gov:TrustBoard directly."@en .
 
 # Board and trust membership (6 individuals)
 gov:BoardMember
