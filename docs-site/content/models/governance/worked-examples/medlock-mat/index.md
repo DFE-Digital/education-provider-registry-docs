@@ -251,7 +251,7 @@ ginst:appointment-rg-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector ;
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee ;
     rdfs:comment "Legal capacity shown as a candidate person-level correlation with a Companies House Director record, not a confirmed match - see the source investigation's reconciliation evidence."@en .
 
 ginst:coop-trust-board
@@ -269,7 +269,7 @@ ginst:appointment-tc-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector .
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee .
 
 ginst:coop-trust-board
     govo:hasGovernanceAppointment ginst:appointment-tc-trustee .
@@ -396,7 +396,7 @@ inst:coop-academies-trust
 | Academy Community Council | Committee of the Trust Board, governance scope over Medlock | `gov:Committee` + `govo:isCommitteeOf` + `govo:hasGovernanceBody` | Direct |
 | Academy Trust Membership | 6 Members, including a corporate member | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AcademyTrustMember`) attached directly to `epr:AcademyTrust` | Direct |
 | Trustee Appointment | 9 Trustees, 1 Chair of Trustees | `govo:hasRoleType gov:Trustee`, `govo:hasAppointingBody gov:AppointedByAcademyMembers` | Direct |
-| Legal Capacity (Director) | Trustees are also company directors | `govo:hasLegalCapacity gov:CompanyDirector` | Direct |
+| Legal Capacity (Director) | Trustees are also company directors and charity trustees | `govo:hasLegalCapacity` (`gov:CompanyDirector`, `gov:CharityTrustee`) | Direct |
 | Role Assignment (Chair / Vice-Chair / Committee Chair) | Chair of Trustees, Vice-Chair of Trust Board, Chair of ACC | `gov:RoleAssignment` + `govo:layeredOn` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair` at Trust Board level; `gov:CommitteeChair` for the ACC, a committee) | Direct |
 | Community Council Member | 11 CCMs across 5 appointing categories | `govo:hasRoleType gov:LocalGoverningBodyMember` | Candidate - no CCM-specific role type exists; reused the closest generic value |
 | CCM appointing category | community / staff / sponsor / parent / ex-officio | `govo:hasAppointingBody` (`gov:ElectedByStaff`, `gov:ExOfficioAppointment`, `gov:AppointedByFoundationOrTrust`, `gov:ElectedByParents`, `gov:AppointedByGoverningBody`) | Candidate - source gives category labels, not the appointing mechanism |

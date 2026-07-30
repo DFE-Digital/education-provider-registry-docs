@@ -245,7 +245,7 @@ ginst:appointment-kd-director
     govo:hasRoleType gov:AcademyTrustee ;
     govo:hasAppointingBody gov:ExOfficioAppointment ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector ;
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee ;
     rdfs:comment "The source describes KD as 'Ex-officio: Chair of Directors' - preserved here as an ex-officio appointing basis for the Director seat itself, since the source does not separately explain what qualifying office the ex-officio status derives from."@en .
 
 ginst:green-board-of-directors
@@ -272,7 +272,7 @@ ginst:appointment-hs-director
     govo:hasRoleType gov:AcademyTrustee ;
     govo:hasAppointingBody gov:ExOfficioAppointment ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector ;
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee ;
     rdfs:comment "Ex-officio Director - likely by virtue of being Accounting Officer/CEO, though the source does not state the qualifying office explicitly."@en .
 
 ginst:green-board-of-directors
@@ -298,7 +298,7 @@ ginst:appointment-gb-director
     govo:hasRoleType gov:AcademyTrustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector .
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee .
 
 ginst:green-board-of-directors
     govo:hasGovernanceAppointment ginst:appointment-gb-director .
@@ -318,7 +318,7 @@ ginst:appointment-tc1-director
     govo:hasRoleType gov:AcademyTrustee ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector ;
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee ;
     rdfs:comment "Co-opted Director. Labelled TC1 on this page to distinguish from TC2, a different person on Boys academy's Local Governing Body (Example 5) - the source uses 'TC' for both."@en .
 
 ginst:green-board-of-directors
@@ -434,7 +434,7 @@ inst:green-school-trust
 | Academy Trust Membership, including a corporate Member | LDBS (corporate, represented by PR), SS, KD, EI (ex officio), MCA | `gov:AcademyTrustMember`; `gov:CorporateGovernanceParticipant` for LDBS | Direct |
 | One person, three relationships | KD: Member, Director, Chair | Three separate `GovernanceAppointment`/`RoleAssignment` records | Direct |
 | Director/Trustee appointment routes | Member-appointed, Co-opted, Ex-officio | `govo:hasAppointingBody` (`gov:AppointedByAcademyMembers`, `gov:AppointedByGoverningBody`, `gov:ExOfficioAppointment`) | Direct |
-| Legal capacity | Every Director is also a Company Director | `govo:hasLegalCapacity gov:CompanyDirector` | Direct |
+| Legal capacity | Every Director is also a Company Director and Charity Trustee | `govo:hasLegalCapacity` (`gov:CompanyDirector`, `gov:CharityTrustee`) | Direct |
 | Chair / Vice-Chair of Directors | KD (Chair), GB (Vice-Chair) | `gov:RoleAssignment` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair`) | Direct |
 | Two Local Governing Bodies, one Board | Girls LGB, Boys LGB, both delegated by the same Board of Directors | `gov:LocalGoverningBody` + `govo:isDelegatedBy` (both to the same instance) + `govo:hasGovernanceBody` | Direct |
 | Local governors with no stated category | ST, AD, TC2 and 9 further | `govo:hasRoleType gov:Governor` (generic) | Candidate |

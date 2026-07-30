@@ -205,7 +205,7 @@ ginst:appointment-jk-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector .
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee .
 
 ginst:oak-trust-board
     govo:hasGovernanceAppointment ginst:appointment-jk-trustee .
@@ -226,7 +226,7 @@ ginst:appointment-jd-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector ;
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee ;
     rdfs:comment "GIAS has no current 'Chair of trustees' record for OAK at all, though it records every Trustee - the Chair responsibility is taken from the Trust's own page, not inferred absent from GIAS."@en .
 
 ginst:oak-trust-board
@@ -253,7 +253,7 @@ ginst:appointment-am-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector .
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee .
 
 ginst:oak-trust-board
     govo:hasGovernanceAppointment ginst:appointment-am-trustee .
@@ -272,7 +272,7 @@ ginst:appointment-db-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector ;
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee ;
     rdfs:comment "Co-opted - gov:AppointedByGoverningBody is the closest candidate value for co-option by the Trust Board itself."@en .
 
 ginst:oak-trust-board
@@ -288,7 +288,7 @@ ginst:appointment-gs-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector .
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee .
 
 ginst:oak-trust-board
     govo:hasGovernanceAppointment ginst:appointment-gs-trustee .
@@ -303,7 +303,7 @@ ginst:appointment-sm-trustee
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
     govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
-    govo:hasLegalCapacity gov:CompanyDirector .
+    govo:hasLegalCapacity gov:CompanyDirector, gov:CharityTrustee .
 
 ginst:oak-trust-board
     govo:hasGovernanceAppointment ginst:appointment-sm-trustee .
@@ -445,7 +445,7 @@ ginst:roleassignment-sb-curriculum
 | Local Governing Body | Brookside's LGB, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` + `govo:hasGovernanceBody` | Direct |
 | Academy Trust Membership | 5 Members | `gov:AcademyTrustMember`, `govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment`, attached directly to the Academy Trust | Direct |
 | Trustee appointment routes | 3 Member-appointed, 6 Co-opted | `govo:hasAppointingBody` (`gov:AppointedByAcademyMembers`, `gov:AppointedByGoverningBody`) | Direct for Member-appointed; Candidate for Co-opted, reusing the closest value |
-| Legal capacity | Every Trustee is also a Company Director | `govo:hasLegalCapacity gov:CompanyDirector` | Direct |
+| Legal capacity | Every Trustee is also a Company Director and Charity Trustee | `govo:hasLegalCapacity` (`gov:CompanyDirector`, `gov:CharityTrustee`) | Direct |
 | Chair / Vice-Chair of Trustees | JD (Chair), SM (Vice-Chair) | `gov:RoleAssignment` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair`) | Direct |
 | Specialist Trustee responsibilities | Safeguarding, Careers, SEND Trustee | `gov:RoleAssignment` + `govo:assignsRole gov:SpecialistResponsibility` | Direct - the same value used for governor link responsibilities, now at Trustee level |
 | Accounting Officer / CEO | AW | `govo:hasRoleType gov:AccountingOfficer`, `govo:hasAppointmentBasis gov:OperationalEmploymentRole` | Direct |

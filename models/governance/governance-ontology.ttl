@@ -60,7 +60,7 @@ govo:governanceConceptualModel
     dcterms:modified "2026-07-30"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.8" ;
+    owl:versionInfo "0.9" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -74,7 +74,8 @@ govo:governanceConceptualModel
     rdfs:comment "v0.5: new object property govo:isDelegatedBy (domain and range gov:GovernanceBody), found missing while modelling the Manor High School worked example (an academy converter). gov:LocalGoverningBody's own class comment already described it as a body to which an academy trust board delegates governance functions, but no property could assert that delegation - govo:isCommitteeOf covers the equivalent relationship only for gov:Committee, a sibling class LocalGoverningBody does not belong to. govo:isCommitteeOf is now declared rdfs:subPropertyOf govo:isDelegatedBy, so the general relationship has one property and Committee-specific delegation remains expressible via the more specific one."@en ;
     rdfs:comment "v0.6: two changes from comparing all three governance worked examples side by side. (1) gov:AppointmentBasis split: new individual gov:DelegatedGovernanceAppointment for Academy Trust constitutional appointments (Trustee, Academy Trust Member, Local Governing Body member, Trust committee member), separating them from gov:StatutoryGovernanceAppointment, now restricted to true SI 2012/1034 / SI 2013/1624 maintained-school appointments. Academy Community Council and Local Governing Body appointments had been using StatutoryGovernanceAppointment despite both bodies' own class comments stating they are not statutory - Frank Barnes' true maintained-school governing body and committee appointments are unaffected and remain StatutoryGovernanceAppointment. (2) new GovernanceRoleType individual gov:SpecialistResponsibility, a single generic value for named subject/portfolio responsibilities (Curriculum, Sustainability etc.) that recurred across the Medlock and Manor High examples with no matching value - deliberately one value covering an open-ended, school-invented set of labels, rather than a named individual per topic. GovernanceRoleType's closed enumeration is now 25 individuals; AppointmentBasis is now 4."@en ;
     rdfs:comment "v0.7: gov:GoverningBody's comment updated to state explicitly that it also covers a federation of maintained schools' single shared governing body (Education Act 2002 ss.24-27), found while modelling the Eileen Wade/Milton Ernest Federation worked example - one GoverningBody instance with govo:hasGovernanceBody asserted from the Federation and from each member establishment. No structural change: govo:hasGovernanceBody's own comment already named epr:Federation as a valid subject; only GoverningBody's comment had been scoped to a single school and hadn't caught up."@en ;
-    rdfs:comment "v0.8: new GovernanceRoleType individual gov:CommitteeViceChair, found missing while modelling the Millfield First and Nursery School worked example (a maintained community school with named committee Vice-Chairs, distinct from the Governing Body's own Vice-Chair). Mirrors gov:CommitteeChair exactly, as its counterpart for Vice-Chair. GovernanceRoleType's closed enumeration is now 26 individuals."@en .
+    rdfs:comment "v0.8: new GovernanceRoleType individual gov:CommitteeViceChair, found missing while modelling the Millfield First and Nursery School worked example (a maintained community school with named committee Vice-Chairs, distinct from the Governing Body's own Vice-Chair). Mirrors gov:CommitteeChair exactly, as its counterpart for Vice-Chair. GovernanceRoleType's closed enumeration is now 26 individuals."@en ;
+    rdfs:comment "v0.9: new LegalCapacity individual gov:CharityTrustee, found missing while modelling the Cheltenham College worked example (an independent school whose Council is its own historic charitable governing body, not a company limited by guarantee). gov:CompanyDirector's own comment already stated 'Academy Trustee = Charity Trustee + Company Director', but no individual existed for the Charity Trustee half on its own - every previous worked example only needed it alongside CompanyDirector, since every Trustee so far has been an academy trust's. Cheltenham's Council members hold charity trustee status with no company-director capacity at all. LegalCapacity's closed enumeration is now 3 individuals. Retrofitted onto every existing Trustee/Director appointment in the Medlock, OAK Multi Academy Trust/Brookside Primary and Green School Trust worked examples, alongside their existing CompanyDirector capacity, for consistency with this rule."@en .
 
 
 #################################################################
@@ -627,7 +628,7 @@ gov:CompanySecretary
 gov:LegalCapacity
     a owl:Class ;
     rdfs:label "Legal capacity"@en ;
-    rdfs:comment "A legal capacity automatically held by a person as a consequence of a governance appointment, rather than a separately appointed role. Closed enumeration of 2 named individuals: CompanyDirector, Director."@en .
+    rdfs:comment "A legal capacity automatically held by a person as a consequence of a governance appointment, rather than a separately appointed role. Closed enumeration of 3 named individuals: CompanyDirector, Director, CharityTrustee."@en .
 
 gov:CompanyDirector
     a owl:NamedIndividual, gov:LegalCapacity ;
@@ -638,6 +639,11 @@ gov:Director
     a owl:NamedIndividual, gov:LegalCapacity ;
     rdfs:label "Director"@en ;
     rdfs:comment "Synonym-scoped variant of CompanyDirector used where source data (e.g. Companies House officer records) uses the shorter term."@en .
+
+gov:CharityTrustee
+    a owl:NamedIndividual, gov:LegalCapacity ;
+    rdfs:label "Charity trustee"@en ;
+    rdfs:comment "The general Charities Act 2011 legal capacity of a person with the general control and management of a charity's administration - held alongside gov:CompanyDirector by an Academy Trustee, but also held on its own by governing-body members of charitable bodies with no company-law dimension at all, such as an independent school's historic charitable governing council. Found missing while modelling the Cheltenham College worked example, whose Council members are published as charity trustees but hold no company-director capacity, since the Council is not a company limited by guarantee."@en .
 
 
 #################################################################
@@ -713,7 +719,7 @@ gov:StatutoryGovernanceAppointment
 gov:DelegatedGovernanceAppointment
     a owl:NamedIndividual, gov:AppointmentBasis ;
     rdfs:label "Delegated governance appointment"@en ;
-    rdfs:comment "A board or committee seat held under an Academy Trust's own constitutional documents (Articles of Association, funding agreement) and scheme of delegation, rather than under a statute governing maintained schools - Trustee, Academy Trust Member, Local Governing Body member, Trust committee member. Usually unpaid, subject to a term of office and to a ConstitutionPosition, exactly like gov:StatutoryGovernanceAppointment; the two differ only in the source of authority, not in payment or term structure. Added v0.6, from comparing all three governance worked examples: gov:LocalGoverningBody and Academy Trust committees are explicitly non-statutory (see their own class comments), so labelling their appointments 'statutory' was misleading, even though the appointment's unpaid, term-bound character is identical to a true statutory appointment."@en .
+    rdfs:comment "A board or committee seat held under an organisation's own non-statutory governing constitution, rather than under a statute governing maintained schools - an Academy Trust's Articles of Association, funding agreement and scheme of delegation (Trustee, Academy Trust Member, Local Governing Body member, Trust committee member), or equally an independent school's own historic charitable governing constitution (e.g. a Council). Usually unpaid, subject to a term of office and to a ConstitutionPosition, exactly like gov:StatutoryGovernanceAppointment; the two differ only in the source of authority, not in payment or term structure. Added v0.6, from comparing all three MAT/academy governance worked examples then in scope: gov:LocalGoverningBody and Academy Trust committees are explicitly non-statutory (see their own class comments), so labelling their appointments 'statutory' was misleading, even though the appointment's unpaid, term-bound character is identical to a true statutory appointment. Widened v0.9, from the Cheltenham College worked example, to cover independent schools' own historic charitable constitutions too, rather than adding a third, narrower AppointmentBasis value for what is the same underlying non-statutory, unpaid governance nature."@en .
 
 gov:OperationalEmploymentRole
     a owl:NamedIndividual, gov:AppointmentBasis ;
