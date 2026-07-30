@@ -60,7 +60,7 @@ govo:governanceConceptualModel
     dcterms:modified "2026-07-30"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.7" ;
+    owl:versionInfo "0.8" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -73,7 +73,8 @@ govo:governanceConceptualModel
     rdfs:comment "v0.4: new GovernanceRoleType individual gov:AssociateGovernor, found not to exist while modelling the Frank Barnes School worked example (a community special school). SI 2012/1034 reg 12 defines an associate member as appointed to a committee, not the governing body, and explicitly not a governor; SI 2013/1624 reg 24 restricts their vote to committee business the governing body grants, never at the governing body itself, and never below age 18. Deliberately not placed under gov:GovernorType, since the statute itself excludes associates from that category. GovernanceRoleType's closed enumeration is now 24 individuals."@en ;
     rdfs:comment "v0.5: new object property govo:isDelegatedBy (domain and range gov:GovernanceBody), found missing while modelling the Manor High School worked example (an academy converter). gov:LocalGoverningBody's own class comment already described it as a body to which an academy trust board delegates governance functions, but no property could assert that delegation - govo:isCommitteeOf covers the equivalent relationship only for gov:Committee, a sibling class LocalGoverningBody does not belong to. govo:isCommitteeOf is now declared rdfs:subPropertyOf govo:isDelegatedBy, so the general relationship has one property and Committee-specific delegation remains expressible via the more specific one."@en ;
     rdfs:comment "v0.6: two changes from comparing all three governance worked examples side by side. (1) gov:AppointmentBasis split: new individual gov:DelegatedGovernanceAppointment for Academy Trust constitutional appointments (Trustee, Academy Trust Member, Local Governing Body member, Trust committee member), separating them from gov:StatutoryGovernanceAppointment, now restricted to true SI 2012/1034 / SI 2013/1624 maintained-school appointments. Academy Community Council and Local Governing Body appointments had been using StatutoryGovernanceAppointment despite both bodies' own class comments stating they are not statutory - Frank Barnes' true maintained-school governing body and committee appointments are unaffected and remain StatutoryGovernanceAppointment. (2) new GovernanceRoleType individual gov:SpecialistResponsibility, a single generic value for named subject/portfolio responsibilities (Curriculum, Sustainability etc.) that recurred across the Medlock and Manor High examples with no matching value - deliberately one value covering an open-ended, school-invented set of labels, rather than a named individual per topic. GovernanceRoleType's closed enumeration is now 25 individuals; AppointmentBasis is now 4."@en ;
-    rdfs:comment "v0.7: gov:GoverningBody's comment updated to state explicitly that it also covers a federation of maintained schools' single shared governing body (Education Act 2002 ss.24-27), found while modelling the Eileen Wade/Milton Ernest Federation worked example - one GoverningBody instance with govo:hasGovernanceBody asserted from the Federation and from each member establishment. No structural change: govo:hasGovernanceBody's own comment already named epr:Federation as a valid subject; only GoverningBody's comment had been scoped to a single school and hadn't caught up."@en .
+    rdfs:comment "v0.7: gov:GoverningBody's comment updated to state explicitly that it also covers a federation of maintained schools' single shared governing body (Education Act 2002 ss.24-27), found while modelling the Eileen Wade/Milton Ernest Federation worked example - one GoverningBody instance with govo:hasGovernanceBody asserted from the Federation and from each member establishment. No structural change: govo:hasGovernanceBody's own comment already named epr:Federation as a valid subject; only GoverningBody's comment had been scoped to a single school and hadn't caught up."@en ;
+    rdfs:comment "v0.8: new GovernanceRoleType individual gov:CommitteeViceChair, found missing while modelling the Millfield First and Nursery School worked example (a maintained community school with named committee Vice-Chairs, distinct from the Governing Body's own Vice-Chair). Mirrors gov:CommitteeChair exactly, as its counterpart for Vice-Chair. GovernanceRoleType's closed enumeration is now 26 individuals."@en .
 
 
 #################################################################
@@ -304,7 +305,7 @@ govo:hasRoleType
     rdfs:label "has role type"@en ;
     rdfs:domain gov:GovernanceAppointment ;
     rdfs:range gov:GovernanceRoleType ;
-    rdfs:comment "Cardinality: exactly 1. Value is one of the 25 GovernanceRoleType named individuals."@en .
+    rdfs:comment "Cardinality: exactly 1. Value is one of the 26 GovernanceRoleType named individuals."@en .
 
 govo:hasAppointingBody
     a owl:ObjectProperty ;
@@ -485,7 +486,7 @@ gov:GovernorType
 gov:GovernanceRoleType
     a owl:Class ;
     rdfs:label "Governance role type"@en ;
-    rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 25 named individuals, covering governor sub-types, associate membership, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
+    rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 26 named individuals, covering governor sub-types, associate membership, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
 
 # Governor and subtypes (8 individuals)
 gov:Governor
@@ -573,6 +574,11 @@ gov:CommitteeChair
     a owl:NamedIndividual, gov:GovernanceRoleType ;
     rdfs:label "Committee chair"@en ;
     rdfs:comment "Assigned via RoleAssignment, layered onto a base CommitteeMembership."@en .
+
+gov:CommitteeViceChair
+    a owl:NamedIndividual, gov:GovernanceRoleType ;
+    rdfs:label "Committee vice chair"@en ;
+    rdfs:comment "Assigned via RoleAssignment, layered onto a base CommitteeMembership - the committee-specific counterpart to gov:ViceChair, mirroring how gov:CommitteeChair is the committee-specific counterpart to gov:Chair. Found missing while modelling the Millfield First and Nursery School worked example, which publishes named Vice-Chairs of specific committees distinct from the Governing Body's own Vice-Chair."@en .
 
 # Operational employment roles (3 individuals - AppointmentBasis: OperationalEmploymentRole)
 gov:AccountingOfficer

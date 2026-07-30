@@ -108,7 +108,7 @@ gov:RoleAndOfficeResponsibility
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Role and office-holder responsibility"@en ;
     skos:definition "A named responsibility or office held by a governance participant."@en ;
-    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:SpecialistResponsibility, gov:AccountingOfficer, gov:ChiefFinancialOfficer, gov:CompanySecretary ;
+    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:CommitteeViceChair, gov:SpecialistResponsibility, gov:AccountingOfficer, gov:ChiefFinancialOfficer, gov:CompanySecretary ;
     gov:status "Provisional"@en .
 
 gov:CommitteeResponsibility
@@ -116,7 +116,7 @@ gov:CommitteeResponsibility
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Committee responsibility"@en ;
     skos:definition "A committee and the membership or chairing responsibilities associated with it."@en ;
-    skos:narrower gov:Committee, gov:CommitteeMembership, gov:CommitteeChair ;
+    skos:narrower gov:Committee, gov:CommitteeMembership, gov:CommitteeChair, gov:CommitteeViceChair ;
     gov:status "Provisional"@en .
 
 gov:ConstitutionPositionType
@@ -483,6 +483,12 @@ gov:ViceChair
 gov:CommitteeChair
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Committee chair"@en ;
+    skos:broader gov:RoleAndOfficeResponsibility, gov:CommitteeResponsibility, gov:StatutoryGovernanceAppointment ;
+    gov:status "Provisional"@en .
+
+gov:CommitteeViceChair
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Committee vice chair"@en ;
     skos:broader gov:RoleAndOfficeResponsibility, gov:CommitteeResponsibility, gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
