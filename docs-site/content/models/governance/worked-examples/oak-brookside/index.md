@@ -65,33 +65,22 @@ flowchart LR
     AT --> AM2["Academy Trust Memberships"]
     AM2 --> MG["MG<br/>Academy Trust Member"]
     AM2 --> KAK["KAK<br/>Academy Trust Member"]
-    AM2 --> DT["DT<br/>Academy Trust Member"]
-    AM2 --> RIG["RIG<br/>Academy Trust Member"]
-    AM2 --> PH["PH<br/>Academy Trust Member"]
 
     TB -->|"has Academy Trustee"| JK["JK<br/>Member-appointed<br/>Safeguarding Trustee"]
     TB -->|"has Academy Trustee"| AMt["AM<br/>Member-appointed"]
     TB -->|"has Academy Trustee"| JD["JD<br/>Member-appointed<br/>Chair of Trustees<br/>Careers Trustee"]
     TB -->|"has Academy Trustee"| DB["DB<br/>Co-opted"]
     TB -->|"has Academy Trustee"| GS["GS<br/>Co-opted"]
-    TB -->|"has Academy Trustee"| MS["MS<br/>Co-opted"]
     TB -->|"has Academy Trustee"| SM["SM<br/>Co-opted<br/>Vice-Chair of Trustees<br/>SEND Trustee"]
-    TB -->|"has Academy Trustee"| JP["JP<br/>Co-opted"]
-    TB -->|"has Academy Trustee"| PW["PW<br/>Co-opted"]
 
     AT --> AO["AW<br/>Accounting Officer<br/>CEO"]
 
     BLGB -->|"has Governor"| GB["GB<br/>Headteacher Governor"]
     BLGB -->|"has Governor"| RC["RC<br/>Staff Governor<br/>Chair of Finance"]
     BLGB -->|"has Governor"| SB["SB<br/>Governor<br/>Chair of Governors<br/>Chair of Curriculum"]
-    BLGB -->|"has Governor"| RO["RO<br/>Parent Governor"]
-    BLGB -->|"has Governor"| IJ["IJ<br/>Parent Governor"]
-    BLGB -->|"has Governor"| ML["ML<br/>Governor"]
-    BLGB -->|"has Governor"| TC["TC<br/>Governor"]
-    BLGB -->|"has Governor"| RS["RS<br/>Governor"]
 ```
 
-The diagram represents the real-world OAK Multi Academy Trust, not registry records. `ML`, `TC` and `RS` are published with no category or role beyond "Governor" - the source does not invent one for them.
+The diagram represents the real-world OAK Multi Academy Trust, not registry records. Left out: 3 further Academy Trust Members (`DT`, `RIG`, `PH`), 3 further Trustees (`MS`, `JP`, `PW`) and 5 further Brookside governors (`RO`, `IJ`, `ML`, `TC`, `RS`, the last three published with no category or role at all) - all evidenced in the source and not shown here, so that Section 1 and Section 2 stay directly comparable.
 
 ---
 

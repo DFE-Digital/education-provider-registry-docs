@@ -61,10 +61,8 @@ flowchart LR
     T --> AM["Academy Trust Memberships"]
     AM --> LDBS["LDBS<br/>Corporate Academy Trust Member"]
     LDBS --> PR["PR<br/>Corporate Member representative"]
-    AM --> SS["SS<br/>Academy Trust Member<br/>appointed by LDBS"]
     AM --> KD["KD<br/>Academy Trust Member<br/>Ex-officio Chair of Directors<br/>Academy Trustee"]
     AM --> EI["EI<br/>Academy Trust Member<br/>Ex-officio: Bishop"]
-    AM --> MCA["MCA<br/>Individual Academy Trust Member"]
 
     TB -->|"delegates functions to"| LGG["Local Governing Body<br/>Girls academy"]
     TB -->|"delegates functions to"| LGB["Local Governing Body<br/>Boys academy"]
@@ -73,21 +71,18 @@ flowchart LR
 
     TB -->|"has Director"| KD
     TB -->|"has Director"| HS["HS<br/>Ex-officio Director<br/>Accounting Officer"]
-    TB -->|"has Director"| AGC["AGC<br/>Co-opted Director"]
     TB -->|"has Director"| GB["GB<br/>Director appointed by Members<br/>Vice-Chair"]
     TB -->|"has Director"| TC1["TC1<br/>Co-opted Director"]
 
     LGG --> ST["ST"]
-    LGG --> AD["AD"]
 
-    LGB --> EW["EW"]
     LGB --> TC2["TC2"]
 
     T --> CFO["JW<br/>Chief Financial Officer<br/>(GIAS registry assertion only)"]
     TB --> GP["HL<br/>Company Secretary<br/>Head of Governance"]
 ```
 
-The diagram represents the real-world Academy Trust, not registry records. `KD` demonstrates three distinct relationships for one person - Academy Trust Member, Academy Trustee/Director, and ex-officio Chair of Directors - not one interchangeable role, the same pattern Medlock's `RG` demonstrated. 8 further Directors and 10 further local governors are evidenced in the source and not shown here.
+The diagram represents the real-world Academy Trust, not registry records. `KD` demonstrates three distinct relationships for one person - Academy Trust Member, Academy Trustee/Director, and ex-officio Chair of Directors - not one interchangeable role, the same pattern Medlock's `RG` demonstrated. Left out: 2 further Academy Trust Members (`SS`, `MCA`), 9 further Directors (including `AGC`) and 10 further local governors (including `AD`, `EW`) - all evidenced in the source and not shown here.
 
 ---
 
