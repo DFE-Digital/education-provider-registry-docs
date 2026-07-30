@@ -96,9 +96,9 @@ flowchart LR
     LGB -->|govo:hasGovernanceAppointment| G2["GB — Governor<br/>(MAT Representative)"]
     LGB -->|govo:hasGovernanceAppointment| G3["CB — ParentGovernor"]
     LGB -->|govo:hasGovernanceAppointment| G4["CL — StaffGovernor"]
-    LGB -->|govo:hasGovernanceAppointment| G5["ZB — CoOptedGovernor"]
+    LGB -->|govo:hasGovernanceAppointment| G5["ZB — CoOptedGovernor<br/>+ RoleAssignment: SpecialistResponsibility"]
     LGB -->|govo:hasGovernanceAppointment| G6["SV — CoOptedGovernor"]
-    LGB -->|govo:hasGovernanceAppointment| G7["SB — CoOptedGovernor"]
+    LGB -->|govo:hasGovernanceAppointment| G7["SB — CoOptedGovernor<br/>+ RoleAssignment: SpecialistResponsibility"]
     LGB -->|govo:hasGovernanceAppointment| G8["DT — ParentGovernor"]
     LGB -->|govo:hasGovernanceAppointment| G9["BM — CoOptedGovernor"]
     LGB -->|govo:hasGovernanceAppointment| P1["MB — GovernanceProfessional<br/>ProfessionalSupportRole"]
@@ -181,7 +181,7 @@ ginst:appointment-cb-governor
     govo:appointmentOf ginst:person-cb ;
     govo:hasRoleType gov:ParentGovernor ;
     govo:hasAppointingBody gov:ElectedByParents ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Parent Governor (Trust's own category label). Candidate mapping - Manor's Local Governing Body is not constituted under SI 2012/1034, unlike a maintained school's governing body."@en .
 
 ginst:manor-lgb
@@ -196,7 +196,7 @@ ginst:appointment-cl-governor
     govo:appointmentOf ginst:person-cl ;
     govo:hasRoleType gov:StaffGovernor ;
     govo:hasAppointingBody gov:ElectedByStaff ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Staff Governor (Trust's own category label). Candidate mapping, as for CB above."@en .
 
 ginst:manor-lgb
@@ -211,7 +211,7 @@ ginst:appointment-gb-governor
     govo:appointmentOf ginst:person-gb ;
     govo:hasRoleType gov:Governor ;
     govo:hasAppointingBody gov:AppointedByFoundationOrTrust ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "MAT Representative. No GovernanceRoleType individual matches this category directly - the generic gov:Governor is the closest candidate value, and gov:AppointedByFoundationOrTrust the closest candidate appointing body. GIAS records GB as historical (ending July 2026) and shows a different current headteacher, SG, not on the observed school page - both source assertions are preserved separately rather than merged."@en .
 
 ginst:manor-lgb
@@ -226,11 +226,17 @@ ginst:appointment-zb-governor
     govo:appointmentOf ginst:person-zb ;
     govo:hasRoleType gov:CoOptedGovernor ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
-    rdfs:comment "Appointed Governor (Trust's own category label), with a published Curriculum responsibility. gov:CoOptedGovernor is the closest candidate value for 'Appointed'. No RoleAndOfficeResponsibility individual matches 'Curriculum' - not modelled."@en .
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
+    rdfs:comment "Appointed Governor (Trust's own category label), with a published Curriculum responsibility. gov:CoOptedGovernor is the closest candidate value for 'Appointed'."@en .
 
 ginst:manor-lgb
     govo:hasGovernanceAppointment ginst:appointment-zb-governor .
+
+ginst:roleassignment-zb-curriculum
+    a gov:RoleAssignment ;
+    govo:layeredOn ginst:appointment-zb-governor ;
+    govo:assignsRole gov:SpecialistResponsibility ;
+    rdfs:comment "Curriculum responsibility, as published by the school."@en .
 
 ginst:person-sv
     a gov:GovernancePerson ;
@@ -241,7 +247,7 @@ ginst:appointment-sv-governor
     govo:appointmentOf ginst:person-sv ;
     govo:hasRoleType gov:CoOptedGovernor ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Appointed Governor (Trust's own category label). Candidate mapping, as for ZB above."@en .
 
 ginst:manor-lgb
@@ -256,11 +262,17 @@ ginst:appointment-sb-governor
     govo:appointmentOf ginst:person-sb ;
     govo:hasRoleType gov:CoOptedGovernor ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
-    rdfs:comment "Appointed Governor (Trust's own category label), with a published Sustainability Governor responsibility. No RoleAndOfficeResponsibility individual matches this - not modelled."@en .
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
+    rdfs:comment "Appointed Governor (Trust's own category label), with a published Sustainability Governor responsibility."@en .
 
 ginst:manor-lgb
     govo:hasGovernanceAppointment ginst:appointment-sb-governor .
+
+ginst:roleassignment-sb-sustainability
+    a gov:RoleAssignment ;
+    govo:layeredOn ginst:appointment-sb-governor ;
+    govo:assignsRole gov:SpecialistResponsibility ;
+    rdfs:comment "Sustainability Governor responsibility, as published by the school."@en .
 
 ginst:person-dt
     a gov:GovernancePerson ;
@@ -271,7 +283,7 @@ ginst:appointment-dt-governor
     govo:appointmentOf ginst:person-dt ;
     govo:hasRoleType gov:ParentGovernor ;
     govo:hasAppointingBody gov:ElectedByParents ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Parent Governor (Trust's own category label). Candidate mapping, as for CB above."@en .
 
 ginst:manor-lgb
@@ -286,7 +298,7 @@ ginst:appointment-bm-governor
     govo:appointmentOf ginst:person-bm ;
     govo:hasRoleType gov:CoOptedGovernor ;
     govo:hasAppointingBody gov:AppointedByGoverningBody ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Appointed Governor (Trust's own category label). Candidate mapping, as for ZB above."@en .
 
 ginst:manor-lgb
@@ -306,7 +318,7 @@ ginst:appointment-jj-governor
     a gov:GovernanceAppointment ;
     govo:appointmentOf ginst:person-jj ;
     govo:hasRoleType gov:Governor ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Published only as 'Governor' and 'Chair of Governors' - no more specific category given, and no appointing body stated for JJ specifically, so govo:hasAppointingBody is omitted here rather than invented."@en .
 
 ginst:manor-lgb
@@ -351,7 +363,7 @@ ginst:manor-lgb
 | Governor categories | Parent, Staff, Appointed, MAT Representative | `govo:hasRoleType` (`gov:ParentGovernor`, `gov:StaffGovernor`, `gov:CoOptedGovernor`, `gov:Governor`) | Candidate - Manor's Local Governing Body is not constituted under SI 2012/1034, unlike a maintained school's governing body |
 | Appointing body / route | Parent election, staff election, Trust appointment, co-option | `govo:hasAppointingBody` (`gov:ElectedByParents`, `gov:ElectedByStaff`, `gov:AppointedByFoundationOrTrust`, `gov:AppointedByGoverningBody`) | Candidate, for the same reason |
 | Chair of Governors | JJ | `gov:RoleAssignment` + `govo:layeredOn` (Local Governing Body appointment) + `govo:assignsRole gov:Chair` | Direct |
-| Governor responsibilities | Curriculum (ZB), Sustainability Governor (SB) | Not modelled | Not evidenced - no `RoleAndOfficeResponsibility` individual matches either |
+| Governor responsibilities | Curriculum (ZB), Sustainability Governor (SB) | `gov:RoleAssignment` + `govo:layeredOn` (governor appointment) + `govo:assignsRole gov:SpecialistResponsibility`, specific topic recorded in the `rdfs:comment` | Direct - one generic value covers any named subject/portfolio responsibility |
 | Governance Professional | MB, Clerk to Governors | `govo:hasRoleType gov:GovernanceProfessional`, `govo:hasAppointmentBasis gov:ProfessionalSupportRole` | Direct |
 | Academy Trust Members, Trustees, central operational appointments | Not evidenced in this investigation | Not modelled | Out of scope - covered separately by the OAK MAT worked example |
 

@@ -199,7 +199,7 @@ ginst:appointment-rg-member
     a gov:GovernanceAppointment ;
     govo:appointmentOf ginst:person-rg ;
     govo:hasRoleType gov:AcademyTrustMember ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment .
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment .
 
 inst:coop-academies-trust
     govo:hasGovernanceAppointment ginst:appointment-rg-member .
@@ -212,7 +212,7 @@ ginst:appointment-pg-member
     a gov:GovernanceAppointment ;
     govo:appointmentOf ginst:person-pg ;
     govo:hasRoleType gov:AcademyTrustMember ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Independent Academy Trust Member (the Trust's own published term)."@en .
 
 inst:coop-academies-trust
@@ -227,7 +227,7 @@ ginst:appointment-coopgroup-member
     a gov:GovernanceAppointment ;
     govo:appointmentOf ginst:coop-group ;
     govo:hasRoleType gov:AcademyTrustMember ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Corporate Academy Trust Member: the Co-op Group, represented by DKW. govo:appointmentOf resolves to a gov:CorporateGovernanceParticipant, not a gov:GovernancePerson - only permitted for Academy Trust Member / Trust Member role types (see gov:GovernanceAppointmentParticipantShape in governance-shacl.ttl)."@en .
 
 inst:coop-academies-trust
@@ -250,7 +250,7 @@ ginst:appointment-rg-trustee
     govo:appointmentOf ginst:person-rg ;
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     govo:hasLegalCapacity gov:CompanyDirector ;
     rdfs:comment "Legal capacity shown as a candidate person-level correlation with a Companies House Director record, not a confirmed match - see the source investigation's reconciliation evidence."@en .
 
@@ -268,7 +268,7 @@ ginst:appointment-tc-trustee
     govo:appointmentOf ginst:person-tc ;
     govo:hasRoleType gov:Trustee ;
     govo:hasAppointingBody gov:AppointedByAcademyMembers ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     govo:hasLegalCapacity gov:CompanyDirector .
 
 ginst:coop-trust-board
@@ -296,7 +296,7 @@ ginst:appointment-hr-ccm
     govo:appointmentOf ginst:person-hr ;
     govo:hasRoleType gov:LocalGoverningBodyMember ;
     govo:hasAppointingBody gov:AppointedByFoundationOrTrust ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Sponsor Community Council Member (Trust's own category). AppointingBody mapped to gov:AppointedByFoundationOrTrust as the closest candidate interpretation of 'sponsor' - not asserted by the source itself."@en .
 
 ginst:medlock-acc
@@ -317,7 +317,7 @@ ginst:appointment-jb-ccm
     govo:appointmentOf ginst:person-jb ;
     govo:hasRoleType gov:LocalGoverningBodyMember ;
     govo:hasAppointingBody gov:ExOfficioAppointment ;
-    govo:hasAppointmentBasis gov:StatutoryGovernanceAppointment ;
+    govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment ;
     rdfs:comment "Ex-officio Community Council Member and headteacher - the same real-world capacity gov:ExOfficioGovernor describes at maintained schools, applied here to the Trust's own committee."@en .
 
 ginst:medlock-acc

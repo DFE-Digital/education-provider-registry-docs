@@ -22,7 +22,7 @@ gov:governanceTaxonomy
     dcterms:title "Governance Taxonomy"@en ;
     dcterms:description "Faceted taxonomy for classifying governance concepts in the Education Provider Registry."@en ;
     dcterms:created "2026-07-27"^^xsd:date ;
-    dcterms:modified "2026-07-28"^^xsd:date ;
+    dcterms:modified "2026-07-30"^^xsd:date ;
     gov:status "Provisional"@en ;
     skos:hasTopConcept
         gov:ActorAndUserType,
@@ -108,7 +108,7 @@ gov:RoleAndOfficeResponsibility
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Role and office-holder responsibility"@en ;
     skos:definition "A named responsibility or office held by a governance participant."@en ;
-    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:AccountingOfficer, gov:ChiefFinancialOfficer, gov:CompanySecretary ;
+    skos:narrower gov:Role, gov:OfficeHolder, gov:Chair, gov:ViceChair, gov:CommitteeChair, gov:SpecialistResponsibility, gov:AccountingOfficer, gov:ChiefFinancialOfficer, gov:CompanySecretary ;
     gov:status "Provisional"@en .
 
 gov:CommitteeResponsibility
@@ -171,8 +171,8 @@ gov:AppointmentBasis
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Appointment basis"@en ;
-    skos:definition "The basis on which a governance participant holds their position: a statutory governance appointment, a paid operational employment role, or a role whose employment arrangement varies. This is an orthogonal classification, applied alongside a concept's primary facet, and is only assigned where the evidence in academy-trust-governance-real-world-rules.md and the Academy Trust Handbook supports it - it is not applied to organisation, record, process or legal-capacity concepts, or to concepts with no direct evidence either way."@en ;
-    skos:narrower gov:StatutoryGovernanceAppointment, gov:OperationalEmploymentRole, gov:ProfessionalSupportRole ;
+    skos:definition "The basis on which a governance participant holds their position: a statutory governance appointment, an Academy Trust delegated/constitutional appointment, a paid operational employment role, or a role whose employment arrangement varies. This is an orthogonal classification, applied alongside a concept's primary facet, and is only assigned where the evidence in academy-trust-governance-real-world-rules.md and the Academy Trust Handbook supports it - it is not applied to organisation, record, process or legal-capacity concepts, or to concepts with no direct evidence either way."@en ;
+    skos:narrower gov:StatutoryGovernanceAppointment, gov:DelegatedGovernanceAppointment, gov:OperationalEmploymentRole, gov:ProfessionalSupportRole ;
     gov:status "Provisional"@en .
 
 #################################################################
@@ -359,33 +359,33 @@ gov:BoardMember
 gov:LocalGoverningBodyMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Local governing body member"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:broader gov:GovernanceParticipantType, gov:DelegatedGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:Trustee
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Trustee"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:broader gov:GovernanceParticipantType, gov:DelegatedGovernanceAppointment ;
     skos:related gov:CompanyDirector, gov:Director ;
     gov:status "Provisional"@en .
 
 gov:AcademyTrustee
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy trustee"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:broader gov:GovernanceParticipantType, gov:DelegatedGovernanceAppointment ;
     skos:related gov:CompanyDirector, gov:Director ;
     gov:status "Provisional"@en .
 
 gov:AcademyTrustMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Academy trust member"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:broader gov:GovernanceParticipantType, gov:DelegatedGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:TrustMember
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Trust member"@en ;
-    skos:broader gov:GovernanceParticipantType, gov:StatutoryGovernanceAppointment ;
+    skos:broader gov:GovernanceParticipantType, gov:DelegatedGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:CompanyDirector
@@ -484,6 +484,13 @@ gov:CommitteeChair
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Committee chair"@en ;
     skos:broader gov:RoleAndOfficeResponsibility, gov:CommitteeResponsibility, gov:StatutoryGovernanceAppointment ;
+    gov:status "Provisional"@en .
+
+gov:SpecialistResponsibility
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Specialist responsibility"@en ;
+    skos:definition "A named subject or portfolio responsibility (e.g. Curriculum, Sustainability, Safeguarding, SEND) a governor or trustee holds, distinct from Chair, Vice Chair and Committee Chair. One generic value covering an open-ended, school- or trust-invented set of labels, rather than a named individual per topic - the specific topic is recorded on the individual appointment, not in this taxonomy."@en ;
+    skos:broader gov:RoleAndOfficeResponsibility ;
     gov:status "Provisional"@en .
 
 gov:AccountingOfficer
@@ -609,8 +616,17 @@ gov:Noticeboard
 gov:StatutoryGovernanceAppointment
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
     skos:prefLabel "Statutory governance appointment"@en ;
-    skos:definition "A governance position that is usually unpaid and held under the statutory governor, trustee, member or chair framework, per the \"usually unpaid governance roles\" evidence in academy-trust-governance-real-world-rules.md."@en ;
+    skos:definition "A governance position constituted under a statute governing maintained schools - the School Governance (Constitution) (England) Regulations 2012 (SI 2012/1034) or the School Governance (Roles, Procedures and Allowances) (England) Regulations 2013 (SI 2013/1624) - usually unpaid, per the \"usually unpaid governance roles\" evidence in academy-trust-governance-real-world-rules.md. See gov:DelegatedGovernanceAppointment for the equivalent Academy Trust basis."@en ;
     skos:broader gov:AppointmentBasis ;
+    skos:related gov:DelegatedGovernanceAppointment ;
+    gov:status "Provisional"@en .
+
+gov:DelegatedGovernanceAppointment
+    a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
+    skos:prefLabel "Delegated governance appointment"@en ;
+    skos:definition "A governance position held under an Academy Trust's own constitutional documents (Articles of Association, funding agreement) and scheme of delegation, rather than under a statute governing maintained schools - usually unpaid, on the same \"usually unpaid governance roles\" evidence in academy-trust-governance-real-world-rules.md as gov:StatutoryGovernanceAppointment, differing only in the source of authority."@en ;
+    skos:broader gov:AppointmentBasis ;
+    skos:related gov:StatutoryGovernanceAppointment ;
     gov:status "Provisional"@en .
 
 gov:OperationalEmploymentRole
