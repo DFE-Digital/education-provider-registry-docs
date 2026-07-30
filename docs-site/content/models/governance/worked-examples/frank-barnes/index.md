@@ -242,9 +242,9 @@ ginst:roleassignment-ra-vicechair
 
 ### Example 4 — Committees, committee membership and Committee Chair
 
-Business and Curriculum Committee are committees of the governing body (`govo:isCommitteeOf`), not separate governance bodies with their own scope. Committee membership is modelled as a second, distinct `GovernanceAppointment` for the same person, attached to the committee rather than the governing body - mirroring how Medlock modelled Academy Community Council membership as separate from Trust Board membership. No `GovernanceRoleType` individual exists specifically for "committee member" (the closest is the generic `gov:BoardMember`); this is a **Candidate** mapping, the same kind of gap Medlock's Community Council Members exposed for `gov:LocalGoverningBodyMember`.
+Business and Curriculum Committee are committees of the governing body (`govo:isCommitteeOf`), not separate governance bodies with their own scope. Committee membership is modelled as a second, distinct `GovernanceAppointment` for the same person, attached to the committee rather than the governing body - mirroring how Medlock modelled Academy Community Council membership as separate from Trust Board membership. No `GovernanceRoleType` individual exists specifically for "committee member" (the closest is the generic `gov:BoardMember`); this is a **Candidate** mapping.
 
-Committee Chair is more precise here than Medlock's own worked example: `gov:CommitteeChair` is layered onto the **committee-membership appointment**, not the governing-body appointment - correctly distinguishing "chairs this committee" from "chairs the whole governing body" (Example 3). Medlock's own Academy Community Council chair was, in hindsight, modelled with the more generic `gov:Chair` rather than `gov:CommitteeChair` - this example uses the more precise value the ontology already provides for exactly this case.
+`gov:CommitteeChair` is layered onto the **committee-membership appointment**, not the governing-body appointment - distinguishing "chairs this committee" from "chairs the whole governing body" (Example 3).
 
 ```
 ginst:person-mp
@@ -318,9 +318,7 @@ ginst:frank-barnes-curriculum-committee
 
 ### Example 5 — Associate governor
 
-`SD` is published as an Associate Governor. This was originally a gap in this example: no `GovernanceRoleType` individual represented an associate's more limited capacity, and force-fitting `gov:BoardMember` (used above for plain committee membership) would have misrepresented it - an Associate is, by statute, explicitly *not* a governor, and never holds any position at the governing body itself.
-
-That gap has since been closed: `governance-ontology.ttl` now has a `gov:AssociateGovernor` individual, added directly from this finding. School Governance (Constitution) (England) Regulations 2012 (SI 2012/1034), reg 12, defines an associate member as *"a person who is appointed by the governing body as a member of any committee established by them but who is not a governor"*. Consequently `SD`'s appointment attaches only to the Curriculum Committee - there is no corresponding `ginst:frank-barnes-governing-body govo:hasGovernanceAppointment` triple for `SD`, unlike every other governor in this example.
+`SD` is published as an Associate Governor. School Governance (Constitution) (England) Regulations 2012 (SI 2012/1034), reg 12, defines an associate member as *"a person who is appointed by the governing body as a member of any committee established by them but who is not a governor"* - a different capacity from `gov:BoardMember`, used above for plain committee membership, and from every full governor category in Example 2: an Associate is explicitly not a governor and never holds a position at the governing body itself. Consequently `SD`'s appointment attaches only to the Curriculum Committee - there is no corresponding `ginst:frank-barnes-governing-body govo:hasGovernanceAppointment` triple for `SD`, unlike every other governor in this example.
 
 ```
 ginst:person-sd
@@ -339,7 +337,7 @@ ginst:frank-barnes-curriculum-committee
     govo:hasGovernanceAppointment ginst:appointment-sd-associate .
 ```
 
-This was a different kind of gap from the corporate-Member gap Medlock exposed. That one was a range restriction the ontology could widen (`govo:appointmentOf`, now `gov:GovernanceParticipant`). This one was a missing value in a closed enumeration (`GovernanceRoleType`) - closing it meant adding a new named individual, not changing any property's range. The finer-grained business rules this example's own comment flags (committee-only voting, age 18) are not yet enforced structurally - a candidate SHACL addition to `governance-shacl.ttl`, not attempted here.
+Any vote by an Associate Governor is limited to committee business the governing body specifically grants (SI 2013/1624 reg 24), and only from age 18 - neither restriction is enforced structurally by the ontology; both are recorded only as narrative evidence in the `rdfs:comment` above.
 
 ---
 
@@ -355,7 +353,7 @@ This was a different kind of gap from the corporate-Member gap Medlock exposed. 
 | Committee | Business Committee, Curriculum Committee | `gov:Committee` + `govo:isCommitteeOf` | Direct |
 | Committee membership | JW, MP, AM, EC | `gov:GovernanceAppointment` (`govo:hasRoleType gov:BoardMember`), attached to the committee | Candidate - no committee-member-specific role type exists |
 | Committee Chair | MP (Curriculum Committee) | `gov:RoleAssignment` + `govo:layeredOn` (committee-membership appointment) + `govo:assignsRole gov:CommitteeChair` | Direct |
-| Associate governor | SD | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AssociateGovernor`), attached only to the Curriculum Committee, never to the Governing Body | Direct - `gov:AssociateGovernor` added to the ontology from this finding. Committee-only voting and the age-18 restriction (SI 2013/1624 reg 24) are recorded as narrative evidence only, not yet enforced structurally |
+| Associate governor | SD | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AssociateGovernor`), attached only to the Curriculum Committee, never to the Governing Body | Direct. Committee-only voting and the age-18 restriction (SI 2013/1624 reg 24) are recorded as narrative evidence only, not enforced structurally |
 | Governance professional / Clerk | Not named on the published page | Not modelled | Not evidenced |
 | Historical governance | Former governors and past terms are published | Not modelled (current membership only) | Out of scope - current membership only, per this example's methodology |
 
