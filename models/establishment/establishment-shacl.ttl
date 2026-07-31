@@ -32,10 +32,10 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-06-25"^^xsd:date ;
+    dcterms:modified "2026-07-31"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.5" ;
+    owl:versionInfo "0.7" ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     est:status "Provisional"@en .
@@ -423,13 +423,42 @@ est:PupilReferralUnitShape
 est:MaintainedNurserySchoolShape
     a sh:NodeShape ;
     rdfs:label "Local authority nursery school shape"@en ;
-    rdfs:comment "Rules for LA nursery schools. Education phase, admissions policy, nursery and sixth-form provision are all required."@en ;
+    rdfs:comment "Rules for LA nursery schools, checked against the real GIAS extract (open, type code 02, n=374). Education phase, age range, pupil count and free school meal measure are required; school capacity is never populated (maxCount 0, not required as previously miscoded); LA accountability is required and academy trust accountability is not applicable; religious character, religious ethos, diocese, sixth-form provision and Section 41 approval are all 100% 'Not applicable'/'Does not apply' and so not applicable. Admissions policy, nursery provision, special classes, boarding provision and resourced provision all show genuine real per-instance variability and are deliberately left unconstrained."@en ;
     sh:targetClass est:MaintainedNurserySchool ;
 
     sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
+        sh:minCount 1 ;
         sh:name "Education phase"@en ;
         sh:message "LA nursery schools must have an education phase (expected: Nursery)."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:minCount 1 ;
+        sh:name "Local authority"@en ;
+        sh:message "LA nursery schools must have a local authority accountability relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:maxCount 0 ;
+        sh:name "Academy trust (not applicable)"@en ;
+        sh:message "LA nursery schools must not have an academy trust accountability relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "LA nursery schools must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ;
+        sh:maxCount 0 ;
+        sh:name "School capacity (not applicable)"@en ;
+        sh:message "School capacity is not recorded for LA nursery schools (real GIAS extract: blank for 374 of 374 open records)."@en ;
     ] ;
 
     sh:property [
@@ -447,11 +476,49 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
+        sh:path ( esto:hasFaithContext esto:classifiedByReligiousCharacter ) ;
+        sh:maxCount 0 ;
+        sh:name "Religious character (not applicable)"@en ;
+        sh:message "Religious character is not applicable for LA nursery schools."@en ;
+    ] ;
+
+    sh:property [
         sh:path ( esto:hasFaithContext esto:classifiedByReligiousEthos ) ;
         sh:maxCount 0 ;
         sh:name "Religious ethos (not applicable)"@en ;
         sh:message "Religious ethos is not applicable for LA nursery schools."@en ;
     ] ;
+
+    sh:property [
+        sh:path ( esto:hasFaithContext esto:associatedWithDiocese ) ;
+        sh:maxCount 0 ;
+        sh:name "Diocese (not applicable)"@en ;
+        sh:message "Diocese is not applicable for LA nursery schools."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:maxCount 0 ;
+        sh:name "Sixth-form provision (not applicable)"@en ;
+        sh:message "Sixth-form provision is not applicable for LA nursery schools."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
+        sh:maxCount 0 ;
+        sh:name "Section 41 approved (not applicable)"@en ;
+        sh:message "Section 41 approval is not applicable for LA nursery schools."@en ;
+    ] .
+
+#################################################################
+# Specific shape - Non-maintained special school
+#################################################################
+
+est:NonMaintainedSpecialSchoolShape
+    a sh:NodeShape ;
+    rdfs:label "Non-maintained special school shape"@en ;
+    rdfs:comment "Rules for non-maintained special schools, checked against the real GIAS extract (open, n=52). Previously merged into est:MaintainedNurserySchoolShape by mistake, wrongly applying these rules to LA nursery schools instead; split out as its own shape here. Neither LA-maintained nor academy-trust accountable; age range, capacity and pupil measures are required; Section 41 approval and diocese are 100% not applicable (corrected from a wrongly-coded minCount 1 on Section 41 approval). Inspectorate name and resourced provision are genuinely variable in the real extract and left unconstrained, also corrected from wrongly-coded requirements/exclusions."@en ;
+    sh:targetClass est:NonMaintainedSpecialSchool ;
 
     sh:property [
         sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
@@ -476,9 +543,10 @@ est:MaintainedNurserySchoolShape
 
     sh:property [
         sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ;
+        sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:name "School capacity"@en ;
-        sh:message "A non-maintained special school may have at most one school capacity."@en ;
+        sh:message "Non-maintained special schools must have exactly one school capacity."@en ;
     ] ;
 
     sh:property [
@@ -497,16 +565,9 @@ est:MaintainedNurserySchoolShape
 
     sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
-        sh:minCount 1 ;
-        sh:name "Section 41 approved"@en ;
-        sh:message "Non-maintained special schools must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasExternalReference esto:referencesInspectionReport esto:recordsInspectorateName ) ;
-        sh:minCount 1 ;
-        sh:name "Inspectorate name"@en ;
-        sh:message "Non-maintained special schools must have an inspectorate name."@en ;
+        sh:maxCount 0 ;
+        sh:name "Section 41 approved (not applicable)"@en ;
+        sh:message "Section 41 approval is not applicable for non-maintained special schools (real GIAS extract: 100% 'Not applicable')."@en ;
     ] ;
 
     sh:property [
@@ -517,115 +578,291 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:maxCount 0 ;
-        sh:name "Type of resourced provision (not applicable)"@en ;
-        sh:message "Resourced provision fields are not applicable for non-maintained special schools."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:maxCount 0 ;
-        sh:name "Resourced provision measures (not applicable)"@en ;
-        sh:message "Resourced provision measures are not applicable for non-maintained special schools."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
         sh:maxCount 0 ;
         sh:name "SEN unit measures (not applicable)"@en ;
-        sh:message "SEN unit measures are not applicable for non-maintained special schools."@en ;
-    ] ;
+        sh:message "SEN unit measures are not applicable for non-maintained special schools (real extract shows no SEN unit or combined resourced-provision-and-SEN-unit case for this type)."@en ;
+    ] .
+
+#################################################################
+# Specific shape - City technology college
+#################################################################
+
+est:CityTechnologyCollegeShape
+    a sh:NodeShape ;
+    rdfs:label "City technology college shape"@en ;
+    rdfs:comment "Rules for city technology colleges, checked against the real GIAS extract (open, n=3 - a small population, kept as its own shape rather than merged with est:OtherIndependentSchoolShape because Section 41 approval and inspectorate name diverge completely between the two types: CTCs show 100% 'Not applicable'/blank, other independent schools show 100% real values). Previously merged into est:MaintainedNurserySchoolShape by mistake, along with est:OtherIndependentSchoolShape's rules, under wrongly-labelled 'Independent schools' properties; split out here. The prior comment claiming CTCs show a diocese association was checked and found false in the current extract (all 3 open CTCs show 'Not applicable')."@en ;
+    sh:targetClass est:CityTechnologyCollege ;
 
     sh:property [
         sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
         sh:maxCount 0 ;
         sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Independent schools must not have an LA accountability relationship."@en ;
+        sh:message "City technology colleges must not have an LA accountability relationship."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Independent schools must not have an academy trust accountability relationship."@en ;
+        sh:message "City technology colleges must not have an academy trust accountability relationship."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
-        sh:minCount 1 ;
-        sh:name "Education phase"@en ;
-        sh:message "Independent schools must have an education phase."@en ;
+        sh:maxCount 0 ;
+        sh:name "Education phase (not applicable)"@en ;
+        sh:message "Education phase is not applicable for city technology colleges."@en ;
     ] ;
 
     sh:property [
         sh:path esto:hasEducationAdmissionsAndProvision ;
         sh:minCount 1 ;
+        sh:maxCount 1 ;
         sh:name "Education, admissions and provision"@en ;
-        sh:message "Independent schools must have an education, admissions and provision record."@en ;
+        sh:message "City technology colleges must have an education, admissions and provision record."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Independent schools must have a boarding-provision classification."@en ;
+        sh:message "City technology colleges must have a boarding-provision classification."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ;
         sh:minCount 1 ;
         sh:name "Age range"@en ;
-        sh:message "Independent schools must have a statutory age range."@en ;
+        sh:message "City technology colleges must have a statutory age range."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ;
+        sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:name "School capacity"@en ;
-        sh:message "An independent school may have at most one school capacity."@en ;
+        sh:message "City technology colleges must have exactly one school capacity."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasCapacityAndPupilMeasures esto:hasPupilCount ) ;
         sh:minCount 1 ;
         sh:name "Number of pupils"@en ;
-        sh:message "Independent schools must have a pupil count."@en ;
+        sh:message "City technology colleges must have a pupil count."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasCapacityAndPupilMeasures esto:hasFreeSchoolMealMeasure ) ;
+        sh:maxCount 0 ;
+        sh:name "Number of pupils eligible for free school meals (not applicable)"@en ;
+        sh:message "Free school meal measures are not recorded for city technology colleges (real GIAS extract: blank for all 3 open records)."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
+        sh:maxCount 0 ;
+        sh:name "Section 41 approved (not applicable)"@en ;
+        sh:message "Section 41 approval is not applicable for city technology colleges."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasExternalReference esto:referencesInspectionReport esto:recordsInspectorateName ) ;
+        sh:maxCount 0 ;
+        sh:name "Inspectorate name (not applicable)"@en ;
+        sh:message "Inspectorate name is not recorded for city technology colleges (real GIAS extract: blank for all 3 open records)."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasFaithContext esto:associatedWithDiocese ) ;
+        sh:maxCount 0 ;
+        sh:name "Diocese (not applicable)"@en ;
+        sh:message "Diocese is not applicable for city technology colleges (real GIAS extract: 'Not applicable' for all 3 open records)."@en ;
+    ] .
+
+#################################################################
+# Specific shape - Other independent school
+#################################################################
+
+est:OtherIndependentSchoolShape
+    a sh:NodeShape ;
+    rdfs:label "Other independent school shape"@en ;
+    rdfs:comment "Rules for other independent schools, checked against the real GIAS extract (open, n=1603). Previously merged into est:MaintainedNurserySchoolShape by mistake, along with est:CityTechnologyCollegeShape's rules, under wrongly-labelled 'Independent schools' properties; split out here. Free school meal measure is never recorded for this type (maxCount 0, corrected from a wrongly-coded minCount 1) - contrast Section 41 approval and inspectorate name, both of which are genuinely always present here (kept as minCount 1)."@en ;
+    sh:targetClass est:OtherIndependentSchool ;
+
+    sh:property [
+        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:maxCount 0 ;
+        sh:name "Local authority - accountability relationship (not applicable)"@en ;
+        sh:message "Other independent schools must not have an LA accountability relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:maxCount 0 ;
+        sh:name "Academy trust (not applicable)"@en ;
+        sh:message "Other independent schools must not have an academy trust accountability relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
+        sh:maxCount 0 ;
+        sh:name "Education phase (not applicable)"@en ;
+        sh:message "Education phase is not applicable for other independent schools."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasEducationAdmissionsAndProvision ;
         sh:minCount 1 ;
-        sh:name "Number of pupils eligible for free school meals"@en ;
-        sh:message "Independent schools must have a free school meal measure."@en ;
+        sh:maxCount 1 ;
+        sh:name "Education, admissions and provision"@en ;
+        sh:message "Other independent schools must have an education, admissions and provision record."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Other independent schools must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Other independent schools must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "Other independent schools must have exactly one school capacity."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasPupilCount ) ;
+        sh:minCount 1 ;
+        sh:name "Number of pupils"@en ;
+        sh:message "Other independent schools must have a pupil count."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasFreeSchoolMealMeasure ) ;
+        sh:maxCount 0 ;
+        sh:name "Number of pupils eligible for free school meals (not applicable)"@en ;
+        sh:message "Free school meal measures are not recorded for other independent schools (real GIAS extract: blank for all 1,603 open records)."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
-        sh:message "Independent schools must have a Section 41 approval status."@en ;
+        sh:message "Other independent schools must have a Section 41 approval status."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasExternalReference esto:referencesInspectionReport esto:recordsInspectorateName ) ;
         sh:minCount 1 ;
         sh:name "Inspectorate name"@en ;
-        sh:message "Independent schools must have an inspectorate name."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:maxCount 0 ;
-        sh:name "SEN unit measures (not applicable)"@en ;
-        sh:message "SEN unit measures are not applicable for independent schools."@en ;
+        sh:message "Other independent schools must have an inspectorate name."@en ;
     ] ;
 
     sh:property [
         sh:path ( esto:hasFaithContext esto:associatedWithDiocese ) ;
+        sh:maxCount 0 ;
+        sh:name "Diocese (not applicable)"@en ;
+        sh:message "Diocese is not applicable for other independent schools (real GIAS extract: 'Not applicable' for all 1,603 open records)."@en ;
+    ] .
+
+#################################################################
+# Specific shape - Other independent special school
+#################################################################
+
+est:OtherIndependentSpecialSchoolShape
+    a sh:NodeShape ;
+    rdfs:label "Other independent special school shape"@en ;
+    rdfs:comment "Rules for other independent special schools, checked against the real GIAS extract (open, n=932). This class had no shape of its own before now - it was not part of the est:MaintainedNurserySchoolShape merge bug fixed alongside est:NonMaintainedSpecialSchoolShape/est:CityTechnologyCollegeShape/est:OtherIndependentSchoolShape, but was found to have the same kind of coverage gap while checking those. Section 41 approval and inspectorate name are both genuinely always present here (same as est:OtherIndependentSchool); free school meal measure and diocese are never applicable (same as the other independent-school types)."@en ;
+    sh:targetClass est:OtherIndependentSpecialSchool ;
+
+    sh:property [
+        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:maxCount 0 ;
+        sh:name "Local authority - accountability relationship (not applicable)"@en ;
+        sh:message "Other independent special schools must not have an LA accountability relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:maxCount 0 ;
+        sh:name "Academy trust (not applicable)"@en ;
+        sh:message "Other independent special schools must not have an academy trust accountability relationship."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
+        sh:maxCount 0 ;
+        sh:name "Education phase (not applicable)"@en ;
+        sh:message "Education phase is not applicable for other independent special schools."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasEducationAdmissionsAndProvision ;
+        sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:name "Diocese"@en ;
-        sh:message "An independent school may have a diocese association (CTC type 06 shows Diocese; other independent school types do not)."@en ;
+        sh:name "Education, admissions and provision"@en ;
+        sh:message "Other independent special schools must have an education, admissions and provision record."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:minCount 1 ;
+        sh:name "Boarding provision"@en ;
+        sh:message "Other independent special schools must have a boarding-provision classification."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ;
+        sh:minCount 1 ;
+        sh:name "Age range"@en ;
+        sh:message "Other independent special schools must have a statutory age range."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "School capacity"@en ;
+        sh:message "Other independent special schools must have exactly one school capacity."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasFreeSchoolMealMeasure ) ;
+        sh:maxCount 0 ;
+        sh:name "Number of pupils eligible for free school meals (not applicable)"@en ;
+        sh:message "Free school meal measures are not recorded for other independent special schools (real GIAS extract: blank for all 932 open records)."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
+        sh:minCount 1 ;
+        sh:name "Section 41 approved"@en ;
+        sh:message "Other independent special schools must have a Section 41 approval status."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasExternalReference esto:referencesInspectionReport esto:recordsInspectorateName ) ;
+        sh:minCount 1 ;
+        sh:name "Inspectorate name"@en ;
+        sh:message "Other independent special schools must have an inspectorate name."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasFaithContext esto:associatedWithDiocese ) ;
+        sh:maxCount 0 ;
+        sh:name "Diocese (not applicable)"@en ;
+        sh:message "Diocese is not applicable for other independent special schools (real GIAS extract: 'Not applicable' for all 932 open records)."@en ;
     ] .
 
 #################################################################
@@ -1082,7 +1319,7 @@ est:AcademySecure16To19Shape
 est:MainstreamFreeSchoolGroupShape
     a sh:NodeShape ;
     rdfs:label "Mainstream free school group shape"@en ;
-    rdfs:comment "Rules for mainstream free school types. Academy trust is required; education phase, gender of entry, admissions policy, boarding, nursery and sixth-form provision are all required."@en ;
+    rdfs:comment "Rules for mainstream free school types. Academy trust is required; education phase and nursery provision are required. Boarding provision, sixth-form provision and admissions policy are all genuinely optional - the real GIAS extract shows per-instance variability (boarding is unrecorded, GIAS code 9, for 87 of 545 open mainstream free schools), so none of the three is constrained here. Section 41 approval is not applicable (100% 'Not applicable' in the real extract)."@en ;
     sh:targetClass est:MainstreamFreeSchool ;
 
     sh:property [
@@ -1121,13 +1358,6 @@ est:MainstreamFreeSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Boarding provision"@en ;
-        sh:message "Mainstream free schools must have a boarding-provision classification."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ;
         sh:minCount 1 ;
         sh:name "Age range"@en ;
@@ -1157,65 +1387,9 @@ est:MainstreamFreeSchoolGroupShape
 
     sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
-        sh:minCount 1 ;
-        sh:name "Section 41 approved"@en ;
-        sh:message "Mainstream free schools must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
         sh:maxCount 0 ;
-        sh:name "Sixth-form provision (not applicable)"@en ;
-        sh:message "Sixth-form provision is not applicable for free school specials."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasPupilCount ) ;
-        sh:minCount 1 ;
-        sh:name "Number of pupils"@en ;
-        sh:message "Free school specials must have a pupil count."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasFreeSchoolMealMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Number of pupils eligible for free school meals"@en ;
-        sh:message "Free school specials must have a free school meal measure."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
-        sh:minCount 1 ;
-        sh:name "Section 41 approved"@en ;
-        sh:message "Free school specials must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
-        sh:minCount 1 ;
-        sh:name "Education phase"@en ;
-        sh:message "Free school specials must have an education phase."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Boarding provision"@en ;
-        sh:message "Free school specials must have a boarding-provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ;
-        sh:minCount 1 ;
-        sh:name "Age range"@en ;
-        sh:message "Free school specials must have a statutory age range."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ;
-        sh:maxCount 1 ;
-        sh:name "School capacity"@en ;
-        sh:message "A free school special may have at most one school capacity."@en ;
+        sh:name "Section 41 approved (not applicable)"@en ;
+        sh:message "Section 41 approval is not applicable for mainstream free schools (real GIAS extract: 100% 'Not applicable' for type 35)."@en ;
     ] .
 
 #################################################################
