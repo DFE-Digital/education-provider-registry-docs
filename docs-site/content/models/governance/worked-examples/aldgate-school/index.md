@@ -13,7 +13,7 @@ title: Governance Ontology — The Aldgate School example
 | **Establishment type** | Voluntary aided school |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -80,11 +80,11 @@ The same governors, bodies and appointments from Section 1, expressed in Turtle 
 
 ```mermaid
 flowchart LR
-    LA["ginst:city-of-london<br/>(epr:LocalAuthority)"]
-    S["inst:aldgate-school<br/>(epr:VoluntaryAidedSchool)"]
+    LA["ginst:city-of-london<br/>(est:LocalAuthority)"]
+    S["inst:aldgate-school<br/>(est:VoluntaryAidedSchool)"]
     GB["ginst:aldgate-governing-body<br/>(gov:GoverningBody)"]
 
-    S -->|"epro:hasAccountabilityRelationship /<br/>epro:accountableToLocalAuthority"| LA
+    S -->|"esto:hasAccountabilityRelationship /<br/>esto:accountableToLocalAuthority"| LA
     S -->|govo:hasGovernanceBody| GB
 
     GB -->|govo:hasGovernanceAppointment| G1["BER — FoundationGovernor<br/>+ RoleAssignment: Chair"]
@@ -110,8 +110,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -122,28 +122,28 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment, Local Authority accountability and Governing Body identity
 
-The same pattern as Gilded Hollins and Millfield: `epr:VoluntaryAidedSchool`, `epro:hasAccountabilityRelationship` + `epro:accountableToLocalAuthority`, and a single `gov:GoverningBody` - genuinely statutory, since this is a maintained school.
+The same pattern as Gilded Hollins and Millfield: `est:VoluntaryAidedSchool`, `esto:hasAccountabilityRelationship` + `esto:accountableToLocalAuthority`, and a single `gov:GoverningBody` - genuinely statutory, since this is a maintained school.
 
 ```
 ginst:city-of-london
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "City of London"@en .
 
 inst:aldgate-school
-    a epr:VoluntaryAidedSchool ;
+    a est:VoluntaryAidedSchool ;
     rdfs:label "The Aldgate School"@en ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100000"
         ]
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToLocalAuthority ginst:city-of-london
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToLocalAuthority ginst:city-of-london
     ] .
 
 ginst:aldgate-governing-body
@@ -338,8 +338,8 @@ ginst:aldgate-finance-committee
 
 | Real-world concept | Aldgate evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Voluntary aided school | The Aldgate School, URN 100000 | `epr:VoluntaryAidedSchool` | Direct |
-| Maintaining Local Authority | City of London | `epr:LocalAuthority` + `epro:hasAccountabilityRelationship` + `epro:accountableToLocalAuthority` | Direct |
+| Voluntary aided school | The Aldgate School, URN 100000 | `est:VoluntaryAidedSchool` | Direct |
+| Maintaining Local Authority | City of London | `est:LocalAuthority` + `esto:hasAccountabilityRelationship` + `esto:accountableToLocalAuthority` | Direct |
 | Governing Body | The statutory governing body | `gov:GoverningBody` + `govo:hasGovernanceBody` | Direct |
 | Foundation governor, multiple named appointing bodies | Portal Trust, LDBS, Deanery | `govo:hasRoleType gov:FoundationGovernor`, `govo:hasAppointingBody gov:AppointedByFoundationOrTrust` | Direct at the category level; specific body preserved in `rdfs:comment` |
 | Ex-officio foundation governor | LJ (Rector) | `govo:hasRoleType gov:ExOfficioGovernor` | Direct |

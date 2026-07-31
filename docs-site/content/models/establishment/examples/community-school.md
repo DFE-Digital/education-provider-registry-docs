@@ -12,7 +12,7 @@ title: EPR Ontology — community school example
 | **Type** | Community school (LA-maintained, primary) |
 | **Ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/` |
 | **Vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/` |
-| **Preferred prefixes** | `epro:` (properties) · `epr:` (classes and named individuals) |
+| **Preferred prefixes** | `esto:` (properties) · `est:` (classes and named individuals) |
 | **Version** | 1.4 |
 | **OWL documentation** | [Ontology reference (WIDOCO)](/education-provider-registry-docs/models/establishment/ontology/) |
 | **Source** | [establishment-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment/establishment-ontology.ttl) |
@@ -27,7 +27,7 @@ title: EPR Ontology — community school example
 
 The **Education Provider Registry Ontology** is an OWL 2 conceptual model for the Education Provider Registry. It declares classes and object properties for the entities and relationships in the GIAS Details view for state-funded education providers in England.
 
-The ontology shares its class IRIs with the [epr: SKOS vocabulary](/education-provider-registry-docs/models/establishment/vocabulary/) through OWL 2 punning — the same URI is simultaneously a vocabulary concept (`skos:Concept`) and an OWL class (`owl:Class`). Closed enumerations (status, phase, gender, boarding, sixth form, special class provision, admissions policy, nursery provision) are declared as sets of `owl:NamedIndividual` within the ontology. Open-ended value sets (religious character, religious ethos, type of SEN provision) remain as `skos:Concept` in the vocabulary only.
+The ontology shares its class IRIs with the [est: SKOS vocabulary](/education-provider-registry-docs/models/establishment/vocabulary/) through OWL 2 punning — the same URI is simultaneously a vocabulary concept (`skos:Concept`) and an OWL class (`owl:Class`). Closed enumerations (status, phase, gender, boarding, sixth form, special class provision, admissions policy, nursery provision) are declared as sets of `owl:NamedIndividual` within the ontology. Open-ended value sets (religious character, religious ethos, type of SEN provision) remain as `skos:Concept` in the vocabulary only.
 
 The ontology is entirely `owl:ObjectProperty` — no `owl:DatatypeProperty` declarations are used. Literal values (identifiers, labels, dates) are represented as `rdfs:label` on typed blank nodes.
 
@@ -41,40 +41,40 @@ The ontology is entirely `owl:ObjectProperty` — no `owl:DatatypeProperty` decl
 - Location and contact — postal address, website, telephone, headteacher or principal
 - Administrative geography — Government Office Region, parliamentary constituency, ward, LSOA, MSOA, OS grid reference
 - SEN and resourced provision — type of SEN provision, resourced provision and SEN unit measures
-- Governance — appointments, role types (22 named individuals), appointing bodies (18 named individuals), persons
 - Establishment groups — multi-academy trusts, federations, sponsors, group membership and relationships
+
+Governance appointments (governors, trustees, members and appointing bodies) are modelled separately by the [governance model](../../governance/), not by this ontology - see the "Governance" example below.
 
 ---
 
 ## Structure of an establishment record
 
-The diagram below shows the top-level object properties that connect an `epr:Establishment` to its component records. Each component is a typed blank node or named individual.
+The diagram below shows the top-level object properties that connect an `est:Establishment` to its component records. Each component is a typed blank node or named individual.
 
 ```mermaid
 graph LR
-    E["inst:100008<br/>(epr:CommunitySchool)"]
+    E["inst:100008<br/>(est:CommunitySchool)"]
 
-    E -->|hasEstablishmentIdentity| ID["epr:EstablishmentIdentity"]
-    E -->|hasEstablishmentLifecycle| LC["epr:EstablishmentLifecycle"]
-    E -->|hasEstablishmentClassification| CL["epr:EstablishmentClassification"]
-    E -->|hasAccountabilityRelationship| AC["epr:EstablishmentAccountability"]
-    E -->|hasEducationAdmissionsAndProvision| PR["epr:EducationAdmissionsAndProvision"]
-    E -->|hasEstablishmentLocationAndContact| LO["epr:EstablishmentLocationAndContact"]
-    E -->|hasAdministrativeGeography| GE["epr:AdministrativeGeography"]
-    E -->|hasGovernanceAppointment| GO["epr:GovernanceAppointment ×8"]
+    E -->|hasEstablishmentIdentity| ID["est:EstablishmentIdentity"]
+    E -->|hasEstablishmentLifecycle| LC["est:EstablishmentLifecycle"]
+    E -->|hasEstablishmentClassification| CL["est:EstablishmentClassification"]
+    E -->|hasAccountabilityRelationship| AC["est:EstablishmentAccountability"]
+    E -->|hasEducationAdmissionsAndProvision| PR["est:EducationAdmissionsAndProvision"]
+    E -->|hasEstablishmentLocationAndContact| LO["est:EstablishmentLocationAndContact"]
+    E -->|hasAdministrativeGeography| GE["est:AdministrativeGeography"]
 
-    ID -->|identifiedByUrn| URN["epr:UniqueReferenceNumber<br/>100008"]
-    ID -->|hasUkprn| UK["epr:UkProviderReferenceNumber<br/>10078065"]
+    ID -->|identifiedByUrn| URN["est:UniqueReferenceNumber<br/>100008"]
+    ID -->|hasUkprn| UK["est:UkProviderReferenceNumber<br/>10078065"]
 
-    LC -->|classifiedByEstablishmentStatus| OS["epr:OpenStatus"]
+    LC -->|classifiedByEstablishmentStatus| OS["est:OpenStatus"]
 
-    CL -->|hasEstablishmentType| CS["epr:CommunitySchool"]
-    CL -->|hasEducationPhase| PP["epr:PrimaryPhase"]
+    CL -->|hasEstablishmentType| CS["est:CommunitySchool"]
+    CL -->|hasEducationPhase| PP["est:PrimaryPhase"]
 
     AC -->|accountableToLocalAuthority| LA["inst:la-202<br/>Camden"]
-
-    GO -->|appointmentOf| GP["epr:GovernancePerson"]
 ```
+
+Governance appointments attach to `inst:100008` via `govo:hasGovernanceAppointment` (from the governance model, not shown here) - see the "Governance" example below.
 
 ---
 
@@ -83,8 +83,8 @@ graph LR
 All examples use the following prefixes.
 
 ```
-@prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .
@@ -96,45 +96,45 @@ All examples use the following prefixes.
 
 ## Example 1 — Identity and lifecycle
 
-Every establishment has exactly one `epr:EstablishmentIdentity` and one `epr:EstablishmentLifecycle`. The identity groups the primary GIAS identifier (URN), the cross-sector identifier (UKPRN), and the local-authority-scoped establishment number that together form the DfE number. The local-authority-scoped number carries an `epr:IdentifierRole` to distinguish a current from a previous LAESTAB identity.
+Every establishment has exactly one `est:EstablishmentIdentity` and one `est:EstablishmentLifecycle`. The identity groups the primary GIAS identifier (URN), the cross-sector identifier (UKPRN), and the local-authority-scoped establishment number that together form the DfE number. The local-authority-scoped number carries an `est:IdentifierRole` to distinguish a current from a previous LAESTAB identity.
 
 This example is drawn from **Argyle Primary School**, URN 100008, a community primary school in Camden. All personal names in these examples are anonymised.
 
 ```
 inst:100008
-    a epr:CommunitySchool ;
+    a est:CommunitySchool ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
 
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100008"
         ] ;
 
-        epro:hasUkprn [
-            a epr:UkProviderReferenceNumber ;
+        esto:hasUkprn [
+            a est:UkProviderReferenceNumber ;
             rdfs:label "10078065"
         ] ;
 
-        epro:hasLocalAuthorityScopedEstablishmentNumber [
-            a epr:LocalAuthorityScopedEstablishmentNumber ;
-            epro:hasLocalAuthorityContext  inst:la-202 ;
-            epro:hasEstablishmentNumberValue [
-                a epr:EstablishmentNumber ;
+        esto:hasLocalAuthorityScopedEstablishmentNumber [
+            a est:LocalAuthorityScopedEstablishmentNumber ;
+            esto:hasLocalAuthorityContext  inst:la-202 ;
+            esto:hasEstablishmentNumberValue [
+                a est:EstablishmentNumber ;
                 rdfs:label "2019"
             ] ;
-            epro:hasIdentifierRole epr:CurrentIdentifierRole
+            esto:hasIdentifierRole est:CurrentIdentifierRole
         ]
     ] ;
 
-    epro:hasEstablishmentLifecycle [
-        a epr:EstablishmentLifecycle ;
-        epro:classifiedByEstablishmentStatus epr:OpenStatus
+    esto:hasEstablishmentLifecycle [
+        a est:EstablishmentLifecycle ;
+        esto:classifiedByEstablishmentStatus est:OpenStatus
     ] .
 
 inst:la-202
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "Camden"@en ;
     rdfs:comment "LA code 202"@en .
 ```
@@ -143,23 +143,23 @@ inst:la-202
 
 ## Example 2 — Classification and accountability
 
-An establishment's type, type group and education phase are grouped under `epr:EstablishmentClassification`. The establishment type IRI (`epr:CommunitySchool`) is both an OWL class (used to type the establishment instance) and an `owl:NamedIndividual` of type `epr:EstablishmentType` — OWL 2 punning, valid because the ontology uses OWL 2 DL.
+An establishment's type, type group and education phase are grouped under `est:EstablishmentClassification`. The establishment type IRI (`est:CommunitySchool`) is both an OWL class (used to type the establishment instance) and an `owl:NamedIndividual` of type `est:EstablishmentType` — OWL 2 punning, valid because the ontology uses OWL 2 DL.
 
 The accountability relationship records which body is responsible for the establishment. For a community school this is the local authority that maintains it.
 
 ```
 inst:100008
-    a epr:CommunitySchool ;
+    a est:CommunitySchool ;
 
-    epro:hasEstablishmentClassification [
-        a epr:EstablishmentClassification ;
-        epro:hasEstablishmentType  epr:CommunitySchool ;
-        epro:hasEducationPhase     epr:PrimaryPhase
+    esto:hasEstablishmentClassification [
+        a est:EstablishmentClassification ;
+        esto:hasEstablishmentType  est:CommunitySchool ;
+        esto:hasEducationPhase     est:PrimaryPhase
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToLocalAuthority inst:la-202
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToLocalAuthority inst:la-202
     ] .
 ```
 
@@ -167,46 +167,46 @@ inst:100008
 
 ## Example 3 — Location, contact and administrative geography
 
-Contact details, the postal address and the headteacher or principal are grouped under `epr:EstablishmentLocationAndContact`. Administrative geography — derived from the establishment's postcode via the GeoData lookup table — is a peer group on the establishment itself, not nested under location.
+Contact details, the postal address and the headteacher or principal are grouped under `est:EstablishmentLocationAndContact`. Administrative geography — derived from the establishment's postcode via the GeoData lookup table — is a peer group on the establishment itself, not nested under location.
 
 ```
 inst:100008
-    a epr:CommunitySchool ;
+    a est:CommunitySchool ;
 
-    epro:hasEstablishmentLocationAndContact [
-        a epr:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
 
-        epro:hasMainAddress [
-            a epr:MainAddress ;
+        esto:hasMainAddress [
+            a est:MainAddress ;
             rdfs:label "Tonbridge Street, London, WC1H 9EG"
         ] ;
 
-        epro:hasWebsite [
-            a epr:Website ;
+        esto:hasWebsite [
+            a est:Website ;
             rdfs:label "http://www.argyle.camden.sch.uk/"
         ] ;
 
-        epro:hasTelephoneNumber [
-            a epr:TelephoneNumber ;
+        esto:hasTelephoneNumber [
+            a est:TelephoneNumber ;
             rdfs:label "02078374590"
         ] ;
 
-        epro:hasHeadteacherOrPrincipal [
-            a epr:HeadteacherOrPrincipal ;
+        esto:hasHeadteacherOrPrincipal [
+            a est:HeadteacherOrPrincipal ;
             rdfs:label "Ms Jane Smith"@en
         ]
     ] ;
 
-    epro:hasAdministrativeGeography [
-        a epr:AdministrativeGeography ;
+    esto:hasAdministrativeGeography [
+        a est:AdministrativeGeography ;
 
-        epro:classifiedByGovernmentOfficeRegion [
-            a epr:GovernmentOfficeRegion ;
+        esto:classifiedByGovernmentOfficeRegion [
+            a est:GovernmentOfficeRegion ;
             rdfs:label "London"@en
         ] ;
 
-        epro:classifiedByParliamentaryConstituency [
-            a epr:ParliamentaryConstituency ;
+        esto:classifiedByParliamentaryConstituency [
+            a est:ParliamentaryConstituency ;
             rdfs:label "Holborn and St Pancras"@en ;
             rdfs:seeAlso <http://statistics.data.gov.uk/id/statistical-geography/E14001290>
         ]
@@ -217,119 +217,33 @@ inst:100008
 
 ## Example 4 — Education, admissions and provision
 
-Statutory age range, gender of entry, admissions policy, boarding provision and sixth-form provision are grouped under `epr:EducationAdmissionsAndProvision`. Each classification points to an `owl:NamedIndividual` from the closed enumeration declared in the ontology.
+Statutory age range, gender of entry, admissions policy, boarding provision and sixth-form provision are grouped under `est:EducationAdmissionsAndProvision`. Each classification points to an `owl:NamedIndividual` from the closed enumeration declared in the ontology.
 
 ```
 inst:100008
-    a epr:CommunitySchool ;
+    a est:CommunitySchool ;
 
-    epro:hasEducationAdmissionsAndProvision [
-        a epr:EducationAdmissionsAndProvision ;
+    esto:hasEducationAdmissionsAndProvision [
+        a est:EducationAdmissionsAndProvision ;
 
-        epro:hasStatutoryAgeRange [
-            a epr:StatutoryAgeRange ;
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
             rdfs:label "3 to 11"
         ] ;
 
-        epro:classifiedByGenderOfEntry      epr:MixedGenderEntry ;
-        epro:classifiedByBoardingProvision  epr:NoBoarders ;
-        epro:classifiedBySixthFormProvision epr:NoSixthForm
+        esto:classifiedByGenderOfEntry      est:MixedGenderEntry ;
+        esto:classifiedByBoardingProvision  est:NoBoarders ;
+        esto:classifiedBySixthFormProvision est:NoSixthForm
     ] .
 ```
 
 ---
 
-## Example 5 — Governance appointments
+## Example 5 — Governance
 
-Each governance appointment is a separate `epr:GovernanceAppointment` instance linked to the establishment via `epro:hasGovernanceAppointment`. The appointment records the role type, appointing body, governance identifier (GID), appointment date and term end date. The appointment is linked to a `epr:GovernancePerson` via `epro:appointmentOf`.
+Governance appointments (governors, trustees, members, local governors and governance professionals) are no longer modelled directly on the establishment or trust entity within this ontology. They are modelled by the dedicated governance model (`gov:`/`govo:` namespace, `models/governance/governance-ontology.ttl`), which links to `est:Establishment`, `est:AcademyTrust` and `est:Federation` via `govo:hasGovernanceAppointment` - a property with no fixed domain, so it applies directly to this establishment/trust without needing a separate establishment-side governance property.
 
-`epr:GovernanceAppointment` and `epr:GovernancePerson` are annotated with `dcterms:accessRights` in the ontology as personal-data-carrying classes. In a production deployment these records would not appear in a public serialisation without a separate access decision.
-
-**All governor names below are anonymised.** The eight-person governing body is realistic in composition for a community primary school — one chair, the headteacher ex-officio, two parent governors, one staff governor, one local authority governor, and two co-opted governors — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
-
-```
-inst:100008
-    a epr:CommunitySchool ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:ChairOfGovernorsRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByGoverningBoard ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-001" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2022-09-01"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2026-08-31"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr Robert Johnson"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:HeadteacherExOfficioGovernorRole ;
-        epro:hasGovernanceAppointingBody epr:ExOfficioHeadteacher ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-002" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2019-04-01"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Ms Jane Smith"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:GovernorRole ;
-        epro:hasGovernanceAppointingBody epr:ElectedByParents ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-003" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2023-01-15"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2027-01-14"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mrs Mary Brown"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:GovernorRole ;
-        epro:hasGovernanceAppointingBody epr:ElectedByParents ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-004" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2021-09-01"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2025-08-31"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr David Wilson"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:GovernorRole ;
-        epro:hasGovernanceAppointingBody epr:ElectedBySchoolStaff ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-005" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2022-03-01"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2026-02-28"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Ms Sarah Davies"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:GovernorRole ;
-        epro:hasGovernanceAppointingBody epr:NominatedByLaAppointedByGb ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-006" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2020-11-01"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2024-10-31"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr Thomas Evans"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:GovernorRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByGoverningBoard ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-007" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2021-06-01"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2025-05-31"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mrs Patricia Moore"@en ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:GovernorRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByGoverningBoard ;
-        epro:hasGovernanceIdentifier     [ a epr:GovernanceIdentifier ; rdfs:label "GID-008" ] ;
-        epro:hasGovernanceAppointmentDate [ a epr:GovernanceAppointmentDate ; rdfs:label "2023-09-01"^^xsd:date ] ;
-        epro:hasGovernanceTermEndDate    [ a epr:GovernanceTermEndDate    ; rdfs:label "2027-08-31"^^xsd:date ] ;
-        epro:appointmentOf [ a epr:GovernancePerson ; rdfs:label "Mr James Taylor"@en ]
-    ] .
-```
+See the [governance model](../../governance/) and its [worked examples](../../governance/worked-examples/) for how appointments, role types, appointing bodies and terms of office are represented.
 
 ---
 

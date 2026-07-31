@@ -13,7 +13,7 @@ title: Governance Ontology — Gilded Hollins Community School example
 | **Establishment type** | Community school (LA maintained) |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -78,11 +78,11 @@ The same governors, bodies and appointments from Section 1, expressed in Turtle 
 
 ```mermaid
 flowchart LR
-    LA["ginst:wigan-council<br/>(epr:LocalAuthority)"]
-    S["inst:gilded-hollins<br/>(epr:CommunitySchool)"]
+    LA["ginst:wigan-council<br/>(est:LocalAuthority)"]
+    S["inst:gilded-hollins<br/>(est:CommunitySchool)"]
     GB["ginst:gilded-hollins-governing-body<br/>(gov:GoverningBody)"]
 
-    S -->|"epro:hasAccountabilityRelationship /<br/>epro:accountableToLocalAuthority"| LA
+    S -->|"esto:hasAccountabilityRelationship /<br/>esto:accountableToLocalAuthority"| LA
     S -->|govo:hasGovernanceBody| GB
 
     GB -->|govo:hasGovernanceAppointment| G1["TS — Governor<br/>+ RoleAssignment: Chair<br/>+ 2x RoleAssignment: SpecialistResponsibility"]
@@ -104,8 +104,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -116,28 +116,28 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment, Local Authority accountability and Governing Body identity
 
-`epr:CommunitySchool` is the specific leaf type. The Local Authority relationship is modelled with `epro:hasAccountabilityRelationship` and `epro:accountableToLocalAuthority` - properties reused unmodified from `establishment-ontology.ttl`, explicitly documented there as "present for LA-maintained schools." None of the six previous worked examples needed this pattern (Medlock, Manor High and St Paul's are academies accountable to their Trust; Frank Barnes, Eileen Wade/Milton Ernest, Long Ditton and Vauxhall Primary all left the maintaining authority out of scope) - this is the first to exercise it.
+`est:CommunitySchool` is the specific leaf type. The Local Authority relationship is modelled with `esto:hasAccountabilityRelationship` and `esto:accountableToLocalAuthority` - properties reused unmodified from `establishment-ontology.ttl`, explicitly documented there as "present for LA-maintained schools." None of the six previous worked examples needed this pattern (Medlock, Manor High and St Paul's are academies accountable to their Trust; Frank Barnes, Eileen Wade/Milton Ernest, Long Ditton and Vauxhall Primary all left the maintaining authority out of scope) - this is the first to exercise it.
 
 ```
 ginst:wigan-council
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "Wigan Council"@en .
 
 inst:gilded-hollins
-    a epr:CommunitySchool ;
+    a est:CommunitySchool ;
     rdfs:label "Gilded Hollins Community School"@en ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "106431"
         ]
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToLocalAuthority ginst:wigan-council
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToLocalAuthority ginst:wigan-council
     ] .
 
 ginst:gilded-hollins-governing-body
@@ -391,8 +391,8 @@ ginst:gilded-hollins-governing-body
 
 | Real-world concept | Gilded Hollins evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Community school | Gilded Hollins Community School, URN 106431 | `epr:CommunitySchool` | Direct - reused leaf type |
-| Maintaining Local Authority | Wigan Council | `epr:LocalAuthority` + `epro:hasAccountabilityRelationship` + `epro:accountableToLocalAuthority` | Direct - the first worked example to exercise this pattern |
+| Community school | Gilded Hollins Community School, URN 106431 | `est:CommunitySchool` | Direct - reused leaf type |
+| Maintaining Local Authority | Wigan Council | `est:LocalAuthority` + `esto:hasAccountabilityRelationship` + `esto:accountableToLocalAuthority` | Direct - the first worked example to exercise this pattern |
 | Governing Body | The statutory governing body | `gov:GoverningBody` + `govo:hasGovernanceBody` | Direct |
 | Chair with no stated category | TS | `govo:hasRoleType gov:Governor` (generic) + `gov:RoleAssignment` assigning `gov:Chair` | Candidate for the base category; Direct for the Chair responsibility |
 | Governor categories | Headteacher, Co-opted, Local Authority, Staff, Parent | `govo:hasRoleType` (`gov:ExOfficioGovernor`, `gov:CoOptedGovernor`, `gov:LocalAuthorityGovernor`, `gov:StaffGovernor`, `gov:ParentGovernor`) | Direct - a true SI 2012/1034 maintained-school governing body |

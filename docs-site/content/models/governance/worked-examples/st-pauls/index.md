@@ -13,7 +13,7 @@ title: Governance Ontology — St Paul's Academy example
 | **Establishment type** | Academy sponsor led |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -78,8 +78,8 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:st-benedict-cat<br/>(epr:AcademyTrust)<br/>St Benedict Catholic Academy Trust"]
-    A["inst:st-pauls-academy<br/>(epr:MainstreamAcademy)<br/>St Paul's Academy"]
+    AT["inst:st-benedict-cat<br/>(est:AcademyTrust)<br/>St Benedict Catholic Academy Trust"]
+    A["inst:st-pauls-academy<br/>(est:MainstreamAcademy)<br/>St Paul's Academy"]
     TB["ginst:st-benedict-trust-board<br/>(gov:TrustBoard)"]
     LGB["ginst:st-pauls-lgb<br/>(gov:LocalGoverningBody)"]
 
@@ -105,8 +105,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -117,26 +117,26 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Academy, Academy Trust and Trust Board identity
 
-St Paul's Academy is a sponsor-led academy, operated by St Benedict Catholic Academy Trust. `epr:MainstreamAcademy` is the specific leaf type (not the generic `epr:Establishment` or `epr:Academy` stub); `epro:hasAcademyRoute` records the sponsor-led route rather than voluntary conversion.
+St Paul's Academy is a sponsor-led academy, operated by St Benedict Catholic Academy Trust. `est:MainstreamAcademy` is the specific leaf type (not the generic `est:Establishment` or `est:Academy` stub); `esto:hasAcademyRoute` records the sponsor-led route rather than voluntary conversion.
 
 `ginst:st-benedict-trust-board` is declared here only as the body St Paul's Local Governing Body is delegated by (Example 2) - this investigation is scoped to St Paul's own local governance and doesn't cover the Trust's Members, Trustees or other Trust-wide governance, which the academy's own page doesn't publish either.
 
 ```
 inst:st-pauls-academy
-    a epr:MainstreamAcademy ;
+    a est:MainstreamAcademy ;
     rdfs:label "St Paul's Academy"@en ;
-    epro:hasAcademyRoute epr:SponsorLedRoute ;
+    esto:hasAcademyRoute est:SponsorLedRoute ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "105135"
         ]
     ] .
 
 inst:st-benedict-cat
-    a epr:AcademyTrust ;
+    a est:AcademyTrust ;
     rdfs:label "St Benedict Catholic Academy Trust"@en .
 
 ginst:st-benedict-trust-board
@@ -309,8 +309,8 @@ inst:st-benedict-cat
 
 | Real-world concept | St Paul's evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy (sponsor led) | St Paul's Academy, URN 105135 | `epr:MainstreamAcademy` + `epro:hasAcademyRoute epr:SponsorLedRoute` | Direct - reused leaf type and route property from the main EPR ontology |
-| Academy Trust | St Benedict Catholic Academy Trust, GIAS group 17729 | `epr:AcademyTrust` | Direct |
+| Academy (sponsor led) | St Paul's Academy, URN 105135 | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:SponsorLedRoute` | Direct - reused leaf type and route property from the main EPR ontology |
+| Academy Trust | St Benedict Catholic Academy Trust, GIAS group 17729 | `est:AcademyTrust` | Direct |
 | Trust Board | Not detailed in this investigation, but a body St Paul's Local Governing Body is delegated by | `gov:TrustBoard` + `govo:hasGovernanceBody` | Direct as a body; the Trust's own Members/Trustees are out of scope of this investigation |
 | Local Governing Body | St Paul's local governing body, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` (delegation) + `govo:hasGovernanceBody` (scope over the academy) | Direct |
 | Governor categories | Foundation, Parent, Headteacher (ex officio) | `govo:hasRoleType` (`gov:FoundationGovernor`, `gov:ParentGovernor`, `gov:ExOfficioGovernor`) | Candidate - St Paul's Local Governing Body is not constituted under SI 2012/1034, unlike a maintained school's governing body |

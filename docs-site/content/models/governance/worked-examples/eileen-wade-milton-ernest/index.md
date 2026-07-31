@@ -13,7 +13,7 @@ title: Governance Ontology — Eileen Wade / Milton Ernest Federation example
 | **Establishment type** | Maintained-school federation, two open schools, one shared governing body |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -83,9 +83,9 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    F["inst:eileen-wade-milton-ernest-federation<br/>(epr:Federation)"]
-    EW["inst:eileen-wade<br/>(epr:FoundationSchool)"]
-    ME["inst:milton-ernest<br/>(epr:VoluntaryControlledSchool)"]
+    F["inst:eileen-wade-milton-ernest-federation<br/>(est:Federation)"]
+    EW["inst:eileen-wade<br/>(est:FoundationSchool)"]
+    ME["inst:milton-ernest<br/>(est:VoluntaryControlledSchool)"]
     GB["ginst:ewme-governing-body<br/>(gov:GoverningBody)"]
 
     F -->|govo:hasGovernanceBody| GB
@@ -111,8 +111,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -123,33 +123,33 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Federation, member schools and a single shared Governing Body
 
-Both schools are maintained (a Foundation school and a Voluntary controlled school), and the federation's Governing Body is genuinely constituted under statute - unlike Manor High and St Paul's Academy, whose Local Governing Bodies derive only from an Academy Trust's own scheme of delegation. `govo:hasGovernanceBody` is used three times here, from the Federation and from each school, all pointing at the same Governing Body instance - one body with scope over both establishments, exactly as `govo:hasGovernanceBody`'s own definition allows ("Links a governed organisation - `epr:Establishment`, `epr:AcademyTrust` **or `epr:Federation`** - to the governance body or bodies responsible for it").
+Both schools are maintained (a Foundation school and a Voluntary controlled school), and the federation's Governing Body is genuinely constituted under statute - unlike Manor High and St Paul's Academy, whose Local Governing Bodies derive only from an Academy Trust's own scheme of delegation. `govo:hasGovernanceBody` is used three times here, from the Federation and from each school, all pointing at the same Governing Body instance - one body with scope over both establishments, exactly as `govo:hasGovernanceBody`'s own definition allows ("Links a governed organisation - `est:Establishment`, `est:AcademyTrust` **or `est:Federation`** - to the governance body or bodies responsible for it").
 
 ```
 inst:eileen-wade
-    a epr:FoundationSchool ;
+    a est:FoundationSchool ;
     rdfs:label "Eileen Wade Primary School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "109443"
         ]
     ] .
 
 inst:milton-ernest
-    a epr:VoluntaryControlledSchool ;
+    a est:VoluntaryControlledSchool ;
     rdfs:label "Milton Ernest CofE Primary School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "109613"
         ]
     ] .
 
 inst:eileen-wade-milton-ernest-federation
-    a epr:Federation ;
+    a est:Federation ;
     rdfs:label "Federation of Eileen Wade and Milton Ernest CoE Primary Schools"@en .
 
 ginst:ewme-governing-body
@@ -357,8 +357,8 @@ ginst:person-ab
 
 | Real-world concept | Federation evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Federation | Federation of Eileen Wade and Milton Ernest CoE Primary Schools, GIAS UID 1809 | `epr:Federation` | Direct - reused type stub from the main EPR ontology |
-| Member establishments | Eileen Wade Primary School (Foundation school), Milton Ernest CofE Primary School (Voluntary controlled school) | `epr:FoundationSchool`, `epr:VoluntaryControlledSchool` | Direct - reused leaf types |
+| Federation | Federation of Eileen Wade and Milton Ernest CoE Primary Schools, GIAS UID 1809 | `est:Federation` | Direct - reused type stub from the main EPR ontology |
+| Member establishments | Eileen Wade Primary School (Foundation school), Milton Ernest CofE Primary School (Voluntary controlled school) | `est:FoundationSchool`, `est:VoluntaryControlledSchool` | Direct - reused leaf types |
 | Shared Governing Body | One Governing Body with scope over both schools | `gov:GoverningBody`, with `govo:hasGovernanceBody` asserted from the Federation and from each school to the same instance | Direct |
 | Governor categories | Staff, Parent, Foundation, Local Authority, Co-opted | `govo:hasRoleType` (`gov:StaffGovernor`, `gov:ParentGovernor`, `gov:FoundationGovernor`, `gov:LocalAuthorityGovernor`, `gov:CoOptedGovernor`) | Direct - a true SI 2012/1034 maintained-school governing body, unlike Manor High's and St Paul's Academy's Academy Trust Local Governing Bodies |
 | Appointing body / route | Staff election, parent election, Diocese/foundation appointment, local authority appointment, co-option | `govo:hasAppointingBody` (`gov:ElectedByStaff`, `gov:ElectedByParents`, `gov:AppointedByFoundationOrTrust`, `gov:AppointedByLocalAuthority`, `gov:AppointedByGoverningBody`) | Direct, for the same reason |

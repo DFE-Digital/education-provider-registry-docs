@@ -75,7 +75,7 @@ jobs:
             -TaxonomyPath "models/governance/governance-taxonomy.ttl" `
             -OutputRoot "docs-site/content/models/governance/taxonomy" `
             -CompactPrefix "gov" `
-            -ExtraPrefixes @("epr") `
+            -ExtraPrefixes @("est") `
             -TaxonomyScheme "gov:governanceTaxonomy" `
             -PageTitle "Governance Taxonomy" `
             -SourceLabel "models/governance/governance-taxonomy.ttl"

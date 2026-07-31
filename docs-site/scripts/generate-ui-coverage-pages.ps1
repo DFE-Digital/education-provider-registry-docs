@@ -1,6 +1,7 @@
 param(
     [string]$CoveragePath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "provider-field-coverage.ttl")),
     [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" (Join-Path "establishment" "establishment-vocabulary.ttl"))),
+    [string]$VocabularyPrefix = "est",
     [string]$OutputRoot   = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "ui-coverage"))
 )
 
@@ -11,11 +12,12 @@ $resolvedVocabularyPath = Resolve-Path -LiteralPath $VocabularyPath
 $resolvedOutputRoot   = New-Item -ItemType Directory -Force -Path $OutputRoot
 $ttl = Get-Content -LiteralPath $resolvedCoveragePath -Raw
 $vocabularyTtl = Get-Content -LiteralPath $resolvedVocabularyPath -Raw
+$escapedVocabularyPrefix = [regex]::Escape($VocabularyPrefix)
 
 $vocabularyConcepts = @{}
 [regex]::Matches(
     $vocabularyTtl,
-    '(?ms)^epr:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept\s*;'
+    "(?ms)^${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+a\s+skos:Concept\s*;"
 ) | ForEach-Object {
     $vocabularyConcepts[$_.Groups[1].Value] = $true
 }
@@ -52,8 +54,8 @@ function Get-AllLiterals {
 
 function Get-TabRef {
     param([string]$Block)
-    $text = Get-PredicateText -Block $Block -Predicate "epr:shownOnTab"
-    $m = [regex]::Match($text, 'epr:(\w+Tab)')
+    $text = Get-PredicateText -Block $Block -Predicate "${VocabularyPrefix}:shownOnTab"
+    $m = [regex]::Match($text, "${escapedVocabularyPrefix}:(\w+Tab)")
     if ($m.Success) { return $m.Groups[1].Value }
     return ""
 }
@@ -63,22 +65,35 @@ function Escape-Md {
     return $v -replace '\|', '\|'
 }
 
-function Format-VocabularyConcept {
-    param([string]$LocalName)
+function Get-VocabularyConceptRef {
+    param([string]$Block)
+    $text = Get-PredicateText -Block $Block -Predicate "${VocabularyPrefix}:vocabularyConcept"
+    $m = [regex]::Match($text, '([A-Za-z][A-Za-z0-9]*):([A-Za-z][A-Za-z0-9]*)')
+    if ($m.Success) { return @{ Prefix = $m.Groups[1].Value; LocalName = $m.Groups[2].Value } }
+    return $null
+}
 
-    if ($vocabularyConcepts.ContainsKey($LocalName)) {
-        return ('[`epr:{0}`](../../models/establishment/vocabulary/{0}/)' -f $LocalName)
+function Format-VocabularyConcept {
+    param([hashtable]$ConceptRef)
+
+    if ($null -eq $ConceptRef) { return "" }
+
+    if ($ConceptRef.Prefix -eq $VocabularyPrefix -and $vocabularyConcepts.ContainsKey($ConceptRef.LocalName)) {
+        return ('[`{0}:{1}`](../../models/establishment/vocabulary/{1}/)' -f $ConceptRef.Prefix, $ConceptRef.LocalName)
     }
 
-    return ('`epr:{0}`' -f $LocalName)
+    # Concepts from another model (e.g. gov:) aren't resolved against this
+    # script's single $VocabularyPath, so shown as plain text rather than
+    # guessing a link target.
+    return ('`{0}:{1}`' -f $ConceptRef.Prefix, $ConceptRef.LocalName)
 }
 
 # ---------------------------------------------------------------------------
 # Parse all coverage blocks from the TTL
-# Each block: epr:LocalName\n    epr:shownOnTab ...\n    epr:uiLabel ...\n    epr:applicableToEstablishmentType ...
+# Each block: {prefix}:LocalName\n    {prefix}:shownOnTab ...\n    {prefix}:uiLabel ...\n    {prefix}:applicableToEstablishmentType ...
 # ---------------------------------------------------------------------------
 
-$blockPattern = "(?ms)^epr:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+epr:shownOnTab\s+epr:\w+Tab\s*[;.](.*?)(?=^epr:|\z)"
+$blockPattern = "(?ms)^${escapedVocabularyPrefix}:([A-Za-z][A-Za-z0-9]*)\s*\r?\n\s+${escapedVocabularyPrefix}:shownOnTab\s+${escapedVocabularyPrefix}:\w+Tab\s*[;.](.*?)(?=^${escapedVocabularyPrefix}:|\z)"
 $blockMatches = [regex]::Matches($ttl, $blockPattern)
 
 $allFields = foreach ($m in $blockMatches) {
@@ -86,15 +101,27 @@ $allFields = foreach ($m in $blockMatches) {
     $block = $m.Value
 
     $tab   = Get-TabRef -Block $block
-    $label = Get-FirstLiteral -Block $block -Predicate "epr:uiLabel"
-    $types = @(Get-AllLiterals -Block $block -Predicate "epr:applicableToEstablishmentType")
+    $label = Get-FirstLiteral -Block $block -Predicate "${VocabularyPrefix}:uiLabel"
+    $types = @(Get-AllLiterals -Block $block -Predicate "${VocabularyPrefix}:applicableToEstablishmentType")
+
+    # A field's subject is normally the vocabulary concept itself (e.g.
+    # est:UniqueReferenceNumber). Where a field is tracked by a bookkeeping
+    # subject that isn't itself a vocabulary concept (governance-tab fields,
+    # which reference gov: concepts from a different model), an explicit
+    # est:vocabularyConcept overrides the default subject-is-the-concept
+    # assumption.
+    $conceptRef = Get-VocabularyConceptRef -Block $block
+    if ($null -eq $conceptRef) {
+        $conceptRef = @{ Prefix = $VocabularyPrefix; LocalName = $localName }
+    }
 
     if ($tab -and $label) {
         [pscustomobject]@{
-            LocalName = $localName
-            Tab       = $tab
-            Label     = $label
-            Types     = $types
+            LocalName  = $localName
+            Tab        = $tab
+            Label      = $label
+            Types      = $types
+            ConceptRef = $conceptRef
         }
     }
 }
@@ -204,10 +231,10 @@ foreach ($tabKey in $tabs.Keys) {
         $lines += "## $typeLabel (type $code)"
         $lines += ""
         if ($applicable.Count -gt 0) {
-            $lines += "| Field | ``epr:`` concept |"
+            $lines += "| Field | Vocabulary concept |"
             $lines += "| --- | --- |"
             foreach ($field in $applicable) {
-                $lines += "| $(Escape-Md $field.Label) | $(Format-VocabularyConcept $field.LocalName) |"
+                $lines += "| $(Escape-Md $field.Label) | $(Format-VocabularyConcept $field.ConceptRef) |"
             }
         }
         else {

@@ -12,7 +12,7 @@ title: Governance Ontology — Frank Barnes School for Deaf Children example
 | **Establishment type** | Community special school (LA maintained) |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -80,7 +80,7 @@ The same governors, bodies and appointments from Section 1, expressed in Turtle 
 
 ```mermaid
 flowchart LR
-    S["inst:frank-barnes<br/>(epr:CommunitySpecialSchool)<br/>Frank Barnes School for Deaf Children"]
+    S["inst:frank-barnes<br/>(est:CommunitySpecialSchool)<br/>Frank Barnes School for Deaf Children"]
     GB["ginst:frank-barnes-governing-body<br/>(gov:GoverningBody)"]
     BC["ginst:frank-barnes-business-committee<br/>(gov:Committee)"]
     CC["ginst:frank-barnes-curriculum-committee<br/>(gov:Committee)"]
@@ -110,8 +110,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -122,17 +122,17 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment and governing body identity
 
-Frank Barnes is a single-establishment community special school, maintained by its local authority - there is no separate legal entity above it, unlike a MAT's Academy Trust. `epr:CommunitySpecialSchool` is reused directly from the main EPR ontology (the specific leaf type, not the generic `epr:Establishment` stub); `epro:hasEstablishmentIdentity` and `epro:identifiedByUrn` are reused unmodified from `establishment-ontology.ttl`.
+Frank Barnes is a single-establishment community special school, maintained by its local authority - there is no separate legal entity above it, unlike a MAT's Academy Trust. `est:CommunitySpecialSchool` is reused directly from the main EPR ontology (the specific leaf type, not the generic `est:Establishment` stub); `esto:hasEstablishmentIdentity` and `esto:identifiedByUrn` are reused unmodified from `establishment-ontology.ttl`.
 
 ```
 inst:frank-barnes
-    a epr:CommunitySpecialSchool ;
+    a est:CommunitySpecialSchool ;
     rdfs:label "Frank Barnes School for Deaf Children"@en ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100091"
         ]
     ] .
@@ -345,7 +345,7 @@ Any vote by an Associate Governor is limited to committee business the governing
 
 | Real-world concept | Frank Barnes evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Establishment (community special school) | Frank Barnes School for Deaf Children, URN 100091 | `epr:CommunitySpecialSchool` | Direct - reused leaf type from the main EPR ontology |
+| Establishment (community special school) | Frank Barnes School for Deaf Children, URN 100091 | `est:CommunitySpecialSchool` | Direct - reused leaf type from the main EPR ontology |
 | Governing Body | The statutory governing body | `gov:GoverningBody` | Direct |
 | Governor categories | Co-opted, parent, staff, ex-officio (headteacher) | `govo:hasRoleType` (`gov:CoOptedGovernor`, `gov:ParentGovernor`, `gov:StaffGovernor`, `gov:ExOfficioGovernor`) | Direct |
 | Appointing body / route | Co-option, parent election, staff election, ex officio | `govo:hasAppointingBody` (`gov:AppointedByGoverningBody`, `gov:ElectedByParents`, `gov:ElectedByStaff`, `gov:ExOfficioAppointment`) | Direct - SI 2012/1034 categories map without guesswork, unlike Medlock's Trust-specific Community Council Member categories |

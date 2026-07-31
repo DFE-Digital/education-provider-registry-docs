@@ -13,7 +13,7 @@ title: Governance Ontology — The Green School Trust example
 | **Establishment type** | Two-academy MAT, board known as "Board of Directors" rather than "Trust Board"/"Board of Trustees" |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -94,9 +94,9 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    T["inst:green-school-trust<br/>(epr:AcademyTrust)"]
-    G["inst:green-school-girls<br/>(epr:MainstreamAcademy)"]
-    B["inst:green-school-boys<br/>(epr:MainstreamFreeSchool)"]
+    T["inst:green-school-trust<br/>(est:AcademyTrust)"]
+    G["inst:green-school-girls<br/>(est:MainstreamAcademy)"]
+    B["inst:green-school-boys<br/>(est:MainstreamFreeSchool)"]
     TB["ginst:green-board-of-directors<br/>(gov:BoardOfDirectors)"]
     LGG["ginst:green-girls-lgb<br/>(gov:LocalGoverningBody)"]
     LGB["ginst:green-boys-lgb<br/>(gov:LocalGoverningBody)"]
@@ -127,8 +127,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -139,36 +139,36 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Academy Trust, two academies and a Board of Directors
 
-This Trust calls its board a "Board of Directors" rather than a "Trust Board" - `gov:BoardOfDirectors` exists precisely for this naming convention (its own comment: "the company-law framing of the trust board... coextensive with TrustBoard"). The two academies have different route/type evidence: Girls is `epr:MainstreamAcademy` with `epro:hasAcademyRoute epr:ConverterRoute`; Boys is `epr:MainstreamFreeSchool`, since free schools are a distinct establishment leaf type from converter/sponsor-led academies.
+This Trust calls its board a "Board of Directors" rather than a "Trust Board" - `gov:BoardOfDirectors` exists precisely for this naming convention (its own comment: "the company-law framing of the trust board... coextensive with TrustBoard"). The two academies have different route/type evidence: Girls is `est:MainstreamAcademy` with `esto:hasAcademyRoute est:ConverterRoute`; Boys is `est:MainstreamFreeSchool`, since free schools are a distinct establishment leaf type from converter/sponsor-led academies.
 
 ```
 inst:green-school-trust
-    a epr:AcademyTrust ;
+    a est:AcademyTrust ;
     rdfs:label "The Green School Trust"@en ;
-    epro:hasGroupCompaniesHouseNumber [
-        a epr:CompaniesHouseNumber ;
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
         rdfs:label "08608665"
     ] .
 
 inst:green-school-girls
-    a epr:MainstreamAcademy ;
+    a est:MainstreamAcademy ;
     rdfs:label "The Green School for Girls"@en ;
-    epro:hasAcademyRoute epr:ConverterRoute ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasAcademyRoute est:ConverterRoute ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "139989"
         ]
     ] .
 
 inst:green-school-boys
-    a epr:MainstreamFreeSchool ;
+    a est:MainstreamFreeSchool ;
     rdfs:label "The Green School for Boys"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "144515"
         ]
     ] .
@@ -423,8 +423,8 @@ inst:green-school-trust
 
 | Real-world concept | Green School Trust evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust | The Green School Trust, GIAS UID 3240, Companies House 08608665 | `epr:AcademyTrust` | Direct |
-| Academies of different types | Girls (Academy converter), Boys (Free school) | `epr:MainstreamAcademy` + `epro:hasAcademyRoute epr:ConverterRoute`; `epr:MainstreamFreeSchool` | Direct |
+| Academy Trust | The Green School Trust, GIAS UID 3240, Companies House 08608665 | `est:AcademyTrust` | Direct |
+| Academies of different types | Girls (Academy converter), Boys (Free school) | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:ConverterRoute`; `est:MainstreamFreeSchool` | Direct |
 | Board known as "Board of Directors" | The Trust's own term for its Trust Board | `gov:BoardOfDirectors` | Direct - the class exists precisely for this naming convention |
 | Academy Trust Membership, including a corporate Member | LDBS (corporate, represented by PR), SS, KD, EI (ex officio), MCA | `gov:AcademyTrustMember`; `gov:CorporateGovernanceParticipant` for LDBS | Direct |
 | One person, three relationships | KD: Member, Director, Chair | Three separate `GovernanceAppointment`/`RoleAssignment` records | Direct |

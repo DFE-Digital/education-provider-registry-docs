@@ -13,7 +13,7 @@ title: Governance Ontology — Long Ditton Federation example
 | **Establishment type** | Maintained-school federation, two open schools, one shared federated governing body |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -89,9 +89,9 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    F["inst:long-ditton-federation<br/>(epr:Federation)"]
-    LDI["inst:long-ditton-infant<br/>(epr:FoundationSchool)"]
-    LDSM["inst:long-ditton-st-marys<br/>(epr:VoluntaryAidedSchool)"]
+    F["inst:long-ditton-federation<br/>(est:Federation)"]
+    LDI["inst:long-ditton-infant<br/>(est:FoundationSchool)"]
+    LDSM["inst:long-ditton-st-marys<br/>(est:VoluntaryAidedSchool)"]
     GB["ginst:long-ditton-governing-body<br/>(gov:GoverningBody)"]
 
     F -->|govo:hasGovernanceBody| GB
@@ -128,8 +128,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -144,29 +144,29 @@ Both schools are maintained (a Foundation school and a Voluntary aided school), 
 
 ```
 inst:long-ditton-infant
-    a epr:FoundationSchool ;
+    a est:FoundationSchool ;
     rdfs:label "Long Ditton Infant and Nursery School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "124966"
         ]
     ] .
 
 inst:long-ditton-st-marys
-    a epr:VoluntaryAidedSchool ;
+    a est:VoluntaryAidedSchool ;
     rdfs:label "Long Ditton St Mary's CofE Junior School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "125180"
         ]
     ] .
 
 inst:long-ditton-federation
-    a epr:Federation ;
+    a est:Federation ;
     rdfs:label "The Long Ditton Federation"@en .
 
 ginst:long-ditton-governing-body
@@ -414,8 +414,8 @@ ginst:long-ditton-governing-body
 
 | Real-world concept | Long Ditton evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Federation | The Long Ditton Federation, GIAS UID 17766 | `epr:Federation` | Direct |
-| Member establishments | Long Ditton Infant and Nursery School (Foundation school), Long Ditton St Mary's CofE Junior School (Voluntary aided school) | `epr:FoundationSchool`, `epr:VoluntaryAidedSchool` | Direct - reused leaf types |
+| Federation | The Long Ditton Federation, GIAS UID 17766 | `est:Federation` | Direct |
+| Member establishments | Long Ditton Infant and Nursery School (Foundation school), Long Ditton St Mary's CofE Junior School (Voluntary aided school) | `est:FoundationSchool`, `est:VoluntaryAidedSchool` | Direct - reused leaf types |
 | Shared federated Governing Body | One Governing Body with scope over both schools | `gov:GoverningBody`, `govo:hasGovernanceBody` from the Federation and each school | Direct |
 | Governor categories | Foundation, Staff, Local Authority, Parent | `govo:hasRoleType` (`gov:FoundationGovernor`, `gov:StaffGovernor`, `gov:LocalAuthorityGovernor`, `gov:ParentGovernor`) | Direct - a true SI 2012/1034 maintained-school federation |
 | Named foundation appointing bodies | St Mary's Church, Guildford Diocese, Ember Learning Trust | `govo:hasAppointingBody gov:AppointedByFoundationOrTrust`, specific body preserved in `rdfs:comment` | Direct at the category level; the specific named body is not separately modelled |

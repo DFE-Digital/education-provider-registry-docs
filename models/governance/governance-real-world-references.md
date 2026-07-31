@@ -2,7 +2,7 @@
 
 This page records authoritative or directly relevant sources for the provisional governance vocabulary. It is intentionally evidence-led: a term may be real-world while its exact subdivision or product label remains only partially defined by an authoritative source.
 
-Six terms formerly listed here (Academy, Academy trust, Establishment, Federation, Local authority, Person) are not governance vocabulary concepts - they belong to the main Education Provider Registry vocabulary and are referenced directly as `epr:` URIs in `governance-taxonomy.ttl` and `governance-ontology.ttl`. See [`establishment-real-world-references.md`](../establishment/establishment-real-world-references.md) for their evidence.
+Six terms formerly listed here (Academy, Academy trust, Establishment, Federation, Local authority, Person) are not governance vocabulary concepts - they belong to the main Education Provider Registry vocabulary and are referenced directly as `est:` URIs in `governance-taxonomy.ttl` and `governance-ontology.ttl`. See [`establishment-real-world-references.md`](../establishment/establishment-real-world-references.md) for their evidence.
 
 ## Authoritative sources used
 

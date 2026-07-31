@@ -2,7 +2,7 @@
     [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" (Join-Path "establishment" "establishment-vocabulary.ttl"))),
     [string]$ReferencesDocPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" (Join-Path "establishment" "establishment-real-world-references.md"))),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" (Join-Path "models" (Join-Path "establishment" "vocabulary")))),
-    [string]$VocabularyPrefix = "epr",
+    [string]$VocabularyPrefix = "est",
     [string]$CanonicalUriBase = "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/",
     [string]$VocabularyTitle = "Vocabulary",
     [string]$SourceTtlLabel = "models/establishment/establishment-vocabulary.ttl",

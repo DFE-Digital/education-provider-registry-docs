@@ -79,7 +79,7 @@ function Escape-MarkdownTableCell {
 # Extract each sh:NodeShape block
 $shapeMatches = [regex]::Matches(
     $ttl,
-    '(?ms)^(epr:\w+)\r?\n\s+a sh:NodeShape\s*;(.*?)(?=^epr:|\z)'
+    '(?ms)^(est:\w+)\r?\n\s+a sh:NodeShape\s*;(.*?)(?=^est:|\z)'
 )
 
 if ($shapeMatches.Count -eq 0) {
@@ -112,7 +112,7 @@ foreach ($shapeMatch in $shapeMatches) {
     $comment     = Get-FirstStringLiteral -Block $block -Predicate 'rdfs:comment'
     $targetClass = Get-TargetClass -Block $block
 
-    if ([string]::IsNullOrWhiteSpace($label)) { $label = $localName -replace '^epr:', '' }
+    if ([string]::IsNullOrWhiteSpace($label)) { $label = $localName -replace '^est:', '' }
 
     $lines += '---'
     $lines += ''

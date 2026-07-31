@@ -110,7 +110,7 @@ function Set-NanocWindowsCompatibility {
     -TaxonomyPath (Join-Path (Join-Path $docsSiteRoot "..") "models\governance\governance-taxonomy.ttl") `
     -OutputRoot (Join-Path $docsSiteRoot "content\models\governance\taxonomy") `
     -CompactPrefix "gov" `
-    -ExtraPrefixes @("epr") `
+    -ExtraPrefixes @("est") `
     -TaxonomyScheme "gov:governanceTaxonomy" `
     -PageTitle "Governance Taxonomy" `
     -SourceLabel "models/governance/governance-taxonomy.ttl"

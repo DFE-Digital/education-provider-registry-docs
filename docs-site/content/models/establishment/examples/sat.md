@@ -13,7 +13,7 @@ title: EPR Ontology — single-academy trust (SAT) example
 | **Member academy** | Abbey College, Ramsey, URN 137377, Cambridgeshire |
 | **Ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/` |
 | **Vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/` |
-| **Preferred prefixes** | `epro:` (properties) · `epr:` (classes and named individuals) |
+| **Preferred prefixes** | `esto:` (properties) · `est:` (classes and named individuals) |
 | **Version** | 1.4 |
 | **OWL documentation** | [Ontology reference (WIDOCO)](/education-provider-registry-docs/models/establishment/ontology/) |
 | **Source** | [establishment-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment/establishment-ontology.ttl) |
@@ -26,12 +26,12 @@ title: EPR Ontology — single-academy trust (SAT) example
 
 ---
 
-This example focuses on the **trust side** of a single-academy trust arrangement — how a SAT is represented as an `epr:EstablishmentGroup` named individual in the EPR ontology. For the establishment (academy) side of the same data, see the [academy example](../academy/).
+This example focuses on the **trust side** of a single-academy trust arrangement — how a SAT is represented as an `est:EstablishmentGroup` named individual in the EPR ontology. For the establishment (academy) side of the same data, see the [academy example](../academy/).
 
 A **single-academy trust** is a charitable company that runs exactly one academy. Because the trust and the academy are legally separate entities, both appear in the EPR data model:
 
-- The trust (`inst:sat-2045`) is an `epr:SingleAcademyTrust` with its own group-level identifiers — Group ID, UKPRN, Companies House number, and incorporation date.
-- The academy (`inst:137377`) is an `epr:AcademyConverter` with its own establishment identifiers (URN, UKPRN, LAESTAB).
+- The trust (`inst:sat-2045`) is an `est:SingleAcademyTrust` with its own group-level identifiers — Group ID, UKPRN, Companies House number, and incorporation date.
+- The academy (`inst:137377`) is an `est:AcademyConverter` with its own establishment identifiers (URN, UKPRN, LAESTAB).
 - The two are connected by **two complementary relationships**: the accountability relationship (the trust is responsible for the academy) and the group membership record (the academy joined the trust on a given date).
 
 The key difference from a MAT: there is always exactly one member academy in a SAT. Both the accountability and the membership point to the same trust instance.
@@ -42,13 +42,13 @@ The key difference from a MAT: there is always exactly one member academy in a S
 
 ```mermaid
 graph LR
-    SAT["inst:sat-2045<br/>(epr:SingleAcademyTrust)<br/>Abbey College, Ramsey"]
+    SAT["inst:sat-2045<br/>(est:SingleAcademyTrust)<br/>Abbey College, Ramsey"]
 
-    SAT -->|identifiedByGroupId| GID["epr:GroupId<br/>TR00001"]
-    SAT -->|hasGroupCompaniesHouseNumber| CH["epr:CompaniesHouseNumber<br/>07740516"]
-    SAT -->|hasGroupUkprn| UKPRN["epr:GroupUkprn<br/>10059272"]
+    SAT -->|identifiedByGroupId| GID["est:GroupId<br/>TR00001"]
+    SAT -->|hasGroupCompaniesHouseNumber| CH["est:CompaniesHouseNumber<br/>07740516"]
+    SAT -->|hasGroupUkprn| UKPRN["est:GroupUkprn<br/>10059272"]
 
-    A["inst:137377<br/>(epr:AcademyConverter)<br/>Abbey College, Ramsey"]
+    A["inst:137377<br/>(est:AcademyConverter)<br/>Abbey College, Ramsey"]
 
     A -->|"accountableToAcademyTrust<br/>(via EstablishmentAccountability)"| SAT
     A -->|"memberOf<br/>(via GroupMembership)"| SAT
@@ -61,8 +61,8 @@ graph LR
 All examples use the following prefixes.
 
 ```
-@prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .
@@ -74,7 +74,7 @@ All examples use the following prefixes.
 
 ## Example 1 — Trust identity
 
-The trust is declared as a named individual (`inst:sat-2045`) of type `epr:SingleAcademyTrust`. It carries five group-level identifiers:
+The trust is declared as a named individual (`inst:sat-2045`) of type `est:SingleAcademyTrust`. It carries five group-level identifiers:
 
 - **Group UID** — the GIAS internal numeric identifier for the group record
 - **Group ID** — the trust register string identifier (format `TR\d+`)
@@ -84,31 +84,31 @@ The trust is declared as a named individual (`inst:sat-2045`) of type `epr:Singl
 
 ```
 inst:sat-2045
-    a epr:SingleAcademyTrust ;
+    a est:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
 
-    epro:hasGroupUniqueIdentifier [
-        a epr:GroupUniqueIdentifier ;
+    esto:hasGroupUniqueIdentifier [
+        a est:GroupUniqueIdentifier ;
         rdfs:label "2045"
     ] ;
 
-    epro:identifiedByGroupId [
-        a epr:GroupId ;
+    esto:identifiedByGroupId [
+        a est:GroupId ;
         rdfs:label "TR00001"
     ] ;
 
-    epro:hasGroupUkprn [
-        a epr:GroupUkprn ;
+    esto:hasGroupUkprn [
+        a est:GroupUkprn ;
         rdfs:label "10059272"
     ] ;
 
-    epro:hasGroupCompaniesHouseNumber [
-        a epr:CompaniesHouseNumber ;
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
         rdfs:label "07740516"
     ] ;
 
-    epro:hasGroupIncorporatedOnDate [
-        a epr:GroupIncorporatedOnDate ;
+    esto:hasGroupIncorporatedOnDate [
+        a est:GroupIncorporatedOnDate ;
         rdfs:label "2011-08-15"^^xsd:date
     ] .
 ```
@@ -117,15 +117,15 @@ inst:sat-2045
 
 ## Example 2 — Accountability
 
-The academy's accountability relationship uses `epro:accountableToAcademyTrust`, pointing to the trust named individual. This is the primary governance link — the trust is the body responsible for the academy.
+The academy's accountability relationship uses `esto:accountableToAcademyTrust`, pointing to the trust named individual. This is the primary governance link — the trust is the body responsible for the academy.
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToAcademyTrust inst:sat-2045
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToAcademyTrust inst:sat-2045
     ] .
 ```
 
@@ -133,17 +133,17 @@ inst:137377
 
 ## Example 3 — Group membership
 
-Separately from the accountability relationship, the academy also has a group membership record. The `epr:GroupMembership` class is a reified relationship — it separates the fact of membership (the accountability relationship) from the dated record of when the academy joined the trust. This allows the join date to be recorded without complicating the accountability structure.
+Separately from the accountability relationship, the academy also has a group membership record. The `est:GroupMembership` class is a reified relationship — it separates the fact of membership (the accountability relationship) from the dated record of when the academy joined the trust. This allows the join date to be recorded without complicating the accountability structure.
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasGroupMembership [
-        a epr:GroupMembership ;
-        epro:memberOf inst:sat-2045 ;
-        epro:hasGroupMembershipDate [
-            a epr:GroupMembershipDate ;
+    esto:hasGroupMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:sat-2045 ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
             rdfs:label "2011-09-01"^^xsd:date
         ]
     ] .
@@ -159,31 +159,31 @@ Trust (`inst:sat-2045`):
 
 ```
 inst:sat-2045
-    a epr:SingleAcademyTrust ;
+    a est:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
 
-    epro:hasGroupUniqueIdentifier [
-        a epr:GroupUniqueIdentifier ;
+    esto:hasGroupUniqueIdentifier [
+        a est:GroupUniqueIdentifier ;
         rdfs:label "2045"
     ] ;
 
-    epro:identifiedByGroupId [
-        a epr:GroupId ;
+    esto:identifiedByGroupId [
+        a est:GroupId ;
         rdfs:label "TR00001"
     ] ;
 
-    epro:hasGroupUkprn [
-        a epr:GroupUkprn ;
+    esto:hasGroupUkprn [
+        a est:GroupUkprn ;
         rdfs:label "10059272"
     ] ;
 
-    epro:hasGroupCompaniesHouseNumber [
-        a epr:CompaniesHouseNumber ;
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
         rdfs:label "07740516"
     ] ;
 
-    epro:hasGroupIncorporatedOnDate [
-        a epr:GroupIncorporatedOnDate ;
+    esto:hasGroupIncorporatedOnDate [
+        a est:GroupIncorporatedOnDate ;
         rdfs:label "2011-08-15"^^xsd:date
     ] .
 ```
@@ -192,18 +192,18 @@ Academy (`inst:137377`):
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToAcademyTrust inst:sat-2045
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToAcademyTrust inst:sat-2045
     ] ;
 
-    epro:hasGroupMembership [
-        a epr:GroupMembership ;
-        epro:memberOf inst:sat-2045 ;
-        epro:hasGroupMembershipDate [
-            a epr:GroupMembershipDate ;
+    esto:hasGroupMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:sat-2045 ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
             rdfs:label "2011-09-01"^^xsd:date
         ]
     ] .
@@ -211,76 +211,21 @@ inst:137377
 
 ---
 
-## Example 5 — Trust board governance
+## Example 5 — Governance
 
-Trust-level governance appointments (members and trustees) are recorded on the trust entity — not on the academy establishment — using `epro:hasGroupGovernanceAppointment`. The appointing body for trustees is `epr:AppointedByAcademyMembers`; for members (the company members of the charitable company), the appointing body is `epr:AppointingBodyNotApplicable` because there is no external appointing mechanism.
+Governance appointments (governors, trustees, members, local governors and governance professionals) are no longer modelled directly on the establishment or trust entity within this ontology. They are modelled by the dedicated governance model (`gov:`/`govo:` namespace, `models/governance/governance-ontology.ttl`), which links to `est:Establishment`, `est:AcademyTrust` and `est:Federation` via `govo:hasGovernanceAppointment` - a property with no fixed domain, so it applies directly to this establishment/trust without needing a separate establishment-side governance property.
 
-**All names below are anonymised.** The three-person trust board shown is realistic in composition for a small SAT — two members and a chair of trustees who is also the executive principal — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
-
-Trustee and member names are personal data (PII) under UK GDPR but are **publicly accessible by design** — they are published in the GIAS public CSV extract and accessible to anonymous users. No EPR access controls are applied to appointment records or person names. The `GovernancePersonIdentifier` (a pseudonymous hash derived from date of birth) is a separate attribute that is not publicly accessible and carries its own access controls.
-
-```
-inst:sat-2045
-    a epr:SingleAcademyTrust ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:MemberRole ;
-        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mrs Elizabeth Wilson"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:MemberRole ;
-        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mr David Richardson"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:ChairOfTrusteesRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2018-09-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mr Robert Jenkins"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:TrusteeRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2019-04-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Ms Karen Patel"@en
-        ]
-    ] .
-```
+See the [governance model](../../governance/) and its [worked examples](../../governance/worked-examples/) for how appointments, role types, appointing bodies and terms of office are represented.
 
 ---
 
 ## SAT vs MAT
 
-Both SATs and MATs use identical object properties (`epro:accountableToAcademyTrust`, `epro:memberOf`, `epro:hasGroupMembership`). The difference is in the OWL class of the trust (`epr:SingleAcademyTrust` vs `epr:MultiAcademyTrust`) and the cardinality of members. In a SAT there is always exactly one member academy; in a MAT there are two or more.
+Both SATs and MATs use identical object properties (`esto:accountableToAcademyTrust`, `esto:memberOf`, `esto:hasGroupMembership`). The difference is in the OWL class of the trust (`est:SingleAcademyTrust` vs `est:MultiAcademyTrust`) and the cardinality of members. In a SAT there is always exactly one member academy; in a MAT there are two or more.
 
 | | SAT | MAT |
 |---|---|---|
-| Trust class | `epr:SingleAcademyTrust` | `epr:MultiAcademyTrust` |
+| Trust class | `est:SingleAcademyTrust` | `est:MultiAcademyTrust` |
 | Member academies | Exactly 1 | 2 or more |
 | Companies House number | Required | Required |
 | Accountability property | `accountableToAcademyTrust` | `accountableToAcademyTrust` |

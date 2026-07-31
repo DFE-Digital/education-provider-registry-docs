@@ -13,7 +13,7 @@ title: EPR Ontology — academy (SAT) example
 | **Trust** | Abbey College, Ramsey (SAT) — Group ID TR00001, Companies House 07740516 |
 | **Ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/` |
 | **Vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/` |
-| **Preferred prefixes** | `epro:` (properties) · `epr:` (classes and named individuals) |
+| **Preferred prefixes** | `esto:` (properties) · `est:` (classes and named individuals) |
 | **Version** | 1.4 |
 | **OWL documentation** | [Ontology reference (WIDOCO)](/education-provider-registry-docs/models/establishment/ontology/) |
 | **Source** | [establishment-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment/establishment-ontology.ttl) |
@@ -28,8 +28,8 @@ title: EPR Ontology — academy (SAT) example
 
 This example shows how an **academy converter** differs from a community school in the EPR ontology. The two key structural differences are:
 
-1. **Accountability** — the establishment is accountable to an `epr:AcademyTrust` via `epro:accountableToAcademyTrust`, not to a local authority. The local authority is still present in the identity block (as the context for the LAESTAB number) but plays no accountability role.
-2. **Group membership** — the establishment is also linked to the trust via `epro:hasGroupMembership`, which carries the join date. For a single-academy trust, both the accountability and the membership point to the same trust instance.
+1. **Accountability** — the establishment is accountable to an `est:AcademyTrust` via `esto:accountableToAcademyTrust`, not to a local authority. The local authority is still present in the identity block (as the context for the LAESTAB number) but plays no accountability role.
+2. **Group membership** — the establishment is also linked to the trust via `esto:hasGroupMembership`, which carries the join date. For a single-academy trust, both the accountability and the membership point to the same trust instance.
 
 Abbey College, Ramsey is a non-selective secondary (11–18, with sixth form). It converted to academy status and formed its own SAT in August 2011.
 
@@ -39,27 +39,27 @@ Abbey College, Ramsey is a non-selective secondary (11–18, with sixth form). I
 
 ```mermaid
 graph LR
-    E["inst:137377<br/>(epr:AcademyConverter)"]
+    E["inst:137377<br/>(est:AcademyConverter)"]
 
-    E -->|hasEstablishmentIdentity| ID["epr:EstablishmentIdentity"]
-    E -->|hasEstablishmentLifecycle| LC["epr:EstablishmentLifecycle"]
-    E -->|hasEstablishmentClassification| CL["epr:EstablishmentClassification"]
-    E -->|hasAccountabilityRelationship| AC["epr:EstablishmentAccountability"]
-    E -->|hasEducationAdmissionsAndProvision| PR["epr:EducationAdmissionsAndProvision"]
-    E -->|hasGroupMembership| GM["epr:GroupMembership"]
+    E -->|hasEstablishmentIdentity| ID["est:EstablishmentIdentity"]
+    E -->|hasEstablishmentLifecycle| LC["est:EstablishmentLifecycle"]
+    E -->|hasEstablishmentClassification| CL["est:EstablishmentClassification"]
+    E -->|hasAccountabilityRelationship| AC["est:EstablishmentAccountability"]
+    E -->|hasEducationAdmissionsAndProvision| PR["est:EducationAdmissionsAndProvision"]
+    E -->|hasGroupMembership| GM["est:GroupMembership"]
 
-    ID -->|identifiedByUrn| URN["epr:UniqueReferenceNumber<br/>137377"]
-    ID -->|hasUkprn| UK["epr:UkProviderReferenceNumber<br/>10035138"]
+    ID -->|identifiedByUrn| URN["est:UniqueReferenceNumber<br/>137377"]
+    ID -->|hasUkprn| UK["est:UkProviderReferenceNumber<br/>10035138"]
 
-    LC -->|classifiedByEstablishmentStatus| OS["epr:OpenStatus"]
+    LC -->|classifiedByEstablishmentStatus| OS["est:OpenStatus"]
 
-    CL -->|hasEstablishmentType| AT["epr:AcademyConverter"]
-    CL -->|hasEducationPhase| SP["epr:SecondaryPhase"]
+    CL -->|hasEstablishmentType| AT["est:AcademyConverter"]
+    CL -->|hasEducationPhase| SP["est:SecondaryPhase"]
 
-    AC -->|accountableToAcademyTrust| SAT["inst:sat-2045<br/>(epr:SingleAcademyTrust)"]
+    AC -->|accountableToAcademyTrust| SAT["inst:sat-2045<br/>(est:SingleAcademyTrust)"]
     GM -->|memberOf| SAT
 
-    PR -->|classifiedBySixthFormProvision| SF["epr:HasSixthForm"]
+    PR -->|classifiedBySixthFormProvision| SF["est:HasSixthForm"]
 ```
 
 ---
@@ -69,8 +69,8 @@ graph LR
 All examples use the following prefixes.
 
 ```
-@prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .
@@ -86,39 +86,39 @@ The identity block for an academy is identical in structure to a community schoo
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
 
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "137377"
         ] ;
 
-        epro:hasUkprn [
-            a epr:UkProviderReferenceNumber ;
+        esto:hasUkprn [
+            a est:UkProviderReferenceNumber ;
             rdfs:label "10035138"
         ] ;
 
-        epro:hasLocalAuthorityScopedEstablishmentNumber [
-            a epr:LocalAuthorityScopedEstablishmentNumber ;
-            epro:hasLocalAuthorityContext  inst:la-873 ;
-            epro:hasEstablishmentNumberValue [
-                a epr:EstablishmentNumber ;
+        esto:hasLocalAuthorityScopedEstablishmentNumber [
+            a est:LocalAuthorityScopedEstablishmentNumber ;
+            esto:hasLocalAuthorityContext  inst:la-873 ;
+            esto:hasEstablishmentNumberValue [
+                a est:EstablishmentNumber ;
                 rdfs:label "4603"
             ] ;
-            epro:hasIdentifierRole epr:CurrentIdentifierRole
+            esto:hasIdentifierRole est:CurrentIdentifierRole
         ]
     ] ;
 
-    epro:hasEstablishmentLifecycle [
-        a epr:EstablishmentLifecycle ;
-        epro:classifiedByEstablishmentStatus epr:OpenStatus
+    esto:hasEstablishmentLifecycle [
+        a est:EstablishmentLifecycle ;
+        esto:classifiedByEstablishmentStatus est:OpenStatus
     ] .
 
 inst:la-873
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "Cambridgeshire"@en ;
     rdfs:comment "LA code 873"@en .
 ```
@@ -127,21 +127,21 @@ inst:la-873
 
 ## Example 2 — Classification and accountability
 
-The establishment type is `epr:AcademyConverter`. The accountability relationship uses `epro:accountableToAcademyTrust` pointing to the single-academy trust (`inst:sat-2045`). There is no `accountableToLocalAuthority` property — academies are not LA-maintained.
+The establishment type is `est:AcademyConverter`. The accountability relationship uses `esto:accountableToAcademyTrust` pointing to the single-academy trust (`inst:sat-2045`). There is no `accountableToLocalAuthority` property — academies are not LA-maintained.
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEstablishmentClassification [
-        a epr:EstablishmentClassification ;
-        epro:hasEstablishmentType  epr:AcademyConverter ;
-        epro:hasEducationPhase     epr:SecondaryPhase
+    esto:hasEstablishmentClassification [
+        a est:EstablishmentClassification ;
+        esto:hasEstablishmentType  est:AcademyConverter ;
+        esto:hasEducationPhase     est:SecondaryPhase
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToAcademyTrust inst:sat-2045
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToAcademyTrust inst:sat-2045
     ] .
 ```
 
@@ -151,42 +151,42 @@ inst:137377
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEstablishmentLocationAndContact [
-        a epr:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
 
-        epro:hasMainAddress [
-            a epr:MainAddress ;
+        esto:hasMainAddress [
+            a est:MainAddress ;
             rdfs:label "Abbey Road, Ramsey, PE26 1DG"
         ] ;
 
-        epro:hasWebsite [
-            a epr:Website ;
+        esto:hasWebsite [
+            a est:Website ;
             rdfs:label "https://www.abbey.college/"
         ] ;
 
-        epro:hasTelephoneNumber [
-            a epr:TelephoneNumber ;
+        esto:hasTelephoneNumber [
+            a est:TelephoneNumber ;
             rdfs:label "01487812352"
         ] ;
 
-        epro:hasHeadteacherOrPrincipal [
-            a epr:HeadteacherOrPrincipal ;
+        esto:hasHeadteacherOrPrincipal [
+            a est:HeadteacherOrPrincipal ;
             rdfs:label "Mr Andrew Clarke"@en
         ]
     ] ;
 
-    epro:hasAdministrativeGeography [
-        a epr:AdministrativeGeography ;
+    esto:hasAdministrativeGeography [
+        a est:AdministrativeGeography ;
 
-        epro:classifiedByGovernmentOfficeRegion [
-            a epr:GovernmentOfficeRegion ;
+        esto:classifiedByGovernmentOfficeRegion [
+            a est:GovernmentOfficeRegion ;
             rdfs:label "East of England"@en
         ] ;
 
-        epro:classifiedByParliamentaryConstituency [
-            a epr:ParliamentaryConstituency ;
+        esto:classifiedByParliamentaryConstituency [
+            a est:ParliamentaryConstituency ;
             rdfs:label "North West Cambridgeshire"@en ;
             rdfs:seeAlso <http://statistics.data.gov.uk/id/statistical-geography/E14001401>
         ]
@@ -197,24 +197,24 @@ inst:137377
 
 ## Example 4 — Education, admissions and provision
 
-Abbey College is non-selective, mixed, no boarding, and has a sixth form. The sixth form is represented by the `epr:HasSixthForm` named individual (contrasting with `epr:NoSixthForm` in the community school example).
+Abbey College is non-selective, mixed, no boarding, and has a sixth form. The sixth form is represented by the `est:HasSixthForm` named individual (contrasting with `est:NoSixthForm` in the community school example).
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEducationAdmissionsAndProvision [
-        a epr:EducationAdmissionsAndProvision ;
+    esto:hasEducationAdmissionsAndProvision [
+        a est:EducationAdmissionsAndProvision ;
 
-        epro:hasStatutoryAgeRange [
-            a epr:StatutoryAgeRange ;
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
             rdfs:label "11 to 18"
         ] ;
 
-        epro:classifiedByAdmissionsPolicy   epr:NonSelectiveAdmissions ;
-        epro:classifiedByGenderOfEntry      epr:MixedGenderEntry ;
-        epro:classifiedByBoardingProvision  epr:NoBoarders ;
-        epro:classifiedBySixthFormProvision epr:HasSixthForm
+        esto:classifiedByAdmissionsPolicy   est:NonSelectiveAdmissions ;
+        esto:classifiedByGenderOfEntry      est:MixedGenderEntry ;
+        esto:classifiedByBoardingProvision  est:NoBoarders ;
+        esto:classifiedBySixthFormProvision est:HasSixthForm
     ] .
 ```
 
@@ -222,39 +222,39 @@ inst:137377
 
 ## Example 5 — Trust identity (single-academy trust)
 
-The trust is a named individual (`inst:sat-2045`) of type `epr:SingleAcademyTrust`. It carries the group-level identifiers: the GIAS internal group UID, the Group ID (used in trust registers), the UKPRN assigned to the trust organisation, the Companies House number, and the incorporation date.
+The trust is a named individual (`inst:sat-2045`) of type `est:SingleAcademyTrust`. It carries the group-level identifiers: the GIAS internal group UID, the Group ID (used in trust registers), the UKPRN assigned to the trust organisation, the Companies House number, and the incorporation date.
 
-The establishment also has a `epr:GroupMembership` linking it to the trust, which records when the academy joined. For a SAT, this is the same trust as in the accountability relationship — both point to `inst:sat-2045`.
+The establishment also has a `est:GroupMembership` linking it to the trust, which records when the academy joined. For a SAT, this is the same trust as in the accountability relationship — both point to `inst:sat-2045`.
 
 Trust (`inst:sat-2045`):
 
 ```
 inst:sat-2045
-    a epr:SingleAcademyTrust ;
+    a est:SingleAcademyTrust ;
     rdfs:label "Abbey College, Ramsey"@en ;
 
-    epro:hasGroupUniqueIdentifier [
-        a epr:GroupUniqueIdentifier ;
+    esto:hasGroupUniqueIdentifier [
+        a est:GroupUniqueIdentifier ;
         rdfs:label "2045"
     ] ;
 
-    epro:identifiedByGroupId [
-        a epr:GroupId ;
+    esto:identifiedByGroupId [
+        a est:GroupId ;
         rdfs:label "TR00001"
     ] ;
 
-    epro:hasGroupUkprn [
-        a epr:GroupUkprn ;
+    esto:hasGroupUkprn [
+        a est:GroupUkprn ;
         rdfs:label "10059272"
     ] ;
 
-    epro:hasGroupCompaniesHouseNumber [
-        a epr:CompaniesHouseNumber ;
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
         rdfs:label "07740516"
     ] ;
 
-    epro:hasGroupIncorporatedOnDate [
-        a epr:GroupIncorporatedOnDate ;
+    esto:hasGroupIncorporatedOnDate [
+        a est:GroupIncorporatedOnDate ;
         rdfs:label "2011-08-15"^^xsd:date
     ] .
 ```
@@ -263,13 +263,13 @@ Group membership linking the academy to its trust:
 
 ```
 inst:137377
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasGroupMembership [
-        a epr:GroupMembership ;
-        epro:memberOf inst:sat-2045 ;
-        epro:hasGroupMembershipDate [
-            a epr:GroupMembershipDate ;
+    esto:hasGroupMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:sat-2045 ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
             rdfs:label "2011-09-01"^^xsd:date
         ]
     ] .
@@ -277,70 +277,11 @@ inst:137377
 
 ---
 
-## Example 6 — Governance (Local Governing Body)
+## Example 6 — Governance
 
-Governance appointments are recorded on the establishment using `epro:hasGovernanceAppointment`. Each appointment is a blank node of type `epr:GovernanceAppointment`, carrying a role type (`epro:hasGovernanceRoleType`), an appointing body (`epro:hasGovernanceAppointingBody`), an optional appointment date, and a link to the person via `epro:appointmentOf`.
+Governance appointments (governors, trustees, members, local governors and governance professionals) are no longer modelled directly on the establishment or trust entity within this ontology. They are modelled by the dedicated governance model (`gov:`/`govo:` namespace, `models/governance/governance-ontology.ttl`), which links to `est:Establishment`, `est:AcademyTrust` and `est:Federation` via `govo:hasGovernanceAppointment` - a property with no fixed domain, so it applies directly to this establishment/trust without needing a separate establishment-side governance property.
 
-**All names below are anonymised.** The four-person LGB shown is realistic in composition for a secondary academy in a single-academy trust — one chair of the local governing body, the headteacher ex-officio, one parent governor, and one co-opted governor — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
-
-Governor names are personal data (PII) under UK GDPR but are **publicly accessible by design** — they are published in the GIAS public CSV extract and accessible to anonymous users. No EPR access controls are applied to appointment records or person names. The `GovernancePersonIdentifier` (a pseudonymous hash derived from date of birth) is a separate attribute that is not publicly accessible and carries its own access controls.
-
-```
-inst:137377
-    a epr:AcademyConverter ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:ChairOfLocalGoverningBodyRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByFoundationOrTrust ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2020-04-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Ms Sarah Fletcher"@en
-        ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:HeadteacherExOfficioGovernorRole ;
-        epro:hasGovernanceAppointingBody epr:ExOfficioHeadteacher ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mr Andrew Clarke"@en
-        ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:LocalGovernorRole ;
-        epro:hasGovernanceAppointingBody epr:ElectedByParents ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2021-09-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mr James Collins"@en
-        ]
-    ] ;
-
-    epro:hasGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:LocalGovernorRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByFoundationOrTrust ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2022-01-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Dr Laura Bennett"@en
-        ]
-    ] .
-```
+See the [governance model](../../governance/) and its [worked examples](../../governance/worked-examples/) for how appointments, role types, appointing bodies and terms of office are represented.
 
 ---
 
