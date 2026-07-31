@@ -170,11 +170,7 @@ inst:medlock
         a est:EstablishmentClassification ;
         esto:hasEstablishmentType est:MainstreamAcademy ;
         esto:hasEstablishmentTypeGroup est:EstablishmentTypeGroupAcademies ;
-        esto:hasEducationPhase est:PrimaryPhase ;
-        esto:classifiedBySection41Approval [
-            a est:Section41Approval ;
-            rdfs:label "Not applicable"@en
-        ]
+        esto:hasEducationPhase est:PrimaryPhase
     ] ;
 
     esto:hasAcademyRoute est:SponsorLedRoute .
@@ -348,6 +344,7 @@ inst:medlock
 - **Faith context is absent, not "not applicable".** Medlock has no religious character, ethos or diocese - the ontology represents that as no `esto:hasFaithContext` triple at all, rather than a faith-context record populated with placeholder "not applicable" values. This is the RDF-idiomatic way to express a real-world non-fact: absence of a triple already means "no assertion."
 - **SEN need types weren't modelled as named concepts at all.** `est:TypeOfSenProvision` had no `owl:NamedIndividual` values - "SLCN" would only ever have been representable as a free-text label, not a thing with its own URI. GIAS's SEN1-SEN13 codes are a real, closed, statutory list (the SEND Code of Practice 0 to 25's four broad areas of need), so this example's SLCN value is now `est:SpeechLanguageAndCommunicationNeeds`, one of 12 named individuals. Checking this also surfaced a second, separate error: `est:TypeOfResourcedProvision`'s own definition wrongly described it as the SEN need type - it's actually a different, much smaller classification (which kind of facility exists: resourced provision unit, SEN unit, or both). Fixed both.
 - **Not exercised by this example:** `est:SingleAcademyTrust`, `est:Federation`, `est:LocalAuthority`-accountable establishment types, and the `est:AcademyTrust` legal-form distinction from its Companies House registration (covered instead by the governance worked example's Example 1, which carries the same Companies House number on the same `inst:coop-academies-trust` instance).
+- **Retroactive fix:** this page originally asserted `esto:classifiedBySection41Approval` with a "Not applicable" placeholder value for Medlock, following the same anti-pattern the faith-context fix (above) addressed. The [Manor High School worked example](../manor-high/) found this specific case (checking the real GIAS extract showed 100% "Not applicable" across every open mainstream academy) and corrected the underlying SHACL shape from `minCount 1` to `maxCount 0` for this type. This page was updated to match - the property is no longer asserted at all.
 
 ---
 
