@@ -109,35 +109,35 @@ est:EstablishmentUniversalShape
     ] ;
 
     sh:property [
-        sh:path esto:hasContactAndLocation ;
+        sh:path esto:hasEstablishmentLocationAndContact ;
         sh:minCount 1 ; sh:maxCount 1 ;
         sh:name "Contact and location"@en ;
         sh:message "Every establishment must have exactly one contact and location record."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasContactAndLocation esto:hasPostalAddress ) ;
+        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasMainSite esto:hasAddress ) ;
         sh:minCount 1 ; sh:maxCount 1 ;
         sh:name "Postal address"@en ;
-        sh:message "Every establishment must have a postal address."@en ;
+        sh:message "Every establishment must have a postal address, via its main site."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasContactAndLocation esto:hasHeadteacherOrPrincipal ) ;
+        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasHeadteacherOrPrincipal ) ;
         sh:maxCount 1 ;
         sh:name "Headteacher or principal"@en ;
         sh:message "An establishment may have at most one headteacher or principal record."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasContactAndLocation esto:hasWebsiteUrl ) ;
+        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasWebsite ) ;
         sh:maxCount 1 ;
         sh:name "Website"@en ;
         sh:message "An establishment may have at most one website URL."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasContactAndLocation esto:hasTelephoneNumber ) ;
+        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasTelephoneNumber ) ;
         sh:maxCount 1 ;
         sh:name "Telephone number"@en ;
         sh:message "An establishment may have at most one telephone number."@en ;
@@ -286,7 +286,7 @@ est:LaMaintainedSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for LA maintained schools."@en ;
@@ -771,7 +771,7 @@ est:NonMaintainedSpecialSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Non-maintained special schools must have a Section 41 approval status."@en ;
@@ -967,7 +967,7 @@ est:IndependentSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Independent schools must have a Section 41 approval status."@en ;
@@ -1161,7 +1161,7 @@ est:MainstreamAcademyGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Mainstream academies must have a Section 41 approval status."@en ;
@@ -1294,7 +1294,7 @@ est:AcademySpecialShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Academy special schools must have a Section 41 approval status."@en ;
@@ -1465,7 +1465,7 @@ est:AcademyAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Academy alternative provision establishments must have a Section 41 approval status."@en ;
@@ -1633,7 +1633,7 @@ est:Academy1619Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Academy 16-19 establishments must have a Section 41 approval status."@en ;
@@ -1836,7 +1836,7 @@ est:AcademySecure16To19Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable in public view)"@en ;
         sh:message "Section 41 approval is not shown in the restricted public Details view for academy secure 16 to 19."@en ;
@@ -1990,7 +1990,7 @@ est:MainstreamFreeSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Mainstream free schools must have a Section 41 approval status."@en ;
@@ -2111,7 +2111,7 @@ est:FreeSchoolSpecialShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Free school specials must have a Section 41 approval status."@en ;
@@ -2270,7 +2270,7 @@ est:FreeSchoolAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Free school alternative provision establishments must have a Section 41 approval status."@en ;
@@ -2429,7 +2429,7 @@ est:FreeSchool16To19Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Free school 16 to 19 establishments must have a Section 41 approval status."@en ;
@@ -2649,7 +2649,7 @@ est:CollegeGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for colleges."@en ;
@@ -2772,7 +2772,7 @@ est:HigherEducationInstitutionShape
 
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for higher education institutions."@en ;
@@ -2883,7 +2883,7 @@ est:ChildrensCentreGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for children's centres."@en ;
@@ -2891,14 +2891,14 @@ est:ChildrensCentreGroupShape
 
 
     sh:property [
-        sh:path ( esto:hasContactAndLocation esto:hasManager ) ;
+        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasCentreManager ) ;
         sh:minCount 1 ;
         sh:name "Manager"@en ;
         sh:message "Children's centres must have a manager record."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasContactAndLocation esto:hasHeadteacherOrPrincipal ) ;
+        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasHeadteacherOrPrincipal ) ;
         sh:maxCount 0 ;
         sh:name "Headteacher or principal (not applicable)"@en ;
         sh:message "Children's centres use a Manager role rather than Headteacher or Principal."@en ;
@@ -3000,7 +3000,7 @@ est:OnlineProviderShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for online providers."@en ;
@@ -3124,7 +3124,7 @@ est:WelshEstablishmentShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Welsh establishments must have a Section 41 approval status."@en ;
@@ -3234,7 +3234,7 @@ est:SpecialPost16Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Special post-16 institutions must have a Section 41 approval status."@en ;
@@ -3345,7 +3345,7 @@ est:BritishSchoolsOverseasShape
 
 
     sh:property [
-        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ;
+        sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
         sh:maxCount 0 ;
         sh:name "Section 41 approved (not applicable)"@en ;
         sh:message "Section 41 approval is not applicable for British schools overseas."@en ;
@@ -3407,7 +3407,7 @@ est:SecureUnitsShape
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for secure units."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for secure units."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for secure units."@en ] ;
-    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for secure units."@en ] ;
     sh:property [ sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for secure units."@en ] ;
 
     sh:property [
@@ -3458,7 +3458,7 @@ est:OffshoreSchoolsShape
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for offshore schools."@en ] ;
-    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for offshore schools."@en ] ;
 
     sh:property [
@@ -3516,7 +3516,7 @@ est:ServiceChildrensEducationShape
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for SCE establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for SCE establishments."@en ] ;
 
     sh:property [
@@ -3575,7 +3575,7 @@ est:MiscellaneousEstablishmentShape
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for miscellaneous establishments."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for miscellaneous establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for miscellaneous establishments."@en ] ;
 
     sh:property [
@@ -3627,7 +3627,7 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for other-department institutions."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for other-department institutions."@en ] ;
-    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41ApprovalStatus ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path ( esto:hasCapacityAndPupilMeasures esto:hasSchoolCapacity ) ; sh:maxCount 0 ; sh:name "School capacity (not applicable)"@en ; sh:message "School capacity is not applicable for other-department institutions."@en ] ;
 
     sh:property [

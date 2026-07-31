@@ -1,0 +1,388 @@
+---
+title: Establishment Ontology — Co-op Academy Medlock / The Co-operative Academies Trust example
+---
+
+[← Worked examples](../)
+
+# Establishment Ontology — Co-op Academy Medlock / The Co-operative Academies Trust example
+
+| | |
+|---|---|
+| **Academy** | Co-op Academy Medlock, URN 150612 |
+| **Trust** | The Co-operative Academies Trust — GIAS UID 2777, Companies House 07747126 |
+| **Establishment type** | Academy sponsor led (GIAS type code 28) |
+| **Establishment ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/` |
+| **Establishment vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/` |
+| **Preferred prefixes** | `esto:` (properties) · `est:` (classes and named individuals) |
+| **OWL documentation** | [Establishment ontology reference (WIDOCO)](../../ontology/) |
+| **Source** | [establishment-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment/establishment-ontology.ttl) |
+| **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
+| **Licence** | [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) |
+
+---
+
+**Evidence and anonymisation.** This page follows the same two-part pattern as the [governance worked examples](../../../governance/worked-examples/). **Section 1** is the real-world establishment record as published in GIAS and Companies House, independent of any ontology. **Section 2** maps that same record onto `establishment-ontology.ttl`. No personal names appear in this example beyond the headteacher's, which is itself part of the GIAS public extract.
+
+This is the establishment side of the same real-world organisation the [governance Medlock/Co-op Academies Trust worked example](../../../governance/worked-examples/medlock-mat/) covers - the two pages share the same Academy Trust and Academy identifiers (`inst:coop-academies-trust`, `inst:medlock`) but map different data: this page covers establishment identity, classification, accountability, group membership and location; the governance page covers people, appointments and roles.
+
+---
+
+## Section 1 — The real-world establishment record
+
+This section is the record as evidenced, before any ontology is applied.
+
+### Sources
+
+| Source | Publisher | What it evidences | Observed |
+|---|---|---|---|
+| [GIAS: Co-op Academy Medlock, URN 150612](https://www.get-information-schools.service.gov.uk/Establishments/Establishment/Details/150612) | Get Information about Schools (DfE) | Establishment identity, classification, lifecycle, location, leadership, capacity and pupil measures | GIAS extract 16 June 2026 |
+| [GIAS: The Co-operative Academies Trust, Group UID 2777](https://www.get-information-schools.service.gov.uk/Groups/Group/Details/2777) | Get Information about Schools (DfE) | Group identity (Group ID `TR00567`), Companies House number, incorporation date, group status and registered address | GIAS extract 22 June 2026 |
+| [GIAS establishment/group links extract](https://www.get-information-schools.service.gov.uk/) | Get Information about Schools (DfE) | Group membership records linking URN 150612 to Group UID 2777 (type: Multi-academy trust) and separately to Group UID 4949 (type: School sponsor), both joined 1 January 2024 | GIAS extract 30 June 2026 |
+| [Companies House: company 07747126](https://find-and-update.company-information.service.gov.uk/company/07747126) | Companies House | Confirms The Co-operative Academies Trust is an active private company limited by guarantee - the same legal entity as GIAS UID 2777 | 24 July 2026 |
+
+### Structure
+
+```mermaid
+flowchart LR
+    AT["Academy Trust / Legal Entity<br/>The Co-operative Academies Trust<br/>Group UID 2777 · Group ID TR00567<br/>Companies House 07747126"]
+    E["Co-op Academy Medlock<br/>URN 150612 · UKPRN 10094339"]
+
+    AT -->|"operates, joined 01/01/2024"| E
+    AT -.->|"also linked as School sponsor<br/>Group UID 4949, same joined date"| E
+
+    E -->|"type"| TY["Academy sponsor led (code 28)<br/>Mainstream academy, sponsor-led route"]
+    E -->|"phase"| PH["Primary, ages 2-11"]
+    E -->|"status"| ST["Open, since 01/01/2024"]
+    E -->|"accountable to"| AT
+
+    E -->|"located at"| LOC["Wadeson Road, Chorlton-on-Medlock<br/>Manchester, M13 9UJ<br/>Manchester LA (code 352)"]
+    E -->|"geography"| GEO["North West region<br/>Ardwick ward<br/>Manchester Rusholme constituency"]
+    E -->|"led by"| HT["Jonathan Brown<br/>Headteacher"]
+
+    E -->|"capacity"| CAP["500 places<br/>411 on roll (16/01/2025)<br/>224 boys, 187 girls<br/>206 pupils FSM-eligible (53.9%)"]
+    E -->|"admissions"| ADM["Mixed, non-selective<br/>No boarding · has nursery · no sixth form"]
+    E -->|"SEN and resourced provision"| SEN["SLCN resourced provision<br/>12 places, 12 on roll"]
+```
+
+The GIAS extract records **two separate group links** for URN 150612 against the same real-world organisation: one as a "Multi-academy trust" (Group UID 2777) and one as a "School sponsor" (Group UID 4949), both joined on the same date and both named "The Co-operative Academies Trust". This is the exact pattern `establishment-ontology.ttl` v1.7 deliberately diverges from GIAS to avoid - see Example 4 below and "What this example found".
+
+---
+
+## Section 2 — Modelled in the establishment ontology
+
+The same record from Section 1, expressed in Turtle using `establishment-ontology.ttl` (`est:`/`esto:`).
+
+### Structure
+
+```mermaid
+flowchart LR
+    AT["inst:coop-academies-trust<br/>(est:MultiAcademyTrust)"]
+    MED["inst:medlock<br/>(est:MainstreamAcademy)"]
+
+    AT -->|esto:hasMembership| GM["est:GroupMembership<br/>joined 2024-01-01"]
+    GM -->|esto:memberOf| AT
+    MED -->|esto:hasMembership| GM
+
+    MED -->|esto:hasAccountabilityRelationship| ACC["est:EstablishmentAccountability"]
+    ACC -->|esto:accountableToAcademyTrust| AT
+    MED -->|esto:sponsoredBy| AT
+
+    MED -->|esto:hasEstablishmentClassification| CL["est:EstablishmentClassification"]
+    CL -->|esto:hasEstablishmentType| TY["est:MainstreamAcademy"]
+    CL -->|esto:hasEducationPhase| PH["est:PrimaryPhase"]
+    MED -->|esto:hasAcademyRoute| RT["est:SponsorLedRoute"]
+
+    MED -->|esto:hasEstablishmentLifecycle| LC["est:EstablishmentLifecycle"]
+    LC -->|esto:classifiedByEstablishmentStatus| OS["est:OpenStatus"]
+
+    MED -->|esto:hasEstablishmentLocationAndContact| LOC["est:EstablishmentLocationAndContact"]
+    LOC -->|esto:hasMainSite| SITE["est:Site"]
+    SITE -->|esto:hasAddress| ADDR["est:Address"]
+    LOC -->|esto:hasHeadteacherOrPrincipal| HT["est:HeadteacherOrPrincipal"]
+
+    MED -->|esto:hasCapacityAndPupilMeasures| CAP["est:CapacityAndPupilMeasures"]
+    MED -->|esto:hasEducationAdmissionsAndProvision| ADM["est:EducationAdmissionsAndProvision"]
+    MED -->|esto:hasSenAndResourcedProvision| SEN["est:SenAndResourcedProvision"]
+```
+
+### Namespace prefixes
+
+All examples in this section use the following prefixes.
+
+```
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix inst:  <https://dfe-digital.github.io/education-provider-registry-docs/establishment/> .
+```
+
+### Example 1 — Establishment and Academy Trust identity
+
+`inst:coop-academies-trust` and `inst:medlock` are the same instances used in the [governance worked example](../../../governance/worked-examples/medlock-mat/) - there, they appear as type stubs (`est:AcademyTrust`, `est:Academy`); here, they carry their full establishment-model detail. `est:MainstreamAcademy` is the leaf type class for GIAS type code 28 ("Academy sponsor led") - see the [establishment type field rules](../../../establishment-type-field-rules/) for how this leaf type resolves from the legacy GIAS type code.
+
+```
+inst:coop-academies-trust
+    a est:MultiAcademyTrust ;
+    rdfs:label "The Co-operative Academies Trust"@en ;
+
+    esto:hasGroupUniqueIdentifier [
+        a est:GroupUniqueIdentifier ;
+        rdfs:label "2777"
+    ] ;
+
+    esto:identifiedByGroupId [
+        a est:GroupId ;
+        rdfs:label "TR00567"
+    ] ;
+
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
+        rdfs:label "07747126"
+    ] .
+
+inst:medlock
+    a est:MainstreamAcademy ;
+    rdfs:label "Co-op Academy Medlock"@en ;
+
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
+            rdf:value "150612"^^xsd:positiveInteger
+        ] ;
+        esto:hasUkprn [
+            a est:UkProviderReferenceNumber ;
+            rdf:value "10094339"^^xsd:positiveInteger
+        ]
+    ] .
+```
+
+### Example 2 — Classification and academy route
+
+GIAS's `TypeOfEstablishment` field (code 28, "Academy sponsor led") is not itself an ontology class - it resolves to two separate classifications: the leaf establishment type (`est:MainstreamAcademy`, shared with academy converters) and the academy route (`est:SponsorLedRoute`, distinguishing sponsor-led from converter academies). `esto:hasAcademyRoute` exists specifically so this distinction isn't lost when both routes collapse to the same legacy GIAS type-group label.
+
+```
+inst:medlock
+    esto:hasEstablishmentClassification [
+        a est:EstablishmentClassification ;
+        esto:hasEstablishmentType est:MainstreamAcademy ;
+        esto:hasEstablishmentTypeGroup est:EstablishmentTypeGroupAcademies ;
+        esto:hasEducationPhase est:PrimaryPhase ;
+        esto:classifiedBySection41Approval [
+            a est:Section41Approval ;
+            rdfs:label "Not applicable"@en
+        ]
+    ] ;
+
+    esto:hasAcademyRoute est:SponsorLedRoute .
+```
+
+### Example 3 — Lifecycle and accountability
+
+Medlock's GIAS `OpenDate` (1 January 2024) is also its group-joined date (Example 4) - a single real-world event GIAS records twice, in two different extracts, for two different purposes. Accountability is expressed independently of group membership: `esto:accountableToAcademyTrust` establishes the funding-agreement relationship that GIAS's own governance model treats as authoritative for academies, distinct from the group-membership structure in Example 4.
+
+```
+inst:medlock
+    esto:hasEstablishmentLifecycle [
+        a est:EstablishmentLifecycle ;
+        esto:classifiedByEstablishmentStatus est:OpenStatus ;
+        esto:hasOpenDate [
+            a est:OpenDate ;
+            rdf:value "2024-01-01"^^xsd:date
+        ]
+    ] ;
+
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToAcademyTrust inst:coop-academies-trust
+    ] .
+```
+
+### Example 4 — Group membership and sponsorship
+
+The GIAS links extract records **two** group-link rows for URN 150612 against the same real-world Trust: one typed "Multi-academy trust" (Group UID 2777) and one typed "School sponsor" (Group UID 4949) - both named "The Co-operative Academies Trust", both joined 1 January 2024. Modelled literally, this would create two `est:EstablishmentGroup` instances for one organisation. `establishment-ontology.ttl` v1.7 removed `est:SchoolSponsor` as a group type precisely for this reason - see its changelog comment: *"sponsor is a role, not a group type"*. The fix: one `est:GroupMembership` record for the real membership (Example 1's Trust, via `esto:hasMembership`/`esto:memberOf`), and a direct `esto:sponsoredBy` property carrying the sponsorship fact without a second group entity.
+
+```
+inst:medlock
+    esto:hasMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:coop-academies-trust ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
+            rdfs:label "2024-01-01"^^xsd:date
+        ]
+    ] ;
+
+    esto:sponsoredBy inst:coop-academies-trust .
+```
+
+*(The "School sponsor" group link, Group UID 4949, is deliberately not given a second `est:EstablishmentGroup` instance - see "What this example found" below.)*
+
+### Example 5 — Location, contact and administrative geography
+
+`est:Site` and `est:Address` are separated (v1.5) because a site is a physical place and an address is how correspondence reaches it - for Medlock, both resolve to the same location, but the model doesn't assume that in general (a trust's registered address, for instance, is rarely its teaching site). Administrative geography (region, ward, constituency) is derived from the postcode, not asserted independently.
+
+```
+inst:medlock
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
+        esto:hasMainSite [
+            a est:Site ;
+            esto:hasAddress [
+                a est:Address ;
+                rdfs:label "Wadeson Road, Chorlton-on-Medlock, Manchester, M13 9UJ"@en
+            ]
+        ] ;
+        esto:hasWebsite [
+            a est:Website ;
+            rdfs:label "https://www.medlock.coopacademies.co.uk/"
+        ] ;
+        esto:hasTelephoneNumber [
+            a est:TelephoneNumber ;
+            rdfs:label "01612731830"
+        ] ;
+        esto:hasHeadteacherOrPrincipal [
+            a est:HeadteacherOrPrincipal ;
+            rdfs:label "Jonathan Brown"@en
+        ]
+    ] ;
+
+    esto:hasAdministrativeGeography [
+        a est:AdministrativeGeography ;
+        esto:classifiedByGovernmentOfficeRegion [
+            a est:GovernmentOfficeRegion ;
+            rdfs:label "North West"@en
+        ] ;
+        esto:classifiedByAdministrativeWard [
+            a est:AdministrativeWard ;
+            rdfs:label "Ardwick"@en
+        ] ;
+        esto:classifiedByParliamentaryConstituency [
+            a est:ParliamentaryConstituency ;
+            rdfs:label "Manchester Rusholme"@en
+        ]
+    ] .
+```
+
+### Example 6 — Admissions, provision, capacity and SEN
+
+Medlock's GIAS extract shows a mixed, non-selective community-style admissions pattern typical of a sponsor-led primary academy, plus a resourced provision for speech, language and communication needs (SLCN) - 12 places, all filled. `est:TypeOfSenProvision` is deliberately open-ended (kept as a `skos:Concept` only, not a closed `owl:NamedIndividual` enumeration - see `establishment-ontology.ttl`'s v0.8 changelog comment), since SEN provision types are not a fixed, closed list the way establishment status or education phase are.
+
+```
+inst:medlock
+    esto:hasEducationAdmissionsAndProvision [
+        a est:EducationAdmissionsAndProvision ;
+        esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
+        esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
+        esto:classifiedByBoardingProvision est:NoBoarders ;
+        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
+        esto:classifiedBySixthFormProvision est:NoSixthForm ;
+        esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
+            rdfs:label "2 to 11"@en ;
+            rdfs:comment "StatutoryLowAge 2, StatutoryHighAge 11."@en
+        ]
+    ] ;
+
+    esto:hasCapacityAndPupilMeasures [
+        a est:CapacityAndPupilMeasures ;
+        esto:hasSchoolCapacity [
+            a est:SchoolCapacity ;
+            rdf:value "500"^^xsd:nonNegativeInteger
+        ] ;
+        esto:hasPupilCount [
+            a est:PupilCount ;
+            rdf:value "411"^^xsd:nonNegativeInteger ;
+            rdfs:comment "Census date 2025-01-16: 224 boys, 187 girls."@en
+        ] ;
+        esto:hasFreeSchoolMealMeasure [
+            a est:PupilsEligibleForFreeSchoolMeals ;
+            rdfs:label "206"^^xsd:integer ;
+            rdfs:comment "53.9% of pupils on roll."@en
+        ]
+    ] ;
+
+    esto:hasSenAndResourcedProvision [
+        a est:SenAndResourcedProvision ;
+        esto:classifiedByTypeOfSenProvision [
+            a est:TypeOfSenProvision ;
+            rdfs:label "SLCN - Speech, language and Communication"@en
+        ] ;
+        esto:classifiedByTypeOfResourcedProvision [
+            a est:TypeOfResourcedProvision ;
+            rdfs:label "SLCN - Speech, language and Communication"@en
+        ] ;
+        esto:hasResourcedProvisionMeasure [
+            a est:ResourcedProvisionMeasure ;
+            rdfs:label "12 places, 12 on roll"@en
+        ] ;
+        esto:hasSenUnitMeasure [
+            a est:SenUnitMeasure ;
+            rdfs:label "0 places, 0 on roll"@en ;
+            rdfs:comment "GIAS SenUnitOnRoll and SenUnitCapacity are both blank for this establishment - a SEN unit is a distinct provision type from the resourced provision recorded above, and Medlock has none."@en
+        ]
+    ] .
+```
+
+### Example 7 — Faith context and record currency
+
+Medlock's GIAS extract records `ReligiousCharacter`, `ReligiousEthos` and `Diocese` as "Does not apply" / "Not applicable" - a mainstream academy with no religious designation still requires a faith-context record under the ontology's per-type SHACL rules, populated with the "not applicable" values rather than omitted, since a missing faith-context block is indistinguishable from an unrecorded field. `est:RecordCurrencyAndStewardship` carries GIAS's own `LastChangedDate`, the extract's record of when this establishment's data was last confirmed or edited.
+
+```
+inst:medlock
+    esto:hasFaithContext [
+        a est:FaithContext ;
+        esto:classifiedByReligiousCharacter est:NotApplicableReligiousCharacter ;
+        esto:classifiedByReligiousEthos est:NotApplicableReligiousEthos ;
+        esto:associatedWithDiocese [
+            a est:Diocese ;
+            rdfs:label "Not applicable"@en
+        ]
+    ] ;
+
+    esto:hasRecordCurrency [
+        a est:RecordCurrencyAndStewardship ;
+        esto:recordsDateLastChanged [
+            a est:DateLastChangedOrConfirmed ;
+            rdf:value "2026-06-03"^^xsd:date
+        ]
+    ] .
+```
+
+---
+
+## What this example found
+
+- **The group-membership/sponsorship duplication (Example 4) is real GIAS extract behaviour, not a hypothetical.** The same establishment, the same joined date, the same organisation name, recorded as two separate group-link rows with two different group types. This is exactly the pattern `establishment-ontology.ttl` v1.7 removed `est:SchoolSponsor` to avoid, and this worked example is the first to exercise that fix against real extract data rather than the changelog comment's abstract description of it.
+- **One real-world date, two GIAS fields.** Medlock's `OpenDate` and its group `Joined date` are both `2024-01-01` - the establishment opened and joined its trust on the same day, which is unsurprising for a sponsor-led academy but not guaranteed in general (a converter academy's `OpenDate` predates its GIAS record; a school moving between trusts has a `Joined date` unrelated to its own `OpenDate`). The model keeps these as two separate dated facts (`esto:hasOpenDate` on lifecycle, `esto:hasGroupMembershipDate` on group membership) rather than assuming they coincide.
+- **Not exercised by this example:** `est:SingleAcademyTrust`, `est:Federation`, `est:LocalAuthority`-accountable establishment types, faith context (Medlock has no religious character), and the `est:AcademyTrust` legal-form distinction from its Companies House registration (covered instead by the governance worked example's Example 1, which carries the same Companies House number on the same `inst:coop-academies-trust` instance).
+
+---
+
+## Concept coverage
+
+| Real-world concept | Medlock evidence | Ontology mapping | Fit |
+|---|---|---|---|
+| Academy Trust (legal entity, group) | GIAS UID 2777, Group ID TR00567, Companies House 07747126 | `est:MultiAcademyTrust` (`rdfs:subClassOf est:AcademyTrust`) | Direct |
+| Academy | Co-op Academy Medlock, URN 150612, UKPRN 10094339 | `est:MainstreamAcademy` | Direct |
+| Establishment type (legacy GIAS code 28) | "Academy sponsor led" | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:SponsorLedRoute` | Direct - resolves one legacy code into two ontology facts |
+| Education phase | Primary, ages 2-11 | `est:PrimaryPhase` | Direct |
+| Lifecycle and status | Open since 2024-01-01 | `est:OpenStatus` + `esto:hasOpenDate` | Direct |
+| Accountability | Academy accountable to its trust | `esto:accountableToAcademyTrust` | Direct |
+| Group membership | Joined Group UID 2777, 2024-01-01 | `est:GroupMembership` + `esto:memberOf` + `esto:hasGroupMembershipDate` | Direct |
+| Sponsorship | Second group link, Group UID 4949, "School sponsor", same trust | `esto:sponsoredBy` (direct property, no second group entity) | Direct - demonstrates the v1.7 divergence from GIAS's own duplicate-group-row pattern |
+| Location and site | Wadeson Road, Chorlton-on-Medlock, M13 9UJ | `est:Site` + `est:Address` | Direct |
+| Administrative geography | North West region, Ardwick ward, Manchester Rusholme constituency | `est:AdministrativeGeography` | Direct |
+| Headteacher | Jonathan Brown | `est:HeadteacherOrPrincipal` | Direct |
+| Capacity and pupil numbers | 500 capacity, 411 on roll (224 boys, 187 girls), 206 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct |
+| Admissions and provision | Mixed, non-selective, no boarding, has nursery, no sixth form | `est:EducationAdmissionsAndProvision` | Direct |
+| SEN and resourced provision | SLCN resourced provision, 12 places, 12 on roll | `est:SenAndResourcedProvision` | Direct - `TypeOfSenProvision` is open-ended by design, not a closed enumeration |
+| Faith context | Not applicable (Medlock has no religious character) | `est:FaithContext` | Not evidenced - no religious character recorded for this establishment |
+
+---
+
+**See also:** [Establishment vocabulary](../../vocabulary/) · [Establishment taxonomy](../../taxonomy/) · [Establishment ontology](../../ontology/) · [Establishment ontology graph viewer](../../ontology/webvowl/) · [Governance worked example for the same organisation](../../../governance/worked-examples/medlock-mat/)
