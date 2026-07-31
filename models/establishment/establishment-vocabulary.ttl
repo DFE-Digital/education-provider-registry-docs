@@ -2581,8 +2581,20 @@ est:HeadteacherOrPrincipal
     skos:definition "The name and title of the person with principal leadership responsibility for the establishment. In maintained schools the headteacher is a statutory role under the School Staffing (England) Regulations 2009; for academies the principal role is defined in the funding agreement."@en ;
     skos:scopeNote "The UI label varies by establishment type. Schools show Headteacher / Principal. Online providers show Headteacher/Manager. Children's centres use the separate CentreManager concept."@en ;
     skos:broader est:EstablishmentLeadership ;
+    skos:narrower est:JobTitle ;
     est:status "Preferred"@en ;
     dcterms:source "C#/database fields: HeadTitle, HeadFirstName, HeadLastName and HeadPreferredJobTitle"@en .
+
+est:JobTitle
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Job title"@en ;
+    skos:definition "The free-text job title recorded for the headteacher or principal, such as Headteacher, Executive Headteacher, Principal or Head of School."@en ;
+    skos:scopeNote "Open-ended: the live GIAS extract shows 387 distinct values, many of them formatting variants of the same underlying title (e.g. 'Headteacher', 'Head Teacher', 'Head teacher'). 'Executive Headteacher' is a title GOV.UK federation governance guidance associates with a headteacher who leads every school in a federation and holds one shared governing-board seat as a result - but this field is entered per establishment and is not validated against that specific meaning, so the title alone should not be treated as proof of cross-establishment leadership."@en ;
+    skos:broader est:HeadteacherOrPrincipal ;
+    est:status "Provisional"@en ;
+    dcterms:source "C#/database field: HeadPreferredJobTitle"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-federations/federations-guidance-on-the-governance-processes> .
 
 est:CentreManager
     a skos:Concept ;
