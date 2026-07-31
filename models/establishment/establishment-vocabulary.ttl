@@ -1968,10 +1968,51 @@ est:FurtherEducationType
     skos:prefLabel "Further education type"@en ;
     skos:altLabel "FurtherEducationType"@en ;
     skos:definition "A coded classification that identifies the specific sub-type of provision for establishments in the further education, higher education or pupil referral unit categories. It sub-divides establishment types that are insufficiently distinguished by the main type field alone."@en ;
-    skos:scopeNote "Shown on the Details tab for pupil referral units, further education establishments and higher education institutions."@en ;
+    skos:scopeNote "Shown on the Details tab for pupil referral units, further education establishments and higher education institutions. Closed enumeration of 8 values, matching the real GIAS extract. No individual value for 'Not applicable' - absence of the classifying triple expresses it."@en ;
     skos:broader est:EstablishmentClassification ;
+    skos:narrower
+        est:GeneralFurtherEducationCollege,
+        est:SixthFormCollegeGeneral,
+        est:LandBasedCollege,
+        est:SixthFormCollegeVoluntaryAided,
+        est:SpecialistDesignatedCollege,
+        est:TertiaryCollege,
+        est:SixthFormCollegeVoluntaryControlled,
+        est:ArtDesignAndPerformingArtsCollege ;
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.FurtherEducationType_code"@en .
+
+est:GeneralFurtherEducationCollege
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "General Further Education College"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:SixthFormCollegeGeneral
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sixth Form College (General)"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:LandBasedCollege
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Land-Based College"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:SixthFormCollegeVoluntaryAided
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sixth Form College (Voluntary Aided)"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:SpecialistDesignatedCollege
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Specialist Designated College"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:TertiaryCollege
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Tertiary College"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:SixthFormCollegeVoluntaryControlled
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sixth Form College (Voluntary Controlled)"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
+
+est:ArtDesignAndPerformingArtsCollege
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Art, Design and Performing Arts College"@en ; skos:broader est:FurtherEducationType ; est:status "Provisional"@en .
 
 est:ProviderType
     a skos:Concept ;
@@ -2125,9 +2166,76 @@ est:ReasonEstablishmentOpened
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Reason establishment opened"@en ;
     skos:definition "A coded value recording the circumstances under which the establishment came into existence or was registered, such as a new school, a conversion from maintained to academy status, an amalgamation, or a change of age range creating a new registration."@en ;
+    skos:scopeNote "Closed enumeration of 13 values, matching the real GIAS extract. No individual value for 'Not applicable' or 'Not recorded' - absence of the classifying triple expresses both."@en ;
     skos:broader est:EstablishmentLifecycle ;
+    skos:narrower
+        est:AcademyConverterOpenReason,
+        est:NewProvisionOpenReason,
+        est:ResultOfAmalgamationOpenReason,
+        est:FreshStartOpenReason,
+        est:AcademyFreeSchoolOpenReason,
+        est:ResultOfClosureOpenReason,
+        est:ChangeReligiousCharacterOpenReason,
+        est:ChangeInStatusOpenReason,
+        est:FormerIndependentOpenReason,
+        est:SplitSchoolOpenReason,
+        est:NewNurserySchoolOpenReason,
+        est:MeetsAccreditationStandardsOpenReason,
+        est:FreeSpecialSchoolOpenReason ;
     est:status "Preferred"@en ;
     dcterms:source "C#: ReasonEstablishmentOpenedId; Java: reasonEstablishmentOpened; database: Establishment.reasonEstablishmentOpened_code"@en .
+
+est:AcademyConverterOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy Converter"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:NewProvisionOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "New Provision"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:ResultOfAmalgamationOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Result of Amalgamation"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:FreshStartOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Fresh Start"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:AcademyFreeSchoolOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy Free School"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:ResultOfClosureOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Result of Closure"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:ChangeReligiousCharacterOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Change Religious Character"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:ChangeInStatusOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Change in status"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:FormerIndependentOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Former Independent"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:SplitSchoolOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Split school"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:NewNurserySchoolOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "New Nursery School"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:MeetsAccreditationStandardsOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Meets accreditation standards"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+
+est:FreeSpecialSchoolOpenReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Free Special School"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
 
 est:ClosedDate
     a skos:Concept ;
@@ -2146,9 +2254,76 @@ est:ReasonEstablishmentClosed
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Reason establishment closed"@en ;
     skos:definition "A coded value recording the circumstances under which the establishment closed, such as amalgamation with another school, academy conversion (which closes the predecessor maintained school record), low pupil numbers, or voluntary closure."@en ;
+    skos:scopeNote "Closed enumeration of 13 values, matching the real GIAS extract. No individual value for 'Not applicable' - absence of the classifying triple expresses it."@en ;
     skos:broader est:EstablishmentLifecycle ;
+    skos:narrower
+        est:AcademyConverterCloseReason,
+        est:ResultOfAmalgamationMergerCloseReason,
+        est:ClosureCloseReason,
+        est:ForAcademyCloseReason,
+        est:FreshStartCloseReason,
+        est:CloseNurserySchoolCloseReason,
+        est:ChangeReligiousCharacterCloseReason,
+        est:DoesNotMeetCriteriaForRegistrationCloseReason,
+        est:DeRegisteredCloseReason,
+        est:AcademyFreeSchoolCloseReason,
+        est:ChangeInStatusCloseReason,
+        est:TransferredToNewSponsorCloseReason,
+        est:CreatedInErrorCloseReason ;
     est:status "Preferred"@en ;
     dcterms:source "C#: ReasonEstablishmentClosedId; Java: reasonEstablishmentClosed; database: Establishment.reasonEstablishmentClosed_code"@en .
+
+est:AcademyConverterCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy Converter"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:ResultOfAmalgamationMergerCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Result of Amalgamation/Merger"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:ClosureCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Closure"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:ForAcademyCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "For Academy"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:FreshStartCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Fresh Start"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:CloseNurserySchoolCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Close Nursery School"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:ChangeReligiousCharacterCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Change Religious Character"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:DoesNotMeetCriteriaForRegistrationCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Does not meet criteria for registration"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:DeRegisteredCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "De-registered"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:AcademyFreeSchoolCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy Free School"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:ChangeInStatusCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Change in status"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:TransferredToNewSponsorCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Transferred to new sponsor"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+
+est:CreatedInErrorCloseReason
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Created in Error - application rejected"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
 
 #################################################################
 # Record currency and stewardship
@@ -2682,12 +2857,133 @@ est:TypeOfSenProvision
     skos:prefLabel "Type of SEN provision"@en ;
     skos:altLabel "SEN1"@en, "SEN2"@en, "SEN3"@en, "SEN4"@en ;
     skos:definition "Up to four types of special educational needs for which the establishment provides specialist support, drawn from the need types defined in the SEND Code of Practice 2015 (such as Autism, Hearing impairment, Social emotional and mental health)."@en ;
-    skos:scopeNote "Shown for maintained and academy schools. Independent and non-maintained special schools instead show special pupil counts. The database stores up to four SEN types per establishment."@en ;
+    skos:scopeNote "Shown for maintained and academy schools. Independent and non-maintained special schools instead show special pupil counts. The database stores up to four SEN types per establishment. Closed enumeration of 12 values, matching the GIAS SEN1-SEN13 codes."@en ;
     skos:broader est:SenAndResourcedProvision ;
+    skos:narrower
+        est:SpeechLanguageAndCommunicationNeeds,
+        est:AutisticSpectrumDisorder,
+        est:SocialEmotionalAndMentalHealth,
+        est:ModerateLearningDifficulty,
+        est:SevereLearningDifficulty,
+        est:ProfoundAndMultipleLearningDifficulty,
+        est:SpecificLearningDifficulty,
+        est:PhysicalDisability,
+        est:HearingImpairment,
+        est:VisualImpairment,
+        est:MultiSensoryImpairment,
+        est:OtherDifficultyOrDisability ;
     est:status "Provisional"@en ;
     dcterms:source "C#: SEN1Ids to SEN4Ids; Java: senPriority1 to senPriority4; database: EstablishmentToSen1 plus legacy EstablishmentToSen2-4"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#type-of-sen-provision> ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:SpeechLanguageAndCommunicationNeeds
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "SLCN - Speech, language and Communication"@en ;
+    skos:definition "Difficulty with receptive language (listening and understanding), expressive language (spoken language), or social communication skills."@en ;
+    skos:scopeNote "One of the 'communication and interaction' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:AutisticSpectrumDisorder
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "ASD - Autistic Spectrum Disorder"@en ;
+    skos:definition "A need falling within the 'communication and interaction' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:SocialEmotionalAndMentalHealth
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "SEMH - Social, Emotional and Mental Health"@en ;
+    skos:definition "One of the four broad areas of need in its own right."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:ModerateLearningDifficulty
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "MLD - Moderate Learning Difficulty"@en ;
+    skos:definition "A need falling within the 'cognition and learning' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:SevereLearningDifficulty
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "SLD - Severe Learning Difficulty"@en ;
+    skos:definition "A need falling within the 'cognition and learning' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:ProfoundAndMultipleLearningDifficulty
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "PMLD - Profound and Multiple Learning Difficulty"@en ;
+    skos:definition "A need falling within the 'cognition and learning' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:SpecificLearningDifficulty
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "SpLD - Specific Learning Difficulty"@en ;
+    skos:definition "A need falling within the 'cognition and learning' broad area of need, such as dyslexia, dyscalculia or dyspraxia."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:PhysicalDisability
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "PD - Physical Disability"@en ;
+    skos:definition "A need falling within the 'sensory and/or physical needs' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:HearingImpairment
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "HI - Hearing Impairment"@en ;
+    skos:definition "A need falling within the 'sensory and/or physical needs' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:VisualImpairment
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "VI - Visual Impairment"@en ;
+    skos:definition "A need falling within the 'sensory and/or physical needs' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:MultiSensoryImpairment
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "MSI - Multi-Sensory Impairment"@en ;
+    skos:definition "A combination of visual and hearing impairment, falling within the 'sensory and/or physical needs' broad area of need."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/send-code-of-practice-0-to-25> .
+
+est:OtherDifficultyOrDisability
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "OTH - Other Difficulty/Disability"@en ;
+    skos:definition "GIAS catch-all value for a need that does not fall under one of the eleven named categories."@en ;
+    skos:broader est:TypeOfSenProvision ;
+    est:status "Provisional"@en .
 
 est:EhcPlan
     a skos:Concept ;
@@ -2721,8 +3017,8 @@ est:SenUnit
     skos:prefLabel "SEN unit"@en ;
     skos:definition "A special provision within a mainstream school where pupils with SEN are taught mainly within separate classes for at least half of the time, distinguished from resourced provision by that proportion of time spent outside mainstream classes."@en ;
     skos:scopeNote "Its numeric measures (capacity and pupil count on roll) are recorded separately as SenUnitCapacity and SenUnitPupilCount. DfE's 2026 SEND reform consultation proposes replacing 'SEN unit', 'resourced provision' and 'pupil support unit' with a single new term 'Inclusion Bases'."@en ;
-    skos:broader est:SenAndResourcedProvision ;
-    skos:related est:SenUnitCapacity, est:SenUnitPupilCount, est:TypeOfResourcedProvision ;
+    skos:broader est:TypeOfResourcedProvision ;
+    skos:related est:SenUnitCapacity, est:SenUnitPupilCount ;
     est:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#sen-unit> ;
     rdfs:isDefinedBy <https://explore-education-statistics.service.gov.uk/methodology/special-educational-needs-in-england>, <https://www.gov.uk/government/consultations/send-reform-putting-children-and-young-people-first/send-reform-putting-children-and-young-people-first-html-version> .
@@ -2732,13 +3028,22 @@ est:TypeOfResourcedProvision
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Type of resourced provision"@en ;
     skos:altLabel "TypeOfReservedProvision"@en ;
-    skos:definition "The SEN need type for which the establishment's resourced provision is designated. Resourced provision is a unit within a mainstream school providing specialist SEN support funded by the local authority, serving pupils who are not in specialist provision full-time."@en ;
-    skos:scopeNote "The database field name uses Reserved rather than Resourced, a legacy naming difference. The UI label uses resourced."@en ;
+    skos:definition "Which kind of specialist SEN facility the establishment hosts: a resourced provision unit, a SEN unit, or both. Resourced provision is a unit within a mainstream school providing specialist SEN support funded by the local authority, serving pupils who are not in specialist provision full-time."@en ;
+    skos:scopeNote "The database field name uses Reserved rather than Resourced, a legacy naming difference. The UI label uses resourced. Not the SEN need type - see est:TypeOfSenProvision for that."@en ;
     skos:broader est:SenAndResourcedProvision ;
+    skos:narrower est:ResourcedProvisionFacility, est:SenUnit ;
     est:status "Preferred"@en ;
     dcterms:source "C#: TypeOfResourcedProvisionId; Java: SpecialIndicators.typeOfResourcedProvision; database: Establishment.TypeOfReservedProvision"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#resourced-provision> ;
     rdfs:isDefinedBy <https://explore-education-statistics.service.gov.uk/methodology/special-educational-needs-in-england>, <https://www.gov.uk/government/consultations/send-reform-putting-children-and-young-people-first/send-reform-putting-children-and-young-people-first-html-version> .
+
+est:ResourcedProvisionFacility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Resourced provision"@en ;
+    skos:definition "The establishment hosts a resourced provision unit."@en ;
+    skos:broader est:TypeOfResourcedProvision ;
+    est:status "Provisional"@en .
 
 est:ResourcedProvisionPupilCount
     a skos:Concept ;
@@ -2872,10 +3177,47 @@ est:InspectorateName
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Inspectorate name"@en ;
     skos:definition "The name of the inspectorate responsible for inspecting the establishment, such as ISI (Independent Schools Inspectorate) for independent schools or the relevant body for British schools overseas. Ofsted is not recorded here; its data appears under External reference."@en ;
-    skos:scopeNote "Shown for independent schools (database field: Inspectorate) and British schools overseas (database field: InspectorateName). Both appear under the same label on the Details tab."@en ;
+    skos:scopeNote "Shown for independent schools (database field: Inspectorate) and British schools overseas (database field: InspectorateName). Both appear under the same label on the Details tab. Closed enumeration of 7 values, matching the real GIAS extract - note the extract shows Ofsted itself as a value here for some independent schools, despite this concept's definition describing Ofsted as recorded separately under External reference."@en ;
     skos:broader est:InspectionRecord ;
+    skos:narrower
+        est:Ofsted,
+        est:IndependentSchoolsInspectorate,
+        est:Sis,
+        est:BridgeSchoolsInspectorate,
+        est:PentaInternational,
+        est:EducationDevelopmentTrust,
+        est:CambridgeEducation ;
     est:status "Provisional"@en ;
     dcterms:source "Database fields: Inspectorate (types 08, 10, 11) and InspectorateName (type 37)"@en .
+
+est:Ofsted
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Ofsted"@en ; skos:broader est:InspectorateName ; est:status "Provisional"@en .
+
+est:IndependentSchoolsInspectorate
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Independent Schools Inspectorate"@en ; skos:altLabel "ISI"@en ;
+    skos:broader est:InspectorateName ; est:status "Provisional"@en .
+
+est:Sis
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "SIS"@en ; skos:broader est:InspectorateName ; est:status "Provisional"@en .
+
+est:BridgeSchoolsInspectorate
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Bridge Schools' Inspectorate"@en ; skos:broader est:InspectorateName ; est:status "Provisional"@en .
+
+est:PentaInternational
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Penta International"@en ; skos:broader est:InspectorateName ; est:status "Provisional"@en .
+
+est:EducationDevelopmentTrust
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Education Development Trust"@en ; skos:broader est:InspectorateName ; est:status "Provisional"@en .
+
+est:CambridgeEducation
+    a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Cambridge Education"@en ; skos:broader est:InspectorateName ; est:status "Provisional"@en .
 
 est:InspectorateReport
     a skos:Concept ;

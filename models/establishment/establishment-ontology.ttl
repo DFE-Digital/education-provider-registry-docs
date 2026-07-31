@@ -38,7 +38,7 @@ esto:establishmentDetailsConceptualModel
     dcterms:modified "2026-07-01"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.8" ;
+    owl:versionInfo "1.9" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -61,6 +61,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.5: Site and address model separated. New classes: est:Site (physical location where education is delivered, carries site name via rdfs:label, UPRN, OS grid reference, and a postal address), est:Address (postal or correspondence address, independent of any physical site). New object properties: esto:hasMainSite (EstablishmentLocationAndContact → Site, 0..1), esto:hasAdditionalSite (EstablishmentLocationAndContact → Site, 0..*; SHACL-scoped to 3 permitted establishment types), esto:hasAddress (Site → Address, 0..1), esto:hasRegisteredAddress (no domain restriction — used on both EstablishmentLocationAndContact and EstablishmentGroup, range Address, 0..1), esto:hasContactAddress (EstablishmentGroup → Address, 0..1). Deprecated: est:MainAddress, esto:hasMainAddress. Domain updated: esto:hasUprn domain changed from MainAddress to Site; esto:hasCountry domain changed from MainAddress to Address; esto:hasOsGridReference domain extended to union of AdministrativeGeography and Site."@en ;
     rdfs:comment "v1.7: Organisation and Person superclasses added. New classes: est:Organisation (superclass of Establishment, EstablishmentGroup, LocalAuthority), est:Person (superclass of GovernancePerson). Removed classes: est:AcademySponsor, est:Proprietor, est:SchoolSponsor (SchoolSponsor was a GIAS legacy group type — sponsor is a role, not a group type). Removed property: esto:hasAcademySponsor. Added properties: esto:hasProprietor (domain Establishment, range Organisation|Person), esto:sponsoredBy (domain Establishment, range Organisation). Updated: esto:accountableToProprietor range changed from est:Proprietor to union of est:Organisation and est:Person. est:EstablishmentGroup rdfs:comment updated to remove reference to school sponsors as a group type."@en ;
     rdfs:comment "v1.8: the v1.2 governance model (8 classes, 10 object properties, 40 named individuals - GovernanceAppointment, GovernanceIdentifier, GovernanceRoleType, GovernanceAppointmentDate, GovernanceTermEndDate, GovernanceAppointingBody, GovernancePerson, GovernancePersonIdentifier and their supporting properties/individuals) removed entirely, now superseded by models/governance/governance-ontology.ttl v0.11. Reconciliation record: docs/transformation/data/modelling/claude/establishment-governance-overlap-removal-plan.md. est:GroupGovernanceAppointmentSubjectShape SHACL shape (establishment-shacl.ttl) also removed as part of this change, since it targeted the now-removed esto:hasGroupGovernanceAppointment. Nothing else in this file referenced the removed classes/properties."@en ;
+    rdfs:comment "v1.9: est:TypeOfSenProvision given 12 owl:NamedIndividual values (SpeechLanguageAndCommunicationNeeds, AutisticSpectrumDisorder, SocialEmotionalAndMentalHealth, ModerateLearningDifficulty, SevereLearningDifficulty, ProfoundAndMultipleLearningDifficulty, SpecificLearningDifficulty, PhysicalDisability, HearingImpairment, VisualImpairment, MultiSensoryImpairment, OtherDifficultyOrDisability) - previously an open-ended class with no enumerated values, despite GIAS's SEN1-SEN13 fields drawing from a closed, statutory list grounded in the four broad areas of need in the SEND Code of Practice 0 to 25 (2015). Matches the real GIAS extract's 12 observed codes exactly. No 'not applicable' individual added - an establishment with no SEN provision simply has no esto:classifiedByTypeOfSenProvision triple. Also fixed: est:TypeOfResourcedProvision's rdfs:comment incorrectly described it as the SEN need type (that's est:TypeOfSenProvision's job) - it is actually which kind of specialist SEN facility exists (resourced provision unit and/or SEN unit); given 2 owl:NamedIndividual values (ResourcedProvisionFacility, and the pre-existing est:SenUnit concept reused via punning) matching its real, much smaller GIAS value set."@en ;
     est:status "Provisional"@en .
 
 
@@ -354,7 +355,7 @@ est:TypeOfSenProvision
 est:TypeOfResourcedProvision
     a owl:Class ;
     rdfs:label "Type of resourced provision"@en ;
-    rdfs:comment "The classification describing the type of resourced provision offered."@en .
+    rdfs:comment "Which kind of specialist SEN facility the establishment hosts: a resourced provision unit, a SEN unit, or both. Not the SEN need type - see est:TypeOfSenProvision for that."@en .
 
 est:ResourcedProvisionMeasure
     a owl:Class ;
@@ -2206,6 +2207,258 @@ est:NotApplicableSpecialClassProvision
     a owl:NamedIndividual, est:SpecialClassProvision ;
     rdfs:label "Not applicable (special-class provision)"@en ;
     rdfs:comment "A classification value indicating that a special-class provision classification does not apply to this type of establishment."@en .
+
+# Type of SEN provision (12 values) - the GIAS SEN1-SEN13 need-type codes,
+# a closed statutory list grounded in the four broad areas of need defined
+# by the SEND Code of Practice 0 to 25 (DfE/DoH, 2015), paras 6.27-6.35.
+# No "not applicable" individual: absence of esto:classifiedByTypeOfSenProvision
+# already expresses that an establishment has no SEN provision of this kind.
+est:SpeechLanguageAndCommunicationNeeds
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "SLCN - Speech, language and Communication"@en ;
+    rdfs:comment "Communication and interaction: difficulty with receptive language, expressive language or social communication skills. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:AutisticSpectrumDisorder
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "ASD - Autistic Spectrum Disorder"@en ;
+    rdfs:comment "Communication and interaction. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:SocialEmotionalAndMentalHealth
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "SEMH - Social, Emotional and Mental Health"@en ;
+    rdfs:comment "One of the four broad areas of need in its own right. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:ModerateLearningDifficulty
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "MLD - Moderate Learning Difficulty"@en ;
+    rdfs:comment "Cognition and learning. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:SevereLearningDifficulty
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "SLD - Severe Learning Difficulty"@en ;
+    rdfs:comment "Cognition and learning. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:ProfoundAndMultipleLearningDifficulty
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "PMLD - Profound and Multiple Learning Difficulty"@en ;
+    rdfs:comment "Cognition and learning. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:SpecificLearningDifficulty
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "SpLD - Specific Learning Difficulty"@en ;
+    rdfs:comment "Cognition and learning - e.g. dyslexia, dyscalculia, dyspraxia. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:PhysicalDisability
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "PD - Physical Disability"@en ;
+    rdfs:comment "Sensory and/or physical needs. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:HearingImpairment
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "HI - Hearing Impairment"@en ;
+    rdfs:comment "Sensory and/or physical needs. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:VisualImpairment
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "VI - Visual Impairment"@en ;
+    rdfs:comment "Sensory and/or physical needs. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:MultiSensoryImpairment
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "MSI - Multi-Sensory Impairment"@en ;
+    rdfs:comment "Sensory and/or physical needs - a combination of visual and hearing impairment. SEND Code of Practice 0 to 25 (2015)."@en .
+
+est:OtherDifficultyOrDisability
+    a owl:NamedIndividual, est:TypeOfSenProvision ;
+    rdfs:label "OTH - Other Difficulty/Disability"@en ;
+    rdfs:comment "GIAS catch-all value for a need that does not fall under one of the eleven named categories above."@en .
+
+# Type of resourced provision (2 values) - which kind of specialist SEN
+# facility the establishment hosts, not the SEN need type (see above).
+est:ResourcedProvisionFacility
+    a owl:NamedIndividual, est:TypeOfResourcedProvision ;
+    rdfs:label "Resourced provision"@en ;
+    rdfs:comment "The establishment hosts a resourced provision unit."@en .
+
+est:SenUnit
+    a owl:NamedIndividual, est:TypeOfResourcedProvision ;
+    rdfs:label "SEN unit"@en ;
+    rdfs:comment "The establishment hosts a SEN unit - reuses the existing est:SenUnit concept (see establishment-vocabulary.ttl) via OWL 2 punning, rather than a new individual, since that concept already describes exactly this real-world thing."@en .
+
+# Reason establishment opened (13 values) - real GIAS extract values, no
+# "not applicable" or "not recorded" individual (absence expresses both).
+est:AcademyConverterOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Academy Converter"@en .
+
+est:NewProvisionOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "New Provision"@en .
+
+est:ResultOfAmalgamationOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Result of Amalgamation"@en .
+
+est:FreshStartOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Fresh Start"@en .
+
+est:AcademyFreeSchoolOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Academy Free School"@en .
+
+est:ResultOfClosureOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Result of Closure"@en .
+
+est:ChangeReligiousCharacterOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Change Religious Character"@en .
+
+est:ChangeInStatusOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Change in status"@en .
+
+est:FormerIndependentOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Former Independent"@en .
+
+est:SplitSchoolOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Split school"@en .
+
+est:NewNurserySchoolOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "New Nursery School"@en .
+
+est:MeetsAccreditationStandardsOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Meets accreditation standards"@en .
+
+est:FreeSpecialSchoolOpenReason
+    a owl:NamedIndividual, est:ReasonEstablishmentOpened ;
+    rdfs:label "Free Special School"@en .
+
+# Reason establishment closed (13 values) - real GIAS extract values.
+est:AcademyConverterCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Academy Converter"@en .
+
+est:ResultOfAmalgamationMergerCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Result of Amalgamation/Merger"@en .
+
+est:ClosureCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Closure"@en .
+
+est:ForAcademyCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "For Academy"@en .
+
+est:FreshStartCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Fresh Start"@en .
+
+est:CloseNurserySchoolCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Close Nursery School"@en .
+
+est:ChangeReligiousCharacterCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Change Religious Character"@en .
+
+est:DoesNotMeetCriteriaForRegistrationCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Does not meet criteria for registration"@en .
+
+est:DeRegisteredCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "De-registered"@en .
+
+est:AcademyFreeSchoolCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Academy Free School"@en .
+
+est:ChangeInStatusCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Change in status"@en .
+
+est:TransferredToNewSponsorCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Transferred to new sponsor"@en .
+
+est:CreatedInErrorCloseReason
+    a owl:NamedIndividual, est:ReasonEstablishmentClosed ;
+    rdfs:label "Created in Error - application rejected"@en .
+
+# Further education type (8 values) - real GIAS extract values.
+est:GeneralFurtherEducationCollege
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "General Further Education College"@en .
+
+est:SixthFormCollegeGeneral
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Sixth Form College (General)"@en .
+
+est:LandBasedCollege
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Land-Based College"@en .
+
+est:SixthFormCollegeVoluntaryAided
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Sixth Form College (Voluntary Aided)"@en .
+
+est:SpecialistDesignatedCollege
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Specialist Designated College"@en .
+
+est:TertiaryCollege
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Tertiary College"@en .
+
+est:SixthFormCollegeVoluntaryControlled
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Sixth Form College (Voluntary Controlled)"@en .
+
+est:ArtDesignAndPerformingArtsCollege
+    a owl:NamedIndividual, est:FurtherEducationType ;
+    rdfs:label "Art, Design and Performing Arts College"@en .
+
+# Inspectorate name (7 values) - real GIAS extract values, combining the
+# InspectorateName and BSOInspectorateName fields, which both populate this
+# one class (see est:InspectorateName's rdfs:comment). "ISI" (InspectorateName
+# field) and "Independent Schools Inspectorate" (BSOInspectorateName field)
+# are the same body under two label conventions - modelled as one individual.
+est:Ofsted
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "Ofsted"@en ;
+    rdfs:comment "Also recorded directly under InspectorateName for some independent schools, despite est:InspectorateName's primary use being non-Ofsted inspectorates."@en .
+
+est:IndependentSchoolsInspectorate
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "Independent Schools Inspectorate"@en ;
+    skos:altLabel "ISI"@en .
+
+est:Sis
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "SIS"@en .
+
+est:BridgeSchoolsInspectorate
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "Bridge Schools' Inspectorate"@en .
+
+est:PentaInternational
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "Penta International"@en .
+
+est:EducationDevelopmentTrust
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "Education Development Trust"@en .
+
+est:CambridgeEducation
+    a owl:NamedIndividual, est:InspectorateName ;
+    rdfs:label "Cambridge Education"@en .
 
 # Academy route (2 values)
 est:ConverterRoute

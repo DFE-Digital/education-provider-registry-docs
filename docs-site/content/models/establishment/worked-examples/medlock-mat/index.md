@@ -269,7 +269,7 @@ inst:medlock
 
 ### Example 6 — Admissions, provision, capacity and SEN
 
-Medlock's GIAS extract shows a mixed, non-selective community-style admissions pattern typical of a sponsor-led primary academy, plus a resourced provision for speech, language and communication needs (SLCN) - 12 places, all filled. `est:TypeOfSenProvision` is deliberately open-ended (a `skos:Concept` only, not a closed `owl:NamedIndividual` enumeration), since SEN provision types are not a fixed, closed list the way establishment status or education phase are.
+Medlock's GIAS extract shows a mixed, non-selective community-style admissions pattern typical of a sponsor-led primary academy, plus a resourced provision unit for speech, language and communication needs (SLCN) - 12 places, all filled. `est:TypeOfSenProvision` (the need type - SLCN, autism, and so on) and `est:TypeOfResourcedProvision` (which kind of facility the establishment hosts - a resourced provision unit, a SEN unit, or both) are two distinct classifications: Medlock's resourced provision unit happens to be for SLCN, but the facility type and the need it serves aren't the same fact and don't share a value set.
 
 ```
 inst:medlock
@@ -308,14 +308,8 @@ inst:medlock
 
     esto:hasSenAndResourcedProvision [
         a est:SenAndResourcedProvision ;
-        esto:classifiedByTypeOfSenProvision [
-            a est:TypeOfSenProvision ;
-            rdfs:label "SLCN - Speech, language and Communication"@en
-        ] ;
-        esto:classifiedByTypeOfResourcedProvision [
-            a est:TypeOfResourcedProvision ;
-            rdfs:label "SLCN - Speech, language and Communication"@en
-        ] ;
+        esto:classifiedByTypeOfSenProvision est:SpeechLanguageAndCommunicationNeeds ;
+        esto:classifiedByTypeOfResourcedProvision est:ResourcedProvisionFacility ;
         esto:hasResourcedProvisionMeasure [
             a est:ResourcedProvisionMeasure ;
             rdfs:label "12 places, 12 on roll"@en
@@ -352,6 +346,7 @@ inst:medlock
 - **The group-membership/sponsorship duplication (Example 4) is real GIAS extract behaviour, not a hypothetical.** The same establishment, the same joined date, the same organisation name, recorded as two separate group-link rows with two different group types. `establishment-ontology.ttl` avoids this duplication by treating sponsorship as a role (`esto:sponsoredBy`), not a group type - this worked example is the first to exercise that against real extract data.
 - **One real-world date, two GIAS fields.** Medlock's `OpenDate` and its group `Joined date` are both `2024-01-01` - the establishment opened and joined its trust on the same day, which is unsurprising for a sponsor-led academy but not guaranteed in general (a converter academy's `OpenDate` predates its GIAS record; a school moving between trusts has a `Joined date` unrelated to its own `OpenDate`). The model keeps these as two separate dated facts (`esto:hasOpenDate` on lifecycle, `esto:hasGroupMembershipDate` on group membership) rather than assuming they coincide.
 - **Faith context is absent, not "not applicable".** Medlock has no religious character, ethos or diocese - the ontology represents that as no `esto:hasFaithContext` triple at all, rather than a faith-context record populated with placeholder "not applicable" values. This is the RDF-idiomatic way to express a real-world non-fact: absence of a triple already means "no assertion."
+- **SEN need types weren't modelled as named concepts at all.** `est:TypeOfSenProvision` had no `owl:NamedIndividual` values - "SLCN" would only ever have been representable as a free-text label, not a thing with its own URI. GIAS's SEN1-SEN13 codes are a real, closed, statutory list (the SEND Code of Practice 0 to 25's four broad areas of need), so this example's SLCN value is now `est:SpeechLanguageAndCommunicationNeeds`, one of 12 named individuals. Checking this also surfaced a second, separate error: `est:TypeOfResourcedProvision`'s own definition wrongly described it as the SEN need type - it's actually a different, much smaller classification (which kind of facility exists: resourced provision unit, SEN unit, or both). Fixed both.
 - **Not exercised by this example:** `est:SingleAcademyTrust`, `est:Federation`, `est:LocalAuthority`-accountable establishment types, and the `est:AcademyTrust` legal-form distinction from its Companies House registration (covered instead by the governance worked example's Example 1, which carries the same Companies House number on the same `inst:coop-academies-trust` instance).
 
 ---
@@ -373,7 +368,7 @@ inst:medlock
 | Headteacher | JB | `est:HeadteacherOrPrincipal` | Direct |
 | Capacity and pupil numbers | 500 capacity, 411 on roll (224 boys, 187 girls), 206 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct |
 | Admissions and provision | Mixed, non-selective, no boarding, has nursery, no sixth form | `est:EducationAdmissionsAndProvision` | Direct |
-| SEN and resourced provision | SLCN resourced provision, 12 places, 12 on roll | `est:SenAndResourcedProvision` | Direct - `TypeOfSenProvision` is open-ended by design, not a closed enumeration |
+| SEN and resourced provision | SLCN resourced provision, 12 places, 12 on roll | `est:SenAndResourcedProvision`, `est:SpeechLanguageAndCommunicationNeeds`, `est:ResourcedProvisionFacility` | Direct |
 | Faith context | Medlock has no religious character, ethos or diocese | Absence of `esto:hasFaithContext` | Direct - no faith-context triple is asserted, rather than a record populated with "not applicable" values |
 
 ---
