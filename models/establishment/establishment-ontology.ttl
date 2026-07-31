@@ -38,7 +38,7 @@ esto:establishmentDetailsConceptualModel
     dcterms:modified "2026-07-01"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.11" ;
+    owl:versionInfo "1.12" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -64,6 +64,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.9: est:TypeOfSenProvision given 12 owl:NamedIndividual values (SpeechLanguageAndCommunicationNeeds, AutisticSpectrumDisorder, SocialEmotionalAndMentalHealth, ModerateLearningDifficulty, SevereLearningDifficulty, ProfoundAndMultipleLearningDifficulty, SpecificLearningDifficulty, PhysicalDisability, HearingImpairment, VisualImpairment, MultiSensoryImpairment, OtherDifficultyOrDisability) - previously an open-ended class with no enumerated values, despite GIAS's SEN1-SEN13 fields drawing from a closed, statutory list grounded in the four broad areas of need in the SEND Code of Practice 0 to 25 (2015). Matches the real GIAS extract's 12 observed codes exactly. No 'not applicable' individual added - an establishment with no SEN provision simply has no esto:classifiedByTypeOfSenProvision triple. Also fixed: est:TypeOfResourcedProvision's rdfs:comment incorrectly described it as the SEN need type (that's est:TypeOfSenProvision's job) - it is actually which kind of specialist SEN facility exists (resourced provision unit and/or SEN unit); given 2 owl:NamedIndividual values (ResourcedProvisionFacility, and the pre-existing est:SenUnit concept reused via punning) matching its real, much smaller GIAS value set."@en ;
     rdfs:comment "v1.10: est:JobTitle added as a new owl:Class (free-text GIAS HeadPreferredJobTitle - 387 distinct values in the live extract, not a closed enumeration, so no owl:NamedIndividual values). New object property esto:hasJobTitle (domain est:HeadteacherOrPrincipal, range est:JobTitle, 0..1). Added because 'Executive Headteacher' - a real DfE-recognised title for a headteacher leading every school in a federation, per GOV.UK federations governance guidance - was previously only recorded ad hoc as an rdfs:comment on an instance, not as a modelled property."@en ;
     rdfs:comment "v1.11: esto:classifiedByTypeOfSenProvision cardinality corrected from 0..1 to 0..*. GIAS records up to 13 SEN need types per establishment (SEN1-SEN13); the real extract shows 1,619 open establishments with more than one type recorded, so the 0..1 comment was factually wrong, not just conservative. No SHACL shape previously constrained this property, so no shape change was needed - only the ontology's own cardinality documentation."@en ;
+    rdfs:comment "v1.12: est:TypeOfResourcedProvision given a third owl:NamedIndividual value, est:ResourcedProvisionAndSenUnitFacility, matching GIAS's real closed-list value 'Resourced provision and SEN unit' (229 open establishments in the live extract) - previously only the two single-facility values (ResourcedProvisionFacility, SenUnit) existed, so this combined case had no individual to assert. classifiedByTypeOfResourcedProvision's cardinality (0..1) is correct as-is: GIAS records this as one field with one of four values (including blank), not two independent flags, so the fix was a missing enumeration value, not a cardinality bug like v1.11's classifiedByTypeOfSenProvision."@en ;
     est:status "Provisional"@en .
 
 
@@ -2291,7 +2292,7 @@ est:OtherDifficultyOrDisability
     rdfs:label "OTH - Other Difficulty/Disability"@en ;
     rdfs:comment "GIAS catch-all value for a need that does not fall under one of the eleven named categories above."@en .
 
-# Type of resourced provision (2 values) - which kind of specialist SEN
+# Type of resourced provision (3 values) - which kind of specialist SEN
 # facility the establishment hosts, not the SEN need type (see above).
 est:ResourcedProvisionFacility
     a owl:NamedIndividual, est:TypeOfResourcedProvision ;
@@ -2302,6 +2303,11 @@ est:SenUnit
     a owl:NamedIndividual, est:TypeOfResourcedProvision ;
     rdfs:label "SEN unit"@en ;
     rdfs:comment "The establishment hosts a SEN unit - reuses the existing est:SenUnit concept (see establishment-vocabulary.ttl) via OWL 2 punning, rather than a new individual, since that concept already describes exactly this real-world thing."@en .
+
+est:ResourcedProvisionAndSenUnitFacility
+    a owl:NamedIndividual, est:TypeOfResourcedProvision ;
+    rdfs:label "Resourced provision and SEN unit"@en ;
+    rdfs:comment "The establishment hosts both a resourced provision unit and a SEN unit. GIAS's TypeOfResourcedProvision field is a single closed-list value, not two independent flags - 229 open establishments in the live extract carry this combined value, so it is modelled as a fourth named individual rather than as two separately-asserted triples."@en .
 
 # Reason establishment opened (13 values) - real GIAS extract values, no
 # "not applicable" or "not recorded" individual (absence expresses both).

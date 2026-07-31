@@ -3043,7 +3043,7 @@ est:TypeOfResourcedProvision
     skos:definition "Which kind of specialist SEN facility the establishment hosts: a resourced provision unit, a SEN unit, or both. Resourced provision is a unit within a mainstream school providing specialist SEN support funded by the local authority, serving pupils who are not in specialist provision full-time."@en ;
     skos:scopeNote "The database field name uses Reserved rather than Resourced, a legacy naming difference. The UI label uses resourced. Not the SEN need type - see est:TypeOfSenProvision for that."@en ;
     skos:broader est:SenAndResourcedProvision ;
-    skos:narrower est:ResourcedProvisionFacility, est:SenUnit ;
+    skos:narrower est:ResourcedProvisionFacility, est:SenUnit, est:ResourcedProvisionAndSenUnitFacility ;
     est:status "Preferred"@en ;
     dcterms:source "C#: TypeOfResourcedProvisionId; Java: SpecialIndicators.typeOfResourcedProvision; database: Establishment.TypeOfReservedProvision"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#resourced-provision> ;
@@ -3054,6 +3054,14 @@ est:ResourcedProvisionFacility
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Resourced provision"@en ;
     skos:definition "The establishment hosts a resourced provision unit."@en ;
+    skos:broader est:TypeOfResourcedProvision ;
+    est:status "Provisional"@en .
+
+est:ResourcedProvisionAndSenUnitFacility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Resourced provision and SEN unit"@en ;
+    skos:definition "The establishment hosts both a resourced provision unit and a SEN unit. GIAS's TypeOfResourcedProvision field is a single closed-list value covering this combined case, not two independently-assertable flags."@en ;
     skos:broader est:TypeOfResourcedProvision ;
     est:status "Provisional"@en .
 
