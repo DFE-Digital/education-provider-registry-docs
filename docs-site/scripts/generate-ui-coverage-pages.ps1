@@ -1,6 +1,6 @@
 param(
     [string]$CoveragePath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "provider-field-coverage.ttl")),
-    [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-vocabulary.ttl")),
+    [string]$VocabularyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" (Join-Path "establishment" "establishment-vocabulary.ttl"))),
     [string]$OutputRoot   = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "ui-coverage"))
 )
 
@@ -67,7 +67,7 @@ function Format-VocabularyConcept {
     param([string]$LocalName)
 
     if ($vocabularyConcepts.ContainsKey($LocalName)) {
-        return ('[`epr:{0}`](../../vocabulary/{0}/)' -f $LocalName)
+        return ('[`epr:{0}`](../../models/establishment/vocabulary/{0}/)' -f $LocalName)
     }
 
     return ('`epr:{0}`' -f $LocalName)

@@ -141,17 +141,17 @@ jobs:
       - name: Generate ontology documentation
         run: |
           java -jar widoco.jar \
-            -ontFile models/education-provider-ontology.ttl \
-            -outFolder docs-site/output/ontology \
+            -ontFile models/establishment/establishment-ontology.ttl \
+            -outFolder docs-site/output/models/establishment/ontology \
             -lang en \
             -includeAnnotationProperties \
             -webVowl \
             -noPlaceHolderText \
             -rewriteAll
-          mv docs-site/output/ontology/doc/* docs-site/output/ontology/
-          rm -rf docs-site/output/ontology/doc
-          if [ ! -f docs-site/output/ontology/index.html ]; then
-            cp docs-site/output/ontology/index-en.html docs-site/output/ontology/index.html
+          mv docs-site/output/models/establishment/ontology/doc/* docs-site/output/models/establishment/ontology/
+          rm -rf docs-site/output/models/establishment/ontology/doc
+          if [ ! -f docs-site/output/models/establishment/ontology/index.html ]; then
+            cp docs-site/output/models/establishment/ontology/index-en.html docs-site/output/models/establishment/ontology/index.html
           fi
 
       - name: Generate governance ontology documentation
@@ -187,32 +187,20 @@ jobs:
           npm install -g staticrypt@3
           TMPDIR_ENC=$(mktemp -d)
 
-          # models: no remember-me (simple password gate, no session storage)
-          #
-          # Excluded from per-file encryption:
-          # - governance/ontology: WIDOCO/WebVOWL load their content via
-          #   client-side JS fetches to sibling .html files (sections/*.html,
-          #   webvowl's own pages etc). Encrypting those individually breaks
-          #   the page, because the authenticated shell's AJAX calls hit
-          #   another password gate instead of real content. The main
-          #   /ontology/ page has the same structure and is deliberately
-          #   unprotected for the same reason.
-          # - governance/worked-examples: the governance section index page
-          #   (models/governance/) stays password-protected, which is
-          #   sufficient gating - worked examples underneath it don't need
-          #   their own additional password gate.
-          for section in models; do
-            while IFS= read -r file; do
-              staticrypt "$file" \
-                --password "$DOCS_PASSWORD" \
-                --directory "$TMPDIR_ENC" \
-                --no-remember \
-                --short \
-                --template "docs-site/staticrypt-template.html" \
-                --template-color-primary "#1d70b8"
-              cp "$TMPDIR_ENC/$(basename "$file")" "$file"
-            done < <(find "docs-site/output/$section" \( -path "*/governance/ontology" -o -path "*/governance/worked-examples" \) -prune -o -name "*.html" -print)
-          done
+          # Only the models/ section index page is password-gated - no
+          # remember-me (simple password gate, no session storage). Everything
+          # below models/ (vocabulary, taxonomy, ontology/WebVOWL, examples,
+          # governance) is public, so WIDOCO/WebVOWL's client-side JS fetches
+          # to sibling .html files work without hitting another password gate.
+          file="docs-site/output/models/index.html"
+          staticrypt "$file" \
+            --password "$DOCS_PASSWORD" \
+            --directory "$TMPDIR_ENC" \
+            --no-remember \
+            --short \
+            --template "docs-site/staticrypt-template.html" \
+            --template-color-primary "#1d70b8"
+          cp "$TMPDIR_ENC/$(basename "$file")" "$file"
 
           rm -rf "$TMPDIR_ENC"
 

@@ -40,7 +40,7 @@ If a layout, filter, or generated page change does not appear in the output, del
 ## Source files remain the source of truth
 
 Do not edit generated Markdown under `docs-site/content/features/`.
-Do not edit generated or copied Markdown under `docs-site/content/business-domain/`, `docs-site/content/models/`, `docs-site/content/taxonomy/` or `docs-site/content/vocabulary/`.
+Do not edit generated or copied Markdown under `docs-site/content/business-domain/`, `docs-site/content/models/`, `docs-site/content/models/establishment/taxonomy/` or `docs-site/content/models/establishment/vocabulary/`.
 
 Edit the source files under `../features/`, `../business-domain/` or `../models/`, then regenerate and compile the docs site.
 

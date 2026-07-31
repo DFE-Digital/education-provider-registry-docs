@@ -1,5 +1,5 @@
-﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
-@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
@@ -21,8 +21,8 @@
 #
 #
 # It sits alongside the vocabulary and taxonomy:
-#   education-provider-vocabulary.ttl
-#   education-provider-taxonomy.ttl
+#   establishment-vocabulary.ttl
+#   establishment-taxonomy.ttl
 
 
 #################################################################
@@ -40,12 +40,12 @@ epro:establishmentDetailsConceptualModel
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
     owl:versionInfo "1.6" ;
     vann:preferredNamespacePrefix "epro" ;
-    vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/ontology/"^^xsd:anyURI ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/taxonomy/> ;
+    vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
-    rdfs:comment "v0.2: per-type field-applicability rules added as SHACL shapes in education-provider-shacl.ttl. Accountability relationship rules (which types require LA, academy trust or proprietor) are now expressed in those shapes rather than as open questions."@en ;
+    rdfs:comment "v0.2: per-type field-applicability rules added as SHACL shapes in establishment-shacl.ttl. Accountability relationship rules (which types require LA, academy trust or proprietor) are now expressed in those shapes rather than as open questions."@en ;
     rdfs:comment "v0.4: field-coverage additions - classes and properties for Ofsted inspection record, PRU operational record, accreditation record (online providers), provider type, manager, academy sponsor SHACL modelling. Ontology already had faith-context classes (ReligiousCharacter, ReligiousEthos, Diocese) and SpecialClassProvision. New additions: OfstedInspectionRecord, PupilReferralUnitOperationalRecord, AccreditationRecord, ProviderType, Manager."@en ;
     rdfs:comment "v0.5: establishment type class hierarchy added. Each GIAS establishment type is now an OWL class subtype of epr:Establishment, via intermediate group classes (LaMaintainedSchool, Academy, FreeSchoolEstablishment etc.). Intermediate classes defined here; leaf type classes enriched with owl:Class and rdfs:subClassOf in the taxonomy TTL using OWL 2 punning."@en ;
     rdfs:comment "v0.7: leaf type OWL class declarations moved from the taxonomy TTL into this ontology TTL. The taxonomy TTL is now pure SKOS (skos:Concept, skos:broader etc.). OWL punning is preserved - the same epr: URIs remain valid SKOS concepts in the taxonomy. WIDOCO now receives only this ontology TTL, eliminating the skos:Concept hub node from the WebVOWL graph."@en ;
