@@ -28,9 +28,9 @@ The canonical identifier for a concept is its expanded RDF IRI, not its GitHub l
 For example, in the TTL file:
 
 ```ttl
-@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix est: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
 
-epr:EstablishmentLifecycle
+est:EstablishmentLifecycle
     a skos:Concept ;
     skos:prefLabel "Establishment lifecycle"@en .
 ```

@@ -99,10 +99,10 @@ function Escape-MarkdownTableCell {
     return $Value -replace '\|', '\|'
 }
 
-# Extract each sh:NodeShape block. Shapes start at the beginning of a line with epr:<Name>.
+# Extract each sh:NodeShape block. Shapes start at the beginning of a line with est:<Name>.
 $shapeMatches = [regex]::Matches(
     $ttl,
-    '(?ms)^(epr:\w+)\r?\n\s+a sh:NodeShape\s*;(.*?)(?=^epr:|\z)'
+    '(?ms)^(est:\w+)\r?\n\s+a sh:NodeShape\s*;(.*?)(?=^est:|\z)'
 )
 
 if ($shapeMatches.Count -eq 0) {
@@ -129,7 +129,7 @@ $lines = @(
 )
 
 foreach ($shapeMatch in $shapeMatches) {
-    $localName = $shapeMatch.Groups[1].Value -replace '^epr:', ''
+    $localName = $shapeMatch.Groups[1].Value -replace '^est:', ''
     $block     = $shapeMatch.Groups[2].Value
 
     $label   = Get-FirstStringLiteral -Block $block -Predicate 'rdfs:label'
@@ -151,10 +151,10 @@ foreach ($shapeMatch in $shapeMatches) {
 
     # Covered types - from SPARQL VALUES clause or sh:targetClass
     $valuesMatch      = [regex]::Match($block, '(?s)VALUES \?type \{([^}]+)\}')
-    $targetClassMatch = [regex]::Match($block, 'sh:targetClass (epr:\w+)')
+    $targetClassMatch = [regex]::Match($block, 'sh:targetClass (est:\w+)')
 
     if ($valuesMatch.Success) {
-        $typeLocalNames = [regex]::Matches($valuesMatch.Groups[1].Value, 'epr:(\w+)') |
+        $typeLocalNames = [regex]::Matches($valuesMatch.Groups[1].Value, 'est:(\w+)') |
             ForEach-Object { $_.Groups[1].Value }
         $coveredLabels = $typeLocalNames | ForEach-Object {
             if ($typeLabels.ContainsKey($_)) { $typeLabels[$_] } else { $_ }
@@ -163,7 +163,7 @@ foreach ($shapeMatch in $shapeMatches) {
         $lines += ''
     }
     elseif ($targetClassMatch.Success) {
-        $className = $targetClassMatch.Groups[1].Value -replace '^epr:', ''
+        $className = $targetClassMatch.Groups[1].Value -replace '^est:', ''
         if ($classToTypes.ContainsKey($className)) {
             $coveredLabels = $classToTypes[$className] | ForEach-Object {
                 if ($typeLabels.ContainsKey($_)) { $typeLabels[$_] } else { $_ }

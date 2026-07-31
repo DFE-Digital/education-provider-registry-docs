@@ -13,7 +13,7 @@ title: Governance Ontology — Millfield First and Nursery School example
 | **Establishment type** | Community school (LA maintained) |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -79,11 +79,11 @@ The same governors, bodies and appointments from Section 1, expressed in Turtle 
 
 ```mermaid
 flowchart LR
-    LA["ginst:hertfordshire-county-council<br/>(epr:LocalAuthority)"]
-    S["inst:millfield<br/>(epr:CommunitySchool)"]
+    LA["ginst:hertfordshire-county-council<br/>(est:LocalAuthority)"]
+    S["inst:millfield<br/>(est:CommunitySchool)"]
     GB["ginst:millfield-governing-body<br/>(gov:GoverningBody)"]
 
-    S -->|"epro:hasAccountabilityRelationship /<br/>epro:accountableToLocalAuthority"| LA
+    S -->|"esto:hasAccountabilityRelationship /<br/>esto:accountableToLocalAuthority"| LA
     S -->|govo:hasGovernanceBody| GB
 
     GB -->|govo:hasGovernanceAppointment| G1["LKW — ExOfficioGovernor"]
@@ -115,8 +115,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -127,28 +127,28 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment, Local Authority accountability and Governing Body identity
 
-The same pattern as Gilded Hollins Community School: `epr:CommunitySchool`, `epro:hasAccountabilityRelationship` + `epro:accountableToLocalAuthority`, and a single `gov:GoverningBody`.
+The same pattern as Gilded Hollins Community School: `est:CommunitySchool`, `esto:hasAccountabilityRelationship` + `esto:accountableToLocalAuthority`, and a single `gov:GoverningBody`.
 
 ```
 ginst:hertfordshire-county-council
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "Hertfordshire County Council"@en .
 
 inst:millfield
-    a epr:CommunitySchool ;
+    a est:CommunitySchool ;
     rdfs:label "Millfield First and Nursery School"@en ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "117309"
         ]
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToLocalAuthority ginst:hertfordshire-county-council
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToLocalAuthority ginst:hertfordshire-county-council
     ] .
 
 ginst:millfield-governing-body
@@ -466,8 +466,8 @@ ginst:millfield-governing-body
 
 | Real-world concept | Millfield evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Community school | Millfield First and Nursery School, URN 117309 | `epr:CommunitySchool` | Direct |
-| Maintaining Local Authority | Hertfordshire County Council | `epr:LocalAuthority` + `epro:hasAccountabilityRelationship` + `epro:accountableToLocalAuthority` | Direct |
+| Community school | Millfield First and Nursery School, URN 117309 | `est:CommunitySchool` | Direct |
+| Maintaining Local Authority | Hertfordshire County Council | `est:LocalAuthority` + `esto:hasAccountabilityRelationship` + `esto:accountableToLocalAuthority` | Direct |
 | Governing Body | The statutory governing body | `gov:GoverningBody` + `govo:hasGovernanceBody` | Direct |
 | Governor categories | Headteacher, Local Authority, Co-opted, Staff, Parent | `govo:hasRoleType` (`gov:ExOfficioGovernor`, `gov:LocalAuthorityGovernor`, `gov:CoOptedGovernor`, `gov:StaffGovernor`, `gov:ParentGovernor`) | Direct - a true SI 2012/1034 maintained-school governing body |
 | Chair / Vice-Chair of the Governing Body | PG (Chair), SON (Vice-Chair) | `gov:RoleAssignment` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair`) | Direct |

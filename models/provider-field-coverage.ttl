@@ -1,4 +1,5 @@
-@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix est:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix gov:     <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -15,10 +16,10 @@
 # Source evidence: docs/data/extract-data — observed GIAS public page rendering,
 # June 2026. One representative establishment per type.
 #
-# Each block annotates an existing epr: vocabulary concept with:
-#   epr:shownOnTab             — which tab (epr:detailsTab etc.)
-#   epr:uiLabel                — the field label as rendered in the GIAS UI
-#   epr:applicableToEstablishmentType — two-digit string type codes where the
+# Each block annotates an existing est: vocabulary concept with:
+#   est:shownOnTab             — which tab (est:detailsTab etc.)
+#   est:uiLabel                — the field label as rendered in the GIAS UI
+#   est:applicableToEstablishmentType — two-digit string type codes where the
 #                                field is shown. Blank = not shown for that type.
 #
 # Type codes in scope (41 observed types):
@@ -56,17 +57,17 @@
 # Annotation property declarations
 #################################################################
 
-epr:shownOnTab
+est:shownOnTab
     a rdf:Property ;
     rdfs:label "shown on tab"@en ;
     rdfs:comment "The GIAS UI tab on which this vocabulary concept is rendered as a visible field."@en .
 
-epr:uiLabel
+est:uiLabel
     a rdf:Property ;
     rdfs:label "UI label"@en ;
     rdfs:comment "The field label as displayed in the GIAS public UI. May differ from the vocabulary prefLabel."@en .
 
-epr:applicableToEstablishmentType
+est:applicableToEstablishmentType
     a rdf:Property ;
     rdfs:label "applicable to establishment type"@en ;
     rdfs:comment "Two-digit establishment type codes for which this field is displayed on the relevant tab. Source: observed GIAS page rendering, June 2026."@en .
@@ -75,24 +76,24 @@ epr:applicableToEstablishmentType
 # Tab resources
 #################################################################
 
-epr:detailsTab
-    a epr:UITab ;
+est:detailsTab
+    a est:UITab ;
     rdfs:label "Details"@en ;
     rdfs:comment "The main Details tab on a GIAS establishment page."@en .
 
-epr:locationTab
-    a epr:UITab ;
+est:locationTab
+    a est:UITab ;
     rdfs:label "Location"@en ;
     rdfs:comment "The Location tab on a GIAS establishment page."@en .
 
-epr:governanceTab
-    a epr:UITab ;
+est:governanceTab
+    a est:UITab ;
     rdfs:label "Governance"@en ;
     rdfs:comment "The Governance tab on a GIAS establishment page."@en .
 
 
 
-epr:UITab
+est:UITab
     a rdfs:Class ;
     rdfs:label "UI tab"@en ;
     rdfs:comment "A named tab on the GIAS establishment details page."@en .
@@ -102,91 +103,91 @@ epr:UITab
 # DETAILS TAB — universal fields (all 41 observed types)
 #################################################################
 
-epr:MainAddress
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Address"@en ;
-    epr:applicableToEstablishmentType
+est:MainAddress
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Address"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:LocalAuthority
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Local authority"@en ;
-    epr:applicableToEstablishmentType
+est:LocalAuthority
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Local authority"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:UniqueReferenceNumber
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "ID"@en ;
-    epr:applicableToEstablishmentType
+est:UniqueReferenceNumber
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "ID"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:EstablishmentStatus
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Establishment status"@en ;
-    epr:applicableToEstablishmentType
+est:EstablishmentStatus
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Establishment status"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:EducationPhase
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Phase of education"@en ;
-    epr:applicableToEstablishmentType
+est:EducationPhase
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Phase of education"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:EstablishmentType
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "School / Establishment type"@en ;
-    epr:applicableToEstablishmentType
+est:EstablishmentType
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "School / Establishment type"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:PupilCount
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Number of pupils"@en ;
-    epr:applicableToEstablishmentType
+est:PupilCount
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Number of pupils"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:ReasonEstablishmentOpened
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Reason establishment opened"@en ;
-    epr:applicableToEstablishmentType
+est:ReasonEstablishmentOpened
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Reason establishment opened"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:ReasonEstablishmentClosed
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Reason establishment closed"@en ;
-    epr:applicableToEstablishmentType
+est:ReasonEstablishmentClosed
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Reason establishment closed"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:DateLastChangedOrConfirmed
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Date last changed / confirmed"@en ;
-    epr:applicableToEstablishmentType
+est:DateLastChangedOrConfirmed
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Date last changed / confirmed"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
@@ -197,74 +198,74 @@ epr:DateLastChangedOrConfirmed
 # DETAILS TAB — leadership
 #################################################################
 
-epr:HeadteacherOrPrincipal
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Headteacher / Principal"@en ;
-    epr:applicableToEstablishmentType
+est:HeadteacherOrPrincipal
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Headteacher / Principal"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "49", "56", "57" .
 
-epr:CentreManager
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Manager"@en ;
-    epr:applicableToEstablishmentType "47", "48" .
+est:CentreManager
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Manager"@en ;
+    est:applicableToEstablishmentType "47", "48" .
 
 
 #################################################################
 # DETAILS TAB — classification
 #################################################################
 
-epr:GenderOfEntry
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Gender of entry"@en ;
-    epr:applicableToEstablishmentType
+est:GenderOfEntry
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Gender of entry"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "49", "56", "57" .
 
-epr:StatutoryAgeRange
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Age range"@en ;
-    epr:applicableToEstablishmentType
+est:StatutoryAgeRange
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Age range"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "25", "26", "28", "29", "31", "32",
         "33", "34", "35", "36", "37", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "49" .
 
-epr:AdmissionsPolicy
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Admissions policy"@en ;
-    epr:applicableToEstablishmentType
+est:AdmissionsPolicy
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Admissions policy"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "28", "33", "34", "35", "36", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "49" .
 
-epr:FurtherEducationType
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Further education type"@en ;
-    epr:applicableToEstablishmentType "14", "18", "29" .
+est:FurtherEducationType
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Further education type"@en ;
+    est:applicableToEstablishmentType "14", "18", "29" .
 
 
 #################################################################
 # DETAILS TAB — contact
 #################################################################
 
-epr:Website
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Website"@en ;
-    epr:applicableToEstablishmentType
+est:Website
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Website"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "28", "29", "32", "33", "34", "35", "36",
         "37", "38", "39", "40", "41", "42", "43", "44", "45", "46",
         "47", "49", "57" .
 
-epr:TelephoneNumber
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Telephone"@en ;
-    epr:applicableToEstablishmentType
+est:TelephoneNumber
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Telephone"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
@@ -275,10 +276,10 @@ epr:TelephoneNumber
 # DETAILS TAB — inspection
 #################################################################
 
-epr:ExternalServiceReference
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Data from other services"@en ;
-    epr:applicableToEstablishmentType
+est:ExternalServiceReference
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Data from other services"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "18", "26", "28", "31", "33", "34", "35", "36", "39", "40",
         "41", "44", "45", "46" .
@@ -288,26 +289,26 @@ epr:ExternalServiceReference
 # DETAILS TAB — faith context
 #################################################################
 
-epr:ReligiousCharacter
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Religious character"@en ;
-    epr:applicableToEstablishmentType
+est:ReligiousCharacter
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Religious character"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "15", "28", "30", "33", "34", "35", "36", "38", "39", "40",
         "41", "42", "43", "44", "45", "46" .
 
-epr:Diocese
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Diocese"@en ;
-    epr:applicableToEstablishmentType
+est:Diocese
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Diocese"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:ReligiousEthos
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Religious ethos"@en ;
-    epr:applicableToEstablishmentType
+est:ReligiousEthos
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Religious ethos"@en ;
+    est:applicableToEstablishmentType
         "06", "08", "10", "11", "28", "33", "34", "35", "36",
         "38", "39", "40", "41", "42", "43", "44", "45", "46", "49" .
 
@@ -316,132 +317,132 @@ epr:ReligiousEthos
 # DETAILS TAB — provision
 #################################################################
 
-epr:BoardingProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Boarders"@en ;
-    epr:applicableToEstablishmentType
+est:BoardingProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Boarders"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "15", "18", "28", "31", "32", "33", "34", "35", "36", "38",
         "39", "40", "41", "42", "43", "44", "45", "46" .
 
-epr:NurseryProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Nursery provision"@en ;
-    epr:applicableToEstablishmentType
+est:NurseryProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Nursery provision"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "15", "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
-epr:SixthFormProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Official sixth form"@en ;
-    epr:applicableToEstablishmentType
+est:SixthFormProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Official sixth form"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "15", "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "49" .
 
-epr:ProviderType
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Provider type"@en ;
-    epr:applicableToEstablishmentType "47", "48" .
+est:ProviderType
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Provider type"@en ;
+    est:applicableToEstablishmentType "47", "48" .
 
 
 #################################################################
 # DETAILS TAB — capacity and SEN
 #################################################################
 
-epr:SchoolCapacity
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "School capacity"@en ;
-    epr:applicableToEstablishmentType
+est:SchoolCapacity
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "School capacity"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "15", "28", "32", "33", "34", "35", "36", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "57" .
 
-epr:SpecialClassProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Special classes"@en ;
-    epr:applicableToEstablishmentType
+est:SpecialClassProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Special classes"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:TypeOfSenProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Type of SEN provision"@en ;
-    epr:applicableToEstablishmentType
+est:TypeOfSenProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Type of SEN provision"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:TypeOfResourcedProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Type of resourced provision"@en ;
-    epr:applicableToEstablishmentType
+est:TypeOfResourcedProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Type of resourced provision"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:ResourcedProvisionPupilCount
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Resourced provision number on roll"@en ;
-    epr:applicableToEstablishmentType
+est:ResourcedProvisionPupilCount
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Resourced provision number on roll"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:ResourcedProvisionCapacity
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Resourced provision capacity"@en ;
-    epr:applicableToEstablishmentType
+est:ResourcedProvisionCapacity
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Resourced provision capacity"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:SenUnitPupilCount
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "SEN unit number on roll"@en ;
-    epr:applicableToEstablishmentType
+est:SenUnitPupilCount
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "SEN unit number on roll"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:SenUnitCapacity
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "SEN unit capacity"@en ;
-    epr:applicableToEstablishmentType
+est:SenUnitCapacity
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "SEN unit capacity"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "15", "28",
         "33", "34", "35", "36", "38", "39", "40", "41", "42",
         "43", "44", "45", "46" .
 
-epr:SpecialPupilsOnStatementOrEhcPlan
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Special pupils under SEN statement / EHC plan"@en ;
-    epr:applicableToEstablishmentType "08", "10", "11", "49" .
+est:SpecialPupilsOnStatementOrEhcPlan
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Special pupils under SEN statement / EHC plan"@en ;
+    est:applicableToEstablishmentType "08", "10", "11", "49" .
 
-epr:SpecialPupilsNotOnStatementOrEhcPlan
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Special pupils not under SEN statement / EHC plan"@en ;
-    epr:applicableToEstablishmentType "08", "10", "11", "49" .
+est:SpecialPupilsNotOnStatementOrEhcPlan
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Special pupils not under SEN statement / EHC plan"@en ;
+    est:applicableToEstablishmentType "08", "10", "11", "49" .
 
 
 #################################################################
 # DETAILS TAB — pupil measures
 #################################################################
 
-epr:PupilsEligibleForFreeSchoolMeals
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Pupils eligible for free school meals"@en ;
-    epr:applicableToEstablishmentType
+est:PupilsEligibleForFreeSchoolMeals
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Pupils eligible for free school meals"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "56" .
 
-epr:PercentagePupilsEligibleForFreeSchoolMeals
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Percentage eligible for free school meals"@en ;
-    epr:applicableToEstablishmentType
+est:PercentagePupilsEligibleForFreeSchoolMeals
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Percentage eligible for free school meals"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
@@ -452,28 +453,28 @@ epr:PercentagePupilsEligibleForFreeSchoolMeals
 # DETAILS TAB — lifecycle
 #################################################################
 
-epr:OpenDate
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Open date"@en ;
-    epr:applicableToEstablishmentType
+est:OpenDate
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Open date"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "56", "57" .
 
-epr:ClosedDate
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Closed date"@en ;
-    epr:applicableToEstablishmentType
+est:ClosedDate
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Closed date"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
         "41", "42", "43", "44", "45", "46", "47", "48", "56", "57" .
 
-epr:Section41Approval
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Section 41 approved"@en ;
-    epr:applicableToEstablishmentType
+est:Section41Approval
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Section 41 approved"@en ;
+    est:applicableToEstablishmentType
         "06", "08", "10", "11", "28", "30", "32",
         "33", "34", "35", "36", "38", "39", "40",
         "41", "42", "43", "44", "45", "46" .
@@ -483,25 +484,25 @@ epr:Section41Approval
 # DETAILS TAB — group membership shown on details view
 #################################################################
 
-epr:GroupMembership
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Trust"@en ;
-    epr:applicableToEstablishmentType "05" .
+est:GroupMembership
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Trust"@en ;
+    est:applicableToEstablishmentType "05" .
 
-epr:AcademyTrust
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Academy trust"@en ;
-    epr:applicableToEstablishmentType "33", "34", "35", "36", "40", "41", "46", "57" .
+est:AcademyTrust
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Academy trust"@en ;
+    est:applicableToEstablishmentType "33", "34", "35", "36", "40", "41", "46", "57" .
 
-epr:SingleAcademyTrust
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Single-academy trust"@en ;
-    epr:applicableToEstablishmentType "39", "44", "45" .
+est:SingleAcademyTrust
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Single-academy trust"@en ;
+    est:applicableToEstablishmentType "39", "44", "45" .
 
-epr:AcademySponsor
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Academy sponsor"@en ;
-    epr:applicableToEstablishmentType
+est:AcademySponsor
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Academy sponsor"@en ;
+    est:applicableToEstablishmentType
         "33", "34", "35", "36", "38", "39", "40", "42", "43", "46" .
 
 
@@ -509,115 +510,115 @@ epr:AcademySponsor
 # DETAILS TAB — non-Ofsted inspection (independent schools + BSO)
 #################################################################
 
-epr:InspectorateName
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Inspectorate name"@en ;
-    epr:applicableToEstablishmentType "08", "10", "11", "37" .
+est:InspectorateName
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Inspectorate name"@en ;
+    est:applicableToEstablishmentType "08", "10", "11", "37" .
 
-epr:InspectorateReport
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Inspectorate report"@en ;
-    epr:applicableToEstablishmentType "37" .
+est:InspectorateReport
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Inspectorate report"@en ;
+    est:applicableToEstablishmentType "37" .
 
-epr:DateOfLastInspectionVisit
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Date of last inspection visit"@en ;
-    epr:applicableToEstablishmentType "37" .
+est:DateOfLastInspectionVisit
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Date of last inspection visit"@en ;
+    est:applicableToEstablishmentType "37" .
 
-epr:DateOfNextInspectionVisit
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Date of next inspection visit"@en ;
-    epr:applicableToEstablishmentType "37" .
+est:DateOfNextInspectionVisit
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Date of next inspection visit"@en ;
+    est:applicableToEstablishmentType "37" .
 
-epr:Proprietor
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Proprietor's name"@en ;
-    epr:applicableToEstablishmentType "08", "10", "11", "49" .
+est:Proprietor
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Proprietor's name"@en ;
+    est:applicableToEstablishmentType "08", "10", "11", "49" .
 
 
 #################################################################
 # DETAILS TAB — PRU operational fields (type 14 only)
 #################################################################
 
-epr:TeenageMothersProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Teenage mothers"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:TeenageMothersProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Teenage mothers"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:TeenageMothersPlaces
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Teenage mothers places"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:TeenageMothersPlaces
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Teenage mothers places"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:ChildcareProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Childcare facilities provision"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:ChildcareProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Childcare facilities provision"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:SenFacilities
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "SEN facilities"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:SenFacilities
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "SEN facilities"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:PupilsWithEBD
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Pupils with EBD"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:PupilsWithEBD
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Pupils with EBD"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:NumberOfPlaces
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Number of places"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:NumberOfPlaces
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Number of places"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:FullTimeProvision
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Full time provision"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:FullTimeProvision
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Full time provision"@en ;
+    est:applicableToEstablishmentType "14" .
 
-epr:PupilsEducatedByOtherProviders
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Pupils educated by other providers"@en ;
-    epr:applicableToEstablishmentType "14" .
+est:PupilsEducatedByOtherProviders
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Pupils educated by other providers"@en ;
+    est:applicableToEstablishmentType "14" .
 
 
 #################################################################
 # DETAILS TAB — online provider fields (type 49 only)
 #################################################################
 
-epr:AccreditationDate
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Accreditation date"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:AccreditationDate
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Accreditation date"@en ;
+    est:applicableToEstablishmentType "49" .
 
-epr:AccreditationExpiryDate
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Accreditation expiry date"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:AccreditationExpiryDate
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Accreditation expiry date"@en ;
+    est:applicableToEstablishmentType "49" .
 
-epr:AccreditationDateEnded
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Accreditation date ended"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:AccreditationDateEnded
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Accreditation date ended"@en ;
+    est:applicableToEstablishmentType "49" .
 
-epr:QualityAssuranceBodyName
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Quality assurance body name"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:QualityAssuranceBodyName
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Quality assurance body name"@en ;
+    est:applicableToEstablishmentType "49" .
 
-epr:QualityAssuranceBodyReport
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Quality assurance body report"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:QualityAssuranceBodyReport
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Quality assurance body report"@en ;
+    est:applicableToEstablishmentType "49" .
 
-epr:CompaniesHouseNumber
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Companies House number"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:CompaniesHouseNumber
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Companies House number"@en ;
+    est:applicableToEstablishmentType "49" .
 
-epr:AccreditationStatus
-    epr:shownOnTab epr:detailsTab ;
-    epr:uiLabel "Establishment accredited"@en ;
-    epr:applicableToEstablishmentType "49" .
+est:AccreditationStatus
+    est:shownOnTab est:detailsTab ;
+    est:uiLabel "Establishment accredited"@en ;
+    est:applicableToEstablishmentType "49" .
 
 
 #################################################################
@@ -625,100 +626,100 @@ epr:AccreditationStatus
 # 11 fields shown for all types except 37 (British schools overseas)
 #################################################################
 
-epr:GovernmentOfficeRegion
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Government office region (GOR)"@en ;
-    epr:applicableToEstablishmentType
+est:GovernmentOfficeRegion
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Government office region (GOR)"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:DistrictAdministrative
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "District"@en ;
-    epr:applicableToEstablishmentType
+est:DistrictAdministrative
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "District"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:AdministrativeWard
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Ward"@en ;
-    epr:applicableToEstablishmentType
+est:AdministrativeWard
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Ward"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:ParliamentaryConstituency
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Parliamentary constituency"@en ;
-    epr:applicableToEstablishmentType
+est:ParliamentaryConstituency
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Parliamentary constituency"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:UrbanRuralClassification
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Urban / rural description"@en ;
-    epr:applicableToEstablishmentType
+est:UrbanRuralClassification
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Urban / rural description"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:GssLocalAuthorityCode
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "GSS local authority code"@en ;
-    epr:applicableToEstablishmentType
+est:GssLocalAuthorityCode
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "GSS local authority code"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:Easting
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Easting"@en ;
-    epr:applicableToEstablishmentType
+est:Easting
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Easting"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:Northing
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Northing"@en ;
-    epr:applicableToEstablishmentType
+est:Northing
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Northing"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:UniquePropertyReferenceNumber
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Unique property reference number (UPRN)"@en ;
-    epr:applicableToEstablishmentType
+est:UniquePropertyReferenceNumber
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Unique property reference number (UPRN)"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:MiddleLayerSuperOutputArea
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Middle super output area (MSOA)"@en ;
-    epr:applicableToEstablishmentType
+est:MiddleLayerSuperOutputArea
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Middle super output area (MSOA)"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46", "47", "48", "49", "56", "57" .
 
-epr:LowerLayerSuperOutputArea
-    epr:shownOnTab epr:locationTab ;
-    epr:uiLabel "Lower super output area (LSOA)"@en ;
-    epr:applicableToEstablishmentType
+est:LowerLayerSuperOutputArea
+    est:shownOnTab est:locationTab ;
+    est:uiLabel "Lower super output area (LSOA)"@en ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "08", "10", "11", "12",
         "14", "15", "18", "24", "25", "26", "27", "28", "29", "30",
         "31", "32", "33", "34", "35", "36", "38", "39", "40", "41",
@@ -732,56 +733,70 @@ epr:LowerLayerSuperOutputArea
 # "Shared with" field visible only for academy types with shared roles.
 #################################################################
 
-epr:GovernancePerson
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Name"@en ;
-    epr:applicableToEstablishmentType
+# Governance-tab tracking entities. These are this file's own bookkeeping
+# subjects (UI-coverage is about GIAS screen fields, not ontology semantics),
+# not vocabulary concepts themselves - each names the real concept that
+# defines its meaning via est:vocabularyConcept, which may be a gov: term
+# since governance appointments are modelled by the governance model, not
+# this one. See establishment-governance-overlap-removal-plan.md.
+
+est:GovernanceTabPersonField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Name"@en ;
+    est:vocabularyConcept gov:GovernancePerson ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "14", "15",
         "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
-epr:GovernanceIdentifier
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Governance role identifier (GID)"@en ;
-    epr:applicableToEstablishmentType
+est:GovernanceTabIdentifierField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Governance role identifier (GID)"@en ;
+    est:vocabularyConcept gov:GovernanceIdentifier ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "14", "15",
         "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
-epr:GovernanceAppointmentDate
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Date of appointment"@en ;
-    epr:applicableToEstablishmentType
+est:GovernanceTabAppointmentDateField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Date of appointment"@en ;
+    est:vocabularyConcept gov:TermOfOffice ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "14", "15",
         "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
-epr:GovernanceTermEndDate
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Date appointment ended"@en ;
-    epr:applicableToEstablishmentType
+est:GovernanceTabTermEndDateField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Date appointment ended"@en ;
+    est:vocabularyConcept gov:TermOfOffice ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "14", "15",
         "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
-epr:GovernanceAppointingBody
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Appointed by"@en ;
-    epr:applicableToEstablishmentType
+est:GovernanceTabAppointingBodyField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Appointed by"@en ;
+    est:vocabularyConcept gov:AppointingBody ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "14", "15",
         "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
-epr:GovernanceRoleType
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Governance role"@en ;
-    epr:applicableToEstablishmentType
+est:GovernanceTabRoleTypeField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Governance role"@en ;
+    est:vocabularyConcept gov:GovernanceRoleType ;
+    est:applicableToEstablishmentType
         "01", "02", "03", "05", "06", "07", "12", "14", "15",
         "28", "33", "34", "35", "36", "38", "39", "40", "41",
         "42", "43", "44", "45", "46" .
 
 # "Shared with" — academy types with shared local governor roles only
-epr:GovernanceAppointment
-    epr:shownOnTab epr:governanceTab ;
-    epr:uiLabel "Shared with"@en ;
-    epr:applicableToEstablishmentType "33", "34", "35", "46" .
+est:GovernanceTabSharedWithField
+    est:shownOnTab est:governanceTab ;
+    est:uiLabel "Shared with"@en ;
+    est:vocabularyConcept gov:GovernanceAppointment ;
+    est:applicableToEstablishmentType "33", "34", "35", "46" .

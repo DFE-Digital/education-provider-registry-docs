@@ -1,5 +1,5 @@
 @prefix gov: <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
-@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix est: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -16,7 +16,7 @@
 # Establishment/organisation-scope nouns that already belong to the main
 # Education Provider Registry vocabulary (Academy, AcademyTrust,
 # Establishment, Federation, LocalAuthority, Person) are not duplicated
-# here. They are referenced directly as epr: URIs in governance-taxonomy.ttl
+# here. They are referenced directly as est: URIs in governance-taxonomy.ttl
 # and governance-ontology.ttl where a governance-specific classification or
 # property needs to attach to them.
 

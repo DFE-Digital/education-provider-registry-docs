@@ -13,7 +13,7 @@ title: Governance Ontology — Vauxhall Primary School example
 | **Shared board** | "Wyvern Federation of Schools" - a shared Governing Board over six schools, published by name; no GIAS federation group record is cited as evidence for it |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -25,7 +25,7 @@ title: Governance Ontology — Vauxhall Primary School example
 
 Person names throughout are shown as initials, exactly as the source investigation anonymised them (e.g. `KD`, `TB`) - this example does not use, and has not gone back to, the school's full published names. Both sections show the same representative **subset** of the published board - 16 named governors, 6 headteachers, a clerk and 2 committee-only members are evidenced in the source - so that Section 1 and Section 2 stay directly comparable. Left out: 9 further co-opted governors, 4 further headteachers, and 3 further federation member schools (see Example 1).
 
-Unlike the two Federation worked examples (Eileen Wade/Milton Ernest, Long Ditton), no GIAS federation group record is cited anywhere in this source as evidence for "Wyvern Federation of Schools" - only Vauxhall's own GIAS Establishment record and Governance tab are cited, plus the Governance tabs of the five other named schools as a coverage check. This page therefore does not assert an `epr:Federation` instance; it models only the shared `gov:GoverningBody` and the schools whose type is confirmed.
+Unlike the two Federation worked examples (Eileen Wade/Milton Ernest, Long Ditton), no GIAS federation group record is cited anywhere in this source as evidence for "Wyvern Federation of Schools" - only Vauxhall's own GIAS Establishment record and Governance tab are cited, plus the Governance tabs of the five other named schools as a coverage check. This page therefore does not assert an `est:Federation` instance; it models only the shared `gov:GoverningBody` and the schools whose type is confirmed.
 
 ---
 
@@ -88,9 +88,9 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    V["inst:vauxhall-primary<br/>(epr:FoundationSchool)"]
-    A["inst:ashmole-primary<br/>(epr:Establishment)"]
-    W["inst:wyvil-primary<br/>(epr:Establishment)"]
+    V["inst:vauxhall-primary<br/>(est:FoundationSchool)"]
+    A["inst:ashmole-primary<br/>(est:Establishment)"]
+    W["inst:wyvil-primary<br/>(est:Establishment)"]
     GB["ginst:wyvern-governing-body<br/>(gov:GoverningBody)"]
 
     V -->|govo:hasGovernanceBody| GB
@@ -122,8 +122,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -134,40 +134,40 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Schools and a single shared Governing Body, without an asserted Federation
 
-`epr:FoundationSchool` is Vauxhall's confirmed leaf type. Ashmole and Wyvil are shown as generic `epr:Establishment` - their specific leaf types are not stated in this source, so none is invented. Three further schools (Herbert Morrison, Lilian Baylis Technology School, Henry Fawcett) are evidenced and not shown here.
+`est:FoundationSchool` is Vauxhall's confirmed leaf type. Ashmole and Wyvil are shown as generic `est:Establishment` - their specific leaf types are not stated in this source, so none is invented. Three further schools (Herbert Morrison, Lilian Baylis Technology School, Henry Fawcett) are evidenced and not shown here.
 
-No `epr:Federation` instance is declared: unlike Eileen Wade/Milton Ernest and Long Ditton, this source cites no GIAS federation group record for "Wyvern Federation of Schools" - only each school's own Establishment record. `govo:hasGovernanceBody` is asserted directly from each school to the same shared `gov:GoverningBody`, without a Federation node connecting them.
+No `est:Federation` instance is declared: unlike Eileen Wade/Milton Ernest and Long Ditton, this source cites no GIAS federation group record for "Wyvern Federation of Schools" - only each school's own Establishment record. `govo:hasGovernanceBody` is asserted directly from each school to the same shared `gov:GoverningBody`, without a Federation node connecting them.
 
 ```
 inst:vauxhall-primary
-    a epr:FoundationSchool ;
+    a est:FoundationSchool ;
     rdfs:label "Vauxhall Primary School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100588"
         ]
     ] .
 
 inst:ashmole-primary
-    a epr:Establishment ;
+    a est:Establishment ;
     rdfs:label "Ashmole Primary School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100556"
         ]
     ] .
 
 inst:wyvil-primary
-    a epr:Establishment ;
+    a est:Establishment ;
     rdfs:label "Wyvil Primary School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100591"
         ]
     ] .
@@ -422,9 +422,9 @@ ginst:wyvern-governing-body
 
 | Real-world concept | Vauxhall evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Foundation school | Vauxhall Primary School, URN 100588 | `epr:FoundationSchool` | Direct - reused leaf type |
-| Federation member schools of unconfirmed type | Ashmole, Wyvil (and 3 further, not shown) | `epr:Establishment` | Direct as a generic type; specific leaf types not evidenced in this source |
-| "Wyvern Federation of Schools" as an organisation | Named on the school's own page | Not modelled as `epr:Federation` | Not evidenced - no GIAS federation group record is cited, unlike the two Federation worked examples |
+| Foundation school | Vauxhall Primary School, URN 100588 | `est:FoundationSchool` | Direct - reused leaf type |
+| Federation member schools of unconfirmed type | Ashmole, Wyvil (and 3 further, not shown) | `est:Establishment` | Direct as a generic type; specific leaf types not evidenced in this source |
+| "Wyvern Federation of Schools" as an organisation | Named on the school's own page | Not modelled as `est:Federation` | Not evidenced - no GIAS federation group record is cited, unlike the two Federation worked examples |
 | Shared Governing Body | One board over six schools | `gov:GoverningBody`, `govo:hasGovernanceBody` from each school | Direct |
 | Chair with no stated category | KD | `govo:hasRoleType gov:Governor` (generic) | Candidate - the source gives no more specific category |
 | Two Vice-Chairs | TB, II | Two separate `gov:RoleAssignment`s, each `govo:assignsRole gov:ViceChair` | Direct - the same two-holders-one-value pattern as Long Ditton's Co-Chairs |

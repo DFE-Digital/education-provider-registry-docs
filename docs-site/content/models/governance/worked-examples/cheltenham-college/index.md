@@ -13,7 +13,7 @@ title: Governance Ontology — Cheltenham College example
 | **Establishment type** | Other independent school |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -77,11 +77,11 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    C["inst:cheltenham-college<br/>(epr:OtherIndependentSchool)"]
-    PREP["ginst:cheltenham-prep<br/>(epr:Establishment)"]
-    COU["ginst:cheltenham-council<br/>(epr:Organisation, gov:Board)"]
+    C["inst:cheltenham-college<br/>(est:OtherIndependentSchool)"]
+    PREP["ginst:cheltenham-prep<br/>(est:Establishment)"]
+    COU["ginst:cheltenham-council<br/>(est:Organisation, gov:Board)"]
 
-    C -->|"epro:hasProprietor /<br/>govo:hasGovernanceBody"| COU
+    C -->|"esto:hasProprietor /<br/>govo:hasGovernanceBody"| COU
     PREP -->|govo:hasGovernanceBody| COU
 
     COU -->|govo:hasGovernanceAppointment| M1["WJ — BoardMember<br/>+ RoleAssignment: Chair"]
@@ -108,8 +108,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -120,34 +120,34 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment, Council as proprietor and governing body, and The Prep
 
-`epr:OtherIndependentSchool` is the specific leaf type GIAS itself records. The Council is modelled as a **single instance** carrying two types at once: `epr:Organisation` (so it can fill `epro:hasProprietor`'s range, the property already documented as "present for independent schools") and `gov:Board` ("generic term for a governance body, used where source data does not distinguish governing body, trust board or local governing body" - exactly this case, since Cheltenham's Council is neither of the more specific body types). This is different from every academy trust example on this site, where the legal entity (`epr:AcademyTrust`) and its board (`gov:TrustBoard`) are always two distinct instances - here, the College's own evidence says the Council genuinely is both at once, so the model doesn't invent a split the source itself doesn't make.
+`est:OtherIndependentSchool` is the specific leaf type GIAS itself records. The Council is modelled as a **single instance** carrying two types at once: `est:Organisation` (so it can fill `esto:hasProprietor`'s range, the property already documented as "present for independent schools") and `gov:Board` ("generic term for a governance body, used where source data does not distinguish governing body, trust board or local governing body" - exactly this case, since Cheltenham's Council is neither of the more specific body types). This is different from every academy trust example on this site, where the legal entity (`est:AcademyTrust`) and its board (`gov:TrustBoard`) are always two distinct instances - here, the College's own evidence says the Council genuinely is both at once, so the model doesn't invent a split the source itself doesn't make.
 
-The Council also governs a second, related school ("The Prep"), evidenced only by name with no URN published in this source - `epr:Establishment`, the generic stub, rather than a more specific leaf type.
+The Council also governs a second, related school ("The Prep"), evidenced only by name with no URN published in this source - `est:Establishment`, the generic stub, rather than a more specific leaf type.
 
 ```
 inst:cheltenham-college
-    a epr:OtherIndependentSchool ;
+    a est:OtherIndependentSchool ;
     rdfs:label "Cheltenham College"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "115795"
         ]
     ] .
 
 ginst:cheltenham-prep
-    a epr:Establishment ;
+    a est:Establishment ;
     rdfs:label "The Prep"@en ;
     rdfs:comment "Named only as related school context in this source, with no URN published - not further typed."@en .
 
 ginst:cheltenham-council
-    a epr:Organisation, gov:Board ;
+    a est:Organisation, gov:Board ;
     rdfs:label "The Council of Cheltenham College"@en ;
     rdfs:comment "One real-world body, modelled as one instance carrying both the proprietor/organisation type and the governance-body type, since the College's own evidence does not distinguish them as Medlock's Academy Trust and Trust Board are distinguished."@en .
 
 inst:cheltenham-college
-    epro:hasProprietor ginst:cheltenham-council ;
+    esto:hasProprietor ginst:cheltenham-council ;
     govo:hasGovernanceBody ginst:cheltenham-council .
 
 ginst:cheltenham-prep
@@ -380,10 +380,10 @@ ginst:cheltenham-council
 
 | Real-world concept | Cheltenham evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Other independent school | Cheltenham College, URN 115795 | `epr:OtherIndependentSchool` | Direct - reused leaf type |
-| Proprietor | The Council of Cheltenham College | `epro:hasProprietor`, range typed `epr:Organisation` | Direct |
+| Other independent school | Cheltenham College, URN 115795 | `est:OtherIndependentSchool` | Direct - reused leaf type |
+| Proprietor | The Council of Cheltenham College | `esto:hasProprietor`, range typed `est:Organisation` | Direct |
 | Governing body, coextensive with the proprietor | The same Council | `gov:Board` on the same instance as the proprietor | Direct - `gov:Board` exists precisely for a body not fitting the more specific governing-body/trust-board/local-governing-body types |
-| Related second school with shared governance | The Prep | `epr:Establishment` (generic, no URN evidenced), `govo:hasGovernanceBody` to the same Council | Direct - a third variant of shared governance across establishments, after the Federation examples and OAK/Manor High |
+| Related second school with shared governance | The Prep | `est:Establishment` (generic, no URN evidenced), `govo:hasGovernanceBody` to the same Council | Direct - a third variant of shared governance across establishments, after the Federation examples and OAK/Manor High |
 | Council Membership | 16 published Council members | `govo:hasRoleType gov:BoardMember` | Candidate - no role type matches "Council Member" specifically |
 | Charity trustee capacity | Council members are charity trustees | `govo:hasLegalCapacity gov:CharityTrustee` | Direct - added to the ontology from this finding |
 | President / Deputy President | WJ, DS | `gov:RoleAssignment` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair`) | Direct - synonym reuse of the same responsibility values used elsewhere under different titles |

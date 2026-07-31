@@ -13,7 +13,7 @@ title: Governance Ontology — OAK Multi Academy Trust / Brookside Primary Schoo
 | **Establishment type** | MAT — Trust-level detail, plus one academy's Local Governing Body |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -92,8 +92,8 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:oak-mat<br/>(epr:AcademyTrust)"]
-    BP["inst:brookside-primary<br/>(epr:MainstreamAcademy)"]
+    AT["inst:oak-mat<br/>(est:AcademyTrust)"]
+    BP["inst:brookside-primary<br/>(est:MainstreamAcademy)"]
     TB["ginst:oak-trust-board<br/>(gov:TrustBoard)"]
     BLGB["ginst:brookside-lgb<br/>(gov:LocalGoverningBody)"]
 
@@ -124,8 +124,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -140,7 +140,7 @@ All examples in this section use the following prefixes.
 
 ```
 inst:oak-mat
-    a epr:AcademyTrust ;
+    a est:AcademyTrust ;
     rdfs:label "OAK Multi Academy Trust"@en .
 
 ginst:oak-trust-board
@@ -335,12 +335,12 @@ inst:oak-mat
 
 ```
 inst:brookside-primary
-    a epr:MainstreamAcademy ;
+    a est:MainstreamAcademy ;
     rdfs:label "Brookside Primary School"@en ;
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "145619"
         ]
     ] .
@@ -428,9 +428,9 @@ ginst:roleassignment-sb-curriculum
 
 | Real-world concept | OAK/Brookside evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `epr:AcademyTrust` (same instance as the Manor High worked example) | Direct |
+| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:AcademyTrust` (same instance as the Manor High worked example) | Direct |
 | Trust Board | OAK's Board of Trustees | `gov:TrustBoard` (same instance as Manor High) | Direct |
-| Academy | Brookside Primary School, URN 145619 | `epr:MainstreamAcademy` | Direct - academy route not published in this source, so `epro:hasAcademyRoute` is not asserted |
+| Academy | Brookside Primary School, URN 145619 | `est:MainstreamAcademy` | Direct - academy route not published in this source, so `esto:hasAcademyRoute` is not asserted |
 | Local Governing Body | Brookside's LGB, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` + `govo:hasGovernanceBody` | Direct |
 | Academy Trust Membership | 5 Members | `gov:AcademyTrustMember`, `govo:hasAppointmentBasis gov:DelegatedGovernanceAppointment`, attached directly to the Academy Trust | Direct |
 | Trustee appointment routes | 3 Member-appointed, 6 Co-opted | `govo:hasAppointingBody` (`gov:AppointedByAcademyMembers`, `gov:AppointedByGoverningBody`) | Direct for Member-appointed; Candidate for Co-opted, reusing the closest value |

@@ -13,7 +13,7 @@ title: EPR Ontology — multi-academy trust example
 | **Member used in examples** | Bourne Abbey Church of England Primary Academy, URN 136354, Lincolnshire |
 | **Ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/` |
 | **Vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/` |
-| **Preferred prefixes** | `epro:` (properties) · `epr:` (classes and named individuals) |
+| **Preferred prefixes** | `esto:` (properties) · `est:` (classes and named individuals) |
 | **Version** | 1.4 |
 | **OWL documentation** | [Ontology reference (WIDOCO)](/education-provider-registry-docs/models/establishment/ontology/) |
 | **Source** | [establishment-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment/establishment-ontology.ttl) |
@@ -28,9 +28,9 @@ title: EPR Ontology — multi-academy trust example
 
 This example shows how a **multi-academy trust** and its member academies are represented in the EPR ontology. The key structural features are:
 
-1. **The trust is a named individual** — `epr:MultiAcademyTrust` carries group-level identifiers: Group ID, UKPRN, Companies House number, and incorporation date.
-2. **Each member academy has an accountability relationship** to the MAT via `epro:accountableToAcademyTrust`.
-3. **Each member academy has a group membership record** (`epr:GroupMembership`) with a join date, linked to the trust via `epro:memberOf`.
+1. **The trust is a named individual** — `est:MultiAcademyTrust` carries group-level identifiers: Group ID, UKPRN, Companies House number, and incorporation date.
+2. **Each member academy has an accountability relationship** to the MAT via `esto:accountableToAcademyTrust`.
+3. **Each member academy has a group membership record** (`est:GroupMembership`) with a join date, linked to the trust via `esto:memberOf`.
 4. **Religious character** is an open-ended value set (SKOS concept from the vocabulary) rather than an OWL named individual. The three academies in this trust all have Church of England character.
 
 Abbey Academies Trust was incorporated in July 2010 and has three member academies, all Church of England primary schools in the South Lincolnshire area. Bourne Abbey Church of England Primary Academy (URN 136354) is the founding member, joining at incorporation in December 2010.
@@ -41,18 +41,18 @@ Abbey Academies Trust was incorporated in July 2010 and has three member academi
 
 ```mermaid
 graph LR
-    MAT["inst:mat-2044<br/>(epr:MultiAcademyTrust)<br/>Abbey Academies Trust"]
+    MAT["inst:mat-2044<br/>(est:MultiAcademyTrust)<br/>Abbey Academies Trust"]
 
-    A1["inst:136354<br/>(epr:AcademyConverter)<br/>Bourne Abbey CofE Primary"]
-    A2["inst:140214<br/>(epr:AcademyConverter)<br/>Bourne Elsea Park CofE Primary"]
-    A3["inst:146279<br/>(epr:AcademyConverter)<br/>Colsterworth CofE Primary"]
+    A1["inst:136354<br/>(est:AcademyConverter)<br/>Bourne Abbey CofE Primary"]
+    A2["inst:140214<br/>(est:AcademyConverter)<br/>Bourne Elsea Park CofE Primary"]
+    A3["inst:146279<br/>(est:AcademyConverter)<br/>Colsterworth CofE Primary"]
 
     A1 -->|accountableToAcademyTrust| MAT
     A2 -->|accountableToAcademyTrust| MAT
     A3 -->|accountableToAcademyTrust| MAT
 
-    MAT -->|identifiedByGroupId| GID["epr:GroupId<br/>TR00261"]
-    MAT -->|hasGroupCompaniesHouseNumber| CH["epr:CompaniesHouseNumber<br/>07318714"]
+    MAT -->|identifiedByGroupId| GID["est:GroupId<br/>TR00261"]
+    MAT -->|hasGroupCompaniesHouseNumber| CH["est:CompaniesHouseNumber<br/>07318714"]
 ```
 
 ---
@@ -62,8 +62,8 @@ graph LR
 All examples use the following prefixes.
 
 ```
-@prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .
@@ -75,35 +75,35 @@ All examples use the following prefixes.
 
 ## Example 1 — Trust identity
 
-The trust is a named individual (`inst:mat-2044`) of type `epr:MultiAcademyTrust`. It carries the group UID (the GIAS internal identifier), the Group ID (the trust register identifier), the UKPRN assigned to the trust organisation, the Companies House number, and the date the trust was incorporated.
+The trust is a named individual (`inst:mat-2044`) of type `est:MultiAcademyTrust`. It carries the group UID (the GIAS internal identifier), the Group ID (the trust register identifier), the UKPRN assigned to the trust organisation, the Companies House number, and the date the trust was incorporated.
 
 ```
 inst:mat-2044
-    a epr:MultiAcademyTrust ;
+    a est:MultiAcademyTrust ;
     rdfs:label "Abbey Academies Trust"@en ;
 
-    epro:hasGroupUniqueIdentifier [
-        a epr:GroupUniqueIdentifier ;
+    esto:hasGroupUniqueIdentifier [
+        a est:GroupUniqueIdentifier ;
         rdfs:label "2044"
     ] ;
 
-    epro:identifiedByGroupId [
-        a epr:GroupId ;
+    esto:identifiedByGroupId [
+        a est:GroupId ;
         rdfs:label "TR00261"
     ] ;
 
-    epro:hasGroupUkprn [
-        a epr:GroupUkprn ;
+    esto:hasGroupUkprn [
+        a est:GroupUkprn ;
         rdfs:label "10058308"
     ] ;
 
-    epro:hasGroupCompaniesHouseNumber [
-        a epr:CompaniesHouseNumber ;
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
         rdfs:label "07318714"
     ] ;
 
-    epro:hasGroupIncorporatedOnDate [
-        a epr:GroupIncorporatedOnDate ;
+    esto:hasGroupIncorporatedOnDate [
+        a est:GroupIncorporatedOnDate ;
         rdfs:label "2010-07-19"^^xsd:date
     ] .
 ```
@@ -116,39 +116,39 @@ Bourne Abbey Church of England Primary Academy was the founding member of the tr
 
 ```
 inst:136354
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
 
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "136354"
         ] ;
 
-        epro:hasUkprn [
-            a epr:UkProviderReferenceNumber ;
+        esto:hasUkprn [
+            a est:UkProviderReferenceNumber ;
             rdfs:label "10032221"
         ] ;
 
-        epro:hasLocalAuthorityScopedEstablishmentNumber [
-            a epr:LocalAuthorityScopedEstablishmentNumber ;
-            epro:hasLocalAuthorityContext  inst:la-925 ;
-            epro:hasEstablishmentNumberValue [
-                a epr:EstablishmentNumber ;
+        esto:hasLocalAuthorityScopedEstablishmentNumber [
+            a est:LocalAuthorityScopedEstablishmentNumber ;
+            esto:hasLocalAuthorityContext  inst:la-925 ;
+            esto:hasEstablishmentNumberValue [
+                a est:EstablishmentNumber ;
                 rdfs:label "3510"
             ] ;
-            epro:hasIdentifierRole epr:CurrentIdentifierRole
+            esto:hasIdentifierRole est:CurrentIdentifierRole
         ]
     ] ;
 
-    epro:hasEstablishmentLifecycle [
-        a epr:EstablishmentLifecycle ;
-        epro:classifiedByEstablishmentStatus epr:OpenStatus
+    esto:hasEstablishmentLifecycle [
+        a est:EstablishmentLifecycle ;
+        esto:classifiedByEstablishmentStatus est:OpenStatus
     ] .
 
 inst:la-925
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "Lincolnshire"@en ;
     rdfs:comment "LA code 925"@en .
 ```
@@ -157,22 +157,22 @@ inst:la-925
 
 ## Example 3 — Classification, accountability and religious character
 
-The accountability relationship points to the MAT (`inst:mat-2044`). Religious character (`epr:ChurchOfEnglandCharacter`) is a SKOS concept from the open-ended vocabulary — it uses the same `epr:` namespace but is a `skos:Concept`, not an `owl:NamedIndividual`. This means it is represented differently from closed-enumeration values like `epr:PrimaryPhase`.
+The accountability relationship points to the MAT (`inst:mat-2044`). Religious character (`est:ChurchOfEnglandCharacter`) is a SKOS concept from the open-ended vocabulary — it uses the same `est:` namespace but is a `skos:Concept`, not an `owl:NamedIndividual`. This means it is represented differently from closed-enumeration values like `est:PrimaryPhase`.
 
 ```
 inst:136354
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEstablishmentClassification [
-        a epr:EstablishmentClassification ;
-        epro:hasEstablishmentType          epr:AcademyConverter ;
-        epro:hasEducationPhase             epr:PrimaryPhase ;
-        epro:classifiedByReligiousCharacter epr:ChurchOfEnglandCharacter
+    esto:hasEstablishmentClassification [
+        a est:EstablishmentClassification ;
+        esto:hasEstablishmentType          est:AcademyConverter ;
+        esto:hasEducationPhase             est:PrimaryPhase ;
+        esto:classifiedByReligiousCharacter est:ChurchOfEnglandCharacter
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToAcademyTrust inst:mat-2044
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToAcademyTrust inst:mat-2044
     ] .
 ```
 
@@ -184,44 +184,44 @@ Primary academy, mixed, non-selective, no boarding, no sixth form. The age range
 
 ```
 inst:136354
-    a epr:AcademyConverter ;
+    a est:AcademyConverter ;
 
-    epro:hasEstablishmentLocationAndContact [
-        a epr:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
 
-        epro:hasMainAddress [
-            a epr:MainAddress ;
+        esto:hasMainAddress [
+            a est:MainAddress ;
             rdfs:label "Abbey Road, Bourne, PE10 9EP"
         ] ;
 
-        epro:hasWebsite [
-            a epr:Website ;
+        esto:hasWebsite [
+            a est:Website ;
             rdfs:label "https://www.bourneabbeyprimary.co.uk/"
         ] ;
 
-        epro:hasTelephoneNumber [
-            a epr:TelephoneNumber ;
+        esto:hasTelephoneNumber [
+            a est:TelephoneNumber ;
             rdfs:label "01778422163"
         ] ;
 
-        epro:hasHeadteacherOrPrincipal [
-            a epr:HeadteacherOrPrincipal ;
+        esto:hasHeadteacherOrPrincipal [
+            a est:HeadteacherOrPrincipal ;
             rdfs:label "Mrs Catherine Harrison"@en
         ]
     ] ;
 
-    epro:hasEducationAdmissionsAndProvision [
-        a epr:EducationAdmissionsAndProvision ;
+    esto:hasEducationAdmissionsAndProvision [
+        a est:EducationAdmissionsAndProvision ;
 
-        epro:hasStatutoryAgeRange [
-            a epr:StatutoryAgeRange ;
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
             rdfs:label "2 to 11"
         ] ;
 
-        epro:classifiedByAdmissionsPolicy   epr:NonSelectiveAdmissions ;
-        epro:classifiedByGenderOfEntry      epr:MixedGenderEntry ;
-        epro:classifiedByBoardingProvision  epr:NoBoarders ;
-        epro:classifiedBySixthFormProvision epr:NoSixthForm
+        esto:classifiedByAdmissionsPolicy   est:NonSelectiveAdmissions ;
+        esto:classifiedByGenderOfEntry      est:MixedGenderEntry ;
+        esto:classifiedByBoardingProvision  est:NoBoarders ;
+        esto:classifiedBySixthFormProvision est:NoSixthForm
     ] .
 ```
 
@@ -229,7 +229,7 @@ inst:136354
 
 ## Example 5 — Group membership
 
-Each member academy has a `epr:GroupMembership` record carrying the date it joined the trust. A single establishment can be a member of more than one group simultaneously (for example, a federation and a trust), so membership is a separate class rather than a direct link.
+Each member academy has a `est:GroupMembership` record carrying the date it joined the trust. A single establishment can be a member of more than one group simultaneously (for example, a federation and a trust), so membership is a separate class rather than a direct link.
 
 The three members of Abbey Academies Trust joined at different times as the trust grew. The founding member (URN 136354) joined at trust formation in December 2010; the second academy joined in September 2014; the third in September 2018.
 
@@ -237,12 +237,12 @@ Bourne Abbey Church of England Primary Academy (URN 136354) — founding member,
 
 ```
 inst:136354
-    a epr:AcademyConverter ;
-    epro:hasGroupMembership [
-        a epr:GroupMembership ;
-        epro:memberOf inst:mat-2044 ;
-        epro:hasGroupMembershipDate [
-            a epr:GroupMembershipDate ;
+    a est:AcademyConverter ;
+    esto:hasGroupMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:mat-2044 ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
             rdfs:label "2010-12-01"^^xsd:date
         ]
     ] .
@@ -252,12 +252,12 @@ Bourne Elsea Park Church of England Primary Academy (URN 140214) — joined Sept
 
 ```
 inst:140214
-    a epr:AcademyConverter ;
-    epro:hasGroupMembership [
-        a epr:GroupMembership ;
-        epro:memberOf inst:mat-2044 ;
-        epro:hasGroupMembershipDate [
-            a epr:GroupMembershipDate ;
+    a est:AcademyConverter ;
+    esto:hasGroupMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:mat-2044 ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
             rdfs:label "2014-09-01"^^xsd:date
         ]
     ] .
@@ -267,12 +267,12 @@ Colsterworth Church of England Primary School (URN 146279) — joined September 
 
 ```
 inst:146279
-    a epr:AcademyConverter ;
-    epro:hasGroupMembership [
-        a epr:GroupMembership ;
-        epro:memberOf inst:mat-2044 ;
-        epro:hasGroupMembershipDate [
-            a epr:GroupMembershipDate ;
+    a est:AcademyConverter ;
+    esto:hasGroupMembership [
+        a est:GroupMembership ;
+        esto:memberOf inst:mat-2044 ;
+        esto:hasGroupMembershipDate [
+            a est:GroupMembershipDate ;
             rdfs:label "2018-09-01"^^xsd:date
         ]
     ] .
@@ -280,80 +280,11 @@ inst:146279
 
 ---
 
-## Example 6 — Trust board governance
+## Example 6 — Governance
 
-Trust-level governance appointments are recorded on the trust entity using `epro:hasGroupGovernanceAppointment`. A MAT typically has a small number of company members (who hold the trust to account) and a larger board of trustees (who govern the trust day to day). Members and trustees are distinct roles in the EPR governance model.
+Governance appointments (governors, trustees, members, local governors and governance professionals) are no longer modelled directly on the establishment or trust entity within this ontology. They are modelled by the dedicated governance model (`gov:`/`govo:` namespace, `models/governance/governance-ontology.ttl`), which links to `est:Establishment`, `est:AcademyTrust` and `est:Federation` via `govo:hasGovernanceAppointment` - a property with no fixed domain, so it applies directly to this establishment/trust without needing a separate establishment-side governance property.
 
-**All names below are anonymised.** The five-person trust board shown is realistic in composition for a growing MAT — two members, a chair of trustees, and two further trustees — but every name is a fictional placeholder. No real personal data from the GIAS extract has been used.
-
-Trustee and member names are personal data (PII) under UK GDPR but are **publicly accessible by design** — they are published in the GIAS public CSV extract and accessible to anonymous users. No EPR access controls are applied to appointment records or person names. The `GovernancePersonIdentifier` (a pseudonymous hash derived from date of birth) is a separate attribute that is not publicly accessible and carries its own access controls.
-
-```
-inst:mat-2044
-    a epr:MultiAcademyTrust ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:MemberRole ;
-        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mr David Harrison"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:MemberRole ;
-        epro:hasGovernanceAppointingBody epr:AppointingBodyNotApplicable ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mrs Susan Morgan"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:ChairOfTrusteesRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2017-09-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Ms Rachel Davies"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:TrusteeRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2018-01-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mr Thomas Lee"@en
-        ]
-    ] ;
-
-    epro:hasGroupGovernanceAppointment [
-        a epr:GovernanceAppointment ;
-        epro:hasGovernanceRoleType       epr:TrusteeRole ;
-        epro:hasGovernanceAppointingBody epr:AppointedByAcademyMembers ;
-        epro:hasGovernanceAppointmentDate [
-            a epr:GovernanceAppointmentDate ;
-            rdfs:label "2020-04-01"^^xsd:date
-        ] ;
-        epro:appointmentOf [
-            a epr:GovernancePerson ;
-            rdfs:label "Mrs Claire Watson"@en
-        ]
-    ] .
-```
+See the [governance model](../../governance/) and its [worked examples](../../governance/worked-examples/) for how appointments, role types, appointing bodies and terms of office are represented.
 
 ---
 

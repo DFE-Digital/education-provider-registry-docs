@@ -30,7 +30,7 @@ The model is split across three layers. The vocabulary and taxonomy define terms
   <li><strong>Field rules (Markdown)</strong> - the same rules in plain English</li>
 </ul>
 
-All artefacts share the same namespace (`epr:`) so a term defined in the vocabulary is the same term referenced in the ontology and checked in the SHACL shapes.
+All artefacts share the same namespace (`est:`) so a term defined in the vocabulary is the same term referenced in the ontology and checked in the SHACL shapes.
 
 ## Source files
 

@@ -1,5 +1,5 @@
-﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+﻿@prefix est:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -45,16 +45,16 @@
     owl:versionInfo "0.1" ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
-    epr:status "Provisional"@en .
+    est:status "Provisional"@en .
 
 
 #################################################################
 # Identity - URN
 #################################################################
 
-epr:UrnValueShape
+est:UrnValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:UniqueReferenceNumber ;
+    sh:targetClass est:UniqueReferenceNumber ;
     rdfs:label "URN value shape"@en ;
     rdfs:comment "A URN must carry exactly one value, which must be a positive integer in the 6-digit GIAS range."@en ;
 
@@ -74,9 +74,9 @@ epr:UrnValueShape
 # Identity - UKPRN
 #################################################################
 
-epr:UkprnValueShape
+est:UkprnValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:UkProviderReferenceNumber ;
+    sh:targetClass est:UkProviderReferenceNumber ;
     rdfs:label "UKPRN value shape"@en ;
     rdfs:comment "A UKPRN must carry exactly one value, which must be an 8-digit positive integer."@en ;
 
@@ -96,9 +96,9 @@ epr:UkprnValueShape
 # Identity - establishment number
 #################################################################
 
-epr:EstablishmentNumberValueShape
+est:EstablishmentNumberValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:EstablishmentNumber ;
+    sh:targetClass est:EstablishmentNumber ;
     rdfs:label "Establishment number value shape"@en ;
     rdfs:comment "An establishment number must carry exactly one value, a positive integer between 1 and 9999. The four-digit zero-padded display form belongs to DfE number / LAESTAB rendering, not the stored value."@en ;
 
@@ -118,9 +118,9 @@ epr:EstablishmentNumberValueShape
 # Lifecycle - dates
 #################################################################
 
-epr:OpenDateValueShape
+est:OpenDateValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:OpenDate ;
+    sh:targetClass est:OpenDate ;
     rdfs:label "Open date value shape"@en ;
 
     sh:property [
@@ -132,9 +132,9 @@ epr:OpenDateValueShape
         sh:message "Open date must be an xsd:date value."@en ;
     ] .
 
-epr:ClosedDateValueShape
+est:ClosedDateValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:ClosedDate ;
+    sh:targetClass est:ClosedDate ;
     rdfs:label "Closed date value shape"@en ;
 
     sh:property [
@@ -146,9 +146,9 @@ epr:ClosedDateValueShape
         sh:message "Closed date must be an xsd:date value."@en ;
     ] .
 
-epr:DateLastChangedValueShape
+est:DateLastChangedValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:DateLastChangedOrConfirmed ;
+    sh:targetClass est:DateLastChangedOrConfirmed ;
     rdfs:label "Date last changed value shape"@en ;
 
     sh:property [
@@ -165,9 +165,9 @@ epr:DateLastChangedValueShape
 # Lifecycle - inspection dates (BSO and independent schools)
 #################################################################
 
-epr:DateOfLastInspectionVisitValueShape
+est:DateOfLastInspectionVisitValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:DateOfLastInspectionVisit ;
+    sh:targetClass est:DateOfLastInspectionVisit ;
     rdfs:label "Date of last inspection visit value shape"@en ;
 
     sh:property [
@@ -179,9 +179,9 @@ epr:DateOfLastInspectionVisitValueShape
         sh:message "Date of last inspection visit must be an xsd:date value."@en ;
     ] .
 
-epr:DateOfNextInspectionVisitValueShape
+est:DateOfNextInspectionVisitValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:DateOfNextInspectionVisit ;
+    sh:targetClass est:DateOfNextInspectionVisit ;
     rdfs:label "Date of next inspection visit value shape"@en ;
 
     sh:property [
@@ -198,9 +198,9 @@ epr:DateOfNextInspectionVisitValueShape
 # Capacity and pupil measures
 #################################################################
 
-epr:SchoolCapacityValueShape
+est:SchoolCapacityValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:SchoolCapacity ;
+    sh:targetClass est:SchoolCapacity ;
     rdfs:label "School capacity value shape"@en ;
 
     sh:property [
@@ -212,9 +212,9 @@ epr:SchoolCapacityValueShape
         sh:message "School capacity must be a non-negative integer."@en ;
     ] .
 
-epr:PupilCountValueShape
+est:PupilCountValueShape
     a sh:NodeShape ;
-    sh:targetClass epr:PupilCount ;
+    sh:targetClass est:PupilCount ;
     rdfs:label "Pupil count value shape"@en ;
 
     sh:property [
@@ -231,14 +231,14 @@ epr:PupilCountValueShape
 # SEN and resourced provision measures
 #################################################################
 
-epr:ResourcedProvisionMeasureShape
+est:ResourcedProvisionMeasureShape
     a sh:NodeShape ;
-    sh:targetClass epr:ResourcedProvisionMeasure ;
+    sh:targetClass est:ResourcedProvisionMeasure ;
     rdfs:label "Resourced provision measure shape"@en ;
     rdfs:comment "Both capacity and number on roll for a resourced provision unit must be non-negative integers. Number on roll must not exceed capacity."@en ;
 
     sh:property [
-        sh:path epr:ResourcedProvisionCapacity ;
+        sh:path est:ResourcedProvisionCapacity ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:name "Resourced provision capacity"@en ;
@@ -246,21 +246,21 @@ epr:ResourcedProvisionMeasureShape
     ] ;
 
     sh:property [
-        sh:path epr:ResourcedProvisionPupilCount ;
+        sh:path est:ResourcedProvisionPupilCount ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:name "Resourced provision number on roll"@en ;
         sh:message "Resourced provision number on roll must be a non-negative integer."@en ;
     ] .
 
-epr:SenUnitMeasureShape
+est:SenUnitMeasureShape
     a sh:NodeShape ;
-    sh:targetClass epr:SenUnitMeasure ;
+    sh:targetClass est:SenUnitMeasure ;
     rdfs:label "SEN unit measure shape"@en ;
     rdfs:comment "Both capacity and number on roll for a SEN unit must be non-negative integers."@en ;
 
     sh:property [
-        sh:path epr:SenUnitCapacity ;
+        sh:path est:SenUnitCapacity ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:name "SEN unit capacity"@en ;
@@ -268,21 +268,21 @@ epr:SenUnitMeasureShape
     ] ;
 
     sh:property [
-        sh:path epr:SenUnitPupilCount ;
+        sh:path est:SenUnitPupilCount ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:name "SEN unit number on roll"@en ;
         sh:message "SEN unit number on roll must be a non-negative integer."@en ;
     ] .
 
-epr:SpecialPupilMeasureShape
+est:SpecialPupilMeasureShape
     a sh:NodeShape ;
-    sh:targetClass epr:SpecialPupilMeasure ;
+    sh:targetClass est:SpecialPupilMeasure ;
     rdfs:label "Special pupil measure shape"@en ;
     rdfs:comment "Counts of pupils with and without SEN statements or EHC plans must be non-negative integers."@en ;
 
     sh:property [
-        sh:path epr:SpecialPupilsWithStatement ;
+        sh:path est:SpecialPupilsWithStatement ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:name "Special pupils with SEN statement or EHC plan"@en ;
@@ -290,7 +290,7 @@ epr:SpecialPupilMeasureShape
     ] ;
 
     sh:property [
-        sh:path epr:SpecialPupilsWithoutStatement ;
+        sh:path est:SpecialPupilsWithoutStatement ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:name "Special pupils without SEN statement or EHC plan"@en ;
@@ -302,14 +302,14 @@ epr:SpecialPupilMeasureShape
 # Statutory age range
 #################################################################
 
-epr:StatutoryAgeRangeShape
+est:StatutoryAgeRangeShape
     a sh:NodeShape ;
-    sh:targetClass epr:StatutoryAgeRange ;
+    sh:targetClass est:StatutoryAgeRange ;
     rdfs:label "Statutory age range shape"@en ;
     rdfs:comment "Lower and upper statutory ages must be non-negative integers within valid bounds, and the upper age must not be less than the lower age."@en ;
 
     sh:property [
-        sh:path epr:AgeLow ;
+        sh:path est:AgeLow ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:minInclusive 0 ;
         sh:maxInclusive 19 ;
@@ -319,7 +319,7 @@ epr:StatutoryAgeRangeShape
     ] ;
 
     sh:property [
-        sh:path epr:AgeHigh ;
+        sh:path est:AgeHigh ;
         sh:datatype xsd:nonNegativeInteger ;
         sh:minInclusive 0 ;
         sh:maxInclusive 25 ;
@@ -337,11 +337,11 @@ epr:StatutoryAgeRangeShape
 # can be expressed for their values:
 #
 # - PupilsEligibleForFreeSchoolMeals (count):
-#     Requires epr:PupilsEligibleForFreeSchoolMeals data property.
+#     Requires est:PupilsEligibleForFreeSchoolMeals data property.
 #     Constraint: xsd:nonNegativeInteger.
 #
 # - PupilsEligibleForFreeSchoolMeals (percentage):
-#     Requires epr:PercentagePupilsEligibleForFreeSchoolMeals data property.
+#     Requires est:PercentagePupilsEligibleForFreeSchoolMeals data property.
 #     Constraint: xsd:decimal; sh:minInclusive 0; sh:maxInclusive 100.
 #
 # These are documented here as pending items, not structural omissions.

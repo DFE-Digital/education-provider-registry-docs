@@ -13,7 +13,7 @@ title: Governance Ontology — George Green's School example
 | **Establishment type** | Voluntary controlled school |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -93,11 +93,11 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    LA["ginst:tower-hamlets<br/>(epr:LocalAuthority)"]
-    S["inst:george-greens<br/>(epr:VoluntaryControlledSchool)"]
+    LA["ginst:tower-hamlets<br/>(est:LocalAuthority)"]
+    S["inst:george-greens<br/>(est:VoluntaryControlledSchool)"]
     GB["ginst:george-greens-governing-board<br/>(gov:GoverningBoard)"]
 
-    S -->|"epro:hasAccountabilityRelationship /<br/>epro:accountableToLocalAuthority"| LA
+    S -->|"esto:hasAccountabilityRelationship /<br/>esto:accountableToLocalAuthority"| LA
     S -->|govo:hasGovernanceBody| GB
 
     GB -->|govo:hasGovernanceAppointment| G1["JR — ExOfficioGovernor"]
@@ -128,8 +128,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -144,24 +144,24 @@ The same LA-accountability pattern as Gilded Hollins, Millfield and Aldgate. Thi
 
 ```
 ginst:tower-hamlets
-    a epr:LocalAuthority ;
+    a est:LocalAuthority ;
     rdfs:label "London Borough of Tower Hamlets"@en .
 
 inst:george-greens
-    a epr:VoluntaryControlledSchool ;
+    a est:VoluntaryControlledSchool ;
     rdfs:label "George Green's School"@en ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "100974"
         ]
     ] ;
 
-    epro:hasAccountabilityRelationship [
-        a epr:EstablishmentAccountability ;
-        epro:accountableToLocalAuthority ginst:tower-hamlets
+    esto:hasAccountabilityRelationship [
+        a est:EstablishmentAccountability ;
+        esto:accountableToLocalAuthority ginst:tower-hamlets
     ] .
 
 ginst:george-greens-governing-board
@@ -418,8 +418,8 @@ ginst:george-greens-curriculum-learning-inclusion-committee
 
 | Real-world concept | George Green's evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Voluntary controlled school | George Green's School, URN 100974 | `epr:VoluntaryControlledSchool` | Direct |
-| Maintaining Local Authority | London Borough of Tower Hamlets | `epr:LocalAuthority` + `epro:hasAccountabilityRelationship` + `epro:accountableToLocalAuthority` | Direct |
+| Voluntary controlled school | George Green's School, URN 100974 | `est:VoluntaryControlledSchool` | Direct |
+| Maintaining Local Authority | London Borough of Tower Hamlets | `est:LocalAuthority` + `esto:hasAccountabilityRelationship` + `esto:accountableToLocalAuthority` | Direct |
 | Governing Board | The statutory governing body, published under this name | `gov:GoverningBoard` + `govo:hasGovernanceBody` | Direct - first use of this synonym class on this site |
 | Governor categories | Ex-officio headteacher, Parent, Local Authority | `govo:hasRoleType` (`gov:ExOfficioGovernor`, `gov:ParentGovernor`, `gov:LocalAuthorityGovernor`) | Direct |
 | Governors with no stated category | LB, TAl, RK, TAd | `govo:hasRoleType gov:Governor` (generic) | Candidate |

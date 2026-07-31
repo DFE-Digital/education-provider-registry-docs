@@ -1,9 +1,9 @@
 ﻿param(
     [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" (Join-Path "establishment" "establishment-taxonomy.ttl"))),
     [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" (Join-Path "models" (Join-Path "establishment" "taxonomy")))),
-    [string]$CompactPrefix = "epr",
+    [string]$CompactPrefix = "est",
     [string[]]$ExtraPrefixes = @(),
-    [string]$TaxonomyScheme = "epr:establishmentDetailsTaxonomy",
+    [string]$TaxonomyScheme = "est:establishmentDetailsTaxonomy",
     [string]$PageTitle = "Education Provider Registry Taxonomy",
     [string]$SourceLabel = "models/establishment/establishment-taxonomy.ttl"
 )
@@ -103,7 +103,7 @@ function Html-Encode {
 
 # ExtraPrefixes lets this taxonomy classify concepts that belong to another
 # vocabulary/ontology (referenced by URI, not redefined) - e.g. the
-# governance taxonomy classifies epr:Establishment, epr:Person etc.
+# governance taxonomy classifies est:Establishment, est:Person etc.
 # alongside its own gov: concepts. Detected blocks record which prefix they
 # came from so identifiers and status lookups stay prefix-correct.
 $allPrefixes = @($CompactPrefix) + $ExtraPrefixes
@@ -250,7 +250,7 @@ foreach ($taxon in $taxons) {
             $conceptLookup[$_].PreferredLabel
         }
         else {
-            "epr:$_"
+            "est:$_"
         }
     }) -join "<br>"
 

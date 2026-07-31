@@ -13,7 +13,7 @@ title: Governance Ontology — Co-operative Academies Trust / Co-op Academy Medl
 | **Trust type** | Multi-academy trust (MAT) |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -89,8 +89,8 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:coop-academies-trust<br/>(epr:AcademyTrust)<br/>The Co-operative Academies Trust"]
-    MED["inst:medlock<br/>(epr:Academy)<br/>Co-op Academy Medlock"]
+    AT["inst:coop-academies-trust<br/>(est:AcademyTrust)<br/>The Co-operative Academies Trust"]
+    MED["inst:medlock<br/>(est:Academy)<br/>Co-op Academy Medlock"]
     TB["ginst:coop-trust-board<br/>(gov:TrustBoard)"]
     ACC["ginst:medlock-acc<br/>(gov:Committee)<br/>Academy Community Council"]
 
@@ -120,8 +120,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -132,31 +132,31 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Legal entity, academy and trust board identity
 
-The Academy Trust is one legal entity carrying two registry identifiers (GIAS UID and Companies House number) - not two organisations. `epr:AcademyTrust` and `epr:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); `epro:hasGroupUniqueIdentifier` and `epro:hasGroupCompaniesHouseNumber` are reused, unmodified, from `establishment-ontology.ttl`.
+The Academy Trust is one legal entity carrying two registry identifiers (GIAS UID and Companies House number) - not two organisations. `est:AcademyTrust` and `est:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); `esto:hasGroupUniqueIdentifier` and `esto:hasGroupCompaniesHouseNumber` are reused, unmodified, from `establishment-ontology.ttl`.
 
 ```
 inst:coop-academies-trust
-    a epr:AcademyTrust ;
+    a est:AcademyTrust ;
     rdfs:label "The Co-operative Academies Trust"@en ;
 
-    epro:hasGroupUniqueIdentifier [
-        a epr:GroupUniqueIdentifier ;
+    esto:hasGroupUniqueIdentifier [
+        a est:GroupUniqueIdentifier ;
         rdfs:label "2777"
     ] ;
 
-    epro:hasGroupCompaniesHouseNumber [
-        a epr:CompaniesHouseNumber ;
+    esto:hasGroupCompaniesHouseNumber [
+        a est:CompaniesHouseNumber ;
         rdfs:label "07747126"
     ] .
 
 inst:medlock
-    a epr:Academy ;
+    a est:Academy ;
     rdfs:label "Co-op Academy Medlock"@en ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "150612"
         ]
     ] .
@@ -390,11 +390,11 @@ inst:coop-academies-trust
 
 | Real-world concept | Medlock evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust (legal entity) | The Co-operative Academies Trust, UID 2777, Companies House 07747126 | `epr:AcademyTrust` | Direct - reused type stub, not redefined |
-| Academy | Co-op Academy Medlock, URN 150612 | `epr:Academy` | Direct - reused type stub |
+| Academy Trust (legal entity) | The Co-operative Academies Trust, UID 2777, Companies House 07747126 | `est:AcademyTrust` | Direct - reused type stub, not redefined |
+| Academy | Co-op Academy Medlock, URN 150612 | `est:Academy` | Direct - reused type stub |
 | Trust Board | The board accountable for the Trust | `gov:TrustBoard` | Direct |
 | Academy Community Council | Committee of the Trust Board, governance scope over Medlock | `gov:Committee` + `govo:isCommitteeOf` + `govo:hasGovernanceBody` | Direct |
-| Academy Trust Membership | 6 Members, including a corporate member | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AcademyTrustMember`) attached directly to `epr:AcademyTrust` | Direct |
+| Academy Trust Membership | 6 Members, including a corporate member | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AcademyTrustMember`) attached directly to `est:AcademyTrust` | Direct |
 | Trustee Appointment | 9 Trustees, 1 Chair of Trustees | `govo:hasRoleType gov:Trustee`, `govo:hasAppointingBody gov:AppointedByAcademyMembers` | Direct |
 | Legal Capacity (Director) | Trustees are also company directors and charity trustees | `govo:hasLegalCapacity` (`gov:CompanyDirector`, `gov:CharityTrustee`) | Direct |
 | Role Assignment (Chair / Vice-Chair / Committee Chair) | Chair of Trustees, Vice-Chair of Trust Board, Chair of ACC | `gov:RoleAssignment` + `govo:layeredOn` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair` at Trust Board level; `gov:CommitteeChair` for the ACC, a committee) | Direct |

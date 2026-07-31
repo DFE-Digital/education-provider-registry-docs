@@ -13,7 +13,7 @@ title: Governance Ontology — Manor High School example
 | **Establishment type** | Academy converter |
 | **Governance ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/` |
 | **Governance vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/` |
-| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `epr:`/`epro:` (reused from the main EPR ontology) |
+| **Preferred prefixes** | `govo:` (properties) · `gov:` (classes and named individuals) · `est:`/`esto:` (reused from the main EPR ontology) |
 | **OWL documentation** | [Governance ontology reference (WIDOCO)](../../ontology/) |
 | **Source** | [governance-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/governance/governance-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
@@ -83,8 +83,8 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:oak-mat<br/>(epr:AcademyTrust)<br/>OAK Multi Academy Trust"]
-    S["inst:manor-high<br/>(epr:MainstreamAcademy)<br/>Manor High School"]
+    AT["inst:oak-mat<br/>(est:AcademyTrust)<br/>OAK Multi Academy Trust"]
+    S["inst:manor-high<br/>(est:MainstreamAcademy)<br/>Manor High School"]
     TB["ginst:oak-trust-board<br/>(gov:TrustBoard)"]
     LGB["ginst:manor-lgb<br/>(gov:LocalGoverningBody)"]
 
@@ -111,8 +111,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
+@prefix est:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix esto:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -123,26 +123,26 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Academy, Academy Trust and Trust Board identity
 
-Manor High School is a secondary academy converter, operated by OAK Multi Academy Trust. `epr:MainstreamAcademy` is the specific leaf type (not the generic `epr:Establishment` or `epr:Academy` stub); `epro:hasAcademyRoute` records that it converted from an existing school rather than being sponsored into being.
+Manor High School is a secondary academy converter, operated by OAK Multi Academy Trust. `est:MainstreamAcademy` is the specific leaf type (not the generic `est:Establishment` or `est:Academy` stub); `esto:hasAcademyRoute` records that it converted from an existing school rather than being sponsored into being.
 
 `ginst:oak-trust-board` is declared here only as the body Manor's Local Governing Body is delegated by (Example 2) - this investigation is scoped to Manor High's own local governance and doesn't cover OAK's Members, Trustees or central operational appointments. OAK's own Trust-level detail - the same `inst:oak-mat` and `ginst:oak-trust-board` instances - is covered by the [OAK Multi Academy Trust / Brookside Primary School worked example](../oak-brookside/).
 
 ```
 inst:manor-high
-    a epr:MainstreamAcademy ;
+    a est:MainstreamAcademy ;
     rdfs:label "Manor High School"@en ;
-    epro:hasAcademyRoute epr:ConverterRoute ;
+    esto:hasAcademyRoute est:ConverterRoute ;
 
-    epro:hasEstablishmentIdentity [
-        a epr:EstablishmentIdentity ;
-        epro:identifiedByUrn [
-            a epr:UniqueReferenceNumber ;
+    esto:hasEstablishmentIdentity [
+        a est:EstablishmentIdentity ;
+        esto:identifiedByUrn [
+            a est:UniqueReferenceNumber ;
             rdfs:label "137120"
         ]
     ] .
 
 inst:oak-mat
-    a epr:AcademyTrust ;
+    a est:AcademyTrust ;
     rdfs:label "OAK Multi Academy Trust"@en .
 
 ginst:oak-trust-board
@@ -358,8 +358,8 @@ ginst:manor-lgb
 
 | Real-world concept | Manor High evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy (converter) | Manor High School, URN 137120 | `epr:MainstreamAcademy` + `epro:hasAcademyRoute epr:ConverterRoute` | Direct - reused leaf type and route property from the main EPR ontology |
-| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `epr:AcademyTrust` | Direct |
+| Academy (converter) | Manor High School, URN 137120 | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:ConverterRoute` | Direct - reused leaf type and route property from the main EPR ontology |
+| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:AcademyTrust` | Direct |
 | Trust Board | The board accountable for OAK Multi Academy Trust | `gov:TrustBoard` + `govo:hasGovernanceBody` | Direct |
 | Local Governing Body | Manor's local governing body, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` (delegation) + `govo:hasGovernanceBody` (scope over the academy) | Direct |
 | Governor categories | Parent, Staff, Appointed, MAT Representative | `govo:hasRoleType` (`gov:ParentGovernor`, `gov:StaffGovernor`, `gov:CoOptedGovernor`, `gov:Governor`) | Candidate - Manor's Local Governing Body is not constituted under SI 2012/1034, unlike a maintained school's governing body |

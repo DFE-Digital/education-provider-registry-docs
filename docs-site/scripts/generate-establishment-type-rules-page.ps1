@@ -108,7 +108,7 @@ $typeMeta = [ordered]@{
 
 # -- parse all NodeShape blocks ------------------------------------------------
 
-$shapeBlocks = [regex]::Matches($ttl, '(?ms)^(epr:\w+)\r?\n\s+a sh:NodeShape\s*;(.*?)(?=^epr:|\z)')
+$shapeBlocks = [regex]::Matches($ttl, '(?ms)^(est:\w+)\r?\n\s+a sh:NodeShape\s*;(.*?)(?=^est:|\z)')
 
 $shapes = [System.Collections.Generic.List[PSCustomObject]]::new()
 
@@ -117,16 +117,16 @@ foreach ($sm in $shapeBlocks) {
     $block     = $sm.Groups[2].Value
 
     $label = Get-StringLiteral $block 'rdfs:label'
-    if ([string]::IsNullOrWhiteSpace($label)) { $label = $localName -replace '^epr:', '' }
+    if ([string]::IsNullOrWhiteSpace($label)) { $label = $localName -replace '^est:', '' }
 
-    $isUniversal = $block -match 'sh:targetClass\s+epr:Establishment'
+    $isUniversal = $block -match 'sh:targetClass\s+est:Establishment'
 
     $targetTypes = @()
     $vm  = [regex]::Match($block, '(?s)VALUES \?type \{([^}]+)\}')
-    $tcm = [regex]::Match($block, 'sh:targetClass\s+epr:(\w+)')
+    $tcm = [regex]::Match($block, 'sh:targetClass\s+est:(\w+)')
 
     if ($vm.Success) {
-        $targetTypes = @([regex]::Matches($vm.Groups[1].Value, 'epr:(\w+)') |
+        $targetTypes = @([regex]::Matches($vm.Groups[1].Value, 'est:(\w+)') |
                          ForEach-Object { $_.Groups[1].Value })
     } elseif ($tcm.Success) {
         $className = $tcm.Groups[1].Value

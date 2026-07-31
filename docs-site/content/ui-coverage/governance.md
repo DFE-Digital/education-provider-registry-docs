@@ -10,260 +10,260 @@ Each section lists the fields visible on this tab for that establishment type.
 
 ## Community school (type 01)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Voluntary aided school (type 02)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Voluntary controlled school (type 03)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Foundation school (type 05)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## City technology college (type 06)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Community special school (type 07)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Foundation special school (type 12)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Pupil referral unit (type 14)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Local authority nursery school (type 15)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy sponsor led (type 28)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy special sponsor led (type 33)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
-| Shared with | [`epr:GovernanceAppointment`](../../vocabulary/GovernanceAppointment/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
+| Shared with | `gov:GovernanceAppointment` |
 
 ## Academy converter (type 34)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
-| Shared with | [`epr:GovernanceAppointment`](../../vocabulary/GovernanceAppointment/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
+| Shared with | `gov:GovernanceAppointment` |
 
 ## Free schools (type 35)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
-| Shared with | [`epr:GovernanceAppointment`](../../vocabulary/GovernanceAppointment/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
+| Shared with | `gov:GovernanceAppointment` |
 
 ## Free schools special (type 36)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Free schools alternative provision (type 38)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Free schools 16 to 19 (type 39)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## University technical college (type 40)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Studio schools (type 41)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy AP converter (type 42)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy AP sponsor led (type 43)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy special converter (type 44)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy 16-19 converter (type 45)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
 
 ## Academy 16 to 19 sponsor led (type 46)
 
-| Field | `epr:` concept |
+| Field | Vocabulary concept |
 | --- | --- |
-| Appointed by | [`epr:GovernanceAppointingBody`](../../vocabulary/GovernanceAppointingBody/) |
-| Date appointment ended | [`epr:GovernanceTermEndDate`](../../vocabulary/GovernanceTermEndDate/) |
-| Date of appointment | [`epr:GovernanceAppointmentDate`](../../vocabulary/GovernanceAppointmentDate/) |
-| Governance role | [`epr:GovernanceRoleType`](../../vocabulary/GovernanceRoleType/) |
-| Governance role identifier (GID) | [`epr:GovernanceIdentifier`](../../vocabulary/GovernanceIdentifier/) |
-| Name | [`epr:GovernancePerson`](../../vocabulary/GovernancePerson/) |
-| Shared with | [`epr:GovernanceAppointment`](../../vocabulary/GovernanceAppointment/) |
+| Appointed by | `gov:AppointingBody` |
+| Date appointment ended | `gov:TermOfOffice` |
+| Date of appointment | `gov:TermOfOffice` |
+| Governance role | `gov:GovernanceRoleType` |
+| Governance role identifier (GID) | `gov:GovernanceIdentifier` |
+| Name | `gov:GovernancePerson` |
+| Shared with | `gov:GovernanceAppointment` |
 
 ---
 
