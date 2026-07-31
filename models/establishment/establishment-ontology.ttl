@@ -2013,11 +2013,15 @@ est:GroupClosedDate
 #
 # Classification values for closed, stable enumerations that
 # carry semantic weight. Declared as owl:NamedIndividual so they
-# appear in WebVOWL and support OWL reasoning.
+# support OWL reasoning and appear in WIDOCO's generated
+# documentation tables. Note: WebVOWL does not render named
+# individuals as graph nodes at all (a long-standing WebVOWL
+# limitation, not specific to this ontology) - only classes and
+# properties appear in the interactive graph viewer.
 #
 # Open-ended value sets (ReligiousCharacter, ReligiousEthos,
-# TypeOfSenProvision, establishment type codes) remain as
-# skos:Concept in the vocabulary TTL only.
+# establishment type codes) remain as skos:Concept in the
+# vocabulary TTL only, with no owl:NamedIndividual typing.
 #
 
 # Identifier role (2 values, v1.0)
