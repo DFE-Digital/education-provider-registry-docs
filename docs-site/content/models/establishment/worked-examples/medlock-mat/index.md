@@ -307,14 +307,11 @@ inst:medlock
         esto:hasResourcedProvisionMeasure [
             a est:ResourcedProvisionMeasure ;
             rdfs:label "12 places, 12 on roll"@en
-        ] ;
-        esto:hasSenUnitMeasure [
-            a est:SenUnitMeasure ;
-            rdfs:label "0 places, 0 on roll"@en ;
-            rdfs:comment "GIAS SenUnitOnRoll and SenUnitCapacity are both blank for this establishment - a SEN unit is a distinct provision type from the resourced provision recorded above, and Medlock has none."@en
         ]
     ] .
 ```
+
+No `esto:hasSenUnitMeasure` - GIAS's `SenUnitOnRoll`/`SenUnitCapacity` are blank for Medlock, so the property is omitted rather than asserted with placeholder "0 places" values. A SEN unit is a distinct provision type from the resourced provision recorded above; see the Brookside Primary School example for a real establishment with both.
 
 ### Example 7 — Record currency
 
