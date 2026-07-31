@@ -310,53 +310,6 @@ est:LaMainstreamSchoolShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "LA mainstream schools must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "LA mainstream schools must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "LA mainstream schools must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "LA mainstream schools must have SEN unit measures."@en ;
-    ] .
-
-#################################################################
-# Specific shape - LA special schools
-#
-# Covers: Community special school, Foundation special school
-#################################################################
-
-est:LaSpecialSchoolShape
-    a sh:NodeShape ;
-    rdfs:label "LA special school shape"@en ;
-    rdfs:comment "Rules for LA maintained special schools. SEN provision is required. Admissions policy, nursery and sixth-form provision are shown in GIAS and required."@en ;
-    sh:targetClass est:LaMaintainedSpecialSchool ;
-
-    sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "LA special schools must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
         sh:minCount 1 ;
         sh:name "Education phase"@en ;
@@ -368,27 +321,6 @@ est:LaSpecialSchoolShape
         sh:maxCount 0 ;
         sh:name "Religious ethos (not applicable)"@en ;
         sh:message "Religious ethos is not applicable for LA special schools."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "LA special schools must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "LA special schools must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "LA special schools must have SEN unit measures."@en ;
     ] ;
 
     sh:property [
@@ -522,34 +454,6 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "LA nursery schools must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "LA nursery schools must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "LA nursery schools must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "LA nursery schools must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
         sh:maxCount 0 ;
         sh:name "Local authority - accountability relationship (not applicable)"@en ;
@@ -561,13 +465,6 @@ est:MaintainedNurserySchoolShape
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
         sh:message "Non-maintained special schools must not have an academy trust accountability relationship."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Non-maintained special schools must have a SEN and resourced provision record."@en ;
     ] ;
 
     sh:property [
@@ -617,13 +514,6 @@ est:MaintainedNurserySchoolShape
         sh:maxCount 0 ;
         sh:name "Diocese (not applicable)"@en ;
         sh:message "Diocese is not applicable for non-maintained special schools."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSpecialPupilMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Special pupil SEN measures"@en ;
-        sh:message "Non-maintained special schools must have special pupil SEN measures."@en ;
     ] ;
 
     sh:property [
@@ -725,20 +615,6 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Independent schools must have a SEN and resourced provision record (for special pupil SEN measures)."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSpecialPupilMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Special pupil SEN measures"@en ;
-        sh:message "Independent schools must have special pupil SEN measures."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
         sh:maxCount 0 ;
         sh:name "SEN unit measures (not applicable)"@en ;
@@ -833,44 +709,9 @@ est:MainstreamAcademyGroupShape
 
     sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ;
-        sh:minCount 1 ;
-        sh:name "Section 41 approved"@en ;
-        sh:message "Mainstream academies must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Mainstream academies must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Mainstream academies must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Mainstream academies must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Mainstream academies must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:sponsoredBy ;
-        sh:minCount 1 ;
-        sh:name "Academy sponsor"@en ;
-        sh:message "Mainstream academies must have an academy sponsor relationship."@en ;
+        sh:maxCount 0 ;
+        sh:name "Section 41 approved (not applicable)"@en ;
+        sh:message "Section 41 approval is not applicable for mainstream academies (real GIAS extract: 100% 'Not applicable' for types 28 and 34)."@en ;
     ] ;
 
     sh:property [
@@ -900,13 +741,6 @@ est:AcademySpecialShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Academy special schools must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
@@ -932,34 +766,6 @@ est:AcademySpecialShape
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Academy special schools must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Academy special schools must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Academy special schools must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Academy special schools must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:sponsoredBy ;
-        sh:minCount 1 ;
-        sh:name "Academy sponsor"@en ;
-        sh:message "Academy special schools must have an academy sponsor relationship. Note: type 44 (Academy special converter) shows 'Single-academy trust' in the UI - see design decision in shacl-open-items.md."@en ;
     ] ;
 
     sh:property [
@@ -1048,34 +854,6 @@ est:AcademyAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Academy alternative provision establishments must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Academy alternative provision establishments must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Academy alternative provision establishments must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Academy alternative provision establishments must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
         sh:minCount 1 ;
         sh:name "Education phase"@en ;
@@ -1155,41 +933,6 @@ est:Academy1619Shape
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Academy 16-19 establishments must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Academy 16-19 establishments must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Academy 16-19 establishments must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Academy 16-19 establishments must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Academy 16-19 establishments must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:sponsoredBy ;
-        sh:minCount 1 ;
-        sh:name "Academy sponsor"@en ;
-        sh:message "Academy 16-19 establishments must have an academy sponsor relationship. Note: type 45 (Academy 16-19 converter) shows 'Single-academy trust' in the UI - see design decision in shacl-open-items.md."@en ;
     ] ;
 
     sh:property [
@@ -1420,62 +1163,6 @@ est:MainstreamFreeSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Mainstream free schools must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Mainstream free schools must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Mainstream free schools must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Mainstream free schools must have SEN unit measures."@en ;
-    ] .
-
-    # Note: Academy sponsor (type 35 only) is not constrained at group level because
-    # this shape covers types 35, 40 and 41. Types 40 and 41 do not show Academy sponsor.
-    # See design decision in shacl-open-items.md.
-
-#################################################################
-# Specific shape - Free school special
-#################################################################
-
-est:FreeSchoolSpecialShape
-    a sh:NodeShape ;
-    rdfs:label "Free school special shape"@en ;
-    rdfs:comment "Rules for free school special. Academy trust is required; SEN provision is required; sixth-form provision is not applicable."@en ;
-    sh:targetClass est:FreeSchoolSpecial ;
-
-    sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
-        sh:minCount 1 ;
-        sh:name "Academy trust"@en ;
-        sh:message "Free school specials must have an academy trust accountability relationship."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Free school specials must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
@@ -1501,34 +1188,6 @@ est:FreeSchoolSpecialShape
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Free school specials must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Free school specials must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Free school specials must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Free school specials must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:sponsoredBy ;
-        sh:minCount 1 ;
-        sh:name "Academy sponsor"@en ;
-        sh:message "Free school specials must have an academy sponsor relationship."@en ;
     ] ;
 
     sh:property [
@@ -1605,34 +1264,6 @@ est:FreeSchoolAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Free school alternative provision establishments must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Free school alternative provision establishments must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Free school alternative provision establishments must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Free school alternative provision establishments must have SEN unit measures."@en ;
-    ] ;
-
-    sh:property [
         sh:path ( esto:hasEstablishmentClassification esto:hasEducationPhase ) ;
         sh:minCount 1 ;
         sh:name "Education phase"@en ;
@@ -1703,34 +1334,6 @@ est:FreeSchool16To19Shape
         sh:minCount 1 ;
         sh:name "Section 41 approved"@en ;
         sh:message "Free school 16 to 19 establishments must have a Section 41 approval status."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Free school 16 to 19 establishments must have a SEN and resourced provision record."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:classifiedByTypeOfResourcedProvision ) ;
-        sh:minCount 1 ;
-        sh:name "Type of resourced provision"@en ;
-        sh:message "Free school 16 to 19 establishments must have a type of resourced provision classification."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasResourcedProvisionMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Resourced provision number on roll and capacity"@en ;
-        sh:message "Free school 16 to 19 establishments must have resourced provision measures."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSenUnitMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "SEN unit number on roll and capacity"@en ;
-        sh:message "Free school 16 to 19 establishments must have SEN unit measures."@en ;
     ] ;
 
     sh:property [
@@ -2228,20 +1831,6 @@ est:OnlineProviderShape
     ] ;
 
     sh:property [
-        sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
-        sh:name "SEN and resourced provision"@en ;
-        sh:message "Online providers must have a SEN and resourced provision record (for special pupil SEN measures)."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSenAndResourcedProvision esto:hasSpecialPupilMeasure ) ;
-        sh:minCount 1 ;
-        sh:name "Special pupil SEN measures"@en ;
-        sh:message "Online providers must have special pupil SEN measures."@en ;
-    ] ;
-
-    sh:property [
         sh:path esto:hasAccreditationRecord ;
         sh:minCount 1 ;
         sh:name "Accreditation record"@en ;
@@ -2354,7 +1943,6 @@ est:SpecialPost16Shape
 
     sh:property [
         sh:path esto:hasSenAndResourcedProvision ;
-        sh:minCount 1 ;
         sh:name "SEN and resourced provision"@en ;
         sh:message "Special post-16 institutions must have a SEN and resourced provision record."@en ;
     ] ;
@@ -2455,7 +2043,6 @@ est:BritishSchoolsOverseasShape
 
     sh:property [
         sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
-        sh:minCount 1 ;
         sh:name "Proprietor"@en ;
         sh:message "British schools overseas must have a proprietor accountability relationship."@en ;
     ] ;
