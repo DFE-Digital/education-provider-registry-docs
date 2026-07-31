@@ -10,12 +10,12 @@ title: EPR Ontology — community school example
 |---|---|
 | **Establishment** | Argyle Primary School, URN 100008, Camden |
 | **Type** | Community school (LA-maintained, primary) |
-| **Ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/ontology/` |
-| **Vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/` |
+| **Ontology namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/` |
+| **Vocabulary namespace** | `https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/` |
 | **Preferred prefixes** | `epro:` (properties) · `epr:` (classes and named individuals) |
 | **Version** | 1.4 |
-| **OWL documentation** | [Ontology reference (WIDOCO)](/education-provider-registry-docs/ontology/) |
-| **Source** | [education-provider-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/education-provider-ontology.ttl) |
+| **OWL documentation** | [Ontology reference (WIDOCO)](/education-provider-registry-docs/models/establishment/ontology/) |
+| **Source** | [establishment-ontology.ttl](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/models/establishment/establishment-ontology.ttl) |
 | **Repository** | [DFE-Digital/education-provider-registry-docs](https://github.com/DFE-Digital/education-provider-registry-docs) |
 | **Licence** | [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) |
 
@@ -27,7 +27,7 @@ title: EPR Ontology — community school example
 
 The **Education Provider Registry Ontology** is an OWL 2 conceptual model for the Education Provider Registry. It declares classes and object properties for the entities and relationships in the GIAS Details view for state-funded education providers in England.
 
-The ontology shares its class IRIs with the [epr: SKOS vocabulary](/education-provider-registry-docs/vocabulary/) through OWL 2 punning — the same URI is simultaneously a vocabulary concept (`skos:Concept`) and an OWL class (`owl:Class`). Closed enumerations (status, phase, gender, boarding, sixth form, special class provision, admissions policy, nursery provision) are declared as sets of `owl:NamedIndividual` within the ontology. Open-ended value sets (religious character, religious ethos, type of SEN provision) remain as `skos:Concept` in the vocabulary only.
+The ontology shares its class IRIs with the [epr: SKOS vocabulary](/education-provider-registry-docs/models/establishment/vocabulary/) through OWL 2 punning — the same URI is simultaneously a vocabulary concept (`skos:Concept`) and an OWL class (`owl:Class`). Closed enumerations (status, phase, gender, boarding, sixth form, special class provision, admissions policy, nursery provision) are declared as sets of `owl:NamedIndividual` within the ontology. Open-ended value sets (religious character, religious ethos, type of SEN provision) remain as `skos:Concept` in the vocabulary only.
 
 The ontology is entirely `owl:ObjectProperty` — no `owl:DatatypeProperty` declarations are used. Literal values (identifiers, labels, dates) are represented as `rdfs:label` on typed blank nodes.
 
@@ -83,8 +83,8 @@ graph LR
 All examples use the following prefixes.
 
 ```
-@prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
-@prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+@prefix epr:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix epro:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .

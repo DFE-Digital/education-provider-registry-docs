@@ -1,4 +1,4 @@
-﻿@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
+﻿@prefix epr: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .

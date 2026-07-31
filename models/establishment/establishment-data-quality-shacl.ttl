@@ -1,5 +1,5 @@
-﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
-@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -11,9 +11,9 @@
 #
 # Scope: value-level constraints on EPR establishment fields.
 # This file constrains datatypes, ranges and cardinality for properties
-# already defined in education-provider-ontology.ttl.
+# already defined in establishment-ontology.ttl.
 #
-# It is separate from education-provider-shacl.ttl, which constrains
+# It is separate from establishment-shacl.ttl, which constrains
 # structural shape (which fields are required, optional or not applicable
 # per establishment type). Both files can be validated together or
 # independently.
@@ -24,10 +24,10 @@
 # named vocabulary properties - see deferred items at the end of this file.
 #
 # Sits alongside:
-#   education-provider-ontology.ttl  (OWL ontology - v0.3)
-#   education-provider-shacl.ttl             (structural SHACL - v0.2)
-#   education-provider-taxonomy.ttl     (SKOS taxonomy)
-#   education-provider-vocabulary.ttl   (SKOS vocabulary)
+#   establishment-ontology.ttl  (OWL ontology - v0.3)
+#   establishment-shacl.ttl             (structural SHACL - v0.2)
+#   establishment-taxonomy.ttl     (SKOS taxonomy)
+#   establishment-vocabulary.ttl   (SKOS vocabulary)
 
 
 #################################################################
@@ -43,7 +43,7 @@
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
     owl:versionInfo "0.1" ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
     epr:status "Provisional"@en .
 
@@ -333,7 +333,7 @@ epr:StatutoryAgeRangeShape
 # Deferred - pending vocabulary data property definitions
 #
 # The following fields require data properties to be defined in
-# education-provider-vocabulary.ttl before SHACL constraints
+# establishment-vocabulary.ttl before SHACL constraints
 # can be expressed for their values:
 #
 # - PupilsEligibleForFreeSchoolMeals (count):

@@ -1,5 +1,5 @@
-﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
-@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+﻿@prefix epr:     <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix epro:    <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -14,9 +14,9 @@
 # in that group unless a more specific shape overrides them.
 #
 # Sits alongside:
-#   education-provider-ontology.ttl  (OWL ontology)
-#   education-provider-taxonomy.ttl     (SKOS taxonomy)
-#   education-provider-vocabulary.ttl   (SKOS vocabulary)
+#   establishment-ontology.ttl  (OWL ontology)
+#   establishment-taxonomy.ttl     (SKOS taxonomy)
+#   establishment-vocabulary.ttl   (SKOS vocabulary)
 #
 # All shapes are provisional. Rules for "Other types" (secure units, offshore
 # schools, service children's education, miscellaneous, British schools overseas,
@@ -37,8 +37,8 @@
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
     owl:versionInfo "0.5" ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/taxonomy/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     epr:status "Provisional"@en .
 
 

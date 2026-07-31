@@ -120,8 +120,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -132,7 +132,7 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Legal entity, academy and trust board identity
 
-The Academy Trust is one legal entity carrying two registry identifiers (GIAS UID and Companies House number) - not two organisations. `epr:AcademyTrust` and `epr:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); `epro:hasGroupUniqueIdentifier` and `epro:hasGroupCompaniesHouseNumber` are reused, unmodified, from `education-provider-ontology.ttl`.
+The Academy Trust is one legal entity carrying two registry identifiers (GIAS UID and Companies House number) - not two organisations. `epr:AcademyTrust` and `epr:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); `epro:hasGroupUniqueIdentifier` and `epro:hasGroupCompaniesHouseNumber` are reused, unmodified, from `establishment-ontology.ttl`.
 
 ```
 inst:coop-academies-trust

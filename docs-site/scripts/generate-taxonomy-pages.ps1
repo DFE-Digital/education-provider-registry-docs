@@ -1,11 +1,11 @@
 ﻿param(
-    [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" "education-provider-taxonomy.ttl")),
-    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" "taxonomy")),
+    [string]$TaxonomyPath = (Join-Path (Join-Path $PSScriptRoot "..\..") (Join-Path "models" (Join-Path "establishment" "establishment-taxonomy.ttl"))),
+    [string]$OutputRoot = (Join-Path (Join-Path $PSScriptRoot "..") (Join-Path "content" (Join-Path "models" (Join-Path "establishment" "taxonomy")))),
     [string]$CompactPrefix = "epr",
     [string[]]$ExtraPrefixes = @(),
     [string]$TaxonomyScheme = "epr:establishmentDetailsTaxonomy",
     [string]$PageTitle = "Education Provider Registry Taxonomy",
-    [string]$SourceLabel = "models/education-provider-taxonomy.ttl"
+    [string]$SourceLabel = "models/establishment/establishment-taxonomy.ttl"
 )
 
 $ErrorActionPreference = "Stop"

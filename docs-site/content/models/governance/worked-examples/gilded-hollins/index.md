@@ -104,8 +104,8 @@ All examples in this section use the following prefixes.
 ```
 @prefix gov:   <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/> .
 @prefix govo:  <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/> .
-@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/> .
-@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/ontology/> .
+@prefix epr:   <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> .
+@prefix epro:  <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
@@ -116,7 +116,7 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment, Local Authority accountability and Governing Body identity
 
-`epr:CommunitySchool` is the specific leaf type. The Local Authority relationship is modelled with `epro:hasAccountabilityRelationship` and `epro:accountableToLocalAuthority` - properties reused unmodified from `education-provider-ontology.ttl`, explicitly documented there as "present for LA-maintained schools." None of the six previous worked examples needed this pattern (Medlock, Manor High and St Paul's are academies accountable to their Trust; Frank Barnes, Eileen Wade/Milton Ernest, Long Ditton and Vauxhall Primary all left the maintaining authority out of scope) - this is the first to exercise it.
+`epr:CommunitySchool` is the specific leaf type. The Local Authority relationship is modelled with `epro:hasAccountabilityRelationship` and `epro:accountableToLocalAuthority` - properties reused unmodified from `establishment-ontology.ttl`, explicitly documented there as "present for LA-maintained schools." None of the six previous worked examples needed this pattern (Medlock, Manor High and St Paul's are academies accountable to their Trust; Frank Barnes, Eileen Wade/Milton Ernest, Long Ditton and Vauxhall Primary all left the maintaining authority out of scope) - this is the first to exercise it.
 
 ```
 ginst:wigan-council
