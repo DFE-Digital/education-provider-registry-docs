@@ -21,8 +21,6 @@ title: Establishment Ontology — Co-op Academy Medlock / The Co-operative Acade
 
 ---
 
-**Evidence and anonymisation.** This page follows the same two-part pattern as the [governance worked examples](../../../governance/worked-examples/). **Section 1** is the real-world establishment record as published in GIAS and Companies House, independent of any ontology. **Section 2** maps that same record onto `establishment-ontology.ttl`. The headteacher is shown as `JB` - initials only, matching the [governance worked example for the same person](../../../governance/worked-examples/medlock-mat/) - not the full name published in the GIAS extract.
-
 This is the establishment side of the same real-world organisation the [governance Medlock/Co-op Academies Trust worked example](../../../governance/worked-examples/medlock-mat/) covers - the two pages share the same Academy Trust and Academy identifiers (`inst:coop-academies-trust`, `inst:medlock`) but map different data: this page covers establishment identity, classification, accountability, group membership and location; the governance page covers people, appointments and roles.
 
 ---

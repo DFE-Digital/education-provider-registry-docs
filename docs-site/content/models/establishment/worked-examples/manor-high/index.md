@@ -21,8 +21,6 @@ title: Establishment Ontology — Manor High School / OAK Multi Academy Trust ex
 
 ---
 
-**Evidence and anonymisation.** This page follows the same two-part pattern as the [Medlock worked example](../medlock-mat/) and the [governance worked examples](../../../governance/worked-examples/). **Section 1** is the real-world establishment record as published in GIAS, independent of any ontology. **Section 2** maps that same record onto `establishment-ontology.ttl`. The headteacher is shown as `SG` - initials only, matching the [governance worked example for the same person](../../../governance/worked-examples/manor-high/) - not the full name published in the GIAS extract.
-
 This is the establishment side of the same real-world organisation the [governance Manor High School worked example](../../../governance/worked-examples/manor-high/) covers - the two pages share the same Academy Trust and Academy identifiers (`inst:oak-mat`, `inst:manor-high`) but map different data: this page covers establishment identity, classification, accountability, group membership and location; the governance page covers local governing body people, appointments and roles.
 
 Manor High is a useful contrast to the [Medlock example](../medlock-mat/): where Medlock has real values for boarding, nursery, faith context and SEN provision, Manor High's GIAS extract shows almost all of those as "Not applicable" - a clean demonstration of the RDF-idiomatic absence-of-triple principle across a much larger share of an establishment's record.
