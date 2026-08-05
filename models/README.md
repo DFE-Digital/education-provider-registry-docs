@@ -51,5 +51,6 @@ The generated technical documentation site publishes the vocabulary and taxonomy
 
 - Vocabulary: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/>
 - Taxonomy: <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/>
+  
 
 
