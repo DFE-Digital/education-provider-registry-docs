@@ -216,8 +216,9 @@ gov:BoardOfDirectors
 govo:hasGovernanceBody
     a owl:ObjectProperty ;
     rdfs:label "has governance body"@en ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:Establishment est:AcademyTrust est:Federation ) ] ;
     rdfs:range gov:GovernanceBody ;
-    rdfs:comment "Cardinality: 0..*. Links a governed organisation (est:Establishment, est:AcademyTrust or est:Federation - see establishment-ontology.ttl) to the governance body or bodies responsible for it. No rdfs:domain is asserted deliberately - all three of those classes use this property, and constraining domain to one of them would cause an OWL reasoner to incorrectly infer subject type."@en .
+    rdfs:comment "Cardinality: 0..*. Links a governed organisation (est:Establishment, est:AcademyTrust or est:Federation - see establishment-ontology.ttl) to the governance body or bodies responsible for it. Domain is a union of all three rather than a single class, since a reasoner would otherwise wrongly infer that only one of them can be a subject of this property."@en .
 
 
 #################################################################
@@ -294,8 +295,9 @@ gov:GovernanceAppointment
 govo:hasGovernanceAppointment
     a owl:ObjectProperty ;
     rdfs:label "has governance appointment"@en ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( gov:GovernanceBody est:AcademyTrust ) ] ;
     rdfs:range gov:GovernanceAppointment ;
-    rdfs:comment "Cardinality: 0..*. No rdfs:domain is asserted deliberately (relaxed v0.2, after the Medlock/Co-operative Academies Trust worked example showed Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the est:AcademyTrust legal entity, not against a GovernanceBody - board membership is not implied for Academy Trust Members). Both gov:GovernanceBody and est:AcademyTrust (and other governed organisations) use this property; constraining domain to one would cause an OWL reasoner to incorrectly infer subject type."@en .
+    rdfs:comment "Cardinality: 0..*. Domain is a union rather than a single class (relaxed v0.2, after the Medlock/Co-operative Academies Trust worked example showed Academy Trust Members, Accounting Officer and Chief Financial Officer are appointments held directly against the est:AcademyTrust legal entity, not against a GovernanceBody - board membership is not implied for Academy Trust Members). Both gov:GovernanceBody and est:AcademyTrust use this property; a single-class domain would cause a reasoner to incorrectly infer subject type."@en .
 
 govo:appointmentOf
     a owl:ObjectProperty ;
