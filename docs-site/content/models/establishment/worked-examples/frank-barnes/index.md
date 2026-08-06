@@ -157,10 +157,7 @@ inst:frank-barnes
 
     esto:hasAdministrativeGeography [
         a est:AdministrativeGeography ;
-        esto:classifiedByGovernmentOfficeRegion [
-            a est:GovernmentOfficeRegion ;
-            rdfs:label "London"@en
-        ] ;
+        esto:classifiedByGovernmentOfficeRegion inst:region-london ;
         esto:classifiedByDistrictAdministrative [
             a est:DistrictAdministrative ;
             rdfs:label "Camden"@en
@@ -192,7 +189,13 @@ inst:frank-barnes
             rdfs:label "Camden 022F"@en
         ]
     ] .
+
+inst:region-london
+    a est:GovernmentOfficeRegion ;
+    rdfs:label "London"@en .
 ```
+
+`inst:region-london` is a real-world reference entity, reusable by URI from any future London establishment, rather than an `owl:NamedIndividual` baked into the ontology - see the same note on Medlock's Example 5.
 
 ### Example 4 — Admissions, provision, capacity and SEN
 

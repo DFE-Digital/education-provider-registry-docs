@@ -256,10 +256,7 @@ inst:medlock
 
     esto:hasAdministrativeGeography [
         a est:AdministrativeGeography ;
-        esto:classifiedByGovernmentOfficeRegion [
-            a est:GovernmentOfficeRegion ;
-            rdfs:label "North West"@en
-        ] ;
+        esto:classifiedByGovernmentOfficeRegion inst:region-north-west ;
         esto:classifiedByDistrictAdministrative [
             a est:DistrictAdministrative ;
             rdfs:label "Manchester"@en
@@ -291,7 +288,13 @@ inst:medlock
             rdfs:label "Manchester 018D"@en
         ]
     ] .
+
+inst:region-north-west
+    a est:GovernmentOfficeRegion ;
+    rdfs:label "North West"@en .
 ```
+
+`inst:region-north-west` is a real-world reference entity, not a controlled-vocabulary value defined by the ontology itself - one instance, reusable by URI from any future establishment in the North West, the same way `inst:coop-academies-trust` is defined once and referenced rather than reconstructed per establishment. Region instances live in the `inst:` instance-data namespace, not as `owl:NamedIndividual`s baked into `establishment-ontology.ttl` - the ontology only defines the class (`est:GovernmentOfficeRegion`) that any number of such real-world regions can be instances of.
 
 ### Example 6 — Admissions, provision, capacity and SEN
 
