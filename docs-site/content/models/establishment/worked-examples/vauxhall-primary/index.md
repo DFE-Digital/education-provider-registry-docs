@@ -148,7 +148,13 @@ inst:vauxhall-primary
         ] ;
         esto:hasMainSite [
             a est:Site ;
-            esto:hasAddress [ a est:Address ; rdfs:label "Vauxhall Street, London, SE11 5LG"@en ]
+            esto:hasAddress [
+                a est:Address ;
+                rdfs:label "Vauxhall Street, London, SE11 5LG"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Vauxhall Street"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "SE11 5LG" ]
+            ]
         ]
     ] ;
 
@@ -212,7 +218,13 @@ inst:wyvil-primary
         ] ;
         esto:hasMainSite [
             a est:Site ;
-            esto:hasAddress [ a est:Address ; rdfs:label "Wyvil Road, London, SW8 2TJ"@en ]
+            esto:hasAddress [
+                a est:Address ;
+                rdfs:label "Wyvil Road, London, SW8 2TJ"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Wyvil Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "SW8 2TJ" ]
+            ]
         ]
     ] ;
 
@@ -289,7 +301,14 @@ inst:lilian-baylis
         ] ;
         esto:hasMainSite [
             a est:Site ;
-            esto:hasAddress [ a est:Address ; rdfs:label "323 Kennington Lane, London, SE11 5QY"@en ]
+            esto:hasAddress [
+                a est:Address ;
+                rdfs:label "323 Kennington Lane, London, SE11 5QY"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "323 Kennington Lane"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Kennington"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "SE11 5QY" ]
+            ]
         ]
     ] ;
 

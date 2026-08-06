@@ -125,7 +125,11 @@ inst:millfield
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Monks Walk, Buntingford, SG9 9DT"@en
+                rdfs:label "Monks Walk, Buntingford, SG9 9DT"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Monks Walk"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Buntingford"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Hertfordshire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "SG9 9DT" ]
             ]
         ]
     ] .

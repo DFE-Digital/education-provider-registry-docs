@@ -38,7 +38,7 @@ esto:establishmentDetailsConceptualModel
     dcterms:modified "2026-08-06"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.13" ;
+    owl:versionInfo "1.14" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -66,6 +66,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.11: esto:classifiedByTypeOfSenProvision cardinality corrected from 0..1 to 0..*. GIAS records up to 13 SEN need types per establishment (SEN1-SEN13); the real extract shows 1,619 open establishments with more than one type recorded, so the 0..1 comment was factually wrong, not just conservative. No SHACL shape previously constrained this property, so no shape change was needed - only the ontology's own cardinality documentation."@en ;
     rdfs:comment "v1.12: est:TypeOfResourcedProvision given a third owl:NamedIndividual value, est:ResourcedProvisionAndSenUnitFacility, matching GIAS's real closed-list value 'Resourced provision and SEN unit' (229 open establishments in the live extract) - previously only the two single-facility values (ResourcedProvisionFacility, SenUnit) existed, so this combined case had no individual to assert. classifiedByTypeOfResourcedProvision's cardinality (0..1) is correct as-is: GIAS records this as one field with one of four values (including blank), not two independent flags, so the fix was a missing enumeration value, not a cardinality bug like v1.11's classifiedByTypeOfSenProvision."@en ;
     rdfs:comment "v1.13: four compound measures given queryable sub-figure properties, closing a gap found while building a logical model of the GIAS Establishment Details page (docs/transformation/data/modelling/logical-model/establishment-details-logical-model.md). Each compound measure's own rdfs:comment already named its sub-figures, and establishment-vocabulary.ttl already carried them as separate SKOS concepts, but no esto: property existed to attach a sub-figure value to an instance independently of the others - callers had to parse free text out of an rdfs:label/rdfs:comment (e.g. '12 places, 12 on roll'). New classes: est:CensusDate, est:PercentagePupilsEligibleForFreeSchoolMeals, est:ResourcedProvisionCapacity, est:ResourcedProvisionPupilCount, est:SenUnitCapacity, est:SenUnitPupilCount. New object properties: esto:hasCensusDate (domain est:CapacityAndPupilMeasures, range est:CensusDate, 0..1 - one shared census date for the whole block, not asserted per measure), esto:hasPercentageEligibleForFreeSchoolMeals (domain est:PupilsEligibleForFreeSchoolMeals, range est:PercentagePupilsEligibleForFreeSchoolMeals, 0..1), esto:hasResourcedProvisionCapacity and esto:hasResourcedProvisionPupilCount (domain est:ResourcedProvisionMeasure, 0..1 each), esto:hasSenUnitCapacity and esto:hasSenUnitPupilCount (domain est:SenUnitMeasure, 0..1 each). The existing compound properties (hasPupilCount, hasFreeSchoolMealMeasure, hasResourcedProvisionMeasure, hasSenUnitMeasure) and their rdfs:comment wording are unchanged - the new properties are additive siblings on the same blank-node instance, not a replacement, so existing worked-example Turtle (e.g. Medlock's free-text resourced-provision label) remains valid; a future worked-example pass can migrate to the structured properties where the underlying GIAS extract has the sub-figures separately. No SHACL shape previously targeted any of the four compound-measure classes by name, so no SHACL change was needed."@en ;
+    rdfs:comment "v1.14: address modelling analysis and fixes (docs/transformation/data/modelling/claude/address-modelling-analysis-and-recommendations.md). (1) est:Address decomposed into structured component properties matching GIAS's own already-decomposed source fields (Street, Locality, Address3, Town, County, Postcode) - previously held only as one concatenated rdfs:label string. New classes: est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode. New object properties, all domain est:Address, 0..1 each: esto:hasAddressLine1, esto:hasAddressLine2, esto:hasAddressLine3, esto:hasTown, esto:hasCounty, esto:hasPostcode. rdfs:label on est:Address is retained as a derived, human-readable form, not replaced - existing worked-example Turtle with only a concatenated label remains valid. Applies uniformly wherever est:Address is used (establishment site address via hasMainSite/hasAddress, group registered/contact address), since all three are documented as coming from the same shape of source fields. (2) est:MainAddress and esto:hasMainAddress removed entirely from this ontology file (previously 'superseded' in prose only via v1.5's comment, with no owl:deprecated annotation - still a plain owl:Class/owl:ObjectProperty a reasoner or codegen tool would treat as current). Retained as a status-Retired skos:Concept in establishment-vocabulary.ttl only, for historical resolution of the old URI (skos:exactMatch est:Address preserved there) - this ontology file carries no trace of it now. (3) est:MainAddress's own migration-guidance comment was factually wrong before removal - it told readers to use esto:hasRegisteredAddress, which is EstablishmentGroup-scoped and never applies to an establishment; the correct path was always esto:hasMainSite -> esto:hasAddress. Moot now the class is gone, but noted here since the same wrong guidance could otherwise have been copied elsewhere. (4) esto:hasEstablishmentLocationAndContact, esto:hasMainSite and esto:hasAddress cardinality comments corrected from '0..1' to reflect what est:EstablishmentUniversalShape (establishment-shacl.ttl) actually enforces: minCount 1 on the full ( hasEstablishmentLocationAndContact hasMainSite hasAddress ) property path, universally, for every establishment type. The OWL-level per-property cardinality (0..1 on each hop) is unchanged and correct in isolation - only the prose describing what's actually required end-to-end was wrong. (5) esto:hasMainSite's comment no longer lists est:Address's own GIAS source fields (Street, Locality, Address3, Town, Postcode) as if they were hasMainSite's; those belong to esto:hasAddress's mapping."@en ;
     est:status "Provisional"@en .
 
 
@@ -891,11 +892,6 @@ est:EstablishmentLocationAndContact
     rdfs:label "Contact and location"@en ;
     rdfs:comment "The group of fields describing how to contact and locate the establishment physically."@en .
 
-est:MainAddress
-    a owl:Class ;
-    rdfs:label "Main address (superseded)"@en ;
-    rdfs:comment "Superseded in v1.5 by est:Address and est:Site. Previously used as the establishment's single address concept, conflating a physical site with a postal address. Retained in the vocabulary with status Superseded. Use esto:hasRegisteredAddress → est:Address for the establishment's administrative address and esto:hasMainSite → est:Site for the principal physical site."@en .
-
 est:Website
     a owl:Class ;
     rdfs:label "Website"@en ;
@@ -941,7 +937,37 @@ est:Site
 est:Address
     a owl:Class ;
     rdfs:label "Address"@en ;
-    rdfs:comment "A postal or correspondence address. An independent concept from est:Site — an address locates an establishment, site, or group for administrative and correspondence purposes. An establishment may have a registered address that differs from its principal teaching site. A trust or group has a registered address (and optionally a contact address) as a legal entity. Added v1.5."@en .
+    rdfs:comment "A postal or correspondence address. An independent concept from est:Site — an address locates an establishment, site, or group for administrative and correspondence purposes. An establishment may have a registered address that differs from its principal teaching site. A trust or group has a registered address (and optionally a contact address) as a legal entity. Added v1.5. Given structured component properties in v1.14 (esto:hasAddressLine1/2/3, esto:hasTown, esto:hasCounty, esto:hasPostcode) matching GIAS's own source fields (Street, Locality, Address3, Town, County, Postcode) - previously held only as a single concatenated rdfs:label string. rdfs:label is retained as a derived, human-readable form; it is not required to match the component properties exactly for instances predating the v1.14 decomposition."@en .
+
+est:AddressLine1
+    a owl:Class ;
+    rdfs:label "Address line 1"@en ;
+    rdfs:comment "The first line of a postal address, typically the building name/number and street name. Named as a generic address line, not est:Street, because the source field is free text and is not guaranteed to contain a street name. Corresponds to GIAS Street / GroupStreet. Added v1.14."@en .
+
+est:AddressLine2
+    a owl:Class ;
+    rdfs:label "Address line 2"@en ;
+    rdfs:comment "The second line of a postal address, typically the locality within the town. Corresponds to GIAS Locality / GroupLocality. Added v1.14."@en .
+
+est:AddressLine3
+    a owl:Class ;
+    rdfs:label "Address line 3"@en ;
+    rdfs:comment "The third line of a postal address, used for further locality or address detail not captured by address lines 1 and 2. Corresponds to GIAS Address3 / GroupAddress3. Added v1.14."@en .
+
+est:Town
+    a owl:Class ;
+    rdfs:label "Town"@en ;
+    rdfs:comment "The town or city of a postal address. Corresponds to GIAS Town / GroupTown. Added v1.14."@en .
+
+est:County
+    a owl:Class ;
+    rdfs:label "County"@en ;
+    rdfs:comment "The county of a postal address. Distinct from est:Country, which records the country of location rather than the English county within an address. Corresponds to GIAS's County extract component. Added v1.14."@en .
+
+est:Postcode
+    a owl:Class ;
+    rdfs:label "Postcode"@en ;
+    rdfs:comment "The UK postcode of a postal address. Already load-bearing elsewhere in the model before this class existed in its own right: est:AdministrativeGeography's region, ward and constituency classifications are derived from an establishment's postcode location. Corresponds to GIAS Postcode / GroupPostcode. Added v1.14."@en .
 
 
 #################################################################
@@ -1082,21 +1108,14 @@ esto:hasEstablishmentLocationAndContact
     rdfs:label "has contact and location"@en ;
     rdfs:domain est:Establishment ;
     rdfs:range est:EstablishmentLocationAndContact ;
-    rdfs:comment "Cardinality: 0..1."@en .
-
-esto:hasMainAddress
-    a owl:ObjectProperty ;
-    rdfs:label "has main address (superseded)"@en ;
-    rdfs:domain est:EstablishmentLocationAndContact ;
-    rdfs:range est:MainAddress ;
-    rdfs:comment "Superseded in v1.5. Use esto:hasRegisteredAddress → est:Address for the establishment's postal address and esto:hasMainSite → est:Site for the principal physical site."@en .
+    rdfs:comment "Cardinality: exactly 1, enforced by est:EstablishmentUniversalShape (establishment-shacl.ttl) for every establishment type. Corrected v1.14 - previously documented here as 0..1, which understated what SHACL actually requires."@en .
 
 esto:hasMainSite
     a owl:ObjectProperty ;
     rdfs:label "has main site"@en ;
     rdfs:domain est:EstablishmentLocationAndContact ;
     rdfs:range est:Site ;
-    rdfs:comment "Cardinality: 0..1. The principal physical site of an establishment — the location where education is primarily delivered. The site name is rdfs:label on the est:Site instance. Mapped from GIAS Establishment.siteName, Street, Locality, Address3, Town, Postcode, UPRN. Added v1.5."@en .
+    rdfs:comment "Cardinality: exactly 1 in practice (via the postal-address chain enforced by est:EstablishmentUniversalShape), though this property's own OWL cardinality is 0..1 - see esto:hasAddress for where the SHACL minCount actually applies. The principal physical site of an establishment — the location where education is primarily delivered. The site name is rdfs:label on the est:Site instance, and its UPRN via esto:hasUprn. Added v1.5. Corrected v1.14 - previously listed est:Address's own GIAS source fields (Street, Locality, Address3, Town, Postcode) here; those belong to esto:hasAddress's mapping, not this property's."@en .
 
 esto:hasAdditionalSite
     a owl:ObjectProperty ;
@@ -1110,7 +1129,49 @@ esto:hasAddress
     rdfs:label "has address"@en ;
     rdfs:domain est:Site ;
     rdfs:range est:Address ;
-    rdfs:comment "Cardinality: 0..1. The postal address of a site. Separates the physical location concept (est:Site) from its postal address (est:Address). Added v1.5."@en .
+    rdfs:comment "Cardinality: exactly 1, enforced by est:EstablishmentUniversalShape's ( hasEstablishmentLocationAndContact hasMainSite hasAddress ) property path (establishment-shacl.ttl) for every establishment. This property's own OWL cardinality remains 0..1, matching esto:hasMainSite - the exactly-1 rule is a SHACL constraint on the composed path from Establishment, not on this property viewed in isolation. Separates the physical location concept (est:Site) from its postal address (est:Address). Added v1.5. Corrected v1.14 for the SHACL cross-reference."@en .
+
+esto:hasAddressLine1
+    a owl:ObjectProperty ;
+    rdfs:label "has address line 1"@en ;
+    rdfs:domain est:Address ;
+    rdfs:range est:AddressLine1 ;
+    rdfs:comment "Cardinality: 0..1. Added v1.14."@en .
+
+esto:hasAddressLine2
+    a owl:ObjectProperty ;
+    rdfs:label "has address line 2"@en ;
+    rdfs:domain est:Address ;
+    rdfs:range est:AddressLine2 ;
+    rdfs:comment "Cardinality: 0..1. Added v1.14."@en .
+
+esto:hasAddressLine3
+    a owl:ObjectProperty ;
+    rdfs:label "has address line 3"@en ;
+    rdfs:domain est:Address ;
+    rdfs:range est:AddressLine3 ;
+    rdfs:comment "Cardinality: 0..1. Added v1.14."@en .
+
+esto:hasTown
+    a owl:ObjectProperty ;
+    rdfs:label "has town"@en ;
+    rdfs:domain est:Address ;
+    rdfs:range est:Town ;
+    rdfs:comment "Cardinality: 0..1. Added v1.14."@en .
+
+esto:hasCounty
+    a owl:ObjectProperty ;
+    rdfs:label "has county"@en ;
+    rdfs:domain est:Address ;
+    rdfs:range est:County ;
+    rdfs:comment "Cardinality: 0..1. Added v1.14."@en .
+
+esto:hasPostcode
+    a owl:ObjectProperty ;
+    rdfs:label "has postcode"@en ;
+    rdfs:domain est:Address ;
+    rdfs:range est:Postcode ;
+    rdfs:comment "Cardinality: 0..1. Added v1.14."@en .
 
 esto:hasRegisteredAddress
     a owl:ObjectProperty ;

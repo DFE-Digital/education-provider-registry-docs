@@ -149,7 +149,10 @@ inst:st-lukes
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Radnor Street, London, EC1V 3SJ"@en
+                rdfs:label "Radnor Street, London, EC1V 3SJ"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Radnor Street"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "EC1V 3SJ" ]
             ]
         ]
     ] ;
@@ -196,7 +199,10 @@ inst:moreland
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Moreland Street, London, EC1V 8BB"@en
+                rdfs:label "Moreland Street, London, EC1V 8BB"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Moreland Street"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "EC1V 8BB" ]
             ]
         ]
     ] ;

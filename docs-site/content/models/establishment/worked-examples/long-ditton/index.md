@@ -165,7 +165,11 @@ inst:long-ditton-infant
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Ditton Hill Road, Surbiton, KT6 5JB"@en
+                rdfs:label "Ditton Hill Road, Surbiton, KT6 5JB"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Ditton Hill Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Surbiton"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Surrey"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "KT6 5JB" ]
             ]
         ]
     ] ;
@@ -199,7 +203,12 @@ inst:long-ditton-st-marys
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Sugden Road, Long Ditton, Surbiton, KT7 0AD"@en
+                rdfs:label "Sugden Road, Long Ditton, Surbiton, KT7 0AD"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Sugden Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Long Ditton"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Surbiton"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Surrey"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "KT7 0AD" ]
             ]
         ]
     ] ;

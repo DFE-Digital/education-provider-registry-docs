@@ -127,7 +127,6 @@ est:locationAndContact
     skos:member
         est:Site,
         est:Address,
-        est:MainAddress,
         est:Website,
         est:TelephoneNumber,
         est:UniquePropertyReferenceNumber,
@@ -382,7 +381,8 @@ est:EstablishmentLocationAndContact
     skos:prefLabel "Establishment location and contact"@en ;
     skos:definition "The physical location, postal address, Unique Property Reference Number and published contact details (website and telephone) for an establishment."@en ;
     skos:narrower
-        est:MainAddress,
+        est:Site,
+        est:Address,
         est:TelephoneNumber,
         est:UniquePropertyReferenceNumber,
         est:Website ;
@@ -2360,12 +2360,76 @@ est:Address
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Address"@en ;
     skos:definition "A postal or correspondence address. An independent concept from est:Site — an address locates an establishment, site, or group for administrative and correspondence purposes. An establishment may have a registered address that differs from its principal teaching site. A trust or group carries a registered address and optionally a separate contact address as a legal entity."@en ;
-    skos:scopeNote "For establishments, the registered address is mapped from GIAS Establishment.Street, Locality, Address3, Town, Postcode and County. For groups and trusts, the registered address is mapped from EstablishmentGroup.GroupStreet etc. and the contact address from GroupContactStreet etc. Address is not the same as a site — UPRN belongs on the site, not the address."@en ;
+    skos:scopeNote "For establishments, the registered address is mapped from GIAS Establishment.Street, Locality, Address3, Town, Postcode and County. For groups and trusts, the registered address is mapped from EstablishmentGroup.GroupStreet etc. and the contact address from GroupContactStreet etc. Address is not the same as a site — UPRN belongs on the site, not the address. Structured into six component concepts (v1.14: AddressLine1, AddressLine2, AddressLine3, Town, County, Postcode) matching these GIAS source fields directly, rather than held only as one concatenated string."@en ;
     skos:broader est:EstablishmentLocationAndContact ;
-    skos:narrower est:Country ;
+    skos:narrower est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode, est:Country ;
     est:status "Provisional"@en ;
     dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en ;
-    dcterms:modified "2026-07-01"^^xsd:date .
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:AddressLine1
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Address line 1"@en ;
+    skos:definition "The first line of a postal address, typically the building name/number and street name."@en ;
+    skos:scopeNote "Named as a generic address line, not est:Street, because the source field is free text and is not guaranteed to contain a street name (e.g. a building or site name may appear here instead)."@en ;
+    skos:broader est:Address ;
+    est:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Street; EstablishmentGroup.GroupStreet"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:AddressLine2
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Address line 2"@en ;
+    skos:definition "The second line of a postal address, typically the locality within the town."@en ;
+    skos:broader est:Address ;
+    est:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Locality; EstablishmentGroup.GroupLocality"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:AddressLine3
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Address line 3"@en ;
+    skos:definition "The third line of a postal address, used for further locality or address detail not captured by address lines 1 and 2."@en ;
+    skos:broader est:Address ;
+    est:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Address3; EstablishmentGroup.GroupAddress3"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:Town
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Town"@en ;
+    skos:definition "The town or city of a postal address."@en ;
+    skos:broader est:Address ;
+    est:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Town; EstablishmentGroup.GroupTown"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:County
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "County"@en ;
+    skos:definition "The county of a postal address."@en ;
+    skos:scopeNote "Distinct from est:Country, which records the country of location rather than the English county within an address. See est:Country's own scope note for that distinction."@en ;
+    skos:broader est:Address ;
+    est:status "Provisional"@en ;
+    dcterms:source "Extract component: County"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:Postcode
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Postcode"@en ;
+    skos:definition "The UK postcode of a postal address."@en ;
+    skos:scopeNote "Already load-bearing elsewhere in the model even before this concept existed in its own right: est:AdministrativeGeography's region, ward and constituency classifications are derived from an establishment's postcode location."@en ;
+    skos:broader est:Address ;
+    skos:related est:AdministrativeGeography ;
+    est:status "Provisional"@en ;
+    dcterms:source "Database: Establishment.Postcode; EstablishmentGroup.GroupPostcode"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
 
 est:MainAddress
     a skos:Concept ;
@@ -2374,8 +2438,8 @@ est:MainAddress
     skos:definition "The primary postal address of the establishment as recorded in GIAS, comprising street, locality, address line 3, town, county and postcode."@en ;
     skos:broader est:EstablishmentLocationAndContact ;
     skos:exactMatch est:Address ;
-    est:status "Superseded"@en ;
-    skos:scopeNote "Superseded in v1.5 by est:Address and est:Site. The concept conflated the postal address and the physical location. Use est:Address for postal and correspondence addresses; use est:Site for the physical location where education is delivered."@en ;
+    est:status "Retired"@en ;
+    skos:scopeNote "Superseded in v1.5 by est:Address and est:Site, but retained (wrongly) as the live provider-field-coverage.ttl mapping for GIAS's Details-tab Address field until v1.14, when est:Address was given its own component structure (AddressLine1-3, Town, County, Postcode) and provider-field-coverage.ttl was repointed at it directly. Fully retired in v1.14 - the concept and its owl:Class/owl:ObjectProperty punning (esto:hasMainAddress) have been removed from establishment-ontology.ttl. Kept here, in the vocabulary only, as a historical record of the retired URI (skos:exactMatch est:Address preserved for anyone resolving old references)."@en ;
     dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en .
 
 est:Country
@@ -2428,7 +2492,7 @@ est:AdministrativeGeography
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Administrative geography"@en ;
     skos:definition "The administrative and statistical area classifications assigned to an establishment based on its postcode location. These are derived from the postcode via the GeoData lookup table or an equivalent postcode-to-area service."@en ;
-    skos:scopeNote "Distinct from the postal address (MainAddress). GIAS stores these as separate field groups: ADDRESS for postal address fields and REGION for administrative geography codes. The target model follows the same separation. Administrative geography applies to all establishment types; values are derived from postcode and not independently editable."@en ;
+    skos:scopeNote "Distinct from the postal address (est:Address, and specifically its est:Postcode component). GIAS stores these as separate field groups: ADDRESS for postal address fields and REGION for administrative geography codes. The target model follows the same separation. Administrative geography applies to all establishment types; values are derived from postcode and not independently editable."@en ;
     skos:narrower
         est:GovernmentOfficeRegion,
         est:UrbanRuralClassification,

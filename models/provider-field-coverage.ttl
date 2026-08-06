@@ -51,6 +51,10 @@
 #
 # Types not observed (no sample in extracts): 09, 17, 22, 23, 98
 #
+# Version: 1.1 — 2026-08-06 — Details tab "Address" field repointed from est:MainAddress
+#   to est:Address (v1.14 of establishment-ontology.ttl gave est:Address its own
+#   structured component properties and est:MainAddress was fully retired - see
+#   docs/transformation/data/modelling/claude/address-modelling-analysis-and-recommendations.md).
 # Version: 1.0 — 2026-06-26
 
 #################################################################
@@ -103,7 +107,7 @@ est:UITab
 # DETAILS TAB — universal fields (all 41 observed types)
 #################################################################
 
-est:MainAddress
+est:Address
     est:shownOnTab est:detailsTab ;
     est:uiLabel "Address"@en ;
     est:applicableToEstablishmentType

@@ -126,7 +126,11 @@ inst:george-greens
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "100 Manchester Road, Isle of Dogs, London, E14 3DW"@en
+                rdfs:label "100 Manchester Road, Isle of Dogs, London, E14 3DW"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "100 Manchester Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Isle of Dogs"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "E14 3DW" ]
             ]
         ]
     ] ;
