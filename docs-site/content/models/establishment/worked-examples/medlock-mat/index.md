@@ -219,7 +219,7 @@ inst:medlock
 
 ### Example 5 — Location, contact and administrative geography
 
-`est:Site` and `est:Address` are separated because a site is a physical place and an address is how correspondence reaches it - for Medlock, both resolve to the same location, but the model doesn't assume that in general (a trust's registered address, for instance, is rarely its teaching site). Administrative geography (region, ward, constituency) is derived from the postcode, not asserted independently.
+`est:Site` and `est:Address` are separated because a site is a physical place and an address is how correspondence reaches it - for Medlock, both resolve to the same location, but the model doesn't assume that in general (a trust's registered address, for instance, is rarely its teaching site). The site's UPRN identifies the specific physical building via Ordnance Survey, independent of any postcode lookup. Administrative geography (region, district, ward, constituency, urban/rural classification, GSS local authority code, OS grid reference, MSOA, LSOA) is derived from the postcode, not asserted independently - this is the first worked example to assert the full set shown on GIAS's Location tab, rather than just region/ward/constituency; all values checked directly against the real extract.
 
 ```
 inst:medlock
@@ -235,7 +235,8 @@ inst:medlock
                 esto:hasTown [ a est:Town ; rdfs:label "Manchester"@en ] ;
                 esto:hasCounty [ a est:County ; rdfs:label "Greater Manchester"@en ] ;
                 esto:hasPostcode [ a est:Postcode ; rdfs:label "M13 9UJ" ]
-            ]
+            ] ;
+            esto:hasUprn [ a est:UniquePropertyReferenceNumber ; rdf:value "10023048531"^^xsd:positiveInteger ]
         ] ;
         esto:hasWebsite [
             a est:Website ;
@@ -261,6 +262,10 @@ inst:medlock
             a est:GovernmentOfficeRegion ;
             rdfs:label "North West"@en
         ] ;
+        esto:classifiedByDistrictAdministrative [
+            a est:DistrictAdministrative ;
+            rdfs:label "Manchester"@en
+        ] ;
         esto:classifiedByAdministrativeWard [
             a est:AdministrativeWard ;
             rdfs:label "Ardwick"@en
@@ -268,6 +273,24 @@ inst:medlock
         esto:classifiedByParliamentaryConstituency [
             a est:ParliamentaryConstituency ;
             rdfs:label "Manchester Rusholme"@en
+        ] ;
+        esto:classifiedByUrbanRuralClassification [
+            a est:UrbanRuralClassification ;
+            rdfs:label "Urban: Nearer to a major town or city"@en
+        ] ;
+        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdfs:label "E08000003" ] ;
+        esto:hasOsGridReference [
+            a est:OsGridReference ;
+            esto:hasEasting [ a est:Easting ; rdf:value "385162"^^xsd:nonNegativeInteger ] ;
+            esto:hasNorthing [ a est:Northing ; rdf:value "397114"^^xsd:nonNegativeInteger ]
+        ] ;
+        esto:classifiedByMiddleLayerSuperOutputArea [
+            a est:MiddleLayerSuperOutputArea ;
+            rdfs:label "Manchester 018"@en
+        ] ;
+        esto:classifiedByLowerLayerSuperOutputArea [
+            a est:LowerLayerSuperOutputArea ;
+            rdfs:label "Manchester 018D"@en
         ]
     ] .
 ```
