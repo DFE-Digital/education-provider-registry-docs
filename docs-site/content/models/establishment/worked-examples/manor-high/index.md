@@ -246,10 +246,7 @@ inst:manor-high
 
     esto:hasAdministrativeGeography [
         a est:AdministrativeGeography ;
-        esto:classifiedByGovernmentOfficeRegion [
-            a est:GovernmentOfficeRegion ;
-            rdfs:label "East Midlands"@en
-        ] ;
+        esto:classifiedByGovernmentOfficeRegion inst:region-east-midlands ;
         esto:classifiedByDistrictAdministrative [
             a est:DistrictAdministrative ;
             rdfs:label "Oadby and Wigston"@en
@@ -281,7 +278,13 @@ inst:manor-high
             rdfs:label "Oadby and Wigston 010B"@en
         ]
     ] .
+
+inst:region-east-midlands
+    a est:GovernmentOfficeRegion ;
+    rdfs:label "East Midlands"@en .
 ```
+
+`inst:region-east-midlands` is a real-world reference entity, reusable by URI from any future East Midlands establishment, rather than an `owl:NamedIndividual` baked into the ontology - see the same note on Medlock's Example 5.
 
 ### Example 5 — Admissions, provision and capacity
 
