@@ -161,7 +161,12 @@ inst:eileen-wade
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "High Street, Upper Dean, Huntingdon, PE28 0ND"@en
+                rdfs:label "High Street, Upper Dean, Huntingdon, PE28 0ND"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "High Street"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Upper Dean"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Huntingdon"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Cambridgeshire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "PE28 0ND" ]
             ]
         ]
     ] ;
@@ -200,7 +205,12 @@ inst:milton-ernest
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Thurleigh Road, Milton Ernest, Bedford, MK44 1RF"@en
+                rdfs:label "Thurleigh Road, Milton Ernest, Bedford, MK44 1RF"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Thurleigh Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Milton Ernest"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Bedford"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Bedfordshire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "MK44 1RF" ]
             ]
         ]
     ] ;

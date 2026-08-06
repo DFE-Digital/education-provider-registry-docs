@@ -162,7 +162,11 @@ inst:cheltenham-college
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Bath Road, Cheltenham, GL53 7LD"@en
+                rdfs:label "Bath Road, Cheltenham, GL53 7LD"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Bath Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Cheltenham"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Gloucestershire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "GL53 7LD" ]
             ]
         ]
     ] ;

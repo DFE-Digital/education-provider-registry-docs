@@ -129,7 +129,11 @@ inst:frank-barnes
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "4 Wollstonecraft Street, Kings Cross, London, N1C 4BT"@en
+                rdfs:label "4 Wollstonecraft Street, Kings Cross, London, N1C 4BT"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "4 Wollstonecraft Street"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Kings Cross"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "N1C 4BT" ]
             ]
         ] ;
         esto:hasWebsite [

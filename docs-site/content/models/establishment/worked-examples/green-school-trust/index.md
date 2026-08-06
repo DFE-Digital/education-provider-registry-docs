@@ -169,7 +169,11 @@ inst:green-school-girls
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Busch Corner, London Road, Isleworth, TW7 5BB"@en
+                rdfs:label "Busch Corner, London Road, Isleworth, TW7 5BB"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Busch Corner"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "London Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Isleworth"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "TW7 5BB" ]
             ]
         ]
     ] ;
@@ -210,7 +214,10 @@ inst:green-school-boys
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Twickenham Road, Isleworth, TW7 6AU"@en
+                rdfs:label "Twickenham Road, Isleworth, TW7 6AU"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Twickenham Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Isleworth"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "TW7 6AU" ]
             ]
         ]
     ] ;

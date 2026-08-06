@@ -227,7 +227,12 @@ inst:medlock
             a est:Site ;
             esto:hasAddress [
                 a est:Address ;
-                rdfs:label "Wadeson Road, Chorlton-on-Medlock, Manchester, M13 9UJ"@en
+                rdfs:label "Wadeson Road, Chorlton-on-Medlock, Manchester, M13 9UJ"@en ;
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Wadeson Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Chorlton-on-Medlock"@en ] ;
+                esto:hasTown [ a est:Town ; rdfs:label "Manchester"@en ] ;
+                esto:hasCounty [ a est:County ; rdfs:label "Greater Manchester"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdfs:label "M13 9UJ" ]
             ]
         ] ;
         esto:hasWebsite [
