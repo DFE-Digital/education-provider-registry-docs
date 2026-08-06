@@ -21,7 +21,7 @@ title: Establishment Ontology — Co-op Academy Medlock / The Co-operative Acade
 
 ---
 
-This is the establishment side of the same real-world organisation the [governance Medlock/Co-op Academies Trust worked example](../../../governance/worked-examples/medlock-mat/) covers - the two pages share the same Academy Trust and Academy identifiers (`inst:coop-academies-trust`, `inst:medlock`) but map different data: this page covers establishment identity, classification, accountability, group membership and location; the governance page covers people, appointments and roles.
+This is the establishment side of the same real-world organisation the [governance Medlock/Co-op Academies Trust worked example](../../../governance/worked-examples/medlock-mat/) covers - the two pages share the same Academy Trust and Academy identifiers (`inst:coop-academies-trust`, `inst:medlock`) but map different data: this page covers establishment identity, classification, accountability, group membership and location; the governance page covers people, appointments and roles. Since v1.17 the two pages also share a real person: Medlock's headteacher (JB) is the same real individual as the governance page's ex-officio Local Governing Body/Community Council Member `ginst:person-jb` - one instance, defined once in the governance worked example and reused here by reference, now typed as both `gov:GovernancePerson` and `est:HeadteacherOrPrincipal` rather than represented twice under two disconnected identities.
 
 ---
 
@@ -117,6 +117,7 @@ All examples in this section use the following prefixes.
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix inst:  <https://dfe-digital.github.io/education-provider-registry-docs/establishment/> .
+@prefix ginst: <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/instance/> .
 ```
 
 ### Example 1 — Establishment and Academy Trust identity
@@ -250,10 +251,7 @@ inst:medlock
 
     esto:hasEstablishmentLeadership [
         a est:EstablishmentLeadership ;
-        esto:hasHeadteacherOrPrincipal [
-            a est:HeadteacherOrPrincipal ;
-            rdfs:label "JB"@en
-        ]
+        esto:hasHeadteacherOrPrincipal ginst:person-jb
     ] ;
 
     esto:hasAdministrativeGeography [
@@ -394,8 +392,8 @@ inst:medlock
 | Group membership | Joined Group UID 2777, 2024-01-01 | `est:GroupMembership` + `esto:memberOf` + `esto:hasGroupMembershipDate` | Direct |
 | Sponsorship | Second group link, Group UID 4949, "School sponsor", same trust | `esto:sponsoredBy` (direct property, no second group entity) | Direct - avoids GIAS's own duplicate-group-row pattern for the same organisation |
 | Location and site | Wadeson Road, Chorlton-on-Medlock, M13 9UJ | `est:Site` + `est:Address` | Direct |
-| Administrative geography | North West region, Ardwick ward, Manchester Rusholme constituency | `est:AdministrativeGeography` | Direct |
-| Headteacher | JB | `est:HeadteacherOrPrincipal` | Direct |
+| Administrative geography | North West region, Manchester district, Ardwick ward, Manchester Rusholme constituency, urban classification, GSS code E08000003, OS grid ref, MSOA/LSOA | `est:AdministrativeGeography` | Direct |
+| Headteacher | JB | `est:HeadteacherOrPrincipal` | Direct - shared instance (`ginst:person-jb`) with the governance worked example's ex-officio Local Governing Body/Community Council Member, not a second, disconnected identity |
 | Capacity and pupil numbers | 500 capacity, 411 on roll (224 boys, 187 girls), 206 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct |
 | Admissions and provision | Mixed, non-selective, no boarding, has nursery, no sixth form | `est:EducationAdmissionsAndProvision` | Direct |
 | SEN and resourced provision | SLCN resourced provision, 12 places, 12 on roll | `est:SenAndResourcedProvision`, `est:SpeechLanguageAndCommunicationNeeds`, `est:ResourcedProvisionFacility` | Direct |

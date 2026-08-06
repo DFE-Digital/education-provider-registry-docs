@@ -309,8 +309,9 @@ ginst:roleassignment-hr-chairacc
     rdfs:comment "HR chairs the Academy Community Council - gov:CommitteeChair, not gov:Chair, since this is a committee chairing responsibility layered onto a committee-membership appointment, not chairing the Trust Board itself (see RG's Chair of Trustees, Example 4, for that case)."@en .
 
 ginst:person-jb
-    a gov:GovernancePerson ;
-    rdfs:label "JB"@en .
+    a gov:GovernancePerson, est:HeadteacherOrPrincipal ;
+    rdfs:label "JB"@en ;
+    rdfs:comment "Since establishment-ontology.ttl v1.17, also typed est:HeadteacherOrPrincipal and referenced directly from the establishment worked example's esto:hasHeadteacherOrPrincipal - one instance for the one real person, rather than a second, disconnected identity on that page. See the establishment worked example's own intro for the cross-reference."@en .
 
 ginst:appointment-jb-ccm
     a gov:GovernanceAppointment ;

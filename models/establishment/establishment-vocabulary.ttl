@@ -288,7 +288,8 @@ est:Person
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Person"@en ;
-    skos:definition "A natural person with a role in the education system. In EPR this includes individuals who are proprietors of independent schools; governance roles are now modelled by the dedicated governance model (gov:GovernancePerson) - see models/governance/governance-ontology.ttl."@en ;
+    skos:definition "A natural person with a role in the education system. In EPR this includes individuals who are proprietors of independent schools, and (v1.17) the named headteacher, principal or children's centre manager leading an establishment; governance roles are modelled by the dedicated governance model (gov:GovernancePerson, itself skos:broader est:Person) - see models/governance/governance-ontology.ttl."@en ;
+    skos:narrower est:HeadteacherOrPrincipal, est:CentreManager ;
     est:status "Provisional"@en .
 
 #################################################################
