@@ -223,7 +223,8 @@ inst:manor-high
                 esto:hasTown [ a est:Town ; rdfs:label "Leicester"@en ] ;
                 esto:hasCounty [ a est:County ; rdfs:label "Leicestershire"@en ] ;
                 esto:hasPostcode [ a est:Postcode ; rdfs:label "LE2 4FU" ]
-            ]
+            ] ;
+            esto:hasUprn [ a est:UniquePropertyReferenceNumber ; rdf:value "100032054860"^^xsd:positiveInteger ]
         ] ;
         esto:hasWebsite [
             a est:Website ;
@@ -249,6 +250,10 @@ inst:manor-high
             a est:GovernmentOfficeRegion ;
             rdfs:label "East Midlands"@en
         ] ;
+        esto:classifiedByDistrictAdministrative [
+            a est:DistrictAdministrative ;
+            rdfs:label "Oadby and Wigston"@en
+        ] ;
         esto:classifiedByAdministrativeWard [
             a est:AdministrativeWard ;
             rdfs:label "Oadby Uplands"@en
@@ -256,6 +261,24 @@ inst:manor-high
         esto:classifiedByParliamentaryConstituency [
             a est:ParliamentaryConstituency ;
             rdfs:label "Harborough, Oadby and Wigston"@en
+        ] ;
+        esto:classifiedByUrbanRuralClassification [
+            a est:UrbanRuralClassification ;
+            rdfs:label "Urban: Nearer to a major town or city"@en
+        ] ;
+        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdfs:label "E10000018" ] ;
+        esto:hasOsGridReference [
+            a est:OsGridReference ;
+            esto:hasEasting [ a est:Easting ; rdf:value "463749"^^xsd:nonNegativeInteger ] ;
+            esto:hasNorthing [ a est:Northing ; rdf:value "301018"^^xsd:nonNegativeInteger ]
+        ] ;
+        esto:classifiedByMiddleLayerSuperOutputArea [
+            a est:MiddleLayerSuperOutputArea ;
+            rdfs:label "Oadby and Wigston 010"@en
+        ] ;
+        esto:classifiedByLowerLayerSuperOutputArea [
+            a est:LowerLayerSuperOutputArea ;
+            rdfs:label "Oadby and Wigston 010B"@en
         ]
     ] .
 ```

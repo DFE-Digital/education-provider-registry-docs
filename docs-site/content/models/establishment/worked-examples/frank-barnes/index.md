@@ -134,7 +134,8 @@ inst:frank-barnes
                 esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Kings Cross"@en ] ;
                 esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
                 esto:hasPostcode [ a est:Postcode ; rdfs:label "N1C 4BT" ]
-            ]
+            ] ;
+            esto:hasUprn [ a est:UniquePropertyReferenceNumber ; rdf:value "5172256"^^xsd:positiveInteger ]
         ] ;
         esto:hasWebsite [
             a est:Website ;
@@ -160,6 +161,10 @@ inst:frank-barnes
             a est:GovernmentOfficeRegion ;
             rdfs:label "London"@en
         ] ;
+        esto:classifiedByDistrictAdministrative [
+            a est:DistrictAdministrative ;
+            rdfs:label "Camden"@en
+        ] ;
         esto:classifiedByAdministrativeWard [
             a est:AdministrativeWard ;
             rdfs:label "King's Cross"@en
@@ -167,6 +172,24 @@ inst:frank-barnes
         esto:classifiedByParliamentaryConstituency [
             a est:ParliamentaryConstituency ;
             rdfs:label "Holborn and St Pancras"@en
+        ] ;
+        esto:classifiedByUrbanRuralClassification [
+            a est:UrbanRuralClassification ;
+            rdfs:label "Urban: Nearer to a major town or city"@en
+        ] ;
+        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdfs:label "E09000007" ] ;
+        esto:hasOsGridReference [
+            a est:OsGridReference ;
+            esto:hasEasting [ a est:Easting ; rdf:value "530000"^^xsd:nonNegativeInteger ] ;
+            esto:hasNorthing [ a est:Northing ; rdf:value "183795"^^xsd:nonNegativeInteger ]
+        ] ;
+        esto:classifiedByMiddleLayerSuperOutputArea [
+            a est:MiddleLayerSuperOutputArea ;
+            rdfs:label "Camden 022"@en
+        ] ;
+        esto:classifiedByLowerLayerSuperOutputArea [
+            a est:LowerLayerSuperOutputArea ;
+            rdfs:label "Camden 022F"@en
         ]
     ] .
 ```
