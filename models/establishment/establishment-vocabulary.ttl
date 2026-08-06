@@ -4,6 +4,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
 
 # Education Provider Registry Vocabulary
 #
@@ -2363,6 +2365,7 @@ est:Address
     skos:scopeNote "For establishments, the registered address is mapped from GIAS Establishment.Street, Locality, Address3, Town, Postcode and County. For groups and trusts, the registered address is mapped from EstablishmentGroup.GroupStreet etc. and the contact address from GroupContactStreet etc. Address is not the same as a site — UPRN belongs on the site, not the address. Structured into six component concepts (v1.14: AddressLine1, AddressLine2, AddressLine3, Town, County, Postcode) matching these GIAS source fields directly, rather than held only as one concatenated string."@en ;
     skos:broader est:EstablishmentLocationAndContact ;
     skos:narrower est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode, est:Country ;
+    skos:closeMatch locn:Address, vcard:Address ;
     est:status "Provisional"@en ;
     dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
@@ -2374,6 +2377,7 @@ est:AddressLine1
     skos:definition "The first line of a postal address, typically the building name/number and street name."@en ;
     skos:scopeNote "Named as a generic address line, not est:Street, because the source field is free text and is not guaranteed to contain a street name (e.g. a building or site name may appear here instead)."@en ;
     skos:broader est:Address ;
+    skos:closeMatch locn:thoroughfare, vcard:hasStreetAddress ;
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Street; EstablishmentGroup.GroupStreet"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
@@ -2384,6 +2388,7 @@ est:AddressLine2
     skos:prefLabel "Address line 2"@en ;
     skos:definition "The second line of a postal address, typically the locality within the town."@en ;
     skos:broader est:Address ;
+    skos:closeMatch locn:addressArea ;
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Locality; EstablishmentGroup.GroupLocality"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
@@ -2393,6 +2398,7 @@ est:AddressLine3
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Address line 3"@en ;
     skos:definition "The third line of a postal address, used for further locality or address detail not captured by address lines 1 and 2."@en ;
+    skos:scopeNote "No external alignment given (contrast the other five address components, each of which has a skos:closeMatch/exactMatch to W3C Locn or vCard) - GIAS's generic third overflow line has no equivalent slot in either vocabulary, both of which stop at a fixed, named set of structured components. Forcing a match here would overstate the correspondence."@en ;
     skos:broader est:Address ;
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Address3; EstablishmentGroup.GroupAddress3"@en ;
@@ -2404,6 +2410,7 @@ est:Town
     skos:prefLabel "Town"@en ;
     skos:definition "The town or city of a postal address."@en ;
     skos:broader est:Address ;
+    skos:closeMatch locn:postName, vcard:hasLocality ;
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Town; EstablishmentGroup.GroupTown"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
@@ -2415,6 +2422,7 @@ est:County
     skos:definition "The county of a postal address."@en ;
     skos:scopeNote "Distinct from est:Country, which records the country of location rather than the English county within an address. See est:Country's own scope note for that distinction."@en ;
     skos:broader est:Address ;
+    skos:closeMatch locn:adminUnitL2, vcard:hasRegion ;
     est:status "Provisional"@en ;
     dcterms:source "Extract component: County"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
@@ -2427,6 +2435,7 @@ est:Postcode
     skos:scopeNote "Already load-bearing elsewhere in the model even before this concept existed in its own right: est:AdministrativeGeography's region, ward and constituency classifications are derived from an establishment's postcode location."@en ;
     skos:broader est:Address ;
     skos:related est:AdministrativeGeography ;
+    skos:exactMatch locn:postCode, vcard:hasPostalCode ;
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Postcode; EstablishmentGroup.GroupPostcode"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
