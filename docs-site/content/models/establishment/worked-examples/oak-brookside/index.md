@@ -182,7 +182,9 @@ inst:brookside-primary
         esto:classifiedBySpecialClassProvision est:HasSpecialClasses ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "4 to 11"@en
+            rdfs:label "4 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "4"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -195,12 +197,13 @@ inst:brookside-primary
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "440"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 249 boys, 191 girls."@en
+            rdfs:comment "249 boys, 191 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "61"^^xsd:integer ;
-            rdfs:comment "13.9% of pupils on roll."@en
+            rdf:value "61"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "13.9"^^xsd:decimal ]
         ]
     ] ;
 
@@ -210,11 +213,15 @@ inst:brookside-primary
         esto:classifiedByTypeOfResourcedProvision est:ResourcedProvisionAndSenUnitFacility ;
         esto:hasResourcedProvisionMeasure [
             a est:ResourcedProvisionMeasure ;
-            rdfs:label "20 places, 20 on roll"@en
+            rdfs:label "20 places, 20 on roll"@en ;
+            esto:hasResourcedProvisionCapacity [ a est:ResourcedProvisionCapacity ; rdf:value "20"^^xsd:nonNegativeInteger ] ;
+            esto:hasResourcedProvisionPupilCount [ a est:ResourcedProvisionPupilCount ; rdf:value "20"^^xsd:nonNegativeInteger ]
         ] ;
         esto:hasSenUnitMeasure [
             a est:SenUnitMeasure ;
-            rdfs:label "20 places, 20 on roll"@en
+            rdfs:label "20 places, 20 on roll"@en ;
+            esto:hasSenUnitCapacity [ a est:SenUnitCapacity ; rdf:value "20"^^xsd:nonNegativeInteger ] ;
+            esto:hasSenUnitPupilCount [ a est:SenUnitPupilCount ; rdf:value "20"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 

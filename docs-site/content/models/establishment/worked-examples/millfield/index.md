@@ -151,7 +151,9 @@ inst:millfield
         esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "3 to 9"@en
+            rdfs:label "3 to 9"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "3"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "9"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -164,12 +166,13 @@ inst:millfield
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "318"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 178 boys, 140 girls."@en
+            rdfs:comment "178 boys, 140 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "28"^^xsd:integer ;
-            rdfs:comment "9.8% of pupils on roll."@en
+            rdf:value "28"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "9.8"^^xsd:decimal ]
         ]
     ] ;
 

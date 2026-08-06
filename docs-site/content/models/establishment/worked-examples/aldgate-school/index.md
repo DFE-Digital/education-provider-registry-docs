@@ -159,7 +159,9 @@ inst:aldgate-school
         esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "3 to 11"@en
+            rdfs:label "3 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "3"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -172,12 +174,13 @@ inst:aldgate-school
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "249"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 137 boys, 112 girls."@en
+            rdfs:comment "137 boys, 112 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "58"^^xsd:integer ;
-            rdfs:comment "23.3% of pupils on roll."@en
+            rdf:value "58"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "23.3"^^xsd:decimal ]
         ]
     ] ;
 

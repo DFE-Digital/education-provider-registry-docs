@@ -138,7 +138,9 @@ inst:cheltenham-college
         esto:classifiedBySixthFormProvision est:HasSixthForm ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "2 to 19"@en
+            rdfs:label "2 to 19"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "2"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "19"^^xsd:nonNegativeInteger ]
         ]
     ] .
 ```
@@ -180,8 +182,9 @@ inst:cheltenham-college
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "1178"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2024-01-18: 632 boys, 546 girls."@en
-        ]
+            rdfs:comment "632 boys, 546 girls."@en
+        ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2024-01-18"^^xsd:date ]
     ] ;
 
     esto:hasSenAndResourcedProvision [

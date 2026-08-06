@@ -296,7 +296,12 @@ inst:green-school-girls
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
         esto:classifiedByBoardingProvision est:NoBoarders ;
         esto:classifiedBySixthFormProvision est:HasSixthForm ;
-        esto:hasStatutoryAgeRange [ a est:StatutoryAgeRange ; rdfs:label "11 to 18"@en ]
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
+            rdfs:label "11 to 18"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "11"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "18"^^xsd:nonNegativeInteger ]
+        ]
     ] ;
 
     esto:hasCapacityAndPupilMeasures [
@@ -305,12 +310,13 @@ inst:green-school-girls
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "897"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 897 girls."@en
+            rdfs:comment "897 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "212"^^xsd:integer ;
-            rdfs:comment "28.2% of pupils on roll."@en
+            rdf:value "212"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "28.2"^^xsd:decimal ]
         ]
     ] .
 
@@ -319,7 +325,12 @@ inst:green-school-boys
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:BoysOnlyGenderEntry ;
         esto:classifiedBySixthFormProvision est:HasSixthForm ;
-        esto:hasStatutoryAgeRange [ a est:StatutoryAgeRange ; rdfs:label "11 to 18"@en ]
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
+            rdfs:label "11 to 18"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "11"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "18"^^xsd:nonNegativeInteger ]
+        ]
     ] ;
 
     esto:hasCapacityAndPupilMeasures [
@@ -328,12 +339,13 @@ inst:green-school-boys
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "772"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 772 boys."@en
+            rdfs:comment "772 boys."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "222"^^xsd:integer ;
-            rdfs:comment "32.1% of pupils on roll."@en
+            rdf:value "222"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "32.1"^^xsd:decimal ]
         ]
     ] .
 ```

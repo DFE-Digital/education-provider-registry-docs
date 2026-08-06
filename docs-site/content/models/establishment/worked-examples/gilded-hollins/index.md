@@ -151,7 +151,9 @@ inst:gilded-hollins
         esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "4 to 11"@en
+            rdfs:label "4 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "4"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -164,12 +166,13 @@ inst:gilded-hollins
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "212"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 108 boys, 104 girls."@en
+            rdfs:comment "108 boys, 104 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "20"^^xsd:integer ;
-            rdfs:comment "9.4% of pupils on roll."@en
+            rdf:value "20"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "9.4"^^xsd:decimal ]
         ]
     ] ;
 

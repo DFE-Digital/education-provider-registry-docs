@@ -38,7 +38,7 @@ esto:establishmentDetailsConceptualModel
     dcterms:modified "2026-08-06"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.14" ;
+    owl:versionInfo "1.15" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -67,6 +67,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.12: est:TypeOfResourcedProvision given a third owl:NamedIndividual value, est:ResourcedProvisionAndSenUnitFacility, matching GIAS's real closed-list value 'Resourced provision and SEN unit' (229 open establishments in the live extract) - previously only the two single-facility values (ResourcedProvisionFacility, SenUnit) existed, so this combined case had no individual to assert. classifiedByTypeOfResourcedProvision's cardinality (0..1) is correct as-is: GIAS records this as one field with one of four values (including blank), not two independent flags, so the fix was a missing enumeration value, not a cardinality bug like v1.11's classifiedByTypeOfSenProvision."@en ;
     rdfs:comment "v1.13: four compound measures given queryable sub-figure properties, closing a gap found while building a logical model of the GIAS Establishment Details page (docs/transformation/data/modelling/logical-model/establishment-details-logical-model.md). Each compound measure's own rdfs:comment already named its sub-figures, and establishment-vocabulary.ttl already carried them as separate SKOS concepts, but no esto: property existed to attach a sub-figure value to an instance independently of the others - callers had to parse free text out of an rdfs:label/rdfs:comment (e.g. '12 places, 12 on roll'). New classes: est:CensusDate, est:PercentagePupilsEligibleForFreeSchoolMeals, est:ResourcedProvisionCapacity, est:ResourcedProvisionPupilCount, est:SenUnitCapacity, est:SenUnitPupilCount. New object properties: esto:hasCensusDate (domain est:CapacityAndPupilMeasures, range est:CensusDate, 0..1 - one shared census date for the whole block, not asserted per measure), esto:hasPercentageEligibleForFreeSchoolMeals (domain est:PupilsEligibleForFreeSchoolMeals, range est:PercentagePupilsEligibleForFreeSchoolMeals, 0..1), esto:hasResourcedProvisionCapacity and esto:hasResourcedProvisionPupilCount (domain est:ResourcedProvisionMeasure, 0..1 each), esto:hasSenUnitCapacity and esto:hasSenUnitPupilCount (domain est:SenUnitMeasure, 0..1 each). The existing compound properties (hasPupilCount, hasFreeSchoolMealMeasure, hasResourcedProvisionMeasure, hasSenUnitMeasure) and their rdfs:comment wording are unchanged - the new properties are additive siblings on the same blank-node instance, not a replacement, so existing worked-example Turtle (e.g. Medlock's free-text resourced-provision label) remains valid; a future worked-example pass can migrate to the structured properties where the underlying GIAS extract has the sub-figures separately. No SHACL shape previously targeted any of the four compound-measure classes by name, so no SHACL change was needed."@en ;
     rdfs:comment "v1.14: address modelling analysis and fixes (docs/transformation/data/modelling/claude/address-modelling-analysis-and-recommendations.md). (1) est:Address decomposed into structured component properties matching GIAS's own already-decomposed source fields (Street, Locality, Address3, Town, County, Postcode) - previously held only as one concatenated rdfs:label string. New classes: est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode. New object properties, all domain est:Address, 0..1 each: esto:hasAddressLine1, esto:hasAddressLine2, esto:hasAddressLine3, esto:hasTown, esto:hasCounty, esto:hasPostcode. rdfs:label on est:Address is retained as a derived, human-readable form, not replaced - existing worked-example Turtle with only a concatenated label remains valid. Applies uniformly wherever est:Address is used (establishment site address via hasMainSite/hasAddress, group registered/contact address), since all three are documented as coming from the same shape of source fields. (2) est:MainAddress and esto:hasMainAddress removed entirely from this ontology file (previously 'superseded' in prose only via v1.5's comment, with no owl:deprecated annotation - still a plain owl:Class/owl:ObjectProperty a reasoner or codegen tool would treat as current). Retained as a status-Retired skos:Concept in establishment-vocabulary.ttl only, for historical resolution of the old URI (skos:exactMatch est:Address preserved there) - this ontology file carries no trace of it now. (3) est:MainAddress's own migration-guidance comment was factually wrong before removal - it told readers to use esto:hasRegisteredAddress, which is EstablishmentGroup-scoped and never applies to an establishment; the correct path was always esto:hasMainSite -> esto:hasAddress. Moot now the class is gone, but noted here since the same wrong guidance could otherwise have been copied elsewhere. (4) esto:hasEstablishmentLocationAndContact, esto:hasMainSite and esto:hasAddress cardinality comments corrected from '0..1' to reflect what est:EstablishmentUniversalShape (establishment-shacl.ttl) actually enforces: minCount 1 on the full ( hasEstablishmentLocationAndContact hasMainSite hasAddress ) property path, universally, for every establishment type. The OWL-level per-property cardinality (0..1 on each hop) is unchanged and correct in isolation - only the prose describing what's actually required end-to-end was wrong. (5) esto:hasMainSite's comment no longer lists est:Address's own GIAS source fields (Street, Locality, Address3, Town, Postcode) as if they were hasMainSite's; those belong to esto:hasAddress's mapping."@en ;
+    rdfs:comment "v1.15: est:StatutoryAgeRange given queryable low/high sub-properties, the same compound-value pattern already fixed for capacity/pupil measures (v1.13) and address (v1.14) - previously held only as a combined rdfs:label ('2 to 11'@en) with the actual GIAS StatutoryLowAge/StatutoryHighAge values repeated as free text in an rdfs:comment on some but not all worked-example instances. New classes: est:StatutoryLowAge, est:StatutoryHighAge. New object properties, both domain est:StatutoryAgeRange, range the respective new class, 0..1 each: esto:hasStatutoryLowAge, esto:hasStatutoryHighAge. Unlike the v1.14 address components (which use rdfs:label for their text values), these follow est:SchoolCapacity's numeric rdf:value pattern (xsd:nonNegativeInteger) - ages are numeric, not free text, so the numeric-measure convention is the correct one to match here. rdfs:label on est:StatutoryAgeRange itself is retained as a derived, human-readable form."@en ;
     est:status "Provisional"@en .
 
 
@@ -260,7 +261,17 @@ est:EducationAdmissionsAndProvision
 est:StatutoryAgeRange
     a owl:Class ;
     rdfs:label "Statutory age range"@en ;
-    rdfs:comment "The lower and upper statutory ages for which the establishment is registered."@en .
+    rdfs:comment "The lower and upper statutory ages for which the establishment is registered. Given queryable sub-properties in v1.15 (esto:hasStatutoryLowAge, esto:hasStatutoryHighAge) matching GIAS's own StatutoryLowAge/StatutoryHighAge fields directly - previously held only as a combined rdfs:label/rdfs:comment pair (e.g. label \"2 to 11\"@en, comment \"StatutoryLowAge 2, StatutoryHighAge 11.\"@en). rdfs:label is retained as a derived, human-readable form."@en .
+
+est:StatutoryLowAge
+    a owl:Class ;
+    rdfs:label "Statutory low age"@en ;
+    rdfs:comment "The lowest statutory age for which the establishment is registered, under the Education Act 2002 s.28. Corresponds to GIAS StatutoryLowAge. Added v1.15."@en .
+
+est:StatutoryHighAge
+    a owl:Class ;
+    rdfs:label "Statutory high age"@en ;
+    rdfs:comment "The highest statutory age for which the establishment is registered, under the Education Act 2002 s.28. Corresponds to GIAS StatutoryHighAge. Added v1.15."@en .
 
 est:GenderOfEntry
     a owl:Class ;
@@ -665,6 +676,20 @@ esto:hasStatutoryAgeRange
     rdfs:domain est:EducationAdmissionsAndProvision ;
     rdfs:range est:StatutoryAgeRange ;
     rdfs:comment "Cardinality: 0..1."@en .
+
+esto:hasStatutoryLowAge
+    a owl:ObjectProperty ;
+    rdfs:label "has statutory low age"@en ;
+    rdfs:domain est:StatutoryAgeRange ;
+    rdfs:range est:StatutoryLowAge ;
+    rdfs:comment "Cardinality: 0..1. Instances carry the age as rdf:value with an xsd:nonNegativeInteger datatype, matching the value-bearing pattern used elsewhere for numeric measures (e.g. est:SchoolCapacity). Added v1.15."@en .
+
+esto:hasStatutoryHighAge
+    a owl:ObjectProperty ;
+    rdfs:label "has statutory high age"@en ;
+    rdfs:domain est:StatutoryAgeRange ;
+    rdfs:range est:StatutoryHighAge ;
+    rdfs:comment "Cardinality: 0..1. Instances carry the age as rdf:value with an xsd:nonNegativeInteger datatype, matching the value-bearing pattern used elsewhere for numeric measures (e.g. est:SchoolCapacity). Added v1.15."@en .
 
 esto:classifiedByGenderOfEntry
     a owl:ObjectProperty ;

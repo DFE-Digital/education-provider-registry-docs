@@ -283,7 +283,8 @@ inst:medlock
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "2 to 11"@en ;
-            rdfs:comment "StatutoryLowAge 2, StatutoryHighAge 11."@en
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "2"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -296,12 +297,13 @@ inst:medlock
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "411"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 224 boys, 187 girls."@en
+            rdfs:comment "224 boys, 187 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "206"^^xsd:integer ;
-            rdfs:comment "53.9% of pupils on roll."@en
+            rdf:value "206"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "53.9"^^xsd:decimal ]
         ]
     ] ;
 
@@ -311,7 +313,9 @@ inst:medlock
         esto:classifiedByTypeOfResourcedProvision est:ResourcedProvisionFacility ;
         esto:hasResourcedProvisionMeasure [
             a est:ResourcedProvisionMeasure ;
-            rdfs:label "12 places, 12 on roll"@en
+            rdfs:label "12 places, 12 on roll"@en ;
+            esto:hasResourcedProvisionCapacity [ a est:ResourcedProvisionCapacity ; rdf:value "12"^^xsd:nonNegativeInteger ] ;
+            esto:hasResourcedProvisionPupilCount [ a est:ResourcedProvisionPupilCount ; rdf:value "12"^^xsd:nonNegativeInteger ]
         ]
     ] .
 ```
