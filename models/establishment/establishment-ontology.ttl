@@ -35,10 +35,10 @@ esto:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-07-01"^^xsd:date ;
+    dcterms:modified "2026-08-06"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.12" ;
+    owl:versionInfo "1.13" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -65,6 +65,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.10: est:JobTitle added as a new owl:Class (free-text GIAS HeadPreferredJobTitle - 387 distinct values in the live extract, not a closed enumeration, so no owl:NamedIndividual values). New object property esto:hasJobTitle (domain est:HeadteacherOrPrincipal, range est:JobTitle, 0..1). Added because 'Executive Headteacher' - a real DfE-recognised title for a headteacher leading every school in a federation, per GOV.UK federations governance guidance - was previously only recorded ad hoc as an rdfs:comment on an instance, not as a modelled property."@en ;
     rdfs:comment "v1.11: esto:classifiedByTypeOfSenProvision cardinality corrected from 0..1 to 0..*. GIAS records up to 13 SEN need types per establishment (SEN1-SEN13); the real extract shows 1,619 open establishments with more than one type recorded, so the 0..1 comment was factually wrong, not just conservative. No SHACL shape previously constrained this property, so no shape change was needed - only the ontology's own cardinality documentation."@en ;
     rdfs:comment "v1.12: est:TypeOfResourcedProvision given a third owl:NamedIndividual value, est:ResourcedProvisionAndSenUnitFacility, matching GIAS's real closed-list value 'Resourced provision and SEN unit' (229 open establishments in the live extract) - previously only the two single-facility values (ResourcedProvisionFacility, SenUnit) existed, so this combined case had no individual to assert. classifiedByTypeOfResourcedProvision's cardinality (0..1) is correct as-is: GIAS records this as one field with one of four values (including blank), not two independent flags, so the fix was a missing enumeration value, not a cardinality bug like v1.11's classifiedByTypeOfSenProvision."@en ;
+    rdfs:comment "v1.13: four compound measures given queryable sub-figure properties, closing a gap found while building a logical model of the GIAS Establishment Details page (docs/transformation/data/modelling/logical-model/establishment-details-logical-model.md). Each compound measure's own rdfs:comment already named its sub-figures, and establishment-vocabulary.ttl already carried them as separate SKOS concepts, but no esto: property existed to attach a sub-figure value to an instance independently of the others - callers had to parse free text out of an rdfs:label/rdfs:comment (e.g. '12 places, 12 on roll'). New classes: est:CensusDate, est:PercentagePupilsEligibleForFreeSchoolMeals, est:ResourcedProvisionCapacity, est:ResourcedProvisionPupilCount, est:SenUnitCapacity, est:SenUnitPupilCount. New object properties: esto:hasCensusDate (domain est:CapacityAndPupilMeasures, range est:CensusDate, 0..1 - one shared census date for the whole block, not asserted per measure), esto:hasPercentageEligibleForFreeSchoolMeals (domain est:PupilsEligibleForFreeSchoolMeals, range est:PercentagePupilsEligibleForFreeSchoolMeals, 0..1), esto:hasResourcedProvisionCapacity and esto:hasResourcedProvisionPupilCount (domain est:ResourcedProvisionMeasure, 0..1 each), esto:hasSenUnitCapacity and esto:hasSenUnitPupilCount (domain est:SenUnitMeasure, 0..1 each). The existing compound properties (hasPupilCount, hasFreeSchoolMealMeasure, hasResourcedProvisionMeasure, hasSenUnitMeasure) and their rdfs:comment wording are unchanged - the new properties are additive siblings on the same blank-node instance, not a replacement, so existing worked-example Turtle (e.g. Medlock's free-text resourced-provision label) remains valid; a future worked-example pass can migrate to the structured properties where the underlying GIAS extract has the sub-figures separately. No SHACL shape previously targeted any of the four compound-measure classes by name, so no SHACL change was needed."@en ;
     est:status "Provisional"@en .
 
 
@@ -315,6 +316,16 @@ est:PupilsEligibleForFreeSchoolMeals
     rdfs:label "Free school meal measure"@en ;
     rdfs:comment "The count and percentage of pupils eligible for free school meals. Includes both est:PupilsEligibleForFreeSchoolMeals and est:PercentagePupilsEligibleForFreeSchoolMeals."@en .
 
+est:CensusDate
+    a owl:Class ;
+    rdfs:label "Census date"@en ;
+    rdfs:comment "The statutory date of the DfE school census to which est:PupilCount and est:PupilsEligibleForFreeSchoolMeals both relate, typically in January each year. A single shared date for the capacity-and-pupil-measures block, not asserted separately per measure. Corresponds to est:CensusDate in establishment-vocabulary.ttl. Added v1.13."@en .
+
+est:PercentagePupilsEligibleForFreeSchoolMeals
+    a owl:Class ;
+    rdfs:label "Percentage of pupils eligible for free school meals"@en ;
+    rdfs:comment "The percentage of pupils on roll recorded as eligible for free school meals at the census date, derived from the count of eligible pupils divided by total pupil count. Corresponds to est:PercentagePupilsEligibleForFreeSchoolMeals in establishment-vocabulary.ttl. Added v1.13."@en .
+
 
 #################################################################
 # Classes - faith context
@@ -365,10 +376,30 @@ est:ResourcedProvisionMeasure
     rdfs:label "Resourced provision measure"@en ;
     rdfs:comment "Numeric measures for resourced provision. Corresponds to est:ResourcedProvisionCapacity and est:ResourcedProvisionPupilCount in the vocabulary."@en .
 
+est:ResourcedProvisionCapacity
+    a owl:Class ;
+    rdfs:label "Resourced-provision capacity"@en ;
+    rdfs:comment "The total number of designated places in the establishment's resourced provision unit, as agreed with the local authority and recorded in GIAS. Corresponds to est:ResourcedProvisionCapacity in establishment-vocabulary.ttl. Added v1.13."@en .
+
+est:ResourcedProvisionPupilCount
+    a owl:Class ;
+    rdfs:label "Resourced-provision pupil count"@en ;
+    rdfs:comment "The number of pupils currently on roll in the establishment's resourced provision unit, as recorded in GIAS. Corresponds to est:ResourcedProvisionPupilCount in establishment-vocabulary.ttl. Added v1.13."@en .
+
 est:SenUnitMeasure
     a owl:Class ;
     rdfs:label "SEN unit measure"@en ;
     rdfs:comment "Numeric measures for the SEN unit. Corresponds to est:SenUnitCapacity and est:SenUnitPupilCount in the vocabulary."@en .
+
+est:SenUnitCapacity
+    a owl:Class ;
+    rdfs:label "SEN-unit capacity"@en ;
+    rdfs:comment "The total number of designated places in the establishment's SEN unit, a specialist provision for pupils with a specific SEN need within a mainstream school setting. Corresponds to est:SenUnitCapacity in establishment-vocabulary.ttl. Added v1.13."@en .
+
+est:SenUnitPupilCount
+    a owl:Class ;
+    rdfs:label "SEN-unit pupil count"@en ;
+    rdfs:comment "The number of pupils currently on roll in the establishment's designated SEN unit, as defined in the SEND Code of Practice 2015 and recorded in GIAS. Corresponds to est:SenUnitPupilCount in establishment-vocabulary.ttl. Added v1.13."@en .
 
 
 #################################################################
@@ -709,6 +740,20 @@ esto:hasFreeSchoolMealMeasure
     rdfs:range est:PupilsEligibleForFreeSchoolMeals ;
     rdfs:comment "Cardinality: 0..1. Covers both count and percentage; see est:PupilsEligibleForFreeSchoolMeals and est:PercentagePupilsEligibleForFreeSchoolMeals in the vocabulary."@en .
 
+esto:hasCensusDate
+    a owl:ObjectProperty ;
+    rdfs:label "has census date"@en ;
+    rdfs:domain est:CapacityAndPupilMeasures ;
+    rdfs:range est:CensusDate ;
+    rdfs:comment "Cardinality: 0..1. The statutory school census date to which esto:hasPupilCount and esto:hasFreeSchoolMealMeasure both relate - a single shared date for the whole capacity-and-pupil-measures block, not asserted separately per measure. Added v1.13."@en .
+
+esto:hasPercentageEligibleForFreeSchoolMeals
+    a owl:ObjectProperty ;
+    rdfs:label "has percentage eligible for free school meals"@en ;
+    rdfs:domain est:PupilsEligibleForFreeSchoolMeals ;
+    rdfs:range est:PercentagePupilsEligibleForFreeSchoolMeals ;
+    rdfs:comment "Cardinality: 0..1. The percentage sub-figure of the free school meal measure, alongside the count carried by est:PupilsEligibleForFreeSchoolMeals's own rdf:value. Added v1.13 so the percentage GIAS itself publishes directly is queryable as its own value rather than only as free text in an rdfs:comment."@en .
+
 
 #################################################################
 # Object properties - faith context
@@ -775,12 +820,40 @@ esto:hasResourcedProvisionMeasure
     rdfs:range est:ResourcedProvisionMeasure ;
     rdfs:comment "Cardinality: 0..1. Covers est:ResourcedProvisionCapacity and est:ResourcedProvisionPupilCount."@en .
 
+esto:hasResourcedProvisionCapacity
+    a owl:ObjectProperty ;
+    rdfs:label "has resourced provision capacity"@en ;
+    rdfs:domain est:ResourcedProvisionMeasure ;
+    rdfs:range est:ResourcedProvisionCapacity ;
+    rdfs:comment "Cardinality: 0..1. The designated-places sub-figure of the resourced provision measure. Added v1.13 so capacity is queryable as its own value rather than only as free text alongside the pupil-count sub-figure."@en .
+
+esto:hasResourcedProvisionPupilCount
+    a owl:ObjectProperty ;
+    rdfs:label "has resourced provision pupil count"@en ;
+    rdfs:domain est:ResourcedProvisionMeasure ;
+    rdfs:range est:ResourcedProvisionPupilCount ;
+    rdfs:comment "Cardinality: 0..1. The pupils-on-roll sub-figure of the resourced provision measure. Added v1.13 so it is queryable as its own value rather than only as free text alongside the capacity sub-figure."@en .
+
 esto:hasSenUnitMeasure
     a owl:ObjectProperty ;
     rdfs:label "has SEN unit measure"@en ;
     rdfs:domain est:SenAndResourcedProvision ;
     rdfs:range est:SenUnitMeasure ;
     rdfs:comment "Cardinality: 0..1. Covers est:SenUnitCapacity and est:SenUnitPupilCount."@en .
+
+esto:hasSenUnitCapacity
+    a owl:ObjectProperty ;
+    rdfs:label "has SEN unit capacity"@en ;
+    rdfs:domain est:SenUnitMeasure ;
+    rdfs:range est:SenUnitCapacity ;
+    rdfs:comment "Cardinality: 0..1. The designated-places sub-figure of the SEN unit measure. Added v1.13 so capacity is queryable as its own value rather than only as free text alongside the pupil-count sub-figure."@en .
+
+esto:hasSenUnitPupilCount
+    a owl:ObjectProperty ;
+    rdfs:label "has SEN unit pupil count"@en ;
+    rdfs:domain est:SenUnitMeasure ;
+    rdfs:range est:SenUnitPupilCount ;
+    rdfs:comment "Cardinality: 0..1. The pupils-on-roll sub-figure of the SEN unit measure. Added v1.13 so it is queryable as its own value rather than only as free text alongside the capacity sub-figure."@en .
 
 
 #################################################################
