@@ -181,7 +181,9 @@ inst:frank-barnes
         esto:classifiedBySpecialClassProvision est:HasSpecialClasses ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "2 to 11"@en
+            rdfs:label "2 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "2"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -194,12 +196,13 @@ inst:frank-barnes
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "35"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 16 boys, 19 girls."@en
+            rdfs:comment "16 boys, 19 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "14"^^xsd:integer ;
-            rdfs:comment "42.4% of pupils on roll."@en
+            rdf:value "14"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "42.4"^^xsd:decimal ]
         ]
     ] ;
 

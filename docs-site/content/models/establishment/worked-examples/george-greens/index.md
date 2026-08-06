@@ -154,7 +154,9 @@ inst:george-greens
         esto:classifiedBySixthFormProvision est:HasSixthForm ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "11 to 19"@en
+            rdfs:label "11 to 19"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "11"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "19"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -167,12 +169,13 @@ inst:george-greens
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "1261"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 650 boys, 611 girls."@en
+            rdfs:comment "650 boys, 611 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "515"^^xsd:integer ;
-            rdfs:comment "50.9% of pupils on roll."@en
+            rdf:value "515"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "50.9"^^xsd:decimal ]
         ]
     ] ;
 
@@ -182,7 +185,9 @@ inst:george-greens
         esto:classifiedByTypeOfResourcedProvision est:ResourcedProvisionFacility ;
         esto:hasResourcedProvisionMeasure [
             a est:ResourcedProvisionMeasure ;
-            rdfs:label "20 places, 20 on roll"@en
+            rdfs:label "20 places, 20 on roll"@en ;
+            esto:hasResourcedProvisionCapacity [ a est:ResourcedProvisionCapacity ; rdf:value "20"^^xsd:nonNegativeInteger ] ;
+            esto:hasResourcedProvisionPupilCount [ a est:ResourcedProvisionPupilCount ; rdf:value "20"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 

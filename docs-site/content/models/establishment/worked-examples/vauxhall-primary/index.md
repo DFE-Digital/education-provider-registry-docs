@@ -168,7 +168,12 @@ inst:vauxhall-primary
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByBoardingProvision est:NoBoarders ;
         esto:classifiedByNurseryProvision est:HasNurseryClasses ;
-        esto:hasStatutoryAgeRange [ a est:StatutoryAgeRange ; rdfs:label "3 to 11"@en ]
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
+            rdfs:label "3 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "3"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
+        ]
     ] ;
 
     esto:hasCapacityAndPupilMeasures [
@@ -177,12 +182,13 @@ inst:vauxhall-primary
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "191"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 92 boys, 99 girls."@en
+            rdfs:comment "92 boys, 99 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "102"^^xsd:integer ;
-            rdfs:comment "53.4% of pupils on roll."@en
+            rdf:value "102"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "53.4"^^xsd:decimal ]
         ]
     ] ;
 
@@ -242,7 +248,12 @@ inst:wyvil-primary
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:hasStatutoryAgeRange [ a est:StatutoryAgeRange ; rdfs:label "3 to 11"@en ]
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
+            rdfs:label "3 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "3"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
+        ]
     ] ;
 
     esto:hasCapacityAndPupilMeasures [
@@ -251,12 +262,13 @@ inst:wyvil-primary
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "470"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 257 boys, 213 girls."@en
+            rdfs:comment "257 boys, 213 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "228"^^xsd:integer ;
-            rdfs:comment "49.2% of pupils on roll."@en
+            rdf:value "228"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "49.2"^^xsd:decimal ]
         ]
     ] ;
 
@@ -267,7 +279,9 @@ inst:wyvil-primary
         esto:classifiedByTypeOfResourcedProvision est:ResourcedProvisionFacility ;
         esto:hasResourcedProvisionMeasure [
             a est:ResourcedProvisionMeasure ;
-            rdfs:label "103 places, 103 on roll"@en
+            rdfs:label "103 places, 103 on roll"@en ;
+            esto:hasResourcedProvisionCapacity [ a est:ResourcedProvisionCapacity ; rdf:value "103"^^xsd:nonNegativeInteger ] ;
+            esto:hasResourcedProvisionPupilCount [ a est:ResourcedProvisionPupilCount ; rdf:value "103"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -284,7 +298,7 @@ inst:wyvil-primary
 
 ### Example 4 — Lilian Baylis: the federation's one secondary-phase member, and a real selective/non-selective value
 
-Lilian Baylis has a real, asserted admissions policy (`est:NonSelectiveAdmissions`) - Vauxhall and Wyvil's is genuinely "Not applicable" and so omitted, the same real-vs-absent distinction as the religious character contrast in Example 3.
+Lilian Baylis has a real, asserted admissions policy (`est:NonSelectiveAdmissions`) - Vauxhall and Wyvil's is genuinely "Not applicable" and so omitted, the same real-vs-absent distinction as the religious character contrast in Example 3. It also has a real, previously-unasserted resourced provision unit - 6 places, only 3 filled, a second real under-capacity resourced provision alongside Wyvil's fully-subscribed 103/103. Unlike Wyvil, Lilian Baylis's GIAS extract records no SEN need type for it (`SEN1` is "Not Applicable" and no other SEN field is populated) - `esto:classifiedByTypeOfResourcedProvision` is asserted but `esto:classifiedByTypeOfSenProvision` is correctly omitted rather than guessed, the same omit-rather-than-assert-a-placeholder principle used throughout these worked examples.
 
 ```
 inst:lilian-baylis
@@ -322,7 +336,12 @@ inst:lilian-baylis
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByBoardingProvision est:NoBoarders ;
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
-        esto:hasStatutoryAgeRange [ a est:StatutoryAgeRange ; rdfs:label "11 to 18"@en ]
+        esto:hasStatutoryAgeRange [
+            a est:StatutoryAgeRange ;
+            rdfs:label "11 to 18"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "11"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "18"^^xsd:nonNegativeInteger ]
+        ]
     ] ;
 
     esto:hasCapacityAndPupilMeasures [
@@ -331,12 +350,24 @@ inst:lilian-baylis
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "836"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 419 boys, 417 girls."@en
+            rdfs:comment "419 boys, 417 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "327"^^xsd:integer ;
-            rdfs:comment "52.5% of pupils on roll."@en
+            rdf:value "327"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "52.5"^^xsd:decimal ]
+        ]
+    ] ;
+
+    esto:hasSenAndResourcedProvision [
+        a est:SenAndResourcedProvision ;
+        esto:classifiedByTypeOfResourcedProvision est:ResourcedProvisionFacility ;
+        esto:hasResourcedProvisionMeasure [
+            a est:ResourcedProvisionMeasure ;
+            rdfs:label "6 places, 3 on roll"@en ;
+            esto:hasResourcedProvisionCapacity [ a est:ResourcedProvisionCapacity ; rdf:value "6"^^xsd:nonNegativeInteger ] ;
+            esto:hasResourcedProvisionPupilCount [ a est:ResourcedProvisionPupilCount ; rdf:value "3"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 

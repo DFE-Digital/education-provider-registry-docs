@@ -2700,9 +2700,33 @@ est:StatutoryAgeRange
     skos:prefLabel "Statutory age range"@en ;
     skos:altLabel "Age range"@en ;
     skos:definition "The lowest and highest ages for which the establishment is registered, as recorded under the Education Act 2002 s.28. Changes to the statutory age range require Secretary of State approval."@en ;
+    skos:scopeNote "Structured into two component concepts (v1.15: StatutoryLowAge, StatutoryHighAge) matching GIAS's own StatutoryLowAge/StatutoryHighAge fields directly, rather than held only as one combined string."@en ;
     skos:broader est:EducationAdmissionsAndProvision ;
+    skos:narrower est:StatutoryLowAge, est:StatutoryHighAge ;
     est:status "Preferred"@en ;
     dcterms:source "C#/Java/database: StatutoryLowAge and StatutoryHighAge"@en .
+
+est:StatutoryLowAge
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Statutory low age"@en ;
+    skos:definition "The lowest statutory age for which the establishment is registered, under the Education Act 2002 s.28."@en ;
+    skos:broader est:StatutoryAgeRange ;
+    skos:related est:StatutoryHighAge ;
+    est:status "Preferred"@en ;
+    dcterms:source "C#/Java/database: StatutoryLowAge"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
+
+est:StatutoryHighAge
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Statutory high age"@en ;
+    skos:definition "The highest statutory age for which the establishment is registered, under the Education Act 2002 s.28."@en ;
+    skos:broader est:StatutoryAgeRange ;
+    skos:related est:StatutoryLowAge ;
+    est:status "Preferred"@en ;
+    dcterms:source "C#/Java/database: StatutoryHighAge"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date .
 
 est:GenderOfEntry
     a skos:Concept ;

@@ -253,7 +253,9 @@ inst:eileen-wade
         esto:classifiedByBoardingProvision est:NoBoarders ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "4 to 11"@en
+            rdfs:label "4 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "4"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -266,12 +268,13 @@ inst:eileen-wade
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "70"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 32 boys, 38 girls."@en
+            rdfs:comment "32 boys, 38 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "7"^^xsd:integer ;
-            rdfs:comment "10% of pupils on roll."@en
+            rdf:value "7"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "10.0"^^xsd:decimal ]
         ]
     ] .
 
@@ -287,7 +290,9 @@ inst:milton-ernest
         esto:classifiedByBoardingProvision est:NoBoarders ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
-            rdfs:label "4 to 11"@en
+            rdfs:label "4 to 11"@en ;
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "4"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "11"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -300,12 +305,13 @@ inst:milton-ernest
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "63"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 35 boys, 28 girls."@en
+            rdfs:comment "35 boys, 28 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "6"^^xsd:integer ;
-            rdfs:comment "9.5% of pupils on roll."@en
+            rdf:value "6"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "9.5"^^xsd:decimal ]
         ]
     ] .
 ```

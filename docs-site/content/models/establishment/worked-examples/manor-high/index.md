@@ -269,7 +269,8 @@ inst:manor-high
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "11 to 16"@en ;
-            rdfs:comment "StatutoryLowAge 11, StatutoryHighAge 16."@en
+            esto:hasStatutoryLowAge [ a est:StatutoryLowAge ; rdf:value "11"^^xsd:nonNegativeInteger ] ;
+            esto:hasStatutoryHighAge [ a est:StatutoryHighAge ; rdf:value "16"^^xsd:nonNegativeInteger ]
         ]
     ] ;
 
@@ -282,12 +283,13 @@ inst:manor-high
         esto:hasPupilCount [
             a est:PupilCount ;
             rdf:value "926"^^xsd:nonNegativeInteger ;
-            rdfs:comment "Census date 2025-01-16: 528 boys, 398 girls."@en
+            rdfs:comment "528 boys, 398 girls."@en
         ] ;
+        esto:hasCensusDate [ a est:CensusDate ; rdf:value "2025-01-16"^^xsd:date ] ;
         esto:hasFreeSchoolMealMeasure [
             a est:PupilsEligibleForFreeSchoolMeals ;
-            rdfs:label "104"^^xsd:integer ;
-            rdfs:comment "11.2% of pupils on roll."@en
+            rdf:value "104"^^xsd:nonNegativeInteger ;
+            esto:hasPercentageEligibleForFreeSchoolMeals [ a est:PercentagePupilsEligibleForFreeSchoolMeals ; rdf:value "11.2"^^xsd:decimal ]
         ]
     ] ;
 
