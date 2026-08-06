@@ -145,12 +145,16 @@ inst:brookside-primary
 
 ```
 inst:brookside-primary
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "GB"@en
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [

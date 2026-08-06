@@ -139,12 +139,16 @@ inst:st-lukes
         esto:accountableToLocalAuthority inst:la-206
     ] ;
 
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "LH"@en
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [
@@ -185,8 +189,8 @@ inst:moreland
         esto:accountableToLocalAuthority inst:la-206
     ] ;
 
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "CL"@en ;
@@ -194,7 +198,11 @@ inst:moreland
                 a est:JobTitle ;
                 rdfs:label "Executive Headteacher"@en
             ]
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [

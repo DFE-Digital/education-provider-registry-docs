@@ -143,7 +143,11 @@ inst:frank-barnes
         esto:hasTelephoneNumber [
             a est:TelephoneNumber ;
             rdfs:label "02073917040"
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "DS"@en

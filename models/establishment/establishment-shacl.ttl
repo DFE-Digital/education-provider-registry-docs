@@ -32,10 +32,10 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-07-31"^^xsd:date ;
+    dcterms:modified "2026-08-06"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.7" ;
+    owl:versionInfo "0.8" ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     est:status "Provisional"@en .
@@ -121,7 +121,7 @@ est:EstablishmentUniversalShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasHeadteacherOrPrincipal ) ;
+        sh:path ( esto:hasEstablishmentLeadership esto:hasHeadteacherOrPrincipal ) ;
         sh:maxCount 1 ;
         sh:name "Headteacher or principal"@en ;
         sh:message "An establishment may have at most one headteacher or principal record."@en ;
@@ -1876,14 +1876,14 @@ est:ChildrensCentreGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasCentreManager ) ;
+        sh:path ( esto:hasEstablishmentLeadership esto:hasCentreManager ) ;
         sh:minCount 1 ;
         sh:name "Manager"@en ;
         sh:message "Children's centres must have a manager record."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEstablishmentLocationAndContact esto:hasHeadteacherOrPrincipal ) ;
+        sh:path ( esto:hasEstablishmentLeadership esto:hasHeadteacherOrPrincipal ) ;
         sh:maxCount 0 ;
         sh:name "Headteacher or principal (not applicable)"@en ;
         sh:message "Children's centres use a Manager role rather than Headteacher or Principal."@en ;

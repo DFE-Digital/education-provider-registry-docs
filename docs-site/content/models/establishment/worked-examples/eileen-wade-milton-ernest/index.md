@@ -151,12 +151,16 @@ inst:eileen-wade
         esto:accountableToLocalAuthority inst:la-822
     ] ;
 
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "LV"@en
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [
@@ -195,12 +199,16 @@ inst:milton-ernest
         esto:accountableToLocalAuthority inst:la-822
     ] ;
 
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "LV"@en
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [

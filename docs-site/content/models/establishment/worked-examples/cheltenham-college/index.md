@@ -151,15 +151,19 @@ No `est:HeadteacherOrPrincipal` label is asserted - GIAS records the headmaster'
 
 ```
 inst:cheltenham-college
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             esto:hasJobTitle [
                 a est:JobTitle ;
                 rdfs:label "Headmaster"@en
             ]
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [

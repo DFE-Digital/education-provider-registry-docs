@@ -116,12 +116,16 @@ inst:george-greens
         esto:hasEducationPhase est:SecondaryPhase
     ] ;
 
-    esto:hasEstablishmentLocationAndContact [
-        a est:EstablishmentLocationAndContact ;
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "JR"@en
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLocationAndContact [
+        a est:EstablishmentLocationAndContact ;
         esto:hasMainSite [
             a est:Site ;
             esto:hasAddress [
