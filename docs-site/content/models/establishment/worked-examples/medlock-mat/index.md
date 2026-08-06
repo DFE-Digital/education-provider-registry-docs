@@ -96,7 +96,9 @@ flowchart LR
     MED -->|esto:hasEstablishmentLocationAndContact| LOC["est:EstablishmentLocationAndContact"]
     LOC -->|esto:hasMainSite| SITE["est:Site"]
     SITE -->|esto:hasAddress| ADDR["est:Address"]
-    LOC -->|esto:hasHeadteacherOrPrincipal| HT["est:HeadteacherOrPrincipal"]
+
+    MED -->|esto:hasEstablishmentLeadership| LEAD["est:EstablishmentLeadership"]
+    LEAD -->|esto:hasHeadteacherOrPrincipal| HT["est:HeadteacherOrPrincipal"]
 
     MED -->|esto:hasCapacityAndPupilMeasures| CAP["est:CapacityAndPupilMeasures"]
     MED -->|esto:hasEducationAdmissionsAndProvision| ADM["est:EducationAdmissionsAndProvision"]
@@ -242,7 +244,11 @@ inst:medlock
         esto:hasTelephoneNumber [
             a est:TelephoneNumber ;
             rdfs:label "01612731830"
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "JB"@en

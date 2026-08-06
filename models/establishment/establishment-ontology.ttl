@@ -38,7 +38,7 @@ esto:establishmentDetailsConceptualModel
     dcterms:modified "2026-08-06"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.15" ;
+    owl:versionInfo "1.16" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -68,6 +68,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.13: four compound measures given queryable sub-figure properties, closing a gap found while building a logical model of the GIAS Establishment Details page (docs/transformation/data/modelling/logical-model/establishment-details-logical-model.md). Each compound measure's own rdfs:comment already named its sub-figures, and establishment-vocabulary.ttl already carried them as separate SKOS concepts, but no esto: property existed to attach a sub-figure value to an instance independently of the others - callers had to parse free text out of an rdfs:label/rdfs:comment (e.g. '12 places, 12 on roll'). New classes: est:CensusDate, est:PercentagePupilsEligibleForFreeSchoolMeals, est:ResourcedProvisionCapacity, est:ResourcedProvisionPupilCount, est:SenUnitCapacity, est:SenUnitPupilCount. New object properties: esto:hasCensusDate (domain est:CapacityAndPupilMeasures, range est:CensusDate, 0..1 - one shared census date for the whole block, not asserted per measure), esto:hasPercentageEligibleForFreeSchoolMeals (domain est:PupilsEligibleForFreeSchoolMeals, range est:PercentagePupilsEligibleForFreeSchoolMeals, 0..1), esto:hasResourcedProvisionCapacity and esto:hasResourcedProvisionPupilCount (domain est:ResourcedProvisionMeasure, 0..1 each), esto:hasSenUnitCapacity and esto:hasSenUnitPupilCount (domain est:SenUnitMeasure, 0..1 each). The existing compound properties (hasPupilCount, hasFreeSchoolMealMeasure, hasResourcedProvisionMeasure, hasSenUnitMeasure) and their rdfs:comment wording are unchanged - the new properties are additive siblings on the same blank-node instance, not a replacement, so existing worked-example Turtle (e.g. Medlock's free-text resourced-provision label) remains valid; a future worked-example pass can migrate to the structured properties where the underlying GIAS extract has the sub-figures separately. No SHACL shape previously targeted any of the four compound-measure classes by name, so no SHACL change was needed."@en ;
     rdfs:comment "v1.14: address modelling analysis and fixes (docs/transformation/data/modelling/claude/address-modelling-analysis-and-recommendations.md). (1) est:Address decomposed into structured component properties matching GIAS's own already-decomposed source fields (Street, Locality, Address3, Town, County, Postcode) - previously held only as one concatenated rdfs:label string. New classes: est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode. New object properties, all domain est:Address, 0..1 each: esto:hasAddressLine1, esto:hasAddressLine2, esto:hasAddressLine3, esto:hasTown, esto:hasCounty, esto:hasPostcode. rdfs:label on est:Address is retained as a derived, human-readable form, not replaced - existing worked-example Turtle with only a concatenated label remains valid. Applies uniformly wherever est:Address is used (establishment site address via hasMainSite/hasAddress, group registered/contact address), since all three are documented as coming from the same shape of source fields. (2) est:MainAddress and esto:hasMainAddress removed entirely from this ontology file (previously 'superseded' in prose only via v1.5's comment, with no owl:deprecated annotation - still a plain owl:Class/owl:ObjectProperty a reasoner or codegen tool would treat as current). Retained as a status-Retired skos:Concept in establishment-vocabulary.ttl only, for historical resolution of the old URI (skos:exactMatch est:Address preserved there) - this ontology file carries no trace of it now. (3) est:MainAddress's own migration-guidance comment was factually wrong before removal - it told readers to use esto:hasRegisteredAddress, which is EstablishmentGroup-scoped and never applies to an establishment; the correct path was always esto:hasMainSite -> esto:hasAddress. Moot now the class is gone, but noted here since the same wrong guidance could otherwise have been copied elsewhere. (4) esto:hasEstablishmentLocationAndContact, esto:hasMainSite and esto:hasAddress cardinality comments corrected from '0..1' to reflect what est:EstablishmentUniversalShape (establishment-shacl.ttl) actually enforces: minCount 1 on the full ( hasEstablishmentLocationAndContact hasMainSite hasAddress ) property path, universally, for every establishment type. The OWL-level per-property cardinality (0..1 on each hop) is unchanged and correct in isolation - only the prose describing what's actually required end-to-end was wrong. (5) esto:hasMainSite's comment no longer lists est:Address's own GIAS source fields (Street, Locality, Address3, Town, Postcode) as if they were hasMainSite's; those belong to esto:hasAddress's mapping."@en ;
     rdfs:comment "v1.15: est:StatutoryAgeRange given queryable low/high sub-properties, the same compound-value pattern already fixed for capacity/pupil measures (v1.13) and address (v1.14) - previously held only as a combined rdfs:label ('2 to 11'@en) with the actual GIAS StatutoryLowAge/StatutoryHighAge values repeated as free text in an rdfs:comment on some but not all worked-example instances. New classes: est:StatutoryLowAge, est:StatutoryHighAge. New object properties, both domain est:StatutoryAgeRange, range the respective new class, 0..1 each: esto:hasStatutoryLowAge, esto:hasStatutoryHighAge. Unlike the v1.14 address components (which use rdfs:label for their text values), these follow est:SchoolCapacity's numeric rdf:value pattern (xsd:nonNegativeInteger) - ages are numeric, not free text, so the numeric-measure convention is the correct one to match here. rdfs:label on est:StatutoryAgeRange itself is retained as a derived, human-readable form."@en ;
+    rdfs:comment "v1.16: est:EstablishmentLeadership given a real owl:Class and esto:hasEstablishmentLeadership object property (domain est:Establishment, range est:EstablishmentLeadership, 0..1), correcting a divergence between the ontology and its own SKOS vocabulary that had existed since est:EstablishmentLeadership was first added to establishment-vocabulary.ttl as a top-level concept (skos:topConceptOf est:establishmentDetailsVocabulary, a peer of est:EstablishmentLocationAndContact/est:EducationAdmissionsAndProvision/etc.) - the vocabulary always intended leadership to be its own grouping, but the ontology never implemented that grouping and instead attached esto:hasHeadteacherOrPrincipal and esto:hasCentreManager directly to est:EstablishmentLocationAndContact, whose own definition is 'the group of fields describing how to contact and locate the establishment physically' - a headteacher's name is neither. Domain of esto:hasHeadteacherOrPrincipal and esto:hasCentreManager corrected to est:EstablishmentLeadership; esto:hasJobTitle's domain (est:HeadteacherOrPrincipal) is unchanged, since a job title is correctly a property of the specific headteacher instance, not a sibling grouping field. est:HeadteacherOrPrincipal and est:JobTitle class declarations moved from the 'contact and location' section of this file into a new 'establishment leadership' section, matching the vocabulary's grouping; est:CentreManager's declaration (in the children's-centre operational-record section, alongside est:ProviderType) was left in place, since moving it would separate it from its other children's-centre-specific siblings for no benefit - only its property's domain needed correcting. establishment-shacl.ttl's three property-path shapes referencing esto:hasHeadteacherOrPrincipal/hasCentreManager (the universal shape's max-1 rule, and the children's-centre group's minCount-1-Manager/maxCount-0-Headteacher rules) updated to path through esto:hasEstablishmentLeadership instead of esto:hasEstablishmentLocationAndContact, matching the new domain. Also reconciled a duplicate vocabulary concept found while implementing this: establishment-vocabulary.ttl carried both est:JobTitle (added at ontology v1.10, actually implemented with an owl:Class and esto:hasJobTitle, status Provisional) and est:PreferredJobTitle (pre-existing, vocabulary-only, never given an ontology counterpart, status Preferred, skos:broader est:EstablishmentLeadership) for what is the same real GIAS field (HeadPreferredJobTitle) - est:PreferredJobTitle deleted outright from the vocabulary (not deprecated - nothing referenced it outside its own declaration and two membership lists), est:JobTitle retained as the one surviving, actually-implemented concept."@en ;
     est:status "Provisional"@en .
 
 
@@ -927,6 +928,30 @@ est:TelephoneNumber
     rdfs:label "Telephone number"@en ;
     rdfs:comment "The establishment's main contact telephone number."@en .
 
+est:Country
+    a owl:Class ;
+    rdfs:label "Country"@en ;
+    rdfs:comment "The country of an address. Relevant for British schools overseas and other establishments located outside England. Distinct from the County text field in the address. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch; the target model uses this class to clarify the concept as country of location rather than nationality."@en .
+
+
+#################################################################
+# Classes - establishment leadership (v1.16)
+#
+# Who leads the establishment is not a location or contact fact -
+# est:EstablishmentLeadership is its own top-level grouping,
+# attached directly to est:Establishment, matching the grouping
+# est:EstablishmentLeadership already had in the SKOS vocabulary
+# (skos:topConceptOf est:establishmentDetailsVocabulary, a peer of
+# est:EstablishmentLocationAndContact) but had never been given a
+# matching owl:Class/property here - est:HeadteacherOrPrincipal was
+# incorrectly attached to est:EstablishmentLocationAndContact instead.
+#################################################################
+
+est:EstablishmentLeadership
+    a owl:Class ;
+    rdfs:label "Establishment leadership"@en ;
+    rdfs:comment "The name, title and preferred job title of the person holding principal leadership responsibility for an establishment, such as the headteacher, principal or children's centre manager. Added v1.16."@en .
+
 est:HeadteacherOrPrincipal
     a owl:Class ;
     rdfs:label "Headteacher or principal"@en ;
@@ -936,11 +961,6 @@ est:JobTitle
     a owl:Class ;
     rdfs:label "Job title"@en ;
     rdfs:comment "The free-text job title GIAS records for a headteacher or principal (HeadPreferredJobTitle) - e.g. 'Headteacher', 'Executive Headteacher', 'Principal', 'Head of School'. Not a closed enumeration: the live extract shows 387 distinct values, many of them formatting variants of the same underlying title. 'Executive Headteacher' is a real, DfE-recognised title for a headteacher with responsibility for every school in a federation (see the GOV.UK federations governance guidance), but the GIAS field is free text entered per establishment, not validated against that specific meaning - a person's title here should not be assumed to imply cross-establishment leadership without separate confirmation."@en .
-
-est:Country
-    a owl:Class ;
-    rdfs:label "Country"@en ;
-    rdfs:comment "The country of an address. Relevant for British schools overseas and other establishments located outside England. Distinct from the County text field in the address. In GIAS this is stored as Establishment.Country_code referencing the Nationality table — a legacy naming mismatch; the target model uses this class to clarify the concept as country of location rather than nationality."@en .
 
 
 #################################################################
@@ -1219,25 +1239,11 @@ esto:hasWebsite
     rdfs:range est:Website ;
     rdfs:comment "Cardinality: 0..1."@en .
 
-esto:hasJobTitle
-    a owl:ObjectProperty ;
-    rdfs:label "has job title"@en ;
-    rdfs:domain est:HeadteacherOrPrincipal ;
-    rdfs:range est:JobTitle ;
-    rdfs:comment "Cardinality: 0..1. Free-text GIAS job title (HeadPreferredJobTitle), e.g. 'Headteacher', 'Executive Headteacher', 'Principal'."@en .
-
 esto:hasTelephoneNumber
     a owl:ObjectProperty ;
     rdfs:label "has telephone number"@en ;
     rdfs:domain est:EstablishmentLocationAndContact ;
     rdfs:range est:TelephoneNumber ;
-    rdfs:comment "Cardinality: 0..1."@en .
-
-esto:hasHeadteacherOrPrincipal
-    a owl:ObjectProperty ;
-    rdfs:label "has headteacher or principal"@en ;
-    rdfs:domain est:EstablishmentLocationAndContact ;
-    rdfs:range est:HeadteacherOrPrincipal ;
     rdfs:comment "Cardinality: 0..1."@en .
 
 esto:hasCountry
@@ -1246,6 +1252,32 @@ esto:hasCountry
     rdfs:domain est:Address ;
     rdfs:range est:Country ;
     rdfs:comment "Cardinality: 0..1. Present for British schools overseas and establishments located outside England. Domain updated from est:MainAddress to est:Address in v1.5."@en .
+
+
+#################################################################
+# Object properties - establishment leadership (v1.16)
+#################################################################
+
+esto:hasEstablishmentLeadership
+    a owl:ObjectProperty ;
+    rdfs:label "has establishment leadership"@en ;
+    rdfs:domain est:Establishment ;
+    rdfs:range est:EstablishmentLeadership ;
+    rdfs:comment "Cardinality: 0..1. Not all establishment types show a leadership field. Added v1.16."@en .
+
+esto:hasHeadteacherOrPrincipal
+    a owl:ObjectProperty ;
+    rdfs:label "has headteacher or principal"@en ;
+    rdfs:domain est:EstablishmentLeadership ;
+    rdfs:range est:HeadteacherOrPrincipal ;
+    rdfs:comment "Cardinality: 0..1. Domain corrected v1.16 from est:EstablishmentLocationAndContact - who leads an establishment is not a location or contact fact; it was grouped there only because the GIAS Details tab happens to render it near address/telephone/website."@en .
+
+esto:hasJobTitle
+    a owl:ObjectProperty ;
+    rdfs:label "has job title"@en ;
+    rdfs:domain est:HeadteacherOrPrincipal ;
+    rdfs:range est:JobTitle ;
+    rdfs:comment "Cardinality: 0..1. Free-text GIAS job title (HeadPreferredJobTitle), e.g. 'Headteacher', 'Executive Headteacher', 'Principal'."@en .
 
 
 #################################################################
@@ -1653,9 +1685,9 @@ esto:classifiedByProviderType
 esto:hasCentreManager
     a owl:ObjectProperty ;
     rdfs:label "has centre manager"@en ;
-    rdfs:domain est:EstablishmentLocationAndContact ;
+    rdfs:domain est:EstablishmentLeadership ;
     rdfs:range est:CentreManager ;
-    rdfs:comment "Cardinality: 0..1. Present for children's centres (types 47 and 48). Distinct from hasHeadteacherOrPrincipal - children's centres show a centre manager role."@en .
+    rdfs:comment "Cardinality: 0..1. Present for children's centres (types 47 and 48). Distinct from hasHeadteacherOrPrincipal - children's centres show a centre manager role. Domain corrected v1.16 from est:EstablishmentLocationAndContact - see esto:hasHeadteacherOrPrincipal's comment."@en .
 
 
 #################################################################

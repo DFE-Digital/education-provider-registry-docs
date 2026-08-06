@@ -157,7 +157,7 @@ est:leadership
     skos:member
         est:HeadteacherOrPrincipal,
         est:CentreManager,
-        est:PreferredJobTitle .
+        est:JobTitle .
 
 est:educationAdmissionsAndProvision
     a skos:Collection ;
@@ -396,10 +396,10 @@ est:EstablishmentLeadership
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment leadership"@en ;
     skos:definition "The name, title and preferred job title of the person holding principal leadership responsibility for an establishment, such as the headteacher, principal or children's centre manager."@en ;
+    skos:scopeNote "Given a matching owl:Class and esto:hasEstablishmentLeadership object property in establishment-ontology.ttl v1.16 - this concept had existed as a top-level SKOS concept since before that, but the ontology had never implemented it, and esto:hasHeadteacherOrPrincipal/esto:hasCentreManager were attached to est:EstablishmentLocationAndContact instead."@en ;
     skos:narrower
         est:CentreManager,
-        est:HeadteacherOrPrincipal,
-        est:PreferredJobTitle ;
+        est:HeadteacherOrPrincipal ;
     est:status "Provisional"@en .
 
 est:EducationAdmissionsAndProvision
@@ -2662,11 +2662,13 @@ est:JobTitle
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Job title"@en ;
+    skos:altLabel "Preferred job title"@en, "Headteacher Preferred Job Title"@en ;
     skos:definition "The free-text job title recorded for the headteacher or principal, such as Headteacher, Executive Headteacher, Principal or Head of School."@en ;
-    skos:scopeNote "Open-ended: the live GIAS extract shows 387 distinct values, many of them formatting variants of the same underlying title (e.g. 'Headteacher', 'Head Teacher', 'Head teacher'). 'Executive Headteacher' is a title GOV.UK federation governance guidance associates with a headteacher who leads every school in a federation and holds one shared governing-board seat as a result - but this field is entered per establishment and is not validated against that specific meaning, so the title alone should not be treated as proof of cross-establishment leadership."@en ;
+    skos:scopeNote "Open-ended: the live GIAS extract shows 387 distinct values, many of them formatting variants of the same underlying title (e.g. 'Headteacher', 'Head Teacher', 'Head teacher'). 'Executive Headteacher' is a title GOV.UK federation governance guidance associates with a headteacher who leads every school in a federation and holds one shared governing-board seat as a result - but this field is entered per establishment and is not validated against that specific meaning, so the title alone should not be treated as proof of cross-establishment leadership. v1.16: absorbed est:PreferredJobTitle, a pre-existing but never-implemented duplicate concept for the same GIAS field (HeadPreferredJobTitle) - its altLabel is preserved here."@en ;
     skos:broader est:HeadteacherOrPrincipal ;
-    est:status "Provisional"@en ;
+    est:status "Preferred"@en ;
     dcterms:source "C#/database field: HeadPreferredJobTitle"@en ;
+    dcterms:modified "2026-08-06"^^xsd:date ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/governance-in-federations/federations-guidance-on-the-governance-processes> .
 
 est:CentreManager
@@ -2679,16 +2681,6 @@ est:CentreManager
     skos:broader est:EstablishmentLeadership ;
     skos:related est:HeadteacherOrPrincipal ;
     est:status "Provisional"@en .
-
-est:PreferredJobTitle
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Preferred job title"@en ;
-    skos:altLabel "Headteacher Preferred Job Title"@en ;
-    skos:definition "The job title preferred by the establishment's headteacher or principal, which may differ from the statutory role title - for example, 'Executive Headteacher' or 'Head of School'."@en ;
-    skos:broader est:EstablishmentLeadership ;
-    skos:related est:HeadteacherOrPrincipal ;
-    est:status "Preferred"@en .
 
 #################################################################
 # Education, admissions and provision

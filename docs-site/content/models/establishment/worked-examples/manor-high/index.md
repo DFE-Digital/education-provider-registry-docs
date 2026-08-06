@@ -95,7 +95,9 @@ flowchart LR
     MH -->|esto:hasEstablishmentLocationAndContact| LOC["est:EstablishmentLocationAndContact"]
     LOC -->|esto:hasMainSite| SITE["est:Site"]
     SITE -->|esto:hasAddress| ADDR["est:Address"]
-    LOC -->|esto:hasHeadteacherOrPrincipal| HT["est:HeadteacherOrPrincipal"]
+
+    MH -->|esto:hasEstablishmentLeadership| LEAD["est:EstablishmentLeadership"]
+    LEAD -->|esto:hasHeadteacherOrPrincipal| HT["est:HeadteacherOrPrincipal"]
 
     MH -->|esto:hasCapacityAndPupilMeasures| CAP["est:CapacityAndPupilMeasures"]
     MH -->|esto:hasEducationAdmissionsAndProvision| ADM["est:EducationAdmissionsAndProvision"]
@@ -230,7 +232,11 @@ inst:manor-high
         esto:hasTelephoneNumber [
             a est:TelephoneNumber ;
             rdfs:label "01162714941"
-        ] ;
+        ]
+    ] ;
+
+    esto:hasEstablishmentLeadership [
+        a est:EstablishmentLeadership ;
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "SG"@en
