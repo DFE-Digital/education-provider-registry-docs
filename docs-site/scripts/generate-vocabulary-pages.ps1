@@ -24,8 +24,15 @@ function Get-PredicateText {
     )
 
     $escapedPredicate = [regex]::Escape($Predicate)
-    $pattern = "(?ms)$escapedPredicate" + '\s+((?:"(?:[^"\\]|\\.)*"(?:@[a-zA-Z-]+|\^\^\S+)?|[^;".]+)+)\s*(?:;|\.\s*(?:\r?\n|$))'
-    $match = [regex]::Match($Block, $pattern)
+    # The alternative's "any non-terminator char" branch is wrapped in an
+    # atomic group (?>...) so it can't backtrack character-by-character
+    # against the quoted-literal branch - without it, prose elsewhere in a
+    # skos:definition that happens to echo another predicate name (eg.
+    # "skos:broader") can send this into catastrophic backtracking and hang
+    # the job. A 2s regex timeout is a defensive backstop for any similar
+    # case that shows up later.
+    $pattern = "(?ms)$escapedPredicate" + '\s+((?:"(?:[^"\\]|\\.)*"(?:@[a-zA-Z-]+|\^\^\S+)?|(?>[^;".]+))+)\s*(?:;|\.\s*(?:\r?\n|$))'
+    $match = [regex]::Match($Block, $pattern, [System.Text.RegularExpressions.RegexOptions]::None, [TimeSpan]::FromSeconds(2))
     if ($match.Success) {
         return $match.Groups[1].Value.Trim()
     }

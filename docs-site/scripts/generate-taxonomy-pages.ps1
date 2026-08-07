@@ -21,8 +21,13 @@ function Get-PredicateText {
     )
 
     $escapedPredicate = [regex]::Escape($Predicate)
-    $pattern = "(?ms)$escapedPredicate" + '\s+((?:"(?:[^"\\]|\\.)*"(?:@[a-zA-Z-]+|\^\^\S+)?|[^;".]+)+)\s*(?:;|\.\s*(?:\r?\n|$))'
-    $match = [regex]::Match($Block, $pattern)
+    # See generate-vocabulary-pages.ps1's Get-PredicateText for why the
+    # "any non-terminator char" branch needs to be an atomic group (?>...) -
+    # without it, prose that echoes another predicate name can trigger
+    # catastrophic backtracking and hang the job. A 2s regex timeout is a
+    # defensive backstop for any similar case that shows up later.
+    $pattern = "(?ms)$escapedPredicate" + '\s+((?:"(?:[^"\\]|\\.)*"(?:@[a-zA-Z-]+|\^\^\S+)?|(?>[^;".]+))+)\s*(?:;|\.\s*(?:\r?\n|$))'
+    $match = [regex]::Match($Block, $pattern, [System.Text.RegularExpressions.RegexOptions]::None, [TimeSpan]::FromSeconds(2))
     if ($match.Success) {
         return $match.Groups[1].Value.Trim()
     }
