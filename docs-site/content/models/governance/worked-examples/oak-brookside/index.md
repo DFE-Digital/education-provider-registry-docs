@@ -341,7 +341,7 @@ inst:brookside-primary
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "145619"
+            rdf:value "145619"^^xsd:positiveInteger
         ]
     ] .
 

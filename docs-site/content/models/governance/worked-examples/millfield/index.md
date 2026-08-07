@@ -142,7 +142,7 @@ inst:millfield
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "117309"
+            rdf:value "117309"^^xsd:positiveInteger
         ]
     ] ;
 

@@ -155,7 +155,7 @@ inst:george-greens
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "100974"
+            rdf:value "100974"^^xsd:positiveInteger
         ]
     ] ;
 

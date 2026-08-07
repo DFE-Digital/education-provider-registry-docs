@@ -160,11 +160,11 @@ inst:brookside-primary
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Copse Close, Oadby, Leicester, LE2 4FU"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Copse Close"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Oadby"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Leicester"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Leicestershire"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "LE2 4FU" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Copse Close"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Oadby"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Leicester"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Leicestershire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "LE2 4FU" ]
             ]
         ]
     ] .

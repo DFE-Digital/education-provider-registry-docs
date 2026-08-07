@@ -131,10 +131,10 @@ inst:aldgate-school
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "St James's Passage, Duke's Place, London, EC3A 5DE"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "St James's Passage"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Duke's Place"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "EC3A 5DE" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "St James's Passage"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Duke's Place"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "EC3A 5DE" ]
             ]
         ]
     ] ;

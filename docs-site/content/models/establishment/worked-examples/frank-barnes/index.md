@@ -130,20 +130,20 @@ inst:frank-barnes
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "4 Wollstonecraft Street, Kings Cross, London, N1C 4BT"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "4 Wollstonecraft Street"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Kings Cross"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "N1C 4BT" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "4 Wollstonecraft Street"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Kings Cross"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "N1C 4BT" ]
             ] ;
             esto:hasUprn [ a est:UniquePropertyReferenceNumber ; rdf:value "5172256"^^xsd:positiveInteger ]
         ] ;
         esto:hasWebsite [
             a est:Website ;
-            rdfs:label "www.fbarnes.camden.sch.uk"
+            rdf:value "www.fbarnes.camden.sch.uk"
         ] ;
         esto:hasTelephoneNumber [
             a est:TelephoneNumber ;
-            rdfs:label "02073917040"
+            rdf:value "02073917040"
         ]
     ] ;
 
@@ -174,7 +174,7 @@ inst:frank-barnes
             a est:UrbanRuralClassification ;
             rdfs:label "Urban: Nearer to a major town or city"@en
         ] ;
-        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdfs:label "E09000007" ] ;
+        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdf:value "E09000007" ] ;
         esto:hasOsGridReference [
             a est:OsGridReference ;
             esto:hasEasting [ a est:Easting ; rdf:value "530000"^^xsd:nonNegativeInteger ] ;

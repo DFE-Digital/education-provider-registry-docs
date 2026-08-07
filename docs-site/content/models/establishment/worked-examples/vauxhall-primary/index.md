@@ -144,7 +144,7 @@ inst:vauxhall-primary
         esto:hasHeadteacherOrPrincipal [
             a est:HeadteacherOrPrincipal ;
             rdfs:label "VB"@en ;
-            esto:hasJobTitle [ a est:JobTitle ; rdfs:label "Acting Headteacher"@en ]
+            esto:hasJobTitle [ a est:JobTitle ; rdf:value "Acting Headteacher"@en ]
         ]
     ] ;
 
@@ -155,9 +155,9 @@ inst:vauxhall-primary
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Vauxhall Street, London, SE11 5LG"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Vauxhall Street"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "SE11 5LG" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Vauxhall Street"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "SE11 5LG" ]
             ]
         ]
     ] ;
@@ -235,9 +235,9 @@ inst:wyvil-primary
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Wyvil Road, London, SW8 2TJ"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Wyvil Road"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "SW8 2TJ" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Wyvil Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "SW8 2TJ" ]
             ]
         ]
     ] ;
@@ -330,10 +330,10 @@ inst:lilian-baylis
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "323 Kennington Lane, London, SE11 5QY"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "323 Kennington Lane"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Kennington"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "SE11 5QY" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "323 Kennington Lane"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Kennington"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "SE11 5QY" ]
             ]
         ]
     ] ;

@@ -130,10 +130,10 @@ inst:gilded-hollins
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "St Helen's Road, Leigh, WN7 3PQ"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "St Helen's Road"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Leigh"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Lancashire"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "WN7 3PQ" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "St Helen's Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Leigh"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Lancashire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "WN7 3PQ" ]
             ]
         ]
     ] .

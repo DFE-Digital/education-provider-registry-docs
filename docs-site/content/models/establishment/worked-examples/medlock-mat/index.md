@@ -131,17 +131,17 @@ inst:coop-academies-trust
 
     esto:hasGroupUniqueIdentifier [
         a est:GroupUniqueIdentifier ;
-        rdfs:label "2777"
+        rdf:value "2777"
     ] ;
 
     esto:identifiedByGroupId [
         a est:GroupId ;
-        rdfs:label "TR00567"
+        rdf:value "TR00567"
     ] ;
 
     esto:hasGroupCompaniesHouseNumber [
         a est:CompaniesHouseNumber ;
-        rdfs:label "07747126"
+        rdf:value "07747126"
     ] .
 
 inst:medlock
@@ -209,7 +209,7 @@ inst:medlock
         esto:memberOf inst:coop-academies-trust ;
         esto:hasGroupMembershipDate [
             a est:GroupMembershipDate ;
-            rdfs:label "2024-01-01"^^xsd:date
+            rdf:value "2024-01-01"^^xsd:date
         ]
     ] ;
 
@@ -231,21 +231,21 @@ inst:medlock
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Wadeson Road, Chorlton-on-Medlock, Manchester, M13 9UJ"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Wadeson Road"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Chorlton-on-Medlock"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Manchester"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Greater Manchester"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "M13 9UJ" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Wadeson Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Chorlton-on-Medlock"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Manchester"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Greater Manchester"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "M13 9UJ" ]
             ] ;
             esto:hasUprn [ a est:UniquePropertyReferenceNumber ; rdf:value "10023048531"^^xsd:positiveInteger ]
         ] ;
         esto:hasWebsite [
             a est:Website ;
-            rdfs:label "https://www.medlock.coopacademies.co.uk/"
+            rdf:value "https://www.medlock.coopacademies.co.uk/"
         ] ;
         esto:hasTelephoneNumber [
             a est:TelephoneNumber ;
-            rdfs:label "01612731830"
+            rdf:value "01612731830"
         ]
     ] ;
 
@@ -273,7 +273,7 @@ inst:medlock
             a est:UrbanRuralClassification ;
             rdfs:label "Urban: Nearer to a major town or city"@en
         ] ;
-        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdfs:label "E08000003" ] ;
+        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdf:value "E08000003" ] ;
         esto:hasOsGridReference [
             a est:OsGridReference ;
             esto:hasEasting [ a est:Easting ; rdf:value "385162"^^xsd:nonNegativeInteger ] ;

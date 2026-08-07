@@ -166,11 +166,11 @@ inst:eileen-wade
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "High Street, Upper Dean, Huntingdon, PE28 0ND"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "High Street"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Upper Dean"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Huntingdon"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Cambridgeshire"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "PE28 0ND" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "High Street"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Upper Dean"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Huntingdon"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Cambridgeshire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "PE28 0ND" ]
             ]
         ]
     ] ;
@@ -214,11 +214,11 @@ inst:milton-ernest
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Thurleigh Road, Milton Ernest, Bedford, MK44 1RF"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Thurleigh Road"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Milton Ernest"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Bedford"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Bedfordshire"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "MK44 1RF" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Thurleigh Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Milton Ernest"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Bedford"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Bedfordshire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "MK44 1RF" ]
             ]
         ]
     ] ;

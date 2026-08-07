@@ -133,7 +133,7 @@ inst:frank-barnes
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "100091"
+            rdf:value "100091"^^xsd:positiveInteger
         ]
     ] .
 

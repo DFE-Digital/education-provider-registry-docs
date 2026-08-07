@@ -83,12 +83,12 @@ inst:green-school-trust
 
     esto:identifiedByGroupId [
         a est:GroupId ;
-        rdfs:label "TR00905"
+        rdf:value "TR00905"
     ] ;
 
     esto:hasGroupCompaniesHouseNumber [
         a est:CompaniesHouseNumber ;
-        rdfs:label "08608665"
+        rdf:value "08608665"
     ] .
 
 inst:green-school-girls
@@ -174,10 +174,10 @@ inst:green-school-girls
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Busch Corner, London Road, Isleworth, TW7 5BB"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Busch Corner"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "London Road"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Isleworth"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "TW7 5BB" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Busch Corner"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "London Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Isleworth"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "TW7 5BB" ]
             ]
         ]
     ] ;
@@ -223,9 +223,9 @@ inst:green-school-boys
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Twickenham Road, Isleworth, TW7 6AU"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Twickenham Road"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Isleworth"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "TW7 6AU" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Twickenham Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Isleworth"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "TW7 6AU" ]
             ]
         ]
     ] ;

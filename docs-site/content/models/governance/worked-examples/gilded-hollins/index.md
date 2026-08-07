@@ -131,7 +131,7 @@ inst:gilded-hollins
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "106431"
+            rdf:value "106431"^^xsd:positiveInteger
         ]
     ] ;
 

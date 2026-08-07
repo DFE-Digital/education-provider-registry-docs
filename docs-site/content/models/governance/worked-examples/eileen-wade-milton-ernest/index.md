@@ -133,7 +133,7 @@ inst:eileen-wade
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "109443"
+            rdf:value "109443"^^xsd:positiveInteger
         ]
     ] .
 
@@ -144,7 +144,7 @@ inst:milton-ernest
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "109613"
+            rdf:value "109613"^^xsd:positiveInteger
         ]
     ] .
 

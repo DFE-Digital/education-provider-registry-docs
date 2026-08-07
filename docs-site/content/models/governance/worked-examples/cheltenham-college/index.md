@@ -132,7 +132,7 @@ inst:cheltenham-college
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "115795"
+            rdf:value "115795"^^xsd:positiveInteger
         ]
     ] .
 

@@ -135,12 +135,12 @@ inst:oak-mat
 
     esto:identifiedByGroupId [
         a est:GroupId ;
-        rdfs:label "TR01390"
+        rdf:value "TR01390"
     ] ;
 
     esto:hasGroupCompaniesHouseNumber [
         a est:CompaniesHouseNumber ;
-        rdfs:label "07695364"
+        rdf:value "07695364"
     ] .
 
 inst:manor-high
@@ -218,21 +218,21 @@ inst:manor-high
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Copse Close, Oadby, Leicester, LE2 4FU"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Copse Close"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Oadby"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Leicester"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Leicestershire"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "LE2 4FU" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Copse Close"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Oadby"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Leicester"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Leicestershire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "LE2 4FU" ]
             ] ;
             esto:hasUprn [ a est:UniquePropertyReferenceNumber ; rdf:value "100032054860"^^xsd:positiveInteger ]
         ] ;
         esto:hasWebsite [
             a est:Website ;
-            rdfs:label "http://www.manorhigh.leics.sch.uk/"
+            rdf:value "http://www.manorhigh.leics.sch.uk/"
         ] ;
         esto:hasTelephoneNumber [
             a est:TelephoneNumber ;
-            rdfs:label "01162714941"
+            rdf:value "01162714941"
         ]
     ] ;
 
@@ -263,7 +263,7 @@ inst:manor-high
             a est:UrbanRuralClassification ;
             rdfs:label "Urban: Nearer to a major town or city"@en
         ] ;
-        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdfs:label "E10000018" ] ;
+        esto:hasGssLocalAuthorityCode [ a est:GssLocalAuthorityCode ; rdf:value "E10000018" ] ;
         esto:hasOsGridReference [
             a est:OsGridReference ;
             esto:hasEasting [ a est:Easting ; rdf:value "463749"^^xsd:nonNegativeInteger ] ;
