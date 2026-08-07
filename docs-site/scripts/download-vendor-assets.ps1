@@ -53,5 +53,25 @@ foreach ($asset in $assets) {
     }
 
     Write-Host "Downloading $($asset.Name) from $($asset.Url)"
-    Invoke-WebRequest -Uri $asset.Url -OutFile $destination
+
+    # Bounded and retried so a slow/unreachable CDN fails fast and visibly
+    # instead of the job hanging - Invoke-WebRequest has no default retry and
+    # its default timeout behaviour is not a reliable wall-clock bound.
+    $maxAttempts = 3
+    $attempt = 0
+    $succeeded = $false
+    while (-not $succeeded -and $attempt -lt $maxAttempts) {
+        $attempt++
+        try {
+            Invoke-WebRequest -Uri $asset.Url -OutFile $destination -TimeoutSec 30
+            $succeeded = $true
+        }
+        catch {
+            if ($attempt -ge $maxAttempts) {
+                throw "Failed to download $($asset.Name) from $($asset.Url) after $maxAttempts attempts: $_"
+            }
+            Write-Warning "Attempt $attempt of $maxAttempts failed for $($asset.Name): $_. Retrying in 5s..."
+            Start-Sleep -Seconds 5
+        }
+    }
 }

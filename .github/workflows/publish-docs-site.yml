@@ -25,6 +25,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Safety net: without this, a hung step (e.g. a stalled network call)
+    # rides all the way up to GitHub's default 360-minute job ceiling before
+    # failing.
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -131,10 +135,17 @@ jobs:
           path: widoco.jar
           key: widoco-1.4.25
 
+      # Bounded and retried so a slow/unreachable download fails fast and
+      # visibly instead of hanging the job (previously had no --max-time,
+      # --connect-timeout, --retry or --fail at all).
       - name: Download WIDOCO
+        timeout-minutes: 5
         run: |
           if [ ! -f widoco.jar ]; then
-            curl -L -o widoco.jar \
+            curl --fail --location --silent --show-error \
+              --connect-timeout 10 --max-time 120 \
+              --retry 3 --retry-delay 5 --retry-all-errors \
+              -o widoco.jar \
               https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar
           fi
 
@@ -218,6 +229,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    timeout-minutes: 10
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
