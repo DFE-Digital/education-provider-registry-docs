@@ -157,7 +157,7 @@ inst:cheltenham-college
             a est:HeadteacherOrPrincipal ;
             esto:hasJobTitle [
                 a est:JobTitle ;
-                rdfs:label "Headmaster"@en
+                rdf:value "Headmaster"@en
             ]
         ]
     ] ;
@@ -169,10 +169,10 @@ inst:cheltenham-college
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Bath Road, Cheltenham, GL53 7LD"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Bath Road"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Cheltenham"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Gloucestershire"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "GL53 7LD" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Bath Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Cheltenham"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Gloucestershire"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "GL53 7LD" ]
             ]
         ]
     ] ;
@@ -205,7 +205,7 @@ inst:cheltenham-college
             a est:InspectionReportReference ;
             esto:recordsInspectorateName [
                 a est:InspectorateName ;
-                rdfs:label "ISI"@en
+                rdf:value "ISI"@en
             ]
         ]
     ] ;

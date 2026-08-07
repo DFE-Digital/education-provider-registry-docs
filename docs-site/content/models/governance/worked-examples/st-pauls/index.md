@@ -131,7 +131,7 @@ inst:st-pauls-academy
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "105135"
+            rdf:value "105135"^^xsd:positiveInteger
         ]
     ] .
 

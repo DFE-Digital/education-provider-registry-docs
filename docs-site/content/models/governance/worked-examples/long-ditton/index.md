@@ -150,7 +150,7 @@ inst:long-ditton-infant
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "124966"
+            rdf:value "124966"^^xsd:positiveInteger
         ]
     ] .
 
@@ -161,7 +161,7 @@ inst:long-ditton-st-marys
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "125180"
+            rdf:value "125180"^^xsd:positiveInteger
         ]
     ] .
 

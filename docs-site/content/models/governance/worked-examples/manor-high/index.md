@@ -137,7 +137,7 @@ inst:manor-high
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "137120"
+            rdf:value "137120"^^xsd:positiveInteger
         ]
     ] .
 

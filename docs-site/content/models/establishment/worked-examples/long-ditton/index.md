@@ -170,10 +170,10 @@ inst:long-ditton-infant
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Ditton Hill Road, Surbiton, KT6 5JB"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Ditton Hill Road"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Surbiton"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Surrey"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "KT6 5JB" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Ditton Hill Road"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Surbiton"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Surrey"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "KT6 5JB" ]
             ]
         ]
     ] ;
@@ -212,11 +212,11 @@ inst:long-ditton-st-marys
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Sugden Road, Long Ditton, Surbiton, KT7 0AD"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Sugden Road"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Long Ditton"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "Surbiton"@en ] ;
-                esto:hasCounty [ a est:County ; rdfs:label "Surrey"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "KT7 0AD" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Sugden Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Long Ditton"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "Surbiton"@en ] ;
+                esto:hasCounty [ a est:County ; rdf:value "Surrey"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "KT7 0AD" ]
             ]
         ]
     ] ;

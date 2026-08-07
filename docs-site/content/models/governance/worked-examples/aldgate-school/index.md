@@ -137,7 +137,7 @@ inst:aldgate-school
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "100000"
+            rdf:value "100000"^^xsd:positiveInteger
         ]
     ] ;
 

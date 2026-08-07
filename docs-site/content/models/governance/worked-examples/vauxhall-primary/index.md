@@ -146,7 +146,7 @@ inst:vauxhall-primary
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "100588"
+            rdf:value "100588"^^xsd:positiveInteger
         ]
     ] .
 
@@ -157,7 +157,7 @@ inst:ashmole-primary
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "100556"
+            rdf:value "100556"^^xsd:positiveInteger
         ]
     ] .
 
@@ -168,7 +168,7 @@ inst:wyvil-primary
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "100591"
+            rdf:value "100591"^^xsd:positiveInteger
         ]
     ] .
 

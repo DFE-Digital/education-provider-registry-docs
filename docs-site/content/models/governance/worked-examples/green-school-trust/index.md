@@ -147,7 +147,7 @@ inst:green-school-trust
     rdfs:label "The Green School Trust"@en ;
     esto:hasGroupCompaniesHouseNumber [
         a est:CompaniesHouseNumber ;
-        rdfs:label "08608665"
+        rdf:value "08608665"
     ] .
 
 inst:green-school-girls
@@ -158,7 +158,7 @@ inst:green-school-girls
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "139989"
+            rdf:value "139989"^^xsd:positiveInteger
         ]
     ] .
 
@@ -169,7 +169,7 @@ inst:green-school-boys
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "144515"
+            rdf:value "144515"^^xsd:positiveInteger
         ]
     ] .
 

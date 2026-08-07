@@ -141,12 +141,12 @@ inst:coop-academies-trust
 
     esto:hasGroupUniqueIdentifier [
         a est:GroupUniqueIdentifier ;
-        rdfs:label "2777"
+        rdf:value "2777"
     ] ;
 
     esto:hasGroupCompaniesHouseNumber [
         a est:CompaniesHouseNumber ;
-        rdfs:label "07747126"
+        rdf:value "07747126"
     ] .
 
 inst:medlock
@@ -157,7 +157,7 @@ inst:medlock
         a est:EstablishmentIdentity ;
         esto:identifiedByUrn [
             a est:UniqueReferenceNumber ;
-            rdfs:label "150612"
+            rdf:value "150612"^^xsd:positiveInteger
         ]
     ] .
 

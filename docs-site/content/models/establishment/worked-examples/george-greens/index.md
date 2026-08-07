@@ -131,10 +131,10 @@ inst:george-greens
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "100 Manchester Road, Isle of Dogs, London, E14 3DW"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "100 Manchester Road"@en ] ;
-                esto:hasAddressLine2 [ a est:AddressLine2 ; rdfs:label "Isle of Dogs"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "E14 3DW" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "100 Manchester Road"@en ] ;
+                esto:hasAddressLine2 [ a est:AddressLine2 ; rdf:value "Isle of Dogs"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "E14 3DW" ]
             ]
         ]
     ] ;

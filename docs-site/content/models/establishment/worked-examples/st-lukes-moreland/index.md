@@ -154,9 +154,9 @@ inst:st-lukes
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Radnor Street, London, EC1V 3SJ"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Radnor Street"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "EC1V 3SJ" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Radnor Street"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "EC1V 3SJ" ]
             ]
         ]
     ] ;
@@ -196,7 +196,7 @@ inst:moreland
             rdfs:label "CL"@en ;
             esto:hasJobTitle [
                 a est:JobTitle ;
-                rdfs:label "Executive Headteacher"@en
+                rdf:value "Executive Headteacher"@en
             ]
         ]
     ] ;
@@ -208,9 +208,9 @@ inst:moreland
             esto:hasAddress [
                 a est:Address ;
                 rdfs:label "Moreland Street, London, EC1V 8BB"@en ;
-                esto:hasAddressLine1 [ a est:AddressLine1 ; rdfs:label "Moreland Street"@en ] ;
-                esto:hasTown [ a est:Town ; rdfs:label "London"@en ] ;
-                esto:hasPostcode [ a est:Postcode ; rdfs:label "EC1V 8BB" ]
+                esto:hasAddressLine1 [ a est:AddressLine1 ; rdf:value "Moreland Street"@en ] ;
+                esto:hasTown [ a est:Town ; rdf:value "London"@en ] ;
+                esto:hasPostcode [ a est:Postcode ; rdf:value "EC1V 8BB" ]
             ]
         ]
     ] ;
