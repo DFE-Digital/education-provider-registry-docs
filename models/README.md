@@ -15,6 +15,10 @@ The establishment model files live in [`establishment/`](establishment/):
 
 The governance model files live in [`governance/`](governance/), following the same pattern.
 
+The logical-model artefacts live in [`logical/`](logical/):
+
+- `basic-establishment-data-logical-model.md` - the first logical-model slice for anonymous Find and Share, covering establishment identity, name, establishment type, statutory age range and education phase.
+
 ## SKOS
 
 SKOS, the Simple Knowledge Organization System, is a W3C standard for representing vocabularies, thesauri, taxonomies and concept schemes using RDF. These `.ttl` files use Turtle syntax to make the concepts readable by both people and RDF tooling.
