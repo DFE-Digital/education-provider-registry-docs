@@ -129,7 +129,7 @@ The last rule is stated in the current SHACL shape's comment but is not yet expr
 
 In this slice it carries:
 
-- `gender_of_entry_type_id`, a direct reference to controlled `GenderOfEntryType` reference data, the same pattern used for `establishment_type_code` and `education_phase_code` on `Establishment`.
+- `gender_of_entry_type_id`, a direct reference to controlled `GenderOfEntryType` reference data, the same pattern used for `establishment_type_id` and `education_phase_id` on `Establishment`.
 - `StatutoryAgeRange`, which records the lower and upper statutory ages.
 
 This means gender of entry is associated with an establishment through the provision substructure:
