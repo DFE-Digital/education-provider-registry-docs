@@ -37,8 +37,7 @@ erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
     ESTABLISHMENT ||--o| EDUCATION_ADMISSIONS_AND_PROVISION : "has"
-    EDUCATION_ADMISSIONS_AND_PROVISION ||--o| GENDER_OF_ENTRY : "has"
-    GENDER_OF_ENTRY }o--|| GENDER_OF_ENTRY_TYPE : "has type"
+    EDUCATION_ADMISSIONS_AND_PROVISION }o--o| GENDER_OF_ENTRY_TYPE : "has gender of entry"
     EDUCATION_ADMISSIONS_AND_PROVISION ||--o| STATUTORY_AGE_RANGE : "has"
 
     ESTABLISHMENT {
@@ -60,12 +59,6 @@ erDiagram
         string name
     }
 
-    GENDER_OF_ENTRY {
-        uuid gender_of_entry_id PK
-        uuid education_admissions_and_provision_id FK, UK
-        integer gender_of_entry_type_id FK
-    }
-
     GENDER_OF_ENTRY_TYPE {
         integer gender_of_entry_type_id PK
         string name
@@ -74,6 +67,7 @@ erDiagram
     EDUCATION_ADMISSIONS_AND_PROVISION {
         uuid education_admissions_and_provision_id PK
         uuid establishment_id FK, UK
+        integer gender_of_entry_type_id FK
     }
 
     STATUTORY_AGE_RANGE {
@@ -98,10 +92,8 @@ erDiagram
 | Establishment type | `name` | Yes | Human-readable type label. |
 | Education phase | `education_phase_id` | Yes | Explicitly seeded integer reference-data identifier. |
 | Education phase | `name` | Yes | Human-readable phase label. |
-| Education admissions and provision | `education_admissions_and_provision_id` | Conditional | One owned substructure for education, admissions and provision facts where they apply to the establishment. This slice uses it to own gender of entry and statutory age range child facts. |
-| Gender of entry | `gender_of_entry_id` | Yes | Generated, opaque technical key for the establishment's current gender-of-entry fact. |
-| Gender of entry | `education_admissions_and_provision_id` | Yes | Parent education, admissions and provision record. Unique in this slice, because an establishment has at most one current gender-of-entry fact. |
-| Gender of entry | `gender_of_entry_type_id` | Yes | Controlled gender-of-entry value selected for this establishment. |
+| Education admissions and provision | `education_admissions_and_provision_id` | Conditional | One owned substructure for education, admissions and provision facts where they apply to the establishment. This slice uses it to hold gender of entry and the statutory age range child fact. |
+| Education admissions and provision | `gender_of_entry_type_id` | Conditional | Controlled gender-of-entry value selected for this establishment, where applicable. |
 | Gender of entry type | `gender_of_entry_type_id` | Yes | Explicitly seeded integer reference-data identifier. |
 | Gender of entry type | `name` | Yes | Human-readable gender-of-entry label. |
 | Statutory age range | `lower_statutory_age` | Yes, when a range exists | Lowest age for which the establishment is registered. Must be a non-negative integer no greater than `19`. |
@@ -137,7 +129,7 @@ The last rule is stated in the current SHACL shape's comment but is not yet expr
 
 In this slice it carries:
 
-- `GenderOfEntry`, which records the current gender-of-entry fact and links to controlled `GenderOfEntryType` reference data.
+- `gender_of_entry_type_id`, a direct reference to controlled `GenderOfEntryType` reference data, the same pattern used for `establishment_type_code` and `education_phase_code` on `Establishment`.
 - `StatutoryAgeRange`, which records the lower and upper statutory ages.
 
 This means gender of entry is associated with an establishment through the provision substructure:
@@ -145,11 +137,10 @@ This means gender of entry is associated with an establishment through the provi
 ```text
 Establishment
   -> EducationAdmissionsAndProvision
-    -> GenderOfEntry
-      -> GenderOfEntryType
+    -> GenderOfEntryType
 ```
 
-It is deliberately not an attribute on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`.
+It is deliberately not an attribute on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`. It is a direct reference-data column, not a wrapper entity, because it carries no attributes of its own beyond the type it selects.
 
 ## Identifier Rules
 
@@ -167,7 +158,7 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 - An establishment has one current establishment type.
 - An establishment may have one phase of education in this first slice. Any need for multiple phases must be evidenced before extending the model.
 - An establishment has at most one current education, admissions and provision substructure and at most one statutory age range within it.
-- Gender of entry is a child fact held within the education, admissions and provision substructure. Its value is selected from gender-of-entry reference data.
+- Gender of entry is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
 - Classification identifiers must be stable and labels may change without changing the establishment record.
 
 ## Deferred Decisions

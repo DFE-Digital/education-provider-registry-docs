@@ -36,15 +36,8 @@ CREATE TABLE establishment.establishment (
 
 CREATE TABLE establishment.education_admissions_and_provision (
     education_admissions_and_provision_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id)
-);
-
-CREATE TABLE establishment.gender_of_entry (
-    gender_of_entry_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    education_admissions_and_provision_id uuid NOT NULL UNIQUE
-        REFERENCES establishment.education_admissions_and_provision (education_admissions_and_provision_id),
-    gender_of_entry_type_id integer NOT NULL
-        REFERENCES establishment.gender_of_entry_type (gender_of_entry_type_id)
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
+    gender_of_entry_type_id integer REFERENCES establishment.gender_of_entry_type (gender_of_entry_type_id)
 );
 
 CREATE TABLE establishment.statutory_age_range (
