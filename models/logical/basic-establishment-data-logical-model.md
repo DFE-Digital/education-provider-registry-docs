@@ -58,12 +58,12 @@ erDiagram
 
     EDUCATION_ADMISSIONS_AND_PROVISION {
         uuid education_admissions_and_provision_id PK
-        uuid establishment_id FK
+        uuid establishment_id FK, UK
     }
 
     STATUTORY_AGE_RANGE {
         uuid statutory_age_range_id PK
-        uuid education_admissions_and_provision_id FK
+        uuid education_admissions_and_provision_id FK, UK
         integer lower_statutory_age
         integer upper_statutory_age
     }
