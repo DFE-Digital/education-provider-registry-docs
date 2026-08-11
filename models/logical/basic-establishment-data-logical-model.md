@@ -9,12 +9,13 @@ This is the first logical-model slice for the Establishment Registry. It defines
 In scope:
 
 - URN.
-- DfE number.
+- Local authority code and establishment number (displayed together as the DfE number / LAESTAB).
 - UKPRN.
 - Establishment name.
 - Establishment type.
 - Age range.
 - Phase of education.
+- Gender of entry.
 
 Out of scope for this slice:
 
@@ -36,23 +37,37 @@ erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
     ESTABLISHMENT ||--o| EDUCATION_ADMISSIONS_AND_PROVISION : "has"
+    EDUCATION_ADMISSIONS_AND_PROVISION ||--o| GENDER_OF_ENTRY : "has"
+    GENDER_OF_ENTRY }o--|| GENDER_OF_ENTRY_TYPE : "has type"
     EDUCATION_ADMISSIONS_AND_PROVISION ||--o| STATUTORY_AGE_RANGE : "has"
 
     ESTABLISHMENT {
         uuid establishment_id PK
         numeric urn UK
-        string dfe_number
+        string local_authority_code
+        integer establishment_number
         numeric ukprn
         string name
     }
 
     ESTABLISHMENT_TYPE {
-        string establishment_type_code PK
+        integer establishment_type_id PK
         string name
     }
 
     EDUCATION_PHASE {
-        string education_phase_code PK
+        integer education_phase_id PK
+        string name
+    }
+
+    GENDER_OF_ENTRY {
+        uuid gender_of_entry_id PK
+        uuid education_admissions_and_provision_id FK, UK
+        integer gender_of_entry_type_id FK
+    }
+
+    GENDER_OF_ENTRY_TYPE {
+        integer gender_of_entry_type_id PK
         string name
     }
 
@@ -75,14 +90,20 @@ erDiagram
 | --- | --- | --- | --- |
 | Establishment | `establishment_id` | Yes | Generated, opaque technical key used for internal database relationships. It is not a public identifier. |
 | Establishment | `urn` | Yes | Immutable, globally unique canonical business identifier. It is used for public routes, search and migration reconciliation. |
-| Establishment | `dfe_number` | Conditional | Current DfE number. It is meaningful only with its local-authority context; its composition and lifecycle are deferred. |
+| Establishment | `local_authority_code` | Conditional | Local authority code component of the DfE number / LAESTAB. Stored separately so the owning authority and component can be validated independently. |
+| Establishment | `establishment_number` | Conditional | Local-authority-scoped establishment number, between 1 and 9999 where present. The frontend composes it with `local_authority_code` for DfE number / LAESTAB display. |
 | Establishment | `ukprn` | Conditional | Current UK Provider Reference Number supplied by UKRLP where applicable. |
 | Establishment | `name` | Yes | Current published establishment name. Historic and alternative names are deferred. |
-| Establishment type | `establishment_type_code` | Yes | Controlled type value held in reference data. An establishment has one current type in this slice. |
+| Establishment type | `establishment_type_id` | Yes | Explicitly seeded integer reference-data identifier. An establishment has one current type in this slice. |
 | Establishment type | `name` | Yes | Human-readable type label. |
-| Education phase | `education_phase_code` | Yes | Controlled phase value held in reference data. |
+| Education phase | `education_phase_id` | Yes | Explicitly seeded integer reference-data identifier. |
 | Education phase | `name` | Yes | Human-readable phase label. |
-| Education admissions and provision | `education_admissions_and_provision_id` | Conditional | One owned substructure for education, admissions and provision facts where they apply to the establishment. This slice uses it only to contain the statutory age range. |
+| Education admissions and provision | `education_admissions_and_provision_id` | Conditional | One owned substructure for education, admissions and provision facts where they apply to the establishment. This slice uses it to own gender of entry and statutory age range child facts. |
+| Gender of entry | `gender_of_entry_id` | Yes | Generated, opaque technical key for the establishment's current gender-of-entry fact. |
+| Gender of entry | `education_admissions_and_provision_id` | Yes | Parent education, admissions and provision record. Unique in this slice, because an establishment has at most one current gender-of-entry fact. |
+| Gender of entry | `gender_of_entry_type_id` | Yes | Controlled gender-of-entry value selected for this establishment. |
+| Gender of entry type | `gender_of_entry_type_id` | Yes | Explicitly seeded integer reference-data identifier. |
+| Gender of entry type | `name` | Yes | Human-readable gender-of-entry label. |
 | Statutory age range | `lower_statutory_age` | Yes, when a range exists | Lowest age for which the establishment is registered. Must be a non-negative integer no greater than `19`. |
 | Statutory age range | `upper_statutory_age` | Yes, when a range exists | Highest age for which the establishment is registered. Must be a non-negative integer no greater than `25` and not lower than `lower_statutory_age`. |
 
@@ -110,12 +131,32 @@ The EPR data-quality SHACL model sets the following limits:
 
 The last rule is stated in the current SHACL shape's comment but is not yet expressed as an executable cross-field constraint. The target implementation must enforce it.
 
+## Education, Admissions And Provision Placement
+
+`EducationAdmissionsAndProvision` is the owned substructure for education, admissions and provision facts that describe how the establishment operates as a school or provider.
+
+In this slice it carries:
+
+- `GenderOfEntry`, which records the current gender-of-entry fact and links to controlled `GenderOfEntryType` reference data.
+- `StatutoryAgeRange`, which records the lower and upper statutory ages.
+
+This means gender of entry is associated with an establishment through the provision substructure:
+
+```text
+Establishment
+  -> EducationAdmissionsAndProvision
+    -> GenderOfEntry
+      -> GenderOfEntryType
+```
+
+It is deliberately not an attribute on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`.
+
 ## Identifier Rules
 
 | Identifier | Cardinality | Constraint | Note |
 | --- | --- | --- | --- |
 | URN | Exactly one | Globally unique and immutable | The canonical public establishment identifier for this slice. |
-| DfE number | Zero or one | Uniqueness requires local-authority context | Stored directly on Establishment. Its source and composition are deferred. |
+| DfE number / LAESTAB | Derived | Uniqueness requires local-authority context | Derived from `local_authority_code` and `establishment_number`, commonly rendered as `LA/ESTAB` with the establishment number zero-padded to four digits. |
 | UKPRN | Zero or one | Eight-digit value; global uniqueness is not yet a target rule | Optional because it does not apply to every establishment. It is externally owned by UKRLP. |
 
 The model must enforce the stated uniqueness constraints for the direct identifier attributes. The uniqueness scope for each identifier type must be defined by its owning authority.
@@ -126,13 +167,13 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 - An establishment has one current establishment type.
 - An establishment may have one phase of education in this first slice. Any need for multiple phases must be evidenced before extending the model.
 - An establishment has at most one current education, admissions and provision substructure and at most one statutory age range within it.
-- Classification codes must be stable and labels may change without changing the establishment record.
+- Gender of entry is a child fact held within the education, admissions and provision substructure. Its value is selected from gender-of-entry reference data.
+- Classification identifiers must be stable and labels may change without changing the establishment record.
 
 ## Deferred Decisions
 
 | Decision | Why It Is Deferred |
 | --- | --- |
-| Whether the DfE number is stored, derived or both. | The underlying local-authority and establishment-number model is outside this slice. |
 | Identifier effective dates, supersession and reuse. | Requires lifecycle and migration evidence. |
 | Type and phase history. | Requires a change-history and lifecycle model. |
 | Complete age-range applicability by establishment type. | The EPR SHACL model contains many type-specific rules; this first slice does not yet reproduce them all. |
@@ -149,7 +190,6 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 
 ## Open Questions
 
-- Is `DfE number` the agreed user-facing label, or should it be presented as a composed identifier with its constituent parts?
 - Which establishment types legitimately have no age range or phase of education?
 - Is UKPRN uniqueness global across all provider and organisation records, not just establishments?
 - Does the anonymous public beta require identifiers to be searchable, display-only, or both?
