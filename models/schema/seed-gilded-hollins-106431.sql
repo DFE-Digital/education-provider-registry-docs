@@ -60,24 +60,16 @@ SET local_authority_code = EXCLUDED.local_authority_code,
     education_phase_id = EXCLUDED.education_phase_id;
 
 -- The establishment's education, admissions and provision parent record.
-INSERT INTO establishment.education_admissions_and_provision (establishment_id)
-SELECT e.establishment_id
-FROM establishment.establishment AS e
-WHERE e.urn = 106431
-ON CONFLICT (establishment_id) DO NOTHING;
-
--- The establishment's gender of entry is Mixed.
-INSERT INTO establishment.gender_of_entry (
-    education_admissions_and_provision_id,
+-- Gender of entry (Mixed) is carried directly on this row.
+INSERT INTO establishment.education_admissions_and_provision (
+    establishment_id,
     gender_of_entry_type_id
 )
-SELECT eap.education_admissions_and_provision_id,
+SELECT e.establishment_id,
        1
-FROM establishment.education_admissions_and_provision AS eap
-JOIN establishment.establishment AS e
-  ON e.establishment_id = eap.establishment_id
+FROM establishment.establishment AS e
 WHERE e.urn = 106431
-ON CONFLICT (education_admissions_and_provision_id) DO UPDATE
+ON CONFLICT (establishment_id) DO UPDATE
 SET gender_of_entry_type_id = EXCLUDED.gender_of_entry_type_id;
 
 -- The establishment's statutory age range is 4 to 11.
@@ -104,7 +96,7 @@ COMMIT;
 -- SELECT e.urn, e.local_authority_code, e.establishment_number, e.ukprn, e.name,
 --        e.establishment_type_id, et.name AS establishment_type,
 --        e.education_phase_id, ep.name AS education_phase,
---        goe.gender_of_entry_id, goe.gender_of_entry_type_id, goet.name AS gender_of_entry,
+--        eap.gender_of_entry_type_id, goet.name AS gender_of_entry,
 --        sar.lower_statutory_age, sar.upper_statutory_age
 -- FROM establishment.establishment AS e
 -- JOIN establishment.establishment_type AS et
@@ -113,10 +105,8 @@ COMMIT;
 --   ON ep.education_phase_id = e.education_phase_id
 -- LEFT JOIN establishment.education_admissions_and_provision AS eap
 --   ON eap.establishment_id = e.establishment_id
--- LEFT JOIN establishment.gender_of_entry AS goe
---   ON goe.education_admissions_and_provision_id = eap.education_admissions_and_provision_id
 -- LEFT JOIN establishment.gender_of_entry_type AS goet
---   ON goet.gender_of_entry_type_id = goe.gender_of_entry_type_id
+--   ON goet.gender_of_entry_type_id = eap.gender_of_entry_type_id
 -- LEFT JOIN establishment.statutory_age_range AS sar
 --   ON sar.education_admissions_and_provision_id = eap.education_admissions_and_provision_id
 -- WHERE e.urn = 106431;

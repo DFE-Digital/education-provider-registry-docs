@@ -19,8 +19,7 @@ SELECT
     e.education_phase_id,
     ep.name AS education_phase,
     eap.education_admissions_and_provision_id,
-    goe.gender_of_entry_id,
-    goe.gender_of_entry_type_id,
+    eap.gender_of_entry_type_id,
     goet.name AS gender_of_entry,
     sar.statutory_age_range_id,
     sar.lower_statutory_age,
@@ -34,9 +33,7 @@ LEFT JOIN establishment.education_phase AS ep
   ON ep.education_phase_id = e.education_phase_id
 LEFT JOIN establishment.education_admissions_and_provision AS eap
   ON eap.establishment_id = e.establishment_id
-LEFT JOIN establishment.gender_of_entry AS goe
-  ON goe.education_admissions_and_provision_id = eap.education_admissions_and_provision_id
 LEFT JOIN establishment.gender_of_entry_type AS goet
-  ON goet.gender_of_entry_type_id = goe.gender_of_entry_type_id
+  ON goet.gender_of_entry_type_id = eap.gender_of_entry_type_id
 LEFT JOIN establishment.statutory_age_range AS sar
   ON sar.education_admissions_and_provision_id = eap.education_admissions_and_provision_id;
