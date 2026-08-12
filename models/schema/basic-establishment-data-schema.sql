@@ -31,7 +31,8 @@ CREATE TABLE establishment.establishment (
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
     establishment_type_id integer NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
-    education_phase_id integer REFERENCES establishment.education_phase (education_phase_id)
+    education_phase_id integer REFERENCES establishment.education_phase (education_phase_id),
+    CHECK ((local_authority_code IS NULL) = (establishment_number IS NULL))
 );
 
 CREATE TABLE establishment.education_admissions_and_provision (
