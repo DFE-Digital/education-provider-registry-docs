@@ -11,7 +11,8 @@
     Change @URN to transform another establishment.
 */
 
-DECLARE @URN numeric(19, 0) = 106431;
+-- Supply URN with sqlcmd, for example: -v URN=106431
+DECLARE @URN numeric(19, 0) = $(URN);
 
 WITH source_establishment AS (
     SELECT
@@ -26,6 +27,19 @@ WITH source_establishment AS (
         ep.name AS education_phase_name,
         e.gender_code,
         g.name AS gender_name,
+        e.admissionsPolicy_code,
+        e.boarders_code,
+        e.nurseryProvision_code,
+        e.officialSixthForm_code,
+        e.SchoolCapacity,
+        e.NumberOfPupils,
+        e.freeSchoolMeals,
+        e.percentageOfPupilsReceivingFsm,
+        e.typeOfReservedProvision_code,
+        e.resourcedProvisionCapacity,
+        e.resourcedProvisionOnRoll,
+        e.senUnitCapacity,
+        e.senUnitOnRoll,
         e.StatutoryLowAge,
         e.StatutoryHighAge
     FROM dbo.Establishment AS e
@@ -97,6 +111,119 @@ SELECT
         WHEN s.gender_name = 'Not applicable' THEN 'Not applicable (gender of entry)'
         ELSE s.gender_name
     END AS gender_of_entry,
+    s.admissionsPolicy_code AS source_admissions_policy_code,
+    CASE
+        WHEN s.admissionsPolicy_code = '1' THEN 'Comprehensive (secondary)'
+        WHEN s.admissionsPolicy_code = '2' THEN 'Selective (grammar)'
+        WHEN s.admissionsPolicy_code = '4' THEN 'Non-selective'
+        WHEN s.admissionsPolicy_code IN ('0', '9') THEN 'Not applicable'
+        ELSE NULL
+    END AS source_admissions_policy,
+    CASE
+        WHEN s.admissionsPolicy_code IN ('1', '4') THEN 1
+        WHEN s.admissionsPolicy_code = '2' THEN 2
+        WHEN s.admissionsPolicy_code IN ('0', '9') THEN 3
+        ELSE NULL
+    END AS admissions_policy_id,
+    CASE
+        WHEN s.admissionsPolicy_code IN ('1', '4') THEN 'Non-selective'
+        WHEN s.admissionsPolicy_code = '2' THEN 'Selective'
+        WHEN s.admissionsPolicy_code IN ('0', '9') THEN 'Not applicable (admissions policy)'
+        ELSE NULL
+    END AS admissions_policy,
+    s.boarders_code AS source_boarding_provision_code,
+    CASE
+        WHEN s.boarders_code = '0' THEN 'Not applicable'
+        WHEN s.boarders_code = '1' THEN 'No boarders'
+        WHEN s.boarders_code = '2' THEN 'Children''s home (Boarding school)'
+        WHEN s.boarders_code = '3' THEN 'Boarding school'
+        WHEN s.boarders_code = '4' THEN 'College / FE residential accommodation'
+        WHEN s.boarders_code = '9' THEN 'Not recorded'
+        ELSE NULL
+    END AS source_boarding_provision,
+    CASE
+        WHEN s.boarders_code = '1' THEN 1
+        WHEN s.boarders_code = '4' THEN 2
+        WHEN s.boarders_code IN ('2', '3') THEN 3
+        ELSE NULL
+    END AS boarding_provision_id,
+    CASE
+        WHEN s.boarders_code = '1' THEN 'No boarders'
+        WHEN s.boarders_code = '4' THEN 'Has boarders'
+        WHEN s.boarders_code IN ('2', '3') THEN 'Boarding school'
+        ELSE NULL
+    END AS boarding_provision,
+    s.nurseryProvision_code AS source_nursery_provision_code,
+    CASE
+        WHEN s.nurseryProvision_code = '0' THEN 'Not applicable'
+        WHEN s.nurseryProvision_code = '1' THEN 'Has Nursery Classes'
+        WHEN s.nurseryProvision_code = '2' THEN 'No Nursery Classes'
+        WHEN s.nurseryProvision_code = '9' THEN 'Not recorded'
+        ELSE NULL
+    END AS source_nursery_provision,
+    CASE
+        WHEN s.nurseryProvision_code = '1' THEN 1
+        WHEN s.nurseryProvision_code = '2' THEN 2
+        WHEN s.nurseryProvision_code = '0' THEN 3
+        ELSE NULL
+    END AS nursery_provision_id,
+    CASE
+        WHEN s.nurseryProvision_code = '1' THEN 'Nursery classes'
+        WHEN s.nurseryProvision_code = '2' THEN 'No nursery classes'
+        WHEN s.nurseryProvision_code = '0' THEN 'Not applicable (nursery provision)'
+        ELSE NULL
+    END AS nursery_provision,
+    s.officialSixthForm_code AS source_sixth_form_provision_code,
+    CASE
+        WHEN s.officialSixthForm_code = '0' THEN 'Not applicable'
+        WHEN s.officialSixthForm_code = '1' THEN 'Has a sixth form'
+        WHEN s.officialSixthForm_code = '2' THEN 'Does not have a sixth form'
+        WHEN s.officialSixthForm_code = '9' THEN 'Not recorded'
+        ELSE NULL
+    END AS source_sixth_form_provision,
+    CASE
+        WHEN s.officialSixthForm_code = '1' THEN 1
+        WHEN s.officialSixthForm_code = '2' THEN 2
+        WHEN s.officialSixthForm_code = '0' THEN 3
+        ELSE NULL
+    END AS sixth_form_provision_id,
+    CASE
+        WHEN s.officialSixthForm_code = '1' THEN 'Sixth form'
+        WHEN s.officialSixthForm_code = '2' THEN 'No sixth form'
+        WHEN s.officialSixthForm_code = '0' THEN 'Not applicable (sixth-form provision)'
+        ELSE NULL
+    END AS sixth_form_provision,
+    s.SchoolCapacity AS school_capacity,
+    TRY_CONVERT(integer, NULLIF(REPLACE(LTRIM(RTRIM(s.NumberOfPupils)), ',', ''), '')) AS pupil_count,
+    TRY_CONVERT(integer, NULLIF(REPLACE(LTRIM(RTRIM(s.freeSchoolMeals)), ',', ''), '')) AS free_school_meal_measure,
+    TRY_CONVERT(decimal(5, 2), NULLIF(REPLACE(LTRIM(RTRIM(s.percentageOfPupilsReceivingFsm)), ',', ''), ''))
+        AS source_free_school_meal_percentage,
+    CAST(NULL AS date) AS census_date,
+    s.typeOfReservedProvision_code AS source_specialist_provision_type_code,
+    CASE
+        WHEN s.typeOfReservedProvision_code = '0' THEN 'Not applicable'
+        WHEN s.typeOfReservedProvision_code = '1' THEN 'Resource Provision'
+        WHEN s.typeOfReservedProvision_code = '2' THEN 'SEN Unit'
+        WHEN s.typeOfReservedProvision_code = '3' THEN 'Resource Provision and SEN Unit'
+        WHEN s.typeOfReservedProvision_code = '9' THEN 'Not recorded'
+        ELSE NULL
+    END AS source_specialist_provision_type,
+    CASE
+        WHEN s.typeOfReservedProvision_code = '1' THEN 1
+        WHEN s.typeOfReservedProvision_code = '2' THEN 2
+        WHEN s.typeOfReservedProvision_code = '3' THEN 3
+        ELSE NULL
+    END AS specialist_provision_type_id,
+    CASE
+        WHEN s.typeOfReservedProvision_code = '1' THEN 'Resourced provision'
+        WHEN s.typeOfReservedProvision_code = '2' THEN 'SEN unit'
+        WHEN s.typeOfReservedProvision_code = '3' THEN 'Resourced provision and SEN unit'
+        ELSE NULL
+    END AS specialist_provision_type,
+    s.resourcedProvisionCapacity AS resourced_provision_capacity,
+    s.resourcedProvisionOnRoll AS resourced_provision_pupil_count,
+    s.senUnitCapacity AS sen_unit_capacity,
+    s.senUnitOnRoll AS sen_unit_pupil_count,
     s.StatutoryLowAge AS lower_statutory_age,
     s.StatutoryHighAge AS upper_statutory_age
 FROM source_establishment AS s;
