@@ -6,6 +6,7 @@
 -- production databases.
 
 DROP SCHEMA IF EXISTS establishment CASCADE;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE SCHEMA IF NOT EXISTS establishment;
 
 CREATE TABLE establishment.establishment_type (
@@ -23,6 +24,31 @@ CREATE TABLE establishment.gender_of_entry_type (
     name text NOT NULL
 );
 
+CREATE TABLE establishment.admissions_policy (
+    admissions_policy_id integer PRIMARY KEY,
+    name text NOT NULL
+);
+
+CREATE TABLE establishment.boarding_provision (
+    boarding_provision_id integer PRIMARY KEY,
+    name text NOT NULL
+);
+
+CREATE TABLE establishment.nursery_provision (
+    nursery_provision_id integer PRIMARY KEY,
+    name text NOT NULL
+);
+
+CREATE TABLE establishment.sixth_form_provision (
+    sixth_form_provision_id integer PRIMARY KEY,
+    name text NOT NULL
+);
+
+CREATE TABLE establishment.specialist_provision_type (
+    specialist_provision_type_id integer PRIMARY KEY,
+    name text NOT NULL
+);
+
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     urn numeric NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
@@ -35,10 +61,24 @@ CREATE TABLE establishment.establishment (
     CHECK ((local_authority_code IS NULL) = (establishment_number IS NULL))
 );
 
+CREATE TABLE establishment.capacity_and_pupil_measures (
+    capacity_and_pupil_measures_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
+    school_capacity integer CHECK (school_capacity >= 0),
+    pupil_count integer CHECK (pupil_count >= 0),
+    free_school_meal_measure integer CHECK (free_school_meal_measure >= 0),
+    census_date date,
+    CHECK (school_capacity IS NOT NULL OR pupil_count IS NOT NULL OR free_school_meal_measure IS NOT NULL)
+);
+
 CREATE TABLE establishment.education_admissions_and_provision (
     education_admissions_and_provision_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
-    gender_of_entry_type_id integer REFERENCES establishment.gender_of_entry_type (gender_of_entry_type_id)
+    gender_of_entry_type_id integer REFERENCES establishment.gender_of_entry_type (gender_of_entry_type_id),
+    admissions_policy_id integer REFERENCES establishment.admissions_policy (admissions_policy_id),
+    boarding_provision_id integer REFERENCES establishment.boarding_provision (boarding_provision_id),
+    nursery_provision_id integer REFERENCES establishment.nursery_provision (nursery_provision_id),
+    sixth_form_provision_id integer REFERENCES establishment.sixth_form_provision (sixth_form_provision_id)
 );
 
 CREATE TABLE establishment.statutory_age_range (
@@ -48,4 +88,30 @@ CREATE TABLE establishment.statutory_age_range (
     lower_statutory_age integer NOT NULL CHECK (lower_statutory_age BETWEEN 0 AND 19),
     upper_statutory_age integer NOT NULL CHECK (upper_statutory_age BETWEEN 0 AND 25),
     CHECK (upper_statutory_age >= lower_statutory_age)
+);
+
+CREATE TABLE establishment.specialist_provision (
+    specialist_provision_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
+    specialist_provision_type_id integer
+        REFERENCES establishment.specialist_provision_type (specialist_provision_type_id)
+);
+
+CREATE TABLE establishment.resourced_provision (
+    resourced_provision_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    specialist_provision_id uuid NOT NULL UNIQUE
+        REFERENCES establishment.specialist_provision (specialist_provision_id),
+    capacity integer CHECK (capacity >= 0),
+    pupil_count integer CHECK (pupil_count >= 0),
+    CHECK (capacity IS NOT NULL OR pupil_count IS NOT NULL),
+    CHECK (capacity IS NULL OR pupil_count IS NULL OR pupil_count <= capacity)
+);
+
+CREATE TABLE establishment.sen_unit_provision (
+    sen_unit_provision_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    specialist_provision_id uuid NOT NULL UNIQUE
+        REFERENCES establishment.specialist_provision (specialist_provision_id),
+    capacity integer CHECK (capacity >= 0),
+    pupil_count integer CHECK (pupil_count >= 0),
+    CHECK (capacity IS NOT NULL OR pupil_count IS NOT NULL)
 );

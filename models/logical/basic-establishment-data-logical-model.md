@@ -16,6 +16,15 @@ In scope:
 - Age range.
 - Phase of education.
 - Gender of entry.
+- Admissions policy.
+- Boarding provision.
+- Nursery provision.
+- Sixth-form provision.
+- School capacity.
+- Pupil count.
+- Free school meal measure.
+- Census date for the pupil measures.
+- Specialist provision measures, including SEN unit and resourced provision where applicable.
 
 Out of scope for this slice:
 
@@ -37,7 +46,13 @@ erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
     ESTABLISHMENT ||--o| EDUCATION_ADMISSIONS_AND_PROVISION : "has"
+    ESTABLISHMENT ||--o| CAPACITY_AND_PUPIL_MEASURES : "has"
+    ESTABLISHMENT ||--o| SPECIALIST_PROVISION : "has"
     EDUCATION_ADMISSIONS_AND_PROVISION }o--o| GENDER_OF_ENTRY_TYPE : "has gender of entry"
+    EDUCATION_ADMISSIONS_AND_PROVISION }o--o| ADMISSIONS_POLICY : "has admissions policy"
+    EDUCATION_ADMISSIONS_AND_PROVISION }o--o| BOARDING_PROVISION : "has boarding provision"
+    EDUCATION_ADMISSIONS_AND_PROVISION }o--o| NURSERY_PROVISION : "has nursery provision"
+    EDUCATION_ADMISSIONS_AND_PROVISION }o--o| SIXTH_FORM_PROVISION : "has sixth-form provision"
     EDUCATION_ADMISSIONS_AND_PROVISION ||--o| STATUTORY_AGE_RANGE : "has"
 
     ESTABLISHMENT {
@@ -64,10 +79,48 @@ erDiagram
         string name
     }
 
+    ADMISSIONS_POLICY {
+        integer admissions_policy_id PK
+        string name
+    }
+
+    BOARDING_PROVISION {
+        integer boarding_provision_id PK
+        string name
+    }
+
+    NURSERY_PROVISION {
+        integer nursery_provision_id PK
+        string name
+    }
+
+    SIXTH_FORM_PROVISION {
+        integer sixth_form_provision_id PK
+        string name
+    }
+
     EDUCATION_ADMISSIONS_AND_PROVISION {
         uuid education_admissions_and_provision_id PK
         uuid establishment_id FK, UK
         integer gender_of_entry_type_id FK
+        integer admissions_policy_id FK
+        integer boarding_provision_id FK
+        integer nursery_provision_id FK
+        integer sixth_form_provision_id FK
+    }
+
+    CAPACITY_AND_PUPIL_MEASURES {
+        uuid capacity_and_pupil_measures_id PK
+        uuid establishment_id FK, UK
+        integer school_capacity
+        integer pupil_count
+        integer free_school_meal_measure
+        date census_date
+    }
+
+    SPECIALIST_PROVISION {
+        uuid specialist_provision_id PK
+        uuid establishment_id FK, UK
     }
 
     STATUTORY_AGE_RANGE {
@@ -75,6 +128,49 @@ erDiagram
         uuid education_admissions_and_provision_id FK, UK
         integer lower_statutory_age
         integer upper_statutory_age
+    }
+```
+
+## Specialist Provision ERD
+
+The specialist-provision branch is shown separately because it has its own internal structure and would make the main establishment ERD too dense.
+
+```mermaid
+erDiagram
+    ESTABLISHMENT ||--o| SPECIALIST_PROVISION : "has"
+    SPECIALIST_PROVISION }o--o| SPECIALIST_PROVISION_TYPE : "has type"
+    SPECIALIST_PROVISION ||--o| RESOURCED_PROVISION : "has"
+    SPECIALIST_PROVISION ||--o| SEN_UNIT_PROVISION : "has"
+
+    ESTABLISHMENT {
+        uuid establishment_id PK
+        numeric urn UK
+        string name
+    }
+
+    SPECIALIST_PROVISION {
+        uuid specialist_provision_id PK
+        uuid establishment_id FK, UK
+        integer specialist_provision_type_id FK
+    }
+
+    SPECIALIST_PROVISION_TYPE {
+        integer specialist_provision_type_id PK
+        string name
+    }
+
+    RESOURCED_PROVISION {
+        uuid resourced_provision_id PK
+        uuid specialist_provision_id FK, UK
+        integer capacity
+        integer pupil_count
+    }
+
+    SEN_UNIT_PROVISION {
+        uuid sen_unit_provision_id PK
+        uuid specialist_provision_id FK, UK
+        integer capacity
+        integer pupil_count
     }
 ```
 
@@ -92,10 +188,35 @@ erDiagram
 | Establishment type | `name` | Yes | Human-readable type label. |
 | Education phase | `education_phase_id` | Yes | Explicitly seeded integer reference-data identifier. |
 | Education phase | `name` | Yes | Human-readable phase label. |
-| Education admissions and provision | `education_admissions_and_provision_id` | Conditional | One owned substructure for education, admissions and provision facts where they apply to the establishment. This slice uses it to hold gender of entry and the statutory age range child fact. |
+| Education admissions and provision | `education_admissions_and_provision_id` | Conditional | One owned substructure for education, admissions and provision facts where they apply to the establishment. This slice uses it to hold gender of entry, admissions policy, boarding provision, nursery provision, sixth-form provision and the statutory age range child fact. |
 | Education admissions and provision | `gender_of_entry_type_id` | Conditional | Controlled gender-of-entry value selected for this establishment, where applicable. |
+| Education admissions and provision | `admissions_policy_id` | Conditional | Controlled admissions-policy value selected for this establishment, where applicable. |
+| Education admissions and provision | `boarding_provision_id` | Conditional | Controlled boarding-provision value selected for this establishment, where applicable. |
+| Education admissions and provision | `nursery_provision_id` | Conditional | Controlled nursery-provision value selected for this establishment, where applicable. |
+| Education admissions and provision | `sixth_form_provision_id` | Conditional | Controlled sixth-form-provision value selected for this establishment, where applicable. |
 | Gender of entry type | `gender_of_entry_type_id` | Yes | Explicitly seeded integer reference-data identifier. |
 | Gender of entry type | `name` | Yes | Human-readable gender-of-entry label. |
+| Admissions policy | `admissions_policy_id` | Yes | Explicitly seeded integer reference-data identifier. |
+| Admissions policy | `name` | Yes | Human-readable admissions-policy label. |
+| Boarding provision | `boarding_provision_id` | Yes | Explicitly seeded integer reference-data identifier. |
+| Boarding provision | `name` | Yes | Human-readable boarding-provision label. |
+| Nursery provision | `nursery_provision_id` | Yes | Explicitly seeded integer reference-data identifier. |
+| Nursery provision | `name` | Yes | Human-readable nursery-provision label. |
+| Sixth-form provision | `sixth_form_provision_id` | Yes | Explicitly seeded integer reference-data identifier. |
+| Sixth-form provision | `name` | Yes | Human-readable sixth-form-provision label. |
+| Capacity and pupil measures | `capacity_and_pupil_measures_id` | Conditional | One owned substructure for capacity and pupil-measure facts where they apply to the establishment. This slice uses it to hold school capacity, pupil count, the free school meal measure and the shared census date. |
+| Capacity and pupil measures | `school_capacity` | Conditional | Registered number of pupil places for which the establishment is organised. Must be a non-negative integer where present. |
+| Capacity and pupil measures | `pupil_count` | Conditional | Total number of pupils on roll at the establishment as recorded in the source establishment record. Must be a non-negative integer where present. |
+| Capacity and pupil measures | `free_school_meal_measure` | Conditional | Number of pupils recorded as eligible for free school meals at the census date. Must be a non-negative integer where present. This is an eligibility count, not the number of meals served. |
+| Capacity and pupil measures | `census_date` | Conditional | Statutory DfE school census date to which `pupil_count` and `free_school_meal_measure` relate. Stored once on the capacity-and-pupil-measures substructure, not repeated on each measure. |
+| Specialist provision | `specialist_provision_id` | Conditional | One owned substructure for specialist-provision facts, including SEN unit and resourced-provision facts where they apply to the establishment. |
+| Specialist provision | `specialist_provision_type_id` | Conditional | Controlled value indicating whether the establishment has resourced provision, a SEN unit, or both. |
+| Specialist provision type | `specialist_provision_type_id` | Yes | Explicitly seeded integer reference-data identifier. |
+| Specialist provision type | `name` | Yes | Human-readable specialist-provision-type label. |
+| Resourced provision | `capacity` | Conditional | Number of designated places in the resourced provision unit. Must be a non-negative integer where present. |
+| Resourced provision | `pupil_count` | Conditional | Number of pupils on roll in the resourced provision unit. Must be a non-negative integer where present and must not exceed capacity when both are present. |
+| SEN unit provision | `capacity` | Conditional | Number of designated places in the SEN unit. Must be a non-negative integer where present. |
+| SEN unit provision | `pupil_count` | Conditional | Number of pupils on roll in the SEN unit. Must be a non-negative integer where present. |
 | Statutory age range | `lower_statutory_age` | Yes, when a range exists | Lowest age for which the establishment is registered. Must be a non-negative integer no greater than `19`. |
 | Statutory age range | `upper_statutory_age` | Yes, when a range exists | Highest age for which the establishment is registered. Must be a non-negative integer no greater than `25` and not lower than `lower_statutory_age`. |
 
@@ -130,17 +251,74 @@ The last rule is stated in the current SHACL shape's comment but is not yet expr
 In this slice it carries:
 
 - `gender_of_entry_type_id`, a direct reference to controlled `GenderOfEntryType` reference data, the same pattern used for `establishment_type_id` and `education_phase_id` on `Establishment`.
+- `admissions_policy_id`, a direct reference to controlled `AdmissionsPolicy` reference data.
+- `boarding_provision_id`, a direct reference to controlled `BoardingProvision` reference data.
+- `nursery_provision_id`, a direct reference to controlled `NurseryProvision` reference data.
+- `sixth_form_provision_id`, a direct reference to controlled `SixthFormProvision` reference data.
 - `StatutoryAgeRange`, which records the lower and upper statutory ages.
 
-This means gender of entry is associated with an establishment through the provision substructure:
+This means gender of entry, admissions policy, boarding provision, nursery provision and sixth-form provision are associated with an establishment through the provision substructure:
 
 ```text
 Establishment
   -> EducationAdmissionsAndProvision
     -> GenderOfEntryType
+    -> AdmissionsPolicy
+    -> BoardingProvision
+    -> NurseryProvision
+    -> SixthFormProvision
 ```
 
-It is deliberately not an attribute on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`. It is a direct reference-data column, not a wrapper entity, because it carries no attributes of its own beyond the type it selects.
+These are deliberately not attributes on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`. Both are direct reference-data columns, not wrapper entities, because neither carries attributes of its own beyond the type it selects.
+
+## Capacity And Specialist Provision Placement
+
+The field semantics in this section are aligned to the existing EPR establishment vocabulary and ontology: `est:PupilsEligibleForFreeSchoolMeals`, `est:CensusDate`, `esto:hasFreeSchoolMealMeasure` and `esto:hasCensusDate`. The ontology defines one shared census date for the capacity-and-pupil-measures block, while the SHACL shapes determine whether the free-school-meal measure is required or not applicable for each establishment type.
+
+School capacity, pupil count and the free school meal measure sit on `CapacityAndPupilMeasures`, not directly on `Establishment`. This follows the published EPR ontology's measurement boundary. The `census_date` is held once on the same block because it provides the temporal context for both the pupil count and free school meal measure.
+
+```text
+Establishment
+  -> CapacityAndPupilMeasures
+     - SchoolCapacity
+     - PupilCount
+     - FreeSchoolMealMeasure
+     - CensusDate
+```
+
+`SchoolCapacity` is the registered number of pupil places for which the establishment is organised. `PupilCount` is the current number of pupils on roll recorded in the source establishment record. They are separate business measures, but they are simple scalar values with the same owner and current lifecycle in this slice, so the physical model stores them as columns on `capacity_and_pupil_measures`.
+
+`FreeSchoolMealMeasure` is the number of pupils recorded as eligible for free school meals. It is an eligibility measure, not a count of meals served. It is a separate scalar measure on the same substructure because it describes the establishment's pupil population and shares the census-date context with `PupilCount`.
+
+`CensusDate` is the statutory DfE school census date to which `PupilCount` and `FreeSchoolMealMeasure` relate, typically a January census date. It is stored once for the block rather than repeated on each measure. The model therefore keeps the observation date explicit without turning each measure into a separate time-series entity; historical and multiple-period observations remain deferred to the lifecycle and history model.
+
+SEN unit and resourced provision facts sit below `SpecialistProvision`, not below `EducationAdmissionsAndProvision`. These are specialist facility facts about the establishment, not admissions-policy facts.
+
+`SpecialistProvision` is the establishment-level container for this branch of the model. It exists when the establishment has a recorded specialist SEN facility. The `SpecialistProvisionType` classifier records which kind of specialist provision is present:
+
+- `Resourced provision`.
+- `SEN unit`.
+- `Resourced provision and SEN unit`.
+
+`ResourcedProvision` and `SenUnitProvision` are modelled separately because they are not the same operational concept.
+
+`ResourcedProvision` means the establishment has designated specialist resources for pupils with particular needs, usually within a mainstream setting. Pupils may access mainstream classes while receiving targeted specialist support. The model records the designated capacity and pupil count for that resourced provision.
+
+`SenUnitProvision` means the establishment has a more distinct SEN unit provision, usually with dedicated places, staff or accommodation for pupils who need a more specialist setting. The model records the designated capacity and pupil count for that SEN unit provision.
+
+An establishment can have one, the other, or both. The numeric measures are therefore separate child records because each provision type has its own capacity and pupil-count values.
+
+```text
+Establishment
+  -> SpecialistProvision
+    -> SpecialistProvisionType
+    -> ResourcedProvision
+       - Capacity
+       - PupilCount
+    -> SenUnitProvision
+       - Capacity
+       - PupilCount
+```
 
 ## Identifier Rules
 
@@ -158,7 +336,15 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 - An establishment has one current establishment type.
 - An establishment may have one phase of education in this first slice. Any need for multiple phases must be evidenced before extending the model.
 - An establishment has at most one current education, admissions and provision substructure and at most one statutory age range within it.
+- An establishment has at most one current capacity and pupil measures substructure, carrying at most one school capacity, pupil-count, free-school-meal-measure and census-date value.
+- `census_date` is shared by `pupil_count` and `free_school_meal_measure`; it is not a separate date for each measure.
+- `free_school_meal_measure` is a count of pupils eligible for free school meals, not a count of meals served.
+- An establishment has at most one current specialist-provision substructure, at most one resourced-provision measure and at most one SEN-unit-provision measure within it.
 - Gender of entry is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
+- Admissions policy is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
+- Boarding provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
+- Nursery provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
+- Sixth-form provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
 - Classification identifiers must be stable and labels may change without changing the establishment record.
 
 ## Deferred Decisions
@@ -168,6 +354,7 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 | Identifier effective dates, supersession and reuse. | Requires lifecycle and migration evidence. |
 | Type and phase history. | Requires a change-history and lifecycle model. |
 | Complete age-range applicability by establishment type. | The EPR SHACL model contains many type-specific rules; this first slice does not yet reproduce them all. |
+| Percentage eligible for free school meals. | The published vocabulary and ontology expose a percentage sub-measure alongside the eligibility count; this slice first adds the requested count and shared census-date context. The percentage's logical placement and derivation rule should be confirmed in the next capacity-measures increment. |
 | Provenance, stewardship and audit metadata. | These are cross-cutting structures to be designed consistently across later slices. |
 
 ## Future-Requirements Assessment
@@ -184,3 +371,8 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 - Which establishment types legitimately have no age range or phase of education?
 - Is UKPRN uniqueness global across all provider and organisation records, not just establishments?
 - Does the anonymous public beta require identifiers to be searchable, display-only, or both?
+- Is `percentage eligible for free school meals` in scope for the next increment as a separate derived measure alongside `free_school_meal_measure`, and should it be stored or calculated from the count and pupil count?
+
+### Local BAU migration mapping
+
+The controlled local migration reads `dbo.Establishment` from `gias_bau_test_local`. `NumberOfPupils` maps to `pupil_count`, `freeSchoolMeals` maps to `free_school_meal_measure`, and `SchoolCapacity` maps to `school_capacity`. The source copy has no census-date field, so the migration leaves `census_date` null and records that absence rather than asserting a date that was not supplied by the source. The reusable BAU transform is `models/schema/transforms/establishment-from-bau.sql`; the target load is `models/schema/target/load-basic-establishment-fixture.sql`; and the orchestration runner is maintained under `docs/transformation/data/logical-model/supporting-docs/automation`.

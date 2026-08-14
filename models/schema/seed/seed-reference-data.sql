@@ -86,4 +86,71 @@ VALUES
 ON CONFLICT (gender_of_entry_type_id) DO UPDATE
 SET name = EXCLUDED.name;
 
+-- Admissions-policy concepts from establishment-taxonomy.ttl.
+--
+-- admissions_policy_id values are explicitly assigned here. They are stable
+-- target identifiers, not serial/identity values and not BAU admissions-policy
+-- codes. BAU "Comprehensive (secondary)" is transformed to Non-selective.
+INSERT INTO establishment.admissions_policy (admissions_policy_id, name)
+VALUES
+    (1, 'Non-selective'),
+    (2, 'Selective'),
+    (3, 'Not applicable (admissions policy)')
+ON CONFLICT (admissions_policy_id) DO UPDATE
+SET name = EXCLUDED.name;
+
+-- Boarding-provision concepts from establishment-taxonomy.ttl.
+--
+-- boarding_provision_id values are explicitly assigned here. They are stable
+-- target identifiers, not serial/identity values and not BAU boarders codes.
+INSERT INTO establishment.boarding_provision (boarding_provision_id, name)
+VALUES
+    (1, 'No boarders'),
+    (2, 'Has boarders'),
+    (3, 'Boarding school')
+ON CONFLICT (boarding_provision_id) DO UPDATE
+SET name = EXCLUDED.name;
+
+-- Nursery-provision concepts from establishment-taxonomy.ttl.
+--
+-- nursery_provision_id values are explicitly assigned here. They are stable
+-- target identifiers, not serial/identity values and not BAU nursery-provision
+-- codes.
+INSERT INTO establishment.nursery_provision (nursery_provision_id, name)
+VALUES
+    (1, 'Nursery classes'),
+    (2, 'No nursery classes'),
+    (3, 'Not applicable (nursery provision)')
+ON CONFLICT (nursery_provision_id) DO UPDATE
+SET name = EXCLUDED.name;
+
+-- Sixth-form-provision concepts from establishment-taxonomy.ttl.
+--
+-- sixth_form_provision_id values are explicitly assigned here. They are stable
+-- target identifiers, not serial/identity values and not BAU official-sixth-form
+-- codes.
+INSERT INTO establishment.sixth_form_provision (sixth_form_provision_id, name)
+VALUES
+    (1, 'Sixth form'),
+    (2, 'No sixth form'),
+    (3, 'Not applicable (sixth-form provision)')
+ON CONFLICT (sixth_form_provision_id) DO UPDATE
+SET name = EXCLUDED.name;
+
+-- Specialist-provision-type concepts from establishment-vocabulary.ttl.
+--
+-- specialist_provision_type_id values are explicitly assigned here. They are
+-- stable target identifiers, not serial/identity values and not BAU
+-- TypeOfReservedProvision codes.
+INSERT INTO establishment.specialist_provision_type (
+    specialist_provision_type_id,
+    name
+)
+VALUES
+    (1, 'Resourced provision'),
+    (2, 'SEN unit'),
+    (3, 'Resourced provision and SEN unit')
+ON CONFLICT (specialist_provision_type_id) DO UPDATE
+SET name = EXCLUDED.name;
+
 COMMIT;
