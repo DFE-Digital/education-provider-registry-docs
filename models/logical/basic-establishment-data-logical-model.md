@@ -25,12 +25,12 @@ In scope:
 - Free school meal measure.
 - Census date for the pupil measures.
 - Specialist provision measures, including SEN unit and resourced provision where applicable.
-- Main site and primary postal address.
+- Main site, additional sites, and postal address.
 
 Out of scope for this slice:
 
 - Establishment lifecycle and closure history.
-- Additional sites, contact details and address history.
+- Contact details and address history.
 - Groups, memberships and governance.
 - Alternative and historic names.
 - Source provenance, stewardship workflow, change history and audit structures.
@@ -134,13 +134,14 @@ erDiagram
 
 ## Location And Contact ERD
 
-The location-and-contact branch is shown separately so the main establishment ERD remains readable. This branch currently contains the principal physical site and its postal address. Contact details and additional sites are deferred.
+The location-and-contact branch is shown separately so the main establishment ERD remains readable. This branch contains every physical site at which the establishment operates — exactly one designated as the main site, plus zero or more additional sites — and each site's postal address. Contact details and address history are deferred.
 
 ```mermaid
 erDiagram
     ESTABLISHMENT ||--|| ESTABLISHMENT_LOCATION_AND_CONTACT : "has"
-    ESTABLISHMENT_LOCATION_AND_CONTACT ||--|| MAIN_SITE : "has"
-    MAIN_SITE }o--|| ADDRESS : "uses"
+    ESTABLISHMENT_LOCATION_AND_CONTACT ||--|{ SITE : "has"
+    ESTABLISHMENT_LOCATION_AND_CONTACT ||--|| SITE : "designates as main"
+    SITE }o--|| ADDRESS : "uses"
 
     ESTABLISHMENT {
         uuid establishment_id PK
@@ -151,13 +152,15 @@ erDiagram
     ESTABLISHMENT_LOCATION_AND_CONTACT {
         uuid establishment_location_and_contact_id PK
         uuid establishment_id FK, UK
+        uuid main_site_id FK, UK
     }
 
-    MAIN_SITE {
-        uuid main_site_id PK
-        uuid establishment_location_and_contact_id FK, UK
+    SITE {
+        uuid site_id PK
+        uuid establishment_location_and_contact_id FK
         uuid address_id FK
         string site_name
+        integer uprn UK
     }
 
     ADDRESS {
@@ -168,7 +171,6 @@ erDiagram
         string town
         string county
         string postcode
-        string uprn
     }
 ```
 
@@ -254,9 +256,13 @@ erDiagram
 | Specialist provision | `specialist_provision_type_id` | Conditional | Controlled value indicating whether the establishment has resourced provision, a SEN unit, or both. |
 | Specialist provision type | `specialist_provision_type_id` | Yes | Explicitly seeded integer reference-data identifier. |
 | Specialist provision type | `name` | Yes | Human-readable specialist-provision-type label. |
-| Establishment location and contact | `establishment_location_and_contact_id` | Yes | Owned boundary for the establishment's location and contact facts. This slice uses it for the main site; contact facts are deferred. |
-| Main site | `main_site_id` | Yes | Technical key for the establishment's principal physical site. Exactly one is required in this slice. |
-| Main site | `site_name` | Conditional | Optional name for the principal site where one is supplied. It is not used to identify the establishment. |
+| Establishment location and contact | `establishment_location_and_contact_id` | Yes | Owned boundary for the establishment's location and contact facts. This slice uses it for the establishment's sites; contact facts are deferred. |
+| Establishment location and contact | `main_site_id` | Yes | Designates which one of the establishment's sites is the principal site. Exactly one is required in this slice. Must reference a `Site` owned by the same `establishment_location_and_contact_id`. |
+| Site | `site_id` | Yes | Technical key for a physical site at which the establishment operates. |
+| Site | `establishment_location_and_contact_id` | Yes | Owning establishment's location-and-contact boundary. A site belongs to exactly one establishment. |
+| Site | `address_id` | Yes | Reusable technical key for the site's postal address. |
+| Site | `site_name` | Conditional | Optional name for the site where one is supplied. It is not used to identify the establishment. |
+| Site | `uprn` | Conditional | Ordnance Survey Unique Property Reference Number for the site's addressable location, where supplied. Numeric and persistent for the property's life cycle; identifies the physical property, not the establishment. Modelled on `Site`, not `Address` — see UPRN section below. |
 | Address | `address_id` | Yes | Reusable technical key for a postal address. The address does not point back to a site; owning subjects hold the relationship. |
 | Address | `address_line_1` | Conditional | First address line, mapped from BAU `Street`. |
 | Address | `address_line_2` | Conditional | Second address line, where supplied. |
@@ -264,7 +270,6 @@ erDiagram
 | Address | `town` | Conditional | Town or locality town, mapped from BAU `Town`. |
 | Address | `county` | Conditional | County where supplied. |
 | Address | `postcode` | Conditional | Postal code, mapped from BAU `Postcode`. |
-| Address | `uprn` | Conditional | Unique Property Reference Number where supplied. |
 | Resourced provision | `capacity` | Conditional | Number of designated places in the resourced provision unit. Must be a non-negative integer where present. |
 | Resourced provision | `pupil_count` | Conditional | Number of pupils on roll in the resourced provision unit. Must be a non-negative integer where present and must not exceed capacity when both are present. |
 | SEN unit provision | `capacity` | Conditional | Number of designated places in the SEN unit. Must be a non-negative integer where present. |
@@ -274,7 +279,7 @@ erDiagram
 
 ## Statutory Age Range Placement
 
-The published EPR establishment model represents age range as `StatutoryAgeRange`, reached through `EducationAdmissionsAndProvision`. This is defined in `education-provider-registry-docs/models/establishment/establishment-ontology.ttl`; its constraints are in `education-provider-registry-docs/models/establishment/establishment-data-quality-shacl.ttl`.
+Age range is represented as `StatutoryAgeRange`, reached through `EducationAdmissionsAndProvision`, rather than as two bare attributes on `Establishment`. Its validation limits are defined in `education-provider-registry-docs/models/establishment/establishment-data-quality-shacl.ttl`.
 
 ```text
 Establishment
@@ -288,7 +293,7 @@ We should follow that logical boundary. Age range is a distinct, regulated pair 
 
 A physical model may ultimately store the two values as columns on an `Establishment` table for simplicity or performance. That is a physical-design decision. It must not erase the logical `StatutoryAgeRange` boundary or the type-specific applicability and validation rules.
 
-The EPR data-quality SHACL model sets the following limits:
+The data-quality SHACL model sets the following limits:
 
 - `AgeLow`: `0` to `19`.
 - `AgeHigh`: `0` to `25`.
@@ -325,9 +330,9 @@ These are deliberately not attributes on `Establishment` itself. The establishme
 
 ## Capacity And Specialist Provision Placement
 
-The field semantics in this section are aligned to the existing EPR establishment vocabulary and ontology: `est:PupilsEligibleForFreeSchoolMeals`, `est:CensusDate`, `esto:hasFreeSchoolMealMeasure` and `esto:hasCensusDate`. The ontology defines one shared census date for the capacity-and-pupil-measures block, while the SHACL shapes determine whether the free-school-meal measure is required or not applicable for each establishment type.
+One shared census date applies to the whole capacity-and-pupil-measures block, not a separate date per measure. Whether the free-school-meal measure is required or not applicable is determined per establishment type by the data-quality SHACL shapes.
 
-School capacity, pupil count and the free school meal measure sit on `CapacityAndPupilMeasures`, not directly on `Establishment`. This follows the published EPR ontology's measurement boundary. The `census_date` is held once on the same block because it provides the temporal context for both the pupil count and free school meal measure.
+School capacity, pupil count and the free school meal measure sit on `CapacityAndPupilMeasures`, not directly on `Establishment`, because they are business measurement facts about the establishment's operation, not identity or classification attributes. The `census_date` is held once on the same block because it provides the temporal context for both the pupil count and free school meal measure.
 
 ```text
 Establishment
@@ -372,22 +377,34 @@ Establishment
        - PupilCount
 ```
 
-## Main Site Placement
+## Site Placement
 
-The BAU model does not have a first-class `MainSite` concept. The primary site is implicit: its postal address is held as columns on `dbo.Establishment` (`Street`, `Locality`, `Address3`, `Town`, `Postcode`, `UPRN`, `Easting` and `Northing`). BAU stores additional physical locations separately in `dbo.EstablishmentAdditionalAddresses`, linked by URN and `record_number`.
+The BAU model does not have a first-class `Site` concept for the principal location. The primary site is implicit: its postal address is held as columns on `dbo.Establishment` (`Street`, `Locality`, `Address3`, `Town`, `Postcode`, `UPRN`, `Easting` and `Northing`). BAU stores additional physical locations separately in `dbo.EstablishmentAdditionalAddresses`, linked by URN and `record_number`.
 
-The target model makes the principal physical location explicit because it is a business concept, not just a group of address strings. It follows the published EPR model:
+The target model makes every physical location explicit as a `Site`, because it is a business concept, not just a group of address strings, and because an establishment can operate at more than one location:
 
 ```text
 Establishment
   -> EstablishmentLocationAndContact
-    -> MainSite
+    -> Site (main)
+      -> Address
+    -> Site (additional, zero or more)
       -> Address
 ```
 
-`EstablishmentLocationAndContact` is the owning boundary for location and contact facts. Only the main site is included in this slice; contact details and additional sites remain deferred. `MainSite` identifies where education is primarily delivered. `Address` holds the postal address and property reference data used by that site.
+`EstablishmentLocationAndContact` is the owning boundary for location and contact facts; contact details are still deferred. It holds every `Site` at which the establishment operates and designates exactly one of them as the main site via `main_site_id`, rather than a role or Boolean flag carried on `Site` itself. This is a deliberate choice: "main" is a fact about which site the establishment currently points to, not an attribute of the site record, and a per-row flag would allow invalid states a single designating foreign key cannot (zero sites flagged main, or more than one).
 
-`Address` is a reusable postal-address concept. It does not contain a `main_site_id`, because an address may be referenced by a main site, a registered legal entity or another future subject. The foreign key is held by the using relationship (`MainSite.address_id` in this slice). The logical model therefore does not add address columns directly to `Establishment`, and it does not use a `main_site` Boolean. The relationship and cardinality express the rule: one establishment has one main site, and one main site uses one address. Physical table flattening remains a later design choice, provided this logical boundary is preserved.
+Which establishment types, if any, should be permitted to have additional sites is not yet defined in this slice, and the logical model does not currently restrict it. This should be confirmed against evidence (for example, actual usage patterns in BAU's `EstablishmentAdditionalAddresses`) before an executable constraint is added.
+
+`Address` is a reusable postal-address concept. It does not contain a `site_id`, because an address may be referenced by a site, a registered legal entity or another future subject. The foreign key is held by the using relationship (`Site.address_id`). The logical model therefore does not add address columns directly to `Establishment`. `main_site_id` must reference a `Site` owned by the same `establishment_location_and_contact_id`; this cross-field constraint is a physical-implementation decision, not yet expressed as an executable rule in this slice.
+
+## UPRN
+
+`Site.uprn` is the Ordnance Survey [Unique Property Reference Number](https://www.ordnancesurvey.co.uk/public/unique-property-reference-numbers) — a numeric identifier for the addressable location itself, not for the establishment.
+
+**Justification.** The OS page defines a UPRN as "a unique numeric identifier for every spatial address in Great Britain" that persists "throughout a property's life cycle – from planning permission through to demolition." Read literally, the first clause ties a UPRN to an address; but the second clause only makes sense if the UPRN survives changes to that address's postal text over the property's lifetime — otherwise "persists throughout the life cycle" would say nothing beyond "exists while the property exists." This is not just a hypothetical reading: street names can and do change independently of the property itself — a local authority can rename or renumber a street, updating every postal address on it — while the property occupying any given plot, and its UPRN, remains the same. OS's own definition therefore implies the UPRN tracks the underlying property, not any one rendering of its postal text.
+
+That distinction is what decides the placement in this model. `Address` here is a bag of current-value text fields (`address_line_1`, `town`, `postcode`) with no versioning or history — this slice explicitly defers address history (see Scope). An identifier that OS itself says must outlive changes to that text cannot correctly live on a record with no guarantee of surviving such changes. `Site` is the entity representing the stable physical location; `Address` is deliberately the mutable, current-value rendering of it. `uprn` therefore belongs on `Site`.
 
 ## Identifier Rules
 
@@ -414,7 +431,8 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 - Boarding provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
 - Nursery provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
 - Sixth-form provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
-- Every establishment has one current main site and every main site has one current address in this slice.
+- Every establishment has one or more current sites, exactly one of which is designated the main site, and every site has one current address in this slice.
+- Additional sites are permitted for any establishment type in this slice; type-scoped restrictions are not yet defined (see Site Placement).
 - The main site is not an establishment identifier; URN remains the canonical public identifier.
 - Classification identifiers must be stable and labels may change without changing the establishment record.
 
@@ -425,10 +443,11 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 | Identifier effective dates, supersession and reuse. | Requires lifecycle and migration evidence. |
 | Type and phase history. | Requires a change-history and lifecycle model. |
 | Complete age-range applicability by establishment type. | The EPR SHACL model contains many type-specific rules; this first slice does not yet reproduce them all. |
-| Percentage eligible for free school meals. | The published vocabulary and ontology expose a percentage sub-measure alongside the eligibility count; this slice first adds the requested count and shared census-date context. The percentage's logical placement and derivation rule should be confirmed in the next capacity-measures increment. |
+| Percentage eligible for free school meals. | A percentage sub-measure alongside the eligibility count has been raised as a candidate field; this slice first adds the requested count and shared census-date context. The percentage's logical placement and derivation rule should be confirmed in the next capacity-measures increment. |
 | Provenance, stewardship and audit metadata. | These are cross-cutting structures to be designed consistently across later slices. |
-| Additional sites. | BAU supports them through `EstablishmentAdditionalAddresses`, but their applicability and lifecycle need a separate slice. |
+| Additional-site type-scoped applicability as an executable rule. | Whether additional sites should be restricted to particular establishment types needs evidence (for example, BAU `EstablishmentAdditionalAddresses` usage patterns) before this slice encodes a rule. |
 | Contact details and address history. | They require separate ownership, privacy and temporal decisions. |
+| Site OS grid reference (easting/northing). | BAU carries `Easting` and `Northing` columns alongside the address fields; not requested for this slice. |
 
 ## Future-Requirements Assessment
 
@@ -449,4 +468,4 @@ The model must enforce the stated uniqueness constraints for the direct identifi
 
 ### Local BAU migration mapping
 
-The controlled local migration reads `dbo.Establishment` from `gias_bau_test_local`. `NumberOfPupils` maps to `pupil_count`, `freeSchoolMeals` maps to `free_school_meal_measure`, and `SchoolCapacity` maps to `school_capacity`. The primary address fields map to `MainSite -> Address`; additional rows from `dbo.EstablishmentAdditionalAddresses` are deferred. The source copy has no census-date field, so the migration leaves `census_date` null and records that absence rather than asserting a date that was not supplied by the source. The reusable BAU transform is maintained with the published model; the local target loader and orchestration runner are maintained privately in the local transformation workspace.
+The controlled local migration reads `dbo.Establishment` from `gias_bau_test_local`. `NumberOfPupils` maps to `pupil_count`, `freeSchoolMeals` maps to `free_school_meal_measure`, and `SchoolCapacity` maps to `school_capacity`. The primary address fields map to the main `Site -> Address`; additional rows from `dbo.EstablishmentAdditionalAddresses` map to additional `Site -> Address` records but are not yet implemented by the local migration. The source copy has no census-date field, so the migration leaves `census_date` null and records that absence rather than asserting a date that was not supplied by the source. The reusable BAU transform is maintained with the published model; the local target loader and orchestration runner are maintained privately in the local transformation workspace.
