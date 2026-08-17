@@ -2490,7 +2490,7 @@ est:UniquePropertyReferenceNumber
     skos:scopeNote "UPRN identifies a physical property (a site), not a postal address. Updated from broader est:EstablishmentLocationAndContact to est:Site in v1.5 to reflect that UPRN belongs on the physical location record."@en ;
     est:status "Preferred"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#unique-property-reference-number-uprn> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information>, <https://alphagov.github.io/data-standards-authority/standards/UPRN/> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information>, <https://alphagov.github.io/data-standards-authority/standards/UPRN/>, <https://www.ordnancesurvey.co.uk/public/unique-property-reference-numbers> .
 
 #################################################################
 # Administrative geography (v1.3)
