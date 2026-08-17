@@ -41,7 +41,15 @@ WITH source_establishment AS (
         e.senUnitCapacity,
         e.senUnitOnRoll,
         e.StatutoryLowAge,
-        e.StatutoryHighAge
+        e.StatutoryHighAge,
+        e.siteName,
+        e.Street,
+        e.Locality,
+        e.Address3,
+        e.Town,
+        e.County_code,
+        e.Postcode,
+        e.UPRN
     FROM dbo.Establishment AS e
     LEFT JOIN dbo.EstablishmentType AS et
       ON et.code = e.type_code
@@ -225,5 +233,13 @@ SELECT
     s.senUnitCapacity AS sen_unit_capacity,
     s.senUnitOnRoll AS sen_unit_pupil_count,
     s.StatutoryLowAge AS lower_statutory_age,
-    s.StatutoryHighAge AS upper_statutory_age
+    s.StatutoryHighAge AS upper_statutory_age,
+    s.siteName AS main_site_name,
+    s.Street AS address_line_1,
+    s.Locality AS address_line_2,
+    s.Address3 AS address_line_3,
+    s.Town AS address_town,
+    s.County_code AS address_county,
+    s.Postcode AS address_postcode,
+    s.UPRN AS address_uprn
 FROM source_establishment AS s;

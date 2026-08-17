@@ -61,6 +61,30 @@ CREATE TABLE establishment.establishment (
     CHECK ((local_authority_code IS NULL) = (establishment_number IS NULL))
 );
 
+CREATE TABLE establishment.address (
+    address_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    address_line_1 text,
+    address_line_2 text,
+    address_line_3 text,
+    town text,
+    county text,
+    postcode text,
+    uprn text
+);
+
+CREATE TABLE establishment.establishment_location_and_contact (
+    establishment_location_and_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id)
+);
+
+CREATE TABLE establishment.main_site (
+    main_site_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_location_and_contact_id uuid NOT NULL UNIQUE
+        REFERENCES establishment.establishment_location_and_contact (establishment_location_and_contact_id),
+    address_id uuid NOT NULL REFERENCES establishment.address (address_id),
+    site_name text
+);
+
 CREATE TABLE establishment.capacity_and_pupil_measures (
     capacity_and_pupil_measures_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
