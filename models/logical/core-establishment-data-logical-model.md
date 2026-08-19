@@ -338,7 +338,7 @@ What is the youngest and oldest age for which this establishment is registered?
 
 - It is a distinct pair of related values, not two unrelated establishment attributes.
 - It is reached through `education_admissions_and_provision`.
-- The lower age is 0ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“19; the upper age is 0ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“25 and cannot be below the lower age.
+- The lower age is 0-19; the upper age is 0-25 and cannot be below the lower age.
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
@@ -422,7 +422,7 @@ Establishment
 
 ## Location And Contact ERD
 
-The location branch is shown separately so the main establishment ERD remains readable. This branch contains every physical site at which the establishment operates ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â exactly one designated as the main site, plus zero or more additional sites ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â and each site's postal address. Contact details and address history are deferred.
+The location branch is shown separately so the main establishment ERD remains readable. This branch contains every physical site at which the establishment operates - exactly one designated as the main site, plus zero or more additional sites - and each site's postal address. Contact details and address history are deferred.
 
 ```mermaid
 erDiagram
@@ -509,12 +509,11 @@ and what address identifies that site?
 
 ### UPRN placement
 
-`Site.uprn` is the Ordnance Survey [Unique Property Reference Number](https://www.ordnancesurvey.co.uk/public/unique-property-reference-numbers) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â a numeric identifier for the addressable location itself, not for the establishment.
+`Site.uprn` is the Ordnance Survey [Unique Property Reference Number](https://www.ordnancesurvey.co.uk/public/unique-property-reference-numbers) - a numeric identifier for the addressable location itself, not for the establishment.
 
-**Justification.** The OS page defines a UPRN as "a unique numeric identifier for every spatial address in Great Britain" that persists "throughout a property's life cycle ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ from planning permission through to demolition." Read literally, the first clause ties a UPRN to an address; but the second clause only makes sense if the UPRN survives changes to that address's postal text over the property's lifetime ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â otherwise "persists throughout the life cycle" would say nothing beyond "exists while the property exists." This is not just a hypothetical reading: street names can and do change independently of the property itself ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â a local authority can rename or renumber a street, updating every postal address on it ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â while the property occupying any given plot, and its UPRN, remains the same. OS's own definition therefore implies the UPRN tracks the underlying property, not any one rendering of its postal text.
+**Justification.** The OS page defines a UPRN as "a unique numeric identifier for every spatial address in Great Britain" that persists "throughout a property's life cycle - from planning permission through to demolition." Read literally, the first clause ties a UPRN to an address; but the second clause only makes sense if the UPRN survives changes to that address's postal text over the property's lifetime - otherwise "persists throughout the life cycle" would say nothing beyond "exists while the property exists." This is not just a hypothetical reading: street names can change independently of the property itself - a local authority can rename or renumber a street, updating every postal address on it - while the property occupying any given plot, and its UPRN, remains the same. OS's own definition therefore implies the UPRN tracks the underlying property, not any one rendering of its postal text.
 
-That distinction is what decides the placement in this model. `Address` here is a bag of current-value text fields (`address_line_1`, `town`, `postcode`) with no versioning or history ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â this slice explicitly defers address history (see Scope). An identifier that OS itself says must outlive changes to that text cannot correctly live on a record with no guarantee of surviving such changes. `Site` is the entity representing the stable physical location; `Address` is deliberately the mutable, current-value rendering of it. `uprn` therefore belongs on `Site`.
-
+That distinction decides the placement in this model. `Address` is a set of current-value text fields (`address_line_1`, `town`, `postcode`) with no versioning or history - this slice explicitly defers address history (see Scope). An identifier that must outlive changes to that text cannot correctly live on a record with no guarantee of surviving such changes. `Site` represents the stable physical location; `Address` is the mutable current-value rendering of it. `uprn` therefore belongs on `Site`.
 ## Address
 
 `address` is the reusable current postal rendering of a physical location.
