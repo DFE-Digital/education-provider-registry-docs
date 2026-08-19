@@ -18,9 +18,10 @@ SELECT
     et.name AS establishment_type,
     e.education_phase_id,
     ep.name AS education_phase,
-    lc.establishment_location_and_contact_id,
-    ms.main_site_id,
+    lc.establishment_location_id,
+    ms.site_id AS main_site_id,
     ms.site_name AS main_site_name,
+    ms.uprn AS main_site_uprn,
     a.address_id,
     a.address_line_1,
     a.address_line_2,
@@ -28,7 +29,6 @@ SELECT
     a.town AS address_town,
     a.county AS address_county,
     a.postcode AS address_postcode,
-    a.uprn AS address_uprn,
     capm.capacity_and_pupil_measures_id,
     capm.school_capacity,
     capm.pupil_count,
@@ -64,10 +64,10 @@ JOIN establishment.establishment_type AS et
   ON et.establishment_type_id = e.establishment_type_id
 LEFT JOIN establishment.education_phase AS ep
   ON ep.education_phase_id = e.education_phase_id
-LEFT JOIN establishment.establishment_location_and_contact AS lc
+LEFT JOIN establishment.establishment_location AS lc
   ON lc.establishment_id = e.establishment_id
-LEFT JOIN establishment.main_site AS ms
-  ON ms.establishment_location_and_contact_id = lc.establishment_location_and_contact_id
+LEFT JOIN establishment.site AS ms
+  ON ms.site_id = lc.main_site_id
 LEFT JOIN establishment.address AS a
   ON a.address_id = ms.address_id
 LEFT JOIN establishment.capacity_and_pupil_measures AS capm
