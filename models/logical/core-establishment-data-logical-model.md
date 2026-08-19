@@ -130,6 +130,16 @@ what is its identity, name and headline classification?
 | `ukprn` | Conditional | Current UK Provider Reference Number supplied by UKRLP where applicable. |
 | `name` | Yes | Current published establishment name; historic and alternative names are deferred. |
 
+### Identifier rules
+
+| Identifier | Cardinality | Constraint | Note |
+| --- | --- | --- | --- |
+| URN | Exactly one | Globally unique and immutable | The canonical public establishment identifier for this slice. |
+| DfE number / LAESTAB | Derived | Uniqueness requires local-authority context | Derived from `local_authority_code` and `establishment_number`, commonly rendered as `LA/ESTAB` with the establishment number zero-padded to four digits. |
+| UKPRN | Zero or one | Eight-digit value; global uniqueness is not yet a target rule | Optional because it does not apply to every establishment. It is externally owned by UKRLP. |
+
+The model must enforce the stated uniqueness constraints for the direct identifier attributes. The uniqueness scope for each identifier type must be defined by its owning authority.
+
 ## Establishment type
 
 `establishment_type` is controlled reference data describing what kind of
@@ -194,6 +204,33 @@ How does this establishment admit and provide education to its pupils?
 | `boarding_provision_id` | Conditional | Controlled boarding-provision value where applicable. |
 | `nursery_provision_id` | Conditional | Controlled nursery-provision value where applicable. |
 | `sixth_form_provision_id` | Conditional | Controlled sixth-form-provision value where applicable. |
+
+### Modelling placement and relationships
+
+`EducationAdmissionsAndProvision` is the owned substructure for education, admissions and provision facts that describe how the establishment operates as a school or provider.
+
+In this slice it carries:
+
+- `gender_of_entry_type_id`, a direct reference to controlled `GenderOfEntryType` reference data, the same pattern used for `establishment_type_id` and `education_phase_id` on `Establishment`.
+- `admissions_policy_id`, a direct reference to controlled `AdmissionsPolicy` reference data.
+- `boarding_provision_id`, a direct reference to controlled `BoardingProvision` reference data.
+- `nursery_provision_id`, a direct reference to controlled `NurseryProvision` reference data.
+- `sixth_form_provision_id`, a direct reference to controlled `SixthFormProvision` reference data.
+- `StatutoryAgeRange`, which records the lower and upper statutory ages.
+
+This means gender of entry, admissions policy, boarding provision, nursery provision and sixth-form provision are associated with an establishment through the provision substructure:
+
+```text
+Establishment
+  -> EducationAdmissionsAndProvision
+    -> GenderOfEntryType
+    -> AdmissionsPolicy
+    -> BoardingProvision
+    -> NurseryProvision
+    -> SixthFormProvision
+```
+
+These are deliberately not attributes on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`. Both are direct reference-data columns, not wrapper entities, because neither carries attributes of its own beyond the type it selects.
 
 ## Gender of entry type
 
@@ -301,7 +338,7 @@ What is the youngest and oldest age for which this establishment is registered?
 
 - It is a distinct pair of related values, not two unrelated establishment attributes.
 - It is reached through `education_admissions_and_provision`.
-- The lower age is 0â€“19; the upper age is 0â€“25 and cannot be below the lower age.
+- The lower age is 0ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“19; the upper age is 0ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“25 and cannot be below the lower age.
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
@@ -309,6 +346,31 @@ What is the youngest and oldest age for which this establishment is registered?
 | `education_admissions_and_provision_id` | Yes | One-to-one owner relationship to the provision substructure. |
 | `lower_statutory_age` | Yes when a range exists | Lowest registered age; integer from 0 to 19. |
 | `upper_statutory_age` | Yes when a range exists | Highest registered age; integer from 0 to 25 and no lower than the lower age. |
+
+### Modelling placement and validation
+
+Age range is represented as `StatutoryAgeRange`, reached through `EducationAdmissionsAndProvision`, rather than as two bare attributes on `Establishment`. Its validation limits are defined in `education-provider-registry-docs/models/establishment/establishment-data-quality-shacl.ttl`.
+
+```text
+Establishment
+  -> EducationAdmissionsAndProvision
+    -> StatutoryAgeRange
+       - AgeLow
+       - AgeHigh
+```
+
+We should follow that logical boundary. Age range is a distinct, regulated pair of values, not two unrelated Establishment attributes. It also sits alongside admissions and provision facts which are outside this first slice but will be modelled later.
+
+A physical model may ultimately store the two values as columns on an `Establishment` table for simplicity or performance. That is a physical-design decision. It must not erase the logical `StatutoryAgeRange` boundary or the type-specific applicability and validation rules.
+
+The data-quality SHACL model sets the following limits:
+
+- `AgeLow`: `0` to `19`.
+- `AgeHigh`: `0` to `25`.
+- `AgeHigh` must not be lower than `AgeLow`.
+
+The last rule is stated in the current SHACL shape's comment but is not yet expressed as an executable cross-field constraint. The target implementation must enforce it.
+
 
 ## Capacity and pupil measures
 
@@ -337,9 +399,30 @@ and how many pupils are eligible for free school meals at the observation date?
 | `census_date` | Conditional | Statutory DfE school census date shared by the pupil measures. |
 
 
+### Measurement placement and lifecycle
+
+One shared census date applies to the whole capacity-and-pupil-measures block, not a separate date per measure. Whether the free-school-meal measure is required or not applicable is determined per establishment type by the data-quality SHACL shapes.
+
+School capacity, pupil count and the free school meal measure sit on `CapacityAndPupilMeasures`, not directly on `Establishment`, because they are business measurement facts about the establishment's operation, not identity or classification attributes. The `census_date` is held once on the same block because it provides the temporal context for both the pupil count and free school meal measure.
+
+```text
+Establishment
+  -> CapacityAndPupilMeasures
+     - SchoolCapacity
+     - PupilCount
+     - FreeSchoolMealMeasure
+     - CensusDate
+```
+
+`SchoolCapacity` is the registered number of pupil places for which the establishment is organised. `PupilCount` is the current number of pupils on roll recorded in the source establishment record. They are separate business measures, but they are simple scalar values with the same owner and current lifecycle in this slice, so the physical model stores them as columns on `capacity_and_pupil_measures`.
+
+`FreeSchoolMealMeasure` is the number of pupils recorded as eligible for free school meals. It is an eligibility measure, not a count of meals served. It is a separate scalar measure on the same substructure because it describes the establishment's pupil population and shares the census-date context with `PupilCount`.
+
+`CensusDate` is the statutory DfE school census date to which `PupilCount` and `FreeSchoolMealMeasure` relate, typically a January census date. It is stored once for the block rather than repeated on each measure. The model therefore keeps the observation date explicit without turning each measure into a separate time-series entity; historical and multiple-period observations remain deferred to the lifecycle and history model.
+
 ## Location And Contact ERD
 
-The location branch is shown separately so the main establishment ERD remains readable. This branch contains every physical site at which the establishment operates Ã¢â‚¬â€ exactly one designated as the main site, plus zero or more additional sites Ã¢â‚¬â€ and each site's postal address. Contact details and address history are deferred.
+The location branch is shown separately so the main establishment ERD remains readable. This branch contains every physical site at which the establishment operates ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â exactly one designated as the main site, plus zero or more additional sites ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â and each site's postal address. Contact details and address history are deferred.
 
 ```mermaid
 erDiagram
@@ -424,6 +507,14 @@ and what address identifies that site?
 | `site_name` | Conditional | Optional site name where supplied; not an establishment identifier. |
 | `uprn` | Conditional | Ordnance Survey Unique Property Reference Number for the physical location, where supplied. |
 
+### UPRN placement
+
+`Site.uprn` is the Ordnance Survey [Unique Property Reference Number](https://www.ordnancesurvey.co.uk/public/unique-property-reference-numbers) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â a numeric identifier for the addressable location itself, not for the establishment.
+
+**Justification.** The OS page defines a UPRN as "a unique numeric identifier for every spatial address in Great Britain" that persists "throughout a property's life cycle ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ from planning permission through to demolition." Read literally, the first clause ties a UPRN to an address; but the second clause only makes sense if the UPRN survives changes to that address's postal text over the property's lifetime ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â otherwise "persists throughout the life cycle" would say nothing beyond "exists while the property exists." This is not just a hypothetical reading: street names can and do change independently of the property itself ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â a local authority can rename or renumber a street, updating every postal address on it ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â while the property occupying any given plot, and its UPRN, remains the same. OS's own definition therefore implies the UPRN tracks the underlying property, not any one rendering of its postal text.
+
+That distinction is what decides the placement in this model. `Address` here is a bag of current-value text fields (`address_line_1`, `town`, `postcode`) with no versioning or history ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â this slice explicitly defers address history (see Scope). An identifier that OS itself says must outlive changes to that text cannot correctly live on a record with no guarantee of surviving such changes. `Site` is the entity representing the stable physical location; `Address` is deliberately the mutable, current-value rendering of it. `uprn` therefore belongs on `Site`.
+
 ## Address
 
 `address` is the reusable current postal rendering of a physical location.
@@ -449,6 +540,27 @@ What is the current postal address for this site?
 | `county` | Conditional | County where supplied. |
 | `postcode` | Conditional | Postal code, mapped from BAU `Postcode`. |
 
+
+### Site placement and lifecycle
+
+The BAU model does not have a first-class `Site` concept for the principal location. The primary site is implicit: its postal address is held as columns on `dbo.Establishment` (`Street`, `Locality`, `Address3`, `Town`, `Postcode`, `UPRN`, `Easting` and `Northing`). BAU stores additional physical locations separately in `dbo.EstablishmentAdditionalAddresses`, linked by URN and `record_number`.
+
+The target model makes every physical location explicit as a `Site`, because it is a business concept, not just a group of address strings, and because an establishment can operate at more than one location:
+
+```text
+Establishment
+  -> EstablishmentLocation
+    -> Site (main)
+      -> Address
+    -> Site (additional, zero or more)
+      -> Address
+```
+
+`EstablishmentLocation` is the owning boundary for location facts; contact details are still deferred. It holds every `Site` at which the establishment operates and designates exactly one of them as the main site via `main_site_id`, rather than a role or Boolean flag carried on `Site` itself. This is a deliberate choice: "main" is a fact about which site the establishment currently points to, not an attribute of the site record, and a per-row flag would allow invalid states a single designating foreign key cannot (zero sites flagged main, or more than one).
+
+Which establishment types, if any, should be permitted to have additional sites is not yet defined in this slice, and the logical model does not currently restrict it. This should be confirmed against evidence (for example, actual usage patterns in BAU's `EstablishmentAdditionalAddresses`) before an executable constraint is added.
+
+`Address` is a reusable postal-address concept. It does not contain a `site_id`, because an address may be referenced by a site, a registered legal entity or another future subject. The foreign key is held by the using relationship (`Site.address_id`). The logical model therefore does not add address columns directly to `Establishment`. `main_site_id` must reference a `Site` owned by the same `establishment_location_id`; this cross-field constraint is a physical-implementation decision, not yet expressed as an executable rule in this slice.
 
 ## Specialist Provision ERD
 
@@ -577,77 +689,7 @@ How many designated places and pupils are in the SEN unit?
 | `pupil_count` | Conditional | Pupils on roll; non-negative integer. |
 
 
-## Statutory Age Range Placement
-
-Age range is represented as `StatutoryAgeRange`, reached through `EducationAdmissionsAndProvision`, rather than as two bare attributes on `Establishment`. Its validation limits are defined in `education-provider-registry-docs/models/establishment/establishment-data-quality-shacl.ttl`.
-
-```text
-Establishment
-  -> EducationAdmissionsAndProvision
-    -> StatutoryAgeRange
-       - AgeLow
-       - AgeHigh
-```
-
-We should follow that logical boundary. Age range is a distinct, regulated pair of values, not two unrelated Establishment attributes. It also sits alongside admissions and provision facts which are outside this first slice but will be modelled later.
-
-A physical model may ultimately store the two values as columns on an `Establishment` table for simplicity or performance. That is a physical-design decision. It must not erase the logical `StatutoryAgeRange` boundary or the type-specific applicability and validation rules.
-
-The data-quality SHACL model sets the following limits:
-
-- `AgeLow`: `0` to `19`.
-- `AgeHigh`: `0` to `25`.
-- `AgeHigh` must not be lower than `AgeLow`.
-
-The last rule is stated in the current SHACL shape's comment but is not yet expressed as an executable cross-field constraint. The target implementation must enforce it.
-
-## Education, Admissions And Provision Placement
-
-`EducationAdmissionsAndProvision` is the owned substructure for education, admissions and provision facts that describe how the establishment operates as a school or provider.
-
-In this slice it carries:
-
-- `gender_of_entry_type_id`, a direct reference to controlled `GenderOfEntryType` reference data, the same pattern used for `establishment_type_id` and `education_phase_id` on `Establishment`.
-- `admissions_policy_id`, a direct reference to controlled `AdmissionsPolicy` reference data.
-- `boarding_provision_id`, a direct reference to controlled `BoardingProvision` reference data.
-- `nursery_provision_id`, a direct reference to controlled `NurseryProvision` reference data.
-- `sixth_form_provision_id`, a direct reference to controlled `SixthFormProvision` reference data.
-- `StatutoryAgeRange`, which records the lower and upper statutory ages.
-
-This means gender of entry, admissions policy, boarding provision, nursery provision and sixth-form provision are associated with an establishment through the provision substructure:
-
-```text
-Establishment
-  -> EducationAdmissionsAndProvision
-    -> GenderOfEntryType
-    -> AdmissionsPolicy
-    -> BoardingProvision
-    -> NurseryProvision
-    -> SixthFormProvision
-```
-
-These are deliberately not attributes on `Establishment` itself. The establishment record holds identity and headline classification facts; provision-specific facts sit below `EducationAdmissionsAndProvision`. Both are direct reference-data columns, not wrapper entities, because neither carries attributes of its own beyond the type it selects.
-
-## Capacity And Specialist Provision Placement
-
-One shared census date applies to the whole capacity-and-pupil-measures block, not a separate date per measure. Whether the free-school-meal measure is required or not applicable is determined per establishment type by the data-quality SHACL shapes.
-
-School capacity, pupil count and the free school meal measure sit on `CapacityAndPupilMeasures`, not directly on `Establishment`, because they are business measurement facts about the establishment's operation, not identity or classification attributes. The `census_date` is held once on the same block because it provides the temporal context for both the pupil count and free school meal measure.
-
-```text
-Establishment
-  -> CapacityAndPupilMeasures
-     - SchoolCapacity
-     - PupilCount
-     - FreeSchoolMealMeasure
-     - CensusDate
-```
-
-`SchoolCapacity` is the registered number of pupil places for which the establishment is organised. `PupilCount` is the current number of pupils on roll recorded in the source establishment record. They are separate business measures, but they are simple scalar values with the same owner and current lifecycle in this slice, so the physical model stores them as columns on `capacity_and_pupil_measures`.
-
-`FreeSchoolMealMeasure` is the number of pupils recorded as eligible for free school meals. It is an eligibility measure, not a count of meals served. It is a separate scalar measure on the same substructure because it describes the establishment's pupil population and shares the census-date context with `PupilCount`.
-
-`CensusDate` is the statutory DfE school census date to which `PupilCount` and `FreeSchoolMealMeasure` relate, typically a January census date. It is stored once for the block rather than repeated on each measure. The model therefore keeps the observation date explicit without turning each measure into a separate time-series entity; historical and multiple-period observations remain deferred to the lifecycle and history model.
+### Specialist provision placement and measures
 
 SEN unit and resourced provision facts sit below `SpecialistProvision`, not below `EducationAdmissionsAndProvision`. These are specialist facility facts about the establishment, not admissions-policy facts.
 
@@ -676,67 +718,4 @@ Establishment
        - Capacity
        - PupilCount
 ```
-
-## Site Placement
-
-The BAU model does not have a first-class `Site` concept for the principal location. The primary site is implicit: its postal address is held as columns on `dbo.Establishment` (`Street`, `Locality`, `Address3`, `Town`, `Postcode`, `UPRN`, `Easting` and `Northing`). BAU stores additional physical locations separately in `dbo.EstablishmentAdditionalAddresses`, linked by URN and `record_number`.
-
-The target model makes every physical location explicit as a `Site`, because it is a business concept, not just a group of address strings, and because an establishment can operate at more than one location:
-
-```text
-Establishment
-  -> EstablishmentLocation
-    -> Site (main)
-      -> Address
-    -> Site (additional, zero or more)
-      -> Address
-```
-
-`EstablishmentLocation` is the owning boundary for location facts; contact details are still deferred. It holds every `Site` at which the establishment operates and designates exactly one of them as the main site via `main_site_id`, rather than a role or Boolean flag carried on `Site` itself. This is a deliberate choice: "main" is a fact about which site the establishment currently points to, not an attribute of the site record, and a per-row flag would allow invalid states a single designating foreign key cannot (zero sites flagged main, or more than one).
-
-Which establishment types, if any, should be permitted to have additional sites is not yet defined in this slice, and the logical model does not currently restrict it. This should be confirmed against evidence (for example, actual usage patterns in BAU's `EstablishmentAdditionalAddresses`) before an executable constraint is added.
-
-`Address` is a reusable postal-address concept. It does not contain a `site_id`, because an address may be referenced by a site, a registered legal entity or another future subject. The foreign key is held by the using relationship (`Site.address_id`). The logical model therefore does not add address columns directly to `Establishment`. `main_site_id` must reference a `Site` owned by the same `establishment_location_id`; this cross-field constraint is a physical-implementation decision, not yet expressed as an executable rule in this slice.
-
-## UPRN
-
-`Site.uprn` is the Ordnance Survey [Unique Property Reference Number](https://www.ordnancesurvey.co.uk/public/unique-property-reference-numbers) Ã¢â‚¬â€ a numeric identifier for the addressable location itself, not for the establishment.
-
-**Justification.** The OS page defines a UPRN as "a unique numeric identifier for every spatial address in Great Britain" that persists "throughout a property's life cycle Ã¢â‚¬â€œ from planning permission through to demolition." Read literally, the first clause ties a UPRN to an address; but the second clause only makes sense if the UPRN survives changes to that address's postal text over the property's lifetime Ã¢â‚¬â€ otherwise "persists throughout the life cycle" would say nothing beyond "exists while the property exists." This is not just a hypothetical reading: street names can and do change independently of the property itself Ã¢â‚¬â€ a local authority can rename or renumber a street, updating every postal address on it Ã¢â‚¬â€ while the property occupying any given plot, and its UPRN, remains the same. OS's own definition therefore implies the UPRN tracks the underlying property, not any one rendering of its postal text.
-
-That distinction is what decides the placement in this model. `Address` here is a bag of current-value text fields (`address_line_1`, `town`, `postcode`) with no versioning or history Ã¢â‚¬â€ this slice explicitly defers address history (see Scope). An identifier that OS itself says must outlive changes to that text cannot correctly live on a record with no guarantee of surviving such changes. `Site` is the entity representing the stable physical location; `Address` is deliberately the mutable, current-value rendering of it. `uprn` therefore belongs on `Site`.
-
-## Identifier Rules
-
-| Identifier | Cardinality | Constraint | Note |
-| --- | --- | --- | --- |
-| URN | Exactly one | Globally unique and immutable | The canonical public establishment identifier for this slice. |
-| DfE number / LAESTAB | Derived | Uniqueness requires local-authority context | Derived from `local_authority_code` and `establishment_number`, commonly rendered as `LA/ESTAB` with the establishment number zero-padded to four digits. |
-| UKPRN | Zero or one | Eight-digit value; global uniqueness is not yet a target rule | Optional because it does not apply to every establishment. It is externally owned by UKRLP. |
-
-The model must enforce the stated uniqueness constraints for the direct identifier attributes. The uniqueness scope for each identifier type must be defined by its owning authority.
-
-## Classification Rules
-
-- Establishment type and phase of education are reference-data classifications, not free text.
-- An establishment has one current establishment type.
-- An establishment may have one phase of education in this first slice. Any need for multiple phases must be evidenced before extending the model.
-- An establishment has at most one current education, admissions and provision substructure and at most one statutory age range within it.
-- An establishment has at most one current capacity and pupil measures substructure, carrying at most one school capacity, pupil-count, free-school-meal-measure and census-date value.
-- `census_date` is shared by `pupil_count` and `free_school_meal_measure`; it is not a separate date for each measure.
-- `free_school_meal_measure` is a count of pupils eligible for free school meals, not a count of meals served.
-- An establishment has at most one current specialist-provision substructure, at most one resourced-provision measure and at most one SEN-unit-provision measure within it.
-- Gender of entry is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
-- Admissions policy is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
-- Boarding provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
-- Nursery provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
-- Sixth-form provision is a reference-data classification held on the education, admissions and provision substructure, not its own owned entity.
-- Every establishment has one or more current sites, exactly one of which is designated the main site, and every site has one current address in this slice.
-- Additional sites are permitted for any establishment type in this slice; type-scoped restrictions are not yet defined (see Site Placement).
-- The main site is not an establishment identifier; URN remains the canonical public identifier.
-- Classification identifiers must be stable and labels may change without changing the establishment record.
-
-
-
-
 
