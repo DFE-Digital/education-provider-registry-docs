@@ -95,6 +95,27 @@ SET local_authority_code = EXCLUDED.local_authority_code,
     establishment_type_id = EXCLUDED.establishment_type_id,
     education_phase_id = EXCLUDED.education_phase_id;
 
+-- Main physical site and its postal address. UPRN belongs to Site, not Address.
+INSERT INTO establishment.address (address_line_1, address_line_2, address_line_3, town, county, postcode)
+SELECT 'obfuscated', NULL, NULL, 'obfuscated', '099', 'NW1 3EX'
+WHERE NOT EXISTS (SELECT 1 FROM establishment.address WHERE postcode = 'NW1 3EX' AND address_line_1 = 'obfuscated');
+INSERT INTO establishment.establishment_location (establishment_id)
+SELECT establishment_id FROM establishment.establishment WHERE urn = 100018
+ON CONFLICT (establishment_id) DO NOTHING;
+INSERT INTO establishment.site (establishment_location_id, address_id, site_name, uprn)
+SELECT l.establishment_location_id, a.address_id, NULL, 5172210
+FROM establishment.establishment_location l
+JOIN establishment.establishment e ON e.establishment_id = l.establishment_id
+JOIN establishment.address a ON a.postcode = 'NW1 3EX' AND a.address_line_1 = 'obfuscated'
+WHERE e.urn = 100018
+  AND NOT EXISTS (SELECT 1 FROM establishment.site s WHERE s.uprn = 5172210);
+UPDATE establishment.establishment_location l
+SET main_site_id = s.site_id
+FROM establishment.site s, establishment.establishment e
+WHERE e.establishment_id = l.establishment_id
+  AND s.uprn = 5172210
+  AND e.urn = 100018;
+
 -- Capacity and pupil measures for this establishment.
 INSERT INTO establishment.capacity_and_pupil_measures (
     establishment_id,

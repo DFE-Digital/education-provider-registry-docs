@@ -241,5 +241,28 @@ SELECT
     s.Town AS address_town,
     s.County_code AS address_county,
     s.Postcode AS address_postcode,
-    s.UPRN AS address_uprn
+    s.UPRN AS site_uprn
 FROM source_establishment AS s;
+
+/*
+    Second result set: additional physical sites for the same establishment.
+    The first result set is the establishment and main-site projection above;
+    this result set is one row per dbo.EstablishmentAdditionalAddresses row.
+*/
+SELECT
+    a.urn,
+    a.record_number,
+    a.siteName AS site_name,
+    a.street AS address_line_1,
+    a.locality AS address_line_2,
+    a.address3 AS address_line_3,
+    a.town AS address_town,
+    a.county_code AS address_county,
+    a.postcode AS address_postcode,
+    a.uprn AS site_uprn,
+    a.country_code,
+    a.easting,
+    a.northing
+FROM dbo.EstablishmentAdditionalAddresses AS a
+WHERE a.URN = @URN
+ORDER BY a.record_number;

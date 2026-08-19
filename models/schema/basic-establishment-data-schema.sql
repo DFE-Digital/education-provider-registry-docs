@@ -1,4 +1,4 @@
--- PostgreSQL DDL for models/logical/basic-establishment-data-logical-model.md
+-- PostgreSQL DDL for models/logical/core-establishment-data-logical-model.md
 -- Target: database establishment_local, schema establishment
 --
 -- Disposable local baseline: this script intentionally drops and recreates the
@@ -68,22 +68,27 @@ CREATE TABLE establishment.address (
     address_line_3 text,
     town text,
     county text,
-    postcode text,
-    uprn text
+    postcode text
 );
 
-CREATE TABLE establishment.establishment_location_and_contact (
-    establishment_location_and_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id)
+CREATE TABLE establishment.establishment_location (
+    establishment_location_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
+    main_site_id uuid
 );
 
-CREATE TABLE establishment.main_site (
-    main_site_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_location_and_contact_id uuid NOT NULL UNIQUE
-        REFERENCES establishment.establishment_location_and_contact (establishment_location_and_contact_id),
+CREATE TABLE establishment.site (
+    site_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_location_id uuid NOT NULL
+        REFERENCES establishment.establishment_location (establishment_location_id),
     address_id uuid NOT NULL REFERENCES establishment.address (address_id),
-    site_name text
+    site_name text,
+    uprn bigint UNIQUE
 );
+
+ALTER TABLE establishment.establishment_location
+    ADD CONSTRAINT fk_establishment_location_main_site
+    FOREIGN KEY (main_site_id) REFERENCES establishment.site (site_id);
 
 CREATE TABLE establishment.capacity_and_pupil_measures (
     capacity_and_pupil_measures_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

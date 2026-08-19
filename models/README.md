@@ -17,7 +17,7 @@ The governance model files live in [`governance/`](governance/), following the s
 
 The logical-model artefacts live in [`logical/`](logical/):
 
-- `basic-establishment-data-logical-model.md` - the first logical-model slice for anonymous Find and Share, covering establishment identity, name, establishment type, statutory age range and education phase.
+- `core-establishment-data-logical-model.md` - the first core logical-model slice for anonymous Find and Share, covering establishment identity, name, establishment type, statutory age range and education phase.
 
 ## SKOS
 
