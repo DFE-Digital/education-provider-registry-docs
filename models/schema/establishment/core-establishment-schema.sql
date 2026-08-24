@@ -51,7 +51,7 @@ CREATE TABLE establishment.specialist_provision_type (
 
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    urn numeric NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
+    urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
     ukprn numeric CHECK (ukprn BETWEEN 10000000 AND 99999999),
     local_authority_code text,
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
