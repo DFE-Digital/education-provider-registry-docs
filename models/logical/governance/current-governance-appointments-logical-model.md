@@ -25,7 +25,7 @@ This slice includes:
 - A governance appointment held either at a governance body or directly at an academy trust legal entity.
 - Role type, appointment basis and an optional appointing body.
 - A term of office.
-- A separate office-holder role assignment, such as Chair or Vice Chair.
+- A separate office-holder assignment, such as Chair or Vice Chair.
 
 This slice intentionally excludes constitution positions and vacancies, committee membership, meetings, declarations, training, compliance, access permissions, user accounts, company-director registrations, detailed identity data and change-event history. Those are separate concerns and must not be implied by this model.
 
@@ -35,7 +35,7 @@ The model is a logical projection of the current governance vocabulary and ontol
 
 | Source | Contribution |
 |---|---|
-| [Governance ontology](../../governance/governance-ontology.ttl) | Defines the structural distinction between governance participant, governance body, appointment, term, appointment basis, appointing body and role assignment. |
+| [Governance ontology](../../governance/governance-ontology.ttl) | Defines the structural distinction between governance participant, governance body, appointment, term, appointment basis, appointing body and the additional office-holder assignment (called a role assignment in the ontology). |
 | [Governance vocabulary](../../governance/governance-vocabulary.ttl) | Defines the preferred business terms. |
 | [Governance taxonomy](../../governance/governance-taxonomy.ttl) | Defines controlled values for appointment basis, role type and related classifications. |
 | [GovernorHub conceptual model](../../../../docs/transformation/data/modelling/people/governor-hub/conceptual-model.md) | Confirms that person, appointment, term and role must remain separate, and that an academy trust is distinct from its trust board. |
@@ -58,8 +58,8 @@ erDiagram
     GOVERNANCE_APPOINTMENT }o--|| APPOINTMENT_BASIS : "has basis"
     GOVERNANCE_APPOINTMENT }o--o| APPOINTING_BODY : "has appointing body"
     GOVERNANCE_APPOINTMENT ||--o| TERM_OF_OFFICE : "has"
-    GOVERNANCE_APPOINTMENT ||--o{ ROLE_ASSIGNMENT : "has"
-    ROLE_ASSIGNMENT }o--|| GOVERNANCE_ROLE_TYPE : "assigns office-holder role"
+    GOVERNANCE_APPOINTMENT ||--o{ OFFICE_HOLDER_ASSIGNMENT : "may have"
+    OFFICE_HOLDER_ASSIGNMENT }o--|| GOVERNANCE_ROLE_TYPE : "assigns office-holder role"
 
     GOVERNANCE_PARTICIPANT {
         uuid governance_participant_id PK
@@ -92,8 +92,8 @@ erDiagram
         date start_date
         date end_date
     }
-    ROLE_ASSIGNMENT {
-        uuid role_assignment_id PK
+    OFFICE_HOLDER_ASSIGNMENT {
+        uuid office_holder_assignment_id PK
         uuid governance_appointment_id FK
         string governance_role_type_id FK
         date start_date
@@ -113,7 +113,7 @@ erDiagram
 - An appointment has one governance role type and one appointment basis. These must remain separate from each other and from its appointing body.
 - An appointing body is optional. It is normally relevant to statutory or otherwise formally appointed roles, not every operational appointment.
 - A term of office belongs to one appointment. A later reappointment is represented as a new appointment and term, preserving the prior appointment rather than overwriting it.
-- A role assignment is layered on an appointment. Chair and Vice Chair are role assignments, not appointment bases and not appointment types.
+- An office-holder assignment is layered on an appointment. Chair and Vice Chair are office-holder assignments, not appointment bases and not appointment roles.
 - Current, future and ended appointments are derived from term dates where a term is held. This slice does not add a duplicate lifecycle-status field.
 
 ## Governance Participant
@@ -130,14 +130,16 @@ Modelling decisions:
 
 - Exactly one of `person_id` and `organisation_id` is populated.
 - A person or organisation may hold many appointments across one or more governance scopes.
-- The participant does not itself say whether somebody is a trustee, governor, member, chair or vice chair. Those are expressed through the appointment and role assignment.
+- The participant does not itself say whether somebody is a trustee, governor, member, Chair or Vice Chair. Appointment roles and, where applicable, office-holder assignments express those facts.
 
-| Column | Meaning |
-|---|---|
-| `governance_participant_id` | Stable identifier for the governance-facing participant reference. |
-| `participant_kind` | Whether the participant is a person or organisation. |
-| `person_id` | Reference to the person where `participant_kind` is person. |
-| `organisation_id` | Reference to the organisation where `participant_kind` is organisation. |
+Illustrative example: A.M. is a fictional person who serves as an academy trustee.
+
+| Column | Meaning | Illustrative value |
+|---|---|---|
+| `governance_participant_id` | Stable identifier for the governance-facing participant reference. | `participant-am` |
+| `participant_kind` | Whether the participant is a person or organisation. | `person` |
+| `person_id` | Reference to the person where `participant_kind` is person. | `person-am` |
+| `organisation_id` | Reference to the organisation where `participant_kind` is organisation. | Not populated, because the participant is a person. |
 
 ## Governance Body
 
@@ -156,11 +158,13 @@ Modelling decisions:
 - A body can govern multiple organisations, as in a federation or a multi-academy trust arrangement.
 - This model does not yet include committees or delegated governance structures.
 
-| Column | Meaning |
-|---|---|
-| `governance_body_id` | Stable identifier for the governance body. |
-| `governance_body_type` | Controlled type, for example governing body, trust board or local governing body. |
-| `name` | The published or locally used name of the governance body, where one is needed. |
+Illustrative example: Riverside Learning Trust is governed by a trust board called the Riverside Learning Trust Board.
+
+| Column | Meaning | Illustrative value |
+|---|---|---|
+| `governance_body_id` | Stable identifier for the governance body. | `governance-body-riverside-trust-board` |
+| `governance_body_type` | Controlled type, for example governing body, trust board or local governing body. | `trust board` |
+| `name` | The published or locally used name of the governance body, where one is needed. | `Riverside Learning Trust Board` |
 
 ## Governance Body Scope
 
@@ -177,11 +181,13 @@ Modelling decisions:
 - `governed_organisation_id` references an establishment, federation or academy trust in the organisation model.
 - The relationship does not turn the governance body into the governed organisation, and does not turn an academy trust into its trust board.
 
-| Column | Meaning |
-|---|---|
-| `governance_body_scope_id` | Stable identifier for the governance-body scope relationship. |
-| `governance_body_id` | The governance body. |
-| `governed_organisation_id` | The establishment, federation or academy trust governed by that body. |
+Illustrative example: the Riverside Learning Trust Board governs the Riverside Learning Trust academy trust.
+
+| Column | Meaning | Illustrative value |
+|---|---|---|
+| `governance_body_scope_id` | Stable identifier for the governance-body scope relationship. | `scope-riverside-board-to-trust` |
+| `governance_body_id` | The governance body. | `governance-body-riverside-trust-board` |
+| `governed_organisation_id` | The establishment, federation or academy trust governed by that body. | `academy-trust-riverside-learning-trust` |
 
 ## Governance Appointment
 
@@ -202,15 +208,17 @@ Modelling decisions:
 - `governance_role_type_id`, `appointment_basis_id` and `appointing_body_id` answer different questions and cannot be collapsed into one field.
 - This table does not record company-director status. A trustee may have a legal director capacity, but that is a separate legal-registration concern.
 
-| Column | Meaning |
-|---|---|
-| `governance_appointment_id` | Stable identifier for the governance appointment. |
-| `governance_participant_id` | The person or organisation holding the appointment. |
-| `governance_body_id` | Governance body at which the appointment is held. Mutually exclusive with `academy_trust_legal_entity_id`. |
-| `academy_trust_legal_entity_id` | Academy trust company at which the appointment is held directly. Mutually exclusive with `governance_body_id`. |
-| `governance_role_type_id` | Controlled role type for the appointment, such as academy trustee, academy trust member or local governor. |
-| `appointment_basis_id` | Controlled basis for the appointment, such as statutory governance, delegated governance or operational employment. |
-| `appointing_body_id` | Optional controlled reference to the person or body that appointed the holder. |
+Illustrative example: A.M. is appointed by the academy trust members as an academy trustee on the Riverside Learning Trust Board.
+
+| Column | Meaning | Illustrative value |
+|---|---|---|
+| `governance_appointment_id` | Stable identifier for the governance appointment. | `appointment-am-trustee-2025` |
+| `governance_participant_id` | The person or organisation holding the appointment. | `participant-am` |
+| `governance_body_id` | Governance body at which the appointment is held. Mutually exclusive with `academy_trust_legal_entity_id`. | `governance-body-riverside-trust-board` |
+| `academy_trust_legal_entity_id` | Academy trust company at which the appointment is held directly. Mutually exclusive with `governance_body_id`. | Not populated, because this is an appointment to the trust board. |
+| `governance_role_type_id` | Controlled role type for the appointment, such as academy trustee, academy trust member or local governor. | `academy trustee` |
+| `appointment_basis_id` | Controlled basis for the appointment, such as statutory governance, delegated governance or operational employment. | `statutory governance` |
+| `appointing_body_id` | Optional controlled reference to the person or body that appointed the holder. | `academy trust members` |
 
 ## Term Of Office
 
@@ -228,48 +236,55 @@ Modelling decisions:
 - The end date may be absent for an open-ended or ongoing appointment.
 - A reappointment is a new appointment and term. The former term stays available as a historical fact.
 
-| Column | Meaning |
-|---|---|
-| `term_of_office_id` | Stable identifier for the term. |
-| `governance_appointment_id` | The appointment to which the term belongs. |
-| `start_date` | Date the term begins. |
-| `end_date` | Date the term ends, where known. |
+Illustrative example: A.M.'s four-year trustee term runs from 1 September 2025 to 31 August 2029.
 
-## Role Assignment
+| Column | Meaning | Illustrative value |
+|---|---|---|
+| `term_of_office_id` | Stable identifier for the term. | `term-am-2025-to-2029` |
+| `governance_appointment_id` | The appointment to which the term belongs. | `appointment-am-trustee-2025` |
+| `start_date` | Date the term begins. | `2025-09-01` |
+| `end_date` | Date the term ends, where known. | `2029-08-31` |
 
-`RoleAssignment` records an additional office-holder responsibility within an existing governance appointment. Its immediate purpose is to represent Chair and Vice Chair without treating them as appointment bases or replacing the underlying appointment role.
+## Office-Holder Assignment
+
+`OfficeHolderAssignment` records an additional office held alongside an existing governance appointment. It is used for Chair and Vice Chair. It does not replace the appointment role.
 
 Business-friendly pattern:
 
 ```text
-What additional office-holder responsibility does this appointment carry?
+Does this appointment also hold an office, such as Chair or Vice Chair?
 ```
 
 Modelling decisions:
 
-- A role assignment belongs to one governance appointment.
-- The assigned role must be an office-holder role type, initially Chair or Vice Chair.
-- An appointment may have no office-holder responsibility, or more than one over time.
+- An office-holder assignment belongs to one governance appointment.
+- The assigned office is initially Chair or Vice Chair.
+- An appointment may have no additional office, or may hold different offices over time.
+- A local governor, governor, trustee or member appointment does not create an office-holder assignment merely because it has that appointment role.
+- For example, A.M. can be a Local governor at Oakfield Academy without holding any office. There is one `GovernanceAppointment` with appointment role `Local governor` and no `OfficeHolderAssignment` row.
+- If A.M. is elected Chair of the local governing body, the same local-governor appointment gains one `OfficeHolderAssignment` with office `Chair`. The appointment remains a Local governor appointment; it does not become a Chair appointment.
 - Start and end dates allow chairing responsibilities to change without ending the underlying governance appointment.
 
-| Column | Meaning |
-|---|---|
-| `role_assignment_id` | Stable identifier for the office-holder assignment. |
-| `governance_appointment_id` | The appointment on which the responsibility is held. |
-| `governance_role_type_id` | Controlled office-holder role type, initially Chair or Vice Chair. |
-| `start_date` | Date the office-holder responsibility begins. |
-| `end_date` | Date the office-holder responsibility ends, where known. |
+Illustrative example: while continuing as an Academy trustee, A.M. serves as Chair of the trust board for two years. The Academy trustee appointment continues before and after the Chair office ends.
+
+| Column | Meaning | Illustrative value |
+|---|---|---|
+| `office_holder_assignment_id` | Stable identifier for the office-holder assignment. | `office-holder-assignment-am-chair-2026` |
+| `governance_appointment_id` | The appointment on which the responsibility is held. | `appointment-am-trustee-2025` |
+| `governance_role_type_id` | Controlled office held, initially Chair or Vice Chair. | `Chair` |
+| `start_date` | Date the office begins. | `2026-09-01` |
+| `end_date` | Date the office ends, where known. | `2028-08-31` |
 
 ## Controlled Reference Values
 
 The following are controlled concepts, defined in the governance vocabulary and taxonomy rather than copied as free text into an appointment record.
 
-| Reference concept | Used by | Purpose |
-|---|---|---|
-| `GovernanceRoleType` | Governance appointment and role assignment | Identifies the substantive appointment role and, for role assignments, the office-holder responsibility. |
-| `AppointmentBasis` | Governance appointment | Explains the basis on which the appointment is held. |
-| `AppointingBody` | Governance appointment | Identifies the optional appointing person or body. |
-| `GovernanceBodyType` | Governance body | Classifies the kind of governance body. |
+| Reference concept | Used by | Purpose | Illustrative value |
+|---|---|---|---|
+| `GovernanceRoleType` | Governance appointment and office-holder assignment | Identifies the appointment role and, for office-holder assignments, the office held. | `academy trustee` for the appointment; `Chair` for the additional office-holder assignment. |
+| `AppointmentBasis` | Governance appointment | Explains the basis on which the appointment is held. | `statutory governance` |
+| `AppointingBody` | Governance appointment | Identifies the optional appointing person or body. | `academy trust members` |
+| `GovernanceBodyType` | Governance body | Classifies the kind of governance body. | `trust board` |
 
 ## Deferred Decisions
 

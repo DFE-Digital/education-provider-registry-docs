@@ -60,7 +60,7 @@ Prompt once for local SQL Server reader password
         |      Extract and load every selected URN
         |
         +--> Rebuild governance_local / governance schema
-               Extract current StaffRecord appointments for every selected URN
+               Extract current StaffRecord appointments and available term dates for every selected URN
                Load each governance appointment fixture, including zero-row fixtures
         |
         v
@@ -76,11 +76,11 @@ The wrapper runs `establishment/core-establishment-schema.sql`, then `seed/seed-
 
 ### Governance Slice
 
-The wrapper runs `governance/governance-schema.sql`, then `invoke-governance-migration.ps1` once per selected URN. The current minimal table contains only a target UUID, the establishment URN, `StaffRecord.uid` as the source appointment identifier, and an optional role type code. The first pass does not migrate people, terms, appointment bases or appointing bodies.
+The wrapper runs `governance/governance-schema.sql`, then `invoke-governance-migration.ps1` once per selected URN. The current minimal slice seeds target-owned governance role types as fixed integer identifiers, based on the Governance vocabulary and taxonomy, then assigns every migrated appointment a mapped appointment role type. `StaffRecord.uid` and `staffRole_code` are used only in the temporary migration fixture and are not retained in the target schema. BAU Chair roles are represented as an appointment plus a linked Chair office-holder assignment. One optional `term_of_office` record is loaded per appointment from `StaffRecord.appointmentDate` and `StaffRecord.stepdownDate`. The first pass does not migrate people, appointment bases or appointing bodies.
 
 ### Validation
 
-The wrapper shows every selected Establishment record with pupil and FSM measures, then the governance appointment counts for the same URNs. An establishment with no qualifying current appointment loads an empty governance fixture and does not stop the wider run. The output does not print names or other personal information from `StaffRecord`.
+The wrapper shows every selected Establishment record with pupil and FSM measures, then governance appointment, mapped-role, term, term-start, term-end and office-holder-assignment counts for the same URNs. An establishment with no qualifying current appointment loads an empty governance fixture and does not stop the wider run. The output does not print names or other personal information from `StaffRecord`.
 
 ## Credential And Temporary-File Handling
 
