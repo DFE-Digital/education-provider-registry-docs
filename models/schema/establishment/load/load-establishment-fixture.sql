@@ -6,7 +6,7 @@
 BEGIN;
 
 CREATE TEMP TABLE source_establishment_fixture (
-    urn numeric,
+    urn integer,
     ukprn numeric,
     local_authority_code text,
     establishment_number integer,

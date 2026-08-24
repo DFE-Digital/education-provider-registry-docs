@@ -7,11 +7,9 @@ Governance schema validation - points worth checking (not necessarily bugs)
    no error). Confirm against the BAU StaffRole reference table that 10 is genuinely
    retired/unused.
 
-2. Type inconsistency for URN: governance.governance_appointment.establishment_urn is
-   integer, but establishment.establishment.urn (in the core establishment schema) is
-   numeric. There's no FK between them (intentionally loose per the model), so it won't
-   break anything today, but it's a latent trap if a future migration tries to join or
-   FK across schemas.
+2. Resolved: governance.governance_appointment.establishment_urn and
+   establishment.establishment.urn are both integer. There remains no cross-database
+   foreign key, by design, but future joins now use matching target types.
 
 3. Hardcoded role-ID allowlists in load/load-governance-appointment-fixture.sql
    (NOT IN (1,2,3,4,5,6,7), <> 8) duplicate what the governance_role_type seed table
