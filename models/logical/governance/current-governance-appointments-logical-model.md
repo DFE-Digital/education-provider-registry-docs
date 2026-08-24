@@ -275,6 +275,15 @@ Illustrative example: while continuing as an Academy trustee, A.M. serves as Cha
 | `start_date` | Date the office begins. | `2026-09-01` |
 | `end_date` | Date the office ends, where known. | `2028-08-31` |
 
+### Why This Is A Separate Table
+
+`OfficeHolderAssignment` is not redundant with the appointment role. A governance role (for example Local governor, Academy trustee) and an office (Chair, Vice Chair) are independent facts that change on different timelines, and collapsing them into one field on `GovernanceAppointment` would lose information the model needs to keep:
+
+- The underlying appointment must survive office changes. If Chair were an attribute of the appointment row, ending the office would mean either overwriting history or ending and recreating the whole appointment merely to change who chairs — but the underlying governorship never stopped.
+- An office has its own start and end dates, separate from the appointment's term. Chairing typically runs on a different cycle than the governance term itself (for example, re-elected as Chair annually while serving a four-year trustee term), so a single date range on the appointment cannot represent both.
+- One appointment may hold zero, one, or several offices across its life, each with its own dates. There is deliberately no uniqueness constraint on `governance_appointment_id` here, unlike `TermOfOffice`, which permits at most one term per appointment.
+- The office reuses `GovernanceRoleType`, the same controlled vocabulary as the appointment role, but the two populate different rows in different tables. This is what keeps "what role were they appointed under" and "what office do they additionally hold" from collapsing into one ambiguous field.
+
 ## Controlled Reference Values
 
 The following are controlled concepts, defined in the governance vocabulary and taxonomy rather than copied as free text into an appointment record.
