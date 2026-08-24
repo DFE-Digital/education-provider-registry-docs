@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
-Extracts the minimal governance-appointment slice for one selected establishment
-from the local BAU SQL Server copy and loads it into governance_local.
+Extracts the minimal governance appointment-and-term slice for one selected
+establishment from the local BAU SQL Server copy and loads it into governance_local.
 #>
 [CmdletBinding()]
 param(
@@ -33,17 +33,21 @@ foreach ($path in @($transformSql, $loadSql)) { if (-not (Test-Path -LiteralPath
 
 $fixtureDirectory = Split-Path -Parent $FixturePath
 New-Item -ItemType Directory -Path $fixtureDirectory -Force | Out-Null
-[System.IO.File]::WriteAllText($FixturePath, "source_governance_appointment_id|establishment_urn|role_type_code$([Environment]::NewLine)", [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText($FixturePath, "source_governance_appointment_id|establishment_urn|governance_role_type_id|office_holder_role_type_id|term_start_date|term_end_date$([Environment]::NewLine)", [System.Text.UTF8Encoding]::new($false))
 
-$reader = $null; $command = $null; $connection = $null; $count = 0
+$reader = $null; $command = $null; $connection = $null; $count = 0; $termCount = 0
 try {
     $sourceSql = (Get-Content -LiteralPath $transformSql -Raw).Replace('$(URN)', [string]$Urn)
     $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword
     $connection.Open(); $command = $connection.CreateCommand(); $command.CommandText = $sourceSql; $reader = $command.ExecuteReader()
     while ($reader.Read()) {
         $sourceId = $reader.GetValue(0).ToString(); $establishmentUrn = $reader.GetValue(1).ToString()
-        $roleTypeCode = if ($reader.IsDBNull(2)) { 'NULL' } else { $reader.GetValue(2).ToString().Replace('|', ' ') }
-        [System.IO.File]::AppendAllText($FixturePath, "$sourceId|$establishmentUrn|$roleTypeCode$([Environment]::NewLine)", [System.Text.UTF8Encoding]::new($false)); $count++
+        $roleTypeId = if ($reader.IsDBNull(2)) { 'NULL' } else { $reader.GetValue(2).ToString().Replace('|', ' ') }
+        $officeHolderRoleTypeId = if ($reader.IsDBNull(3)) { 'NULL' } else { $reader.GetValue(3).ToString().Replace('|', ' ') }
+        $termStartDate = if ($reader.IsDBNull(4)) { 'NULL' } else { $reader.GetDateTime(4).ToString('yyyy-MM-dd') }
+        $termEndDate = if ($reader.IsDBNull(5)) { 'NULL' } else { $reader.GetDateTime(5).ToString('yyyy-MM-dd') }
+        [System.IO.File]::AppendAllText($FixturePath, "$sourceId|$establishmentUrn|$roleTypeId|$officeHolderRoleTypeId|$termStartDate|$termEndDate$([Environment]::NewLine)", [System.Text.UTF8Encoding]::new($false)); $count++
+        if (-not $reader.IsDBNull(4) -or -not $reader.IsDBNull(5)) { $termCount++ }
     }
 }
 catch { throw "Governance source transform failed for URN ${Urn}: $($_.Exception.Message)" }
@@ -58,4 +62,4 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "PostgreSQL governance load failed with exit code $LASTEXITCODE" }
 }
 finally { Remove-Item -LiteralPath $loadSqlTemp -Force -ErrorAction SilentlyContinue }
-Write-Host "Governance migration completed. Appointments loaded: $count. Fixture: $FixturePath"
+Write-Host "Governance migration completed. Appointments loaded: $count. Terms loaded: $termCount. Fixture: $FixturePath"
