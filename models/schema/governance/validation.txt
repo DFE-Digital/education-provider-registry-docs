@@ -1,24 +1,39 @@
-Governance schema validation - points worth checking (not necessarily bugs)
+Why office_holder_assignment exists as a separate table
 
-1. Gap in the BAU role-code mapping: codes '01'-'09' then jump to '11'-'20' - '10' is
-   absent from role_mapping in transforms/governance-appointment-from-bau.sql. If GIAS
-   BAU StaffRole actually has a code 10, any StaffRecord using it will simply be
-   excluded by the INNER JOIN dbo.StaffRole / LEFT JOIN role_mapping (silently dropped,
-   no error). Confirm against the BAU StaffRole reference table that 10 is genuinely
-   retired/unused.
+office_holder_assignment exists to solve a real modelling problem: a governance role
+(e.g. Local governor, Academy trustee) and an office (Chair, Vice Chair) are independent
+facts that change on different timelines and shouldn't be conflated into one field.
 
-2. Type inconsistency for URN: governance.governance_appointment.establishment_urn is
-   integer, but establishment.establishment.urn (in the core establishment schema) is
-   numeric. There's no FK between them (intentionally loose per the model), so it won't
-   break anything today, but it's a latent trap if a future migration tries to join or
-   FK across schemas.
+Why it's needed rather than just adding a role or is_chair flag on governance_appointment:
 
-3. Hardcoded role-ID allowlists in load/load-governance-appointment-fixture.sql
-   (NOT IN (1,2,3,4,5,6,7), <> 8) duplicate what the governance_role_type seed table
-   already encodes. If a new role type is ever added, both the seed data and this
-   loader check need updating in lockstep - easy to miss the second one.
+1. The underlying appointment must survive office changes. The logical model's own
+   example makes this concrete: A.M. is a Local governor, gets elected Chair, later
+   steps down as Chair but stays a Local governor. If "Chair" were just an attribute of
+   the appointment row, you'd either overwrite history when the office ends, or you'd
+   have to end and recreate the whole appointment just to change who chairs - which is
+   wrong, since the underlying governorship never stopped.
 
-4. governance-schema.sql has a current_database() = 'governance_local' runtime guard;
-   the sibling basic-establishment-data-schema.sql in the parent schema directory only
-   has a comment, no equivalent guard. Not wrong, just an inconsistency in safety-net
-   rigor between the two schema scripts if you want them to match.
+2. Offices have their own start/end dates, separate from the appointment's term.
+   office_holder_assignment carries its own start_date/end_date, distinct from
+   term_of_office. Chairing typically runs shorter and on a different cycle than the
+   governance term itself (e.g. re-elected as Chair annually while serving a 4-year
+   trustee term) - a single appointment row can't hold two independent date ranges.
+
+3. One appointment can hold zero, one, or several offices over its life. The table's FK
+   is governance_appointment_id NOT NULL with no uniqueness constraint on it (unlike
+   term_of_office, which is capped at one per appointment) - deliberately allowing a
+   history of office-holding rows against the same appointment, e.g. Chair 2022-2024,
+   then Chair again 2026-.
+
+4. It reuses governance_role_type rather than inventing a new concept. Office and
+   appointment role share the same controlled vocabulary table (governance_role_type_id
+   FK in both tables) but populate different rows in different tables - Chair (id 8) is
+   deliberately excluded from valid governance_appointment.governance_role_type_id
+   values (loader enforces 1-7 only) and only valid there (loader enforces = 8 or NULL).
+   That split is what keeps "what role were they appointed under" and "what office do
+   they additionally hold" from collapsing into one ambiguous column.
+
+So the table isn't redundant modelling - it's the mechanism that lets office-holding be
+layered on and removed from an appointment independently, which a single-table design
+can't represent without either losing history or conflating two different real-world
+facts.
