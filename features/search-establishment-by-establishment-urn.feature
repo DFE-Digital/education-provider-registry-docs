@@ -1,17 +1,27 @@
 @search
 Feature: SearchEstablishmentByURN
   As a public website visitor
-  I want to search for establishments by their name
+  I want to search for establishments by their URN
   So that I can find information about establishments I am interested in
 
-@search-urn-no-results
-Scenario: Search on urn returns no results
-  Given an establishment search has been made
-  When no establishments match the urn
-  Then an error is returned indicating no establishment were found
+Background:
+Given the following establishments have been created
+| Establishment Name                       | URN    | Establishment Status | Establishment Type          |
+| Longfield Tutorial Centre                | 101863 | Closed               | Pupil referral unit         |
+| Chantry Infant School                    | 124664 | Closed               | Community school            |
+| St Aidan's Catholic Primary School       | 102846 | Closed               | Voluntary aided school      |
+| St James Church of England School Hanney | 123148 | Closed               | Voluntary controlled school |
+| Kelling Primary School                   | 120823 | Closed               | Community school            |
 
-@search-urn-multiple-results
-Scenario: Search on urn returns multiple results
-  Given an establishment search has been made
-  When one or more establishment names match the search term
-  Then the matching estbablishments are returned
+Scenario Outline: Search on establishment URN
+When I search using the term "<term>"
+Then <results_count> establishments are returned
+And the ordered results are "<results>"
+
+Examples:
+| term   | results_count | results                                                                                                        |
+| 12     | 3             | Chantry Infant School; Kelling Primary School; St James Church of England School Hanney                        |
+| 0      | 3             | Longfield Tutorial Centre; St Aidan's Catholic Primary School; Kelling Primary School                          |
+| 48     | 1             | St Aidan's Catholic Primary School                                                                             |
+| 124664 | 1             | Chantry Infant School                                                                                          |
+| 999    | 0             | NONE                                                                                                           |
