@@ -262,6 +262,10 @@ est:groupMembershipConcepts
         est:GroupMembership,
         est:GroupRelationship,
         est:GroupRelationshipType,
+        est:GroupMembershipRoleType,
+        est:Member,
+        est:SponsoredAcademy,
+        est:Sponsor,
         est:GroupId,
         est:GroupUkprn,
         est:SuccessorMultiAcademyTrust,
@@ -541,6 +545,7 @@ est:EstablishmentGroupMembership
         est:GroupUkprn,
         est:GroupUniqueIdentifier,
         est:GroupMembershipDate,
+        est:GroupMembershipRoleType,
         est:GroupStatus,
         est:GroupOpenDate,
         est:GroupIncorporatedOnDate,
@@ -691,6 +696,44 @@ est:PredecessorSingleAcademyTrust
     skos:broader est:GroupRelationshipType ;
     est:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#successor-mat-predecessor-sat> .
+
+est:GroupMembershipRoleType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group membership role type"@en ;
+    skos:definition "The capacity in which an establishment holds a membership of an establishment group - an ordinary member, or a sponsored academy admitted under a sponsor arrangement."@en ;
+    skos:scopeNote "Maps to the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model, with all three values. 'Sponsor' describes an organisation's membership of the group and is not yet assertable via esto:hasMembership, whose subject is an establishment (gap 2.G2). Lets a single establishment group carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second SP-prefixed 'School sponsor' group record for an organisation that already exists as the members' trust."@en ;
+    skos:narrower
+        est:Member,
+        est:SponsoredAcademy,
+        est:Sponsor ;
+    skos:broader est:EstablishmentGroupMembership ;
+    est:status "Provisional"@en .
+
+est:Member
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Member"@en ;
+    skos:definition "The establishment is an ordinary member of the group. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Member'. The implied default when no group membership role is recorded."@en ;
+    skos:broader est:GroupMembershipRoleType ;
+    est:status "Provisional"@en .
+
+est:SponsoredAcademy
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsored Academy"@en ;
+    skos:definition "The establishment is a member of the group as a sponsored academy under an Academies Act 2010 sponsor arrangement. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsored Academy'. Replaces the second SP-prefixed 'School sponsor' group-link row GIAS holds against the same organisation."@en ;
+    skos:broader est:GroupMembershipRoleType ;
+    est:status "Provisional"@en .
+
+est:Sponsor
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsor"@en ;
+    skos:definition "The member holds the sponsor role within the group - it is the approved sponsoring organisation. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsor'."@en ;
+    skos:scopeNote "Describes an organisation's membership of the group, not an establishment's. Not yet assertable via esto:hasMembership (subject est:Establishment - gap 2.G2); included for full parity with the enterprise data model. For an establishment, the DfE-approved sponsor is named by esto:sponsoredBy."@en ;
+    skos:broader est:GroupMembershipRoleType ;
+    est:status "Provisional"@en .
 
 est:GroupId
     a skos:Concept ;

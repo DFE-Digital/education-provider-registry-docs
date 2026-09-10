@@ -39,7 +39,8 @@ est:establishmentDetailsTaxonomy
         est:ReligiousCharacter,
         est:ReligiousEthos,
         est:EstablishmentGroupType,
-        est:GroupRelationshipType .
+        est:GroupRelationshipType,
+        est:GroupMembershipRoleType .
 
 #################################################################
 # Facet collection
@@ -61,7 +62,8 @@ est:establishmentDetailsTaxonomyFacets
         est:ReligiousCharacter,
         est:ReligiousEthos,
         est:EstablishmentGroupType,
-        est:GroupRelationshipType .
+        est:GroupRelationshipType,
+        est:GroupMembershipRoleType .
 
 #################################################################
 # Type-group collection
@@ -1222,4 +1224,41 @@ est:PredecessorSingleAcademyTrust
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Predecessor SAT"@en ;
     skos:broader est:GroupRelationshipType ;
+    est:status "Provisional"@en .
+
+#################################################################
+# Group-membership-role-type facet (v1.18)
+#################################################################
+
+est:GroupMembershipRoleType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Group membership role type"@en ;
+    skos:definition "The capacity in which an establishment holds a membership of an establishment group - an ordinary member, or a sponsored academy admitted under a sponsor arrangement. Maps to the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity."@en ;
+    skos:narrower
+        est:Member,
+        est:SponsoredAcademy,
+        est:Sponsor ;
+    est:status "Provisional"@en .
+
+est:Member
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Member"@en ;
+    skos:broader est:GroupMembershipRoleType ;
+    est:status "Provisional"@en .
+
+est:SponsoredAcademy
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Sponsored Academy"@en ;
+    skos:broader est:GroupMembershipRoleType ;
+    est:status "Provisional"@en .
+
+est:Sponsor
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Sponsor"@en ;
+    skos:broader est:GroupMembershipRoleType ;
     est:status "Provisional"@en .

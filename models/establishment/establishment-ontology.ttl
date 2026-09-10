@@ -35,10 +35,10 @@ esto:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-08-06"^^xsd:date ;
+    dcterms:modified "2026-09-10"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.17" ;
+    owl:versionInfo "1.18" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -70,6 +70,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.15: est:StatutoryAgeRange given queryable low/high sub-properties, the same compound-value pattern already fixed for capacity/pupil measures (v1.13) and address (v1.14) - previously held only as a combined rdfs:label ('2 to 11'@en) with the actual GIAS StatutoryLowAge/StatutoryHighAge values repeated as free text in an rdfs:comment on some but not all worked-example instances. New classes: est:StatutoryLowAge, est:StatutoryHighAge. New object properties, both domain est:StatutoryAgeRange, range the respective new class, 0..1 each: esto:hasStatutoryLowAge, esto:hasStatutoryHighAge. Unlike the v1.14 address components (which use rdfs:label for their text values), these follow est:SchoolCapacity's numeric rdf:value pattern (xsd:nonNegativeInteger) - ages are numeric, not free text, so the numeric-measure convention is the correct one to match here. rdfs:label on est:StatutoryAgeRange itself is retained as a derived, human-readable form."@en ;
     rdfs:comment "v1.16: est:EstablishmentLeadership given a real owl:Class and esto:hasEstablishmentLeadership object property (domain est:Establishment, range est:EstablishmentLeadership, 0..1), correcting a divergence between the ontology and its own SKOS vocabulary that had existed since est:EstablishmentLeadership was first added to establishment-vocabulary.ttl as a top-level concept (skos:topConceptOf est:establishmentDetailsVocabulary, a peer of est:EstablishmentLocationAndContact/est:EducationAdmissionsAndProvision/etc.) - the vocabulary always intended leadership to be its own grouping, but the ontology never implemented that grouping and instead attached esto:hasHeadteacherOrPrincipal and esto:hasCentreManager directly to est:EstablishmentLocationAndContact, whose own definition is 'the group of fields describing how to contact and locate the establishment physically' - a headteacher's name is neither. Domain of esto:hasHeadteacherOrPrincipal and esto:hasCentreManager corrected to est:EstablishmentLeadership; esto:hasJobTitle's domain (est:HeadteacherOrPrincipal) is unchanged, since a job title is correctly a property of the specific headteacher instance, not a sibling grouping field. est:HeadteacherOrPrincipal and est:JobTitle class declarations moved from the 'contact and location' section of this file into a new 'establishment leadership' section, matching the vocabulary's grouping; est:CentreManager's declaration (in the children's-centre operational-record section, alongside est:ProviderType) was left in place, since moving it would separate it from its other children's-centre-specific siblings for no benefit - only its property's domain needed correcting. establishment-shacl.ttl's three property-path shapes referencing esto:hasHeadteacherOrPrincipal/hasCentreManager (the universal shape's max-1 rule, and the children's-centre group's minCount-1-Manager/maxCount-0-Headteacher rules) updated to path through esto:hasEstablishmentLeadership instead of esto:hasEstablishmentLocationAndContact, matching the new domain. Also reconciled a duplicate vocabulary concept found while implementing this: establishment-vocabulary.ttl carried both est:JobTitle (added at ontology v1.10, actually implemented with an owl:Class and esto:hasJobTitle, status Provisional) and est:PreferredJobTitle (pre-existing, vocabulary-only, never given an ontology counterpart, status Preferred, skos:broader est:EstablishmentLeadership) for what is the same real GIAS field (HeadPreferredJobTitle) - est:PreferredJobTitle deleted outright from the vocabulary (not deprecated - nothing referenced it outside its own declaration and two membership lists), est:JobTitle retained as the one surviving, actually-implemented concept."@en ;
     rdfs:comment "v1.17: est:HeadteacherOrPrincipal and est:CentreManager both given rdfs:subClassOf est:Person, matching the pattern gov:GovernancePerson already uses (rdfs:subClassOf est:Person, governance-ontology.ttl) - a headteacher or centre manager's name was previously carried only as an rdfs:label on an otherwise untyped-as-a-person instance, formally no different from any other labelled blank node in this ontology. Purely additive - existing worked-example Turtle needs no change, since RDFS subsumption means every existing `a est:HeadteacherOrPrincipal` instance is now also inferred `a est:Person` without any triple being edited. establishment-vocabulary.ttl's est:Person concept updated to list both as skos:narrower and to mention them in its definition, which previously only named independent-school proprietors as an example of the class's use."@en ;
+    rdfs:comment "v1.18: group membership role type added, closing gap 2.G1 in docs/transformation/data/enterprise/claude/organisation-groups-alignment-establishment-model-vs-edm.md (plan: group-membership-role-type-plan.md). New class est:GroupMembershipRoleType (closed enumeration, modelled like est:GroupRelationshipType); 3 owl:NamedIndividual values est:Member, est:SponsoredAcademy and est:Sponsor, matching the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity in full. est:Sponsor describes an organisation's membership of the group and is not yet assertable via esto:hasMembership (domain est:Establishment - gap 2.G2 remains open); it is included for parity and for the future organisation-as-member case. New object property esto:hasGroupMembershipRole (domain est:GroupMembership, range est:GroupMembershipRoleType, 0..1). This lets a single est:EstablishmentGroup carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second 'School sponsor' (SP-prefixed) group record for an organisation that already exists as the members' trust (TR-prefixed). esto:sponsoredBy retained unchanged - it names the DfE-approved sponsor organisation, which need not be an est:EstablishmentGroup (for example a diocese), a distinct fact from the in-group role. establishment-shacl.ttl gains est:GroupMembershipShape (the first shape to target est:GroupMembership); establishment-vocabulary.ttl and establishment-taxonomy.ttl gain the SKOS mirror of the new class and its values."@en ;
     est:status "Provisional"@en .
 
 
@@ -1767,6 +1768,13 @@ esto:hasGroupMembershipDate
     rdfs:range est:GroupMembershipDate ;
     rdfs:comment "Cardinality: 0..1. The date the establishment joined this group."@en .
 
+esto:hasGroupMembershipRole
+    a owl:ObjectProperty ;
+    rdfs:label "has group membership role"@en ;
+    rdfs:domain est:GroupMembership ;
+    rdfs:range est:GroupMembershipRoleType ;
+    rdfs:comment "Cardinality: 0..1. The capacity in which this membership is held. Absent means an ordinary membership (est:Member is the implied default). Use est:SponsoredAcademy to record that the establishment joined the group as a sponsored academy under an Academies Act 2010 sponsor arrangement - this replaces the second 'School sponsor' (SP-prefixed) group-link row GIAS holds for an organisation that already exists as the members' trust. Distinct from esto:sponsoredBy, which names the DfE-approved sponsor organisation (which need not be an est:EstablishmentGroup - for example a diocese). Added v1.18."@en .
+
 esto:hasGroupStatus
     a owl:ObjectProperty ;
     rdfs:label "has group status"@en ;
@@ -2177,6 +2185,11 @@ est:GroupRelationshipType
     rdfs:label "Group relationship type"@en ;
     rdfs:comment "The classification of a group-to-group relationship, for example predecessor SAT or successor MAT."@en .
 
+est:GroupMembershipRoleType
+    a owl:Class ;
+    rdfs:label "Group membership role type"@en ;
+    rdfs:comment "The capacity in which a member holds a membership of an establishment group - an ordinary member, a sponsored academy admitted under a sponsor arrangement, or the sponsoring organisation itself. Closed enumeration with three values (est:Member, est:SponsoredAcademy, est:Sponsor), matching the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model. Note: est:Sponsor describes an organisation's membership and is not assertable through esto:hasMembership while that property's domain is est:Establishment (gap 2.G2); for an establishment the approved sponsor is named by esto:sponsoredBy. Added v1.18."@en .
+
 est:GroupId
     a owl:Class ;
     rdfs:label "Group identifier"@en ;
@@ -2254,6 +2267,22 @@ est:PredecessorSingleAcademyTrust
     a owl:NamedIndividual, est:GroupRelationshipType ;
     rdfs:label "Predecessor SAT"@en ;
     rdfs:comment "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en .
+
+# Group membership role type (3 values, v1.18)
+est:Member
+    a owl:NamedIndividual, est:GroupMembershipRoleType ;
+    rdfs:label "Member"@en ;
+    rdfs:comment "The establishment is an ordinary member of the group. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Member'. The implied default when esto:hasGroupMembershipRole is absent."@en .
+
+est:SponsoredAcademy
+    a owl:NamedIndividual, est:GroupMembershipRoleType ;
+    rdfs:label "Sponsored Academy"@en ;
+    rdfs:comment "The establishment is a member of the group as a sponsored academy under an Academies Act 2010 sponsor arrangement. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsored Academy'. Replaces the second 'School sponsor' (SP-prefixed) group-link row GIAS holds against the same organisation."@en .
+
+est:Sponsor
+    a owl:NamedIndividual, est:GroupMembershipRoleType ;
+    rdfs:label "Sponsor"@en ;
+    rdfs:comment "The member holds the sponsor role within the group - it is the approved sponsoring organisation, not a sponsored academy. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsor'. This value describes an organisation's membership of the group; it is only assertable once a group membership can have an organisation as its subject (esto:hasMembership currently has domain est:Establishment - gap 2.G2). Included now for full parity with the enterprise data model's reference entity. For an establishment, the DfE-approved sponsor is named by esto:sponsoredBy instead."@en .
 # The same est: URIs also carry skos:Concept in the vocabulary
 # TTL - valid OWL 2 punning.
 #################################################################
