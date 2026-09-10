@@ -32,10 +32,10 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-08-06"^^xsd:date ;
+    dcterms:modified "2026-09-10"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.8" ;
+    owl:versionInfo "0.9" ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     est:status "Provisional"@en .
@@ -2533,5 +2533,48 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
         sh:minCount 1 ;
         sh:name "Number of pupils eligible for free school meals"@en ;
         sh:message "Other-department institutions must have a free school meal measure."@en ;
+    ] .
+
+#################################################################
+# Group membership shape (v0.9)
+#
+# The first shape to target est:GroupMembership. Constrains the
+# reified membership link itself, independent of establishment
+# type. Deliberately does NOT cap the number of GroupMembership
+# instances between one establishment and one group - an
+# establishment can hold more than one membership of the same
+# group with different roles and joined dates (e.g. an ordinary
+# membership of its trust plus a sponsored-academy membership of
+# the same trust, which GIAS records as two group-link rows).
+#################################################################
+
+est:GroupMembershipShape
+    a sh:NodeShape ;
+    rdfs:label "Group membership shape"@en ;
+    rdfs:comment "Structural rules for a reified est:GroupMembership. Each membership links to exactly one establishment group, may carry at most one joined date, and may carry at most one group membership role, drawn from the est:GroupMembershipRoleType enumeration. Added v0.9 alongside establishment-ontology.ttl v1.18 (esto:hasGroupMembershipRole)."@en ;
+    sh:targetClass est:GroupMembership ;
+
+    sh:property [
+        sh:path esto:memberOf ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:EstablishmentGroup ;
+        sh:name "Establishment group"@en ;
+        sh:message "A group membership must link to exactly one establishment group."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasGroupMembershipDate ;
+        sh:maxCount 1 ;
+        sh:name "Group membership date"@en ;
+        sh:message "A group membership may record at most one joined date."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasGroupMembershipRole ;
+        sh:maxCount 1 ;
+        sh:in ( est:Member est:SponsoredAcademy est:Sponsor ) ;
+        sh:name "Group membership role"@en ;
+        sh:message "Group membership role must be est:Member, est:SponsoredAcademy or est:Sponsor."@en ;
     ] .
 
