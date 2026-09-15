@@ -11,6 +11,16 @@ CREATE TEMP TABLE source_establishment_fixture (
     local_authority_code text,
     establishment_number integer,
     name text,
+    website text,
+    telephone_number text,
+    status_code text,
+    open_date date,
+    close_date date,
+    reason_opened_code text,
+    reason_opened_name text,
+    reason_closed_code text,
+    reason_closed_name text,
+    last_changed_date date,
     type_code text,
     education_phase_code text,
     school_capacity integer,
@@ -76,6 +86,45 @@ INSERT INTO establishment.specialist_provision_type (specialist_provision_type_i
 VALUES (3, 'Resourced provision and SEN unit')
 ON CONFLICT (specialist_provision_type_id) DO UPDATE SET name = EXCLUDED.name;
 
+INSERT INTO establishment.establishment_status (establishment_status_id, code, name) VALUES
+    (1, 1, 'Open'),
+    (2, 2, 'Closed'),
+    (3, 3, 'Open, but proposed to close'),
+    (4, 4, 'Proposed to open')
+ON CONFLICT (establishment_status_id) DO UPDATE SET code = EXCLUDED.code, name = EXCLUDED.name;
+
+INSERT INTO establishment.reason_establishment_opened (reason_establishment_opened_id, name) VALUES
+    (1, 'Academy Converter'),
+    (2, 'New Provision'),
+    (3, 'Result of Amalgamation'),
+    (4, 'Fresh Start'),
+    (5, 'Academy Free School'),
+    (6, 'Result of Closure'),
+    (7, 'Change Religious Character'),
+    (8, 'Change in status'),
+    (9, 'Former Independent'),
+    (10, 'Split school'),
+    (11, 'New Nursery School'),
+    (12, 'Meets accreditation standards'),
+    (13, 'Free Special School')
+ON CONFLICT (reason_establishment_opened_id) DO UPDATE SET name = EXCLUDED.name;
+
+INSERT INTO establishment.reason_establishment_closed (reason_establishment_closed_id, name) VALUES
+    (1, 'Academy Converter'),
+    (2, 'Result of Amalgamation/Merger'),
+    (3, 'Closure'),
+    (4, 'For Academy'),
+    (5, 'Fresh Start'),
+    (6, 'Close Nursery School'),
+    (7, 'Change Religious Character'),
+    (8, 'Does not meet criteria for registration'),
+    (9, 'De-registered'),
+    (10, 'Academy Free School'),
+    (11, 'Change in status'),
+    (12, 'Transferred to new sponsor'),
+    (13, 'Created in Error - application rejected')
+ON CONFLICT (reason_establishment_closed_id) DO UPDATE SET name = EXCLUDED.name;
+
 INSERT INTO establishment.establishment (
     urn, local_authority_code, establishment_number, ukprn, name,
     establishment_type_id, education_phase_id
@@ -96,6 +145,53 @@ ON CONFLICT (urn) DO UPDATE SET
     name = EXCLUDED.name,
     establishment_type_id = EXCLUDED.establishment_type_id,
     education_phase_id = EXCLUDED.education_phase_id;
+
+INSERT INTO establishment.establishment_contact (establishment_id, website, telephone_number)
+SELECT e.establishment_id,
+       NULLIF(BTRIM(s.website), ''),
+       NULLIF(BTRIM(s.telephone_number), '')
+FROM source_establishment_fixture AS s
+JOIN establishment.establishment AS e ON e.urn = s.urn
+WHERE NULLIF(BTRIM(s.website), '') IS NOT NULL
+   OR NULLIF(BTRIM(s.telephone_number), '') IS NOT NULL
+ON CONFLICT (establishment_id) DO UPDATE SET
+    website = EXCLUDED.website,
+   telephone_number = EXCLUDED.telephone_number;
+
+INSERT INTO establishment.establishment_lifecycle (
+    establishment_id, establishment_status_id, open_date, close_date,
+    reason_establishment_opened_id, reason_establishment_closed_id, last_changed_date
+)
+SELECT e.establishment_id,
+       es.establishment_status_id,
+       s.open_date,
+       s.close_date,
+       reo.reason_establishment_opened_id,
+       rec.reason_establishment_closed_id,
+       s.last_changed_date
+FROM source_establishment_fixture AS s
+JOIN establishment.establishment AS e ON e.urn = s.urn
+JOIN establishment.establishment_status AS es
+  ON es.code = NULLIF(BTRIM(s.status_code), '')::integer
+LEFT JOIN LATERAL (
+    SELECT r.reason_establishment_opened_id
+    FROM establishment.reason_establishment_opened AS r
+    WHERE r.name = NULLIF(BTRIM(s.reason_opened_name), '')
+    LIMIT 1
+) AS reo ON TRUE
+LEFT JOIN LATERAL (
+    SELECT r.reason_establishment_closed_id
+    FROM establishment.reason_establishment_closed AS r
+    WHERE r.name = NULLIF(BTRIM(s.reason_closed_name), '')
+    LIMIT 1
+) AS rec ON TRUE
+ON CONFLICT (establishment_id) DO UPDATE SET
+    establishment_status_id = EXCLUDED.establishment_status_id,
+    open_date = EXCLUDED.open_date,
+    close_date = EXCLUDED.close_date,
+    reason_establishment_opened_id = EXCLUDED.reason_establishment_opened_id,
+    reason_establishment_closed_id = EXCLUDED.reason_establishment_closed_id,
+    last_changed_date = EXCLUDED.last_changed_date;
 
 INSERT INTO establishment.establishment_location (establishment_id)
 SELECT e.establishment_id

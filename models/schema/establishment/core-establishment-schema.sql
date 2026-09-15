@@ -61,6 +61,44 @@ CREATE TABLE establishment.establishment (
     CHECK ((local_authority_code IS NULL) = (establishment_number IS NULL))
 );
 
+CREATE TABLE establishment.establishment_contact (
+    establishment_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
+    website text,
+    telephone_number text,
+    CHECK (website IS NOT NULL OR telephone_number IS NOT NULL)
+);
+
+CREATE TABLE establishment.establishment_status (
+    establishment_status_id integer PRIMARY KEY,
+    code integer NOT NULL UNIQUE,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.reason_establishment_opened (
+    reason_establishment_opened_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.reason_establishment_closed (
+    reason_establishment_closed_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.establishment_lifecycle (
+    establishment_lifecycle_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
+    establishment_status_id integer NOT NULL REFERENCES establishment.establishment_status (establishment_status_id),
+    open_date date,
+    close_date date,
+    reason_establishment_opened_id integer
+        REFERENCES establishment.reason_establishment_opened (reason_establishment_opened_id),
+    reason_establishment_closed_id integer
+        REFERENCES establishment.reason_establishment_closed (reason_establishment_closed_id),
+    last_changed_date date,
+    CHECK (close_date IS NULL OR open_date IS NULL OR close_date >= open_date)
+);
+
 CREATE TABLE establishment.address (
     address_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     address_line_1 text,

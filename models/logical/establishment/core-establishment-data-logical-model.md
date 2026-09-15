@@ -15,6 +15,11 @@ erDiagram
     ESTABLISHMENT ||--o| EDUCATION_ADMISSIONS_AND_PROVISION : "has"
     ESTABLISHMENT ||--o| CAPACITY_AND_PUPIL_MEASURES : "has"
     ESTABLISHMENT ||--o| SPECIALIST_PROVISION : "has"
+    ESTABLISHMENT ||--o| ESTABLISHMENT_CONTACT : "has contact"
+    ESTABLISHMENT ||--o| ESTABLISHMENT_LIFECYCLE : "has lifecycle"
+    ESTABLISHMENT_LIFECYCLE }o--|| ESTABLISHMENT_STATUS : "has status"
+    ESTABLISHMENT_LIFECYCLE }o--o| REASON_ESTABLISHMENT_OPENED : "has opening reason"
+    ESTABLISHMENT_LIFECYCLE }o--o| REASON_ESTABLISHMENT_CLOSED : "has closing reason"
     EDUCATION_ADMISSIONS_AND_PROVISION }o--o| GENDER_OF_ENTRY_TYPE : "has gender of entry"
     EDUCATION_ADMISSIONS_AND_PROVISION }o--o| ADMISSIONS_POLICY : "has admissions policy"
     EDUCATION_ADMISSIONS_AND_PROVISION }o--o| BOARDING_PROVISION : "has boarding provision"
@@ -38,6 +43,40 @@ erDiagram
 
     EDUCATION_PHASE {
         integer education_phase_id PK
+        string name
+    }
+
+    ESTABLISHMENT_CONTACT {
+        uuid establishment_contact_id PK
+        uuid establishment_id FK, UK
+        string website
+        string telephone_number
+    }
+
+    ESTABLISHMENT_LIFECYCLE {
+        uuid establishment_lifecycle_id PK
+        uuid establishment_id FK, UK
+        integer establishment_status_id FK
+        date open_date
+        date close_date
+        integer reason_establishment_opened_id FK
+        integer reason_establishment_closed_id FK
+        date last_changed_date
+    }
+
+    ESTABLISHMENT_STATUS {
+        integer establishment_status_id PK
+        integer code UK
+        string name
+    }
+
+    REASON_ESTABLISHMENT_OPENED {
+        integer reason_establishment_opened_id PK
+        string name
+    }
+
+    REASON_ESTABLISHMENT_CLOSED {
+        integer reason_establishment_closed_id PK
         string name
     }
 
@@ -139,6 +178,128 @@ what is its identity, name and headline classification?
 | UKPRN | Zero or one | Eight-digit value; global uniqueness is not yet a target rule | Optional because it does not apply to every establishment. It is externally owned by UKRLP. |
 
 The model must enforce the stated uniqueness constraints for the direct identifier attributes. The uniqueness scope for each identifier type must be defined by its owning authority.
+
+## Establishment lifecycle
+
+`establishment_lifecycle` records the current status of an establishment and
+the key dates and reasons that explain its opening or closure. It is the
+logical representation of the ontology's `EstablishmentLifecycle` concept.
+
+Business-friendly pattern:
+
+```text
+Is the establishment open, when did its current lifecycle begin or end,
+and what reason explains that change?
+```
+
+- An establishment has zero or one lifecycle record in this slice.
+- `establishment_status_id` is a controlled value, not free text.
+- Open and close dates, and their reasons, are conditional source facts. They
+  must not be inferred when the source does not provide them.
+- When both dates are present, `close_date` must not precede `open_date`.
+- `last_changed_date` describes source currency; it is not the date of a
+  lifecycle event.
+
+| Column | Required | Meaning and rule |
+| --- | --- | --- |
+| `establishment_lifecycle_id` | Yes | Generated opaque technical key for the lifecycle record. |
+| `establishment_id` | Yes | One-to-one owner relationship to `establishment`; unique in this table. |
+| `establishment_status_id` | Yes | Controlled establishment-status reference value. |
+| `open_date` | Conditional | Date the establishment opened, where supplied by the source. |
+| `close_date` | Conditional | Date the establishment closed, where supplied by the source. |
+| `reason_establishment_opened_id` | Conditional | Controlled reason for opening, where supplied by the source. |
+| `reason_establishment_closed_id` | Conditional | Controlled reason for closure, where supplied by the source. |
+| `last_changed_date` | Conditional | Source-system date on which the lifecycle data last changed. |
+
+### BAU source mapping
+
+The first migration maps lifecycle facts from `dbo.Establishment` and its
+controlled reference tables. The target model keeps these facts together as
+one owned lifecycle boundary rather than adding status and dates to the core
+identity table.
+
+| Logical concept | BAU source | Notes |
+| --- | --- | --- |
+| Establishment status | `dbo.Establishment.status_code` -> `dbo.EstablishmentStatus.code` | Preserve the controlled code and its label. |
+| Open date | `dbo.Establishment.OpenDate` | Nullable source date. |
+| Close date | `dbo.Establishment.CloseDate` | Nullable source date. |
+| Reason opened | `dbo.Establishment.reasonEstablishmentOpened_code` -> `dbo.ReasonEstablishmentOpened.code` | Nullable source reason. |
+| Reason closed | `dbo.Establishment.reasonEstablishmentClosed_code` -> `dbo.ReasonEstablishmentClosed.code` | Nullable source reason. |
+| Last changed date | `dbo.Establishment.lastChangedDate` | Source currency marker. |
+
+### Lifecycle reference data
+
+`establishment_status`, `reason_establishment_opened` and
+`reason_establishment_closed` are controlled reference-data entities. Names
+provide the human-readable labels. The lifecycle record points to these
+values rather than storing labels or source codes as unbounded text.
+
+| Entity | Key attributes | Meaning |
+| --- | --- | --- |
+| `establishment_status` | `establishment_status_id`, numeric `code`, `name` | Current lifecycle status, such as open or closed. |
+| `reason_establishment_opened` | `reason_establishment_opened_id`, `name` | Controlled reason explaining an opening event. |
+| `reason_establishment_closed` | `reason_establishment_closed_id`, `name` | Controlled reason explaining a closure event. |
+
+## Establishment status
+
+`establishment_status` is a closed, controlled list. A lifecycle record must
+use one of these values; applications must not create new status labels as
+free text. The identifiers below are the canonical vocabulary values.
+
+| Value | Canonical identifier | Meaning |
+| --- | --- | --- |
+| Open | `est:OpenStatus` | The establishment is currently open and operating. |
+| Closed | `est:ClosedStatus` | The establishment has closed and is retained for historical reference. |
+| Open, but proposed to close | `est:OpenProposedToCloseStatus` | The establishment is open, but a formal closure proposal is in progress. |
+| Proposed to open | `est:ProposedToOpenStatus` | The establishment is approved or planned but has not yet opened. |
+
+These four values are the complete list for this model slice. The BAU
+`status_code` is mapped to the corresponding canonical value through
+`dbo.EstablishmentStatus`; the BAU code itself is an integration detail and
+is not used as an unbounded label in the logical model.
+
+## Reason establishment opened
+
+`reason_establishment_opened` is a closed, controlled list. The value is
+optional because absence means that the source supplied no opening reason; it
+must not be replaced with a made-up "not recorded" value.
+
+| Value | Canonical identifier |
+| --- | --- |
+| Academy Converter | `est:AcademyConverterOpenReason` |
+| New Provision | `est:NewProvisionOpenReason` |
+| Result of Amalgamation | `est:ResultOfAmalgamationOpenReason` |
+| Fresh Start | `est:FreshStartOpenReason` |
+| Academy Free School | `est:AcademyFreeSchoolOpenReason` |
+| Result of Closure | `est:ResultOfClosureOpenReason` |
+| Change Religious Character | `est:ChangeReligiousCharacterOpenReason` |
+| Change in status | `est:ChangeInStatusOpenReason` |
+| Former Independent | `est:FormerIndependentOpenReason` |
+| Split school | `est:SplitSchoolOpenReason` |
+| New Nursery School | `est:NewNurserySchoolOpenReason` |
+| Meets accreditation standards | `est:MeetsAccreditationStandardsOpenReason` |
+| Free Special School | `est:FreeSpecialSchoolOpenReason` |
+
+## Reason establishment closed
+
+`reason_establishment_closed` is a closed, controlled list. The value is
+optional and is only populated when the source records a closure reason.
+
+| Value | Canonical identifier |
+| --- | --- |
+| Academy Converter | `est:AcademyConverterCloseReason` |
+| Result of Amalgamation/Merger | `est:ResultOfAmalgamationMergerCloseReason` |
+| Closure | `est:ClosureCloseReason` |
+| For Academy | `est:ForAcademyCloseReason` |
+| Fresh Start | `est:FreshStartCloseReason` |
+| Close Nursery School | `est:CloseNurserySchoolCloseReason` |
+| Change Religious Character | `est:ChangeReligiousCharacterCloseReason` |
+| Does not meet criteria for registration | `est:DoesNotMeetCriteriaForRegistrationCloseReason` |
+| De-registered | `est:DeRegisteredCloseReason` |
+| Academy Free School | `est:AcademyFreeSchoolCloseReason` |
+| Change in status | `est:ChangeInStatusCloseReason` |
+| Transferred to new sponsor | `est:TransferredToNewSponsorCloseReason` |
+| Created in Error - application rejected | `est:CreatedInErrorCloseReason` |
 
 ## Establishment type
 
@@ -422,11 +583,12 @@ Establishment
 
 ## Location And Contact ERD
 
-The location branch is shown separately so the main establishment ERD remains readable. This branch contains every physical site at which the establishment operates - exactly one designated as the main site, plus zero or more additional sites - and each site's postal address. Contact details and address history are deferred.
+The location-and-contact branch is shown separately so the main establishment ERD remains readable. The location boundary contains every physical site at which the establishment operates - exactly one designated as the main site, plus zero or more additional sites - and each site's postal address. Public contact values are held in the separate `establishment_contact` table. Address history and other contact channels are deferred.
 
 ```mermaid
 erDiagram
     ESTABLISHMENT ||--|| ESTABLISHMENT_LOCATION : "has"
+    ESTABLISHMENT ||--o| ESTABLISHMENT_CONTACT : "has contact"
     ESTABLISHMENT_LOCATION ||--|{ SITE : "has"
     ESTABLISHMENT_LOCATION ||--|| SITE : "designates as main"
     SITE }o--|| ADDRESS : "uses"
@@ -441,6 +603,13 @@ erDiagram
         uuid establishment_location_id PK
         uuid establishment_id FK, UK
         uuid main_site_id FK, UK
+    }
+
+    ESTABLISHMENT_CONTACT {
+        uuid establishment_contact_id PK
+        uuid establishment_id FK, UK
+        string website
+        string telephone_number
     }
 
     SITE {
@@ -464,8 +633,10 @@ erDiagram
 
 ## Establishment location
 
-`establishment_location` is the owning boundary for the establishment's
-physical sites. It designates exactly one current site as the main site.
+`establishment_location` is the physical-location part of the vocabulary and
+ontology concept `EstablishmentLocationAndContact`. It is the owning boundary
+for the establishment's physical sites and designates exactly one current site
+as the main site.
 
 Business-friendly pattern:
 
@@ -483,6 +654,38 @@ and which site is its principal site?
 | `establishment_location_id` | Yes | Technical key for the location boundary. |
 | `establishment_id` | Yes | One-to-one owner relationship to `establishment`. |
 | `main_site_id` | Yes | Identifies the principal site owned by the same location boundary. |
+
+## Establishment contact
+
+`establishment_contact` is the relational implementation of the contact part
+of the ontology concept `EstablishmentLocationAndContact`. It holds the
+establishment's optional public contact values independently from its physical
+sites and addresses.
+
+Business-friendly pattern:
+
+```text
+How can this establishment be contacted publicly?
+```
+
+- An establishment has zero or one contact record in this slice.
+- `website` represents the optional public website URL (`est:Website`).
+- `telephone_number` represents the optional main contact telephone number (`est:TelephoneNumber`).
+- Each establishment has at most one website and at most one telephone number.
+- This slice does not include email addresses, named contacts, headteachers or contact history.
+
+| Column | Required | Meaning and rule |
+| --- | --- | --- |
+| `establishment_contact_id` | Yes | Technical key for the contact record. |
+| `establishment_id` | Yes | One-to-one owner relationship to `establishment`; unique so there is at most one contact record. |
+| `website` | Conditional | Public website URL where supplied; maps to `est:Website` and `esto:hasWebsite`. |
+| `telephone_number` | Conditional | Main public contact telephone number where supplied; maps to `est:TelephoneNumber` and `esto:hasTelephoneNumber`. |
+
+The vocabulary still groups these values under Location and Contact, and the
+ontology still attaches them to `EstablishmentLocationAndContact`. Splitting
+the values into a developer-friendly relational table is a physical/logical
+mapping choice; it does not introduce a new business concept or alter the
+ontology.
 
 ## Site
 
@@ -548,14 +751,15 @@ The target model makes every physical location explicit as a `Site`, because it 
 
 ```text
 Establishment
-  -> EstablishmentLocation
+  -> EstablishmentLocationAndContact
+     (relational table: establishment_location)
     -> Site (main)
       -> Address
     -> Site (additional, zero or more)
       -> Address
 ```
 
-`EstablishmentLocation` is the owning boundary for location facts; contact details are still deferred. It holds every `Site` at which the establishment operates and designates exactly one of them as the main site via `main_site_id`, rather than a role or Boolean flag carried on `Site` itself. This is a deliberate choice: "main" is a fact about which site the establishment currently points to, not an attribute of the site record, and a per-row flag would allow invalid states a single designating foreign key cannot (zero sites flagged main, or more than one).
+`EstablishmentLocation` is the owning boundary for location facts. It holds every `Site` at which the establishment operates and designates exactly one of them as the main site via `main_site_id`. "Main" is a fact about which site the establishment currently points to, not an attribute of the site record, and a per-row flag would allow invalid states a single designating foreign key cannot (zero sites flagged main, or more than one).
 
 Which establishment types, if any, should be permitted to have additional sites is not yet defined in this slice, and the logical model does not currently restrict it. This should be confirmed against evidence (for example, actual usage patterns in BAU's `EstablishmentAdditionalAddresses`) before an executable constraint is added.
 

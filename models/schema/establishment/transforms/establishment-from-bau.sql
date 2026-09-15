@@ -21,6 +21,17 @@ WITH source_establishment AS (
         e.LA_code,
         e.EstablishmentNumber,
         e.EstablishmentName,
+        e.WebsiteAddress,
+        e.TelephoneNumber,
+        e.status_code,
+        es.name AS establishment_status_name,
+        e.OpenDate,
+        e.CloseDate,
+        e.reasonEstablishmentOpened_code,
+        reo.name AS reason_establishment_opened_name,
+        e.reasonEstablishmentClosed_code,
+        rec.name AS reason_establishment_closed_name,
+        e.lastChangedDate,
         e.type_code,
         et.name AS type_name,
         e.educationPhase_code,
@@ -57,6 +68,12 @@ WITH source_establishment AS (
       ON ep.code = e.educationPhase_code
     LEFT JOIN dbo.Gender AS g
       ON g.code = e.gender_code
+    LEFT JOIN dbo.EstablishmentStatus AS es
+      ON es.code = e.status_code
+    LEFT JOIN dbo.ReasonEstablishmentOpened AS reo
+      ON reo.code = e.reasonEstablishmentOpened_code
+    LEFT JOIN dbo.ReasonEstablishmentClosed AS rec
+      ON rec.code = e.reasonEstablishmentClosed_code
     WHERE e.URN = @URN
 )
 SELECT
@@ -69,6 +86,17 @@ SELECT
         ELSE CONCAT(s.LA_code, '/', RIGHT(CONCAT('0000', CAST(s.EstablishmentNumber AS varchar(4))), 4))
     END AS dfe_number,
     s.EstablishmentName AS name,
+    NULLIF(LTRIM(RTRIM(s.WebsiteAddress)), '') AS website,
+    NULLIF(LTRIM(RTRIM(s.TelephoneNumber)), '') AS telephone_number,
+    s.status_code AS source_establishment_status_code,
+    s.establishment_status_name AS establishment_status,
+    CONVERT(varchar(10), s.OpenDate, 23) AS open_date,
+    CONVERT(varchar(10), s.CloseDate, 23) AS close_date,
+    s.reasonEstablishmentOpened_code AS source_reason_establishment_opened_code,
+    s.reason_establishment_opened_name AS reason_establishment_opened,
+    s.reasonEstablishmentClosed_code AS source_reason_establishment_closed_code,
+    s.reason_establishment_closed_name AS reason_establishment_closed,
+    CONVERT(varchar(10), s.lastChangedDate, 23) AS last_changed_date,
     s.type_code AS source_establishment_type_code,
     s.type_name AS source_establishment_type,
     CASE
