@@ -14,6 +14,17 @@ SELECT
     e.establishment_number,
     e.local_authority_code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
+    ec.website,
+    ec.telephone_number,
+    elc.establishment_lifecycle_id,
+    es.establishment_status_id,
+    es.code AS establishment_status_code,
+    es.name AS establishment_status,
+    elc.open_date,
+    elc.close_date,
+    reo.name AS reason_establishment_opened,
+    rec.name AS reason_establishment_closed,
+    elc.last_changed_date,
     e.establishment_type_id,
     et.name AS establishment_type,
     e.education_phase_id,
@@ -62,6 +73,16 @@ JOIN establishment.establishment AS e
   ON e.urn = p.urn
 JOIN establishment.establishment_type AS et
   ON et.establishment_type_id = e.establishment_type_id
+LEFT JOIN establishment.establishment_contact AS ec
+  ON ec.establishment_id = e.establishment_id
+LEFT JOIN establishment.establishment_lifecycle AS elc
+  ON elc.establishment_id = e.establishment_id
+LEFT JOIN establishment.establishment_status AS es
+  ON es.establishment_status_id = elc.establishment_status_id
+LEFT JOIN establishment.reason_establishment_opened AS reo
+  ON reo.reason_establishment_opened_id = elc.reason_establishment_opened_id
+LEFT JOIN establishment.reason_establishment_closed AS rec
+  ON rec.reason_establishment_closed_id = elc.reason_establishment_closed_id
 LEFT JOIN establishment.education_phase AS ep
   ON ep.education_phase_id = e.education_phase_id
 LEFT JOIN establishment.establishment_location AS lc
