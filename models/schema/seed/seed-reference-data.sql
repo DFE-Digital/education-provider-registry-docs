@@ -13,6 +13,13 @@
 
 BEGIN;
 
+INSERT INTO establishment.local_authority_jurisdiction (local_authority_jurisdiction_id, name)
+VALUES
+    (1, 'English'),
+    (2, 'Welsh')
+ON CONFLICT (local_authority_jurisdiction_id) DO UPDATE
+SET name = EXCLUDED.name;
+
 INSERT INTO establishment.establishment_type (establishment_type_id, name)
 VALUES
     -- Core community-school and academy concepts

@@ -10,9 +10,11 @@ SELECT
     e.establishment_id,
     e.urn,
     e.ukprn,
-    e.local_authority_code,
+    la.code AS local_authority_code,
+    la.code AS local_authority_reference_code,
+    la.name AS local_authority_name,
     e.establishment_number,
-    e.local_authority_code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
+    la.code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
     ec.website,
     ec.telephone_number,
@@ -29,8 +31,8 @@ SELECT
     et.name AS establishment_type,
     e.education_phase_id,
     ep.name AS education_phase,
-    lc.establishment_location_id,
-    ms.site_id AS main_site_id,
+    ms.site_id,
+    ets.is_main_site,
     ms.site_name AS main_site_name,
     ms.uprn AS main_site_uprn,
     a.address_id,
@@ -73,6 +75,10 @@ JOIN establishment.establishment AS e
   ON e.urn = p.urn
 JOIN establishment.establishment_type AS et
   ON et.establishment_type_id = e.establishment_type_id
+LEFT JOIN establishment.establishment_geography AS eg
+  ON eg.establishment_id = e.establishment_id
+LEFT JOIN establishment.local_authority AS la
+  ON la.local_authority_id = eg.local_authority_id
 LEFT JOIN establishment.establishment_contact AS ec
   ON ec.establishment_id = e.establishment_id
 LEFT JOIN establishment.establishment_lifecycle AS elc
@@ -85,10 +91,11 @@ LEFT JOIN establishment.reason_establishment_closed AS rec
   ON rec.reason_establishment_closed_id = elc.reason_establishment_closed_id
 LEFT JOIN establishment.education_phase AS ep
   ON ep.education_phase_id = e.education_phase_id
-LEFT JOIN establishment.establishment_location AS lc
-  ON lc.establishment_id = e.establishment_id
+LEFT JOIN establishment.establishment_to_site AS ets
+  ON ets.establishment_id = e.establishment_id
+ AND ets.is_main_site
 LEFT JOIN establishment.site AS ms
-  ON ms.site_id = lc.main_site_id
+  ON ms.site_id = ets.site_id
 LEFT JOIN establishment.address AS a
   ON a.address_id = ms.address_id
 LEFT JOIN establishment.capacity_and_pupil_measures AS capm

@@ -126,12 +126,11 @@ INSERT INTO establishment.reason_establishment_closed (reason_establishment_clos
 ON CONFLICT (reason_establishment_closed_id) DO UPDATE SET name = EXCLUDED.name;
 
 INSERT INTO establishment.establishment (
-    urn, local_authority_code, establishment_number, ukprn, name,
+    urn, establishment_number, ukprn, name,
     establishment_type_id, education_phase_id
 )
 SELECT
     s.urn,
-    s.local_authority_code,
     s.establishment_number,
     s.ukprn,
     s.name,
@@ -139,12 +138,33 @@ SELECT
     CASE WHEN s.education_phase_code = '4' THEN 5 ELSE 2 END
 FROM source_establishment_fixture AS s
 ON CONFLICT (urn) DO UPDATE SET
-    local_authority_code = EXCLUDED.local_authority_code,
     establishment_number = EXCLUDED.establishment_number,
     ukprn = EXCLUDED.ukprn,
     name = EXCLUDED.name,
     establishment_type_id = EXCLUDED.establishment_type_id,
     education_phase_id = EXCLUDED.education_phase_id;
+
+-- Geography is an optional owned substructure. A missing, blank or zero
+-- source local-authority code means that no local-authority relationship is
+-- recorded, rather than creating a sentinel authority record.
+DELETE FROM establishment.establishment_geography AS eg
+USING source_establishment_fixture AS s
+JOIN establishment.establishment AS e ON e.urn = s.urn
+WHERE eg.establishment_id = e.establishment_id;
+
+INSERT INTO establishment.establishment_geography (
+    establishment_id, local_authority_id
+)
+SELECT e.establishment_id,
+       la.local_authority_id
+FROM source_establishment_fixture AS s
+JOIN establishment.establishment AS e ON e.urn = s.urn
+JOIN establishment.local_authority AS la
+  ON la.code = NULLIF(BTRIM(s.local_authority_code), '')::integer
+WHERE NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
+  AND NULLIF(BTRIM(s.local_authority_code), '')::integer <> 0
+ON CONFLICT (establishment_id) DO UPDATE SET
+    local_authority_id = EXCLUDED.local_authority_id;
 
 INSERT INTO establishment.establishment_contact (establishment_id, website, telephone_number)
 SELECT e.establishment_id,
@@ -193,14 +213,8 @@ ON CONFLICT (establishment_id) DO UPDATE SET
     reason_establishment_closed_id = EXCLUDED.reason_establishment_closed_id,
     last_changed_date = EXCLUDED.last_changed_date;
 
-INSERT INTO establishment.establishment_location (establishment_id)
-SELECT e.establishment_id
-FROM source_establishment_fixture AS s
-JOIN establishment.establishment AS e ON e.urn = s.urn
-ON CONFLICT (establishment_id) DO NOTHING;
-
 CREATE TEMP TABLE source_main_site_fixture AS
-SELECT el.establishment_location_id,
+SELECT e.establishment_id,
        COALESCE(ms.site_id, gen_random_uuid()) AS site_id,
        COALESCE(ms.address_id, gen_random_uuid()) AS address_id,
        s.main_site_name,
@@ -213,10 +227,14 @@ SELECT el.establishment_location_id,
        s.address_uprn
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
-JOIN establishment.establishment_location AS el
-  ON el.establishment_id = e.establishment_id
 LEFT JOIN establishment.site AS ms
-  ON ms.establishment_location_id = el.establishment_location_id;
+  ON EXISTS (
+      SELECT 1
+      FROM establishment.establishment_to_site AS ets
+      WHERE ets.establishment_id = e.establishment_id
+        AND ets.site_id = ms.site_id
+        AND ets.is_main_site
+  );
 
 INSERT INTO establishment.address (
     address_id, address_line_1, address_line_2, address_line_3,
@@ -235,21 +253,23 @@ ON CONFLICT (address_id) DO UPDATE SET
 
 -- Keep the address reusable: Site owns the reference to Address.
 INSERT INTO establishment.site (
-    site_id, establishment_location_id, address_id, site_name, uprn
+    site_id, address_id, site_name, uprn
 )
-SELECT site_id, establishment_location_id, address_id, main_site_name,
+SELECT site_id, address_id, main_site_name,
        NULLIF(address_uprn, '')::bigint
 FROM source_main_site_fixture
 ON CONFLICT (site_id) DO UPDATE SET
-    establishment_location_id = EXCLUDED.establishment_location_id,
     address_id = EXCLUDED.address_id,
     site_name = EXCLUDED.site_name,
     uprn = EXCLUDED.uprn;
 
-UPDATE establishment.establishment_location AS el
-SET main_site_id = s.site_id
-FROM source_main_site_fixture AS s
-WHERE el.establishment_location_id = s.establishment_location_id;
+INSERT INTO establishment.establishment_to_site (
+    establishment_id, site_id, is_main_site
+)
+SELECT establishment_id, site_id, true
+FROM source_main_site_fixture
+ON CONFLICT (establishment_id, site_id) DO UPDATE SET
+    is_main_site = EXCLUDED.is_main_site;
 
 INSERT INTO establishment.capacity_and_pupil_measures (
     establishment_id, school_capacity, pupil_count, free_school_meal_measure, census_date
