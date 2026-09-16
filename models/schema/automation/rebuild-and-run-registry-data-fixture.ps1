@@ -20,9 +20,10 @@ $establishmentSchemaSql = Join-Path $schemaRoot 'establishment\core-establishmen
 $governanceSchemaSql = Join-Path $schemaRoot 'governance\governance-schema.sql'
 $referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
 $establishmentRunner = Join-Path $automationRoot 'invoke-establishment-migration.ps1'
+$localAuthorityRunner = Join-Path $automationRoot 'seed-local-authorities-from-bau.ps1'
 $governanceRunner = Join-Path $automationRoot 'invoke-governance-migration.ps1'
 $psql = Get-LocalPostgresClientPath
-foreach ($path in @($selectionPath, $establishmentSchemaSql, $governanceSchemaSql, $referenceDataSql, $establishmentRunner, $governanceRunner)) {
+foreach ($path in @($selectionPath, $establishmentSchemaSql, $governanceSchemaSql, $referenceDataSql, $establishmentRunner, $localAuthorityRunner, $governanceRunner)) {
     if (-not (Test-Path -LiteralPath $path)) { throw "Required registry migration file not found: $path" }
 }
 
@@ -52,6 +53,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Governance schema rebuild failed.' }
 
     $env:EPR_BAU_SQL_PASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
+    & $localAuthorityRunner -FixturePath (Join-Path $FixtureDirectory 'epr-local-authority-fixture.csv')
     foreach ($urn in $urns) {
         & $establishmentRunner -Urn $urn -FixturePath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv")
     }

@@ -71,7 +71,6 @@ SET name = EXCLUDED.name;
 -- a duplicate.
 INSERT INTO establishment.establishment (
     urn,
-    local_authority_code,
     establishment_number,
     ukprn,
     name,
@@ -80,7 +79,6 @@ INSERT INTO establishment.establishment (
 )
 VALUES (
     100018,
-    '202',
     2436,
     10069172,
     'Netley Primary School & Centre for Autism',
@@ -88,33 +86,36 @@ VALUES (
     2
 )
 ON CONFLICT (urn) DO UPDATE
-SET local_authority_code = EXCLUDED.local_authority_code,
-    establishment_number = EXCLUDED.establishment_number,
+SET establishment_number = EXCLUDED.establishment_number,
     ukprn = EXCLUDED.ukprn,
     name = EXCLUDED.name,
     establishment_type_id = EXCLUDED.establishment_type_id,
     education_phase_id = EXCLUDED.education_phase_id;
 
+INSERT INTO establishment.establishment_geography (establishment_id, local_authority_id)
+SELECT e.establishment_id, la.local_authority_id
+FROM establishment.establishment AS e
+JOIN establishment.local_authority AS la ON la.code = 202
+WHERE e.urn = 100018
+ON CONFLICT (establishment_id) DO UPDATE
+SET local_authority_id = EXCLUDED.local_authority_id;
+
 -- Main physical site and its postal address. UPRN belongs to Site, not Address.
 INSERT INTO establishment.address (address_line_1, address_line_2, address_line_3, town, county, postcode)
 SELECT 'obfuscated', NULL, NULL, 'obfuscated', '099', 'NW1 3EX'
 WHERE NOT EXISTS (SELECT 1 FROM establishment.address WHERE postcode = 'NW1 3EX' AND address_line_1 = 'obfuscated');
-INSERT INTO establishment.establishment_location (establishment_id)
-SELECT establishment_id FROM establishment.establishment WHERE urn = 100018
-ON CONFLICT (establishment_id) DO NOTHING;
-INSERT INTO establishment.site (establishment_location_id, address_id, site_name, uprn)
-SELECT l.establishment_location_id, a.address_id, NULL, 5172210
-FROM establishment.establishment_location l
-JOIN establishment.establishment e ON e.establishment_id = l.establishment_id
+INSERT INTO establishment.site (address_id, site_name, uprn)
+SELECT a.address_id, NULL, 5172210
+FROM establishment.establishment e
 JOIN establishment.address a ON a.postcode = 'NW1 3EX' AND a.address_line_1 = 'obfuscated'
 WHERE e.urn = 100018
   AND NOT EXISTS (SELECT 1 FROM establishment.site s WHERE s.uprn = 5172210);
-UPDATE establishment.establishment_location l
-SET main_site_id = s.site_id
-FROM establishment.site s, establishment.establishment e
-WHERE e.establishment_id = l.establishment_id
-  AND s.uprn = 5172210
-  AND e.urn = 100018;
+INSERT INTO establishment.establishment_to_site (establishment_id, site_id, is_main_site)
+SELECT e.establishment_id, s.site_id, true
+FROM establishment.establishment e
+JOIN establishment.site s ON s.uprn = 5172210
+WHERE e.urn = 100018
+ON CONFLICT (establishment_id, site_id) DO UPDATE SET is_main_site = EXCLUDED.is_main_site;
 
 -- Capacity and pupil measures for this establishment.
 INSERT INTO establishment.capacity_and_pupil_measures (

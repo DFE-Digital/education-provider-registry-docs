@@ -49,16 +49,55 @@ CREATE TABLE establishment.specialist_provision_type (
     name text NOT NULL
 );
 
+CREATE TABLE establishment.local_authority_jurisdiction (
+    local_authority_jurisdiction_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.local_authority (
+    local_authority_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code integer NOT NULL UNIQUE,
+    name text NOT NULL,
+    local_authority_jurisdiction_id integer NOT NULL
+        REFERENCES establishment.local_authority_jurisdiction (local_authority_jurisdiction_id)
+);
+
+CREATE TABLE establishment.local_authority_contact (
+    local_authority_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    local_authority_id uuid NOT NULL
+        REFERENCES establishment.local_authority (local_authority_id),
+    contact_email text,
+    contact_first_name text,
+    contact_last_name text,
+    contact_title text,
+    contact_phone text,
+    contact_role text,
+    is_current boolean NOT NULL DEFAULT true,
+    CHECK (
+        contact_email IS NOT NULL
+        OR contact_phone IS NOT NULL
+        OR contact_first_name IS NOT NULL
+        OR contact_last_name IS NOT NULL
+        OR contact_title IS NOT NULL
+    )
+);
+
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
     ukprn numeric CHECK (ukprn BETWEEN 10000000 AND 99999999),
-    local_authority_code text,
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
     establishment_type_id integer NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
-    education_phase_id integer REFERENCES establishment.education_phase (education_phase_id),
-    CHECK ((local_authority_code IS NULL) = (establishment_number IS NULL))
+    education_phase_id integer REFERENCES establishment.education_phase (education_phase_id)
+);
+
+CREATE TABLE establishment.establishment_geography (
+    establishment_geography_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL UNIQUE
+        REFERENCES establishment.establishment (establishment_id),
+    local_authority_id uuid
+        REFERENCES establishment.local_authority (local_authority_id)
 );
 
 CREATE TABLE establishment.establishment_contact (
@@ -109,24 +148,25 @@ CREATE TABLE establishment.address (
     postcode text
 );
 
-CREATE TABLE establishment.establishment_location (
-    establishment_location_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_id uuid NOT NULL UNIQUE REFERENCES establishment.establishment (establishment_id),
-    main_site_id uuid
-);
-
 CREATE TABLE establishment.site (
     site_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_location_id uuid NOT NULL
-        REFERENCES establishment.establishment_location (establishment_location_id),
     address_id uuid NOT NULL REFERENCES establishment.address (address_id),
     site_name text,
-    uprn bigint UNIQUE
+    uprn bigint
 );
 
-ALTER TABLE establishment.establishment_location
-    ADD CONSTRAINT fk_establishment_location_main_site
-    FOREIGN KEY (main_site_id) REFERENCES establishment.site (site_id);
+CREATE TABLE establishment.establishment_to_site (
+    establishment_id uuid NOT NULL
+        REFERENCES establishment.establishment (establishment_id),
+    site_id uuid NOT NULL
+        REFERENCES establishment.site (site_id),
+    is_main_site boolean NOT NULL DEFAULT false,
+    PRIMARY KEY (establishment_id, site_id)
+);
+
+CREATE UNIQUE INDEX ux_establishment_to_site_one_main
+    ON establishment.establishment_to_site (establishment_id)
+    WHERE is_main_site;
 
 CREATE TABLE establishment.capacity_and_pupil_measures (
     capacity_and_pupil_measures_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

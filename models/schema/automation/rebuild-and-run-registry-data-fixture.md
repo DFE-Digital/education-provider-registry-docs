@@ -18,6 +18,7 @@ Every URN is loaded into the Establishment target. Governance processing is also
 
 - A local SQL Server copy named `gias_bau_test_local`, populated manually from the approved BAU source. Automation never connects to BAU Test directly.
 - A read-only SQL Server login named `reader`, with `SELECT` access to the copied tables. The governance slice needs `dbo.StaffRecord`; the Establishment slice needs `dbo.Establishment` and its lookup tables.
+- The geography slice also needs `dbo.LocalAuthority` and `dbo.LocalAuthorityGroup` in the local SQL Server copy.
 - Local PostgreSQL databases named `establishment_local` and `governance_local`. The `postgres` role must be able to rebuild the `establishment` and `governance` schemas and load their data.
 - A PostgreSQL password file at `%APPDATA%\postgresql\pgpass.conf`, with entries matching both targets:
 
@@ -43,6 +44,17 @@ To retain the temporary CSV files for local troubleshooting:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-and-run-registry-data-fixture.ps1" -KeepFixture
 ```
+
+The repository also contains complete SQL worked-example seeds. To rebuild the
+schema and run those seeds directly:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass `
+  -File ".\models\schema\automation\rebuild-and-seed-establishment.ps1"
+```
+
+The default set loads URNs 100018, 106431, 136102 and 146200. Use repeated
+`-SeedFile` arguments to select a different set of files.
 
 ## Internal Execution Flow
 
@@ -72,7 +84,7 @@ Remove SQL Server password variable and temporary files
 
 ### Establishment Slice
 
-The wrapper runs `establishment/core-establishment-schema.sql`, then `seed/seed-reference-data.sql`, then `invoke-establishment-migration.ps1` once per selected URN. The runner uses the reusable BAU transform and PostgreSQL loader under `establishment/`.
+The wrapper runs `establishment/core-establishment-schema.sql`, then `seed/seed-reference-data.sql`, then `seed-local-authorities-from-bau.ps1` to load all local authorities and ten clearly labelled FAKE contact records, then `invoke-establishment-migration.ps1` once per selected URN. The runner uses the reusable BAU transform and PostgreSQL loader under `establishment/`.
 
 ### Governance Slice
 
