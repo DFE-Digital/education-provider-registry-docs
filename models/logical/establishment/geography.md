@@ -15,12 +15,13 @@ Which local authority is associated with this establishment?
 It covers:
 
 - The current local authority associated with an establishment.
+- The Government Office Region classification associated with an establishment.
 - The controlled local-authority code and name.
 - Normalised local-authority contact records.
 - The distinction between local-authority accountability and the physical
   address of the establishment.
 
-It does not yet cover GSS local-authority codes, regions, wards, parliamentary
+It does not yet cover GSS local-authority codes, districts, wards, parliamentary
 constituencies, LSOAs, MSOAs, urban/rural classifications or postcode-derived
 geography. Those should be added as separate geography slices after the local
 authority relationship is reviewed.
@@ -32,14 +33,16 @@ entity rather than as a column on `establishment`. This keeps the core identity
 record focused on the establishment itself and gives geography a clear place
 for future attributes, such as additional administrative areas or effective
 dates. The first version is an optional one-to-one record containing a
-`local_authority_id` foreign key to the stable local-authority reference.
+`local_authority_id` foreign key to the stable local-authority reference and an
+optional `government_office_region_id` foreign key to the region reference.
 
 ## Geography ERD
 
 ```mermaid
 erDiagram
     ESTABLISHMENT ||--o| ESTABLISHMENT_GEOGRAPHY : "has geography"
-    ESTABLISHMENT_GEOGRAPHY }o--|| LOCAL_AUTHORITY : "uses local authority"
+    ESTABLISHMENT_GEOGRAPHY }o--o| LOCAL_AUTHORITY : "uses local authority"
+    ESTABLISHMENT_GEOGRAPHY }o--o| GOVERNMENT_OFFICE_REGION : "uses region"
     LOCAL_AUTHORITY }o--|| LOCAL_AUTHORITY_JURISDICTION : "has jurisdiction"
     LOCAL_AUTHORITY ||--o{ LOCAL_AUTHORITY_CONTACT : "has contacts"
 
@@ -54,6 +57,13 @@ erDiagram
         uuid establishment_geography_id PK
         uuid establishment_id FK, UK
         uuid local_authority_id FK
+        uuid government_office_region_id FK
+    }
+
+    GOVERNMENT_OFFICE_REGION {
+        uuid government_office_region_id PK
+        string code UK
+        string name
     }
 
     LOCAL_AUTHORITY {
@@ -126,6 +136,7 @@ relationship through the referenced `local_authority` record.
 | `establishment_geography_id` | Yes | Technical key for the geography substructure. |
 | `establishment_id` | Yes | One-to-one owner relationship to `establishment`. |
 | `local_authority_id` | Conditional | Current local-authority relationship, where the source provides one. Foreign key to `local_authority.local_authority_id`. |
+| `government_office_region_id` | Conditional | Current Government Office Region classification, where the source provides one. Foreign key to `government_office_region.government_office_region_id`. |
 
 An establishment has at most one current geography record and at most one
 current local authority in this slice. This
@@ -133,6 +144,22 @@ does not imply that the local authority is the establishment's owner or
 accountable body. Ownership, accountability and governance relationships are
 separate concepts and will be modelled in the establishment-group and
 governance slices.
+
+## Government Office Region
+
+`government_office_region` is controlled reference data for the region
+classification recorded directly against an establishment. It is linked from
+`establishment_geography`, rather than from `local_authority`, because the
+legacy source stores `GOR_code` on `dbo.Establishment`.
+
+| Attribute | Required | Meaning and rule |
+| --- | --- | --- |
+| `government_office_region_id` | Yes | Stable target identifier for the reference record. |
+| `code` | Yes | Legacy GOR integration code; unique in the target reference data. |
+| `name` | Yes | Published region name. |
+
+The region relationship is optional. A missing value means that no GOR
+classification is available; it does not require a sentinel region record.
 
 ## Local authority contact
 
@@ -163,6 +190,7 @@ to `dbo.LocalAuthority.code`:
 | Local-authority code | `dbo.LocalAuthority.code` | Controlled integration value. |
 | Local-authority name | `dbo.LocalAuthority.name` | Current display label. |
 | Local-authority jurisdiction | `dbo.LocalAuthority.group_code` -> `dbo.LocalAuthorityGroup.name` | Legacy source relationship; target name is `LocalAuthorityJurisdiction`. |
+| Government Office Region | `dbo.Establishment.GOR_code` -> `dbo.GovernmentOfficeRegion.code` | Nullable establishment geography classification. |
 
 The existing DfE number remains derived from local-authority code and
 establishment number. This geography slice does not change the identifier
@@ -191,6 +219,7 @@ The physical model uses these tables:
 | Establishment geography | `establishment.establishment_geography` | Physical table defined with nullable `local_authority_id`; source migration populates it only when a real local authority applies. |
 | Local-authority jurisdiction | `establishment.local_authority_jurisdiction` | Schema and English/Welsh controlled values defined. |
 | Local authority | `establishment.local_authority` | Schema defined; BAU reference data still to be loaded. |
+| Government Office Region | `establishment.government_office_region` | Controlled reference table defined and wired to the migration; load from the local BAU `dbo.GovernmentOfficeRegion` copy before establishment rows. |
 | Local-authority contact | `establishment.local_authority_contact` | Schema defined as a one-to-many relationship; BAU contact data still to be loaded. |
 
 The target relationship will use `establishment_geography.local_authority_id`

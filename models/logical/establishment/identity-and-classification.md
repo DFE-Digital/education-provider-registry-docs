@@ -10,6 +10,7 @@ erDiagram
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
     ESTABLISHMENT ||--o| ESTABLISHMENT_LIFECYCLE : "has lifecycle"
     ESTABLISHMENT ||--o| ESTABLISHMENT_GEOGRAPHY : "has geography"
+    ESTABLISHMENT_GEOGRAPHY }o--o| GOVERNMENT_OFFICE_REGION : "uses region"
     ESTABLISHMENT_LIFECYCLE }o--|| ESTABLISHMENT_STATUS : "has status"
     ESTABLISHMENT_LIFECYCLE }o--o| REASON_ESTABLISHMENT_OPENED : "has opening reason"
     ESTABLISHMENT_LIFECYCLE }o--o| REASON_ESTABLISHMENT_CLOSED : "has closing reason"
@@ -28,6 +29,13 @@ erDiagram
         uuid establishment_geography_id PK
         uuid establishment_id FK, UK
         uuid local_authority_id FK
+        uuid government_office_region_id FK
+    }
+
+    GOVERNMENT_OFFICE_REGION {
+        uuid government_office_region_id PK
+        string code UK
+        string name
     }
 
     ESTABLISHMENT_LIFECYCLE {
