@@ -4,7 +4,7 @@ Extracts and loads geographic reference data from the approved local BAU copy.
 
 .DESCRIPTION
 Loads Local Authorities (including the deterministic local contacts fixture)
-and Government Office Regions through one geographic-reference-data entry
+Government Office Regions and District Administrative values through one geographic-reference-data entry
 point. Additional geographic reference datasets can be added to the list in
 this script without creating another top-level PowerShell command.
 #>
@@ -48,6 +48,14 @@ $datasets = @(
         Load = Join-Path $schemaRoot 'establishment\load\load-government-office-region-fixture.sql'
         Fixture = Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv'
         Header = 'code'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
+        Name = 'district-administrative'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\district-administratives-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-district-administrative-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-district-administrative-fixture.csv'
+        Header = 'code|name|archived'
         RequireRows = $true
     },
     [pscustomobject]@{
