@@ -19,6 +19,7 @@ WITH source_establishment AS (
         e.URN,
         e.UKPRN,
         e.LA_code,
+        e.GOR_code,
         e.EstablishmentNumber,
         e.EstablishmentName,
         e.WebsiteAddress,
@@ -80,6 +81,7 @@ SELECT
     s.URN AS urn,
     s.UKPRN AS ukprn,
     s.LA_code AS local_authority_code,
+    s.GOR_code AS government_office_region_code,
     s.EstablishmentNumber AS establishment_number,
     CASE
         WHEN s.LA_code IS NULL OR s.EstablishmentNumber IS NULL THEN NULL

@@ -9,6 +9,7 @@ CREATE TEMP TABLE source_establishment_fixture (
     urn integer,
     ukprn numeric,
     local_authority_code text,
+    government_office_region_code text,
     establishment_number integer,
     name text,
     website text,
@@ -49,6 +50,24 @@ CREATE TEMP TABLE source_establishment_fixture (
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+
+-- Geography reference data must be loaded before establishment geography. Do
+-- not silently turn a supplied BAU GOR code into a missing target relation.
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM source_establishment_fixture AS s
+        LEFT JOIN establishment.government_office_region AS gor
+          ON gor.code = NULLIF(BTRIM(s.government_office_region_code), '')
+        WHERE NULLIF(BTRIM(s.government_office_region_code), '') IS NOT NULL
+          AND BTRIM(s.government_office_region_code) <> '0'
+          AND gor.government_office_region_id IS NULL
+    ) THEN
+        RAISE EXCEPTION 'Establishment fixture contains a GOR code absent from establishment.government_office_region';
+    END IF;
+END;
+$$;
 
 -- Reference data is normally loaded by seed/seed-reference-data.sql. The
 -- upserts make this fixture independently rerunnable without changing IDs.
@@ -153,18 +172,24 @@ JOIN establishment.establishment AS e ON e.urn = s.urn
 WHERE eg.establishment_id = e.establishment_id;
 
 INSERT INTO establishment.establishment_geography (
-    establishment_id, local_authority_id
+    establishment_id, local_authority_id, government_office_region_id
 )
 SELECT e.establishment_id,
-       la.local_authority_id
+       la.local_authority_id,
+       gor.government_office_region_id
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
-JOIN establishment.local_authority AS la
+LEFT JOIN establishment.local_authority AS la
   ON la.code = NULLIF(BTRIM(s.local_authority_code), '')::integer
-WHERE NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
-  AND NULLIF(BTRIM(s.local_authority_code), '')::integer <> 0
+LEFT JOIN establishment.government_office_region AS gor
+  ON gor.code = NULLIF(BTRIM(s.government_office_region_code), '')
+WHERE (NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
+       AND NULLIF(BTRIM(s.local_authority_code), '')::integer <> 0)
+   OR (NULLIF(BTRIM(s.government_office_region_code), '') IS NOT NULL
+       AND BTRIM(s.government_office_region_code) <> '0')
 ON CONFLICT (establishment_id) DO UPDATE SET
-    local_authority_id = EXCLUDED.local_authority_id;
+    local_authority_id = EXCLUDED.local_authority_id,
+    government_office_region_id = EXCLUDED.government_office_region_id;
 
 INSERT INTO establishment.establishment_contact (establishment_id, website, telephone_number)
 SELECT e.establishment_id,

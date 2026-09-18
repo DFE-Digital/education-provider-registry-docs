@@ -82,6 +82,14 @@ CREATE TABLE establishment.local_authority_contact (
     )
 );
 
+CREATE TABLE establishment.government_office_region (
+    government_office_region_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    -- BAU dbo.GovernmentOfficeRegion.code is an nvarchar code set (A, B, ...,
+    -- W and Z), not a numeric identifier. Preserve it as text at the target.
+    code text NOT NULL UNIQUE,
+    name text NOT NULL UNIQUE
+);
+
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
@@ -97,7 +105,9 @@ CREATE TABLE establishment.establishment_geography (
     establishment_id uuid NOT NULL UNIQUE
         REFERENCES establishment.establishment (establishment_id),
     local_authority_id uuid
-        REFERENCES establishment.local_authority (local_authority_id)
+        REFERENCES establishment.local_authority (local_authority_id),
+    government_office_region_id uuid
+        REFERENCES establishment.government_office_region (government_office_region_id)
 );
 
 CREATE TABLE establishment.establishment_contact (

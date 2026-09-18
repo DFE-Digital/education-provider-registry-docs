@@ -13,6 +13,8 @@ SELECT
     la.code AS local_authority_code,
     la.code AS local_authority_reference_code,
     la.name AS local_authority_name,
+    gor.code AS government_office_region_code,
+    gor.name AS government_office_region_name,
     e.establishment_number,
     la.code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
@@ -79,6 +81,8 @@ LEFT JOIN establishment.establishment_geography AS eg
   ON eg.establishment_id = e.establishment_id
 LEFT JOIN establishment.local_authority AS la
   ON la.local_authority_id = eg.local_authority_id
+LEFT JOIN establishment.government_office_region AS gor
+  ON gor.government_office_region_id = eg.government_office_region_id
 LEFT JOIN establishment.establishment_contact AS ec
   ON ec.establishment_id = e.establishment_id
 LEFT JOIN establishment.establishment_lifecycle AS elc
