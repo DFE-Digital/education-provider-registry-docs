@@ -80,6 +80,9 @@ finally {
     if (-not $KeepFixture) {
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-gss-local-authority-code-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
         foreach ($urn in $urns) {
             Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv") -Force -ErrorAction SilentlyContinue
             Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-registry-governance-appointment-$urn-fixture.csv") -Force -ErrorAction SilentlyContinue

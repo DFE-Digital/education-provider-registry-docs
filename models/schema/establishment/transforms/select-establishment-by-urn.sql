@@ -1,18 +1,18 @@
 -- Select the complete current Establishment model slice for one school.
 -- Target: PostgreSQL database establishment_local, schema establishment.
 --
--- Change the URN in the params CTE to inspect another establishment.
+-- Supply the URN with psql, for example: -v urn=136102.
 
 WITH params AS (
-    SELECT 106431::numeric AS urn
+    SELECT :'urn'::numeric AS urn
 )
 SELECT
-    e.establishment_id,
     e.urn,
     e.ukprn,
     la.code AS local_authority_code,
     la.code AS local_authority_reference_code,
     la.name AS local_authority_name,
+    gss.code AS local_authority_gss_code,
     gor.code AS government_office_region_code,
     gor.name AS government_office_region_name,
     e.establishment_number,
@@ -20,7 +20,6 @@ SELECT
     e.name,
     ec.website,
     ec.telephone_number,
-    elc.establishment_lifecycle_id,
     es.establishment_status_id,
     es.code AS establishment_status_code,
     es.name AS establishment_status,
@@ -33,23 +32,19 @@ SELECT
     et.name AS establishment_type,
     e.education_phase_id,
     ep.name AS education_phase,
-    ms.site_id,
     ets.is_main_site,
     ms.site_name AS main_site_name,
     ms.uprn AS main_site_uprn,
-    a.address_id,
     a.address_line_1,
     a.address_line_2,
     a.address_line_3,
     a.town AS address_town,
     a.county AS address_county,
     a.postcode AS address_postcode,
-    capm.capacity_and_pupil_measures_id,
     capm.school_capacity,
     capm.pupil_count,
     capm.free_school_meal_measure,
     capm.census_date,
-    eap.education_admissions_and_provision_id,
     eap.gender_of_entry_type_id,
     goet.name AS gender_of_entry,
     eap.admissions_policy_id,
@@ -60,16 +55,12 @@ SELECT
     np.name AS nursery_provision,
     eap.sixth_form_provision_id,
     sfp.name AS sixth_form_provision,
-    sar.statutory_age_range_id,
     sar.lower_statutory_age,
     sar.upper_statutory_age,
-    sp.specialist_provision_id,
     sp.specialist_provision_type_id,
     spt.name AS specialist_provision_type,
-    rp.resourced_provision_id,
     rp.capacity AS resourced_provision_capacity,
     rp.pupil_count AS resourced_provision_pupil_count,
-    sup.sen_unit_provision_id,
     sup.capacity AS sen_unit_capacity,
     sup.pupil_count AS sen_unit_pupil_count
 FROM params AS p
@@ -81,6 +72,8 @@ LEFT JOIN establishment.establishment_geography AS eg
   ON eg.establishment_id = e.establishment_id
 LEFT JOIN establishment.local_authority AS la
   ON la.local_authority_id = eg.local_authority_id
+LEFT JOIN establishment.gss_local_authority_code AS gss
+  ON gss.id = la.gss_local_authority_code_id
 LEFT JOIN establishment.government_office_region AS gor
   ON gor.government_office_region_id = eg.government_office_region_id
 LEFT JOIN establishment.establishment_contact AS ec

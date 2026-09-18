@@ -38,8 +38,9 @@ checked-in fixtures. The export is not an automatic commit.
 1. Validate the local SQL Server and PostgreSQL targets.
 2. Rebuild the disposable establishment schema.
 3. Load the checked-in reference/static fixture seed.
-4. Load local-authority and Government Office Region reference rows from the
-   local BAU copy.
+4. Load geographic reference data from the local BAU copy: Local Authorities,
+   Government Office Regions, GSS local-authority codes, and Local Authority
+   to GSS/GOR mappings.
 5. Extract and load each selected URN using the Establishment migration runner.
 6. Query the loaded rows and key pupil/FSM measures as a smoke validation.
 7. Delete credentials and temporary files unless -KeepFixture is supplied.

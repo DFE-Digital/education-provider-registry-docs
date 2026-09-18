@@ -17,12 +17,14 @@ It covers:
 - The current local authority associated with an establishment.
 - The Government Office Region classification associated with an establishment.
 - The controlled local-authority code and name.
+- The Government Statistical Service local-authority code used for ONS
+  geographic integration.
 - Normalised local-authority contact records.
 - The distinction between local-authority accountability and the physical
   address of the establishment.
 
-It does not yet cover GSS local-authority codes, districts, wards, parliamentary
-constituencies, LSOAs, MSOAs, urban/rural classifications or postcode-derived
+It does not yet cover districts, wards, parliamentary constituencies, LSOAs,
+MSOAs, urban/rural classifications or postcode-derived
 geography. Those should be added as separate geography slices after the local
 authority relationship is reviewed.
 
@@ -44,6 +46,7 @@ erDiagram
     ESTABLISHMENT_GEOGRAPHY }o--o| LOCAL_AUTHORITY : "uses local authority"
     ESTABLISHMENT_GEOGRAPHY }o--o| GOVERNMENT_OFFICE_REGION : "uses region"
     LOCAL_AUTHORITY }o--|| LOCAL_AUTHORITY_JURISDICTION : "has jurisdiction"
+    LOCAL_AUTHORITY }o--o| GSS_LOCAL_AUTHORITY_CODE : "uses GSS code"
     LOCAL_AUTHORITY ||--o{ LOCAL_AUTHORITY_CONTACT : "has contacts"
 
     ESTABLISHMENT {
@@ -71,6 +74,12 @@ erDiagram
         integer code UK
         string name
         integer local_authority_jurisdiction_id FK
+        uuid gss_local_authority_code_id FK
+    }
+
+    GSS_LOCAL_AUTHORITY_CODE {
+        uuid id PK
+        string code UK
     }
 
     LOCAL_AUTHORITY_CONTACT {
@@ -107,6 +116,33 @@ providers operate outside a conventional English local-authority structure.
 
 The code is the integration and reconciliation value. The name is a label and
 may change without changing the identity of the local authority record.
+
+## GSS local-authority code
+
+GSS means Government Statistical Service. A GSS local-authority code is the
+standard ONS geographic identifier for a local authority, for example
+E08000007 for Stockport. It is used to link a local authority to ONS
+statistical datasets and other published geographic products.
+
+The GSS code is distinct from the numeric DfE local-authority code:
+
+| Identifier | Example | Purpose |
+| --- | --- | --- |
+| DfE local-authority code | 861 | Legacy GIAS integration and DfE number/LAESTAB reconciliation. |
+| GSS local-authority code | E08000007 | ONS and Government Statistical Service geographic integration. |
+
+The legacy BAU source represents this relationship through:
+
+| BAU table | Role |
+| --- | --- |
+| dbo.GSSLACode | GSS code. The source name, archive and order fields are not retained in the target. |
+| dbo.LaGssMapping | Maps localAuthority_code to gssLaCode_code. |
+| dbo.Establishment.GssLaCode_code | Direct GSS code recorded against an establishment. |
+
+The local-authority reference should use the mapping from dbo.LaGssMapping to
+associate the existing DfE local-authority code with the GSS code. The GSS code
+must remain text; values begin with a letter and must not be converted to an
+integer.
 
 ## Local authority jurisdiction
 
@@ -190,6 +226,7 @@ to `dbo.LocalAuthority.code`:
 | Local-authority code | `dbo.LocalAuthority.code` | Controlled integration value. |
 | Local-authority name | `dbo.LocalAuthority.name` | Current display label. |
 | Local-authority jurisdiction | `dbo.LocalAuthority.group_code` -> `dbo.LocalAuthorityGroup.name` | Legacy source relationship; target name is `LocalAuthorityJurisdiction`. |
+| GSS local-authority code | `dbo.LaGssMapping.localAuthority_code` -> `dbo.LaGssMapping.gssLaCode_code` -> `dbo.GSSLACode.code` | Standard ONS geographic identifier for the local authority. |
 | Government Office Region | `dbo.Establishment.GOR_code` -> `dbo.GovernmentOfficeRegion.code` | Nullable establishment geography classification. |
 
 The existing DfE number remains derived from local-authority code and
@@ -200,6 +237,10 @@ explicit target entity.
 ## Rules and open decisions
 
 - `local_authority.code` must be unique in the target reference data.
+- GSS local-authority codes must be stored as text and remain unique in the GSS
+  reference data.
+- A DfE local-authority code may map to at most one current GSS code in the
+  initial model.
 - An establishment may have no local-authority relationship when the source
   does not provide one or the establishment is outside the conventional local
   authority model.
@@ -219,6 +260,7 @@ The physical model uses these tables:
 | Establishment geography | `establishment.establishment_geography` | Physical table defined with nullable `local_authority_id`; source migration populates it only when a real local authority applies. |
 | Local-authority jurisdiction | `establishment.local_authority_jurisdiction` | Schema and English/Welsh controlled values defined. |
 | Local authority | `establishment.local_authority` | Schema defined; BAU reference data still to be loaded. |
+| GSS local-authority code | `establishment.gss_local_authority_code` | Target-owned UUID `id` and unique text `code`; BAU `dbo.GSSLACode` and `dbo.LaGssMapping` supply the code values. |
 | Government Office Region | `establishment.government_office_region` | Controlled reference table defined and wired to the migration; load from the local BAU `dbo.GovernmentOfficeRegion` copy before establishment rows. |
 | Local-authority contact | `establishment.local_authority_contact` | Schema defined as a one-to-many relationship; BAU contact data still to be loaded. |
 

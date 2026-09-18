@@ -62,6 +62,15 @@ CREATE TABLE establishment.local_authority (
         REFERENCES establishment.local_authority_jurisdiction (local_authority_jurisdiction_id)
 );
 
+CREATE TABLE establishment.gss_local_authority_code (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE
+);
+
+ALTER TABLE establishment.local_authority
+    ADD COLUMN gss_local_authority_code_id uuid
+        REFERENCES establishment.gss_local_authority_code (id);
+
 CREATE TABLE establishment.local_authority_contact (
     local_authority_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     local_authority_id uuid NOT NULL
@@ -88,6 +97,13 @@ CREATE TABLE establishment.government_office_region (
     -- W and Z), not a numeric identifier. Preserve it as text at the target.
     code text NOT NULL UNIQUE,
     name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.local_authority_government_office_region (
+    local_authority_id uuid PRIMARY KEY
+        REFERENCES establishment.local_authority (local_authority_id),
+    government_office_region_id uuid NOT NULL
+        REFERENCES establishment.government_office_region (government_office_region_id)
 );
 
 CREATE TABLE establishment.establishment (
