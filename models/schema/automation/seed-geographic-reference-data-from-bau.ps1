@@ -47,7 +47,31 @@ $datasets = @(
         Transform = Join-Path $schemaRoot 'establishment\transforms\government-office-regions-from-bau.sql'
         Load = Join-Path $schemaRoot 'establishment\load\load-government-office-region-fixture.sql'
         Fixture = Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv'
+        Header = 'code'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
+        Name = 'gss-local-authority-code'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\gss-local-authority-codes-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-gss-local-authority-code-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-gss-local-authority-code-fixture.csv'
         Header = 'code|name'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
+        Name = 'local-authority-gss-mapping'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\local-authority-gss-mappings-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-local-authority-gss-mapping-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv'
+        Header = 'local_authority_code|gss_code'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
+        Name = 'local-authority-gor-mapping'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\local-authority-gor-mappings-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-local-authority-gor-mapping-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv'
+        Header = 'local_authority_code|region_code'
         RequireRows = $true
     }
 )

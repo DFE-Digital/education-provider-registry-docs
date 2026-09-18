@@ -39,9 +39,12 @@ $referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
 $establishmentRunner = Join-Path $automationRoot 'invoke-establishment-migration.ps1'
 $geographicReferenceRunner = Join-Path $automationRoot 'seed-geographic-reference-data-from-bau.ps1'
 $exporter = Join-Path $automationRoot 'export-establishment-fixture-from-local-target.ps1'
+$approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
+$rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
+$approvalUrns = @(100018, 106431, 136102)
 $psql = Get-LocalPostgresClientPath
 
-foreach ($path in @($selectionPath, $schemaSql, $validationSql, $referenceDataSql, $establishmentRunner, $geographicReferenceRunner, $exporter)) {
+foreach ($path in @($selectionPath, $schemaSql, $validationSql, $referenceDataSql, $establishmentRunner, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required migration file not found: $path" }
 }
 
@@ -76,6 +79,14 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Establishment validation query failed.' }
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $validationSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment fixture validation failed.' }
+    foreach ($approvalUrn in $approvalUrns) {
+        if ($urns -contains $approvalUrn) {
+            & $approvalTest -Urn $approvalUrn -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
+            if ($LASTEXITCODE -ne 0) { throw "Establishment approval test failed for URN $approvalUrn." }
+        }
+    }
+    & $rowCountTest -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
+    if ($LASTEXITCODE -ne 0) { throw 'Establishment row-count approval test failed.' }
     if ($ExportDirectory) {
         & $exporter -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -OutputDirectory $ExportDirectory
         if ($LASTEXITCODE -ne 0) { throw 'Checked-in fixture export failed.' }
@@ -90,6 +101,9 @@ finally {
     if (-not $KeepFixture) {
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-gss-local-authority-code-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
         foreach ($urn in $urns) { Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv") -Force -ErrorAction SilentlyContinue }
     }
 }

@@ -71,4 +71,38 @@ reviewed SQL fixtures for developers who use the checked-in-fixture rebuild.
 The scripts are intentionally restricted to the local
 `establishment_local` database. They do not target shared environments.
 
+## Establishment approval tests
 
+The local Establishment schema has approval tests covering the complete data
+slice for URNs `100018`, `106431` and `136102`, plus an approval test covering
+the expected row count of every physical Establishment table.
+
+The Establishment snapshots compare business data and stable reference keys;
+generated surrogate UUIDs are intentionally excluded because they are expected
+to change when the local schema is rebuilt.
+
+The rebuild scripts run these tests automatically at the end of each migration.
+To run them directly from the repository root:
+
+```powershell
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 100018
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 106431
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 136102
+.\models\schema\tests\assert-establishment-row-counts.ps1
+```
+
+Approved snapshots are updated only when a data or model change is deliberate
+and has been reviewed. Use the `-UpdateApproval` switch on the relevant script:
+
+```powershell
+.\models\schema\tests\assert-establishment-approval.ps1 -UpdateApproval
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 136102 -UpdateApproval
+.\models\schema\tests\assert-establishment-row-counts.ps1 -UpdateApproval
+```
+
+The first command updates the default approval file for URN `136102`. To
+update the other approved URNs, run the same command with `-Urn 100018` and
+`-Urn 106431`.
+
+After updating an approval file, rerun the normal rebuild and review the
+snapshot diff before committing it.
