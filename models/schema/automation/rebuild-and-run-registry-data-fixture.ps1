@@ -20,11 +20,10 @@ $establishmentSchemaSql = Join-Path $schemaRoot 'establishment\core-establishmen
 $governanceSchemaSql = Join-Path $schemaRoot 'governance\governance-schema.sql'
 $referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
 $establishmentRunner = Join-Path $automationRoot 'invoke-establishment-migration.ps1'
-$localAuthorityRunner = Join-Path $automationRoot 'seed-local-authorities-from-bau.ps1'
-$governmentOfficeRegionRunner = Join-Path $automationRoot 'seed-government-office-regions-from-bau.ps1'
+$geographicReferenceRunner = Join-Path $automationRoot 'seed-geographic-reference-data-from-bau.ps1'
 $governanceRunner = Join-Path $automationRoot 'invoke-governance-migration.ps1'
 $psql = Get-LocalPostgresClientPath
-foreach ($path in @($selectionPath, $establishmentSchemaSql, $governanceSchemaSql, $referenceDataSql, $establishmentRunner, $localAuthorityRunner, $governmentOfficeRegionRunner, $governanceRunner)) {
+foreach ($path in @($selectionPath, $establishmentSchemaSql, $governanceSchemaSql, $referenceDataSql, $establishmentRunner, $geographicReferenceRunner, $governanceRunner)) {
     if (-not (Test-Path -LiteralPath $path)) { throw "Required registry migration file not found: $path" }
 }
 
@@ -54,8 +53,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Governance schema rebuild failed.' }
 
     $env:EPR_BAU_SQL_PASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
-    & $localAuthorityRunner -FixturePath (Join-Path $FixtureDirectory 'epr-local-authority-fixture.csv')
-    & $governmentOfficeRegionRunner -FixturePath (Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv')
+    & $geographicReferenceRunner -FixtureDirectory $FixtureDirectory
     & $psql -h 127.0.0.1 -p 5432 -U postgres -d establishment_local -w -v ON_ERROR_STOP=1 -c "DO `$`$ BEGIN IF NOT EXISTS (SELECT 1 FROM establishment.government_office_region) THEN RAISE EXCEPTION 'No Government Office Region rows loaded'; END IF; END `$`$;"
     if ($LASTEXITCODE -ne 0) { throw 'Government Office Region validation failed.' }
     foreach ($urn in $urns) {
