@@ -15,6 +15,9 @@ SELECT
     gss.code AS local_authority_gss_code,
     gor.code AS government_office_region_code,
     gor.name AS government_office_region_name,
+    district.code AS district_administrative_code,
+    district.name AS district_administrative_name,
+    district.archived AS district_administrative_archived,
     e.establishment_number,
     la.code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
@@ -76,6 +79,8 @@ LEFT JOIN establishment.gss_local_authority_code AS gss
   ON gss.id = la.gss_local_authority_code_id
 LEFT JOIN establishment.government_office_region AS gor
   ON gor.government_office_region_id = eg.government_office_region_id
+LEFT JOIN establishment.district_administrative AS district
+  ON district.id = eg.district_administrative_id
 LEFT JOIN establishment.establishment_contact AS ec
   ON ec.establishment_id = e.establishment_id
 LEFT JOIN establishment.establishment_lifecycle AS elc

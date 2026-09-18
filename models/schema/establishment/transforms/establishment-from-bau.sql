@@ -20,6 +20,7 @@ WITH source_establishment AS (
         e.UKPRN,
         e.LA_code,
         e.GOR_code,
+        e.districtAdministrative_code,
         e.EstablishmentNumber,
         e.EstablishmentName,
         e.WebsiteAddress,
@@ -82,6 +83,7 @@ SELECT
     s.UKPRN AS ukprn,
     s.LA_code AS local_authority_code,
     s.GOR_code AS government_office_region_code,
+    s.districtAdministrative_code AS district_administrative_code,
     s.EstablishmentNumber AS establishment_number,
     CASE
         WHEN s.LA_code IS NULL OR s.EstablishmentNumber IS NULL THEN NULL

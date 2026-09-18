@@ -106,6 +106,13 @@ CREATE TABLE establishment.local_authority_government_office_region (
         REFERENCES establishment.government_office_region (government_office_region_id)
 );
 
+CREATE TABLE establishment.district_administrative (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL,
+    archived boolean NOT NULL DEFAULT false
+);
+
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
@@ -123,7 +130,9 @@ CREATE TABLE establishment.establishment_geography (
     local_authority_id uuid
         REFERENCES establishment.local_authority (local_authority_id),
     government_office_region_id uuid
-        REFERENCES establishment.government_office_region (government_office_region_id)
+        REFERENCES establishment.government_office_region (government_office_region_id),
+    district_administrative_id uuid
+        REFERENCES establishment.district_administrative (id)
 );
 
 CREATE TABLE establishment.establishment_contact (
