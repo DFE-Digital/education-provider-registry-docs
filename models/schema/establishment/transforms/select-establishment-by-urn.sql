@@ -20,6 +20,12 @@ SELECT
     district.archived AS district_administrative_archived,
     ward.code AS administrative_ward_code,
     ward.name AS administrative_ward_name,
+    pc.code AS parliamentary_constituency_code,
+    pc.name AS parliamentary_constituency_name,
+    lsoa.code AS lsoa_code,
+    lsoa.name AS lsoa_name,
+    msoa.code AS msoa_code,
+    msoa.name AS msoa_name,
     e.establishment_number,
     la.code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
@@ -85,6 +91,12 @@ LEFT JOIN establishment.district_administrative AS district
   ON district.id = eg.district_administrative_id
 LEFT JOIN establishment.administrative_ward AS ward
   ON ward.id = eg.administrative_ward_id
+LEFT JOIN establishment.parliamentary_constituency AS pc
+  ON pc.id = eg.parliamentary_constituency_id
+LEFT JOIN establishment.lsoa AS lsoa
+  ON lsoa.id = eg.lsoa_id
+LEFT JOIN establishment.msoa AS msoa
+  ON msoa.id = eg.msoa_id
 LEFT JOIN establishment.establishment_contact AS ec
   ON ec.establishment_id = e.establishment_id
 LEFT JOIN establishment.establishment_lifecycle AS elc

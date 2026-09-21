@@ -67,6 +67,30 @@ $datasets = @(
         RequireRows = $true
     },
     [pscustomobject]@{
+        Name = 'parliamentary-constituency'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\parliamentary-constituencies-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-parliamentary-constituency-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-parliamentary-constituency-fixture.csv'
+        Header = 'code|name'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
+        Name = 'lsoa'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\lsoas-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-lsoa-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-lsoa-fixture.csv'
+        Header = 'code|name'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
+        Name = 'msoa'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\msoas-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-msoa-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-msoa-fixture.csv'
+        Header = 'code|name'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
         Name = 'gss-local-authority-code'
         Transform = Join-Path $schemaRoot 'establishment\transforms\gss-local-authority-codes-from-bau.sql'
         Load = Join-Path $schemaRoot 'establishment\load\load-gss-local-authority-code-fixture.sql'

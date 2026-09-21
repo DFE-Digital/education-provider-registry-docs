@@ -119,6 +119,24 @@ CREATE TABLE establishment.administrative_ward (
     name text NOT NULL
 );
 
+CREATE TABLE establishment.parliamentary_constituency (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL
+);
+
+CREATE TABLE establishment.lsoa (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL
+);
+
+CREATE TABLE establishment.msoa (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL
+);
+
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
@@ -140,7 +158,13 @@ CREATE TABLE establishment.establishment_geography (
     district_administrative_id uuid
         REFERENCES establishment.district_administrative (id),
     administrative_ward_id uuid
-        REFERENCES establishment.administrative_ward (id)
+        REFERENCES establishment.administrative_ward (id),
+    parliamentary_constituency_id uuid
+        REFERENCES establishment.parliamentary_constituency (id),
+    lsoa_id uuid
+        REFERENCES establishment.lsoa (id),
+    msoa_id uuid
+        REFERENCES establishment.msoa (id)
 );
 
 CREATE TABLE establishment.establishment_contact (

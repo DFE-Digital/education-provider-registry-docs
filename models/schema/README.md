@@ -30,8 +30,9 @@ flowchart TD
 | BAU-source rebuild | You have `gias_bau_test_local` and the local SQL Server `reader` credential. | `rebuild-establishment-from-local-bau.ps1` | [Rebuild Establishment From Local BAU](automation/rebuild-establishment-from-local-bau.md) |
 | Checked-in-fixture rebuild | You do not have the BAU SQL Server copy. | `rebuild-establishment-from-checked-in-sql.ps1` | [Rebuild Establishment From Checked-in SQL](automation/rebuild-establishment-from-checked-in-sql.md) |
 
-The BAU-source rebuild is the authoritative local refresh path. It can export
-reviewed SQL fixtures for developers who use the checked-in-fixture rebuild.
+The BAU-source rebuild is the authoritative local refresh path. After its
+validation and approval tests pass, it automatically exports and refreshes the
+checked-in SQL fixtures for developers who do not have the local BAU copy.
 
 ## From zero to a populated local PostgreSQL database
 

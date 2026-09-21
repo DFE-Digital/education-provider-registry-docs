@@ -3,7 +3,7 @@
 ## Purpose
 
 This model describes the local authority, Government Office Region, administrative
-district and administrative ward associated with an establishment. It also defines
+district, administrative ward, parliamentary constituency, LSOA and MSOA associated with an establishment. It also defines
 local-authority jurisdiction, statistical identifiers and contact details.
 
 Geographic associations describe location and classification. Ownership and
@@ -13,11 +13,12 @@ in [Location, contact and sites](location-contact-and-sites.md).
 ## Relationships
 
 An establishment has zero or one geography record. Each record belongs to exactly
-one establishment and can reference one local authority, one region, one district
-and one ward. Each reference value can be associated with many establishments.
+one establishment and can reference one local authority, one region, one district,
+one ward, one parliamentary constituency, one LSOA and one MSOA. Each reference value can be associated
+with many establishments.
 
 A local authority has one jurisdiction, zero or one GSS code and any number of
-contacts. Region, district and ward classifications are recorded independently;
+contacts. Region, district, ward, parliamentary constituency, LSOA and MSOA classifications are recorded independently;
 this model does not define a hierarchy between them.
 
 ```mermaid
@@ -27,6 +28,9 @@ erDiagram
     ESTABLISHMENT_GEOGRAPHY }o--o| GOVERNMENT_OFFICE_REGION : "uses region"
     ESTABLISHMENT_GEOGRAPHY }o--o| DISTRICT_ADMINISTRATIVE : "uses district"
     ESTABLISHMENT_GEOGRAPHY }o--o| ADMINISTRATIVE_WARD : "uses ward"
+    ESTABLISHMENT_GEOGRAPHY }o--o| PARLIAMENTARY_CONSTITUENCY : "uses constituency"
+    ESTABLISHMENT_GEOGRAPHY }o--o| LSOA : "uses LSOA"
+    ESTABLISHMENT_GEOGRAPHY }o--o| MSOA : "uses MSOA"
     LOCAL_AUTHORITY }o--|| LOCAL_AUTHORITY_JURISDICTION : "has jurisdiction"
     LOCAL_AUTHORITY }o--o| GSS_LOCAL_AUTHORITY_CODE : "uses GSS code"
     LOCAL_AUTHORITY ||--o{ LOCAL_AUTHORITY_CONTACT : "has contacts"
@@ -45,6 +49,9 @@ erDiagram
         uuid government_office_region_id FK
         uuid district_administrative_id FK
         uuid administrative_ward_id FK
+        uuid parliamentary_constituency_id FK
+        uuid lsoa_id FK
+        uuid msoa_id FK
     }
 
     GOVERNMENT_OFFICE_REGION {
@@ -61,6 +68,24 @@ erDiagram
     }
 
     ADMINISTRATIVE_WARD {
+        uuid id PK
+        string code UK
+        string name
+    }
+
+    PARLIAMENTARY_CONSTITUENCY {
+        uuid id PK
+        string code UK
+        string name
+    }
+
+    LSOA {
+        uuid id PK
+        string code UK
+        string name
+    }
+
+    MSOA {
         uuid id PK
         string code UK
         string name
@@ -120,6 +145,9 @@ Groups the geographic classifications associated with an establishment.
 | `government_office_region_id` | UUID | No | Foreign key to government_office_region.government_office_region_id. |
 | `district_administrative_id` | UUID | No | Foreign key to district_administrative.id. |
 | `administrative_ward_id` | UUID | No | Foreign key to administrative_ward.id. |
+| `parliamentary_constituency_id` | UUID | No | Foreign key to parliamentary_constituency.id. |
+| `lsoa_id` | UUID | No | Foreign key to lsoa.id. |
+| `msoa_id` | UUID | No | Foreign key to msoa.id. |
 
 ### Local authority
 
@@ -194,6 +222,74 @@ Identifies the ward associated with an establishment's location.
 | `code` | Text | Yes | Unique ward code. |
 | `name` | Text | Yes | Ward name. |
 
+### Parliamentary constituency
+
+`parliamentary_constituency`
+
+Identifies the parliamentary constituency associated with an establishment's
+location.
+
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique constituency code. |
+| `name` | Text | Yes | Constituency name. |
+
+### LSOA
+
+`lsoa`
+
+Identifies the Lower Layer Super Output Area associated with an establishment's
+location. LSOAs are small-area statistical geographies designed for consistent
+reporting of statistics below local-authority level. They are built from groups
+of Output Areas and are modelled separately from MSOAs.
+
+The Office for National Statistics (ONS) defines and publishes the codes,
+names and boundary products for LSOAs in England and Wales. A representative
+example is:
+
+The ONS description of these statistical geographies is available in its
+[Census 2021 geographies guidance](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies).
+
+| Code | Name | Interpretation |
+| --- | --- | --- |
+| `E01000001` | City of London 001A | An England and Wales LSOA code beginning with `E01`. |
+
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique LSOA code. |
+| `name` | Text | Yes | LSOA name. |
+
+The code and name identify the statistical geography; they do not identify a
+school, local authority or electoral ward.
+
+### MSOA
+
+`msoa`
+
+Identifies the Middle Layer Super Output Area associated with an establishment's
+location. MSOAs are statistical geographies made up of groups of LSOAs and
+usually fit within a local authority. They are modelled separately from LSOAs.
+
+The ONS defines and publishes the codes, names and boundary products for MSOAs
+in England and Wales. A representative example is:
+
+| Code | Name | Interpretation |
+| --- | --- | --- |
+| `E02000001` | City of London 001 | An England and Wales MSOA code beginning with `E02`. |
+
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique MSOA code. |
+| `name` | Text | Yes | MSOA name. |
+
+An MSOA normally contains several LSOAs. The relationship between the two
+statistical geographies is maintained by ONS lookup and boundary products; this
+model records the Establishment's current LSOA and MSOA classifications without
+duplicating that hierarchy.
+
 ### Local-authority contact
 
 `local_authority_contact`
@@ -222,11 +318,14 @@ Describes a contact for a local authority. Multiple contacts may be current at t
 - The DfE local-authority code combines with the establishment number to form
   the DfE number (LAESTAB).
 - Archived district values remain valid references for existing relationships.
+- Parliamentary constituency codes are unique within the constituency reference.
+- LSOA codes are unique within the LSOA reference.
+- MSOA codes are unique within the MSOA reference.
 - A local-authority contact contains at least one of an email address, telephone
   number, given name, family name or title.
 
 ## Model boundary
 
 The model records current geographic associations without effective dates or
-boundary-change history. Parliamentary constituencies, LSOAs, MSOAs, urban/rural
-classifications and postcode lookup data are outside its scope.
+boundary-change history. Urban/rural classifications and postcode lookup data
+are outside its scope.

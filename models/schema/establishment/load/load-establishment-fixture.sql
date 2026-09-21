@@ -12,6 +12,9 @@ CREATE TEMP TABLE source_establishment_fixture (
     government_office_region_code text,
     district_administrative_code text,
     administrative_ward_code text,
+    parliamentary_constituency_code text,
+    lsoa_code text,
+    msoa_code text,
     establishment_number integer,
     name text,
     website text,
@@ -89,6 +92,23 @@ BEGIN
           AND w.id IS NULL
     ) THEN
         RAISE EXCEPTION 'Establishment fixture contains an Administrative Ward code absent from establishment.administrative_ward';
+    END IF;
+    IF EXISTS (
+        SELECT 1
+        FROM source_establishment_fixture AS s
+        LEFT JOIN establishment.parliamentary_constituency AS pc
+          ON pc.code = NULLIF(BTRIM(s.parliamentary_constituency_code), '')
+        WHERE NULLIF(BTRIM(s.parliamentary_constituency_code), '') IS NOT NULL
+          AND BTRIM(s.parliamentary_constituency_code) <> '0'
+          AND pc.id IS NULL
+    ) THEN
+        RAISE EXCEPTION 'Establishment fixture contains a Parliamentary Constituency code absent from establishment.parliamentary_constituency';
+    END IF;
+    IF EXISTS (SELECT 1 FROM source_establishment_fixture AS s LEFT JOIN establishment.lsoa AS l ON l.code = NULLIF(BTRIM(s.lsoa_code), '') WHERE NULLIF(BTRIM(s.lsoa_code), '') IS NOT NULL AND BTRIM(s.lsoa_code) <> '0' AND l.id IS NULL) THEN
+        RAISE EXCEPTION 'Establishment fixture contains an LSOA code absent from establishment.lsoa';
+    END IF;
+    IF EXISTS (SELECT 1 FROM source_establishment_fixture AS s LEFT JOIN establishment.msoa AS m ON m.code = NULLIF(BTRIM(s.msoa_code), '') WHERE NULLIF(BTRIM(s.msoa_code), '') IS NOT NULL AND BTRIM(s.msoa_code) <> '0' AND m.id IS NULL) THEN
+        RAISE EXCEPTION 'Establishment fixture contains an MSOA code absent from establishment.msoa';
     END IF;
 END;
 $$;
@@ -197,13 +217,15 @@ WHERE eg.establishment_id = e.establishment_id;
 
 INSERT INTO establishment.establishment_geography (
     establishment_id, local_authority_id, government_office_region_id,
-    district_administrative_id, administrative_ward_id
+    district_administrative_id, administrative_ward_id,
+    parliamentary_constituency_id, lsoa_id, msoa_id
 )
 SELECT e.establishment_id,
        la.local_authority_id,
        gor.government_office_region_id,
        d.id,
-       w.id
+       w.id,
+       pc.id, l.id, m.id
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 LEFT JOIN establishment.local_authority AS la
@@ -214,6 +236,12 @@ LEFT JOIN establishment.district_administrative AS d
   ON d.code = NULLIF(BTRIM(s.district_administrative_code), '')
 LEFT JOIN establishment.administrative_ward AS w
   ON w.code = NULLIF(BTRIM(s.administrative_ward_code), '')
+LEFT JOIN establishment.parliamentary_constituency AS pc
+  ON pc.code = NULLIF(BTRIM(s.parliamentary_constituency_code), '')
+LEFT JOIN establishment.lsoa AS l
+  ON l.code = NULLIF(BTRIM(s.lsoa_code), '')
+LEFT JOIN establishment.msoa AS m
+  ON m.code = NULLIF(BTRIM(s.msoa_code), '')
 WHERE (NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
        AND NULLIF(BTRIM(s.local_authority_code), '')::integer <> 0)
    OR (NULLIF(BTRIM(s.government_office_region_code), '') IS NOT NULL
@@ -222,11 +250,18 @@ WHERE (NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
        AND BTRIM(s.district_administrative_code) <> '0')
    OR (NULLIF(BTRIM(s.administrative_ward_code), '') IS NOT NULL
        AND BTRIM(s.administrative_ward_code) <> '0')
+   OR (NULLIF(BTRIM(s.parliamentary_constituency_code), '') IS NOT NULL
+       AND BTRIM(s.parliamentary_constituency_code) <> '0')
+   OR (NULLIF(BTRIM(s.lsoa_code), '') IS NOT NULL AND BTRIM(s.lsoa_code) <> '0')
+   OR (NULLIF(BTRIM(s.msoa_code), '') IS NOT NULL AND BTRIM(s.msoa_code) <> '0')
 ON CONFLICT (establishment_id) DO UPDATE SET
     local_authority_id = EXCLUDED.local_authority_id,
     government_office_region_id = EXCLUDED.government_office_region_id,
     district_administrative_id = EXCLUDED.district_administrative_id,
-    administrative_ward_id = EXCLUDED.administrative_ward_id;
+    administrative_ward_id = EXCLUDED.administrative_ward_id,
+    parliamentary_constituency_id = EXCLUDED.parliamentary_constituency_id,
+    lsoa_id = EXCLUDED.lsoa_id,
+    msoa_id = EXCLUDED.msoa_id;
 
 INSERT INTO establishment.establishment_contact (establishment_id, website, telephone_number)
 SELECT e.establishment_id,
