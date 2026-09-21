@@ -22,6 +22,9 @@ WITH source_establishment AS (
         e.GOR_code,
         e.districtAdministrative_code,
         e.administrativeWard_code,
+        e.parliamentaryConstituency_code,
+        e.lsoa_code,
+        e.msoa_code,
         e.EstablishmentNumber,
         e.EstablishmentName,
         e.WebsiteAddress,
@@ -86,6 +89,9 @@ SELECT
     s.GOR_code AS government_office_region_code,
     s.districtAdministrative_code AS district_administrative_code,
     s.administrativeWard_code AS administrative_ward_code,
+    s.parliamentaryConstituency_code AS parliamentary_constituency_code,
+    s.lsoa_code AS lsoa_code,
+    s.msoa_code AS msoa_code,
     s.EstablishmentNumber AS establishment_number,
     CASE
         WHEN s.LA_code IS NULL OR s.EstablishmentNumber IS NULL THEN NULL

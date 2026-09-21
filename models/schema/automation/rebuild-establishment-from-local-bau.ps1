@@ -42,6 +42,9 @@ $exporter = Join-Path $automationRoot 'export-establishment-fixture-from-local-t
 $approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
 $rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
 $approvalUrns = @(100018, 106431, 136102)
+$checkedInSeedRoot = Join-Path $schemaRoot 'seed'
+$generatedSeedRoot = Join-Path $checkedInSeedRoot 'generated'
+if (-not $ExportDirectory) { $ExportDirectory = $generatedSeedRoot }
 $psql = Get-LocalPostgresClientPath
 
 foreach ($path in @($selectionPath, $schemaSql, $validationSql, $referenceDataSql, $establishmentRunner, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
@@ -90,6 +93,11 @@ try {
     if ($ExportDirectory) {
         & $exporter -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -OutputDirectory $ExportDirectory
         if ($LASTEXITCODE -ne 0) { throw 'Checked-in fixture export failed.' }
+        if ($ExportDirectory -eq $generatedSeedRoot) {
+            Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-reference-data.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-reference-data.sql') -Force
+            Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-establishment-fixture.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-establishment-fixture.sql') -Force
+            Write-Host 'Checked-in SQL fixtures refreshed from the validated local BAU target.'
+        }
     }
     Write-Host "BAU-source Establishment rebuild completed for URNs: $urnList."
     if ($KeepFixture) { Write-Host "Fixtures retained in: $FixtureDirectory" }
@@ -103,6 +111,9 @@ finally {
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-district-administrative-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-administrative-ward-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-parliamentary-constituency-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-lsoa-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-msoa-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-gss-local-authority-code-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
