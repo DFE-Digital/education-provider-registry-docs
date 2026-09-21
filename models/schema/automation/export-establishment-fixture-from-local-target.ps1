@@ -36,7 +36,7 @@ $referenceTables = @(
     'nursery_provision', 'sixth_form_provision', 'specialist_provision_type',
     'establishment_status', 'reason_establishment_opened',
     'reason_establishment_closed', 'local_authority', 'government_office_region',
-    'gss_local_authority_code', 'district_administrative', 'administrative_ward', 'parliamentary_constituency', 'lsoa', 'msoa', 'local_authority_contact',
+    'gss_local_authority_code', 'district_administrative', 'administrative_ward', 'parliamentary_constituency', 'lsoa', 'msoa', 'urban_rural', 'local_authority_contact',
     'local_authority_government_office_region'
 )
 $ownedTables = @(

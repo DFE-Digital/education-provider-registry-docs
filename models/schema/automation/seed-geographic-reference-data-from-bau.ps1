@@ -91,6 +91,14 @@ $datasets = @(
         RequireRows = $true
     },
     [pscustomobject]@{
+        Name = 'urban-rural'
+        Transform = Join-Path $schemaRoot 'establishment\transforms\urban-rurals-from-bau.sql'
+        Load = Join-Path $schemaRoot 'establishment\load\load-urban-rural-fixture.sql'
+        Fixture = Join-Path $FixtureDirectory 'epr-urban-rural-fixture.csv'
+        Header = 'code|name'
+        RequireRows = $true
+    },
+    [pscustomobject]@{
         Name = 'gss-local-authority-code'
         Transform = Join-Path $schemaRoot 'establishment\transforms\gss-local-authority-codes-from-bau.sql'
         Load = Join-Path $schemaRoot 'establishment\load\load-gss-local-authority-code-fixture.sql'

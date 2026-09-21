@@ -3,7 +3,8 @@
 ## Purpose
 
 This model describes the local authority, Government Office Region, administrative
-district, administrative ward, parliamentary constituency, LSOA and MSOA associated with an establishment. It also defines
+district, administrative ward, parliamentary constituency, LSOA, MSOA and
+urban/rural classification associated with an establishment. It also defines
 local-authority jurisdiction, statistical identifiers and contact details.
 
 Geographic associations describe location and classification. Ownership and
@@ -14,11 +15,13 @@ in [Location, contact and sites](location-contact-and-sites.md).
 
 An establishment has zero or one geography record. Each record belongs to exactly
 one establishment and can reference one local authority, one region, one district,
-one ward, one parliamentary constituency, one LSOA and one MSOA. Each reference value can be associated
+one ward, one parliamentary constituency, one LSOA, one MSOA and one urban/rural
+classification. Each reference value can be associated
 with many establishments.
 
 A local authority has one jurisdiction, zero or one GSS code and any number of
-contacts. Region, district, ward, parliamentary constituency, LSOA and MSOA classifications are recorded independently;
+contacts. Region, district, ward, parliamentary constituency, LSOA, MSOA and
+urban/rural classifications are recorded independently;
 this model does not define a hierarchy between them.
 
 ```mermaid
@@ -31,6 +34,7 @@ erDiagram
     ESTABLISHMENT_GEOGRAPHY }o--o| PARLIAMENTARY_CONSTITUENCY : "uses constituency"
     ESTABLISHMENT_GEOGRAPHY }o--o| LSOA : "uses LSOA"
     ESTABLISHMENT_GEOGRAPHY }o--o| MSOA : "uses MSOA"
+    ESTABLISHMENT_GEOGRAPHY }o--o| URBAN_RURAL : "uses classification"
     LOCAL_AUTHORITY }o--|| LOCAL_AUTHORITY_JURISDICTION : "has jurisdiction"
     LOCAL_AUTHORITY }o--o| GSS_LOCAL_AUTHORITY_CODE : "uses GSS code"
     LOCAL_AUTHORITY ||--o{ LOCAL_AUTHORITY_CONTACT : "has contacts"
@@ -52,6 +56,7 @@ erDiagram
         uuid parliamentary_constituency_id FK
         uuid lsoa_id FK
         uuid msoa_id FK
+        uuid urban_rural_id FK
     }
 
     GOVERNMENT_OFFICE_REGION {
@@ -86,6 +91,12 @@ erDiagram
     }
 
     MSOA {
+        uuid id PK
+        string code UK
+        string name
+    }
+
+    URBAN_RURAL {
         uuid id PK
         string code UK
         string name
@@ -148,6 +159,7 @@ Groups the geographic classifications associated with an establishment.
 | `parliamentary_constituency_id` | UUID | No | Foreign key to parliamentary_constituency.id. |
 | `lsoa_id` | UUID | No | Foreign key to lsoa.id. |
 | `msoa_id` | UUID | No | Foreign key to msoa.id. |
+| `urban_rural_id` | UUID | No | Foreign key to urban_rural.id. |
 
 ### Local authority
 
@@ -290,6 +302,20 @@ statistical geographies is maintained by ONS lookup and boundary products; this
 model records the Establishment's current LSOA and MSOA classifications without
 duplicating that hierarchy.
 
+### Urban/rural classification
+
+`urban_rural`
+
+Identifies the urban or rural classification associated with an establishment's
+location. It is an independent controlled reference value and is not a substitute
+for an administrative or statistical area.
+
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique urban/rural classification code. |
+| `name` | Text | Yes | Human-readable classification name. |
+
 ### Local-authority contact
 
 `local_authority_contact`
@@ -321,11 +347,11 @@ Describes a contact for a local authority. Multiple contacts may be current at t
 - Parliamentary constituency codes are unique within the constituency reference.
 - LSOA codes are unique within the LSOA reference.
 - MSOA codes are unique within the MSOA reference.
+- Urban/rural classification codes are unique within the urban_rural reference.
 - A local-authority contact contains at least one of an email address, telephone
   number, given name, family name or title.
 
 ## Model boundary
 
 The model records current geographic associations without effective dates or
-boundary-change history. Urban/rural classifications and postcode lookup data
-are outside its scope.
+boundary-change history. Postcode lookup data is outside its scope.

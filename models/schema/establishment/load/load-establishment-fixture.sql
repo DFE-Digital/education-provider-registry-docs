@@ -15,6 +15,7 @@ CREATE TEMP TABLE source_establishment_fixture (
     parliamentary_constituency_code text,
     lsoa_code text,
     msoa_code text,
+    urban_rural_code text,
     establishment_number integer,
     name text,
     website text,
@@ -109,6 +110,9 @@ BEGIN
     END IF;
     IF EXISTS (SELECT 1 FROM source_establishment_fixture AS s LEFT JOIN establishment.msoa AS m ON m.code = NULLIF(BTRIM(s.msoa_code), '') WHERE NULLIF(BTRIM(s.msoa_code), '') IS NOT NULL AND BTRIM(s.msoa_code) <> '0' AND m.id IS NULL) THEN
         RAISE EXCEPTION 'Establishment fixture contains an MSOA code absent from establishment.msoa';
+    END IF;
+    IF EXISTS (SELECT 1 FROM source_establishment_fixture AS s LEFT JOIN establishment.urban_rural AS ur ON ur.code = NULLIF(BTRIM(s.urban_rural_code), '') WHERE NULLIF(BTRIM(s.urban_rural_code), '') IS NOT NULL AND BTRIM(s.urban_rural_code) <> '0' AND ur.id IS NULL) THEN
+        RAISE EXCEPTION 'Establishment fixture contains an urban/rural code absent from establishment.urban_rural';
     END IF;
 END;
 $$;
@@ -218,14 +222,14 @@ WHERE eg.establishment_id = e.establishment_id;
 INSERT INTO establishment.establishment_geography (
     establishment_id, local_authority_id, government_office_region_id,
     district_administrative_id, administrative_ward_id,
-    parliamentary_constituency_id, lsoa_id, msoa_id
+    parliamentary_constituency_id, lsoa_id, msoa_id, urban_rural_id
 )
 SELECT e.establishment_id,
        la.local_authority_id,
        gor.government_office_region_id,
        d.id,
        w.id,
-       pc.id, l.id, m.id
+       pc.id, l.id, m.id, ur.id
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 LEFT JOIN establishment.local_authority AS la
@@ -242,6 +246,8 @@ LEFT JOIN establishment.lsoa AS l
   ON l.code = NULLIF(BTRIM(s.lsoa_code), '')
 LEFT JOIN establishment.msoa AS m
   ON m.code = NULLIF(BTRIM(s.msoa_code), '')
+LEFT JOIN establishment.urban_rural AS ur
+  ON ur.code = NULLIF(BTRIM(s.urban_rural_code), '')
 WHERE (NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
        AND NULLIF(BTRIM(s.local_authority_code), '')::integer <> 0)
    OR (NULLIF(BTRIM(s.government_office_region_code), '') IS NOT NULL
@@ -254,6 +260,7 @@ WHERE (NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
        AND BTRIM(s.parliamentary_constituency_code) <> '0')
    OR (NULLIF(BTRIM(s.lsoa_code), '') IS NOT NULL AND BTRIM(s.lsoa_code) <> '0')
    OR (NULLIF(BTRIM(s.msoa_code), '') IS NOT NULL AND BTRIM(s.msoa_code) <> '0')
+   OR (NULLIF(BTRIM(s.urban_rural_code), '') IS NOT NULL AND BTRIM(s.urban_rural_code) <> '0')
 ON CONFLICT (establishment_id) DO UPDATE SET
     local_authority_id = EXCLUDED.local_authority_id,
     government_office_region_id = EXCLUDED.government_office_region_id,
@@ -261,7 +268,8 @@ ON CONFLICT (establishment_id) DO UPDATE SET
     administrative_ward_id = EXCLUDED.administrative_ward_id,
     parliamentary_constituency_id = EXCLUDED.parliamentary_constituency_id,
     lsoa_id = EXCLUDED.lsoa_id,
-    msoa_id = EXCLUDED.msoa_id;
+    msoa_id = EXCLUDED.msoa_id,
+    urban_rural_id = EXCLUDED.urban_rural_id;
 
 INSERT INTO establishment.establishment_contact (establishment_id, website, telephone_number)
 SELECT e.establishment_id,
