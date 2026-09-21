@@ -5,7 +5,7 @@ Exports the populated local Establishment target into checked-in SQL inputs.
 .DESCRIPTION
 Run this after the BAU-source rebuild has completed successfully. The target contains the
 selected establishment-centric slice and the BAU-derived reference data.
-pg_dump writes dependency-ordered, column-labelled INSERT statements so the
+pg_dump writes dependency-ordered, column-labelled batched INSERT statements so the
 checked-in-fixture rebuild
 can replay the result without SQL Server.
 #>
@@ -36,7 +36,7 @@ $referenceTables = @(
     'nursery_provision', 'sixth_form_provision', 'specialist_provision_type',
     'establishment_status', 'reason_establishment_opened',
     'reason_establishment_closed', 'local_authority', 'government_office_region',
-    'gss_local_authority_code', 'district_administrative', 'local_authority_contact',
+    'gss_local_authority_code', 'district_administrative', 'administrative_ward', 'local_authority_contact',
     'local_authority_government_office_region'
 )
 $ownedTables = @(
@@ -52,7 +52,7 @@ if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
 try {
     $referenceFile = Join-Path $OutputDirectory 'seed-reference-data.sql'
     $ownedFile = Join-Path $OutputDirectory 'seed-establishment-fixture.sql'
-    $common = @('-h', $PostgresHost, '-p', $PostgresPort, '-U', $PostgresUser, '-d', $PostgresDatabase, '--data-only', '--column-inserts', '--no-owner', '--no-privileges', '--no-comments')
+    $common = @('-h', $PostgresHost, '-p', $PostgresPort, '-U', $PostgresUser, '-d', $PostgresDatabase, '--data-only', '--column-inserts', '--rows-per-insert=1000', '--no-owner', '--no-privileges', '--no-comments')
     $referenceArgs = @($common + @('--file', $referenceFile))
     foreach ($table in $referenceTables) { $referenceArgs += @('--table', "establishment.$table") }
     & $pgDump @referenceArgs

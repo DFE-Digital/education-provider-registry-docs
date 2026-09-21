@@ -1,48 +1,24 @@
 # Establishment geography
 
-This is the first geography slice for the Establishment Registry. It models
-the establishment's current local-authority, Government Office Region and
-administrative-district relationships without attempting to model the complete
-administrative geography hierarchy.
+## Purpose
 
-## Scope
+This model describes the local authority, Government Office Region, administrative
+district and administrative ward associated with an establishment. It also defines
+local-authority jurisdiction, statistical identifiers and contact details.
 
-This slice answers:
+Geographic associations describe location and classification. Ownership and
+governance are separate relationships. Postal addresses and sites are described
+in [Location, contact and sites](location-contact-and-sites.md).
 
-```text
-Which local authority is associated with this establishment?
-```
+## Relationships
 
-It covers:
+An establishment has zero or one geography record. Each record belongs to exactly
+one establishment and can reference one local authority, one region, one district
+and one ward. Each reference value can be associated with many establishments.
 
-- The current local authority associated with an establishment.
-- The Government Office Region classification associated with an establishment.
-- The controlled local-authority code and name.
-- The Government Statistical Service local-authority code used for ONS
-  geographic integration.
-- Normalised local-authority contact records.
-- The distinction between local-authority accountability and the physical
-  address of the establishment.
-- The administrative district associated with the establishment's location.
-
-It does not yet cover wards, parliamentary constituencies, LSOAs,
-MSOAs, urban/rural classifications or postcode-derived
-geography. Those should be added as separate geography slices after the local
-authority relationship is reviewed.
-
-## Design decision
-
-Local-authority geography is modelled in a dedicated `establishment_geography`
-entity rather than as a column on `establishment`. This keeps the core identity
-record focused on the establishment itself and gives geography a clear place
-for future attributes, such as additional administrative areas or effective
-dates. The first version is an optional one-to-one record containing a
-`local_authority_id` foreign key to the stable local-authority reference,
-an optional `government_office_region_id` foreign key to the region reference,
-and an optional `district_administrative_id` foreign key to the district
-reference.
-
-## Geography ERD
+A local authority has one jurisdiction, zero or one GSS code and any number of
+contacts. Region, district and ward classifications are recorded independently;
+this model does not define a hierarchy between them.
 
 ```mermaid
 erDiagram
@@ -50,6 +26,7 @@ erDiagram
     ESTABLISHMENT_GEOGRAPHY }o--o| LOCAL_AUTHORITY : "uses local authority"
     ESTABLISHMENT_GEOGRAPHY }o--o| GOVERNMENT_OFFICE_REGION : "uses region"
     ESTABLISHMENT_GEOGRAPHY }o--o| DISTRICT_ADMINISTRATIVE : "uses district"
+    ESTABLISHMENT_GEOGRAPHY }o--o| ADMINISTRATIVE_WARD : "uses ward"
     LOCAL_AUTHORITY }o--|| LOCAL_AUTHORITY_JURISDICTION : "has jurisdiction"
     LOCAL_AUTHORITY }o--o| GSS_LOCAL_AUTHORITY_CODE : "uses GSS code"
     LOCAL_AUTHORITY ||--o{ LOCAL_AUTHORITY_CONTACT : "has contacts"
@@ -67,6 +44,7 @@ erDiagram
         uuid local_authority_id FK
         uuid government_office_region_id FK
         uuid district_administrative_id FK
+        uuid administrative_ward_id FK
     }
 
     GOVERNMENT_OFFICE_REGION {
@@ -80,6 +58,12 @@ erDiagram
         string code UK
         string name
         boolean archived
+    }
+
+    ADMINISTRATIVE_WARD {
+        uuid id PK
+        string code UK
+        string name
     }
 
     LOCAL_AUTHORITY {
@@ -113,201 +97,136 @@ erDiagram
     }
 ```
 
-## Local authority
+The establishment entity is shown for context; its full definition is in
+[Identity and classification](identity-and-classification.md).
 
-`local_authority` is controlled reference data for the local authority
-associated with an establishment. The relationship is optional because not
-all establishment types have the same local-authority context, and some
-providers operate outside a conventional English local-authority structure.
+## Tables and columns
 
-| Column | Required | Meaning and rule |
-| --- | --- | --- |
-| `local_authority_id` | Yes | Stable target identifier for the reference record. |
-| `code` | Yes | Numeric DfE local-authority code used for LAESTAB/DfE-number reconciliation. |
-| `name` | Yes | Current published local-authority name. |
-| `local_authority_jurisdiction_id` | Yes | Controlled jurisdiction classification for the local authority. |
+Required columns must have a value. Optional relationships may be absent when a
+classification is not recorded or does not apply. Primary keys identify records;
+reference codes identify distinct values within their respective code lists.
 
-The code is the integration and reconciliation value. The name is a label and
-may change without changing the identity of the local authority record.
+### Establishment geography
 
-## GSS local-authority code
+`establishment_geography`
 
-GSS means Government Statistical Service. A GSS local-authority code is the
-standard ONS geographic identifier for a local authority, for example
-E08000007 for Stockport. It is used to link a local authority to ONS
-statistical datasets and other published geographic products.
+Groups the geographic classifications associated with an establishment.
 
-The GSS code is distinct from the numeric DfE local-authority code:
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `establishment_geography_id` | UUID | Yes | Primary key. |
+| `establishment_id` | UUID | Yes | Unique foreign key to establishment.establishment_id. |
+| `local_authority_id` | UUID | No | Foreign key to local_authority.local_authority_id. |
+| `government_office_region_id` | UUID | No | Foreign key to government_office_region.government_office_region_id. |
+| `district_administrative_id` | UUID | No | Foreign key to district_administrative.id. |
+| `administrative_ward_id` | UUID | No | Foreign key to administrative_ward.id. |
 
-| Identifier | Example | Purpose |
-| --- | --- | --- |
-| DfE local-authority code | 861 | Legacy GIAS integration and DfE number/LAESTAB reconciliation. |
-| GSS local-authority code | E08000007 | ONS and Government Statistical Service geographic integration. |
+### Local authority
 
-The legacy BAU source represents this relationship through:
+`local_authority`
 
-| BAU table | Role |
-| --- | --- |
-| dbo.GSSLACode | GSS code. The source name, archive and order fields are not retained in the target. |
-| dbo.LaGssMapping | Maps localAuthority_code to gssLaCode_code. |
-| dbo.Establishment.GssLaCode_code | Direct GSS code recorded against an establishment. |
+Identifies the local authority associated with an establishment.
 
-The local-authority reference should use the mapping from dbo.LaGssMapping to
-associate the existing DfE local-authority code with the GSS code. The GSS code
-must remain text; values begin with a letter and must not be converted to an
-integer.
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `local_authority_id` | UUID | Yes | Primary key. |
+| `code` | Integer | Yes | Unique DfE local-authority code. |
+| `name` | Text | Yes | Local-authority name. |
+| `local_authority_jurisdiction_id` | Integer | Yes | Foreign key to local_authority_jurisdiction.local_authority_jurisdiction_id. |
+| `gss_local_authority_code_id` | UUID | No | Foreign key to gss_local_authority_code.id. |
 
-## Local authority jurisdiction
+### Local-authority jurisdiction
 
-`local_authority_jurisdiction` classifies the jurisdiction represented by a
-local-authority reference. It replaces the legacy `LocalAuthorityGroup` name,
-which describes these values inaccurately as a group.
+`local_authority_jurisdiction`
 
-This is a closed controlled list:
+Classifies a local authority's jurisdiction. The controlled values are English and Welsh.
 
-| Value | Meaning |
-| --- | --- |
-| English | Local authority for an English jurisdiction. |
-| Welsh | Local authority for a Welsh jurisdiction. |
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `local_authority_jurisdiction_id` | Integer | Yes | Primary key. |
+| `name` | Text | Yes | Unique jurisdiction name. |
 
-“Not applicable” is represented by a missing geography relationship, not by a
-sentinel jurisdiction or local-authority record.
+### GSS local-authority code
 
-## Establishment geography
+`gss_local_authority_code`
 
-`establishment_geography` is an optional, one-to-one owned substructure for
-the establishment's current geography. It keeps geography attributes out of
-the core establishment identity table while preserving the DfE number/LAESTAB
-relationship through the referenced `local_authority` record.
+GSS means Government Statistical Service. A GSS local-authority code is an ONS geographic identifier used to link local authorities to statistical datasets. It is distinct from the numeric DfE local-authority code.
 
-| Attribute | Required | Meaning and rule |
-| --- | --- | --- |
-| `establishment_geography_id` | Yes | Technical key for the geography substructure. |
-| `establishment_id` | Yes | One-to-one owner relationship to `establishment`. |
-| `local_authority_id` | Conditional | Current local-authority relationship, where the source provides one. Foreign key to `local_authority.local_authority_id`. |
-| `government_office_region_id` | Conditional | Current Government Office Region classification, where the source provides one. Foreign key to `government_office_region.government_office_region_id`. |
-| `district_administrative_id` | Conditional | Current administrative district classification, where the source provides one. Foreign key to `district_administrative.id`. |
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique GSS local-authority code; contains letters and digits. |
 
-An establishment has at most one current geography record and at most one
-current local authority in this slice. This
-does not imply that the local authority is the establishment's owner or
-accountable body. Ownership, accountability and governance relationships are
-separate concepts and will be modelled in the establishment-group and
-governance slices.
+### Government Office Region
 
-## Government Office Region
+`government_office_region`
 
-`government_office_region` is controlled reference data for the region
-classification recorded directly against an establishment. It is linked from
-`establishment_geography`, rather than from `local_authority`, because the
-legacy source stores `GOR_code` on `dbo.Establishment`.
+Identifies the region classification associated with an establishment.
 
-| Attribute | Required | Meaning and rule |
-| --- | --- | --- |
-| `government_office_region_id` | Yes | Stable target identifier for the reference record. |
-| `code` | Yes | Legacy GOR integration code; unique in the target reference data. |
-| `name` | Yes | Published region name. |
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `government_office_region_id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique region code. |
+| `name` | Text | Yes | Region name. |
 
-The region relationship is optional. A missing value means that no GOR
-classification is available; it does not require a sentinel region record.
+### Administrative district
 
-## Administrative district
+`district_administrative`
 
-`district_administrative` is controlled reference data for the administrative
-district recorded against an establishment. The source uses the term
-`DistrictAdministrative`. In two-tier areas this is a district council below
-county level; in unitary-authority, metropolitan-district and London-borough
-areas it may represent the same geography as the local authority.
+Identifies the administrative district associated with an establishment's location. District and local-authority classifications can describe the same area while remaining distinct concepts.
 
-All rows from the BAU reference table are retained, including archived rows.
-The archive flag describes the status of the reference value; it does not
-justify deleting a value that is still referenced by an establishment. This
-also preserves special values such as `L99999999` (Channel Islands) and
-`M99999999` (Isle of Man).
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique district code. |
+| `name` | Text | Yes | District name. |
+| `archived` | Boolean | Yes | Whether the district reference value is archived. Existing relationships can reference archived districts. |
 
-| Attribute | Required | Meaning and rule |
-| --- | --- | --- |
-| `id` | Yes | Technical UUID key generated by the target. |
-| `code` | Yes | BAU `DistrictAdministrative.code`, unique in the target. |
-| `name` | Yes | BAU district name. |
-| `archived` | Yes | BAU archive indicator retained as a boolean. |
+### Administrative ward
 
-The establishment relationship is optional. A missing value means that the
-source did not provide a district classification; it does not require a
-sentinel district record.
+`administrative_ward`
 
-## Local authority contact
+Identifies the ward associated with an establishment's location.
 
-`local_authority_contact` stores contact details separately from the local
-authority identity. A local authority may have multiple contacts, and contact
-records can be retained when responsibilities or contact details change.
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `id` | UUID | Yes | Primary key. |
+| `code` | Text | Yes | Unique ward code. |
+| `name` | Text | Yes | Ward name. |
 
-| Column | Required | Meaning and rule |
-| --- | --- | --- |
-| `local_authority_contact_id` | Yes | Technical key for the contact record. |
-| `local_authority_id` | Yes | Foreign key to the owning local authority. |
-| `contact_email` | Conditional | Contact email address, where supplied. |
-| `contact_first_name` | Conditional | Contact person's given name, where supplied. |
-| `contact_last_name` | Conditional | Contact person's family name, where supplied. |
-| `contact_title` | Conditional | Contact person's title or job title, where supplied. |
-| `contact_phone` | Conditional | Contact telephone number, where supplied. |
-| `contact_role` | Conditional | Role or purpose of the contact; controlled values require further evidence. |
-| `is_current` | Yes | Indicates whether the contact is current. Multiple current contacts are permitted until role rules are agreed. |
+### Local-authority contact
 
-## BAU source mapping
+`local_authority_contact`
 
-The legacy schema already treats `dbo.Establishment.LA_code` as a foreign key
-to `dbo.LocalAuthority.code`:
+Describes a contact for a local authority. Multiple contacts may be current at the same time.
 
-| Logical concept | BAU source | Notes |
-| --- | --- | --- |
-| Establishment local-authority code | `dbo.Establishment.LA_code` | Nullable current relationship, loaded into `establishment_geography`. |
-| Local-authority code | `dbo.LocalAuthority.code` | Controlled integration value. |
-| Local-authority name | `dbo.LocalAuthority.name` | Current display label. |
-| Local-authority jurisdiction | `dbo.LocalAuthority.group_code` -> `dbo.LocalAuthorityGroup.name` | Legacy source relationship; target name is `LocalAuthorityJurisdiction`. |
-| GSS local-authority code | `dbo.LaGssMapping.localAuthority_code` -> `dbo.LaGssMapping.gssLaCode_code` -> `dbo.GSSLACode.code` | Standard ONS geographic identifier for the local authority. |
-| Government Office Region | `dbo.Establishment.GOR_code` -> `dbo.GovernmentOfficeRegion.code` | Nullable establishment geography classification. |
-| Administrative district | `dbo.Establishment.districtAdministrative_code` -> `dbo.DistrictAdministrative.code` | Nullable establishment geography classification. All `dbo.DistrictAdministrative` rows are retained, including archived values. |
+| Column | Type | Required | Meaning and constraint |
+| --- | --- | --- | --- |
+| `local_authority_contact_id` | UUID | Yes | Primary key. |
+| `local_authority_id` | UUID | Yes | Foreign key to local_authority.local_authority_id. |
+| `contact_email` | Text | No | Contact email address. |
+| `contact_first_name` | Text | No | Contact person's given name. |
+| `contact_last_name` | Text | No | Contact person's family name. |
+| `contact_title` | Text | No | Contact person's title or job title. |
+| `contact_phone` | Text | No | Contact telephone number. |
+| `contact_role` | Text | No | Role or purpose of the contact. |
+| `is_current` | Boolean | Yes | Whether the contact record is current. |
 
-The existing DfE number remains derived from local-authority code and
-establishment number. This geography slice does not change the identifier
-rules; it normalises the local-authority reference so the relationship has an
-explicit target entity.
+## Integrity rules
 
-## Rules and open decisions
+- Each establishment has at most one geography record.
+- Every populated foreign key references an existing record.
+- Reference codes are unique within their reference table. Names are labels and
+  may change without changing a record's identity.
+- Each local authority has exactly one jurisdiction and at most one GSS code.
+- The DfE local-authority code combines with the establishment number to form
+  the DfE number (LAESTAB).
+- Archived district values remain valid references for existing relationships.
+- A local-authority contact contains at least one of an email address, telephone
+  number, given name, family name or title.
 
-- `local_authority.code` must be unique in the target reference data.
-- `district_administrative.code` must be unique in the target reference data.
-- All BAU DistrictAdministrative rows are migrated; `archived` is preserved and
-  must not be used to filter rows that are still referenced.
-- GSS local-authority codes must be stored as text and remain unique in the GSS
-  reference data.
-- A DfE local-authority code may map to at most one current GSS code in the
-  initial model.
-- An establishment may have no local-authority relationship when the source
-  does not provide one or the establishment is outside the conventional local
-  authority model.
-- Local-authority names must not be copied into `establishment` as free text.
-- Local-government reorganisation and historical local-authority changes are
-  deferred. A future history model will be needed if the service must explain
-  which authority applied at a past date.
-- The complete set of local-authority values should be extracted from the BAU
-  source before physical-schema and seed work begins.
+## Model boundary
 
-## Physical implementation boundary
-
-The physical model uses these tables:
-
-| Logical concept | Physical table | Current status |
-| --- | --- | --- |
-| Establishment geography | `establishment.establishment_geography` | Physical table defined with nullable `local_authority_id`; source migration populates it only when a real local authority applies. |
-| Local-authority jurisdiction | `establishment.local_authority_jurisdiction` | Schema and English/Welsh controlled values defined. |
-| Local authority | `establishment.local_authority` | Schema defined; BAU reference data still to be loaded. |
-| GSS local-authority code | `establishment.gss_local_authority_code` | Target-owned UUID `id` and unique text `code`; BAU `dbo.GSSLACode` and `dbo.LaGssMapping` supply the code values. |
-| Government Office Region | `establishment.government_office_region` | Controlled reference table defined and wired to the migration; load from the local BAU `dbo.GovernmentOfficeRegion` copy before establishment rows. |
-| Local-authority contact | `establishment.local_authority_contact` | Schema defined as a one-to-many relationship; BAU contact data still to be loaded. |
-
-The target relationship will use `establishment_geography.local_authority_id`
-as the foreign key to `local_authority.local_authority_id`. The local
-authority's numeric `code` remains reference data used for DfE-number/LAESTAB
-reconciliation, but is not used as the relationship key.
+The model records current geographic associations without effective dates or
+boundary-change history. Parliamentary constituencies, LSOAs, MSOAs, urban/rural
+classifications and postcode lookup data are outside its scope.
