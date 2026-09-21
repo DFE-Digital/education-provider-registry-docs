@@ -26,6 +26,8 @@ SELECT
     lsoa.name AS lsoa_name,
     msoa.code AS msoa_code,
     msoa.name AS msoa_name,
+    urban_rural.code AS urban_rural_code,
+    urban_rural.name AS urban_rural_name,
     e.establishment_number,
     la.code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
@@ -97,6 +99,8 @@ LEFT JOIN establishment.lsoa AS lsoa
   ON lsoa.id = eg.lsoa_id
 LEFT JOIN establishment.msoa AS msoa
   ON msoa.id = eg.msoa_id
+LEFT JOIN establishment.urban_rural AS urban_rural
+  ON urban_rural.id = eg.urban_rural_id
 LEFT JOIN establishment.establishment_contact AS ec
   ON ec.establishment_id = e.establishment_id
 LEFT JOIN establishment.establishment_lifecycle AS elc

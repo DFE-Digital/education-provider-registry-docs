@@ -25,6 +25,7 @@ WITH source_establishment AS (
         e.parliamentaryConstituency_code,
         e.lsoa_code,
         e.msoa_code,
+        e.UrbanRural_code,
         e.EstablishmentNumber,
         e.EstablishmentName,
         e.WebsiteAddress,
@@ -92,6 +93,7 @@ SELECT
     s.parliamentaryConstituency_code AS parliamentary_constituency_code,
     s.lsoa_code AS lsoa_code,
     s.msoa_code AS msoa_code,
+    s.UrbanRural_code AS urban_rural_code,
     s.EstablishmentNumber AS establishment_number,
     CASE
         WHEN s.LA_code IS NULL OR s.EstablishmentNumber IS NULL THEN NULL

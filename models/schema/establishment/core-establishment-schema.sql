@@ -137,6 +137,12 @@ CREATE TABLE establishment.msoa (
     name text NOT NULL
 );
 
+CREATE TABLE establishment.urban_rural (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL
+);
+
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
@@ -164,7 +170,9 @@ CREATE TABLE establishment.establishment_geography (
     lsoa_id uuid
         REFERENCES establishment.lsoa (id),
     msoa_id uuid
-        REFERENCES establishment.msoa (id)
+        REFERENCES establishment.msoa (id),
+    urban_rural_id uuid
+        REFERENCES establishment.urban_rural (id)
 );
 
 CREATE TABLE establishment.establishment_contact (

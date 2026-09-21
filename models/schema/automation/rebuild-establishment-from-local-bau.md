@@ -39,7 +39,7 @@ before committing.
 3. Load the checked-in reference/static fixture seed.
 4. Load geographic reference data from the local BAU copy: Local Authorities,
    Government Office Regions, Districts, Wards, Parliamentary Constituencies,
-   LSOAs, MSOAs, GSS local-authority codes, and Local Authority to GSS/GOR
+   LSOAs, MSOAs, Urban/Rural classifications, GSS local-authority codes, and Local Authority to GSS/GOR
    mappings.
 5. Extract and load each selected URN using the Establishment migration runner.
 6. Query the loaded rows and key pupil/FSM measures as a smoke validation.
