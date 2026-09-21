@@ -21,6 +21,7 @@ WITH source_establishment AS (
         e.LA_code,
         e.GOR_code,
         e.districtAdministrative_code,
+        e.administrativeWard_code,
         e.EstablishmentNumber,
         e.EstablishmentName,
         e.WebsiteAddress,
@@ -84,6 +85,7 @@ SELECT
     s.LA_code AS local_authority_code,
     s.GOR_code AS government_office_region_code,
     s.districtAdministrative_code AS district_administrative_code,
+    s.administrativeWard_code AS administrative_ward_code,
     s.EstablishmentNumber AS establishment_number,
     CASE
         WHEN s.LA_code IS NULL OR s.EstablishmentNumber IS NULL THEN NULL

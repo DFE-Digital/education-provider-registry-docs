@@ -18,6 +18,8 @@ SELECT
     district.code AS district_administrative_code,
     district.name AS district_administrative_name,
     district.archived AS district_administrative_archived,
+    ward.code AS administrative_ward_code,
+    ward.name AS administrative_ward_name,
     e.establishment_number,
     la.code || '/' || lpad(e.establishment_number::text, 4, '0') AS dfe_number,
     e.name,
@@ -81,6 +83,8 @@ LEFT JOIN establishment.government_office_region AS gor
   ON gor.government_office_region_id = eg.government_office_region_id
 LEFT JOIN establishment.district_administrative AS district
   ON district.id = eg.district_administrative_id
+LEFT JOIN establishment.administrative_ward AS ward
+  ON ward.id = eg.administrative_ward_id
 LEFT JOIN establishment.establishment_contact AS ec
   ON ec.establishment_id = e.establishment_id
 LEFT JOIN establishment.establishment_lifecycle AS elc

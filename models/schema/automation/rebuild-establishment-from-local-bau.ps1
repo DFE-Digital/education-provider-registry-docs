@@ -102,6 +102,7 @@ finally {
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-district-administrative-fixture.csv') -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-administrative-ward-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-gss-local-authority-code-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
