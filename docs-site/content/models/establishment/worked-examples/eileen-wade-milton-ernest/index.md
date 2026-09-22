@@ -138,7 +138,7 @@ inst:milton-ernest
 
 Both schools are accountable to the same local authority, independent of their shared federation membership - accountability and group membership are separate relationships, as established at Manor High and Frank Barnes. `LV` is asserted once and referenced by both establishments, matching the governance worked example's treatment of the same shared headteacher.
 
-Eileen Wade's religious character is `est:NoReligiousCharacter` - a real, populated value meaning "not a faith school" - distinct from `est:NotApplicableReligiousCharacter`, which means the classification doesn't apply to the establishment's type at all (see "What this example found"). Milton Ernest's is `est:ChurchOfEnglandCharacter`, with a real diocese.
+Eileen Wade's religious character is `est:NoReligiousCharacter` - a real, populated value meaning "not a faith school" (see "What this example found"). Milton Ernest's is `est:ChurchOfEnglandCharacter`, with a real diocese.
 
 ```
 inst:la-822
@@ -329,7 +329,7 @@ inst:milton-ernest
 ## What this example found
 
 - **First federation example, and first with two different member types.** `est:Federation` reuses the same `est:EstablishmentGroup`/`GroupMembership` machinery as academy trusts - no separate federation-specific membership pattern was needed. The two members are different leaf types (`est:FoundationSchool`, `est:VoluntaryControlledSchool`), confirming group membership doesn't constrain member establishment type.
-- **`est:NoReligiousCharacter` vs `est:NotApplicableReligiousCharacter` is a real, meaningful distinction, not a duplicate.** Eileen Wade's GIAS value is "None" (a real classification: this establishment has been assessed and has no religious character), not "Does not apply" (the classification concept doesn't apply to this establishment type). Both individuals already existed; this is their first real use in a worked example, and confirms they mean different things rather than being interchangeable "not a faith school" synonyms.
+- **First real use of `est:NoReligiousCharacter` in a worked example.** Eileen Wade's GIAS value is "None" - a real, populated classification meaning this establishment has been assessed and has no religious character, asserted just like any other value in this facet. Where the classification concept doesn't apply to an establishment's type at all, the vocabulary now omits the triple rather than asserting a "not applicable" value.
 - **A shared headteacher across two establishments, modelled the same way the governance side handles a shared ex-officio governor** - one `est:HeadteacherOrPrincipal` value asserted independently on each establishment's own location-and-contact record, since GIAS itself records the headteacher per establishment even when the underlying person is the same.
 - **Not exercised by this example:** the closed legacy Trust relationship (GIAS UID 1094) referenced in Eileen Wade's extract - out of scope as historical, not current, data.
 

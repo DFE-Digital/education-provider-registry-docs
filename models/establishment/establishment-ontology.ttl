@@ -2308,7 +2308,7 @@ est:ProposedToOpenStatus
     rdfs:label "Proposed to open"@en ;
     rdfs:comment "The establishment has been approved but has not yet opened. Academy and free school proposals use this status between the signing of the funding agreement and the establishment's first day of operation."@en .
 
-# Education phase (8 values)
+# Education phase (7 values)
 est:NurseryPhase
     a owl:NamedIndividual, est:EducationPhase ;
     rdfs:label "Nursery"@en ;
@@ -2344,12 +2344,7 @@ est:SixteenToNineteenPhase
     rdfs:label "16 to 19"@en ;
     rdfs:comment "An education phase for establishments providing post-16 education and training to young people aged 16 to 19, including sixth-form colleges and studio schools."@en .
 
-est:NotApplicableEducationPhase
-    a owl:NamedIndividual, est:EducationPhase ;
-    rdfs:label "Not applicable (education phase)"@en ;
-    rdfs:comment "A classification value indicating that the education phase field is not applicable to this type of establishment."@en .
-
-# Admissions policy (3 values)
+# Admissions policy (2 values)
 est:SelectiveAdmissions
     a owl:NamedIndividual, est:AdmissionsPolicy ;
     rdfs:label "Selective"@en ;
@@ -2360,12 +2355,7 @@ est:NonSelectiveAdmissions
     rdfs:label "Non-selective"@en ;
     rdfs:comment "An admissions-policy value indicating that the school does not allocate places through academic selection tests or criteria."@en .
 
-est:NotApplicableAdmissionsPolicy
-    a owl:NamedIndividual, est:AdmissionsPolicy ;
-    rdfs:label "Not applicable (admissions policy)"@en ;
-    rdfs:comment "A classification value indicating that an admissions policy classification does not apply to this type of establishment."@en .
-
-# Gender of entry (4 values)
+# Gender of entry (3 values)
 est:BoysOnlyGenderEntry
     a owl:NamedIndividual, est:GenderOfEntry ;
     rdfs:label "Boys"@en ;
@@ -2380,11 +2370,6 @@ est:MixedGenderEntry
     a owl:NamedIndividual, est:GenderOfEntry ;
     rdfs:label "Mixed"@en ;
     rdfs:comment "A gender-of-entry value indicating that the establishment admits both boys and girls without restriction on grounds of sex."@en .
-
-est:NotApplicableGenderOfEntry
-    a owl:NamedIndividual, est:GenderOfEntry ;
-    rdfs:label "Not applicable (gender of entry)"@en ;
-    rdfs:comment "A classification value indicating that a gender-of-entry classification does not apply to this type of establishment."@en .
 
 # Boarding provision (3 values)
 est:BoardingSchool
@@ -2402,7 +2387,7 @@ est:NoBoarders
     rdfs:label "No boarders"@en ;
     rdfs:comment "A boarding-provision value indicating that the establishment does not accommodate any pupils as boarders."@en .
 
-# Nursery provision (3 values)
+# Nursery provision (2 values)
 est:HasNurseryClasses
     a owl:NamedIndividual, est:NurseryProvision ;
     rdfs:label "Nursery classes"@en ;
@@ -2413,12 +2398,7 @@ est:NoNurseryClasses
     rdfs:label "No nursery classes"@en ;
     rdfs:comment "A nursery-provision value indicating that the establishment does not operate any nursery classes."@en .
 
-est:NotApplicableNurseryProvision
-    a owl:NamedIndividual, est:NurseryProvision ;
-    rdfs:label "Not applicable (nursery provision)"@en ;
-    rdfs:comment "A classification value indicating that a nursery provision classification does not apply to this type of establishment."@en .
-
-# Sixth-form provision (3 values)
+# Sixth-form provision (2 values)
 est:HasSixthForm
     a owl:NamedIndividual, est:SixthFormProvision ;
     rdfs:label "Sixth form"@en ;
@@ -2429,12 +2409,7 @@ est:NoSixthForm
     rdfs:label "No sixth form"@en ;
     rdfs:comment "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en .
 
-est:NotApplicableSixthFormProvision
-    a owl:NamedIndividual, est:SixthFormProvision ;
-    rdfs:label "Not applicable (sixth-form provision)"@en ;
-    rdfs:comment "A classification value indicating that a sixth-form provision classification does not apply to this type of establishment."@en .
-
-# Special-class provision (3 values)
+# Special-class provision (2 values)
 est:HasSpecialClasses
     a owl:NamedIndividual, est:SpecialClassProvision ;
     rdfs:label "Has special classes"@en ;
@@ -2444,11 +2419,6 @@ est:NoSpecialClasses
     a owl:NamedIndividual, est:SpecialClassProvision ;
     rdfs:label "No special classes"@en ;
     rdfs:comment "A special-class-provision value indicating that the establishment does not provide any specially resourced classes or units for pupils with special educational needs."@en .
-
-est:NotApplicableSpecialClassProvision
-    a owl:NamedIndividual, est:SpecialClassProvision ;
-    rdfs:label "Not applicable (special-class provision)"@en ;
-    rdfs:comment "A classification value indicating that a special-class provision classification does not apply to this type of establishment."@en .
 
 # Type of SEN provision (12 values) - the GIAS SEN1-SEN13 need-type codes,
 # a closed statutory list grounded in the four broad areas of need defined
