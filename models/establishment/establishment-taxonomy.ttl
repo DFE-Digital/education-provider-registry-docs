@@ -123,8 +123,7 @@ est:EducationPhase
         est:MiddleDeemedSecondaryPhase,
         est:SecondaryPhase,
         est:AllThroughPhase,
-        est:SixteenToNineteenPhase,
-        est:NotApplicableEducationPhase ;
+        est:SixteenToNineteenPhase ;
     est:status "Provisional"@en .
 
 est:EstablishmentStatus
@@ -148,8 +147,7 @@ est:AdmissionsPolicy
     skos:definition "The classification describing how places are allocated."@en ;
     skos:narrower
         est:SelectiveAdmissions,
-        est:NonSelectiveAdmissions,
-        est:NotApplicableAdmissionsPolicy ;
+        est:NonSelectiveAdmissions ;
     est:status "Provisional"@en .
 
 est:GenderOfEntry
@@ -161,8 +159,7 @@ est:GenderOfEntry
     skos:narrower
         est:BoysOnlyGenderEntry,
         est:GirlsOnlyGenderEntry,
-        est:MixedGenderEntry,
-        est:NotApplicableGenderOfEntry ;
+        est:MixedGenderEntry ;
     est:status "Provisional"@en .
 
 est:BoardingProvision
@@ -185,8 +182,7 @@ est:NurseryProvision
     skos:definition "The classification describing whether the establishment offers nursery classes."@en ;
     skos:narrower
         est:HasNurseryClasses,
-        est:NoNurseryClasses,
-        est:NotApplicableNurseryProvision ;
+        est:NoNurseryClasses ;
     est:status "Provisional"@en .
 
 est:SixthFormProvision
@@ -197,8 +193,7 @@ est:SixthFormProvision
     skos:definition "The classification describing whether the establishment has a sixth form."@en ;
     skos:narrower
         est:HasSixthForm,
-        est:NoSixthForm,
-        est:NotApplicableSixthFormProvision ;
+        est:NoSixthForm ;
     est:status "Provisional"@en .
 
 est:SpecialClassProvision
@@ -209,8 +204,7 @@ est:SpecialClassProvision
     skos:definition "The classification describing whether the establishment has special classes."@en ;
     skos:narrower
         est:HasSpecialClasses,
-        est:NoSpecialClasses,
-        est:NotApplicableSpecialClassProvision ;
+        est:NoSpecialClasses ;
     est:status "Provisional"@en .
 
 est:ReligiousCharacter
@@ -224,7 +218,6 @@ est:ReligiousCharacter
         est:JewishCharacter,
         est:MuslimCharacter,
         est:NoReligiousCharacter,
-        est:NotApplicableReligiousCharacter,
         est:OtherReligiousCharacter,
         est:RomanCatholicCharacter ;
     est:status "Provisional"@en .
@@ -239,7 +232,6 @@ est:ReligiousEthos
     skos:narrower
         est:ChristianEthos,
         est:NoReligiousEthos,
-        est:NotApplicableReligiousEthos,
         est:OtherReligiousEthos ;
     est:status "Provisional"@en .
 
@@ -803,15 +795,6 @@ est:SixteenToNineteenPhase
     skos:broader est:EducationPhase ;
     est:status "Provisional"@en .
 
-est:NotApplicableEducationPhase
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Not applicable (education phase)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:scopeNote "Not applicable specifically within the education-phase facet."@en ;
-    skos:broader est:EducationPhase ;
-    est:status "Provisional"@en .
-
 #################################################################
 # Establishment-status taxons
 #################################################################
@@ -862,15 +845,6 @@ est:NonSelectiveAdmissions
     skos:broader est:AdmissionsPolicy ;
     est:status "Provisional"@en .
 
-est:NotApplicableAdmissionsPolicy
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Not applicable (admissions policy)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:scopeNote "Not applicable specifically within the admissions-policy facet."@en ;
-    skos:broader est:AdmissionsPolicy ;
-    est:status "Provisional"@en .
-
 #################################################################
 # Gender-of-entry taxons
 #################################################################
@@ -893,15 +867,6 @@ est:GirlsOnlyGenderEntry
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Girls"@en ;
-    skos:broader est:GenderOfEntry ;
-    est:status "Provisional"@en .
-
-est:NotApplicableGenderOfEntry
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Not applicable (gender of entry)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:scopeNote "Not applicable specifically within the gender-of-entry facet."@en ;
     skos:broader est:GenderOfEntry ;
     est:status "Provisional"@en .
 
@@ -949,15 +914,6 @@ est:NoNurseryClasses
     skos:broader est:NurseryProvision ;
     est:status "Provisional"@en .
 
-est:NotApplicableNurseryProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Not applicable (nursery provision)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:scopeNote "Not applicable specifically within the nursery-provision facet."@en ;
-    skos:broader est:NurseryProvision ;
-    est:status "Provisional"@en .
-
 #################################################################
 # Sixth-form-provision taxons
 #################################################################
@@ -973,15 +929,6 @@ est:NoSixthForm
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "No sixth form"@en ;
-    skos:broader est:SixthFormProvision ;
-    est:status "Provisional"@en .
-
-est:NotApplicableSixthFormProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Not applicable (sixth-form provision)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:scopeNote "Not applicable specifically within the sixth-form-provision facet."@en ;
     skos:broader est:SixthFormProvision ;
     est:status "Provisional"@en .
 
@@ -1003,26 +950,9 @@ est:HasSpecialClasses
     skos:broader est:SpecialClassProvision ;
     est:status "Provisional"@en .
 
-est:NotApplicableSpecialClassProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Not applicable (special-class provision)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:scopeNote "Not applicable specifically within the special-class-provision facet. Confirm the actual recorded value in GIAS data."@en ;
-    skos:broader est:SpecialClassProvision ;
-    est:status "Provisional"@en .
-
 #################################################################
 # Religious-character taxons
 #################################################################
-
-est:NotApplicableReligiousCharacter
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Does not apply (religious character)"@en ;
-    skos:altLabel "Does not apply"@en ;
-    skos:broader est:ReligiousCharacter ;
-    est:status "Provisional"@en .
 
 est:NoReligiousCharacter
     a skos:Concept ;
@@ -1072,14 +1002,6 @@ est:OtherReligiousCharacter
 #################################################################
 # Religious-ethos taxons
 #################################################################
-
-est:NotApplicableReligiousEthos
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Does not apply (religious ethos)"@en ;
-    skos:altLabel "Does not apply"@en ;
-    skos:broader est:ReligiousEthos ;
-    est:status "Provisional"@en .
 
 est:NoReligiousEthos
     a skos:Concept ;

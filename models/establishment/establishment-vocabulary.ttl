@@ -1509,18 +1509,6 @@ est:SixteenToNineteenPhase
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#16-to-19> ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/16-to-19-funding-how-it-works> .
 
-est:NotApplicableEducationPhase
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Not applicable (education phase)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:definition "A classification value indicating that the education phase field is not applicable to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types where a phase classification is conceptually inapplicable, such as further education colleges, higher education institutions, or local authority children's centres. Distinct from the absence of a value: a phase simply does not apply."@en ;
-    skos:broader est:EducationPhase ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#not-applicable-phase> .
-
 est:NonSelectiveAdmissions
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1546,18 +1534,6 @@ est:SelectiveAdmissions
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#selective> ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/school-admissions-code--2> ;
     est:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/99> .
-
-est:NotApplicableAdmissionsPolicy
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Not applicable (admissions policy)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:definition "A classification value indicating that an admissions policy classification does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types not subject to school admissions legislation, such as further education colleges, early years settings, or non-maintained special schools. Distinct from non-selective: the field is conceptually inapplicable, not merely answered in the negative."@en ;
-    skos:broader est:AdmissionsPolicy ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#not-applicable-admissions> .
 
 est:BoardingSchool
     a skos:Concept ;
@@ -1589,7 +1565,7 @@ est:NoBoarders
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "No boarders"@en ;
     skos:definition "A boarding-provision value indicating that the establishment does not accommodate any pupils as boarders."@en ;
-    skos:scopeNote "Applies to schools for which the boarding provision field is applicable (i.e. maintained or independent schools), but where no boarding is offered. Distinct from a NotApplicable value, which would indicate the field is irrelevant to the establishment type."@en ;
+    skos:scopeNote "Applies to schools for which the boarding provision field is applicable (i.e. maintained or independent schools), but where no boarding is offered."@en ;
     skos:broader est:BoardingProvision ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
@@ -1634,18 +1610,6 @@ est:MixedGenderEntry
     dcterms:references <https://www.gov.uk/government/publications/school-admissions-code--2> ;
     est:legislation <https://www.legislation.gov.uk/ukpga/2010/15/schedule/11> .
 
-est:NotApplicableGenderOfEntry
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Not applicable (gender of entry)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:definition "A classification value indicating that a gender-of-entry classification does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types where a gender-of-entry classification is conceptually inapplicable, such as further education colleges or early years settings. Distinct from mixed gender entry: the field is not applicable, not merely answered as mixed."@en ;
-    skos:broader est:GenderOfEntry ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#not-applicable-gender> .
-
 est:HasNurseryClasses
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1663,22 +1627,11 @@ est:NoNurseryClasses
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "No nursery classes"@en ;
     skos:definition "A nursery-provision value indicating that the establishment does not operate any nursery classes."@en ;
-    skos:scopeNote "Applies where the nursery provision field is applicable to the establishment type (e.g. a primary school) but the school has no nursery classes. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
+    skos:scopeNote "Applies where the nursery provision field is applicable to the establishment type (e.g. a primary school) but the school has no nursery classes."@en ;
     skos:broader est:NurseryProvision ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#no-nursery-classes> .
-
-est:NotApplicableNurseryProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Not applicable (nursery provision)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:definition "A classification value indicating that a nursery provision classification does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types where nursery provision is conceptually inapplicable, such as secondary schools, sixth-form colleges, or further education institutions. Distinct from NoNurseryClasses, which applies to establishment types where the field is relevant but no nursery classes are provided."@en ;
-    skos:broader est:NurseryProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
 
 est:HasSixthForm
     a skos:Concept ;
@@ -1697,22 +1650,11 @@ est:NoSixthForm
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Does not have a sixth form"@en ;
     skos:definition "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en ;
-    skos:scopeNote "Applies where the sixth-form provision field is applicable to the establishment type (e.g. a secondary school) but no post-16 provision is offered. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
+    skos:scopeNote "Applies where the sixth-form provision field is applicable to the establishment type (e.g. a secondary school) but no post-16 provision is offered."@en ;
     skos:broader est:SixthFormProvision ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#no-sixth-form> .
-
-est:NotApplicableSixthFormProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Not applicable (sixth-form provision)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:definition "A classification value indicating that a sixth-form provision classification does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types where sixth-form provision is conceptually inapplicable, such as primary schools, nursery schools, or pupil referral units. Distinct from NoSixthForm, which applies to establishment types where the field is relevant but no sixth form is provided."@en ;
-    skos:broader est:SixthFormProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
 
 est:HasSpecialClasses
     a skos:Concept ;
@@ -1730,22 +1672,11 @@ est:NoSpecialClasses
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "No special classes"@en ;
     skos:definition "A special-class-provision value indicating that the establishment does not provide any specially resourced classes or units for pupils with special educational needs."@en ;
-    skos:scopeNote "Applies where the special-class provision field is applicable to the establishment type but no such provision is offered. Distinct from the NotApplicable value, which is used where the field is irrelevant to the establishment type."@en ;
+    skos:scopeNote "Applies where the special-class provision field is applicable to the establishment type but no such provision is offered."@en ;
     skos:broader est:SpecialClassProvision ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Invented review definition"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#has-special-classes-no-special-classes> .
-
-est:NotApplicableSpecialClassProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Not applicable (special-class provision)"@en ;
-    skos:altLabel "Not applicable"@en ;
-    skos:definition "A classification value indicating that a special-class provision classification does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types where the concept of resourced SEN classes is inapplicable, such as special schools (where all provision is by definition specialist) or early years settings. Distinct from NoSpecialClasses, which indicates the field is applicable but no such provision exists."@en ;
-    skos:broader est:SpecialClassProvision ;
-    est:status "Provisional"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
 
 est:ChurchOfEnglandCharacter
     a skos:Concept ;
@@ -1783,18 +1714,7 @@ est:NoReligiousCharacter
     skos:prefLabel "No religious character"@en ;
     skos:altLabel "None"@en ;
     skos:definition "A religious-character value indicating that the school has no religious character designation; it is a non-faith school."@en ;
-    skos:scopeNote "Applies to maintained and independent schools for which a religious character designation under the School Standards and Framework Act 1998 is applicable but has not been conferred. Distinct from NotApplicableReligiousCharacter, which is used where the designation concept does not apply to the establishment type at all."@en ;
-    skos:broader est:ReligiousCharacter ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
-
-est:NotApplicableReligiousCharacter
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Does not apply (religious character)"@en ;
-    skos:altLabel "Does not apply"@en ;
-    skos:definition "A classification value indicating that the religious character designation field does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types outside the scope of the statutory religious character designation under the School Standards and Framework Act 1998, such as further education colleges. Distinct from NoReligiousCharacter, which indicates the field is applicable but no designation has been conferred."@en ;
+    skos:scopeNote "Applies to maintained and independent schools for which a religious character designation under the School Standards and Framework Act 1998 is applicable but has not been conferred."@en ;
     skos:broader est:ReligiousCharacter ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Invented review definition"@en .
@@ -1836,18 +1756,7 @@ est:NoReligiousEthos
     skos:prefLabel "No religious ethos"@en ;
     skos:altLabel "None"@en ;
     skos:definition "A religious-ethos value indicating that the school does not self-declare any religious ethos."@en ;
-    skos:scopeNote "Religious ethos is a self-declaration and is not a statutory designation. Applies where the ethos field is applicable to the establishment type but the school has declared no religious ethos. Distinct from NotApplicableReligiousEthos, which indicates the field is irrelevant to the establishment type."@en ;
-    skos:broader est:ReligiousEthos ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
-
-est:NotApplicableReligiousEthos
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Does not apply (religious ethos)"@en ;
-    skos:altLabel "Does not apply"@en ;
-    skos:definition "A classification value indicating that the religious ethos field does not apply to this type of establishment."@en ;
-    skos:scopeNote "Used for establishment types where recording a religious ethos is not applicable, such as further education colleges or local authority services. Distinct from NoReligiousEthos, which indicates the field is applicable but the school has declared no religious ethos."@en ;
+    skos:scopeNote "Religious ethos is a self-declaration and is not a statutory designation. Applies where the ethos field is applicable to the establishment type but the school has declared no religious ethos."@en ;
     skos:broader est:ReligiousEthos ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Invented review definition"@en .
@@ -2000,7 +1909,6 @@ est:EducationPhase
         est:AllThroughPhase,
         est:MiddleDeemedSecondaryPhase,
         est:MiddlePhase,
-        est:NotApplicableEducationPhase,
         est:NurseryPhase,
         est:PrimaryPhase,
         est:SecondaryPhase,
@@ -2774,8 +2682,7 @@ est:GenderOfEntry
     skos:narrower
         est:BoysOnlyGenderEntry,
         est:GirlsOnlyGenderEntry,
-        est:MixedGenderEntry,
-        est:NotApplicableGenderOfEntry ;
+        est:MixedGenderEntry ;
     est:status "Preferred"@en ;
     dcterms:source "C#: GenderId; Java: gender; database: Establishment.gender_code"@en .
 
@@ -2787,7 +2694,6 @@ est:AdmissionsPolicy
     skos:broader est:EducationAdmissionsAndProvision ;
     skos:narrower
         est:NonSelectiveAdmissions,
-        est:NotApplicableAdmissionsPolicy,
         est:SelectiveAdmissions ;
     est:status "Preferred"@en ;
     dcterms:source "C#: AdmissionsPolicyId; database: Establishment.admissionsPolicy_code"@en .
@@ -2814,8 +2720,7 @@ est:NurseryProvision
     skos:broader est:EducationAdmissionsAndProvision ;
     skos:narrower
         est:HasNurseryClasses,
-        est:NoNurseryClasses,
-        est:NotApplicableNurseryProvision ;
+        est:NoNurseryClasses ;
     est:status "Preferred"@en ;
     dcterms:source "C#: ProvisionNurseryId; database: Establishment.nurseryProvision_code"@en .
 
@@ -2828,8 +2733,7 @@ est:SixthFormProvision
     skos:broader est:EducationAdmissionsAndProvision ;
     skos:narrower
         est:HasSixthForm,
-        est:NoSixthForm,
-        est:NotApplicableSixthFormProvision ;
+        est:NoSixthForm ;
     est:status "Preferred"@en ;
     dcterms:source "C#: ProvisionOfficialSixthFormId; Java: SpecialIndicators.officialSixthForm; database: Establishment.officialSixthForm_code"@en .
 
@@ -2842,8 +2746,7 @@ est:SpecialClassProvision
     skos:broader est:EducationAdmissionsAndProvision ;
     skos:narrower
         est:HasSpecialClasses,
-        est:NoSpecialClasses,
-        est:NotApplicableSpecialClassProvision ;
+        est:NoSpecialClasses ;
     est:status "Preferred"@en .
 
 est:Section41Approval
@@ -2954,7 +2857,6 @@ est:ReligiousCharacter
         est:JewishCharacter,
         est:MuslimCharacter,
         est:NoReligiousCharacter,
-        est:NotApplicableReligiousCharacter,
         est:OtherReligiousCharacter,
         est:RomanCatholicCharacter ;
     est:status "Preferred"@en ;
@@ -2972,7 +2874,6 @@ est:ReligiousEthos
     skos:narrower
         est:ChristianEthos,
         est:NoReligiousEthos,
-        est:NotApplicableReligiousEthos,
         est:OtherReligiousEthos ;
     est:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#religious-ethos> ;
