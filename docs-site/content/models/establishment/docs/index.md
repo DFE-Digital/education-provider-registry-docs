@@ -10,7 +10,7 @@ Short notes on specific modelling decisions in the establishment model — where
 
 | Note | Covers |
 |---|---|
-| [Group membership and sponsorship](./group-membership-and-sponsorship/) | Why one `est:EstablishmentGroup` replaces GIAS's paired "Multi-academy trust" and "School sponsor" group records for a single organisation, and how `esto:hasGroupMembershipRole` carries the distinction |
+| [Group membership and sponsorship](./group-membership-and-sponsorship/) | Why one `est:EstablishmentGroup` replaces GIAS's paired "Multi-academy trust" and "School sponsor" group records for a single organisation, and how the sponsor link becomes a dated `est:Sponsorship` rather than a second group membership |
 
 ---
 

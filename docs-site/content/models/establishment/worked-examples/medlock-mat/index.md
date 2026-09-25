@@ -78,9 +78,9 @@ flowchart LR
     MED["inst:medlock<br/>(est:MainstreamAcademy)"]
 
     MED -->|esto:hasMembership| GM1["est:GroupMembership<br/>role est:Member<br/>joined 2024-01-01"]
-    MED -->|esto:hasMembership| GM2["est:GroupMembership<br/>role est:SponsoredAcademy<br/>joined 2024-01-01"]
+    MED -->|esto:hasSponsorship| SPN["est:Sponsorship<br/>started 2024-01-01"]
     GM1 -->|esto:memberOf| AT
-    GM2 -->|esto:memberOf| AT
+    SPN -->|esto:hasSponsor| AT
 
     MED -->|esto:hasAccountabilityRelationship| ACC["est:EstablishmentAccountability"]
     ACC -->|esto:accountableToAcademyTrust| AT
@@ -201,7 +201,7 @@ inst:medlock
 
 ### Example 4 — Group membership and sponsorship
 
-The GIAS links extract records **two** group-link rows for URN 150612 against the same real-world Trust: one typed "Multi-academy trust" (Group UID 2777) and one typed "School sponsor" (Group UID 4949) - both named "The Co-operative Academies Trust", both joined 1 January 2024. Modelled literally, this would create two `est:EstablishmentGroup` instances for one organisation. `establishment-ontology.ttl` does not model sponsorship as a group type - so the model uses **one** `est:EstablishmentGroup` (Example 1's Trust) and **two** `est:GroupMembership` records against it, distinguished by `esto:hasGroupMembershipRole` (ontology v1.18): the "Multi-academy trust" link becomes an `est:Member` membership, the "School sponsor" link an `est:SponsoredAcademy` one. `esto:sponsoredBy` additionally names the approved sponsor organisation - a fact distinct from the in-group role, and one that also applies where a sponsor is not a group (see the [Oasis Community Learning example](../oasis-community-learning/) for the full pattern against a Trust whose two links carry *different* joined dates).
+The GIAS links extract records **two** group-link rows for URN 150612 against the same real-world Trust: one typed "Multi-academy trust" (Group UID 2777) and one typed "School sponsor" (Group UID 4949) - both named "The Co-operative Academies Trust", both joined 1 January 2024. Modelled literally, this would create two `est:EstablishmentGroup` instances for one organisation. The model uses **one** `est:EstablishmentGroup` (Example 1's Trust): the "Multi-academy trust" link becomes an `est:GroupMembership`, and the "School sponsor" link becomes an `est:Sponsorship` (ontology v1.19) whose sponsor is the same Trust instance, dated from the link's joined date. `esto:sponsoredBy` is the current-value shortcut to the same sponsor. Sponsorship is not a group membership, so the same pattern covers a sponsor that is not the academy's trust. The [Oasis Community Learning example](../oasis-community-learning/) shows a sponsorship that starts later than the membership.
 
 ```
 inst:medlock
@@ -215,12 +215,11 @@ inst:medlock
         ]
     ] ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:coop-academies-trust ;
-        esto:hasGroupMembershipRole est:SponsoredAcademy ;
-        esto:hasGroupMembershipDate [
-            a est:GroupMembershipDate ;
+    esto:hasSponsorship [
+        a est:Sponsorship ;
+        esto:hasSponsor inst:coop-academies-trust ;
+        esto:hasSponsorshipStartDate [
+            a est:SponsorshipStartDate ;
             rdf:value "2024-01-01"^^xsd:date
         ]
     ] ;
@@ -228,7 +227,7 @@ inst:medlock
     esto:sponsoredBy inst:coop-academies-trust .
 ```
 
-*(The "School sponsor" group link, Group UID 4949, is not given a second `est:EstablishmentGroup` instance - it becomes the `est:SponsoredAcademy`-role membership above.)*
+*(The "School sponsor" group link, Group UID 4949, is not given a second `est:EstablishmentGroup` instance - it becomes the `est:Sponsorship` above.)*
 
 ### Example 5 — Location, contact and administrative geography
 
@@ -385,7 +384,7 @@ inst:medlock
 
 ## What this example found
 
-- **The group-membership/sponsorship duplication (Example 4) is real GIAS extract behaviour, not a hypothetical.** The same establishment, the same joined date, the same organisation name, recorded as two separate group-link rows with two different group types. `establishment-ontology.ttl` collapses this to one `est:EstablishmentGroup` and two `est:GroupMembership` records distinguished by `esto:hasGroupMembershipRole` (`est:Member` / `est:SponsoredAcademy`, ontology v1.18), with `esto:sponsoredBy` additionally naming the approved sponsor. Here both memberships share a joined date; the [Oasis Community Learning example](../oasis-community-learning/) is the case where they differ (2008 into the trust, 2010 as sponsored academy).
+- **The group-membership/sponsorship duplication (Example 4) is real GIAS extract behaviour, not a hypothetical.** The same establishment, the same joined date, the same organisation name, recorded as two separate group-link rows with two different group types. `establishment-ontology.ttl` collapses this to one `est:EstablishmentGroup`, one `est:GroupMembership`, and one `est:Sponsorship` whose sponsor is the trust (ontology v1.19), with `esto:sponsoredBy` as the current-value shortcut. Here the membership and the sponsorship start on the same day; in the [Oasis Community Learning example](../oasis-community-learning/) they differ (2008 into the trust, 2010 sponsorship). Until v1.19 this page recorded the sponsor link as a second membership with the role `est:SponsoredAcademy`, which has since been removed.
 - **One real-world date, two GIAS fields.** Medlock's `OpenDate` and its group `Joined date` are both `2024-01-01` - the establishment opened and joined its trust on the same day, which is unsurprising for a sponsor-led academy but not guaranteed in general (a converter academy's `OpenDate` predates its GIAS record; a school moving between trusts has a `Joined date` unrelated to its own `OpenDate`). The model keeps these as two separate dated facts (`esto:hasOpenDate` on lifecycle, `esto:hasGroupMembershipDate` on group membership) rather than assuming they coincide.
 - **Faith context is absent, not "not applicable".** Medlock has no religious character, ethos or diocese - the ontology represents that as no `esto:hasFaithContext` triple at all, rather than a faith-context record populated with placeholder "not applicable" values. This is the RDF-idiomatic way to express a real-world non-fact: absence of a triple already means "no assertion."
 - **SEN need types weren't modelled as named concepts at all.** `est:TypeOfSenProvision` had no `owl:NamedIndividual` values - "SLCN" would only ever have been representable as a free-text label, not a thing with its own URI. GIAS's SEN1-SEN13 codes are a real, closed, statutory list (the SEND Code of Practice 0 to 25's four broad areas of need), so this example's SLCN value is now `est:SpeechLanguageAndCommunicationNeeds`, one of 12 named individuals. Checking this also surfaced a second, separate error: `est:TypeOfResourcedProvision`'s own definition wrongly described it as the SEN need type - it's actually a different, much smaller classification (which kind of facility exists: resourced provision unit, SEN unit, or both). Fixed both.
@@ -405,8 +404,8 @@ inst:medlock
 | Lifecycle and status | Open since 2024-01-01 | `est:OpenStatus` + `esto:hasOpenDate` | Direct |
 | Accountability | Academy accountable to its trust | `esto:accountableToAcademyTrust` | Direct |
 | Group membership | Joined Group UID 2777, 2024-01-01 | `est:GroupMembership` + `esto:memberOf` + `esto:hasGroupMembershipRole est:Member` + `esto:hasGroupMembershipDate` | Direct |
-| Group membership - sponsored academy | Second group link, Group UID 4949, "School sponsor", same trust, 2024-01-01 | second `est:GroupMembership` + `esto:hasGroupMembershipRole est:SponsoredAcademy` against the same group | Direct - one group entity, not two |
-| Sponsorship (approved sponsor identity) | Sponsor is The Co-operative Academies Trust | `esto:sponsoredBy` (same instance as the trust) | Direct - distinct fact from the in-group role |
+| Sponsorship | Second group link, Group UID 4949, "School sponsor", same trust, 2024-01-01 | `est:Sponsorship` + `esto:hasSponsor` (the trust) + `esto:hasSponsorshipStartDate` | Direct - one group entity, not two; sponsorship is not a membership |
+| Current sponsor | Sponsor is The Co-operative Academies Trust | `esto:sponsoredBy` (same instance as the trust) | Direct - shortcut to the current sponsorship's sponsor |
 | Location and site | Wadeson Road, Chorlton-on-Medlock, M13 9UJ | `est:Site` + `est:Address` | Direct |
 | Administrative geography | North West region, Manchester district, Ardwick ward, Manchester Rusholme constituency, urban classification, GSS code E08000003, OS grid ref, MSOA/LSOA | `est:AdministrativeGeography` | Direct |
 | Headteacher | JB | `est:HeadteacherOrPrincipal` | Direct - shared instance (`ginst:person-jb`) with the governance worked example's ex-officio Local Governing Body/Community Council Member, not a second, disconnected identity |

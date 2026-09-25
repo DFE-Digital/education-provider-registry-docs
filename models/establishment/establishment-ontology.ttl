@@ -35,10 +35,10 @@ esto:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-09-10"^^xsd:date ;
+    dcterms:modified "2026-09-24"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.18" ;
+    owl:versionInfo "1.19" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -71,6 +71,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.16: est:EstablishmentLeadership given a real owl:Class and esto:hasEstablishmentLeadership object property (domain est:Establishment, range est:EstablishmentLeadership, 0..1), correcting a divergence between the ontology and its own SKOS vocabulary that had existed since est:EstablishmentLeadership was first added to establishment-vocabulary.ttl as a top-level concept (skos:topConceptOf est:establishmentDetailsVocabulary, a peer of est:EstablishmentLocationAndContact/est:EducationAdmissionsAndProvision/etc.) - the vocabulary always intended leadership to be its own grouping, but the ontology never implemented that grouping and instead attached esto:hasHeadteacherOrPrincipal and esto:hasCentreManager directly to est:EstablishmentLocationAndContact, whose own definition is 'the group of fields describing how to contact and locate the establishment physically' - a headteacher's name is neither. Domain of esto:hasHeadteacherOrPrincipal and esto:hasCentreManager corrected to est:EstablishmentLeadership; esto:hasJobTitle's domain (est:HeadteacherOrPrincipal) is unchanged, since a job title is correctly a property of the specific headteacher instance, not a sibling grouping field. est:HeadteacherOrPrincipal and est:JobTitle class declarations moved from the 'contact and location' section of this file into a new 'establishment leadership' section, matching the vocabulary's grouping; est:CentreManager's declaration (in the children's-centre operational-record section, alongside est:ProviderType) was left in place, since moving it would separate it from its other children's-centre-specific siblings for no benefit - only its property's domain needed correcting. establishment-shacl.ttl's three property-path shapes referencing esto:hasHeadteacherOrPrincipal/hasCentreManager (the universal shape's max-1 rule, and the children's-centre group's minCount-1-Manager/maxCount-0-Headteacher rules) updated to path through esto:hasEstablishmentLeadership instead of esto:hasEstablishmentLocationAndContact, matching the new domain. Also reconciled a duplicate vocabulary concept found while implementing this: establishment-vocabulary.ttl carried both est:JobTitle (added at ontology v1.10, actually implemented with an owl:Class and esto:hasJobTitle, status Provisional) and est:PreferredJobTitle (pre-existing, vocabulary-only, never given an ontology counterpart, status Preferred, skos:broader est:EstablishmentLeadership) for what is the same real GIAS field (HeadPreferredJobTitle) - est:PreferredJobTitle deleted outright from the vocabulary (not deprecated - nothing referenced it outside its own declaration and two membership lists), est:JobTitle retained as the one surviving, actually-implemented concept."@en ;
     rdfs:comment "v1.17: est:HeadteacherOrPrincipal and est:CentreManager both given rdfs:subClassOf est:Person, matching the pattern gov:GovernancePerson already uses (rdfs:subClassOf est:Person, governance-ontology.ttl) - a headteacher or centre manager's name was previously carried only as an rdfs:label on an otherwise untyped-as-a-person instance, formally no different from any other labelled blank node in this ontology. Purely additive - existing worked-example Turtle needs no change, since RDFS subsumption means every existing `a est:HeadteacherOrPrincipal` instance is now also inferred `a est:Person` without any triple being edited. establishment-vocabulary.ttl's est:Person concept updated to list both as skos:narrower and to mention them in its definition, which previously only named independent-school proprietors as an example of the class's use."@en ;
     rdfs:comment "v1.18: group membership role type added, closing gap 2.G1 in docs/transformation/data/enterprise/claude/organisation-groups-alignment-establishment-model-vs-edm.md (plan: group-membership-role-type-plan.md). New class est:GroupMembershipRoleType (closed enumeration, modelled like est:GroupRelationshipType); 3 owl:NamedIndividual values est:Member, est:SponsoredAcademy and est:Sponsor, matching the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity in full. est:Sponsor describes an organisation's membership of the group and is not yet assertable via esto:hasMembership (domain est:Establishment - gap 2.G2 remains open); it is included for parity and for the future organisation-as-member case. New object property esto:hasGroupMembershipRole (domain est:GroupMembership, range est:GroupMembershipRoleType, 0..1). This lets a single est:EstablishmentGroup carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second 'School sponsor' (SP-prefixed) group record for an organisation that already exists as the members' trust (TR-prefixed). esto:sponsoredBy retained unchanged - it names the DfE-approved sponsor organisation, which need not be an est:EstablishmentGroup (for example a diocese), a distinct fact from the in-group role. establishment-shacl.ttl gains est:GroupMembershipShape (the first shape to target est:GroupMembership); establishment-vocabulary.ttl and establishment-taxonomy.ttl gain the SKOS mirror of the new class and its values."@en ;
+    rdfs:comment "v1.19: sponsorship tightened, following the sponsorship review in docs/transformation/data/modelling/groups/claude/establishment-groups-logical-model-recommendation.md. (1) New class est:Sponsorship: a dated record that a person or organisation sponsors an academy or free school, with new classes est:SponsorshipStartDate and est:SponsorshipEndDate (rdf:value xsd:date) and new object properties esto:hasSponsorship (domain est:Establishment, range est:Sponsorship, 0..*), esto:hasSponsor (domain est:Sponsorship, range est:Organisation or est:Person, exactly 1), esto:hasSponsorshipStartDate and esto:hasSponsorshipEndDate (0..1 each). This is now the one mechanism for sponsorship, whether the sponsor is the academy's own trust (82% of GIAS sponsor links) or another body such as a diocese (18%), and it keeps the joined dates and sponsor history that esto:sponsoredBy cannot. (2) esto:sponsoredBy retained as a current-value shortcut for the sponsor of the current sponsorship. Its range is widened from est:Organisation to est:Organisation or est:Person, matching esto:hasProprietor, because about ten GIAS sponsors are named individuals. (3) est:SponsoredAcademy and est:Sponsor removed from this ontology outright, keeping the ontology free of deprecated terms (the v1.14 est:MainAddress precedent); they survive only as status-Retired concepts in establishment-vocabulary.ttl, for historical resolution of the URIs. est:SponsoredAcademy (v1.18) recorded sponsorship as a second group membership: it duplicated esto:sponsoredBy with no rule linking the two, never named the sponsor, could not represent a sponsor other than the academy's trust, and partly reversed v1.7's decision that sponsor is a role, not a group type. est:Sponsor could never be asserted correctly, because a membership's subject is always an establishment. est:GroupMembershipRoleType keeps est:Member as its only current value, and gap 2.G2 is closed as no longer needed. establishment-shacl.ttl v0.10 enforces the new rules, establishment-vocabulary.ttl and establishment-taxonomy.ttl carry the SKOS changes, and the Medlock and Oasis worked examples move to the new pattern. Also restored the tail of the 'Named individuals' section header, which an earlier edit had left stranded after the role-type values."@en ;
     est:status "Provisional"@en .
 
 
@@ -233,6 +234,21 @@ est:EstablishmentAccountability
     a owl:Class ;
     rdfs:label "Accountability relationship"@en ;
     rdfs:comment "A relationship between an establishment and the organisation accountable for it. An establishment may have zero or more accountability relationships of different kinds."@en .
+
+est:Sponsorship
+    a owl:Class ;
+    rdfs:label "Sponsorship"@en ;
+    rdfs:comment "A dated record that a person or organisation sponsors an academy or free school under the Academies Act 2010. The sponsor may be the academy's own trust, another body such as a diocese, college or company, or a named individual. Replaces the GIAS 'School sponsor' (SP-prefixed) group-link row, whether that record duplicates the academy's trust or names a different body. Distinct from group membership (est:GroupMembership) and from accountability (est:EstablishmentAccountability). Added v1.19."@en .
+
+est:SponsorshipStartDate
+    a owl:Class ;
+    rdfs:label "Sponsorship start date"@en ;
+    rdfs:comment "The date a sponsorship began. Instances carry the date as rdf:value with an xsd:date datatype. Maps to GroupLink.effectiveDate on the GIAS 'School sponsor' group link. Added v1.19."@en .
+
+est:SponsorshipEndDate
+    a owl:Class ;
+    rdfs:label "Sponsorship end date"@en ;
+    rdfs:comment "The first date on which a sponsorship no longer applied. Instances carry the date as rdf:value with an xsd:date datatype. GIAS holds no equivalent. Added v1.19."@en .
 
 est:LocalAuthority
     a owl:Class ;
@@ -651,8 +667,36 @@ esto:sponsoredBy
     a owl:ObjectProperty ;
     rdfs:label "sponsored by"@en ;
     rdfs:domain est:Establishment ;
-    rdfs:range est:Organisation ;
-    rdfs:comment "The organisation approved by the Secretary of State to sponsor this academy or free school under the Academies Act 2010. Cardinality: 0..1."@en .
+    rdfs:range [ a owl:Class ; owl:unionOf ( est:Organisation est:Person ) ] ;
+    rdfs:comment "Current-value shortcut for the sponsor of this academy or free school: the party named by esto:hasSponsor on the establishment's current est:Sponsorship (the one with no end date). Where both are recorded they must agree. The sponsor is the person or organisation approved by the Secretary of State under the Academies Act 2010; it may be the academy's own trust, another body such as a diocese, or a named individual. It is never an establishment, a federation, or a children's centre group or collaboration (enforced in establishment-shacl.ttl). Cardinality: 0..1, and only for academy and free school types. Range widened from est:Organisation to est:Organisation or est:Person in v1.19."@en .
+
+esto:hasSponsorship
+    a owl:ObjectProperty ;
+    rdfs:label "has sponsorship"@en ;
+    rdfs:domain est:Establishment ;
+    rdfs:range est:Sponsorship ;
+    rdfs:comment "Cardinality: 0..*. A dated sponsorship of this academy or free school. At most one should be current (no end date); earlier sponsorships are kept as history. Only for academy and free school types. Added v1.19."@en .
+
+esto:hasSponsor
+    a owl:ObjectProperty ;
+    rdfs:label "has sponsor"@en ;
+    rdfs:domain est:Sponsorship ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( est:Organisation est:Person ) ] ;
+    rdfs:comment "Cardinality: exactly 1. The person or organisation that sponsors the establishment in this sponsorship. Never an establishment, a federation, or a children's centre group or collaboration (enforced in establishment-shacl.ttl). Added v1.19."@en .
+
+esto:hasSponsorshipStartDate
+    a owl:ObjectProperty ;
+    rdfs:label "has sponsorship start date"@en ;
+    rdfs:domain est:Sponsorship ;
+    rdfs:range est:SponsorshipStartDate ;
+    rdfs:comment "Cardinality: 0..1. The date the sponsorship began. Maps to the joined date of the GIAS 'School sponsor' group link (GroupLink.effectiveDate). Added v1.19."@en .
+
+esto:hasSponsorshipEndDate
+    a owl:ObjectProperty ;
+    rdfs:label "has sponsorship end date"@en ;
+    rdfs:domain est:Sponsorship ;
+    rdfs:range est:SponsorshipEndDate ;
+    rdfs:comment "Cardinality: 0..1. The first date on which the sponsorship no longer applied. Absent while the sponsorship is current. GIAS holds no equivalent. Added v1.19."@en .
 
 esto:isSingleAcademyTrust
     a owl:ObjectProperty ;
@@ -1773,7 +1817,7 @@ esto:hasGroupMembershipRole
     rdfs:label "has group membership role"@en ;
     rdfs:domain est:GroupMembership ;
     rdfs:range est:GroupMembershipRoleType ;
-    rdfs:comment "Cardinality: 0..1. The capacity in which this membership is held. Absent means an ordinary membership (est:Member is the implied default). Use est:SponsoredAcademy to record that the establishment joined the group as a sponsored academy under an Academies Act 2010 sponsor arrangement - this replaces the second 'School sponsor' (SP-prefixed) group-link row GIAS holds for an organisation that already exists as the members' trust. Distinct from esto:sponsoredBy, which names the DfE-approved sponsor organisation (which need not be an est:EstablishmentGroup - for example a diocese). Added v1.18."@en .
+    rdfs:comment "Cardinality: 0..1. The capacity in which this membership is held. Absent means an ordinary membership (est:Member is the implied default). est:Member is its only value: est:SponsoredAcademy and est:Sponsor were removed in v1.19, when sponsorship moved to est:Sponsorship and esto:hasSponsorship. Added v1.18."@en .
 
 esto:hasGroupStatus
     a owl:ObjectProperty ;
@@ -2173,7 +2217,7 @@ est:GenericTrust
 est:GroupMembership
     a owl:Class ;
     rdfs:label "Group membership"@en ;
-    rdfs:comment "A dated record of an establishment's membership of an establishment group, trust, federation, sponsor arrangement or children's centre collaboration. Maps to GroupLink in the current GIAS schema. An establishment may have membership in more than one group simultaneously."@en .
+    rdfs:comment "A dated record of an establishment's membership of an establishment group, trust, federation, or children's centre group or collaboration. Maps to GroupLink in the current GIAS schema. An establishment may have membership in more than one group simultaneously. Sponsorship is not a membership: since v1.19 it is recorded with est:Sponsorship."@en .
 
 est:GroupRelationship
     a owl:Class ;
@@ -2188,7 +2232,7 @@ est:GroupRelationshipType
 est:GroupMembershipRoleType
     a owl:Class ;
     rdfs:label "Group membership role type"@en ;
-    rdfs:comment "The capacity in which a member holds a membership of an establishment group - an ordinary member, a sponsored academy admitted under a sponsor arrangement, or the sponsoring organisation itself. Closed enumeration with three values (est:Member, est:SponsoredAcademy, est:Sponsor), matching the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model. Note: est:Sponsor describes an organisation's membership and is not assertable through esto:hasMembership while that property's domain is est:Establishment (gap 2.G2); for an establishment the approved sponsor is named by esto:sponsoredBy. Added v1.18."@en .
+    rdfs:comment "The capacity in which an establishment holds a membership of an establishment group. est:Member is its only value. est:SponsoredAcademy and est:Sponsor, added in v1.18 to match the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model, were removed in v1.19: sponsorship is recorded with est:Sponsorship, not as group membership. The class is kept for the enterprise-model mapping and for future membership roles. Added v1.18."@en .
 
 est:GroupId
     a owl:Class ;
@@ -2245,6 +2289,9 @@ est:GroupClosedDate
 # establishment type codes) remain as skos:Concept in the
 # vocabulary TTL only, with no owl:NamedIndividual typing.
 #
+# The same est: URIs also carry skos:Concept in the vocabulary
+# TTL - valid OWL 2 punning.
+#################################################################
 
 # Identifier role (2 values, v1.0)
 est:CurrentIdentifierRole
@@ -2268,24 +2315,11 @@ est:PredecessorSingleAcademyTrust
     rdfs:label "Predecessor SAT"@en ;
     rdfs:comment "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en .
 
-# Group membership role type (3 values, v1.18)
+# Group membership role type (1 value; est:SponsoredAcademy and est:Sponsor removed v1.19)
 est:Member
     a owl:NamedIndividual, est:GroupMembershipRoleType ;
     rdfs:label "Member"@en ;
     rdfs:comment "The establishment is an ordinary member of the group. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Member'. The implied default when esto:hasGroupMembershipRole is absent."@en .
-
-est:SponsoredAcademy
-    a owl:NamedIndividual, est:GroupMembershipRoleType ;
-    rdfs:label "Sponsored Academy"@en ;
-    rdfs:comment "The establishment is a member of the group as a sponsored academy under an Academies Act 2010 sponsor arrangement. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsored Academy'. Replaces the second 'School sponsor' (SP-prefixed) group-link row GIAS holds against the same organisation."@en .
-
-est:Sponsor
-    a owl:NamedIndividual, est:GroupMembershipRoleType ;
-    rdfs:label "Sponsor"@en ;
-    rdfs:comment "The member holds the sponsor role within the group - it is the approved sponsoring organisation, not a sponsored academy. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsor'. This value describes an organisation's membership of the group; it is only assertable once a group membership can have an organisation as its subject (esto:hasMembership currently has domain est:Establishment - gap 2.G2). Included now for full parity with the enterprise data model's reference entity. For an establishment, the DfE-approved sponsor is named by esto:sponsoredBy instead."@en .
-# The same est: URIs also carry skos:Concept in the vocabulary
-# TTL - valid OWL 2 punning.
-#################################################################
 
 # Establishment status (4 values)
 est:OpenStatus

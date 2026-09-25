@@ -18,7 +18,7 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 **GIAS 1.0:** `School sponsor` is GIAS group type 05. Sponsor body records are stored in the groups table, linked to establishments via the group-link mechanism. The front end presents it as `Academy sponsor`.
 
-**EPR target:** `est:SchoolSponsor` is removed as an OWL class. The SKOS taxonomy entry is retained and marked legacy. Sponsor relationships are expressed via `esto:sponsoredBy` (domain `est:Establishment`, range `est:Organisation`) directly on the establishment record.
+**EPR target:** `est:SchoolSponsor` is removed as an OWL class. The SKOS taxonomy entry is retained and marked legacy. Since ontology v1.19, each sponsor link is a dated `est:Sponsorship` naming its sponsor through `esto:hasSponsor`, and `esto:sponsoredBy` (domain `est:Establishment`, range `est:Organisation` or `est:Person`) is a shortcut to the current sponsor.
 
 **Reason:** GIAS stored sponsor bodies in the groups table as a legacy implementation choice. The business semantics are sponsor semantics throughout — the field is labelled "Academy sponsor", the flag says "Linked to a sponsor", and the permission is sponsor-specific. A sponsor is an organisation that establishments link to, not a type of group that establishments belong to.
 
@@ -28,7 +28,7 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 **GIAS 1.0:** `est:AcademySponsor` was an OWL class. The property `esto:hasAcademySponsor` linked a trust to its sponsor.
 
-**EPR target:** Both removed. The sponsoring body is typed as `est:Organisation`, linked via `esto:sponsoredBy` on `est:Establishment`.
+**EPR target:** Both removed. The sponsoring body is typed as `est:Organisation`, or `est:Person` for an individual sponsor. It is linked through a dated `est:Sponsorship` on `est:Establishment`, with `esto:sponsoredBy` as the current-sponsor shortcut (ontology v1.19).
 
 **Reason:** A sponsor is something an organisation *does*, not something an organisation *is*. A university, charity, business or trust can sponsor an academy without being a distinct kind of organisation. The old property was also on `est:AcademyTrust` rather than on the establishment, which did not match GIAS link semantics (the link is from establishment to sponsor).
 

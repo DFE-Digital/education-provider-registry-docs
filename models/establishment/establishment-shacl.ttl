@@ -32,10 +32,10 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-09-10"^^xsd:date ;
+    dcterms:modified "2026-09-24"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.9" ;
+    owl:versionInfo "0.10" ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     est:status "Provisional"@en .
@@ -2543,15 +2543,14 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
 # type. Deliberately does NOT cap the number of GroupMembership
 # instances between one establishment and one group - an
 # establishment can hold more than one membership of the same
-# group with different roles and joined dates (e.g. an ordinary
-# membership of its trust plus a sponsored-academy membership of
-# the same trust, which GIAS records as two group-link rows).
+# group with different joined dates. Since v0.10, sponsorship is
+# not a membership: it is validated by est:SponsorshipShape.
 #################################################################
 
 est:GroupMembershipShape
     a sh:NodeShape ;
     rdfs:label "Group membership shape"@en ;
-    rdfs:comment "Structural rules for a reified est:GroupMembership. Each membership links to exactly one establishment group, may carry at most one joined date, and may carry at most one group membership role, drawn from the est:GroupMembershipRoleType enumeration. Added v0.9 alongside establishment-ontology.ttl v1.18 (esto:hasGroupMembershipRole)."@en ;
+    rdfs:comment "Structural rules for a reified est:GroupMembership. Each membership links to exactly one establishment group, may carry at most one joined date, and may carry at most one group membership role, which must be est:Member. Added v0.9 alongside establishment-ontology.ttl v1.18 (esto:hasGroupMembershipRole). v0.10: est:SponsoredAcademy and est:Sponsor removed from the allowed roles, following their removal from the ontology in v1.19."@en ;
     sh:targetClass est:GroupMembership ;
 
     sh:property [
@@ -2573,8 +2572,122 @@ est:GroupMembershipShape
     sh:property [
         sh:path esto:hasGroupMembershipRole ;
         sh:maxCount 1 ;
-        sh:in ( est:Member est:SponsoredAcademy est:Sponsor ) ;
+        sh:in ( est:Member ) ;
         sh:name "Group membership role"@en ;
-        sh:message "Group membership role must be est:Member, est:SponsoredAcademy or est:Sponsor."@en ;
+        sh:message "Group membership role must be est:Member. Record sponsorship with est:Sponsorship, not as a group membership."@en ;
     ] .
 
+
+#################################################################
+# Sponsorship shapes (v0.10)
+#
+# Added alongside establishment-ontology.ttl v1.19, which made
+# est:Sponsorship the one mechanism for sponsorship and kept
+# esto:sponsoredBy as a current-value shortcut. A sponsor may be
+# an academy trust, another organisation (such as a diocese) or a
+# person, but never an establishment, a federation, or a
+# children's centre group or collaboration. Academy trusts are
+# est:EstablishmentGroup subclasses, so only the arrangement group
+# types are excluded, not est:EstablishmentGroup as a whole.
+#################################################################
+
+est:SponsorPartyShape
+    a sh:NodeShape ;
+    rdfs:label "Sponsor party shape"@en ;
+    rdfs:comment "What a sponsor can be: a person or an organisation, but never an establishment, a federation, or a children's centre group or collaboration. Used through sh:node by est:EstablishmentSponsorshipShape and est:SponsorshipShape; it has no target of its own. Added v0.10."@en ;
+    sh:or (
+        [ sh:class est:Organisation ]
+        [ sh:class est:Person ]
+    ) ;
+    sh:not [
+        sh:or (
+            [ sh:class est:Establishment ]
+            [ sh:class est:Federation ]
+            [ sh:class est:ChildrensCentreGroup ]
+            [ sh:class est:ChildrensCentreCollaboration ]
+        )
+    ] .
+
+est:EstablishmentSponsorshipShape
+    a sh:NodeShape ;
+    rdfs:label "Establishment sponsorship shape"@en ;
+    rdfs:comment "Rules for an establishment that has a sponsor. Only academies and free schools, including university technical colleges and studio schools, can have one: all 9,206 GIAS sponsor links are to these types. esto:sponsoredBy is at most one current-value sponsor and must be a valid sponsor party. Added v0.10."@en ;
+    sh:targetSubjectsOf esto:sponsoredBy, esto:hasSponsorship ;
+    sh:or (
+        [ sh:class est:Academy ]
+        [ sh:class est:FreeSchoolEstablishment ]
+    ) ;
+    sh:message "Only academies and free schools can have a sponsor."@en ;
+
+    sh:property [
+        sh:path esto:sponsoredBy ;
+        sh:maxCount 1 ;
+        sh:node est:SponsorPartyShape ;
+        sh:name "Sponsored by"@en ;
+        sh:message "An establishment has at most one current sponsor, which must be a person or an organisation - not an establishment, a federation, or a children's centre group or collaboration."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasSponsorship ;
+        sh:class est:Sponsorship ;
+        sh:name "Sponsorship"@en ;
+        sh:message "esto:hasSponsorship must point to an est:Sponsorship."@en ;
+    ] .
+
+est:SponsorshipShape
+    a sh:NodeShape ;
+    rdfs:label "Sponsorship shape"@en ;
+    rdfs:comment "Structural rules for a reified est:Sponsorship: exactly one sponsor, which must be a valid sponsor party, and at most one start date and one end date, each an xsd:date. That an end date is not before its start date cannot be expressed in SHACL Core; it is enforced in migration and application logic. Added v0.10."@en ;
+    sh:targetClass est:Sponsorship ;
+
+    sh:property [
+        sh:path esto:hasSponsor ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:node est:SponsorPartyShape ;
+        sh:name "Sponsor"@en ;
+        sh:message "A sponsorship must have exactly one sponsor, which must be a person or an organisation - not an establishment, a federation, or a children's centre group or collaboration."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasSponsorshipStartDate ;
+        sh:maxCount 1 ;
+        sh:class est:SponsorshipStartDate ;
+        sh:name "Sponsorship start date"@en ;
+        sh:message "A sponsorship may record at most one start date, typed est:SponsorshipStartDate."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasSponsorshipStartDate rdf:value ) ;
+        sh:datatype xsd:date ;
+        sh:name "Sponsorship start date value"@en ;
+        sh:message "A sponsorship start date must be an xsd:date."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasSponsorshipEndDate ;
+        sh:maxCount 1 ;
+        sh:class est:SponsorshipEndDate ;
+        sh:name "Sponsorship end date"@en ;
+        sh:message "A sponsorship may record at most one end date, typed est:SponsorshipEndDate."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasSponsorshipEndDate rdf:value ) ;
+        sh:datatype xsd:date ;
+        sh:name "Sponsorship end date value"@en ;
+        sh:message "A sponsorship end date must be an xsd:date."@en ;
+    ] .
+
+est:SponsorLedAcademySponsorShape
+    a sh:NodeShape ;
+    rdfs:label "Sponsor-led academy sponsor shape"@en ;
+    rdfs:comment "Warning, not violation: an academy on the sponsor-led route would normally record its sponsor. GIAS holds sponsor-led academies with no sponsor link, for example Co-op Academy Rathbone (URN 151857), which may be data-quality gaps. Added v0.10."@en ;
+    sh:targetSubjectsOf esto:hasAcademyRoute ;
+    sh:severity sh:Warning ;
+    sh:or (
+        [ sh:not [ sh:path esto:hasAcademyRoute ; sh:hasValue est:SponsorLedRoute ] ]
+        [ sh:path esto:sponsoredBy ; sh:minCount 1 ]
+        [ sh:path esto:hasSponsorship ; sh:minCount 1 ]
+    ) ;
+    sh:message "A sponsor-led academy should record its sponsor, through esto:hasSponsorship or esto:sponsoredBy."@en .
