@@ -21,9 +21,9 @@ title: Establishment Ontology — Oasis Academy Coulsdon / Oasis Community Learn
 
 ---
 
-This is the worked example for **group membership role** (`esto:hasGroupMembershipRole`, ontology v1.18). It is the acceptance test for the [group membership and sponsorship modelling note](../../docs/group-membership-and-sponsorship/). Headteacher shown as `CG` (initials only). No governance worked example exists yet for this organisation.
+This is the worked example for **sponsorship** (`est:Sponsorship`, ontology v1.19). It is the acceptance test for the [group membership and sponsorship modelling note](../../docs/group-membership-and-sponsorship/). Headteacher shown as `CG` (initials only). No governance worked example exists yet for this organisation.
 
-Oasis Academy Coulsdon holds **two** GIAS group links against the same real-world organisation — one to the "Multi-academy trust" group (UID 4076, which carries the Companies House number and UKPRN) and one to a "School sponsor" group (UID 4075, which carries neither). The establishment model represents this as **one** `est:EstablishmentGroup` and **two** role-typed `est:GroupMembership` records, rather than two group entities for one legal entity.
+Oasis Academy Coulsdon holds **two** GIAS group links against the same real-world organisation — one to the "Multi-academy trust" group (UID 4076, which carries the Companies House number and UKPRN) and one to a "School sponsor" group (UID 4075, which carries neither). The establishment model represents this as **one** `est:EstablishmentGroup`, **one** `est:GroupMembership` and **one** `est:Sponsorship` whose sponsor is the trust, rather than two group entities for one legal entity.
 
 ---
 
@@ -80,9 +80,9 @@ flowchart LR
     OC["inst:oasis-coulsdon<br/>(est:MainstreamAcademy)"]
 
     OC -->|esto:hasMembership| GM1["est:GroupMembership<br/>role est:Member<br/>joined 2008-09-01"]
-    OC -->|esto:hasMembership| GM2["est:GroupMembership<br/>role est:SponsoredAcademy<br/>joined 2010-09-01"]
+    OC -->|esto:hasSponsorship| SPN["est:Sponsorship<br/>started 2010-09-01"]
     GM1 -->|esto:memberOf| OCL
-    GM2 -->|esto:memberOf| OCL
+    SPN -->|esto:hasSponsor| OCL
 
     OC -->|esto:hasAccountabilityRelationship| ACC["est:EstablishmentAccountability"]
     ACC -->|esto:accountableToAcademyTrust| OCL
@@ -107,7 +107,7 @@ flowchart LR
     OC -->|esto:hasSenAndResourcedProvision| SEN["est:SenAndResourcedProvision"]
 ```
 
-The "School sponsor" group (UID 4075 / SP00392) is **not** given a second `est:EstablishmentGroup` instance. Its group-link row becomes the second `est:GroupMembership`, carrying `esto:hasGroupMembershipRole est:SponsoredAcademy` and its own joined date, against the one `inst:oasis-community-learning` instance.
+The "School sponsor" group (UID 4075 / SP00392) is **not** given a second `est:EstablishmentGroup` instance. Its group-link row becomes an `est:Sponsorship` naming `inst:oasis-community-learning` as sponsor, with the link's joined date as its start date.
 
 ### Namespace prefixes
 
@@ -180,9 +180,9 @@ inst:oasis-coulsdon
     ] .
 ```
 
-### Example 2 — Two role-typed memberships of one group
+### Example 2 — One membership and one sponsorship
 
-This is the change under test. The academy has two `est:GroupMembership` records, both `esto:memberOf inst:oasis-community-learning`, distinguished by `esto:hasGroupMembershipRole` and by joined date. The first is the ordinary trust membership (GIAS UID 4076 link, joined the day the academy opened); the second is the sponsored-academy relationship (GIAS UID 4075 link, joined when the "School sponsor" record was created in 2010).
+This is the change under test. The academy has one `est:GroupMembership` of `inst:oasis-community-learning` (GIAS UID 4076 link, joined the day the academy opened) and one `est:Sponsorship` naming the same trust as sponsor (GIAS UID 4075 link, from when the "School sponsor" record was created in 2010).
 
 ```
 inst:oasis-coulsdon
@@ -196,22 +196,21 @@ inst:oasis-coulsdon
         ]
     ] ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:oasis-community-learning ;
-        esto:hasGroupMembershipRole est:SponsoredAcademy ;
-        esto:hasGroupMembershipDate [
-            a est:GroupMembershipDate ;
+    esto:hasSponsorship [
+        a est:Sponsorship ;
+        esto:hasSponsor inst:oasis-community-learning ;
+        esto:hasSponsorshipStartDate [
+            a est:SponsorshipStartDate ;
             rdf:value "2010-09-01"^^xsd:date
         ]
     ] .
 ```
 
-`est:GroupMembershipShape` permits more than one membership between the same establishment and the same group; it does not cap them.
+`est:SponsorshipShape` requires exactly one sponsor and allows at most one start date and one end date.
 
 ### Example 3 — Accountability, sponsorship and classification
 
-`esto:accountableToAcademyTrust` and `esto:sponsoredBy` both point at the same `inst:oasis-community-learning` instance. `esto:sponsoredBy` names the DfE-approved sponsor organisation — a fact distinct from the in-group role in Example 2, and one that also applies where a sponsor is not a group at all (a diocese, for example).
+`esto:accountableToAcademyTrust` and `esto:sponsoredBy` both point at the same `inst:oasis-community-learning` instance. `esto:sponsoredBy` is the current-value shortcut to the sponsor of the current sponsorship in Example 2.
 
 ```
 inst:oasis-coulsdon
@@ -388,13 +387,13 @@ No `esto:hasFaithContext`, `esto:classifiedByNurseryProvision`, `esto:classified
 
 ## What this example found
 
-- **The change works against a real double-link record.** Oasis Academy Coulsdon's two GIAS group links — to a "Multi-academy trust" group and a "School sponsor" group that are the same legal entity — collapse to one `est:EstablishmentGroup` and two `est:GroupMembership` records, one per link, distinguished by `esto:hasGroupMembershipRole` (`est:Member` / `est:SponsoredAcademy`). Both joined dates (2008-09-01 into the trust, 2010-09-01 as sponsored academy) are preserved.
-- **The shadow "School sponsor" group is an administrative artefact.** GIAS created UID 4075 / SP00392 on 1 September 2010, after the academy opened, and it carries none of the legal-entity identifiers — Companies House number, UKPRN, incorporation date and registered address all sit on the "Multi-academy trust" record. Modelling it as a second `est:EstablishmentGroup` would split one organisation in two; the role-typed membership avoids that.
-- **`esto:sponsoredBy` and `esto:hasGroupMembershipRole` are complementary, not redundant.** `esto:sponsoredBy` names the approved sponsor organisation (here the same instance as the trust); `esto:hasGroupMembershipRole est:SponsoredAcademy` records how this establishment sits in this group. The first still carries the sponsorship fact where the sponsor is not a group — see the [Green School Trust example](../green-school-trust/), where the sponsor is a diocese.
-- **GIAS's own establishment record points only at the trust.** The URN 135654 extract's `Trusts (code)` is `4076` — the MAT — with no reference to the sponsor group at all. The sponsored-academy relationship exists only in the separate links extract. The model brings both onto one establishment as two memberships.
-- **Contrast with the [Manor High example](../manor-high/):** a converter academy with a single, clean group link and no sponsor record — no role type needed there, and `esto:hasGroupMembershipRole` is simply omitted (implied `est:Member`).
+- **The change works against a real double-link record.** Oasis Academy Coulsdon's two GIAS group links — to a "Multi-academy trust" group and a "School sponsor" group that are the same legal entity — become one `est:GroupMembership` and one `est:Sponsorship`, against one `est:EstablishmentGroup`. Both dates (2008-09-01 into the trust, 2010-09-01 sponsorship) are preserved.
+- **The shadow "School sponsor" group is an administrative artefact.** GIAS created UID 4075 / SP00392 on 1 September 2010, after the academy opened, and it carries none of the legal-entity identifiers — Companies House number, UKPRN, incorporation date and registered address all sit on the "Multi-academy trust" record. Modelling it as a second `est:EstablishmentGroup` would split one organisation in two; a sponsorship naming the trust avoids that.
+- **Sponsorship is one mechanism, not two.** `est:Sponsorship` records who sponsors the academy and from when; `esto:sponsoredBy` is only a shortcut to the current sponsor. The same pattern covers a sponsor that is not the academy's trust — see the [Green School Trust example](../green-school-trust/), where the sponsor is a diocese. Until v1.19 this page used a second membership with the role `est:SponsoredAcademy` alongside `esto:sponsoredBy`: two statements of one fact, with nothing keeping them in step.
+- **GIAS's own establishment record points only at the trust.** The URN 135654 extract's `Trusts (code)` is `4076` — the MAT — with no reference to the sponsor group at all. The sponsorship exists only in the separate links extract. The model brings both onto one establishment: a membership and a sponsorship.
+- **Contrast with the [Manor High example](../manor-high/):** a converter academy with a single, clean group link and no sponsor record — no sponsorship, and `esto:hasGroupMembershipRole` is simply omitted (implied `est:Member`).
 - **A fifth over-capacity worked example.** 934 on roll against 930 places — the same real pattern as Moreland, Gilded Hollins, Aldgate and George Green's, here on a sponsor-led secondary academy.
-- **Not exercised by this example:** `est:Sponsor` (the third `est:GroupMembershipRoleType` value — it describes an organisation's membership of a group and is not assertable via `esto:hasMembership` while that property's subject is `est:Establishment`); `est:GroupStatus`; SEN unit provision (only resourced provision is recorded).
+- **Not exercised by this example:** `est:SponsorshipEndDate` (the sponsorship is current); `est:GroupStatus`; SEN unit provision (only resourced provision is recorded).
 
 ---
 
@@ -403,15 +402,15 @@ No `esto:hasFaithContext`, `esto:classifiedByNurseryProvision`, `esto:classified
 | Real-world concept | Oasis Coulsdon evidence | Ontology mapping | Fit |
 |---|---|---|---|
 | Academy trust (legal entity, group) | GIAS UID 4076, Group ID TR01553, Companies House 05398529, UKPRN 10058190, incorporated 2005-03-18 | `est:MultiAcademyTrust` (`rdfs:subClassOf est:AcademyTrust`) — one instance | Direct |
-| "School sponsor" group record | GIAS UID 4075, Group ID SP00392, no legal identifiers | Not a separate instance — folded into the sponsored-academy membership | Direct — avoids splitting one organisation into two group entities |
+| "School sponsor" group record | GIAS UID 4075, Group ID SP00392, no legal identifiers | Not a separate instance — becomes an `est:Sponsorship` naming the trust | Direct — avoids splitting one organisation into two group entities |
 | Academy | Oasis Academy Coulsdon, URN 135654, UKPRN 10024184 | `est:MainstreamAcademy` | Direct |
 | Establishment type (legacy GIAS code 28) | "Academy sponsor led" | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:SponsorLedRoute` | Direct |
 | Education phase | Secondary, ages 11-16 | `est:SecondaryPhase` + `est:StatutoryAgeRange` | Direct |
 | Lifecycle, status and reason opened | Open since 2008-09-01, "New Provision" | `est:OpenStatus` + `esto:hasOpenDate` + `est:NewProvisionOpenReason` | Direct |
 | Group membership — ordinary | UID 4076 link, joined 2008-09-01 | `est:GroupMembership` + `esto:memberOf` + `esto:hasGroupMembershipRole est:Member` + `esto:hasGroupMembershipDate` | Direct |
-| Group membership — sponsored academy | UID 4075 link, joined 2010-09-01 | second `est:GroupMembership` + `esto:hasGroupMembershipRole est:SponsoredAcademy` + `esto:hasGroupMembershipDate` | Direct — the v1.18 change |
+| Sponsorship | UID 4075 link, joined 2010-09-01 | `est:Sponsorship` + `esto:hasSponsor` (the trust) + `esto:hasSponsorshipStartDate` | Direct — the v1.19 change |
 | Accountability | Academy accountable to its trust | `esto:accountableToAcademyTrust` | Direct |
-| Sponsorship (approved sponsor identity) | Sponsor is Oasis Community Learning | `esto:sponsoredBy` (same instance as the trust) | Direct — distinct fact from the in-group role |
+| Current sponsor | Sponsor is Oasis Community Learning | `esto:sponsoredBy` (same instance as the trust) | Direct — shortcut to the current sponsorship's sponsor |
 | Location and site | Homefield Road, Old Coulsdon, CR5 1ES | `est:Site` + `est:Address` | Direct |
 | Group registered address | 75 Westminster Bridge Road, London, SE1 7HS | `esto:hasRegisteredAddress` → `est:Address` on the group | Direct |
 | Headteacher | CG, "Principal" | `est:HeadteacherOrPrincipal` + `esto:hasJobTitle` | Direct |

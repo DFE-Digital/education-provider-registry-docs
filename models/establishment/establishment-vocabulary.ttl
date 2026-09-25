@@ -101,6 +101,7 @@ est:classificationAndAccountability
         est:AcademyTrust,
         est:SingleAcademyTrust,
         est:AcademySponsor,
+        est:Sponsorship,
         est:Proprietor .
 
 est:lifecycle
@@ -264,8 +265,6 @@ est:groupMembershipConcepts
         est:GroupRelationshipType,
         est:GroupMembershipRoleType,
         est:Member,
-        est:SponsoredAcademy,
-        est:Sponsor,
         est:GroupId,
         est:GroupUkprn,
         est:SuccessorMultiAcademyTrust,
@@ -353,7 +352,8 @@ est:EstablishmentAccountability
         est:AcademyTrust,
         est:LocalAuthority,
         est:MaintainingAuthority,
-        est:Proprietor ;
+        est:Proprietor,
+        est:Sponsorship ;
     est:status "Provisional"@en .
 
 est:EstablishmentLifecycle
@@ -611,7 +611,7 @@ est:SchoolSponsor
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "School sponsor"@en ;
     skos:definition "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. The sponsor supports governance, leadership and educational improvement of the sponsored academies. Source: Academies Act 2010."@en ;
-    skos:scopeNote "Legacy GIAS group type 05. In the target EPR model the sponsoring body is modelled as an est:Organisation linked to an est:Establishment via esto:sponsoredBy. Sponsor is a role an organisation plays, not a type of establishment group."@en ;
+    skos:scopeNote "Legacy GIAS group type 05. In the target EPR model each of its group links becomes an est:Sponsorship naming the sponsor (an est:Organisation or est:Person), and the current sponsor is also given by esto:sponsoredBy. Sponsor is a role an organisation plays, not a type of establishment group."@en ;
     est:status "Legacy"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#school-sponsor> ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
@@ -651,7 +651,7 @@ est:GroupMembership
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Group membership"@en ;
-    skos:definition "A dated record of an establishment's membership of an establishment group, trust, federation, sponsor arrangement or children's centre collaboration. An establishment may have membership in more than one group simultaneously."@en ;
+    skos:definition "A dated record of an establishment's membership of an establishment group, trust, federation, or children's centre group or collaboration. Sponsorship is not a membership: it is recorded as est:Sponsorship. An establishment may have membership in more than one group simultaneously."@en ;
     skos:scopeNote "Maps to GroupLink in the current GIAS schema. Contains the establishment (via URN), the group (via group ID), and an effective date."@en ;
     skos:narrower est:GroupMembershipDate ;
     skos:broader est:EstablishmentGroupMembership ;
@@ -701,12 +701,9 @@ est:GroupMembershipRoleType
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Group membership role type"@en ;
-    skos:definition "The capacity in which an establishment holds a membership of an establishment group - an ordinary member, or a sponsored academy admitted under a sponsor arrangement."@en ;
-    skos:scopeNote "Maps to the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model, with all three values. 'Sponsor' describes an organisation's membership of the group and is not yet assertable via esto:hasMembership, whose subject is an establishment (gap 2.G2). Lets a single establishment group carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second SP-prefixed 'School sponsor' group record for an organisation that already exists as the members' trust."@en ;
-    skos:narrower
-        est:Member,
-        est:SponsoredAcademy,
-        est:Sponsor ;
+    skos:definition "The capacity in which an establishment holds a membership of an establishment group. Its only value is an ordinary member."@en ;
+    skos:scopeNote "Maps to the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model. That entity's other values, Sponsor and Sponsored Academy, are not group roles in this model: since v1.19, sponsorship is recorded as est:Sponsorship. The concepts est:SponsoredAcademy and est:Sponsor are retired."@en ;
+    skos:narrower est:Member ;
     skos:broader est:EstablishmentGroupMembership ;
     est:status "Provisional"@en .
 
@@ -722,18 +719,21 @@ est:SponsoredAcademy
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Sponsored Academy"@en ;
-    skos:definition "The establishment is a member of the group as a sponsored academy under an Academies Act 2010 sponsor arrangement. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsored Academy'. Replaces the second SP-prefixed 'School sponsor' group-link row GIAS holds against the same organisation."@en ;
+    skos:definition "The establishment is a member of the group as a sponsored academy under an Academies Act 2010 sponsor arrangement. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsored Academy'."@en ;
     skos:broader est:GroupMembershipRoleType ;
-    est:status "Provisional"@en .
+    skos:related est:Sponsorship ;
+    est:status "Retired"@en ;
+    skos:scopeNote "Added in v1.18 and retired in v1.19, when it was removed from establishment-ontology.ttl. It recorded sponsorship as a second group membership, which duplicated esto:sponsoredBy, never named the sponsor, and could not represent a sponsor other than the academy's own trust. Sponsorship is now recorded as est:Sponsorship. Kept here, in the vocabulary only, as a historical record of the retired URI."@en .
 
 est:Sponsor
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Sponsor"@en ;
     skos:definition "The member holds the sponsor role within the group - it is the approved sponsoring organisation. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsor'."@en ;
-    skos:scopeNote "Describes an organisation's membership of the group, not an establishment's. Not yet assertable via esto:hasMembership (subject est:Establishment - gap 2.G2); included for full parity with the enterprise data model. For an establishment, the DfE-approved sponsor is named by esto:sponsoredBy."@en ;
     skos:broader est:GroupMembershipRoleType ;
-    est:status "Provisional"@en .
+    skos:related est:Sponsorship ;
+    est:status "Retired"@en ;
+    skos:scopeNote "Added in v1.18 and retired in v1.19, when it was removed from establishment-ontology.ttl. It could never be asserted correctly, because a group membership's subject is always an establishment. A sponsor is now named by esto:hasSponsor on an est:Sponsorship. Kept here, in the vocabulary only, as a historical record of the retired URI."@en .
 
 est:GroupId
     a skos:Concept ;
@@ -2035,11 +2035,41 @@ est:AcademySponsor
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy sponsor"@en ;
     skos:definition "A body - typically a school, university, charity or business - approved by the Secretary of State under the Academies Act 2010 to sponsor one or more academies. A sponsor provides strategic leadership and improvement support, particularly for sponsored academies that have converted from underperforming maintained schools."@en ;
-    skos:scopeNote "Shown on the Details tab for sponsor-led academies and several academy and free school types. In the target EPR model the sponsor is an est:Organisation linked to the establishment via esto:sponsoredBy. The est:AcademySponsor OWL class has been removed; the concept is retained here as a vocabulary entry for the GIAS UI field."@en ;
+    skos:scopeNote "Shown on the Details tab for sponsor-led academies and several academy and free school types. In the target EPR model a sponsor is recorded as a dated est:Sponsorship, and the current sponsor through the shortcut esto:sponsoredBy. The sponsor may be an organisation or a person. The est:AcademySponsor OWL class has been removed; the concept is retained here as a vocabulary entry for the GIAS UI field."@en ;
     skos:broader est:EstablishmentAccountability ;
-    skos:related est:AcademyTrust, est:Organisation ;
+    skos:related est:AcademyTrust, est:Organisation, est:Sponsorship ;
     est:status "Provisional"@en ;
     dcterms:source "Database field: SchoolSponsors"@en .
+
+est:Sponsorship
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsorship"@en ;
+    skos:definition "A dated record that a person or organisation sponsors an academy or free school under the Academies Act 2010. The sponsor may be the academy's own trust, another body such as a diocese, college or company, or a named individual."@en ;
+    skos:scopeNote "Replaces the GIAS 'School sponsor' group record (group type 05, SP-prefixed) and its group links: each link becomes a sponsorship, and its joined date becomes the sponsorship start date. The current sponsor is also available through the shortcut esto:sponsoredBy. Only academies and free schools can have one. Added v1.19."@en ;
+    skos:broader est:EstablishmentAccountability ;
+    skos:narrower est:SponsorshipStartDate, est:SponsorshipEndDate ;
+    skos:related est:AcademySponsor ;
+    est:status "Provisional"@en ;
+    dcterms:source "Database: GroupLink rows to EstablishmentGroup type 05 (School sponsor)"@en .
+
+est:SponsorshipStartDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsorship start date"@en ;
+    skos:definition "The date a sponsorship began."@en ;
+    skos:scopeNote "Maps to GroupLink.effectiveDate on the GIAS 'School sponsor' group link. Added v1.19."@en ;
+    skos:broader est:Sponsorship ;
+    est:status "Provisional"@en .
+
+est:SponsorshipEndDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsorship end date"@en ;
+    skos:definition "The first date on which a sponsorship no longer applied. Absent while the sponsorship is current."@en ;
+    skos:scopeNote "GIAS holds no equivalent: its group links have an archive flag but no end date. Added v1.19."@en ;
+    skos:broader est:Sponsorship ;
+    est:status "Provisional"@en .
 
 est:Proprietor
     a skos:Concept ;

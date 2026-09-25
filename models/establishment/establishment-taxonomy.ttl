@@ -24,7 +24,7 @@ est:establishmentDetailsTaxonomy
     dcterms:title "Education Provider Registry Taxonomy"@en ;
     dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the establishment record Details tab in the public view."@en ;
     dcterms:created "2026-06-16"^^xsd:date ;
-    dcterms:modified "2026-06-24"^^xsd:date ;
+    dcterms:modified "2026-09-24"^^xsd:date ;
     est:status "Provisional"@en ;
     skos:hasTopConcept
         est:EstablishmentType,
@@ -1157,30 +1157,13 @@ est:GroupMembershipRoleType
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:topConceptOf est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Group membership role type"@en ;
-    skos:definition "The capacity in which an establishment holds a membership of an establishment group - an ordinary member, or a sponsored academy admitted under a sponsor arrangement. Maps to the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity."@en ;
-    skos:narrower
-        est:Member,
-        est:SponsoredAcademy,
-        est:Sponsor ;
+    skos:definition "The capacity in which an establishment holds a membership of an establishment group - its only value is an ordinary member. Maps to the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity, whose Sponsor and Sponsored Academy values are recorded as est:Sponsorship instead (v1.19)."@en ;
+    skos:narrower est:Member ;
     est:status "Provisional"@en .
 
 est:Member
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Member"@en ;
-    skos:broader est:GroupMembershipRoleType ;
-    est:status "Provisional"@en .
-
-est:SponsoredAcademy
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Sponsored Academy"@en ;
-    skos:broader est:GroupMembershipRoleType ;
-    est:status "Provisional"@en .
-
-est:Sponsor
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Sponsor"@en ;
     skos:broader est:GroupMembershipRoleType ;
     est:status "Provisional"@en .
