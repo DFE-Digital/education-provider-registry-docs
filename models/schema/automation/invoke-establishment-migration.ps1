@@ -9,6 +9,7 @@ param(
     [string]$SourceDatabase = 'gias_bau_test_local',
     [string]$SqlUser = 'reader',
     [string]$SqlPassword = $env:EPR_BAU_SQL_PASSWORD,
+    [switch]$UseWindowsAuthentication,
     [string]$PostgresHost = '127.0.0.1',
     [int]$PostgresPort = 5432,
     [string]$PostgresDatabase = 'establishment_local',
@@ -24,7 +25,7 @@ $schemaRoot = Split-Path -Parent $automationRoot
 . (Join-Path $automationRoot 'common\sql-client-functions.ps1')
 Assert-LocalBauSource -SqlServer $SqlServer -SourceDatabase $SourceDatabase
 Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $PostgresDatabase
-if (-not $SqlPassword) { throw 'Supply -SqlPassword or set EPR_BAU_SQL_PASSWORD.' }
+if (-not $UseWindowsAuthentication -and -not $SqlPassword) { throw 'Supply -SqlPassword, set EPR_BAU_SQL_PASSWORD, or use -UseWindowsAuthentication.' }
 
 $transformSql = Join-Path $schemaRoot 'establishment\transforms\establishment-from-bau.sql'
 $loadSql = Join-Path $schemaRoot 'establishment\load\load-establishment-fixture.sql'
@@ -41,7 +42,7 @@ New-Item -ItemType Directory -Path $fixtureDirectory -Force | Out-Null
 $reader = $null; $command = $null; $connection = $null
 try {
     $sourceSql = (Get-Content -LiteralPath $transformSql -Raw).Replace('$(URN)', [string]$Urn)
-    $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword
+    $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication
     $connection.Open(); $command = $connection.CreateCommand(); $command.CommandText = $sourceSql; $reader = $command.ExecuteReader()
     if (-not $reader.Read()) { throw "No transformed row returned for URN $Urn" }
     $values = for ($i = 0; $i -lt $reader.FieldCount; $i++) { if ($reader.IsDBNull($i)) { 'NULL' } else { $reader.GetValue($i).ToString().Replace('|', ' ') } }

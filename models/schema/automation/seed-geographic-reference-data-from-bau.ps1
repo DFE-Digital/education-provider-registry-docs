@@ -14,6 +14,7 @@ param(
     [string]$SourceDatabase = 'gias_bau_test_local',
     [string]$SqlUser = 'reader',
     [string]$SqlPassword = $env:EPR_BAU_SQL_PASSWORD,
+    [switch]$UseWindowsAuthentication,
     [string]$PostgresHost = '127.0.0.1',
     [int]$PostgresPort = 5432,
     [string]$PostgresDatabase = 'establishment_local',
@@ -28,7 +29,7 @@ $schemaRoot = Split-Path -Parent $automationRoot
 . (Join-Path $automationRoot 'common\sql-client-functions.ps1')
 Assert-LocalBauSource -SqlServer $SqlServer -SourceDatabase $SourceDatabase
 Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $PostgresDatabase
-if (-not $SqlPassword) { throw 'Supply -SqlPassword or set EPR_BAU_SQL_PASSWORD.' }
+if (-not $UseWindowsAuthentication -and -not $SqlPassword) { throw 'Supply -SqlPassword, set EPR_BAU_SQL_PASSWORD, or use -UseWindowsAuthentication.' }
 
 $psql = Get-LocalPostgresClientPath
 New-Item -ItemType Directory -Path $FixtureDirectory -Force | Out-Null
@@ -137,7 +138,7 @@ try {
         $count = 0
         try {
             if (-not $connection) {
-                $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword
+                $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication
                 $connection.Open()
             }
             $command = $connection.CreateCommand()

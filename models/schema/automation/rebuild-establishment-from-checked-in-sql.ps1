@@ -23,14 +23,16 @@ Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $Postgr
 
 $schemaSql = Join-Path $schemaRoot 'establishment\core-establishment-schema.sql'
 $validationSql = Join-Path $schemaRoot 'establishment\validate-establishment-fixture.sql'
+$groupsValidationSql = Join-Path $schemaRoot 'establishment\validate-academy-trust-responsibilities.sql'
 $referenceDataSql = Join-Path $seedRoot 'seed-reference-data.sql'
+$academyTrustReferenceDataSql = Join-Path $seedRoot 'seed-academy-trust-reference-data.sql'
 $approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
 $rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
 $approvalUrns = @(100018, 106431, 136102)
 $seedPaths = @($SeedFile | ForEach-Object {
     if ([System.IO.Path]::IsPathRooted($_)) { $_ } else { Join-Path $seedRoot $_ }
 })
-foreach ($path in @($schemaSql, $validationSql, $referenceDataSql, $approvalTest, $rowCountTest) + $seedPaths) {
+foreach ($path in @($schemaSql, $validationSql, $groupsValidationSql, $referenceDataSql, $academyTrustReferenceDataSql, $approvalTest, $rowCountTest) + $seedPaths) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required file not found: $path" }
 }
 
@@ -43,6 +45,8 @@ try {
 
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $referenceDataSql
     if ($LASTEXITCODE -ne 0) { throw "Reference-data seed failed with exit code $LASTEXITCODE" }
+    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustReferenceDataSql
+    if ($LASTEXITCODE -ne 0) { throw "Academy-trust reference-data seed failed with exit code $LASTEXITCODE" }
 
     foreach ($path in $seedPaths) {
         Write-Host "Running seed: $([System.IO.Path]::GetFileName($path))"
@@ -51,6 +55,8 @@ try {
     }
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $validationSql
     if ($LASTEXITCODE -ne 0) { throw 'Checked-in Establishment fixture validation failed.' }
+    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $groupsValidationSql
+    if ($LASTEXITCODE -ne 0) { throw 'Checked-in establishment-groups fixture validation failed.' }
     foreach ($approvalUrn in $approvalUrns) {
         & $approvalTest -Urn $approvalUrn -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
         if ($LASTEXITCODE -ne 0) { throw "Establishment approval test failed for URN $approvalUrn." }

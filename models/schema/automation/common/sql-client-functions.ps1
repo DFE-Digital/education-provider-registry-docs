@@ -6,7 +6,18 @@ function Get-LocalPostgresClientPath {
 }
 
 function New-LocalBauSqlConnection {
-    param([Parameter(Mandatory)][string]$SqlServer, [Parameter(Mandatory)][string]$SourceDatabase, [Parameter(Mandatory)][string]$SqlUser, [Parameter(Mandatory)][string]$SqlPassword)
-    $connectionString = "Server=$SqlServer;Database=$SourceDatabase;User ID=$SqlUser;Password=$SqlPassword;Encrypt=False;TrustServerCertificate=True;Connection Timeout=10"
+    param(
+        [Parameter(Mandatory)][string]$SqlServer,
+        [Parameter(Mandatory)][string]$SourceDatabase,
+        [string]$SqlUser,
+        [string]$SqlPassword,
+        [switch]$UseWindowsAuthentication
+    )
+    if ($UseWindowsAuthentication) {
+        $connectionString = "Server=$SqlServer;Database=$SourceDatabase;Integrated Security=SSPI;Encrypt=False;TrustServerCertificate=True;Connection Timeout=10"
+    }
+    else {
+        $connectionString = "Server=$SqlServer;Database=$SourceDatabase;User ID=$SqlUser;Password=$SqlPassword;Encrypt=False;TrustServerCertificate=True;Connection Timeout=10"
+    }
     return [System.Data.SqlClient.SqlConnection]::new($connectionString)
 }

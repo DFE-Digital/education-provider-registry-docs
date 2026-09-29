@@ -297,3 +297,151 @@ CREATE TABLE establishment.sen_unit_provision (
     pupil_count integer CHECK (pupil_count >= 0),
     CHECK (capacity IS NOT NULL OR pupil_count IS NOT NULL)
 );
+
+-- Establishment-groups slice: legal entities and people can hold dated roles
+-- and dated responsibilities. Legal form, charity status and organisation
+-- groups remain outside this physical slice.
+CREATE TABLE establishment.legal_entity (
+    legal_entity_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL CHECK (btrim(name) <> ''),
+    incorporation_date date,
+    dissolution_date date,
+    CHECK (dissolution_date IS NULL OR incorporation_date IS NULL OR dissolution_date >= incorporation_date)
+);
+
+CREATE TABLE establishment.organisation_identifier_type (
+    organisation_identifier_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.organisation_identifier (
+    organisation_identifier_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    legal_entity_id uuid NOT NULL
+        REFERENCES establishment.legal_entity (legal_entity_id),
+    organisation_identifier_type_id integer NOT NULL
+        REFERENCES establishment.organisation_identifier_type (organisation_identifier_type_id),
+    value text NOT NULL CHECK (btrim(value) <> ''),
+    is_current boolean NOT NULL DEFAULT true
+);
+
+CREATE UNIQUE INDEX organisation_identifier_current_value_unique
+    ON establishment.organisation_identifier (organisation_identifier_type_id, value)
+    WHERE is_current;
+
+-- Minimal relationship endpoint for roles and responsibilities held by a
+-- person. Person identity and descriptive attributes belong to the people
+-- slice and are not introduced here.
+CREATE TABLE establishment.person (
+    person_id uuid PRIMARY KEY DEFAULT gen_random_uuid()
+);
+
+CREATE TABLE establishment.establishment_party_role_type (
+    establishment_party_role_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.establishment_party_role (
+    establishment_party_role_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_party_role_type_id integer NOT NULL
+        REFERENCES establishment.establishment_party_role_type (establishment_party_role_type_id),
+    legal_entity_id uuid
+        REFERENCES establishment.legal_entity (legal_entity_id),
+    person_id uuid
+        REFERENCES establishment.person (person_id),
+    start_date date,
+    end_date date,
+    end_date_basis text,
+    observed_date date,
+    CHECK ((legal_entity_id IS NOT NULL) <> (person_id IS NOT NULL)),
+    CHECK (person_id IS NULL OR establishment_party_role_type_id = 4),
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date),
+    CHECK (
+        (end_date IS NULL AND end_date_basis IS NULL)
+        OR (end_date IS NOT NULL AND end_date_basis IN ('evidenced', 'inferred'))
+    )
+);
+
+CREATE UNIQUE INDEX establishment_party_role_legal_entity_period_unique
+    ON establishment.establishment_party_role (
+        legal_entity_id,
+        establishment_party_role_type_id,
+        COALESCE(start_date, DATE '-infinity')
+    )
+    WHERE legal_entity_id IS NOT NULL;
+
+CREATE UNIQUE INDEX establishment_party_role_person_period_unique
+    ON establishment.establishment_party_role (
+        person_id,
+        establishment_party_role_type_id,
+        COALESCE(start_date, DATE '-infinity')
+    )
+    WHERE person_id IS NOT NULL;
+
+CREATE TABLE establishment.academy_trust_type (
+    academy_trust_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.academy_trust_classification (
+    academy_trust_classification_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_party_role_id uuid NOT NULL
+        REFERENCES establishment.establishment_party_role (establishment_party_role_id),
+    academy_trust_type_id integer NOT NULL
+        REFERENCES establishment.academy_trust_type (academy_trust_type_id),
+    start_date date,
+    end_date date,
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
+);
+
+CREATE UNIQUE INDEX academy_trust_classification_period_unique
+    ON establishment.academy_trust_classification (
+        establishment_party_role_id,
+        academy_trust_type_id,
+        COALESCE(start_date, DATE '-infinity')
+    );
+
+CREATE TABLE establishment.responsibility_type (
+    responsibility_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.establishment_responsibility (
+    establishment_responsibility_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_id uuid NOT NULL
+        REFERENCES establishment.establishment (establishment_id),
+    legal_entity_id uuid
+        REFERENCES establishment.legal_entity (legal_entity_id),
+    person_id uuid
+        REFERENCES establishment.person (person_id),
+    responsibility_type_id integer NOT NULL
+        REFERENCES establishment.responsibility_type (responsibility_type_id),
+    start_date date,
+    end_date date,
+    end_date_basis text,
+    observed_date date,
+    CHECK ((legal_entity_id IS NOT NULL) <> (person_id IS NOT NULL)),
+    CHECK (person_id IS NULL OR responsibility_type_id IN (3, 4)),
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date),
+    CHECK (
+        (end_date IS NULL AND end_date_basis IS NULL)
+        OR (end_date IS NOT NULL AND end_date_basis IN ('evidenced', 'inferred'))
+    )
+);
+
+CREATE UNIQUE INDEX establishment_responsibility_legal_entity_period_unique
+    ON establishment.establishment_responsibility (
+        establishment_id,
+        legal_entity_id,
+        responsibility_type_id,
+        COALESCE(start_date, DATE '-infinity')
+    )
+    WHERE legal_entity_id IS NOT NULL;
+
+CREATE UNIQUE INDEX establishment_responsibility_person_period_unique
+    ON establishment.establishment_responsibility (
+        establishment_id,
+        person_id,
+        responsibility_type_id,
+        COALESCE(start_date, DATE '-infinity')
+    )
+    WHERE person_id IS NOT NULL;
