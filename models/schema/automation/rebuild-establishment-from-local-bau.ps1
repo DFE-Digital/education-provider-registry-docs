@@ -13,6 +13,7 @@ param(
     [string]$SqlServer = 'localhost',
     [string]$SourceDatabase = 'gias_bau_test_local',
     [string]$SqlUser = 'reader',
+    [switch]$UseWindowsAuthentication,
     [string]$PostgresHost = '127.0.0.1',
     [int]$PostgresPort = 5432,
     [string]$PostgresDatabase = 'establishment_local',
@@ -36,7 +37,10 @@ $selectionPath = Join-Path $schemaRoot 'seed\one-organisation.json'
 $schemaSql = Join-Path $schemaRoot 'establishment\core-establishment-schema.sql'
 $validationSql = Join-Path $schemaRoot 'establishment\validate-establishment-fixture.sql'
 $referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
+$academyTrustReferenceDataSql = Join-Path $schemaRoot 'seed\seed-academy-trust-reference-data.sql'
 $establishmentRunner = Join-Path $automationRoot 'invoke-establishment-migration.ps1'
+$academyTrustRunner = Join-Path $automationRoot 'invoke-academy-trust-responsibility-migration.ps1'
+$academyTrustValidationSql = Join-Path $schemaRoot 'establishment\validate-academy-trust-responsibilities.sql'
 $geographicReferenceRunner = Join-Path $automationRoot 'seed-geographic-reference-data-from-bau.ps1'
 $exporter = Join-Path $automationRoot 'export-establishment-fixture-from-local-target.ps1'
 $approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
@@ -47,7 +51,7 @@ $generatedSeedRoot = Join-Path $checkedInSeedRoot 'generated'
 if (-not $ExportDirectory) { $ExportDirectory = $generatedSeedRoot }
 $psql = Get-LocalPostgresClientPath
 
-foreach ($path in @($selectionPath, $schemaSql, $validationSql, $referenceDataSql, $establishmentRunner, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
+foreach ($path in @($selectionPath, $schemaSql, $validationSql, $referenceDataSql, $academyTrustReferenceDataSql, $establishmentRunner, $academyTrustRunner, $academyTrustValidationSql, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required migration file not found: $path" }
 }
 
@@ -57,29 +61,51 @@ $urns = @($selection.urns | ForEach-Object { try { [int]$_ } catch { throw 'Ever
 if ($urns.Count -eq 0) { throw 'The selection must contain at least one URN.' }
 if (($urns | Select-Object -Unique).Count -ne $urns.Count) { throw 'The selection must not contain duplicate URNs.' }
 foreach ($urn in $urns) { if ($urn -lt 100000 -or $urn -gt 999999) { throw "The selected URN is outside the valid range: $urn" } }
+$establishmentPartyRoleResponsibilities = @($selection.establishmentPartyRoleResponsibilities)
+foreach ($responsibility in $establishmentPartyRoleResponsibilities) {
+    $responsibilityUrn = [int]$responsibility.urn
+    $sourceGroupId = [int]$responsibility.sourceGroupId
+    if ($responsibilityUrn -notin $urns) { throw "Establishment-party-role fixture URN must also be in urns: $responsibilityUrn" }
+    if ($sourceGroupId -lt 1) { throw "Establishment-party-role source group ID must be positive: $sourceGroupId" }
+}
 
 New-Item -ItemType Directory -Path $FixtureDirectory -Force | Out-Null
-$securePassword = Read-Host 'Local SQL Server reader password' -AsSecureString
+$securePassword = $null
+if (-not $UseWindowsAuthentication) {
+    $securePassword = Read-Host 'Local SQL Server reader password' -AsSecureString
+}
 $envPasswordBefore = $env:PGPASSWORD
 if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
-$env:EPR_BAU_SQL_PASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
+if ($securePassword) {
+    $env:EPR_BAU_SQL_PASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
+}
 try {
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $schemaSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment schema rebuild failed.' }
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $referenceDataSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment reference-data seed failed.' }
+    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustReferenceDataSql
+    if ($LASTEXITCODE -ne 0) { throw 'Academy-trust reference-data seed failed.' }
 
-    & $geographicReferenceRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -FixtureDirectory $FixtureDirectory
+    & $geographicReferenceRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication -FixtureDirectory $FixtureDirectory
     if ($LASTEXITCODE -ne 0) { throw 'Geographic reference-data seed failed.' }
 
     foreach ($urn in $urns) {
-        & $establishmentRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn $urn -FixturePath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv")
+        & $establishmentRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn $urn -FixturePath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv")
         if ($LASTEXITCODE -ne 0) { throw "Establishment migration failed for URN $urn." }
+    }
+    foreach ($responsibility in $establishmentPartyRoleResponsibilities) {
+        & $academyTrustRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn ([int]$responsibility.urn) -SourceGroupId ([int]$responsibility.sourceGroupId) -FixturePath (Join-Path $FixtureDirectory "epr-academy-trust-$($responsibility.fixture)-$($responsibility.urn)-fixture.csv")
+        if ($LASTEXITCODE -ne 0) { throw "Establishment-party-role migration failed for fixture $($responsibility.fixture)." }
     }
 
     $urnList = $urns -join ', '
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -c "SELECT e.urn, e.name, m.pupil_count, m.free_school_meal_measure FROM establishment.establishment AS e LEFT JOIN establishment.capacity_and_pupil_measures AS m ON m.establishment_id = e.establishment_id WHERE e.urn IN ($urnList) ORDER BY e.urn;"
     if ($LASTEXITCODE -ne 0) { throw 'Establishment validation query failed.' }
+    if ($establishmentPartyRoleResponsibilities.Count -gt 0) {
+        & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustValidationSql
+        if ($LASTEXITCODE -ne 0) { throw 'Academy-trust fixture validation failed.' }
+    }
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $validationSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment fixture validation failed.' }
     foreach ($approvalUrn in $approvalUrns) {
@@ -119,5 +145,6 @@ finally {
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
         foreach ($urn in $urns) { Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv") -Force -ErrorAction SilentlyContinue }
+        foreach ($responsibility in $establishmentPartyRoleResponsibilities) { Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-academy-trust-$($responsibility.fixture)-$($responsibility.urn)-fixture.csv") -Force -ErrorAction SilentlyContinue }
     }
 }

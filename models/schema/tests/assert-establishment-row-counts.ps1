@@ -32,6 +32,18 @@ FROM (
     FROM information_schema.tables AS t
     WHERE t.table_schema = 'establishment'
       AND t.table_type = 'BASE TABLE'
+      AND t.table_name NOT IN (
+          'academy_trust_classification',
+          'academy_trust_type',
+          'establishment_party_role',
+          'establishment_party_role_type',
+          'establishment_responsibility',
+          'legal_entity',
+          'organisation_identifier',
+          'organisation_identifier_type',
+          'person',
+          'responsibility_type'
+      )
 ) AS counts;
 '@
 $tempSql = Join-Path $env:TEMP "epr-establishment-row-counts-$PID.sql"

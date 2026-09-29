@@ -20,12 +20,16 @@ The script never connects to BAU Test, shared, staging or production systems.
 
 ## How to run
 
-From education-provider-registry-docs:
+From education-provider-registry-docs, using the local SQL reader login:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1"
 
 The command prompts once for the local SQL Server reader password. Use
 -KeepFixture to retain temporary extraction files for troubleshooting.
+
+When the local BAU copy is configured for Windows authentication:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer SL646104 -UseWindowsAuthentication
 
 After validation succeeds, the command automatically exports the target into
 `models/schema/seed/generated/` and refreshes the checked-in reference and
