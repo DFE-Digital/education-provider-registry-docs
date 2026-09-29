@@ -11,8 +11,9 @@ The model contains:
 - legal entities, their legal form, charity status and external identifiers;
 - dated establishment-party roles held by a legal entity or, for a school sponsor, a person;
 - dated academy-trust classifications for academy-trust roles;
-- dated responsibilities held by a legal entity or person for an establishment; and
-- dated membership of federations and children's-centre organisation groups.
+- dated responsibilities held by a legal entity or person for an establishment;
+- dated membership of federations and children's-centre organisation groups; and
+- the group UIDs and Group IDs that identify roles and organisation groups.
 
 ```mermaid
 erDiagram
@@ -33,6 +34,10 @@ erDiagram
     ORGANISATION_GROUP }o--o| LOCAL_AUTHORITY : "coordinated by"
     ORGANISATION_GROUP ||--o{ ORGANISATION_GROUP_MEMBER : "has"
     ESTABLISHMENT ||--o{ ORGANISATION_GROUP_MEMBER : "is"
+    ESTABLISHMENT_PARTY_ROLE ||--o{ GROUP_IDENTIFIER : "identified by"
+    ORGANISATION_GROUP ||--o{ GROUP_IDENTIFIER : "identified by"
+    GROUP_IDENTIFIER }o--|| GROUP_IDENTIFIER_TYPE : "has type"
+    GROUP_IDENTIFIER }o--|| IDENTIFIER_ISSUER : "issued by"
 
     ESTABLISHMENT {
         uuid establishment_id PK
@@ -128,6 +133,23 @@ erDiagram
         date observed_date
         boolean is_lead_centre
     }
+    GROUP_IDENTIFIER {
+        uuid group_identifier_id PK
+        uuid establishment_party_role_id FK
+        uuid organisation_group_id FK
+        integer group_identifier_type_id FK
+        integer identifier_issuer_id FK
+        string value
+        boolean is_current
+    }
+    GROUP_IDENTIFIER_TYPE {
+        integer group_identifier_type_id PK
+        string name UK
+    }
+    IDENTIFIER_ISSUER {
+        integer identifier_issuer_id PK
+        string name UK
+    }
     LOCAL_AUTHORITY {
         uuid local_authority_id PK
         integer code UK
@@ -150,6 +172,7 @@ erDiagram
 - Dated single-academy trust, multi-academy trust and secure single-academy trust classifications.
 - Responsibilities held by academy trusts, sponsors, foundation trusts and proprietors.
 - Federations, children's-centre groups and children's-centre collaborations, with their establishment members.
+- Group UIDs and Group IDs for roles and organisation groups, including allocation of new group UIDs after cutover.
 
 ### Deferred
 
@@ -158,13 +181,17 @@ erDiagram
 - Local-authority maintenance, which belongs to the accountability slice.
 - Succession between legal entities beyond a change from SAT to MAT.
 - Umbrella-trust relationships and user permission scopes.
+- Issuing Group IDs (TR numbers) for new academy trusts.
+- Whether a role that ends and later restarts keeps its earlier group UID or receives a new one.
 - Whether foundation-trust, umbrella-trust and school-sponsor roles may be assigned to new target records. This will be enforced by the application once decided; assignability and retirement dates are not stored in this logical model.
 
 ### Migration boundary
 
-BAU group UIDs, Group IDs, source names, source type codes, source links and the evidence used to resolve identity are not attributes of the target model. Mapping them to target records, retaining identity decisions, and redirects from legacy group pages belong in a separate migration-lineage schema if they are required.
+GIAS group UIDs and Group IDs are target data. They are business identifiers: GIAS group pages, search, extracts and links use them, and they stay in use after migration. They are held in [`group_identifier`](#group-identifier) against the role or organisation group they identify.
 
-In particular, a BAU group identifier does not identify a target legal entity: a source record may resolve to a legal entity, a person or an organisation group. The target has no BAU group-reference mapping table.
+Everything else about the source is migration lineage and stays outside the target model: source names, source type codes, source links, the evidence used to resolve identity and the decisions made in review. If that lineage is needed, it belongs in a separate migration-lineage schema.
+
+A GIAS group identifier identifies a role or an organisation group, never a legal entity directly. Several GIAS records can resolve to one legal entity, and each keeps its own identifiers on its own role.
 
 ## Entities
 
@@ -354,7 +381,7 @@ Which named group of establishments is this, and when did it exist?
 ```
 
 - It is used only for federations, children's-centre groups and children's-centre collaborations.
-- It is not a legal entity and has neither a legal-entity type nor organisation identifiers.
+- It is not a legal entity and has neither a legal-entity type nor organisation identifiers. Its group UID, and any Group ID, are held in `group_identifier`.
 - Children's-centre groups and collaborations are coordinated by a local authority; federations are not.
 - Status is derived from dates.
 
@@ -388,6 +415,39 @@ Only establishments can be group members in this slice.
 | `observed_date` | Conditional | Source-snapshot date on which membership with an unknown start was seen in effect. |
 | `is_lead_centre` | Conditional | Used only for children's-centre groups. True identifies the lead centre; null means the source does not say. Lead-centre history is deferred. |
 
+### Group identifier
+
+`group_identifier` holds the group UIDs and Group IDs that identify an establishment-party role or an organisation group.
+
+```text
+Which group UID and Group ID identify this role or organisation group?
+```
+
+- **Owner:** exactly one of `establishment_party_role_id` and `organisation_group_id` is set. A group identifier never belongs to a legal entity or person directly: Outwood Grange Academies Trust is one legal entity whose academy-trust role holds UID `4119` and Group ID `TR01585`, and whose school-sponsor role holds UID `4118` and Group ID `SP00396`.
+- **Types:** group UID and Group ID.
+- **One scheme, two issuers:** there is one group UID scheme. Values migrated from GIAS have issuer GIAS; values allocated after cutover have issuer Establishment Registry.
+- **Several values per owner:** a SAT-to-MAT consolidation gives one academy-trust role two UIDs, for example `2224` (the SAT record) and `17488` (the MAT record), and one Group ID, `TR00125`, stored once. The current value is the one the owner is known by now; the others are kept so that old references still resolve.
+- **Uniqueness:** a group UID is unique across all owners and both issuers. A Group ID is unique across owners.
+- **Values** are stored as text, as issued. A Group ID keeps its prefix, such as `TR`, `SP` or `UT`.
+- Proprietors have no GIAS group record, so they have no group identifier.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `group_identifier_id` | Yes | Generated opaque target identifier. |
+| `establishment_party_role_id` | Conditional | The owning role. |
+| `organisation_group_id` | Conditional | The owning organisation group. |
+| `group_identifier_type_id` | Yes | Group UID or Group ID. |
+| `identifier_issuer_id` | Yes | GIAS or Establishment Registry. |
+| `value` | Yes | The identifier as issued. |
+| `is_current` | Yes | True for the value the owner is known by now. False for a value kept so that old references still resolve. |
+
+#### Allocating group UIDs
+
+- **Single issuer:** GIAS issues group UIDs until cutover. From cutover, the Establishment Registry is the only issuer, and GIAS no longer creates groups, so the two systems never issue at the same time.
+- **Two ranges, as in BAU:** children's-centre groups and collaborations continue the children's-centre range, which starts at 80,000. All other roles and organisation groups continue the main range, which starts at 1,000. Each range continues from its own maximum in the complete, approved migration inventory. The two ranges are kept until there is evidence not to. If the main range approaches 80,000, the ranges must be revisited before they meet.
+- **Atomic allocation:** a value is allocated by a sequence or an equivalent atomic allocator, is never reused, and gaps are allowed.
+- **Migrated records keep their values:** a migrated role or organisation group keeps its GIAS values and does not receive a new UID. A new UID is allocated only when a role or organisation group is created in the registry.
+
 ## Derived views
 
 The following are views of responsibilities and memberships. They are not separately stored collections.
@@ -399,6 +459,7 @@ The following are views of responsibilities and memberships. They are not separa
 | Foundation trust's schools | `supported_by_foundation_trust` responsibilities in effect on a date. |
 | Proprietor's schools | `proprietor` responsibilities in effect on a date, grouped by party. |
 | Academy count check | Number of academies per academy trust; a data-quality check, not a way to set trust type. |
+| Group lookup | The role or organisation group identified by a group UID or Group ID, whether current or not, and for a role its holder. |
 
 An on-date view has three states:
 
@@ -422,10 +483,14 @@ An on-date view has three states:
 12. An establishment is in at most one organisation group of each type on a date. Federation members are maintained schools; children's-centre group and collaboration members are children's centres.
 13. An open federation has at least two members.
 14. A children's-centre group has at most one member with `is_lead_centre = true`. `is_lead_centre` is null for all other group types.
-15. `local_authority_id` is required for children's-centre group types and absent for federations.
+15. `local_authority_id` is required for children's-centre group types and absent for federations. Every member of a children's-centre group or collaboration should be in the group's local authority; a member in another local authority is reported as a warning, because local-government reorganisation can move a centre.
 16. No stored collection restates a responsibility: an academy trust's academies are not organisation-group memberships.
 17. A relationship should fall within the lifetime of its party or group where those dates are known. A conflict is reported for review; it does not invent a date to satisfy the rule.
 18. A possible overlap involving an unknown start date is reported as a warning. Known-date overlaps block loading.
+19. Every group identifier has exactly one owner: an establishment-party role or an organisation group.
+20. A group UID is unique across all owners, whatever its issuer. A Group ID is unique across owners.
+21. An owner has at most one current value of each group-identifier type.
+22. Every migrated role or organisation group whose source record has a GIAS group UID keeps that UID, with issuer GIAS. A group UID with issuer Establishment Registry is allocated from the range for its owner's kind.
 
 ## Date convention
 
@@ -450,10 +515,11 @@ The following mapping is a migration aid only. Source tables and fields do not d
 | Proprietor names and proprietor records | `legal_entity` or `person`, then `establishment_responsibility` | Create `proprietor` periods after resolving a body or person. |
 | Federation and children's-centre records | `organisation_group` | Create the appropriate group type and lifecycle. |
 | Federation and children's-centre links | `organisation_group_member` | Create dated memberships and the current lead-centre indication where evidenced. |
+| Group UIDs and Group IDs | `group_identifier` | Keep each value exactly as issued, with issuer GIAS, against the role or organisation group that the source record resolves to. SAT and MAT records of one company put both UIDs on one role, with the MAT's current; a shared Group ID is stored once. Non-standard Group IDs are corrected in GIAS before the production migration. |
 | Source group relationships | Migration lineage only | May support identity resolution but do not create a target group-to-group relationship. |
 
 ## Physical-model boundary
 
-The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group` and `organisation_group_member`.
+The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `group_identifier_type`, `identifier_issuer` and `group_identifier`. It also needs one group-UID allocator for each range.
 
 It references the existing establishment, local-authority and person tables by their opaque identifiers. Migration lineage is deliberately outside this schema.
