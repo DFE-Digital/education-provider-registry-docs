@@ -30,8 +30,8 @@ Every academy then carries **two group-link rows**, often with different joined 
 
 The data shows that the sponsor record is usually, but not always, the trust itself:
 
-- **82% of sponsor links** (7,531 of 9,206) point to a sponsor record named like the academy's own trust, and 827 of the 1,236 sponsor records link exactly the same academies as a same-named trust record.
-- **18% of sponsor links** name a different body: dioceses, colleges, universities, companies and about ten named individuals. Diocese of London, for example, sponsors 28 academies spread across 13 different trusts.
+- **82% of sponsor links** (7,531 of 9,206) point to a sponsor record named like the academy's own trust, and 644 of the 1,236 sponsor records link exactly the same, non-empty set of academies as a same-named trust record.
+- **18% of sponsor links** are not matched to the academy's trust by name. Most name a different body: dioceses, colleges, universities, companies and three individuals. Some are renamed trusts or spelling variants. Diocese of London, for example, sponsors 28 academies spread across 13 different trusts.
 
 ## What the enterprise data model does
 
@@ -88,7 +88,7 @@ Ontology v1.18 recorded sponsorship as a second group membership with the role `
 On load from GIAS:
 
 - The `TR`-prefixed group record becomes the `est:EstablishmentGroup` instance, carrying the Companies House number, UKPRN, incorporation date and registered address.
-- The `SP`-prefixed group record is **not** migrated as a group. Its sponsor is resolved to the trust's instance where it is the same organisation, and otherwise to its own organisation or person.
+- The `SP`-prefixed group record is **not** migrated as a group. Its sponsor is resolved to the trust's instance where the evidence shows it is the same organisation, and otherwise to its own organisation or person. A name match alone is not enough; weaker matches go to review (see the groups recommendation's identity-resolution rules).
 - Each `SP` group-link row becomes an `est:Sponsorship` of the academy, naming that sponsor, with the link's joined date as its start date.
 - The establishment also gets `esto:sponsoredBy`, pointing at the sponsor of its current sponsorship.
 
