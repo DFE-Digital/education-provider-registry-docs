@@ -22,6 +22,7 @@ $seedRoot = Join-Path $schemaRoot 'seed'
 Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $PostgresDatabase
 
 $schemaSql = Join-Path $schemaRoot 'establishment\core-establishment-schema.sql'
+$migrationSchemaSql = Join-Path $schemaRoot 'migration\migration-schema.sql'
 $validationSql = Join-Path $schemaRoot 'establishment\validate-establishment-fixture.sql'
 $groupsValidationSql = Join-Path $schemaRoot 'establishment\validate-academy-trust-responsibilities.sql'
 $referenceDataSql = Join-Path $seedRoot 'seed-reference-data.sql'
@@ -32,7 +33,7 @@ $approvalUrns = @(100018, 106431, 136102)
 $seedPaths = @($SeedFile | ForEach-Object {
     if ([System.IO.Path]::IsPathRooted($_)) { $_ } else { Join-Path $seedRoot $_ }
 })
-foreach ($path in @($schemaSql, $validationSql, $groupsValidationSql, $referenceDataSql, $academyTrustReferenceDataSql, $approvalTest, $rowCountTest) + $seedPaths) {
+foreach ($path in @($schemaSql, $migrationSchemaSql, $validationSql, $groupsValidationSql, $referenceDataSql, $academyTrustReferenceDataSql, $approvalTest, $rowCountTest) + $seedPaths) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required file not found: $path" }
 }
 
@@ -42,6 +43,9 @@ if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
 try {
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $schemaSql
     if ($LASTEXITCODE -ne 0) { throw "PostgreSQL schema rebuild failed with exit code $LASTEXITCODE" }
+
+    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $migrationSchemaSql
+    if ($LASTEXITCODE -ne 0) { throw "Migration schema rebuild failed with exit code $LASTEXITCODE" }
 
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $referenceDataSql
     if ($LASTEXITCODE -ne 0) { throw "Reference-data seed failed with exit code $LASTEXITCODE" }

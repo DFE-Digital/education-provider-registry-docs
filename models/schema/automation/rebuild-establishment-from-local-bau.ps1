@@ -35,6 +35,7 @@ Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $Postgr
 
 $selectionPath = Join-Path $schemaRoot 'seed\one-organisation.json'
 $schemaSql = Join-Path $schemaRoot 'establishment\core-establishment-schema.sql'
+$migrationSchemaSql = Join-Path $schemaRoot 'migration\migration-schema.sql'
 $validationSql = Join-Path $schemaRoot 'establishment\validate-establishment-fixture.sql'
 $referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
 $academyTrustReferenceDataSql = Join-Path $schemaRoot 'seed\seed-academy-trust-reference-data.sql'
@@ -51,7 +52,7 @@ $generatedSeedRoot = Join-Path $checkedInSeedRoot 'generated'
 if (-not $ExportDirectory) { $ExportDirectory = $generatedSeedRoot }
 $psql = Get-LocalPostgresClientPath
 
-foreach ($path in @($selectionPath, $schemaSql, $validationSql, $referenceDataSql, $academyTrustReferenceDataSql, $establishmentRunner, $academyTrustRunner, $academyTrustValidationSql, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
+foreach ($path in @($selectionPath, $schemaSql, $migrationSchemaSql, $validationSql, $referenceDataSql, $academyTrustReferenceDataSql, $establishmentRunner, $academyTrustRunner, $academyTrustValidationSql, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required migration file not found: $path" }
 }
 
@@ -82,6 +83,8 @@ if ($securePassword) {
 try {
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $schemaSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment schema rebuild failed.' }
+    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $migrationSchemaSql
+    if ($LASTEXITCODE -ne 0) { throw 'Migration schema rebuild failed.' }
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $referenceDataSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment reference-data seed failed.' }
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustReferenceDataSql

@@ -5,8 +5,9 @@ SQL Server copy and loads them into PostgreSQL establishment_local.
 
 .DESCRIPTION
 This runner implements the first establishment-groups physical slice. It
-writes a temporary target-shaped fixture only; it does not persist BAU group
-identifiers or migration-lineage records in the target schema.
+writes a temporary target-shaped fixture and persists resolved GIAS group
+identifiers on the target role; unresolved migration-lineage records remain
+outside the target schema.
 #>
 [CmdletBinding()]
 param(
@@ -35,14 +36,15 @@ if (-not $UseWindowsAuthentication -and -not $SqlPassword) { throw 'Supply -SqlP
 
 $transformSql = Join-Path $schemaRoot 'establishment\transforms\academy-trust-responsibility-from-bau.sql'
 $loadSql = Join-Path $schemaRoot 'establishment\load\load-academy-trust-responsibility-fixture.sql'
+$migrationSchemaSql = Join-Path $schemaRoot 'migration\migration-schema.sql'
 $psql = Get-LocalPostgresClientPath
-foreach ($path in @($transformSql, $loadSql)) {
+foreach ($path in @($transformSql, $loadSql, $migrationSchemaSql)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required migration file not found: $path" }
 }
 
 $fixtureDirectory = Split-Path -Parent $FixturePath
 New-Item -ItemType Directory -Path $fixtureDirectory -Force | Out-Null
-$header = 'legal_entity_name|companies_house_number|ukprn|legal_entity_incorporation_date|establishment_party_role_type|academy_trust_type|responsibility_type|role_start_date|role_end_date|role_end_date_basis|classification_start_date|classification_end_date|establishment_urn|responsibility_start_date|responsibility_end_date|end_date_basis'
+$header = 'legal_entity_name|companies_house_number|ukprn|legal_entity_incorporation_date|group_uid|group_id|establishment_party_role_type|academy_trust_type|responsibility_type|role_start_date|role_end_date|role_end_date_basis|classification_start_date|classification_end_date|establishment_urn|responsibility_start_date|responsibility_end_date|end_date_basis'
 [System.IO.File]::WriteAllText($FixturePath, $header + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
 
 $reader = $null; $command = $null; $connection = $null

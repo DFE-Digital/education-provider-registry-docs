@@ -298,12 +298,26 @@ CREATE TABLE establishment.sen_unit_provision (
     CHECK (capacity IS NOT NULL OR pupil_count IS NOT NULL)
 );
 
--- Establishment-groups slice: legal entities and people can hold dated roles
--- and dated responsibilities. Legal form, charity status and organisation
--- groups remain outside this physical slice.
+-- Establishment-groups slice: legal entities and people can hold dated roles,
+-- responsibilities and group identifiers. Organisation groups are modelled
+-- separately from legal entities.
+CREATE TABLE establishment.legal_entity_type (
+    legal_entity_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.charity_status (
+    charity_status_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
 CREATE TABLE establishment.legal_entity (
     legal_entity_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name text NOT NULL CHECK (btrim(name) <> ''),
+    legal_entity_type_id integer
+        REFERENCES establishment.legal_entity_type (legal_entity_type_id),
+    charity_status_id integer
+        REFERENCES establishment.charity_status (charity_status_id),
     incorporation_date date,
     dissolution_date date,
     CHECK (dissolution_date IS NULL OR incorporation_date IS NULL OR dissolution_date >= incorporation_date)
@@ -350,15 +364,9 @@ CREATE TABLE establishment.establishment_party_role (
         REFERENCES establishment.person (person_id),
     start_date date,
     end_date date,
-    end_date_basis text,
-    observed_date date,
     CHECK ((legal_entity_id IS NOT NULL) <> (person_id IS NOT NULL)),
     CHECK (person_id IS NULL OR establishment_party_role_type_id = 4),
-    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date),
-    CHECK (
-        (end_date IS NULL AND end_date_basis IS NULL)
-        OR (end_date IS NOT NULL AND end_date_basis IN ('evidenced', 'inferred'))
-    )
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
 
 CREATE UNIQUE INDEX establishment_party_role_legal_entity_period_unique
@@ -417,15 +425,9 @@ CREATE TABLE establishment.establishment_responsibility (
         REFERENCES establishment.responsibility_type (responsibility_type_id),
     start_date date,
     end_date date,
-    end_date_basis text,
-    observed_date date,
     CHECK ((legal_entity_id IS NOT NULL) <> (person_id IS NOT NULL)),
     CHECK (person_id IS NULL OR responsibility_type_id IN (3, 4)),
-    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date),
-    CHECK (
-        (end_date IS NULL AND end_date_basis IS NULL)
-        OR (end_date IS NOT NULL AND end_date_basis IN ('evidenced', 'inferred'))
-    )
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
 
 CREATE UNIQUE INDEX establishment_responsibility_legal_entity_period_unique
@@ -445,3 +447,69 @@ CREATE UNIQUE INDEX establishment_responsibility_person_period_unique
         COALESCE(start_date, DATE '-infinity')
     )
     WHERE person_id IS NOT NULL;
+
+CREATE TABLE establishment.organisation_group_type (
+    organisation_group_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.organisation_group (
+    organisation_group_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL CHECK (btrim(name) <> ''),
+    organisation_group_type_id integer NOT NULL
+        REFERENCES establishment.organisation_group_type (organisation_group_type_id),
+    local_authority_id uuid
+        REFERENCES establishment.local_authority (local_authority_id),
+    open_date date,
+    close_date date,
+    CHECK (close_date IS NULL OR open_date IS NULL OR close_date >= open_date)
+);
+
+CREATE TABLE establishment.organisation_group_member (
+    organisation_group_member_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    organisation_group_id uuid NOT NULL
+        REFERENCES establishment.organisation_group (organisation_group_id),
+    establishment_id uuid NOT NULL
+        REFERENCES establishment.establishment (establishment_id),
+    joined_date date,
+    left_date date,
+    is_lead_centre boolean,
+    CHECK (left_date IS NULL OR joined_date IS NULL OR left_date >= joined_date)
+);
+
+CREATE TABLE establishment.group_identifier_type (
+    group_identifier_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.identifier_issuer (
+    identifier_issuer_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE establishment.group_identifier (
+    group_identifier_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_party_role_id uuid
+        REFERENCES establishment.establishment_party_role (establishment_party_role_id),
+    organisation_group_id uuid
+        REFERENCES establishment.organisation_group (organisation_group_id),
+    group_identifier_type_id integer NOT NULL
+        REFERENCES establishment.group_identifier_type (group_identifier_type_id),
+    identifier_issuer_id integer NOT NULL
+        REFERENCES establishment.identifier_issuer (identifier_issuer_id),
+    value text NOT NULL CHECK (btrim(value) <> ''),
+    is_current boolean NOT NULL DEFAULT true,
+    CHECK ((establishment_party_role_id IS NOT NULL) <> (organisation_group_id IS NOT NULL)
+)
+);
+
+CREATE UNIQUE INDEX group_identifier_value_unique
+    ON establishment.group_identifier (group_identifier_type_id, value);
+
+CREATE UNIQUE INDEX group_identifier_role_current_type_unique
+    ON establishment.group_identifier (establishment_party_role_id, group_identifier_type_id)
+    WHERE establishment_party_role_id IS NOT NULL AND is_current;
+
+CREATE UNIQUE INDEX group_identifier_group_current_type_unique
+    ON establishment.group_identifier (organisation_group_id, group_identifier_type_id)
+    WHERE organisation_group_id IS NOT NULL AND is_current;
