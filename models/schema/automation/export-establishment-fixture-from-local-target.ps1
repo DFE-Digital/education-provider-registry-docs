@@ -46,7 +46,14 @@ $ownedTables = @(
     'statutory_age_range', 'specialist_provision', 'resourced_provision',
     'sen_unit_provision', 'legal_entity', 'organisation_identifier',
     'establishment_party_role', 'academy_trust_classification',
-    'establishment_responsibility'
+    'establishment_responsibility', 'organisation_group',
+    'organisation_group_member', 'group_identifier'
+)
+$migrationTables = @(
+    'migration_run', 'source_snapshot', 'source_record',
+    'establishment_party_role_evidence',
+    'establishment_responsibility_evidence',
+    'organisation_group_member_evidence', 'identity_resolution'
 )
 
 $envPasswordBefore = $env:PGPASSWORD
@@ -54,6 +61,7 @@ if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
 try {
     $referenceFile = Join-Path $OutputDirectory 'seed-reference-data.sql'
     $ownedFile = Join-Path $OutputDirectory 'seed-establishment-fixture.sql'
+    $migrationFile = Join-Path $OutputDirectory 'seed-migration-evidence.sql'
     $common = @('-h', $PostgresHost, '-p', $PostgresPort, '-U', $PostgresUser, '-d', $PostgresDatabase, '--data-only', '--column-inserts', '--rows-per-insert=1000', '--no-owner', '--no-privileges', '--no-comments')
     $referenceArgs = @($common + @('--file', $referenceFile))
     foreach ($table in $referenceTables) { $referenceArgs += @('--table', "establishment.$table") }
@@ -63,6 +71,10 @@ try {
     foreach ($table in $ownedTables) { $ownedArgs += @('--table', "establishment.$table") }
     & $pgDump @ownedArgs
     if ($LASTEXITCODE -ne 0) { throw 'Establishment fixture export failed.' }
+    $migrationArgs = @($common + @('--file', $migrationFile))
+    foreach ($table in $migrationTables) { $migrationArgs += @('--table', "migration.$table") }
+    & $pgDump @migrationArgs
+    if ($LASTEXITCODE -ne 0) { throw 'Migration evidence export failed.' }
     Write-Host "Exported BAU-derived reference and Establishment SQL to $OutputDirectory"
 }
 finally { $env:PGPASSWORD = $envPasswordBefore }
