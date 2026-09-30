@@ -17,6 +17,7 @@ $schemaRoot = Split-Path -Parent $automationRoot
 
 $selectionPath = Join-Path $schemaRoot 'seed\one-organisation.json'
 $establishmentSchemaSql = Join-Path $schemaRoot 'establishment\core-establishment-schema.sql'
+$migrationSchemaSql = Join-Path $schemaRoot 'migration\migration-schema.sql'
 $governanceSchemaSql = Join-Path $schemaRoot 'governance\governance-schema.sql'
 $referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
 $academyTrustReferenceDataSql = Join-Path $schemaRoot 'seed\seed-academy-trust-reference-data.sql'
@@ -26,7 +27,7 @@ $academyTrustValidationSql = Join-Path $schemaRoot 'establishment\validate-acade
 $geographicReferenceRunner = Join-Path $automationRoot 'seed-geographic-reference-data-from-bau.ps1'
 $governanceRunner = Join-Path $automationRoot 'invoke-governance-migration.ps1'
 $psql = Get-LocalPostgresClientPath
-foreach ($path in @($selectionPath, $establishmentSchemaSql, $governanceSchemaSql, $referenceDataSql, $academyTrustReferenceDataSql, $establishmentRunner, $academyTrustRunner, $academyTrustValidationSql, $geographicReferenceRunner, $governanceRunner)) {
+foreach ($path in @($selectionPath, $establishmentSchemaSql, $migrationSchemaSql, $governanceSchemaSql, $referenceDataSql, $academyTrustReferenceDataSql, $establishmentRunner, $academyTrustRunner, $academyTrustValidationSql, $geographicReferenceRunner, $governanceRunner)) {
     if (-not (Test-Path -LiteralPath $path)) { throw "Required registry migration file not found: $path" }
 }
 
@@ -55,6 +56,9 @@ $securePassword = Read-Host 'Local SQL Server reader password' -AsSecureString
 try {
     & $psql -h 127.0.0.1 -p 5432 -U postgres -d establishment_local -w -v ON_ERROR_STOP=1 -f $establishmentSchemaSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment schema rebuild failed.' }
+
+    & $psql -h 127.0.0.1 -p 5432 -U postgres -d establishment_local -w -v ON_ERROR_STOP=1 -f $migrationSchemaSql
+    if ($LASTEXITCODE -ne 0) { throw 'Migration schema rebuild failed.' }
 
     & $psql -h 127.0.0.1 -p 5432 -U postgres -d establishment_local -w -v ON_ERROR_STOP=1 -f $referenceDataSql
     if ($LASTEXITCODE -ne 0) { throw 'Establishment reference-data seed failed.' }

@@ -1,6 +1,7 @@
 -- Shared validation for the established core-Establishment fixture.
 -- The establishment-party-role tables have their own bounded T20 fixture
--- and validation.
+-- and validation. Organisation groups and group identifiers are optional
+-- slices and are validated by their own fixtures when populated.
 DO $$
 DECLARE
     r record;
@@ -17,7 +18,10 @@ BEGIN
               'establishment_party_role',
               'establishment_party_role_type',
               'establishment_responsibility',
+              'group_identifier',
               'legal_entity',
+              'organisation_group',
+              'organisation_group_member',
               'organisation_identifier',
               'organisation_identifier_type',
               'person',
@@ -46,7 +50,10 @@ WHERE table_schema = 'establishment'
       'establishment_party_role',
       'establishment_party_role_type',
       'establishment_responsibility',
+      'group_identifier',
       'legal_entity',
+      'organisation_group',
+      'organisation_group_member',
       'organisation_identifier',
       'organisation_identifier_type',
       'person',

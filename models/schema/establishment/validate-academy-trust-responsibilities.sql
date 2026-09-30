@@ -34,17 +34,67 @@ BEGIN
       AND role_type.name = 'Academy trust'
       AND role.start_date IS NULL
       AND role.end_date = DATE '2016-02-29'
-      AND role.end_date_basis = 'evidenced'
+      AND EXISTS (
+          SELECT 1
+          FROM migration.establishment_party_role_evidence AS role_evidence
+          WHERE role_evidence.establishment_party_role_id = role.establishment_party_role_id
+            AND role_evidence.end_date_basis = 'evidenced'
+      )
       AND academy_type.name = 'Multi-academy trust'
       AND classification.start_date IS NULL
       AND classification.end_date = DATE '2016-02-29'
       AND rt.name = 'Run by academy trust'
       AND er.start_date = DATE '2009-09-01'
       AND er.end_date = DATE '2016-02-29'
-      AND er.end_date_basis = 'inferred';
+      AND EXISTS (
+          SELECT 1
+          FROM migration.establishment_responsibility_evidence AS responsibility_evidence
+          WHERE responsibility_evidence.establishment_responsibility_id = er.establishment_responsibility_id
+            AND responsibility_evidence.end_date_basis = 'inferred'
+      );
 
     IF actual_count <> 1 THEN
         RAISE EXCEPTION 'T20 validation expected one role, MAT classification and responsibility but found %', actual_count;
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM establishment.group_identifier AS gi
+        JOIN establishment.group_identifier_type AS git
+          ON git.group_identifier_type_id = gi.group_identifier_type_id
+        JOIN establishment.identifier_issuer AS issuer
+          ON issuer.identifier_issuer_id = gi.identifier_issuer_id
+        JOIN establishment.establishment_party_role AS role
+          ON role.establishment_party_role_id = gi.establishment_party_role_id
+        JOIN establishment.legal_entity AS le
+          ON le.legal_entity_id = role.legal_entity_id
+        WHERE le.name = 'MARCH 2016 LIMITED'
+          AND git.name = 'Group UID'
+          AND issuer.name = 'GIAS'
+          AND gi.value = '3839'
+          AND gi.is_current
+    ) THEN
+        RAISE EXCEPTION 'T20 validation expected current GIAS group UID 3839';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM establishment.group_identifier AS gi
+        JOIN establishment.group_identifier_type AS git
+          ON git.group_identifier_type_id = gi.group_identifier_type_id
+        JOIN establishment.identifier_issuer AS issuer
+          ON issuer.identifier_issuer_id = gi.identifier_issuer_id
+        JOIN establishment.establishment_party_role AS role
+          ON role.establishment_party_role_id = gi.establishment_party_role_id
+        JOIN establishment.legal_entity AS le
+          ON le.legal_entity_id = role.legal_entity_id
+        WHERE le.name = 'MARCH 2016 LIMITED'
+          AND git.name = 'Group ID'
+          AND issuer.name = 'GIAS'
+          AND gi.value = 'TR01385'
+          AND gi.is_current
+    ) THEN
+        RAISE EXCEPTION 'T20 validation expected current GIAS Group ID TR01385';
     END IF;
 END
 $$;
@@ -54,11 +104,13 @@ SELECT e.urn,
        oi.value AS companies_house_number,
        role_type.name AS establishment_party_role_type,
        academy_type.name AS academy_trust_type,
+       uid.value AS group_uid,
+       group_id.value AS group_id,
        role.start_date AS role_start_date,
        role.end_date AS role_end_date,
        er.start_date AS responsibility_start_date,
        er.end_date AS responsibility_end_date,
-       er.end_date_basis
+       responsibility_evidence.end_date_basis
 FROM establishment.establishment_responsibility AS er
 JOIN establishment.establishment AS e
   ON e.establishment_id = er.establishment_id
@@ -76,6 +128,16 @@ JOIN establishment.academy_trust_classification AS classification
   ON classification.establishment_party_role_id = role.establishment_party_role_id
 JOIN establishment.academy_trust_type AS academy_type
   ON academy_type.academy_trust_type_id = classification.academy_trust_type_id
+LEFT JOIN migration.establishment_responsibility_evidence AS responsibility_evidence
+  ON responsibility_evidence.establishment_responsibility_id = er.establishment_responsibility_id
+LEFT JOIN establishment.group_identifier AS uid
+  ON uid.establishment_party_role_id = role.establishment_party_role_id
+ AND uid.group_identifier_type_id = (SELECT group_identifier_type_id FROM establishment.group_identifier_type WHERE name = 'Group UID')
+ AND uid.is_current
+LEFT JOIN establishment.group_identifier AS group_id
+  ON group_id.establishment_party_role_id = role.establishment_party_role_id
+ AND group_id.group_identifier_type_id = (SELECT group_identifier_type_id FROM establishment.group_identifier_type WHERE name = 'Group ID')
+ AND group_id.is_current
 WHERE e.urn = 135905
   AND oit.name = 'Companies House number'
   AND oi.is_current

@@ -15,6 +15,8 @@ SELECT
     CASE
         WHEN eg.type_code IN ('06', '10') THEN CONVERT(varchar(10), eg.openDate, 23)
     END AS legal_entity_incorporation_date,
+    CONVERT(varchar(20), eg.id) AS group_uid,
+    NULLIF(LTRIM(RTRIM(eg.groupId)), '') AS group_id,
     CASE eg.type_code
         WHEN '02' THEN 'Foundation trust'
         WHEN '06' THEN 'Academy trust'
