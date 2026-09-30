@@ -126,6 +126,11 @@ INSERT INTO establishment.establishment_lifecycle (establishment_lifecycle_id, e
 INSERT INTO establishment.establishment_responsibility (establishment_responsibility_id, establishment_id, legal_entity_id, person_id, responsibility_type_id, start_date, end_date) VALUES
 	('7e12aa3f-f165-44ac-bb79-a59e79e8c89b', '942c642a-018c-4e01-a03d-10e579877e52', '8777a5a5-b34f-4732-9ade-cf670eff0709', NULL, 1, '2009-09-01', '2016-02-29');
 
+INSERT INTO establishment.group_identifier (establishment_party_role_id, group_identifier_type_id, identifier_issuer_id, value, is_current)
+VALUES
+    ('cd129711-2f9a-4177-91ef-d046b032013c', 1, 1, '3839', true),
+    ('cd129711-2f9a-4177-91ef-d046b032013c', 2, 1, 'TR01385', true);
+
 
 --
 -- Data for Name: site; Type: TABLE DATA; Schema: establishment; Owner: -
