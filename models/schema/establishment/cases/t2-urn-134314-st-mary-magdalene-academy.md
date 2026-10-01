@@ -34,6 +34,18 @@ include a Companies House number, so identity resolution must not merge it
 with Hive Education Trust merely because both records are linked to this
 establishment.
 
+The source does not provide dates for the legal entities' party roles or trust
+classifications, so those start and end dates are `NULL`. The group-link dates
+belong to the establishment responsibilities. They show that Hive Education
+Trust was a SAT when the responsibility beginning 1 September 2007 applied,
+and a MAT when the responsibility beginning 4 October 2021 applied. They do
+not establish when either classification itself started or ended.
+
+The active MAT group makes the MAT responsibility and the MAT classification
+current. The archived SAT group makes the SAT responsibility and SAT
+classification historical. This current-state assertion is explicit; it is not
+derived from the dates.
+
 ## Relationship graph
 
 ```mermaid
@@ -41,9 +53,11 @@ flowchart LR
     E["St Mary Magdalene Academy<br/>URN 134314"]
     H["Hive Education Trust<br/>legal entity<br/>Companies House 05412502"]
     D["Diocese of London<br/>sponsor party"]
-    R1["Academy trust role"]
+    R1["Academy trust role<br/>role dates unknown"]
+    C["Legal-entity classifications<br/>SAT historical for the 2007 responsibility<br/>MAT current for the 2021 responsibility<br/>classification dates unknown"]
     R2["School sponsor role"]
     H --> R1
+    H --> C
     R1 -->|Run by academy trust| E
     D --> R2
     R2 -->|Sponsored by| E
@@ -55,13 +69,15 @@ The migration should create:
 
 - one establishment row for URN `134314`;
 - one legal entity and academy-trust role for Hive Education Trust;
-- two academy-trust classification periods for that role: SAT from 1 September
-  2007 to 3 October 2021, and MAT from 4 October 2021 onward. The SAT end
-  date is inferred as the day before the successor MAT link starts;
+- SAT and MAT classifications for Hive Education Trust, both with `NULL` start
+  and end dates. The SAT classification has `is_current = false`; the MAT
+  classification has `is_current = true`;
 - one legal entity and school-sponsor role for the Diocese of London;
-- dated `Run by academy trust` responsibility history covering the SAT and MAT
-  periods; and
-- one `Sponsored by` responsibility beginning 1 September 2007.
+- two `Run by academy trust` responsibilities: SAT from 1 September 2007 with
+  an unknown end date and `is_current = false`, and MAT from 4 October 2021
+  with an unknown end date and `is_current = true`;
+- one `Sponsored by` responsibility beginning 1 September 2007, with no
+  academy-trust type and `is_current = true`.
 
 The two responsibilities must remain distinguishable even though they refer to
 the same establishment. The sponsor's missing Companies House number should be

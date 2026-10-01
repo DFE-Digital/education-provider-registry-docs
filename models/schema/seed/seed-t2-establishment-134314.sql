@@ -85,27 +85,27 @@ VALUES
      '13431400-0000-4000-8000-000000000002', NULL, NULL);
 
 INSERT INTO establishment.academy_trust_classification
-    (academy_trust_classification_id, establishment_party_role_id,
-     academy_trust_type_id, start_date, end_date)
+    (academy_trust_classification_id, legal_entity_id,
+     academy_trust_type_id, start_date, end_date, is_current)
 VALUES
     ('13431400-0000-4000-8000-000000000022',
-     '13431400-0000-4000-8000-000000000020', 1, '2007-09-01', '2021-10-03'),
+     '13431400-0000-4000-8000-000000000001', 1, NULL, NULL, false),
     ('13431400-0000-4000-8000-000000000030',
-     '13431400-0000-4000-8000-000000000020', 2, '2021-10-04', NULL);
+     '13431400-0000-4000-8000-000000000001', 2, NULL, NULL, true);
 
 INSERT INTO establishment.establishment_responsibility
     (establishment_responsibility_id, establishment_id, legal_entity_id,
-     responsibility_type_id, start_date, end_date)
+     responsibility_type_id, academy_trust_type_id, start_date, end_date, is_current)
 VALUES
     ('13431400-0000-4000-8000-000000000023',
      '13431400-0000-4000-8000-000000000010',
-     '13431400-0000-4000-8000-000000000001', 1, '2007-09-01', '2021-10-03'),
+     '13431400-0000-4000-8000-000000000001', 1, 1, '2007-09-01', NULL, false),
     ('13431400-0000-4000-8000-000000000031',
      '13431400-0000-4000-8000-000000000010',
-     '13431400-0000-4000-8000-000000000001', 1, '2021-10-04', NULL),
+     '13431400-0000-4000-8000-000000000001', 1, 2, '2021-10-04', NULL, true),
     ('13431400-0000-4000-8000-000000000024',
      '13431400-0000-4000-8000-000000000010',
-     '13431400-0000-4000-8000-000000000002', 3, '2007-09-01', NULL);
+     '13431400-0000-4000-8000-000000000002', 3, NULL, '2007-09-01', NULL, true);
 
 INSERT INTO establishment.group_identifier
     (group_identifier_id, establishment_party_role_id, group_identifier_type_id,

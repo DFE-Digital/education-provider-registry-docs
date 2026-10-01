@@ -61,6 +61,17 @@ CREATE TABLE migration.establishment_responsibility_evidence (
     notes text
 );
 
+CREATE TABLE migration.academy_trust_classification_evidence (
+    evidence_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    academy_trust_classification_id uuid NOT NULL
+        REFERENCES establishment.academy_trust_classification (academy_trust_classification_id),
+    source_record_id uuid REFERENCES migration.source_record (source_record_id),
+    assertion_rule text NOT NULL,
+    review_status text NOT NULL DEFAULT 'accepted',
+    notes text,
+    UNIQUE (academy_trust_classification_id, source_record_id, assertion_rule)
+);
+
 CREATE TABLE migration.organisation_group_member_evidence (
     evidence_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     organisation_group_member_id uuid NOT NULL REFERENCES establishment.organisation_group_member (organisation_group_member_id),
@@ -89,6 +100,8 @@ CREATE INDEX ix_party_role_evidence_role
     ON migration.establishment_party_role_evidence (establishment_party_role_id);
 CREATE INDEX ix_responsibility_evidence_responsibility
     ON migration.establishment_responsibility_evidence (establishment_responsibility_id);
+CREATE INDEX ix_classification_evidence_classification
+    ON migration.academy_trust_classification_evidence (academy_trust_classification_id);
 CREATE INDEX ix_group_member_evidence_member
     ON migration.organisation_group_member_evidence (organisation_group_member_id);
 CREATE INDEX ix_identity_resolution_source

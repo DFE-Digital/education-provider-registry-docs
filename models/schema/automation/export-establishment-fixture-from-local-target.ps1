@@ -53,6 +53,7 @@ $migrationTables = @(
     'migration_run', 'source_snapshot', 'source_record',
     'establishment_party_role_evidence',
     'establishment_responsibility_evidence',
+    'academy_trust_classification_evidence',
     'organisation_group_member_evidence', 'identity_resolution'
 )
 
