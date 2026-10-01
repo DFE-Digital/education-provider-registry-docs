@@ -25,17 +25,22 @@ if (-not (Test-Path -LiteralPath $query -PathType Leaf)) { throw "Query not foun
 if (-not $UpdateApproval -and -not (Test-Path -LiteralPath $approval -PathType Leaf)) { throw "Approval file not found: $approval" }
 
 $psql = Get-LocalPostgresClientPath
+$normaliseApprovalText = {
+    param([string]$Value)
+    if ($null -eq $Value) { return '' }
+    return $Value.TrimStart([char]0xFEFF).Replace("`r`n", "`n").Replace("`r", "`n").Trim()
+}
 $oldPassword = $env:PGPASSWORD
 if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
 try {
-    $actual = (& $psql -X -q -P format=csv -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -v "urn=$Urn" -f $query | Out-String).Trim()
+    $actual = & $normaliseApprovalText ((& $psql -X -q -P format=csv -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -v "urn=$Urn" -f $query | Out-String))
     if ($LASTEXITCODE -ne 0) { throw "Establishment approval query failed with exit code $LASTEXITCODE" }
     if ($UpdateApproval) {
         Set-Content -LiteralPath $approval -Value $actual -Encoding utf8
         Write-Host "Updated approval snapshot: $approval"
         return
     }
-    $expected = (Get-Content -LiteralPath $approval -Raw).Trim()
+    $expected = & $normaliseApprovalText (Get-Content -LiteralPath $approval -Raw)
     if ($actual -cne $expected) {
         Write-Host "$([char]::ConvertFromUtf32(0x1F926)) Establishment approval test failed for URN $Urn." -ForegroundColor Red
         Write-Host 'Expected approval:'

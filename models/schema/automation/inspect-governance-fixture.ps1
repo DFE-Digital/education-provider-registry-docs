@@ -14,7 +14,7 @@ param(
     [string]$SourceDatabase = 'gias_bau_test_local',
     [string]$SqlUser = 'reader',
     [string]$SqlPassword = $env:EPR_BAU_SQL_PASSWORD,
-    [int[]]$Urn = @(100018, 106431, 136102)
+    [int[]]$Urn = @(136102)
 )
 
 $allowedServers = @('localhost', '127.0.0.1', 'SL646104')

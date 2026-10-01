@@ -49,7 +49,11 @@ before committing.
 6. Query the loaded rows and key pupil/FSM measures as a smoke validation.
 7. Run the approval tests and row-count approval.
 8. Export and refresh the checked-in seed files after all validation passes.
-9. Delete credentials and temporary files unless -KeepFixture is supplied.
+9. Add or update one establishment case file under
+   `models/schema/establishment/cases/` for every T represented by the
+   extract, including its URN, name, establishment type and relevant group
+   links.
+10. Delete credentials and temporary files unless -KeepFixture is supplied.
 
 Reference dictionaries are runtime inputs only for this current implementation;
 the target schema and checked-in seed remain the shared baseline for the

@@ -60,7 +60,7 @@ $envPasswordBefore = $env:PGPASSWORD
 if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
 try {
     $referenceFile = Join-Path $OutputDirectory 'seed-reference-data.sql'
-    $ownedFile = Join-Path $OutputDirectory 'seed-establishment-fixture.sql'
+    $ownedFile = Join-Path $OutputDirectory 'seed-t1-establishment-136102.sql'
     $migrationFile = Join-Path $OutputDirectory 'seed-migration-evidence.sql'
     $common = @('-h', $PostgresHost, '-p', $PostgresPort, '-U', $PostgresUser, '-d', $PostgresDatabase, '--data-only', '--column-inserts', '--rows-per-insert=1000', '--no-owner', '--no-privileges', '--no-comments')
     $referenceArgs = @($common + @('--file', $referenceFile))

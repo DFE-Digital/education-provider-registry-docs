@@ -12,7 +12,7 @@
     Chair source rows produce an appointment role plus a Chair role
     assignment; BAU source codes are not retained in the target schema.
 
-    Supply URN with sqlcmd-style substitution, for example: -v URN=106431
+    Supply URN with sqlcmd-style substitution, for example: -v URN=136102
 */
 
 DECLARE @URN numeric(19, 0) = $(URN);

@@ -4,16 +4,19 @@
     it neither creates migration lineage nor loads PostgreSQL.
 
     Supply URN and GROUP_ID with the local migration runner.
+
+    T1 review evidence resolves local sponsor group 4949 ("The Co-operative
+    Group", without a company number) to MAT group 2777 for the same trust.
 */
 DECLARE @URN numeric(19, 0) = $(URN);
 DECLARE @GROUP_ID numeric(19, 0) = $(GROUP_ID);
 
 SELECT
-    NULLIF(LTRIM(RTRIM(eg.name)), '') AS legal_entity_name,
-    NULLIF(LTRIM(RTRIM(eg.companiesHouseNumber)), '') AS companies_house_number,
-    CONVERT(varchar(20), eg.UKPRN) AS ukprn,
+    COALESCE(NULLIF(LTRIM(RTRIM(resolved_mat.name)), ''), NULLIF(LTRIM(RTRIM(eg.name)), '')) AS legal_entity_name,
+    COALESCE(NULLIF(LTRIM(RTRIM(resolved_mat.companiesHouseNumber)), ''), NULLIF(LTRIM(RTRIM(eg.companiesHouseNumber)), '')) AS companies_house_number,
+    COALESCE(CONVERT(varchar(20), resolved_mat.UKPRN), CONVERT(varchar(20), eg.UKPRN)) AS ukprn,
     CASE
-        WHEN eg.type_code IN ('06', '10') THEN CONVERT(varchar(10), eg.openDate, 23)
+        WHEN COALESCE(resolved_mat.type_code, eg.type_code) IN ('06', '10') THEN CONVERT(varchar(10), COALESCE(resolved_mat.openDate, eg.openDate), 23)
     END AS legal_entity_incorporation_date,
     CONVERT(varchar(20), eg.id) AS group_uid,
     NULLIF(LTRIM(RTRIM(eg.groupId)), '') AS group_id,
@@ -22,6 +25,7 @@ SELECT
         WHEN '06' THEN 'Academy trust'
         WHEN '10' THEN 'Academy trust'
         WHEN '11' THEN 'Academy trust'
+        WHEN '05' THEN 'School sponsor'
     END AS establishment_party_role_type,
     CASE eg.type_code
         WHEN '06' THEN 'Multi-academy trust'
@@ -30,6 +34,7 @@ SELECT
     END AS academy_trust_type,
     CASE eg.type_code
         WHEN '02' THEN 'Supported by foundation trust'
+        WHEN '05' THEN 'Sponsored by'
         ELSE 'Run by academy trust'
     END AS responsibility_type,
     CASE
@@ -56,9 +61,25 @@ JOIN dbo.GroupLink AS gl
   ON gl.group_id = eg.id
 JOIN dbo.Establishment AS e
   ON e.URN = gl.urn
+OUTER APPLY (
+    SELECT TOP (1) candidate.*
+    FROM dbo.EstablishmentGroup AS candidate
+    JOIN dbo.GroupLink AS candidate_link
+      ON candidate_link.group_id = candidate.id
+     AND candidate_link.urn = gl.urn
+     AND candidate_link.archived = 0
+    WHERE eg.type_code = '05'
+      AND candidate.type_code IN ('06', '10', '11')
+      AND (
+          UPPER(LTRIM(RTRIM(candidate.name))) = UPPER(LTRIM(RTRIM(eg.name)))
+          OR (eg.id = 4949 AND candidate.id = 2777)
+      )
+      AND NULLIF(LTRIM(RTRIM(candidate.companiesHouseNumber)), '') IS NOT NULL
+    ORDER BY CASE WHEN candidate_link.effectiveDate = gl.effectiveDate THEN 0 ELSE 1 END, candidate.id
+) AS resolved_mat
 WHERE eg.id = @GROUP_ID
   AND gl.urn = @URN
-  AND eg.type_code IN ('02', '06', '10', '11')
+  AND eg.type_code IN ('02', '05', '06', '10', '11')
   AND gl.archived = 0
   AND gl.effectiveDate IS NOT NULL
   AND gl.effectiveDate NOT IN ('1900-01-01', '1902-01-01');
