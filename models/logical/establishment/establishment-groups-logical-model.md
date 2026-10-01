@@ -107,6 +107,380 @@ erDiagram
     }
 ```
 
+#### Why roles and responsibilities are separate
+
+A role records the capacity in which a party is recognised across the education system. A responsibility records what that party does for one particular establishment. They are separate business facts with independent dates and different cardinality:
+
+- One party can hold more than one role at the same time.
+- One role can support responsibilities for many establishments.
+- Responsibilities can start and end without changing the party's role.
+- Ending one responsibility does not mean that the party has stopped holding the role.
+
+##### Can a role be inferred from a responsibility?
+
+Only partially. A responsibility can imply that a compatible party role must exist, but it cannot reliably determine the role's complete lifecycle. The responsibility is therefore useful validation evidence, not a replacement for the role record.
+
+| Responsibility type | Implied role |
+| --- | --- |
+| `run_by_academy_trust` | Academy trust |
+| `sponsored_by` | School sponsor |
+| `supported_by_foundation_trust` | Foundation trust |
+| `proprietor` | No corresponding party role in this model |
+
+The role remains separately represented because it can start before the party becomes responsible for its first establishment, continue after its last responsibility ends, or exist while the party has no current establishment responsibilities. Academy-trust classifications and group identifiers also belong to the role. An umbrella-trust role has no establishment responsibility from which it could be inferred.
+
+Taking the earliest and latest responsibility dates would only estimate the role period and could conceal gaps or missing data. For example, Northbridge Learning Limited can remain a school sponsor while it has no sponsor responsibility between Birch Academy and Dene Free School. The school-sponsor role remains one continuous record; the two establishment responsibilities remain separate records.
+
+The following hypothetical scenario illustrates the distinction across all three tables. Northbridge Learning Limited becomes an academy trust in 2011 and remains one until 2030. It is classified as a SAT until 2016 and then as a MAT until 2030. The MAT classification begins while only Alder Academy is represented in the responsibility data; Cedar Academy joins in 2018. Northbridge is also recognised as a school sponsor between 2014 and 2026. During those role periods it runs two academies and sponsors two establishments, each for its own period.
+
+The shared event sequence is:
+
+| Date | Event | Table consequence |
+| --- | --- | --- |
+| 2011-01-01 | Northbridge becomes an academy trust and is classified as a SAT. | One `establishment_party_role` row and one `academy_trust_classification` row start. |
+| 2012-09-01 | Northbridge starts running Alder Academy. | One `establishment_responsibility` row starts. |
+| 2014-09-01 | Northbridge becomes a recognised school sponsor. | A second `establishment_party_role` row starts. |
+| 2015-09-01 | Northbridge starts sponsoring Birch Academy. | A second responsibility row starts. |
+| 2016-09-01 | Northbridge changes from SAT to MAT. | The SAT classification row ends and a MAT classification row starts; the academy-trust role continues. |
+| 2018-09-01 | Northbridge starts running Cedar Academy. | A third responsibility row starts while the MAT classification is in effect. |
+| 2021-09-01 | Northbridge stops sponsoring Birch Academy. | The Birch responsibility row ends; the school-sponsor role continues. |
+| 2022-01-01 | Northbridge stops running Alder Academy. | The Alder responsibility row ends; the academy-trust role and MAT classification continue. |
+| 2022-09-01 | Northbridge starts sponsoring Dene Free School. | A fourth responsibility row starts. |
+| 2026-09-01 | Northbridge stops being a school sponsor and stops sponsoring Dene Free School. | The school-sponsor role and Dene responsibility row end. |
+| 2028-09-01 | Northbridge stops running Cedar Academy. | The Cedar responsibility row ends; the academy-trust role and MAT classification continue. |
+| 2030-01-01 | Northbridge stops being an academy trust. | The academy-trust role and MAT classification row end. |
+
+The three timelines can therefore be read together as follows:
+
+```text
+2011       2012       2014       2015       2016       2018       2021       2022       2026       2028       2030
+|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+
+Academy-trust role
+|=============================================================================================================|
+
+SAT classification
+|==============================|
+MAT classification
+                              |================================================================================|
+
+School-sponsor role
+                       |====================================================================|
+
+Runs Alder Academy
+       |===============================================================|
+Runs Cedar Academy
+                                  |==========================================================================|
+Sponsors Birch Academy
+                                  |==========================================|
+Sponsors Dene Free School
+                                                                     |====================================|
+```
+
+The rows represented by this consolidated example are two role rows, two academy-trust classification rows and four establishment-responsibility rows. The timelines share the same party, but they describe different facts: the role tables describe Northbridge's recognised capacities, the classification table describes the status of its academy-trust role, and the responsibility table describes its dated relationships with named establishments.
+
+##### Establishment party role timeline
+
+This timeline answers: "In what capacity was Northbridge Learning Limited recognised, and when?"
+
+```text
+2011-01-01          2014-09-01                         2026-09-01      2030-01-01
+|-------------------|----------------------------------|---------------|
+
+Academy-trust role
+|======================================================================|
+2011-01-01                                                          2030-01-01
+
+School-sponsor role
+                    |==================================|
+                    2014-09-01                    2026-09-01
+```
+
+Each continuous role period becomes one row in `establishment_party_role`:
+
+| Row | Party | Role type | Start date | End date |
+| --- | --- | --- | --- | --- |
+| R1 | Northbridge Learning Limited | Academy trust | 2011-01-01 | 2030-01-01 |
+| R2 | Northbridge Learning Limited | School sponsor | 2014-09-01 | 2026-09-01 |
+
+There are two rows because Northbridge holds two different recognised roles. Neither row names an establishment. If Northbridge's academy-trust role ended and later restarted, the restarted period would require another row.
+
+##### Academy trust classification timeline
+
+This timeline answers: "How was Northbridge's academy-trust role classified during its continuous role period?" Northbridge is classified as a SAT when it first becomes an academy trust. On 1 September 2016 it becomes a MAT, even though it has only one academy at that point. Cedar Academy joins its responsibilities later, in 2018. The classification records the recognised SAT or MAT status; it is not calculated from the number of responsibility rows.
+
+```text
+2011-01-01          2016-09-01                                      2030-01-01
+|-------------------|--------------------------------------------------|
+
+Academy-trust role
+|==================================================================|
+
+SAT classification
+|===================|
+2011-01-01          2016-09-01
+
+MAT classification
+                    |=============================================|
+                    2016-09-01                              2030-01-01
+```
+
+The classification timeline becomes two rows in `academy_trust_classification`, both linked to the same academy-trust role:
+
+| Row | Academy-trust role | Academy-trust type | Start date | End date |
+| --- | --- | --- | --- | --- |
+| C1 | Northbridge academy-trust role | SAT | 2011-01-01 | 2016-09-01 |
+| C2 | Northbridge academy-trust role | MAT | 2016-09-01 | 2030-01-01 |
+
+The SAT row ends on the first day the MAT row applies. The legal entity and its academy-trust role remain the same, so the classification change does not create a second `legal_entity` row or a second `establishment_party_role` row. It is also valid for the MAT period to begin while only Alder Academy is represented in the responsibility data; the MAT classification is a recorded business classification, not an academy count calculation.
+
+##### Establishment responsibility timeline
+
+This timeline answers: "Which establishment was Northbridge Learning Limited responsible for, in what way, and when?"
+
+```text
+2011-01-01          2015-09-01      2018-09-01      2022-09-01      2030-01-01
+|-------------------|---------------|---------------|---------------|
+
+Runs Alder Academy
+     |====================================|
+     2012-09-01                      2022-01-01
+
+Sponsors Birch Academy
+                    |=======================|
+                    2015-09-01         2021-09-01
+
+Runs Cedar Academy
+                               |===================================|
+                               2018-09-01                     2028-09-01
+
+Sponsors Dene Free School
+                                                   |===============|
+                                                   2022-09-01 2026-09-01
+```
+
+Each establishment-specific period becomes one row in `establishment_responsibility`:
+
+| Row | Party | Establishment | Responsibility type | Start date | End date |
+| --- | --- | --- | --- | --- | --- |
+| E1 | Northbridge Learning Limited | Alder Academy | `run_by_academy_trust` | 2012-09-01 | 2022-01-01 |
+| E2 | Northbridge Learning Limited | Birch Academy | `sponsored_by` | 2015-09-01 | 2021-09-01 |
+| E3 | Northbridge Learning Limited | Cedar Academy | `run_by_academy_trust` | 2018-09-01 | 2028-09-01 |
+| E4 | Northbridge Learning Limited | Dene Free School | `sponsored_by` | 2022-09-01 | 2026-09-01 |
+
+The four responsibility rows overlap in different combinations, but they do not create extra role rows. Alder and Cedar are covered by the academy-trust role; Birch and Dene are covered by the school-sponsor role. The responsibility boundaries remain independent: Northbridge stops running Alder in 2022 but continues to hold its academy-trust role and continues running Cedar. It also stops sponsoring Birch before it starts sponsoring Dene, without ending and recreating its school-sponsor role.
+
+This separation prevents the model from confusing "Northbridge is an academy trust" with "Northbridge runs Alder Academy". The first statement is a party-level role; the second is a dated relationship with a particular establishment.
+
+#### Establishment
+
+`establishment` is the registered education provider that is run, sponsored, supported or owned by another party, or that belongs to an organisation group. It remains a distinct business object with its own URN and name.
+
+This diagram shows the establishment only as the subject of a responsibility. Its full definition belongs to the core establishment model. For example, Manchester Creative and Media Academy is the establishment with URN `135905`; it is separate from MARCH 2016 LIMITED, the legal entity that operated it.
+
+#### Legal entity
+
+`legal_entity` identifies an organisation that is not an establishment. It represents academy trusts, sponsoring bodies, foundation trusts, umbrella trusts and proprietor bodies.
+
+- One row represents one real-world legal entity. A SAT record, a MAT record and a sponsor record can resolve to the same row.
+- An establishment remains an `establishment`; the wider organisation concept is a union view, not a shared target table.
+- Academy-trust type is not a legal-entity type.
+- The current name is held here. Name history is not represented.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `legal_entity_id` | Yes | Generated opaque target identifier. |
+| `name` | Yes | Current name; for a company, its registered name. |
+| `legal_entity_type_id` | No | Controlled type where known. |
+| `charity_status_id` | No | Registered, exempt, excepted or not a charity; null when unknown. |
+| `incorporation_date` | No | Date of incorporation where incorporated. |
+| `dissolution_date` | No | Date of dissolution where known from an authoritative register. |
+
+The `legal_entity_type` vocabulary is: charitable company limited by guarantee; company limited by guarantee; private limited company; public limited company; limited liability partnership; charitable incorporated organisation; body incorporated by Royal Charter; unincorporated charitable trust; public body; overseas entity; sole trader; and traditional partnership.
+
+For example, MARCH 2016 LIMITED is represented once as a legal entity, regardless of the roles it has held or the establishments for which it has been responsible.
+
+#### Legal entity type
+
+`legal_entity_type` describes the legal form under which a legal entity exists. It answers the business question "what kind of organisation is this in law?", rather than "what does it do in education?"
+
+For example, an academy trust may be a charitable company limited by guarantee. "Academy trust" is its education role, while "charitable company limited by guarantee" is its legal-entity type. Keeping these concepts separate allows the same legal form to be used by organisations with different education roles.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `legal_entity_type_id` | Yes | Stable reference to the controlled legal-form value. |
+| `name` | Yes | Unique business-friendly name of the legal form. |
+
+#### Charity status
+
+`charity_status` records whether and how a legal entity is recognised as charitable. This is separate from legal form because organisations with the same legal form can have different charity statuses.
+
+Examples include registered charity, exempt charity, excepted charity and not a charity. A null value on `legal_entity` means that the status is not known; it does not mean that the organisation is not charitable.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `charity_status_id` | Yes | Stable reference to the controlled charity-status value. |
+| `name` | Yes | Unique business-friendly name of the charity status. |
+
+#### Organisation identifier
+
+`organisation_identifier` holds an identifier issued by an external authority for a legal entity.
+
+- Identifier types are Companies House number, UKPRN and Charity Commission number.
+- A legal entity can have several values of one type over time, but only one current value of a type.
+- A current value is unique within its identifier type. A replaced value cannot be current for another legal entity.
+- Values are stored as text so leading zeroes are retained.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `organisation_identifier_id` | Yes | Generated opaque target identifier. |
+| `legal_entity_id` | Yes | The owning legal entity. |
+| `organisation_identifier_type_id` | Yes | Controlled identifier type. |
+| `value` | Yes | Identifier as issued. |
+| `is_current` | Yes | False when a value has been replaced. |
+
+For example, MARCH 2016 LIMITED has Companies House number `06888873`. The identifier belongs to the legal entity, not to Manchester Creative and Media Academy and not to the entity's academy-trust role.
+
+#### Organisation identifier type
+
+`organisation_identifier_type` defines the external identifier schemes that can identify a legal entity. The current types are Companies House number, UKPRN and Charity Commission number.
+
+The type gives meaning to the stored value. For example, `06888873` is meaningful as a Companies House number, while a UKPRN belongs to a different numbering scheme and issuing authority.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `organisation_identifier_type_id` | Yes | Stable reference to the identifier scheme. |
+| `name` | Yes | Unique name of the identifier scheme. |
+
+#### Establishment party role
+
+`establishment_party_role` records that a legal entity or person held a recognised role in relation to establishments for one continuous period.
+
+- The role types are academy trust, foundation trust, umbrella trust and school sponsor.
+- Every role has exactly one holder. Exactly one of `legal_entity_id` and `person_id` is set.
+- A person can hold only a school-sponsor role.
+- A party can hold the same role type more than once, but each row represents one continuous period. If a role ends and later starts again, the later period is a new row.
+- Periods for the same party and role type cannot overlap. A gap between periods is allowed.
+- Role assignability and role-retirement dates are not represented.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `establishment_party_role_id` | Yes | Generated opaque target identifier. |
+| `establishment_party_role_type_id` | Yes | Academy trust, foundation trust, umbrella trust or school sponsor. |
+| `legal_entity_id` | Conditional | The legal entity holding the role. |
+| `person_id` | Conditional | The person holding the role; permitted only for school sponsor. |
+| `start_date` | No | First date on which the role applies; null means unknown. |
+| `end_date` | No | First date on which the role no longer applies. |
+
+The school-sponsor role means that DfE recognised the party as a school sponsor. It does not, by itself, assert formal approval, sponsorship of a particular establishment or governance rights over an academy trust. Sponsorship of a particular establishment is recorded separately as an `establishment_responsibility`. Formal approval and trust-level governance rights are outside this model unless a reliable source is identified.
+
+For example, MARCH 2016 LIMITED held an academy-trust role. That role describes its recognised function in the education system; the separate responsibility record says that it ran Manchester Creative and Media Academy.
+
+#### Establishment party role type
+
+`establishment_party_role_type` defines the recognised roles a legal entity or, where permitted, a person can hold in relation to establishments. The controlled values are academy trust, foundation trust, umbrella trust and school sponsor.
+
+The type describes a party's general capacity. It does not identify a particular establishment. For example, being recognised as a school sponsor is a role; sponsoring a named academy is a separate responsibility.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `establishment_party_role_type_id` | Yes | Stable reference to the role type. |
+| `name` | Yes | Unique business-friendly name of the role type. |
+
+#### Academy trust classification
+
+`academy_trust_classification` records the classification held by an academy-trust role for a period.
+
+- The types are single-academy trust, multi-academy trust and secure single-academy trust.
+- Classifications exist only for academy-trust roles. Every academy-trust role has at least one classification.
+- Classification periods for one role cannot overlap and fall within the role's period where both boundaries are known.
+- A SAT-to-MAT change creates two classification periods for one continuous academy-trust role and one legal entity. It does not create a second legal entity or a second role.
+- The classification is recorded, not derived from the number of academies.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `academy_trust_classification_id` | Yes | Generated opaque target identifier. |
+| `establishment_party_role_id` | Yes | The academy-trust role being classified. |
+| `academy_trust_type_id` | Yes | Single-academy trust, multi-academy trust or secure single-academy trust. |
+| `start_date` | No | First date on which the classification applies; null means unknown. |
+| `end_date` | No | First date on which the classification no longer applies. |
+
+##### Date semantics
+
+The two periods represent separate lifecycle facts:
+
+| Record | Meaning | What causes a new period? |
+| --- | --- | --- |
+| `establishment_party_role` | When did this party act as an academy trust? | The academy-trust role ends, or it ends and later restarts. |
+| `academy_trust_classification` | During that academy-trust role, when was it a SAT, MAT or secure SAT? | The recorded academy-trust type changes. |
+
+The role is the longer-lived concept. A classification describes the academy-trust role; it is not a second role and it is not the legal entity's lifecycle. Neither period says when the trust ran a particular academy; that period belongs to `establishment_responsibility`. One continuous role can therefore contain several successive classification periods.
+
+The dates follow these rules:
+
+- A classification cannot exist without its academy-trust role.
+- Every known part of a classification period falls within the role period.
+- Classification periods for the same role do not overlap.
+- Successive classifications can meet on the same date because periods are half open: the earlier classification ends on the first day the later classification applies.
+- Ending a classification does not end the academy-trust role when another classification starts immediately.
+- Ending the academy-trust role ends every classification under it. If the party later becomes an academy trust again, that is a new role with its own classification history.
+- Null dates mean that the boundary is unknown. They do not mean that the role and classification are necessarily coterminous.
+
+#### Academy trust type
+
+`academy_trust_type` defines the classifications that can apply to an academy-trust role. The values are single-academy trust, multi-academy trust and secure single-academy trust.
+
+This reference data supports changes over time without changing the identity of the legal entity. For example, a trust can move from a single-academy-trust classification to a multi-academy-trust classification while retaining one continuous academy-trust role.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `academy_trust_type_id` | Yes | Stable reference to the academy-trust classification. |
+| `name` | Yes | Unique business-friendly name of the classification. |
+
+#### Establishment responsibility
+
+`establishment_responsibility` records that a legal entity or person runs, sponsors or supports an establishment, or is its proprietor, for a period.
+
+There is one row per party, establishment, responsibility type and period. Exactly one of `legal_entity_id` and `person_id` is set. A person can be the party only for `sponsored_by` and `proprietor`.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `establishment_responsibility_id` | Yes | Generated opaque target identifier. |
+| `establishment_id` | Yes | The existing establishment. |
+| `responsibility_type_id` | Yes | Controlled responsibility type. |
+| `legal_entity_id` | Conditional | Responsible legal entity. |
+| `person_id` | Conditional | Responsible person, where permitted. |
+| `start_date` | No | First date on which the responsibility applies; null means unknown. |
+| `end_date` | No | First date on which it no longer applies. |
+
+| Responsibility type | Meaning |
+| --- | --- |
+| `run_by_academy_trust` | The academy trust runs the academy or free school and is accountable for it. |
+| `sponsored_by` | The legal entity or person recorded as the establishment's sponsor. |
+| `supported_by_foundation_trust` | The foundation trust that supports a foundation school. |
+| `proprietor` | The legal entity or person responsible for managing an independent school, non-maintained special school or city technology college. This does not model ownership of premises or a proprietor company. |
+
+`maintained_by_local_authority` belongs to the accountability slice.
+
+For example, the `run_by_academy_trust` responsibility links MARCH 2016 LIMITED to Manchester Creative and Media Academy for the period in which that company operated the academy.
+
+#### Responsibility type
+
+`responsibility_type` defines the kinds of responsibility that a party can have for a specific establishment. The controlled values in this slice are `run_by_academy_trust`, `sponsored_by`, `supported_by_foundation_trust` and `proprietor`.
+
+The type makes the relationship explicit. The same legal entity can have different responsibilities for different establishments, or even several distinct responsibilities across its wider portfolio. For example, Outwood Grange Academies Trust can run academies, sponsor establishments and act as the proprietor of an independent school.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `responsibility_type_id` | Yes | Stable reference to the responsibility type. |
+| `name` | Yes | Unique business-friendly name of the responsibility type. |
+
+#### Person
+
+`person` represents an individual who can hold a permitted role or responsibility. The full person record belongs to the people model; this diagram includes only its identifier so that relationships can refer to it without duplicating personal data.
+
+A person can hold a school-sponsor role and can be recorded as a sponsor or proprietor where the business evidence supports it. A person cannot hold an academy-trust, foundation-trust or umbrella-trust role in this model.
+
 ### Organisation groups and group identifiers
 
 This diagram contains federations and children's-centre groups, their establishment memberships and identifiers issued for role or organisation-group records. `ESTABLISHMENT_PARTY_ROLE` is shown as the endpoint for role identifiers; its attributes are defined in the first diagram.
@@ -174,7 +548,115 @@ erDiagram
     }
 ```
 
-`ESTABLISHMENT` and `LOCAL_AUTHORITY` are defined in the establishment slice. `PERSON` belongs to the people slice. They are shown here only as relationship endpoints.
+#### Establishment party role
+
+`establishment_party_role` is described beneath the first ERD. In this diagram it is an identifier owner: a GIAS group UID or Group ID can identify a particular role held by a party.
+
+For example, Outwood Grange Academies Trust has separate academy-trust and school-sponsor roles. Each role has its own GIAS group identifiers even though both roles are held by the same legal entity.
+
+#### Organisation group
+
+`organisation_group` is a named group of establishments with its own lifecycle but no legal identity.
+
+- It is used only for federations, children's-centre groups and children's-centre collaborations.
+- It is not a legal entity and has neither a legal-entity type nor organisation identifiers. Its group UID, and any Group ID, are held in `group_identifier`.
+- Children's-centre groups and collaborations are coordinated by a local authority; federations are not.
+- Status is derived from dates.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `organisation_group_id` | Yes | Generated opaque target identifier. |
+| `name` | Yes | Current name. |
+| `organisation_group_type_id` | Yes | Federation, children's-centre group or children's-centre collaboration. |
+| `local_authority_id` | Conditional | Required for children's-centre types and absent for federations. |
+| `open_date` | No | First date on which the group existed, where known. |
+| `close_date` | No | First date on which the group no longer existed, where known. |
+
+For example, a federation is represented as an organisation group because it groups schools for governance purposes but is not itself a company, charity or other legal entity.
+
+#### Organisation group type
+
+`organisation_group_type` defines the kinds of non-legal grouping represented by `organisation_group`. The controlled values are federation, children's-centre group and children's-centre collaboration.
+
+The type determines which business rules apply. For example, a federation must have maintained-school members, while a children's-centre group is coordinated by a local authority and can identify a lead centre.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `organisation_group_type_id` | Yes | Stable reference to the organisation-group type. |
+| `name` | Yes | Unique business-friendly name of the group type. |
+
+#### Organisation group member
+
+`organisation_group_member` records that an establishment belongs to an organisation group for a period.
+
+Only establishments can be group members in this slice.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `organisation_group_member_id` | Yes | Generated opaque target identifier. |
+| `organisation_group_id` | Yes | The organisation group. |
+| `establishment_id` | Yes | The member establishment. |
+| `joined_date` | No | First date on which membership applies; null means unknown. |
+| `left_date` | No | First date on which membership no longer applies. |
+| `is_lead_centre` | Conditional | Used only for children's-centre groups. True identifies the lead centre; null means the source does not say. Lead-centre history is not represented. |
+
+For example, two maintained schools in a federation each have their own establishment record and URN. Their membership rows link both establishments to the same federation and retain the dates on which each membership applied.
+
+#### Group identifier
+
+`group_identifier` holds the group UIDs and Group IDs that identify an establishment-party role or an organisation group.
+
+- **Owner:** exactly one of `establishment_party_role_id` and `organisation_group_id` is set. A group identifier never belongs to a legal entity or person directly: Outwood Grange Academies Trust is one legal entity whose academy-trust role holds UID `4119` and Group ID `TR01585`, and whose school-sponsor role holds UID `4118` and Group ID `SP00396`.
+- **Types:** group UID and Group ID.
+- **One scheme, two issuers:** there is one group UID scheme. Values migrated from GIAS have issuer GIAS; values allocated after cutover have issuer Establishment Registry.
+- **Several values per owner:** a SAT-to-MAT consolidation gives one academy-trust role two UIDs, for example `2224` (the SAT record) and `17488` (the MAT record), and one Group ID, `TR00125`, stored once. The current value is the one the owner is known by now; the others are kept so that old references still resolve.
+- **Uniqueness:** a group UID is unique across all owners and both issuers. A Group ID is unique across owners.
+- **Values** are stored as text, as issued. A Group ID keeps its prefix, such as `TR`, `SP` or `UT`.
+- Proprietors have no GIAS group record, so they have no group identifier.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `group_identifier_id` | Yes | Generated opaque target identifier. |
+| `establishment_party_role_id` | Conditional | The owning role. |
+| `organisation_group_id` | Conditional | The owning organisation group. |
+| `group_identifier_type_id` | Yes | Group UID or Group ID. |
+| `identifier_issuer_id` | Yes | GIAS or Establishment Registry. |
+| `value` | Yes | The identifier as issued. |
+| `is_current` | Yes | True for the value the owner is known by now. False for a value kept so that old references still resolve. |
+
+#### Group identifier type
+
+`group_identifier_type` defines which GIAS or Establishment Registry group-identifier scheme a value belongs to. The current types are Group UID and Group ID.
+
+A Group UID is the numeric identifier historically used for a GIAS group record. A Group ID is the prefixed business identifier, such as `TR01385` for an academy-trust role or `SP00396` for a school-sponsor role. The type prevents values from different schemes being treated as interchangeable.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `group_identifier_type_id` | Yes | Stable reference to the group-identifier scheme. |
+| `name` | Yes | Unique name of the scheme. |
+
+#### Identifier issuer
+
+`identifier_issuer` records which service allocated a group identifier. The current issuers are GIAS for migrated values and Establishment Registry for values allocated after cutover.
+
+Separating issuer from identifier type allows the same Group UID scheme to continue across migration. For example, the T20 academy-trust role retains Group UID `3839` and Group ID `TR01385`, both with GIAS as their issuer.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `identifier_issuer_id` | Yes | Stable reference to the issuing service. |
+| `name` | Yes | Unique business-friendly name of the issuer. |
+
+#### Establishment
+
+`establishment` is described beneath the first ERD. In this diagram it is a member of an organisation group, such as a maintained school belonging to a federation or a children's centre belonging to a children's-centre group.
+
+The establishment keeps its own identity throughout changes in group membership. Joining or leaving a federation changes the membership record, not the establishment's URN or identity.
+
+#### Local authority
+
+`local_authority` is the recognised local government organisation that coordinates a children's-centre group or collaboration. Its full definition belongs to the establishment and accountability model; this diagram references it without duplicating that data.
+
+For example, a children's-centre collaboration can be linked to the local authority responsible for coordinating it. Federations do not use this relationship, because the model does not treat a local authority as the owner of a federation.
 
 ## Model scope
 
@@ -205,186 +687,6 @@ GIAS group UIDs and Group IDs are target data. They are business identifiers: GI
 Source names, source type codes, source links and identity-resolution evidence are migration lineage and are outside the target model.
 
 A GIAS group identifier identifies a role or an organisation group, never a legal entity directly. Several GIAS records can resolve to one legal entity, and each keeps its own identifiers on its own role.
-
-## Entities
-
-### Legal entity
-
-`legal_entity` identifies an organisation that is not an establishment. It represents academy trusts, sponsoring bodies, foundation trusts, umbrella trusts and proprietor bodies.
-
-- One row represents one real-world legal entity. A SAT record, a MAT record and a sponsor record can resolve to the same row.
-- An establishment remains an `establishment`; the wider organisation concept is a union view, not a shared target table.
-- Academy-trust type is not a legal-entity type.
-- The current name is held here. Name history is not represented.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `legal_entity_id` | Yes | Generated opaque target identifier. |
-| `name` | Yes | Current name; for a company, its registered name. |
-| `legal_entity_type_id` | No | Controlled type where known. |
-| `charity_status_id` | No | Registered, exempt, excepted or not a charity; null when unknown. |
-| `incorporation_date` | No | Date of incorporation where incorporated. |
-| `dissolution_date` | No | Date of dissolution where known from an authoritative register. |
-
-The `legal_entity_type` vocabulary is: charitable company limited by guarantee; company limited by guarantee; private limited company; public limited company; limited liability partnership; charitable incorporated organisation; body incorporated by Royal Charter; unincorporated charitable trust; public body; overseas entity; sole trader; and traditional partnership.
-
-### Organisation identifier
-
-`organisation_identifier` holds an identifier issued by an external authority for a legal entity.
-
-- Identifier types are Companies House number, UKPRN and Charity Commission number.
-- A legal entity can have several values of one type over time, but only one current value of a type.
-- A current value is unique within its identifier type. A replaced value cannot be current for another legal entity.
-- Values are stored as text so leading zeroes are retained.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `organisation_identifier_id` | Yes | Generated opaque target identifier. |
-| `legal_entity_id` | Yes | The owning legal entity. |
-| `organisation_identifier_type_id` | Yes | Controlled identifier type. |
-| `value` | Yes | Identifier as issued. |
-| `is_current` | Yes | False when a value has been replaced. |
-
-### Establishment party role
-
-`establishment_party_role` records that a legal entity or person held a recognised role in relation to establishments for one continuous period.
-
-- The role types are academy trust, foundation trust, umbrella trust and school sponsor.
-- Every role has exactly one holder. Exactly one of `legal_entity_id` and `person_id` is set.
-- A person can hold only a school-sponsor role.
-- A party can hold the same role type more than once, but each row represents one continuous period. If a role ends and later starts again, the later period is a new row.
-- Periods for the same party and role type cannot overlap. A gap between periods is allowed.
-- Role assignability and role-retirement dates are not represented.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `establishment_party_role_id` | Yes | Generated opaque target identifier. |
-| `establishment_party_role_type_id` | Yes | Academy trust, foundation trust, umbrella trust or school sponsor. |
-| `legal_entity_id` | Conditional | The legal entity holding the role. |
-| `person_id` | Conditional | The person holding the role; permitted only for school sponsor. |
-| `start_date` | No | First date on which the role applies; null means unknown. |
-| `end_date` | No | First date on which the role no longer applies. |
-
-The school-sponsor role means that DfE recognised the party as a school sponsor. It does not, by itself, assert formal approval, sponsorship of a particular establishment or governance rights over an academy trust. Sponsorship of a particular establishment is recorded separately as an `establishment_responsibility`. Formal approval and trust-level governance rights are outside this model unless a reliable source is identified.
-
-### Academy trust classification
-
-`academy_trust_classification` records the classification held by an academy-trust role for a period.
-
-- The types are single-academy trust, multi-academy trust and secure single-academy trust.
-- Classifications exist only for academy-trust roles. Every academy-trust role has at least one classification.
-- Classification periods for one role cannot overlap and fall within the role's period where both boundaries are known.
-- A SAT-to-MAT change creates two classification periods for one continuous academy-trust role and one legal entity. It does not create a second legal entity or a second role.
-- The classification is recorded, not derived from the number of academies.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `academy_trust_classification_id` | Yes | Generated opaque target identifier. |
-| `establishment_party_role_id` | Yes | The academy-trust role being classified. |
-| `academy_trust_type_id` | Yes | Single-academy trust, multi-academy trust or secure single-academy trust. |
-| `start_date` | No | First date on which the classification applies; null means unknown. |
-| `end_date` | No | First date on which the classification no longer applies. |
-
-#### Date semantics
-
-The two periods represent separate lifecycle facts:
-
-| Record | Meaning | What causes a new period? |
-| --- | --- | --- |
-| `establishment_party_role` | When did this party act as an academy trust? | The academy-trust role ends, or it ends and later restarts. |
-| `academy_trust_classification` | During that academy-trust role, when was it a SAT, MAT or secure SAT? | The recorded academy-trust type changes. |
-
-The role is the longer-lived concept. A classification describes the academy-trust role; it is not a second role and it is not the legal entity's lifecycle. Neither period says when the trust ran a particular academy; that period belongs to `establishment_responsibility`. One continuous role can therefore contain several successive classification periods.
-
-The dates follow these rules:
-
-- A classification cannot exist without its academy-trust role.
-- Every known part of a classification period falls within the role period.
-- Classification periods for the same role do not overlap.
-- Successive classifications can meet on the same date because periods are half open: the earlier classification ends on the first day the later classification applies.
-- Ending a classification does not end the academy-trust role when another classification starts immediately.
-- Ending the academy-trust role ends every classification under it. If the party later becomes an academy trust again, that is a new role with its own classification history.
-- Null dates mean that the boundary is unknown. They do not mean that the role and classification are necessarily coterminous.
-
-### Establishment responsibility
-
-`establishment_responsibility` records that a legal entity or person runs, sponsors or supports an establishment, or is its proprietor, for a period.
-
-There is one row per party, establishment, responsibility type and period. Exactly one of `legal_entity_id` and `person_id` is set. A person can be the party only for `sponsored_by` and `proprietor`.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `establishment_responsibility_id` | Yes | Generated opaque target identifier. |
-| `establishment_id` | Yes | The existing establishment. |
-| `responsibility_type_id` | Yes | Controlled responsibility type. |
-| `legal_entity_id` | Conditional | Responsible legal entity. |
-| `person_id` | Conditional | Responsible person, where permitted. |
-| `start_date` | No | First date on which the responsibility applies; null means unknown. |
-| `end_date` | No | First date on which it no longer applies. |
-
-| Responsibility type | Meaning |
-| --- | --- |
-| `run_by_academy_trust` | The academy trust runs the academy or free school and is accountable for it. |
-| `sponsored_by` | The legal entity or person recorded as the establishment's sponsor. |
-| `supported_by_foundation_trust` | The foundation trust that supports a foundation school. |
-| `proprietor` | The legal entity or person responsible for managing an independent school, non-maintained special school or city technology college. This does not model ownership of premises or a proprietor company. |
-
-`maintained_by_local_authority` belongs to the accountability slice.
-
-### Organisation group
-
-`organisation_group` is a named group of establishments with its own lifecycle but no legal identity.
-
-- It is used only for federations, children's-centre groups and children's-centre collaborations.
-- It is not a legal entity and has neither a legal-entity type nor organisation identifiers. Its group UID, and any Group ID, are held in `group_identifier`.
-- Children's-centre groups and collaborations are coordinated by a local authority; federations are not.
-- Status is derived from dates.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `organisation_group_id` | Yes | Generated opaque target identifier. |
-| `name` | Yes | Current name. |
-| `organisation_group_type_id` | Yes | Federation, children's-centre group or children's-centre collaboration. |
-| `local_authority_id` | Conditional | Required for children's-centre types and absent for federations. |
-| `open_date` | No | First date on which the group existed, where known. |
-| `close_date` | No | First date on which the group no longer existed, where known. |
-
-### Organisation group member
-
-`organisation_group_member` records that an establishment belongs to an organisation group for a period.
-
-Only establishments can be group members in this slice.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `organisation_group_member_id` | Yes | Generated opaque target identifier. |
-| `organisation_group_id` | Yes | The organisation group. |
-| `establishment_id` | Yes | The member establishment. |
-| `joined_date` | No | First date on which membership applies; null means unknown. |
-| `left_date` | No | First date on which membership no longer applies. |
-| `is_lead_centre` | Conditional | Used only for children's-centre groups. True identifies the lead centre; null means the source does not say. Lead-centre history is not represented. |
-
-### Group identifier
-
-`group_identifier` holds the group UIDs and Group IDs that identify an establishment-party role or an organisation group.
-
-- **Owner:** exactly one of `establishment_party_role_id` and `organisation_group_id` is set. A group identifier never belongs to a legal entity or person directly: Outwood Grange Academies Trust is one legal entity whose academy-trust role holds UID `4119` and Group ID `TR01585`, and whose school-sponsor role holds UID `4118` and Group ID `SP00396`.
-- **Types:** group UID and Group ID.
-- **One scheme, two issuers:** there is one group UID scheme. Values migrated from GIAS have issuer GIAS; values allocated after cutover have issuer Establishment Registry.
-- **Several values per owner:** a SAT-to-MAT consolidation gives one academy-trust role two UIDs, for example `2224` (the SAT record) and `17488` (the MAT record), and one Group ID, `TR00125`, stored once. The current value is the one the owner is known by now; the others are kept so that old references still resolve.
-- **Uniqueness:** a group UID is unique across all owners and both issuers. A Group ID is unique across owners.
-- **Values** are stored as text, as issued. A Group ID keeps its prefix, such as `TR`, `SP` or `UT`.
-- Proprietors have no GIAS group record, so they have no group identifier.
-
-| Attribute | Required | Rule |
-| --- | --- | --- |
-| `group_identifier_id` | Yes | Generated opaque target identifier. |
-| `establishment_party_role_id` | Conditional | The owning role. |
-| `organisation_group_id` | Conditional | The owning organisation group. |
-| `group_identifier_type_id` | Yes | Group UID or Group ID. |
-| `identifier_issuer_id` | Yes | GIAS or Establishment Registry. |
-| `value` | Yes | The identifier as issued. |
-| `is_current` | Yes | True for the value the owner is known by now. False for a value kept so that old references still resolve. |
 
 ## Derived views
 

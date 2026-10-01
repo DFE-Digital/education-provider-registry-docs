@@ -44,7 +44,9 @@ try {
     $sourceSql = (Get-Content -LiteralPath $transformSql -Raw).Replace('$(URN)', [string]$Urn)
     $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication
     $connection.Open(); $command = $connection.CreateCommand(); $command.CommandText = $sourceSql; $reader = $command.ExecuteReader()
-    if (-not $reader.Read()) { throw "No transformed row returned for URN $Urn" }
+    if (-not $reader.Read()) {
+        throw "No transformed row returned for URN $Urn. Confirm that dbo.Establishment in source database '$SourceDatabase' contains this URN and that the local BAU snapshot has been refreshed to the extract containing T1."
+    }
     $values = for ($i = 0; $i -lt $reader.FieldCount; $i++) { if ($reader.IsDBNull($i)) { 'NULL' } else { $reader.GetValue($i).ToString().Replace('|', ' ') } }
     $row = ($values -join '|') | ConvertFrom-Csv -Delimiter '|' -Header $transformHeader
 }

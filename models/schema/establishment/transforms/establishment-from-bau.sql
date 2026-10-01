@@ -11,7 +11,7 @@
     Change @URN to transform another establishment.
 */
 
--- Supply URN with sqlcmd, for example: -v URN=106431
+-- Supply URN with sqlcmd, for example: -v URN=136102
 DECLARE @URN numeric(19, 0) = $(URN);
 
 WITH source_establishment AS (

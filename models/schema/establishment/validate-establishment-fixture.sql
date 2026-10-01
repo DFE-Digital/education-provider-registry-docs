@@ -1,7 +1,8 @@
 -- Shared validation for the established core-Establishment fixture.
--- The establishment-party-role tables have their own bounded T20 fixture
--- and validation. Organisation groups and group identifiers are optional
--- slices and are validated by their own fixtures when populated.
+-- The establishment-party-role tables have their own bounded T1 fixture
+-- and validation. Organisation groups, group identifiers and specialist/SEN
+-- child tables are optional slices and are validated by their own fixtures or
+-- source-specific assertions when populated.
 DO $$
 DECLARE
     r record;
@@ -25,7 +26,10 @@ BEGIN
               'organisation_identifier',
               'organisation_identifier_type',
               'person',
-              'responsibility_type'
+              'responsibility_type',
+              'specialist_provision',
+              'resourced_provision',
+              'sen_unit_provision'
           )
         ORDER BY table_name
     LOOP
@@ -57,6 +61,9 @@ WHERE table_schema = 'establishment'
       'organisation_identifier',
       'organisation_identifier_type',
       'person',
-      'responsibility_type'
+      'responsibility_type',
+      'specialist_provision',
+      'resourced_provision',
+      'sen_unit_provision'
   )
 ORDER BY table_name;

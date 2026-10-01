@@ -46,7 +46,7 @@ $geographicReferenceRunner = Join-Path $automationRoot 'seed-geographic-referenc
 $exporter = Join-Path $automationRoot 'export-establishment-fixture-from-local-target.ps1'
 $approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
 $rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
-$approvalUrns = @(100018, 106431, 136102)
+$approvalUrns = @(136102)
 $checkedInSeedRoot = Join-Path $schemaRoot 'seed'
 $generatedSeedRoot = Join-Path $checkedInSeedRoot 'generated'
 if (-not $ExportDirectory) { $ExportDirectory = $generatedSeedRoot }
@@ -124,7 +124,7 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Checked-in fixture export failed.' }
         if ($ExportDirectory -eq $generatedSeedRoot) {
             Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-reference-data.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-reference-data.sql') -Force
-            Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-establishment-fixture.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-establishment-fixture.sql') -Force
+            Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-t1-establishment-136102.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-t1-establishment-136102.sql') -Force
             Write-Host 'Checked-in SQL fixtures refreshed from the validated local BAU target.'
         }
     }

@@ -10,7 +10,7 @@ param(
     [string]$PostgresDatabase = 'establishment_local',
     [string]$PostgresUser = 'postgres',
     [string]$PostgresPassword = $env:PGPASSWORD,
-    [string[]]$SeedFile = @('seed-establishment-fixture.sql')
+    [string[]]$SeedFile = @('seed-t1-establishment-136102.sql')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -30,7 +30,7 @@ $academyTrustReferenceDataSql = Join-Path $seedRoot 'seed-academy-trust-referenc
 $migrationEvidenceSql = Join-Path $seedRoot 'seed-migration-evidence.sql'
 $approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
 $rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
-$approvalUrns = @(100018, 106431, 136102)
+$approvalUrns = @(136102)
 $seedPaths = @($SeedFile | ForEach-Object {
     if ([System.IO.Path]::IsPathRooted($_)) { $_ } else { Join-Path $seedRoot $_ }
 })
