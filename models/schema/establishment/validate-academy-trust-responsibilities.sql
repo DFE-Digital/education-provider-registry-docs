@@ -8,16 +8,10 @@ BEGIN
     SELECT count(DISTINCT er.establishment_responsibility_id) INTO actual_count
     FROM establishment.establishment_responsibility AS er
     JOIN establishment.establishment AS e ON e.establishment_id = er.establishment_id
-    JOIN establishment.legal_entity AS le ON le.legal_entity_id = er.legal_entity_id
-    JOIN establishment.organisation_identifier AS oi ON oi.legal_entity_id = le.legal_entity_id
-    JOIN establishment.organisation_identifier_type AS oit ON oit.organisation_identifier_type_id = oi.organisation_identifier_type_id
-    WHERE e.urn = 136102
-      AND oit.name = 'Companies House number'
-      AND oi.value = '07747126'
-      AND oi.is_current;
+    WHERE e.urn = 136102;
 
-    IF actual_count <> 2 THEN
-        RAISE EXCEPTION 'T1 validation expected two responsibilities for URN 136102 but found %', actual_count;
+    IF actual_count <> 3 THEN
+        RAISE EXCEPTION 'T1 validation expected three responsibilities for URN 136102 but found %', actual_count;
     END IF;
 
     IF NOT EXISTS (
@@ -65,6 +59,61 @@ BEGIN
 END
 $$;
 
+-- T2: URN 134314 has a different party for academy-trust and school-sponsor
+-- responsibilities. The sponsor has no Companies House identifier in source.
+DO $$
+DECLARE
+    actual_count integer;
+BEGIN
+    SELECT count(DISTINCT er.establishment_responsibility_id) INTO actual_count
+    FROM establishment.establishment_responsibility AS er
+    JOIN establishment.establishment AS e ON e.establishment_id = er.establishment_id
+    WHERE e.urn = 134314;
+
+    IF actual_count <> 3 THEN
+        RAISE EXCEPTION 'T2 validation expected three responsibilities for URN 134314 but found %', actual_count;
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM establishment.establishment_responsibility AS er
+        JOIN establishment.establishment AS e ON e.establishment_id = er.establishment_id
+        JOIN establishment.legal_entity AS le ON le.legal_entity_id = er.legal_entity_id
+        JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
+        JOIN establishment.establishment_party_role_type AS role_type ON role_type.establishment_party_role_type_id = role.establishment_party_role_type_id
+        JOIN establishment.responsibility_type AS rt ON rt.responsibility_type_id = er.responsibility_type_id
+        JOIN establishment.group_identifier AS gi ON gi.establishment_party_role_id = role.establishment_party_role_id
+        WHERE e.urn = 134314
+          AND le.name = 'HIVE EDUCATION TRUST'
+          AND role_type.name = 'Academy trust'
+          AND rt.name = 'Run by academy trust'
+          AND gi.value = '23869'
+          AND er.start_date = DATE '2021-10-04'
+    ) THEN
+        RAISE EXCEPTION 'T2 validation expected Hive Education Trust as the academy trust for URN 134314';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM establishment.establishment_responsibility AS er
+        JOIN establishment.establishment AS e ON e.establishment_id = er.establishment_id
+        JOIN establishment.legal_entity AS le ON le.legal_entity_id = er.legal_entity_id
+        JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
+        JOIN establishment.establishment_party_role_type AS role_type ON role_type.establishment_party_role_type_id = role.establishment_party_role_type_id
+        JOIN establishment.responsibility_type AS rt ON rt.responsibility_type_id = er.responsibility_type_id
+        JOIN establishment.group_identifier AS gi ON gi.establishment_party_role_id = role.establishment_party_role_id
+        WHERE e.urn = 134314
+          AND le.name = 'Diocese of London'
+          AND role_type.name = 'School sponsor'
+          AND rt.name = 'Sponsored by'
+          AND gi.value = '2914'
+          AND er.start_date = DATE '2007-09-01'
+    ) THEN
+        RAISE EXCEPTION 'T2 validation expected Diocese of London as the external sponsor for URN 134314';
+    END IF;
+END
+$$;
+
 SELECT e.urn,
        le.name AS legal_entity_name,
        oi.value AS companies_house_number,
@@ -78,8 +127,8 @@ SELECT e.urn,
 FROM establishment.establishment_responsibility AS er
 JOIN establishment.establishment AS e ON e.establishment_id = er.establishment_id
 JOIN establishment.legal_entity AS le ON le.legal_entity_id = er.legal_entity_id
-JOIN establishment.organisation_identifier AS oi ON oi.legal_entity_id = le.legal_entity_id
-JOIN establishment.organisation_identifier_type AS oit ON oit.organisation_identifier_type_id = oi.organisation_identifier_type_id
+LEFT JOIN establishment.organisation_identifier AS oi ON oi.legal_entity_id = le.legal_entity_id
+LEFT JOIN establishment.organisation_identifier_type AS oit ON oit.organisation_identifier_type_id = oi.organisation_identifier_type_id
 JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
 JOIN establishment.establishment_party_role_type AS role_type ON role_type.establishment_party_role_type_id = role.establishment_party_role_type_id
 JOIN establishment.responsibility_type AS rt ON rt.responsibility_type_id = er.responsibility_type_id
@@ -91,9 +140,9 @@ LEFT JOIN establishment.group_identifier AS uid ON uid.establishment_party_role_
 LEFT JOIN establishment.group_identifier AS group_id ON group_id.establishment_party_role_id = role.establishment_party_role_id
     AND group_id.group_identifier_type_id = (SELECT group_identifier_type_id FROM establishment.group_identifier_type WHERE name = 'Group ID')
     AND group_id.is_current
-WHERE e.urn = 136102
-  AND oit.name = 'Companies House number'
-  AND oi.is_current
+WHERE e.urn IN (136102, 134314)
+  AND (oit.name = 'Companies House number' OR oit.name IS NULL)
+  AND (oi.is_current OR oi.is_current IS NULL)
 ORDER BY role_type.name;
 
 DO $$

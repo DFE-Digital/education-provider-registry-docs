@@ -8,7 +8,7 @@ BEGIN;
 
 CREATE TEMP TABLE establishment_party_role_fixture (
     legal_entity_name text NOT NULL,
-    companies_house_number text NOT NULL,
+    companies_house_number text,
     ukprn text,
     legal_entity_incorporation_date date,
     group_uid text NOT NULL,
@@ -35,14 +35,25 @@ INSERT INTO establishment.legal_entity (name, incorporation_date)
 SELECT DISTINCT f.legal_entity_name,
        f.legal_entity_incorporation_date
 FROM establishment_party_role_fixture AS f
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM establishment.organisation_identifier AS oi
-    JOIN establishment.organisation_identifier_type AS oit
-      ON oit.organisation_identifier_type_id = oi.organisation_identifier_type_id
-    WHERE oit.name = 'Companies House number'
-      AND oi.value = f.companies_house_number
-      AND oi.is_current
+WHERE (
+    f.companies_house_number IS NOT NULL
+    AND NOT EXISTS (
+        SELECT 1
+        FROM establishment.organisation_identifier AS oi
+        JOIN establishment.organisation_identifier_type AS oit
+          ON oit.organisation_identifier_type_id = oi.organisation_identifier_type_id
+        WHERE oit.name = 'Companies House number'
+          AND oi.value = f.companies_house_number
+          AND oi.is_current
+    )
+)
+OR (
+    f.companies_house_number IS NULL
+    AND NOT EXISTS (
+        SELECT 1
+        FROM establishment.legal_entity AS existing
+        WHERE upper(btrim(existing.name)) = upper(btrim(f.legal_entity_name))
+    )
 );
 
 INSERT INTO establishment.organisation_identifier (
@@ -64,8 +75,13 @@ LEFT JOIN establishment.organisation_identifier AS existing
   ON existing.organisation_identifier_type_id = oit.organisation_identifier_type_id
  AND existing.value = f.companies_house_number
  AND existing.is_current
-WHERE existing.organisation_identifier_id IS NULL;
+WHERE f.companies_house_number IS NOT NULL
+  AND existing.organisation_identifier_id IS NULL;
 
+-- Some source parties, such as the Diocese of London in T2, have no
+-- Companies House number. Do not invent an identifier. Their legal entity,
+-- role, group identifiers and responsibility are resolved by the source name
+-- and group UID instead.
 INSERT INTO establishment.organisation_identifier (
     legal_entity_id,
     organisation_identifier_type_id,
@@ -176,7 +192,7 @@ SELECT role.establishment_party_role_id,
        git.group_identifier_type_id,
        issuer.identifier_issuer_id,
        f.group_uid,
-       true
+       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
 FROM establishment_party_role_fixture AS f
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.name = 'Companies House number'
@@ -199,7 +215,8 @@ WHERE NOT EXISTS (
     FROM establishment.group_identifier AS existing
     WHERE existing.group_identifier_type_id = git.group_identifier_type_id
       AND existing.value = f.group_uid
-);
+)
+ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
 
 INSERT INTO establishment.group_identifier (
     establishment_party_role_id,
@@ -212,7 +229,7 @@ SELECT role.establishment_party_role_id,
        git.group_identifier_type_id,
        issuer.identifier_issuer_id,
        f.group_id,
-       true
+       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
 FROM establishment_party_role_fixture AS f
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.name = 'Companies House number'
@@ -236,7 +253,8 @@ WHERE f.group_id IS NOT NULL
       FROM establishment.group_identifier AS existing
       WHERE existing.group_identifier_type_id = git.group_identifier_type_id
         AND existing.value = f.group_id
-  );
+  )
+ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
 
 INSERT INTO establishment.establishment_responsibility (
     establishment_id,
@@ -261,6 +279,93 @@ JOIN establishment.organisation_identifier AS company_identifier
  AND company_identifier.is_current
 JOIN establishment.responsibility_type AS rt
   ON rt.name = f.responsibility_type
+ON CONFLICT DO NOTHING;
+
+INSERT INTO establishment.establishment_party_role (
+    establishment_party_role_type_id, legal_entity_id, start_date, end_date
+)
+SELECT role_type.establishment_party_role_type_id,
+       le.legal_entity_id,
+       f.role_start_date,
+       f.role_end_date
+FROM establishment_party_role_fixture AS f
+JOIN establishment.legal_entity AS le
+  ON le.name = f.legal_entity_name
+JOIN establishment.establishment_party_role_type AS role_type
+  ON role_type.name = f.establishment_party_role_type
+WHERE f.companies_house_number IS NULL
+  AND NOT EXISTS (
+      SELECT 1
+      FROM establishment.establishment_party_role AS existing
+      WHERE existing.legal_entity_id = le.legal_entity_id
+        AND existing.establishment_party_role_type_id = role_type.establishment_party_role_type_id
+  );
+
+INSERT INTO establishment.group_identifier (
+    establishment_party_role_id, group_identifier_type_id,
+    identifier_issuer_id, value, is_current
+)
+SELECT role.establishment_party_role_id,
+       git.group_identifier_type_id,
+       issuer.identifier_issuer_id,
+       f.group_uid,
+       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
+FROM establishment_party_role_fixture AS f
+JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
+JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
+JOIN establishment.establishment_party_role_type AS role_type
+  ON role_type.establishment_party_role_type_id = role.establishment_party_role_type_id
+ AND role_type.name = f.establishment_party_role_type
+JOIN establishment.group_identifier_type AS git ON git.name = 'Group UID'
+JOIN establishment.identifier_issuer AS issuer ON issuer.name = 'GIAS'
+WHERE f.companies_house_number IS NULL
+  AND NOT EXISTS (
+      SELECT 1 FROM establishment.group_identifier AS existing
+      WHERE existing.group_identifier_type_id = git.group_identifier_type_id
+        AND existing.value = f.group_uid
+  )
+ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
+
+INSERT INTO establishment.group_identifier (
+    establishment_party_role_id, group_identifier_type_id,
+    identifier_issuer_id, value, is_current
+)
+SELECT role.establishment_party_role_id,
+       git.group_identifier_type_id,
+       issuer.identifier_issuer_id,
+       f.group_id,
+       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
+FROM establishment_party_role_fixture AS f
+JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
+JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
+JOIN establishment.establishment_party_role_type AS role_type
+  ON role_type.establishment_party_role_type_id = role.establishment_party_role_type_id
+ AND role_type.name = f.establishment_party_role_type
+JOIN establishment.group_identifier_type AS git ON git.name = 'Group ID'
+JOIN establishment.identifier_issuer AS issuer ON issuer.name = 'GIAS'
+WHERE f.companies_house_number IS NULL
+  AND f.group_id IS NOT NULL
+  AND NOT EXISTS (
+      SELECT 1 FROM establishment.group_identifier AS existing
+      WHERE existing.group_identifier_type_id = git.group_identifier_type_id
+        AND existing.value = f.group_id
+  )
+ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
+
+INSERT INTO establishment.establishment_responsibility (
+    establishment_id, legal_entity_id, responsibility_type_id,
+    start_date, end_date
+)
+SELECT e.establishment_id,
+       le.legal_entity_id,
+       rt.responsibility_type_id,
+       f.responsibility_start_date,
+       f.responsibility_end_date
+FROM establishment_party_role_fixture AS f
+JOIN establishment.establishment AS e ON e.urn = f.establishment_urn
+JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
+JOIN establishment.responsibility_type AS rt ON rt.name = f.responsibility_type
+WHERE f.companies_house_number IS NULL
 ON CONFLICT DO NOTHING;
 
 -- Keep source-derived dates and inference decisions outside the live model.

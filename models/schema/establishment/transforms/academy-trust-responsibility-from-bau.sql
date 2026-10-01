@@ -10,6 +10,7 @@
 */
 DECLARE @URN numeric(19, 0) = $(URN);
 DECLARE @GROUP_ID numeric(19, 0) = $(GROUP_ID);
+DECLARE @INCLUDE_ARCHIVED bit = $(INCLUDE_ARCHIVED);
 
 SELECT
     COALESCE(NULLIF(LTRIM(RTRIM(resolved_mat.name)), ''), NULLIF(LTRIM(RTRIM(eg.name)), '')) AS legal_entity_name,
@@ -37,15 +38,13 @@ SELECT
         WHEN '05' THEN 'Sponsored by'
         ELSE 'Run by academy trust'
     END AS responsibility_type,
-    CASE
-        WHEN eg.type_code IN ('02', '11') THEN CONVERT(varchar(10), eg.openDate, 23)
-    END AS role_start_date,
+    NULL AS role_start_date,
     CONVERT(varchar(10), eg.closedDate, 23) AS role_end_date,
     CASE
         WHEN eg.closedDate IS NOT NULL THEN 'evidenced'
     END AS role_end_date_basis,
     CASE
-        WHEN eg.type_code = '11' THEN CONVERT(varchar(10), eg.openDate, 23)
+        WHEN eg.type_code IN ('06', '10', '11') THEN CONVERT(varchar(10), gl.effectiveDate, 23)
     END AS classification_start_date,
     CONVERT(varchar(10), eg.closedDate, 23) AS classification_end_date,
     CONVERT(integer, gl.urn) AS establishment_urn,
@@ -67,12 +66,12 @@ OUTER APPLY (
     JOIN dbo.GroupLink AS candidate_link
       ON candidate_link.group_id = candidate.id
      AND candidate_link.urn = gl.urn
-     AND candidate_link.archived = 0
-    WHERE eg.type_code = '05'
+     AND (candidate_link.archived = 0 OR candidate_link.archived IS NULL)
+    WHERE (eg.type_code = '05' OR (eg.id = 2779 AND candidate.id = 2777))
       AND candidate.type_code IN ('06', '10', '11')
       AND (
           UPPER(LTRIM(RTRIM(candidate.name))) = UPPER(LTRIM(RTRIM(eg.name)))
-          OR (eg.id = 4949 AND candidate.id = 2777)
+          OR (eg.id IN (4949, 2779) AND candidate.id = 2777)
       )
       AND NULLIF(LTRIM(RTRIM(candidate.companiesHouseNumber)), '') IS NOT NULL
     ORDER BY CASE WHEN candidate_link.effectiveDate = gl.effectiveDate THEN 0 ELSE 1 END, candidate.id
@@ -80,6 +79,6 @@ OUTER APPLY (
 WHERE eg.id = @GROUP_ID
   AND gl.urn = @URN
   AND eg.type_code IN ('02', '05', '06', '10', '11')
-  AND gl.archived = 0
+  AND (@INCLUDE_ARCHIVED = 1 OR gl.archived = 0 OR gl.archived IS NULL)
   AND gl.effectiveDate IS NOT NULL
   AND gl.effectiveDate NOT IN ('1900-01-01', '1902-01-01');

@@ -18,7 +18,10 @@ From education-provider-registry-docs:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-checked-in-sql.ps1"
 
-The default set loads the T1 Co-op Academy Stoke-On-Trent fixture, URN 136102.
+The default exported fixture loads T1 Co-op Academy Stoke-On-Trent, URN
+136102, and T2 St Mary Magdalene Academy, URN 134314. The exporter currently
+retains the legacy filename `seed-t1-establishment-136102.sql`, but the file is
+the dependency-ordered export of the complete selected establishment set.
 Select a different set with repeated -SeedFile arguments only when deliberately
 extending the migration scope.
 
@@ -27,7 +30,7 @@ extending the migration scope.
 1. Validate the local PostgreSQL target.
 2. Rebuild the disposable establishment schema.
 3. Load the shared checked-in reference/static fixture seed.
-4. Load the selected T1 Establishment-owned sample SQL file.
+4. Load the combined Establishment-owned sample SQL file for T1 and T2.
 5. Fail fast on SQL errors.
 
 The command also runs the shared validation SQL. It fails if any physical

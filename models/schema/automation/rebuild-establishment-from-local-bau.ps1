@@ -68,6 +68,7 @@ foreach ($responsibility in $establishmentPartyRoleResponsibilities) {
     $sourceGroupId = [int]$responsibility.sourceGroupId
     if ($responsibilityUrn -notin $urns) { throw "Establishment-party-role fixture URN must also be in urns: $responsibilityUrn" }
     if ($sourceGroupId -lt 1) { throw "Establishment-party-role source group ID must be positive: $sourceGroupId" }
+    if ($null -ne $responsibility.includeArchived -and $responsibility.includeArchived -isnot [bool]) { throw "includeArchived must be boolean for source group $sourceGroupId" }
 }
 
 New-Item -ItemType Directory -Path $FixtureDirectory -Force | Out-Null
@@ -90,15 +91,16 @@ try {
     & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustReferenceDataSql
     if ($LASTEXITCODE -ne 0) { throw 'Academy-trust reference-data seed failed.' }
 
-    & $geographicReferenceRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication -FixtureDirectory $FixtureDirectory
+    $childSqlPassword = if ($UseWindowsAuthentication) { $null } else { $env:EPR_BAU_SQL_PASSWORD }
+    & $geographicReferenceRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $childSqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication -FixtureDirectory $FixtureDirectory
     if ($LASTEXITCODE -ne 0) { throw 'Geographic reference-data seed failed.' }
 
     foreach ($urn in $urns) {
-        & $establishmentRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn $urn -FixturePath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv")
+        & $establishmentRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $childSqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn $urn -FixturePath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv")
         if ($LASTEXITCODE -ne 0) { throw "Establishment migration failed for URN $urn." }
     }
     foreach ($responsibility in $establishmentPartyRoleResponsibilities) {
-        & $academyTrustRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn ([int]$responsibility.urn) -SourceGroupId ([int]$responsibility.sourceGroupId) -FixturePath (Join-Path $FixtureDirectory "epr-academy-trust-$($responsibility.fixture)-$($responsibility.urn)-fixture.csv")
+        & $academyTrustRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $childSqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication -IncludeArchived:([bool]$responsibility.includeArchived) -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn ([int]$responsibility.urn) -SourceGroupId ([int]$responsibility.sourceGroupId) -FixturePath (Join-Path $FixtureDirectory "epr-academy-trust-$($responsibility.fixture)-$($responsibility.urn)-fixture.csv")
         if ($LASTEXITCODE -ne 0) { throw "Establishment-party-role migration failed for fixture $($responsibility.fixture)." }
     }
 

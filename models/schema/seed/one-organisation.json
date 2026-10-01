@@ -1,6 +1,6 @@
 {
   "organisationType": "establishment-fixture-set",
-  "urns": [136102],
+  "urns": [136102, 134314],
   "establishmentPartyRoleResponsibilities": [
     {
       "urn": 136102,
@@ -9,8 +9,30 @@
     },
     {
       "urn": 136102,
+      "sourceGroupId": 2779,
+      "fixture": "T1-sat",
+      "includeArchived": true
+    },
+    {
+      "urn": 136102,
       "sourceGroupId": 4949,
       "fixture": "T1-sponsor"
+    },
+    {
+      "urn": 134314,
+      "sourceGroupId": 23869,
+      "fixture": "T2-mat"
+    },
+    {
+      "urn": 134314,
+      "sourceGroupId": 4737,
+      "fixture": "T2-sat",
+      "includeArchived": true
+    },
+    {
+      "urn": 134314,
+      "sourceGroupId": 2914,
+      "fixture": "T2-sponsor"
     }
   ]
 }
