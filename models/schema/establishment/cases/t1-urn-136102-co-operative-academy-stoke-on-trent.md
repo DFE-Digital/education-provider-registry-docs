@@ -13,14 +13,24 @@
 
 ## T1 group records
 
-| Source group | Source type | Target role | Target responsibility | Group ID |
-| ---: | --- | --- | --- | --- |
-| 2777 | Multi-academy trust | Academy trust | Run by academy trust | TR00567 |
-| 4949 | School sponsor | School sponsor | Sponsored by | SP00125 |
+| Source group | Source type | Source status | Effective date | Target role | Target responsibility | Group ID |
+| ---: | --- | --- | --- | --- | --- | --- |
+| 2779 | Single-academy trust | Archived | 1 September 2010 | Academy trust | Run by academy trust | TR00567 |
+| 2777 | Multi-academy trust | Active | 1 July 2015 | Academy trust | Run by academy trust | TR00567 |
+| 4949 | School sponsor | Active | 1 September 2010 | School sponsor | Sponsored by | SP00125 |
 
-The sponsor record is named `The Co-operative Group` in the local BAU copy and does not carry a Companies House number. T1 resolves it to the same legal entity as MAT group 2777, The Co-operative Academies Trust, Companies House number `07747126`. The two source group records remain distinct identifiers and roles in the migration evidence.
+The archived SAT group `2779` and active MAT group `2777` represent successive
+classifications of The Co-operative Academies Trust. The SAT period ends on 30
+June 2015, inferred as the day before the successor MAT link starts. The
+sponsor record is named `The Co-operative Group` in the local BAU copy and does
+not carry a Companies House number. T1 resolves it to the same legal entity as
+MAT group 2777, The Co-operative Academies Trust, Companies House number
+`07747126`. The three source group records remain distinct identifiers and
+roles in the migration evidence.
 
-Both responsibilities start on 1 September 2014 in the local BAU copy. The academy-trust classification is multi-academy trust.
+The sponsor responsibility starts on 1 September 2010. The academy-trust
+responsibility history starts with the SAT on 1 September 2010 and continues
+with the MAT from 1 July 2015.
 
 ## Relationship graph
 
@@ -28,7 +38,8 @@ Both responsibilities start on 1 September 2014 in the local BAU copy. The acade
 flowchart LR
     E["The Co-Operative Academy of Stoke-On-Trent<br/>URN 136102"]
     L["The Co-operative Academies Trust<br/>legal entity<br/>Companies House 07747126"]
-    M["Academy trust role<br/>MAT"]
+    M["Academy trust role<br/>SAT then MAT"]
+    T["Classification history<br/>SAT 2010-09-01 to 2015-06-30<br/>MAT from 2015-07-01"]
     S["School sponsor role"]
     MU["GIAS group UID 2777<br/>TR00567"]
     SU["GIAS group UID 4949<br/>SP00125"]
@@ -36,6 +47,7 @@ flowchart LR
     E -->|"Run by academy trust"| L
     E -->|"Sponsored by"| L
     L -->|"holds"| M
+    M -->|"classified by"| T
     L -->|"holds"| S
     M -->|"identified by"| MU
     S -->|"identified by"| SU
@@ -44,8 +56,9 @@ flowchart LR
 ## Extract query
 
 Run the following query against `establishment_local` after the T1 migration.
-It returns the establishment, its two responsibilities, the resolved legal
-entity, both party roles, the MAT classification and all four GIAS identifiers.
+It returns the establishment, its responsibility history, the resolved legal
+entity, both party roles, the SAT-to-MAT classification history and all GIAS
+identifiers.
 
 ```sql
 WITH target AS (

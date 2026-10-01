@@ -74,9 +74,9 @@ The scripts are intentionally restricted to the local
 
 ## Establishment approval tests
 
-The local Establishment schema has an approval test covering the complete data
-slice for T1, URN `136102`, plus a scope test that rejects any other
-establishment URN.
+The local Establishment schema has an approval test covering T1, URN `136102`,
+and a checked-in physical fixture for T2, URN `134314`. A scope test rejects
+any other establishment URN.
 
 The Establishment snapshots compare business data and stable reference keys;
 generated surrogate UUIDs are intentionally excluded because they are expected

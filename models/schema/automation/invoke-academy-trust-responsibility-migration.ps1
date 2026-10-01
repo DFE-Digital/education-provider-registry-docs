@@ -16,6 +16,7 @@ param(
     [string]$SqlUser = 'reader',
     [string]$SqlPassword = $env:EPR_BAU_SQL_PASSWORD,
     [switch]$UseWindowsAuthentication,
+    [switch]$IncludeArchived,
     [string]$PostgresHost = '127.0.0.1',
     [int]$PostgresPort = 5432,
     [string]$PostgresDatabase = 'establishment_local',
@@ -49,7 +50,7 @@ $header = 'legal_entity_name|companies_house_number|ukprn|legal_entity_incorpora
 
 $reader = $null; $command = $null; $connection = $null
 try {
-    $sourceSql = (Get-Content -LiteralPath $transformSql -Raw).Replace('$(URN)', [string]$Urn).Replace('$(GROUP_ID)', [string]$SourceGroupId)
+    $sourceSql = (Get-Content -LiteralPath $transformSql -Raw).Replace('$(URN)', [string]$Urn).Replace('$(GROUP_ID)', [string]$SourceGroupId).Replace('$(INCLUDE_ARCHIVED)', $(if ($IncludeArchived) { '1' } else { '0' }))
     $connection = New-LocalBauSqlConnection -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication
     $connection.Open()
     $command = $connection.CreateCommand()

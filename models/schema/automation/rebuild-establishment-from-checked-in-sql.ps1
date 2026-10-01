@@ -10,6 +10,9 @@ param(
     [string]$PostgresDatabase = 'establishment_local',
     [string]$PostgresUser = 'postgres',
     [string]$PostgresPassword = $env:PGPASSWORD,
+    # The BAU exporter writes the complete selected establishment set to this
+    # dependency-ordered file. Despite its legacy T1 filename, it now contains
+    # both T1 and T2 and must be loaded only once.
     [string[]]$SeedFile = @('seed-t1-establishment-136102.sql')
 )
 
