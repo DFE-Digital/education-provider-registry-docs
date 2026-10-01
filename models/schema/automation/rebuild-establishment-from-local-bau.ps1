@@ -1,13 +1,24 @@
 <#
 .SYNOPSIS
-Rebuilds establishment_local and migrates the selected Establishment slice from
-the approved local BAU SQL Server copy.
+Rebuilds establishment_local from the approved local BAU SQL Server copy, tests
+it, and refreshes the checked-in SQL fixtures.
 
 .DESCRIPTION
-This is the BAU-source Establishment workflow. It is deliberately a separate
-entry point from rebuild-establishment-from-checked-in-sql.ps1 so the
-developer's source-data choice is visible in the command name.
-##>
+Steps:
+  1. Recreate the establishment and migration schemas and load reference seeds.
+  2. Load geographic reference data from BAU.
+  3. Load each selected establishment, then each selected establishment-party link.
+  4. Print a summary and run all establishment tests.
+  5. Export the database and refresh the checked-in fixtures in seed/, unless
+     -ExportDirectory sends the export somewhere else for review.
+  6. With -IncludeGovernance, also rebuild governance_local and load governance.
+
+The selection is read from seed/fixture-selection.json. To run one step on its
+own, import EprLocalAutomation and call that step's function (see README.md).
+
+.EXAMPLE
+.\rebuild-establishment-from-local-bau.ps1 -SqlServer SL646104 -UseWindowsAuthentication
+#>
 [CmdletBinding()]
 param(
     [string]$SqlServer = 'localhost',
@@ -19,137 +30,58 @@ param(
     [string]$PostgresDatabase = 'establishment_local',
     [string]$PostgresUser = 'postgres',
     [string]$PostgresPassword = $env:PGPASSWORD,
-    [string]$FixtureDirectory = $env:TEMP,
+    # Parent folder for this run's working files.
+    [string]$FixtureDirectory = [System.IO.Path]::GetTempPath(),
+    # Export to this folder for review instead of refreshing seed/. By default the
+    # export goes to the run's working folder and is copied into seed/.
     [string]$ExportDirectory,
+    [switch]$IncludeGovernance,
     [switch]$KeepFixture
 )
 
 $ErrorActionPreference = 'Stop'
-$automationRoot = $PSScriptRoot
-$schemaRoot = Split-Path -Parent $automationRoot
-. (Join-Path $automationRoot 'common\local-database-guards.ps1')
-. (Join-Path $automationRoot 'common\sql-client-functions.ps1')
+Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLocalAutomation.psm1') -Force
 
-Assert-LocalBauSource -SqlServer $SqlServer -SourceDatabase $SourceDatabase
-Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $PostgresDatabase
+$source = New-BauSource -SqlServer $SqlServer -Database $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication
+$target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
+$selection = Get-FixtureSelection
+$workspace = New-RunWorkspace -ParentDirectory $FixtureDirectory
 
-$selectionPath = Join-Path $schemaRoot 'seed\one-organisation.json'
-$schemaSql = Join-Path $schemaRoot 'establishment\core-establishment-schema.sql'
-$migrationSchemaSql = Join-Path $schemaRoot 'migration\migration-schema.sql'
-$validationSql = Join-Path $schemaRoot 'establishment\validate-establishment-fixture.sql'
-$referenceDataSql = Join-Path $schemaRoot 'seed\seed-reference-data.sql'
-$academyTrustReferenceDataSql = Join-Path $schemaRoot 'seed\seed-academy-trust-reference-data.sql'
-$establishmentRunner = Join-Path $automationRoot 'invoke-establishment-migration.ps1'
-$academyTrustRunner = Join-Path $automationRoot 'invoke-academy-trust-responsibility-migration.ps1'
-$academyTrustValidationSql = Join-Path $schemaRoot 'establishment\validate-academy-trust-responsibilities.sql'
-$geographicReferenceRunner = Join-Path $automationRoot 'seed-geographic-reference-data-from-bau.ps1'
-$exporter = Join-Path $automationRoot 'export-establishment-fixture-from-local-target.ps1'
-$approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
-$rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
-$approvalUrns = @(136102, 134314)
-$checkedInSeedRoot = Join-Path $schemaRoot 'seed'
-$generatedSeedRoot = Join-Path $checkedInSeedRoot 'generated'
-if (-not $ExportDirectory) { $ExportDirectory = $generatedSeedRoot }
-$psql = Get-LocalPostgresClientPath
-
-foreach ($path in @($selectionPath, $schemaSql, $migrationSchemaSql, $validationSql, $referenceDataSql, $academyTrustReferenceDataSql, $establishmentRunner, $academyTrustRunner, $academyTrustValidationSql, $geographicReferenceRunner, $exporter, $approvalTest, $rowCountTest)) {
-    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required migration file not found: $path" }
-}
-
-$selection = Get-Content -LiteralPath $selectionPath -Raw | ConvertFrom-Json
-if ($selection.organisationType -ne 'establishment-fixture-set') { throw "The selection must have organisationType 'establishment-fixture-set'." }
-$urns = @($selection.urns | ForEach-Object { try { [int]$_ } catch { throw 'Every selected organisation URN must be an integer.' } })
-if ($urns.Count -eq 0) { throw 'The selection must contain at least one URN.' }
-if (($urns | Select-Object -Unique).Count -ne $urns.Count) { throw 'The selection must not contain duplicate URNs.' }
-foreach ($urn in $urns) { if ($urn -lt 100000 -or $urn -gt 999999) { throw "The selected URN is outside the valid range: $urn" } }
-$establishmentPartyRoleResponsibilities = @($selection.establishmentPartyRoleResponsibilities)
-foreach ($responsibility in $establishmentPartyRoleResponsibilities) {
-    $responsibilityUrn = [int]$responsibility.urn
-    $sourceGroupId = [int]$responsibility.sourceGroupId
-    if ($responsibilityUrn -notin $urns) { throw "Establishment-party-role fixture URN must also be in urns: $responsibilityUrn" }
-    if ($sourceGroupId -lt 1) { throw "Establishment-party-role source group ID must be positive: $sourceGroupId" }
-    if ($null -ne $responsibility.includeArchived -and $responsibility.includeArchived -isnot [bool]) { throw "includeArchived must be boolean for source group $sourceGroupId" }
-}
-
-New-Item -ItemType Directory -Path $FixtureDirectory -Force | Out-Null
-$securePassword = $null
-if (-not $UseWindowsAuthentication) {
-    $securePassword = Read-Host 'Local SQL Server reader password' -AsSecureString
-}
-$envPasswordBefore = $env:PGPASSWORD
-if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
-if ($securePassword) {
-    $env:EPR_BAU_SQL_PASSWORD = [System.Net.NetworkCredential]::new('', $securePassword).Password
-}
 try {
-    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $schemaSql
-    if ($LASTEXITCODE -ne 0) { throw 'Establishment schema rebuild failed.' }
-    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $migrationSchemaSql
-    if ($LASTEXITCODE -ne 0) { throw 'Migration schema rebuild failed.' }
-    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $referenceDataSql
-    if ($LASTEXITCODE -ne 0) { throw 'Establishment reference-data seed failed.' }
-    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustReferenceDataSql
-    if ($LASTEXITCODE -ne 0) { throw 'Academy-trust reference-data seed failed.' }
+    Initialize-EstablishmentDatabase -Target $target
+    Import-GeographicReferenceData -Source $source -Target $target -WorkingDirectory $workspace
 
-    $childSqlPassword = if ($UseWindowsAuthentication) { $null } else { $env:EPR_BAU_SQL_PASSWORD }
-    & $geographicReferenceRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $childSqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication -FixtureDirectory $FixtureDirectory
-    if ($LASTEXITCODE -ne 0) { throw 'Geographic reference-data seed failed.' }
-
-    foreach ($urn in $urns) {
-        & $establishmentRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $childSqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn $urn -FixturePath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv")
-        if ($LASTEXITCODE -ne 0) { throw "Establishment migration failed for URN $urn." }
+    foreach ($urn in $selection.Urns) {
+        Import-EstablishmentFromBau -Source $source -Target $target -Urn $urn -WorkingDirectory $workspace
     }
-    foreach ($responsibility in $establishmentPartyRoleResponsibilities) {
-        & $academyTrustRunner -SqlServer $SqlServer -SourceDatabase $SourceDatabase -SqlUser $SqlUser -SqlPassword $childSqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication -IncludeArchived:([bool]$responsibility.includeArchived) -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -Urn ([int]$responsibility.urn) -SourceGroupId ([int]$responsibility.sourceGroupId) -FixturePath (Join-Path $FixtureDirectory "epr-academy-trust-$($responsibility.fixture)-$($responsibility.urn)-fixture.csv")
-        if ($LASTEXITCODE -ne 0) { throw "Establishment-party-role migration failed for fixture $($responsibility.fixture)." }
+    foreach ($link in $selection.PartyRoleLinks) {
+        Import-EstablishmentPartyRoleFromBau -Source $source -Target $target -Urn $link.Urn `
+            -SourceGroupId $link.SourceGroupId -IncludeArchived:$link.IncludeArchived -WorkingDirectory $workspace
     }
 
-    $urnList = $urns -join ', '
-    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -c "SELECT e.urn, e.name, m.pupil_count, m.free_school_meal_measure FROM establishment.establishment AS e LEFT JOIN establishment.capacity_and_pupil_measures AS m ON m.establishment_id = e.establishment_id WHERE e.urn IN ($urnList) ORDER BY e.urn;"
-    if ($LASTEXITCODE -ne 0) { throw 'Establishment validation query failed.' }
-    if ($establishmentPartyRoleResponsibilities.Count -gt 0) {
-        & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $academyTrustValidationSql
-        if ($LASTEXITCODE -ne 0) { throw 'Academy-trust fixture validation failed.' }
-    }
-    & $psql -h $PostgresHost -p $PostgresPort -U $PostgresUser -d $PostgresDatabase -w -v ON_ERROR_STOP=1 -f $validationSql
-    if ($LASTEXITCODE -ne 0) { throw 'Establishment fixture validation failed.' }
-    foreach ($approvalUrn in $approvalUrns) {
-        if ($urns -contains $approvalUrn) {
-            & $approvalTest -Urn $approvalUrn -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
-            if ($LASTEXITCODE -ne 0) { throw "Establishment approval test failed for URN $approvalUrn." }
-        }
-    }
-    & $rowCountTest -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
-    if ($LASTEXITCODE -ne 0) { throw 'Establishment row-count approval test failed.' }
+    Show-EstablishmentSummary -Target $target -Urn $selection.Urns
+    Invoke-EstablishmentTests -Target $target -Selection $selection
+
     if ($ExportDirectory) {
-        & $exporter -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -OutputDirectory $ExportDirectory
-        if ($LASTEXITCODE -ne 0) { throw 'Checked-in fixture export failed.' }
-        if ($ExportDirectory -eq $generatedSeedRoot) {
-            Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-reference-data.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-reference-data.sql') -Force
-            Copy-Item -LiteralPath (Join-Path $ExportDirectory 'seed-t1-establishment-136102.sql') -Destination (Join-Path $checkedInSeedRoot 'seed-t1-establishment-136102.sql') -Force
-            Write-Host 'Checked-in SQL fixtures refreshed from the validated local BAU target.'
-        }
+        Export-EstablishmentFixture -Target $target -OutputDirectory $ExportDirectory
     }
-    Write-Host "BAU-source Establishment rebuild completed for URNs: $urnList."
-    if ($KeepFixture) { Write-Host "Fixtures retained in: $FixtureDirectory" }
+    else {
+        $exportDirectory = Join-Path $workspace 'export'
+        Export-EstablishmentFixture -Target $target -OutputDirectory $exportDirectory
+        Update-CheckedInSeed -FromDirectory $exportDirectory
+    }
+
+    if ($IncludeGovernance) {
+        $governanceTarget = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database 'governance_local' -User $PostgresUser -Password $PostgresPassword
+        Initialize-GovernanceDatabase -Target $governanceTarget
+        foreach ($urn in $selection.Urns) {
+            Import-GovernanceFromBau -Source $source -Target $governanceTarget -Urn $urn -WorkingDirectory $workspace
+        }
+        Show-GovernanceSummary -Target $governanceTarget -Urn $selection.Urns
+    }
+
+    Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
 }
 finally {
-    Remove-Item Env:EPR_BAU_SQL_PASSWORD -ErrorAction SilentlyContinue
-    Remove-Variable securePassword -ErrorAction SilentlyContinue
-    $env:PGPASSWORD = $envPasswordBefore
-    if (-not $KeepFixture) {
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-government-office-region-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-district-administrative-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-administrative-ward-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-parliamentary-constituency-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-lsoa-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-msoa-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-urban-rural-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-gss-local-authority-code-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gss-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $FixtureDirectory 'epr-local-authority-gor-mapping-fixture.csv') -Force -ErrorAction SilentlyContinue
-        foreach ($urn in $urns) { Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-registry-establishment-$urn-fixture.csv") -Force -ErrorAction SilentlyContinue }
-        foreach ($responsibility in $establishmentPartyRoleResponsibilities) { Remove-Item -LiteralPath (Join-Path $FixtureDirectory "epr-academy-trust-$($responsibility.fixture)-$($responsibility.urn)-fixture.csv") -Force -ErrorAction SilentlyContinue }
-    }
+    Remove-RunWorkspace -Path $workspace -Keep:$KeepFixture
 }

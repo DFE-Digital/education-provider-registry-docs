@@ -2,6 +2,8 @@
 
 ## Status
 
+**1 October 2026:** the automation has been refactored into the `EprLocalAutomation` module with thin entry-point scripts. See the [automation README](README.md). `rebuild-and-run-registry-data-fixture.ps1` is replaced by `rebuild-establishment-from-local-bau.ps1 -IncludeGovernance`. The remaining work listed below is unchanged.
+
 The two explicit Establishment rebuild paths and their runbooks are
 implemented. Complete checked-in fixture capture remains dependent on a
 successful local BAU extraction.
@@ -43,10 +45,11 @@ replayed independently by the checked-in-fixture rebuild.
 
 After a successful BAU-source rebuild:
 
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -ExportDirectory ".\models\schema\seed\generated"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1"
 
-Review the generated reference and Establishment SQL before replacing the
-checked-in fixtures. Export is not an automatic Git commit.
+The rebuild refreshes the checked-in fixtures in seed/ directly; review them
+with git diff before committing. Export is not an automatic Git commit. Use
+-ExportDirectory to export elsewhere without touching seed/.
 
 ## Remaining work
 

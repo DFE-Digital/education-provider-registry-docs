@@ -2,6 +2,11 @@
 -- The PowerShell runner substitutes __FIXTURE_PATH__ with a local path before
 -- invoking psql. This avoids Windows drive-letter parsing in psql variables.
 -- The source extract is pipe-delimited CSV and has a header row.
+--
+-- Reference values arrive as target IDs, already mapped from BAU codes by
+-- transforms/establishment-from-bau.sql. That transform is the only place the
+-- mapping is defined; this load uses the IDs as given and relies on
+-- seed/seed-reference-data.sql for the reference rows.
 
 BEGIN;
 
@@ -28,8 +33,8 @@ CREATE TEMP TABLE source_establishment_fixture (
     reason_closed_code text,
     reason_closed_name text,
     last_changed_date date,
-    type_code text,
-    education_phase_code text,
+    establishment_type_id integer,
+    education_phase_id integer,
     school_capacity integer,
     pupil_count integer,
     free_school_meal_measure integer,
@@ -39,12 +44,12 @@ CREATE TEMP TABLE source_establishment_fixture (
     sen_unit_pupil_count integer,
     lower_statutory_age integer,
     upper_statutory_age integer,
-    gender_code text,
-    admissions_policy_code text,
-    boarders_code text,
-    nursery_provision_code text,
-    sixth_form_code text,
-    reserved_provision_code text,
+    gender_of_entry_type_id integer,
+    admissions_policy_id integer,
+    boarding_provision_id integer,
+    nursery_provision_id integer,
+    sixth_form_provision_id integer,
+    specialist_provision_type_id integer,
     main_site_name text,
     address_line_1 text,
     address_line_2 text,
@@ -117,80 +122,27 @@ BEGIN
 END;
 $$;
 
--- Reference data is normally loaded by seed/seed-reference-data.sql. The
--- upserts make this fixture independently rerunnable without changing IDs.
-INSERT INTO establishment.establishment_type (establishment_type_id, name) VALUES
-    (1, 'Community school'), (4, 'Mainstream academy')
-ON CONFLICT (establishment_type_id) DO UPDATE SET name = EXCLUDED.name;
+-- Fail on any value the transform could not map, rather than loading a
+-- default. The transform returns NULL for an unrecognised type or phase.
+DO $$
+DECLARE
+    unmapped text;
+BEGIN
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
+    FROM source_establishment_fixture
+    WHERE establishment_type_id IS NULL;
+    IF unmapped IS NOT NULL THEN
+        RAISE EXCEPTION 'Establishment type could not be mapped for URN %. Add the BAU type to the mapping in transforms/establishment-from-bau.sql.', unmapped;
+    END IF;
 
-INSERT INTO establishment.education_phase (education_phase_id, name) VALUES
-    (2, 'Primary'), (5, 'Secondary')
-ON CONFLICT (education_phase_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.gender_of_entry_type (gender_of_entry_type_id, name) VALUES
-    (1, 'Mixed'), (2, 'Boys'), (3, 'Girls'),
-    (4, 'Not applicable (gender of entry)')
-ON CONFLICT (gender_of_entry_type_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.admissions_policy (admissions_policy_id, name) VALUES
-    (1, 'Non-selective'), (3, 'Not applicable (admissions policy)')
-ON CONFLICT (admissions_policy_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.boarding_provision (boarding_provision_id, name) VALUES
-    (1, 'No boarders'), (2, 'Has boarders'), (3, 'Boarding school')
-ON CONFLICT (boarding_provision_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.nursery_provision (nursery_provision_id, name) VALUES
-    (1, 'Nursery classes'), (2, 'No nursery classes'),
-    (3, 'Not applicable (nursery provision)')
-ON CONFLICT (nursery_provision_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.sixth_form_provision (sixth_form_provision_id, name) VALUES
-    (2, 'No sixth form'), (3, 'Not applicable (sixth-form provision)')
-ON CONFLICT (sixth_form_provision_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.specialist_provision_type (specialist_provision_type_id, name)
-VALUES (3, 'Resourced provision and SEN unit')
-ON CONFLICT (specialist_provision_type_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.establishment_status (establishment_status_id, code, name) VALUES
-    (1, 1, 'Open'),
-    (2, 2, 'Closed'),
-    (3, 3, 'Open, but proposed to close'),
-    (4, 4, 'Proposed to open')
-ON CONFLICT (establishment_status_id) DO UPDATE SET code = EXCLUDED.code, name = EXCLUDED.name;
-
-INSERT INTO establishment.reason_establishment_opened (reason_establishment_opened_id, name) VALUES
-    (1, 'Academy Converter'),
-    (2, 'New Provision'),
-    (3, 'Result of Amalgamation'),
-    (4, 'Fresh Start'),
-    (5, 'Academy Free School'),
-    (6, 'Result of Closure'),
-    (7, 'Change Religious Character'),
-    (8, 'Change in status'),
-    (9, 'Former Independent'),
-    (10, 'Split school'),
-    (11, 'New Nursery School'),
-    (12, 'Meets accreditation standards'),
-    (13, 'Free Special School')
-ON CONFLICT (reason_establishment_opened_id) DO UPDATE SET name = EXCLUDED.name;
-
-INSERT INTO establishment.reason_establishment_closed (reason_establishment_closed_id, name) VALUES
-    (1, 'Academy Converter'),
-    (2, 'Result of Amalgamation/Merger'),
-    (3, 'Closure'),
-    (4, 'For Academy'),
-    (5, 'Fresh Start'),
-    (6, 'Close Nursery School'),
-    (7, 'Change Religious Character'),
-    (8, 'Does not meet criteria for registration'),
-    (9, 'De-registered'),
-    (10, 'Academy Free School'),
-    (11, 'Change in status'),
-    (12, 'Transferred to new sponsor'),
-    (13, 'Created in Error - application rejected')
-ON CONFLICT (reason_establishment_closed_id) DO UPDATE SET name = EXCLUDED.name;
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
+    FROM source_establishment_fixture
+    WHERE education_phase_id IS NULL;
+    IF unmapped IS NOT NULL THEN
+        RAISE EXCEPTION 'Education phase could not be mapped for URN %. Add the BAU phase to the mapping in transforms/establishment-from-bau.sql.', unmapped;
+    END IF;
+END;
+$$;
 
 INSERT INTO establishment.establishment (
     urn, establishment_number, ukprn, name,
@@ -201,8 +153,8 @@ SELECT
     s.establishment_number,
     s.ukprn,
     s.name,
-    CASE WHEN s.type_code = '28' THEN 4 ELSE 1 END,
-    CASE WHEN s.education_phase_code = '4' THEN 5 ELSE 2 END
+    s.establishment_type_id,
+    s.education_phase_id
 FROM source_establishment_fixture AS s
 ON CONFLICT (urn) DO UPDATE SET
     establishment_number = EXCLUDED.establishment_number,
@@ -394,25 +346,11 @@ INSERT INTO establishment.education_admissions_and_provision (
     boarding_provision_id, nursery_provision_id, sixth_form_provision_id
 )
 SELECT e.establishment_id,
-       CASE s.gender_code
-           WHEN '3' THEN 1 -- Mixed
-           WHEN '1' THEN 2 -- Boys
-           WHEN '2' THEN 3 -- Girls
-           WHEN '0' THEN 4 -- Not applicable
-           ELSE NULL
-       END,
-       CASE WHEN s.admissions_policy_code = '1' THEN 1 ELSE 3 END,
-       CASE s.boarders_code
-           WHEN '1' THEN 1 -- No boarders
-           WHEN '4' THEN 2 -- Has boarders / FE residential accommodation
-           WHEN '2' THEN 3 -- Children's home / boarding school
-           WHEN '3' THEN 3 -- Boarding school
-           ELSE NULL
-       END,
-       CASE WHEN s.nursery_provision_code = '1' THEN 1
-            WHEN s.nursery_provision_code = '2' THEN 2 ELSE 3 END,
-       CASE WHEN s.sixth_form_code = '1' THEN 1
-            WHEN s.sixth_form_code = '2' THEN 2 ELSE 3 END
+       s.gender_of_entry_type_id,
+       s.admissions_policy_id,
+       s.boarding_provision_id,
+       s.nursery_provision_id,
+       s.sixth_form_provision_id
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 ON CONFLICT (establishment_id) DO UPDATE SET
@@ -435,11 +373,12 @@ ON CONFLICT (education_admissions_and_provision_id) DO UPDATE SET
     lower_statutory_age = EXCLUDED.lower_statutory_age,
     upper_statutory_age = EXCLUDED.upper_statutory_age;
 
+-- Specialist provision type: 1 resourced provision, 2 SEN unit, 3 both.
 INSERT INTO establishment.specialist_provision (establishment_id, specialist_provision_type_id)
-SELECT e.establishment_id, 3
+SELECT e.establishment_id, s.specialist_provision_type_id
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
-WHERE s.reserved_provision_code = '3'
+WHERE s.specialist_provision_type_id IS NOT NULL
 ON CONFLICT (establishment_id) DO UPDATE SET specialist_provision_type_id = EXCLUDED.specialist_provision_type_id;
 
 INSERT INTO establishment.resourced_provision (specialist_provision_id, capacity, pupil_count)
@@ -447,7 +386,7 @@ SELECT sp.specialist_provision_id, s.resourced_provision_capacity, s.resourced_p
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 JOIN establishment.specialist_provision AS sp ON sp.establishment_id = e.establishment_id
-WHERE s.reserved_provision_code = '3'
+WHERE s.specialist_provision_type_id IN (1, 3)
 ON CONFLICT (specialist_provision_id) DO UPDATE SET
     capacity = EXCLUDED.capacity, pupil_count = EXCLUDED.pupil_count;
 
@@ -456,7 +395,7 @@ SELECT sp.specialist_provision_id, s.sen_unit_capacity, s.sen_unit_pupil_count
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 JOIN establishment.specialist_provision AS sp ON sp.establishment_id = e.establishment_id
-WHERE s.reserved_provision_code = '3'
+WHERE s.specialist_provision_type_id IN (2, 3)
 ON CONFLICT (specialist_provision_id) DO UPDATE SET
     capacity = EXCLUDED.capacity, pupil_count = EXCLUDED.pupil_count;
 

@@ -18,10 +18,10 @@ From education-provider-registry-docs:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-checked-in-sql.ps1"
 
-The default exported fixture loads T1 Co-op Academy Stoke-On-Trent, URN
-136102, and T2 St Mary Magdalene Academy, URN 134314. The exporter currently
-retains the legacy filename `seed-t1-establishment-136102.sql`, but the file is
-the dependency-ordered export of the complete selected establishment set.
+The default fixture, `seed/seed-establishment-fixture.sql`, loads T1 Co-op
+Academy Stoke-On-Trent, URN 136102, and T2 St Mary Magdalene Academy, URN
+134314. It is the dependency-ordered export of the complete selected
+establishment set.
 Select a different set with repeated -SeedFile arguments only when deliberately
 extending the migration scope.
 
@@ -33,9 +33,12 @@ extending the migration scope.
 4. Load the combined Establishment-owned sample SQL file for T1 and T2.
 5. Fail fast on SQL errors.
 
-The command also runs the shared validation SQL. It fails if any physical
-Establishment table is empty, if the checked-in reference seed is incomplete,
-or if an Establishment child slice has not been captured.
+The command then runs all establishment tests (`Invoke-EstablishmentTests`):
+core validation, groups validation, an approval snapshot per selected URN, and
+scope. It fails if any physical Establishment table is empty, if the checked-in
+reference seed is incomplete, or if an Establishment child slice has not been
+captured. Each step is a function in the `EprLocalAutomation` module and can be
+run on its own; see the [automation README](README.md).
 
 The fixture files are repository data, not a live BAU source. Their provenance,
 selected URNs and any sanitisation or synthetic values must be recorded when

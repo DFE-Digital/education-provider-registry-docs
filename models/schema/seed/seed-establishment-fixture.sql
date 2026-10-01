@@ -55,7 +55,7 @@ INSERT INTO establishment.address (address_id, address_line_1, address_line_2, a
 
 INSERT INTO establishment.establishment (establishment_id, urn, ukprn, establishment_number, name, establishment_type_id, education_phase_id) VALUES
 	('fe5d7077-116b-44dc-bd51-aad3e54a03ee', 136102, 10030216, 6905, 'The Co-Operative Academy of Stoke-On-Trent', 4, 5),
-	('02d917f5-edf6-4e72-96a1-c09680395c72', 134314, 10024207, 6905, 'St Mary Magdalene Academy', 4, 2);
+	('02d917f5-edf6-4e72-96a1-c09680395c72', 134314, 10024207, 6905, 'St Mary Magdalene Academy', 4,6);
 
 
 --
