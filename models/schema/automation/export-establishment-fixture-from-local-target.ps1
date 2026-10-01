@@ -1,13 +1,12 @@
 <#
 .SYNOPSIS
-Exports the populated local Establishment target into checked-in SQL inputs.
+Exports the current establishment_local database as SQL fixtures: reference
+data, establishment data and migration evidence.
 
 .DESCRIPTION
-Run this after the BAU-source rebuild has completed successfully. The target contains the
-selected establishment-centric slice and the BAU-derived reference data.
-pg_dump writes dependency-ordered, column-labelled batched INSERT statements so the
-checked-in-fixture rebuild
-can replay the result without SQL Server.
+Run after a successful BAU-source rebuild. The output can be replayed by
+rebuild-establishment-from-checked-in-sql.ps1 without SQL Server. This script
+only exports; it does not change the checked-in files in seed/.
 #>
 [CmdletBinding()]
 param(
@@ -20,62 +19,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$automationRoot = $PSScriptRoot
-. (Join-Path $automationRoot 'common\local-database-guards.ps1')
-. (Join-Path $automationRoot 'common\sql-client-functions.ps1')
-Assert-LocalPostgresTarget -PostgresHost $PostgresHost -PostgresDatabase $PostgresDatabase
+Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLocalAutomation.psm1') -Force
 
-$pgDump = (Get-Command pg_dump.exe -ErrorAction SilentlyContinue).Source
-if (-not $pgDump) { $pgDump = 'C:\Program Files\PostgreSQL\18\bin\pg_dump.exe' }
-if (-not (Test-Path -LiteralPath $pgDump)) { throw \"pg_dump not found: $pgDump\" }
-New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
-
-$referenceTables = @(
-    'local_authority_jurisdiction', 'establishment_type', 'education_phase',
-    'gender_of_entry_type', 'admissions_policy', 'boarding_provision',
-    'nursery_provision', 'sixth_form_provision', 'specialist_provision_type',
-    'establishment_status', 'reason_establishment_opened',
-    'reason_establishment_closed', 'local_authority', 'government_office_region',
-    'gss_local_authority_code', 'district_administrative', 'administrative_ward', 'parliamentary_constituency', 'lsoa', 'msoa', 'urban_rural', 'local_authority_contact',
-    'local_authority_government_office_region'
-)
-$ownedTables = @(
-    'establishment', 'establishment_geography', 'establishment_contact',
-    'establishment_lifecycle', 'address', 'site', 'establishment_to_site',
-    'capacity_and_pupil_measures', 'education_admissions_and_provision',
-    'statutory_age_range', 'specialist_provision', 'resourced_provision',
-    'sen_unit_provision', 'legal_entity', 'organisation_identifier',
-    'establishment_party_role', 'academy_trust_classification',
-    'establishment_responsibility', 'organisation_group',
-    'organisation_group_member', 'group_identifier'
-)
-$migrationTables = @(
-    'migration_run', 'source_snapshot', 'source_record',
-    'establishment_party_role_evidence',
-    'establishment_responsibility_evidence',
-    'academy_trust_classification_evidence',
-    'organisation_group_member_evidence', 'identity_resolution'
-)
-
-$envPasswordBefore = $env:PGPASSWORD
-if ($PostgresPassword) { $env:PGPASSWORD = $PostgresPassword }
-try {
-    $referenceFile = Join-Path $OutputDirectory 'seed-reference-data.sql'
-    $ownedFile = Join-Path $OutputDirectory 'seed-t1-establishment-136102.sql'
-    $migrationFile = Join-Path $OutputDirectory 'seed-migration-evidence.sql'
-    $common = @('-h', $PostgresHost, '-p', $PostgresPort, '-U', $PostgresUser, '-d', $PostgresDatabase, '--data-only', '--column-inserts', '--rows-per-insert=1000', '--no-owner', '--no-privileges', '--no-comments')
-    $referenceArgs = @($common + @('--file', $referenceFile))
-    foreach ($table in $referenceTables) { $referenceArgs += @('--table', "establishment.$table") }
-    & $pgDump @referenceArgs
-    if ($LASTEXITCODE -ne 0) { throw 'Reference-data export failed.' }
-    $ownedArgs = @($common + @('--file', $ownedFile))
-    foreach ($table in $ownedTables) { $ownedArgs += @('--table', "establishment.$table") }
-    & $pgDump @ownedArgs
-    if ($LASTEXITCODE -ne 0) { throw 'Establishment fixture export failed.' }
-    $migrationArgs = @($common + @('--file', $migrationFile))
-    foreach ($table in $migrationTables) { $migrationArgs += @('--table', "migration.$table") }
-    & $pgDump @migrationArgs
-    if ($LASTEXITCODE -ne 0) { throw 'Migration evidence export failed.' }
-    Write-Host "Exported BAU-derived reference and Establishment SQL to $OutputDirectory"
-}
-finally { $env:PGPASSWORD = $envPasswordBefore }
+$target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
+Export-EstablishmentFixture -Target $target -OutputDirectory $OutputDirectory
+Write-Host "Exported reference, establishment and migration SQL to $OutputDirectory"

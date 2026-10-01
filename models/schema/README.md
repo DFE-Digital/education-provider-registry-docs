@@ -72,6 +72,10 @@ checked-in SQL fixtures for developers who do not have the local BAU copy.
 The scripts are intentionally restricted to the local
 `establishment_local` database. They do not target shared environments.
 
+The scripts are thin entry points to the `EprLocalAutomation` PowerShell module.
+Any single step, such as one test or one establishment reload, can be run on its
+own by importing the module. See the [automation README](automation/README.md).
+
 ## Establishment approval tests
 
 The local Establishment schema has one approval snapshot per migrated case:
