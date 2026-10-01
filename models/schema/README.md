@@ -74,9 +74,9 @@ The scripts are intentionally restricted to the local
 
 ## Establishment approval tests
 
-The local Establishment schema has an approval test covering T1, URN `136102`,
-and a checked-in physical fixture for T2, URN `134314`. A scope test rejects
-any other establishment URN.
+The local Establishment schema has one approval snapshot per migrated case:
+T1, URN `136102`, and T2, URN `134314`. A scope test rejects any other
+establishment URN.
 
 The Establishment snapshots compare business data and stable reference keys;
 generated surrogate UUIDs are intentionally excluded because they are expected
@@ -87,6 +87,7 @@ To run them directly from the repository root:
 
 ```powershell
 .\models\schema\tests\assert-establishment-approval.ps1 -Urn 136102
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 134314
 .\models\schema\tests\assert-establishment-row-counts.ps1
 ```
 
@@ -97,9 +98,10 @@ approval script:
 ```powershell
 .\models\schema\tests\assert-establishment-approval.ps1 -UpdateApproval
 .\models\schema\tests\assert-establishment-approval.ps1 -Urn 136102 -UpdateApproval
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 134314 -UpdateApproval
 ```
 
-The command updates the approval file for URN `136102`.
+The commands update the approval files for URNs `136102` and `134314`.
 
 After updating an approval file, rerun the normal rebuild and review the
 snapshot diff before committing it.

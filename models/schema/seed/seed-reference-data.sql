@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict JZwgLyn1Ayj8e9cgag2YE0W51knx7FcMGx6cYFwZazBINhcxuy1fDyaztj1TK2n
+\restrict zvwPEZ1emTXnL8g1N0hoROv3wdJbl3D9KrG8y7Eede64SN2ic555peobUPrgSyN
 
 -- Dumped from database version 18.6
 -- Dumped by pg_dump version 18.6
@@ -24,34 +24,24 @@ SET row_security = off;
 --
 
 INSERT INTO establishment.administrative_ward (id, code, name) VALUES
-	('9ffdcf27-6ae8-4fbd-a07c-b89d779ccde2', '00BBGB', 'Beckton'),
-	('734ebf54-abd0-4746-a2c6-902bc70cce82', '00CWGJ', 'Oxley'),
-	('9ac1b240-dcb7-424b-80e2-a75094f8e1ca', '00HXMZ', 'Blunsdon'),
-	('ac1af278-1344-4b49-bc58-6841adefa613', '00NXPD', 'Fairwood'),
-	('aad2b32e-dbe0-47c2-9c8b-bab762680c66', '00PMNQ', 'New Inn'),
-	('6a5bd643-a5eb-4389-8637-722c5bee006b', '00QPMA', 'Almond'),
-	('19d8f8a7-2c96-4397-8f54-09541bc54e58', '11UCGQ', 'Central'),
-	('ee1d3211-1c11-4427-9ef7-68e90760d8b2', '15UBGJ', 'Calstock'),
-	('a04043e2-3ec5-40aa-b31f-ad4aaa09daab', '19UJFS', 'Preston'),
-	('ac2de94c-1c98-46a0-80eb-de10124cee85', 'E05000455', 'Abbey'),
-	('40688c8a-5c17-4437-bf67-8be4156046a3', 'E05000672', 'East'),
+	('bd307b52-c0b0-49da-aa79-751858bd3ec5', '00AAFB', 'Aldgate'),
+	('fbfc02e5-6602-4e95-a5fc-9be88dd6d058', '00CHGJ', 'Felling'),
+	('6c6b359d-b0e8-4a37-a72e-d99adea60bba', '00PDNQ', 'Plymouth'),
+	('7cf06ab1-f7dc-43f2-8223-68c278758100', '22UFHC', 'Trinity'),
+	('8ac009a8-cc86-490f-b5d2-e4283d623796', '39UCGQ', 'Prees'),
+	('5becc808-f74a-45fe-9b6e-efe9096100db', '41UHGF', 'Alton'),
+	('ecbeb8d4-014b-4620-acf2-b2672bddd9d5', 'E05000793', 'Manor'),
 	('45084ce2-60b2-4fe0-b5b0-71d942519820', 'E05003678', 'Crane'),
 	('3337fa25-dd3a-49fa-94a4-6fa7a24eda92', 'E05004321', 'Ermin'),
-	('cc2df13c-3ebd-4153-976e-b892d5b13463', 'E05005363', 'Derby'),
-	('53a76a1d-020f-40af-8ef4-52fbbfb40c33', 'E05005849', 'Gaunt'),
 	('de23bdc1-c223-4b52-bff8-f1b7ad35fac8', 'E05007169', 'Clare'),
-	('a6eab932-1bb9-4e40-babe-7a23a24da583', 'E05008191', 'Tern'),
-	('2b70d42b-da44-4836-a981-36142f7c6574', 'E05009944', 'Mount'),
+	('1377f8a4-e37a-4f9a-b7e8-ba4b749bcd5c', 'E05008669', 'Elton'),
 	('84ede4ff-d0d0-44c4-8c97-914dcc3622d9', 'E05010362', 'Wing'),
-	('0ba7d83e-ec78-4ce2-8971-731933218b79', 'E05012280', 'Dales'),
-	('4b1cebed-5767-414d-a6b2-dc7cd1ccc561', 'E05013673', 'Bowes'),
-	('0ac34114-dc6b-45c4-88f3-9602498253c4', 'E05015091', 'Ridge'),
-	('49265460-5e74-4236-aaa3-6e1c3f094079', 'S13002931', 'Leith'),
-	('d839f066-4f15-4e12-a9e1-58011c3e86e7', 'S13003146', 'Arran'),
-	('189f44c8-1541-4679-a637-78cc9d9d0d8a', 'W05000237', 'Acton'),
-	('01641023-f8b7-476b-a52d-03d4d3c53679', 'W05000864', 'Heath'),
+	('eb4c69b6-c894-4a1c-af30-d2c1a282b5bf', 'E05014108', 'Oval'),
+	('263ebc83-b5e7-4038-aa96-3974b9ed16fd', 'E05016427', 'Olton'),
+	('100580d2-1ba7-43f4-ba91-cd5d499d0899', 'W05000476', 'Glyn'),
+	('97670d96-d190-467e-9794-c15b06daec09', 'W05000814', 'Mill'),
+	('9883b9d6-8eb7-4db0-b858-b68e6ee8ecdf', 'W05001599', 'Hope'),
 	('078624ac-d8f0-4ce7-96c2-d892ae4a9c43', '00AAFA', 'Aldersgate'),
-	('bd307b52-c0b0-49da-aa79-751858bd3ec5', '00AAFB', 'Aldgate'),
 	('56c5b966-ac34-46b3-99fd-ab5a2feb10cc', '00AAFC', 'Bassishaw'),
 	('c571b045-75cc-4aa6-86d7-4917de562c59', '00AAFD', 'Billingsgate'),
 	('8e9b4d60-3834-42c2-868e-c7979f2f923d', '00AAFE', 'Bishopsgate'),
@@ -524,8 +514,10 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('18f0d76b-316e-4acf-a798-4635ed79d00d', '00BAGQ', 'Village'),
 	('3a8fe0e3-72d0-4273-8709-e6c8efc3bb57', '00BAGR', 'West Barnes'),
 	('cd585aef-8b64-49da-906b-f3231f749f46', '00BAGS', 'Wimbledon Park'),
+	('9ffdcf27-6ae8-4fbd-a07c-b89d779ccde2', '00BBGB', 'Beckton'),
 	('434c3d60-0157-4058-8f75-4e77241f20d1', '00BBGC', 'Boleyn'),
 	('2f02932c-fbb8-40d3-b6d8-f2dfb8ccf5f7', '00BBGD', 'Canning Town North'),
+	('4e32b360-8c99-46fc-9cfb-c86caf6062cf', '00BHGF', 'Hatch Lane'),
 	('171b119a-f14f-4d5b-a560-67ea07ddb5cb', '00BBGE', 'Canning Town South'),
 	('f5e7a421-acdb-4628-ac07-adc7991de343', '00BBGF', 'Custom House'),
 	('da5b324b-7579-4e88-9609-acdadb2864b9', '00BBGG', 'East Ham Central'),
@@ -646,7 +638,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('7ed7ef40-de6d-4669-a62d-17abc79718fb', '00BHGC', 'Forest'),
 	('6b1343f9-08d0-4901-a344-3506299853eb', '00BHGD', 'Grove Green'),
 	('ca3c568e-4ba6-4a7c-a8a3-52e90ab6aaa1', '00BHGE', 'Hale End and Highams Park'),
-	('4e32b360-8c99-46fc-9cfb-c86caf6062cf', '00BHGF', 'Hatch Lane'),
 	('0bd58ede-68a0-4834-98b5-a206b109d0cb', '00BHGG', 'High Street'),
 	('6ab0daba-549f-48f3-9740-635daedac988', '00BHGH', 'Higham Hill'),
 	('756678f2-d918-48ab-8886-25c0f57b5377', '00BHGJ', 'Hoe Street'),
@@ -1023,8 +1014,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('e6cc1feb-a931-462a-9944-931d97cd288f', '00CBGT', 'Seacombe'),
 	('988109b8-8069-435e-bca5-e6a9f73af4cb', '00CBGU', 'Upton'),
 	('d69f1b1e-3a3c-4cbd-b7ea-cc66099678b8', '00CBGW', 'Wallasey'),
-	('2e856f88-0145-44b1-8e82-4c9e7343e888', '00CBGX', 'West Kirby and Thurstaston');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('2e856f88-0145-44b1-8e82-4c9e7343e888', '00CBGX', 'West Kirby and Thurstaston'),
 	('3393a216-68ae-443c-a92a-3c9cb1e99ec3', '00CCFZ', 'Central'),
 	('bef9fd59-f076-4624-84f1-6560778be5a3', '00CCGA', 'Cudworth'),
 	('6386d86c-dfe4-4a00-918b-935a89153ff7', '00CCGB', 'Darfield'),
@@ -1033,7 +1023,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('13494d41-f87d-448b-beac-0e97993a6dce', '00CCGE', 'Dearne North'),
 	('23f39fdd-76e0-4319-81dc-65ec27f48343', '00CCGF', 'Dearne South'),
 	('9b13da95-4c6d-4f66-a0ec-d96bc0616fa7', '00CCGG', 'Dodworth'),
-	('c0b539c7-cdad-4827-9636-fb77a6fd7d7f', '00CCGH', 'Hoyland Milton'),
+	('c0b539c7-cdad-4827-9636-fb77a6fd7d7f', '00CCGH', 'Hoyland Milton');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('a9e428b6-41f1-4031-8ff3-98db5237fb9a', '00CCGJ', 'Kingstone'),
 	('33c7baf4-96f6-45e4-a199-73b0acc81594', '00CCGK', 'Monk Bretton'),
 	('23e11f24-6362-49bf-b594-783cdd8e7e27', '00CCGL', 'North East'),
@@ -1125,7 +1116,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8682520d-1bc8-4078-9402-02cf112df26a', '00CHGF', 'Deckham'),
 	('f061a9b1-fda9-4afb-97b4-1c6d2f3e6f37', '00CHGG', 'Dunston and Teams'),
 	('33d85842-edbb-4da5-9734-5168411d0318', '00CHGH', 'Dunston Hill and Whickham East'),
-	('fbfc02e5-6602-4e95-a5fc-9be88dd6d058', '00CHGJ', 'Felling'),
 	('32d38c33-1211-4378-abe3-d6f4659e3802', '00CHGK', 'High Fell'),
 	('1bd8c738-9feb-45d8-955c-3d26faaacffd', '00CHGL', 'Lamesley'),
 	('10da3caf-82b8-4419-9a96-ebe7ddb3abec', '00CHGM', 'Lobley Hill and Bensham'),
@@ -1381,6 +1371,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('19b40738-fa36-4134-a6d5-4dd837e7cb73', '00CWGF', 'Graiseley'),
 	('3d72c940-587b-491e-a3db-c72b6b27441b', '00CWGG', 'Heath Town'),
 	('cf843ab0-b128-40da-ac38-055066da992d', '00CWGH', 'Merry Hill'),
+	('734ebf54-abd0-4746-a2c6-902bc70cce82', '00CWGJ', 'Oxley'),
 	('c46c2ed4-a127-41c6-9ac0-835a463e6ad2', '00CWGK', 'Park'),
 	('8eb14fe7-024a-4c64-aae6-5183d676bb53', '00CWGL', 'Penn'),
 	('6313c84b-fb5f-450a-a098-adc18dfc54fe', '00CWGM', 'St Peter''s'),
@@ -1493,6 +1484,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8b1cb63d-0fc4-4a3b-8f74-19cd8f7b4a3c', '00DAHU', 'Weetwood'),
 	('ce8ffa2d-293a-4a4b-a702-a6b60acad494', '00DAHW', 'Wetherby'),
 	('2bd12f88-0748-4bdb-bb7c-31f16f912cd7', '00DBFY', 'Ackworth, North Elmsall and Upton'),
+	('eda8c506-0af5-4403-9c80-2564d29aed71', '00EHNS', 'Lascelles'),
 	('5248963a-ac14-4eb9-b71f-2ff59a280989', '00DBFZ', 'Airedale and Ferry Fryston'),
 	('62237f65-6157-4344-b1b9-059034b2925b', '00DBGA', 'Altofts and Whitwood'),
 	('8b018835-cba2-41e8-a479-9fe85d63c122', '00DBGB', 'Castleford Central and Glasshoughton'),
@@ -1615,7 +1607,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('22950f6f-ddb2-495d-9f0c-2875a6dd45e9', '00EHNP', 'Heighington and Coniscliffe'),
 	('9788c47f-f784-4d99-8a2c-161201a26275', '00EHNQ', 'Hummersknott'),
 	('160f7072-07f3-494c-b6cd-3ec81ba7b9cc', '00EHNR', 'Hurworth'),
-	('eda8c506-0af5-4403-9c80-2564d29aed71', '00EHNS', 'Lascelles'),
 	('88acd57b-2547-469a-a4e3-a3c82ef85295', '00EHNT', 'Lingfield'),
 	('f74131cf-49aa-4264-a7ab-a7450396b0ac', '00EHNU', 'Middleton St George'),
 	('5bba3ec7-a7a5-496a-96ad-3b17699cd8e4', '00EHNW', 'Mowden'),
@@ -2024,8 +2015,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('f303b7d9-f112-4dab-ae48-f20e09d06add', '00FNNP', 'Evington'),
 	('4cb5f443-39f6-484c-bd4d-d530e9884822', '00FNNQ', 'Eyres Monsell'),
 	('9a558407-2939-43d9-8e09-e8db165d46b8', '00FNNR', 'Fosse'),
-	('a39a6055-9b45-460b-b108-f5287bf23581', '00FNNS', 'Freemen');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('a39a6055-9b45-460b-b108-f5287bf23581', '00FNNS', 'Freemen'),
 	('c6a4fe8c-c0dd-4efd-ad6c-29a0ce086164', '00FNNT', 'Humberstone and Hamilton'),
 	('3f49acae-3e75-4e53-a887-cc850aaaba35', '00FNNU', 'Knighton'),
 	('f13cf6f7-323f-4b37-becd-dabab2a5d2fb', '00FNNW', 'Latimer'),
@@ -2034,7 +2024,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('3d74cb16-2c17-4ec4-b973-c0aae606090f', '00FNNZ', 'Spinney Hills'),
 	('cbaa4d8f-0909-4fbb-a029-40ce45668ae7', '00FNPA', 'Stoneygate'),
 	('1f111e4d-7642-459e-ad24-6cb9081a0df0', '00FNPB', 'Thurncourt'),
-	('f52499bf-ecc6-4b82-b386-b5e86d041aad', '00FNPC', 'Westcotes'),
+	('f52499bf-ecc6-4b82-b386-b5e86d041aad', '00FNPC', 'Westcotes');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('7a14a08b-f89e-4aa9-87ab-11068640ad7c', '00FNPD', 'Western Park'),
 	('7edd4c28-c400-4a81-9ffe-cf103982a4f5', '00FPMS', 'Braunston and Belton'),
 	('dc6d12b9-26e0-4b87-a0fe-e80f6f070999', '00FPMT', 'Cottesmore'),
@@ -2569,6 +2560,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('4721c6ae-a8ab-4eda-b27e-7d8454d272b9', '00HPNE', 'Penn Hill'),
 	('45dabe34-de28-4634-bc92-c7afc6fee4e9', '00HPNF', 'Poole Town'),
 	('d9c9ed83-01d2-427c-91cf-e2838361ac43', '00HXMY', 'Abbey Meads'),
+	('9ac1b240-dcb7-424b-80e2-a75094f8e1ca', '00HXMZ', 'Blunsdon'),
 	('0b2af370-7dd8-48ae-88b6-5987e8b15973', '00HXNA', 'Central'),
 	('8ff31d1f-2375-44a9-98f5-70cca2411779', '00HXNB', 'Covingham and Nythe'),
 	('54252f63-71a8-418c-902c-f74c4534c85e', '00HXNC', 'Dorcan'),
@@ -3025,8 +3017,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('a137ceb4-46a7-4552-85ba-0300745a082c', '00MRMZ', 'Milton'),
 	('81b94469-8869-41ca-a20c-8ac0808238ce', '00MRNA', 'Nelson'),
 	('438023b1-2c19-4c55-bfdb-c3c898ad3044', '00MRNB', 'Paulsgrove'),
-	('9b7c5eaf-2ddd-40b0-b388-881a4750cd5e', '00MRNC', 'St Jude');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('9b7c5eaf-2ddd-40b0-b388-881a4750cd5e', '00MRNC', 'St Jude'),
 	('bca5db23-d0b5-49cf-9c0b-f67ba53d59c0', '00MRND', 'St Thomas'),
 	('8b24a70d-11f1-495e-94a2-22c057d6f433', '00MSMR', 'Bargate'),
 	('20f4ac35-aa1e-4fcd-9882-2c6cb1c7cd29', '00MSMS', 'Bassett'),
@@ -3034,7 +3025,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('25cbe367-c569-4dcb-ae8d-ceb92fc3fb32', '00MSMU', 'Bitterne'),
 	('1a467ffe-a752-473f-8db9-5b9f472e71ef', '00MSMW', 'Bitterne Park'),
 	('076bb13e-c344-4a37-b46a-1a59ce1cdb82', '00MSMX', 'Coxford'),
-	('ccc90e68-868c-4d03-b89b-7dd22c420a8a', '00MSMY', 'Freemantle'),
+	('ccc90e68-868c-4d03-b89b-7dd22c420a8a', '00MSMY', 'Freemantle');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('ed101013-1520-440f-9f62-72143a26f8ac', '00MSMZ', 'Harefield'),
 	('e80901dd-e2ae-49dc-83ca-845f234f8e7c', '00MSNA', 'Millbrook'),
 	('915b1d0a-596d-4f59-a496-f0333e6a06bb', '00MSNB', 'Peartree'),
@@ -3652,6 +3644,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('6f84ba24-8275-4633-8e67-fa956aff7db0', '00NXPA', 'Cockett'),
 	('62ef2133-4ca7-4fed-b287-a2ca9429eb88', '00NXPB', 'Cwmbwrla'),
 	('5eee0137-1dab-4b77-a216-62aad9291f88', '00NXPC', 'Dunvant'),
+	('ac1af278-1344-4b49-bc58-6841adefa613', '00NXPD', 'Fairwood'),
 	('27f5b7e5-7d8a-4b0f-b2c9-03ed42fb88a9', '00NXPE', 'Gorseinon'),
 	('862a50ed-11d0-4dc4-b8f4-2cdf51ef43b0', '00NXPF', 'Gower'),
 	('fd1ccb9e-82ad-4e59-9370-e49a5f3d47de', '00NXPG', 'Gowerton'),
@@ -3776,7 +3769,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('914762c8-38de-45ae-874a-0f0282394919', '00PDNM', 'Llandow/Ewenny'),
 	('6038323f-a67d-4933-820b-7102e1ce3662', '00PDNN', 'Llantwit Major'),
 	('4ac2005d-5a20-45a7-9dc0-7904951e7e4b', '00PDNP', 'Peterston-super-Ely'),
-	('6c6b359d-b0e8-4a37-a72e-d99adea60bba', '00PDNQ', 'Plymouth'),
 	('06be345e-cd68-4049-b545-8e6d04e4b053', '00PDNR', 'Rhoose'),
 	('5701a3f2-c6a9-497b-a329-297c44391d39', '00PDNS', 'St. Athan'),
 	('e08cd9e6-13b1-4ddf-a61f-952f14c9969a', '00PDNT', 'St. Augustine''s'),
@@ -3908,6 +3900,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('74a000a5-154a-483d-888e-f4f7d46a739b', '00PMNM', 'Llantarnam'),
 	('077d842e-59e6-4179-be6f-b6cbd6c5f6b4', '00PMNN', 'Llanyrafon North'),
 	('9b8c17c9-f665-4293-9bfb-506cde31cabe', '00PMNP', 'Llanyrafon South'),
+	('aad2b32e-dbe0-47c2-9c8b-bab762680c66', '00PMNQ', 'New Inn'),
 	('4b60fc82-0994-4ff6-adee-ea376f749c51', '00PMNR', 'Panteg'),
 	('e1dfaa23-ab87-4aa3-a845-ea55e174587d', '00PMNS', 'Pontnewydd'),
 	('9eabd90e-aaa3-44d1-ac1b-4c381285fb4f', '00PMNT', 'Pontnewynydd'),
@@ -4026,15 +4019,15 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('96b2f5c2-48d8-4c44-8319-aa5c585e6a7f', '00QBMA', 'Banff and District'),
 	('640feedd-4a6b-41f3-a146-675dddd33ad3', '00QBMB', 'Troup'),
 	('93b9f9ba-1d2d-4fed-953a-6f9e816991a7', '00QBMC', 'Fraserburgh and District'),
-	('b47bf423-487a-487c-8f78-e13159e814ba', '00QBMD', 'Central Buchan');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('b47bf423-487a-487c-8f78-e13159e814ba', '00QBMD', 'Central Buchan'),
 	('49bdb7a3-9825-41c3-8f99-3d746e4fd4bf', '00QBME', 'Peterhead North and Rattray'),
 	('305ec4da-5bc0-4baf-82fa-d2fd488743f6', '00QBMF', 'Peterhead South and Cruden'),
 	('6e99fdfa-a044-40da-a4f8-7dc954d3e27c', '00QBMG', 'Turriff and District'),
 	('b1443a3b-f096-444e-bb2e-8262773392d4', '00QBMH', 'Mid Formartine'),
 	('014e900a-13f3-4d23-815b-450a2935a854', '00QBMJ', 'Ellon and District'),
 	('c0fd24ad-20f2-4f99-8fc4-6dd27465642f', '00QBMK', 'West Garioch'),
-	('e4507099-ac6c-4307-bcaa-8f6cf193c1fa', '00QBML', 'Inverurie and District'),
+	('e4507099-ac6c-4307-bcaa-8f6cf193c1fa', '00QBML', 'Inverurie and District');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('fc07597b-4d2b-49b6-8cac-be4114226196', '00QBMM', 'East Garioch'),
 	('f02eb710-a29b-4282-b11a-1f6232e58b68', '00QBMN', 'Westhill and District'),
 	('639e3ce8-bb5c-46ad-aeaf-7c6119c4f888', '00QBMP', 'Huntly, Strathbogie and Howe of Alford'),
@@ -4135,6 +4128,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('18c3aeba-c068-43ef-973d-fd97308d519c', '00QNMD', 'Netherlee, Stamperland and Williamwood'),
 	('9267e43c-307f-495a-b2bc-d1f466d26cb4', '00QNME', 'Newton Mearns South'),
 	('a0ac021f-9d24-4942-8bc2-c2167f1221a2', '00QNMF', 'Busby, Clarkston and Eaglesham'),
+	('6a5bd643-a5eb-4389-8637-722c5bee006b', '00QPMA', 'Almond'),
 	('4f9815d2-265e-4ed0-8f5b-5728a187091a', '00QPMB', 'Pentland Hills'),
 	('8ab3fe79-c5ad-4b3d-bdcc-dd2577ebc953', '00QPMC', 'Drum Brae/Gyle'),
 	('f1d33da6-4d21-4543-9d9e-9f9eefcd42c6', '00QPMD', 'Forth'),
@@ -4481,6 +4475,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('5ab4d858-2cb3-46d1-bf16-486a3bfdf165', '11UCGM', 'Ashley Green, Latimer and Chenies'),
 	('adfcb8a4-75e4-4fa6-ae6b-8be1f457b2ea', '11UCGN', 'Austenwood'),
 	('a2289463-8659-4a10-b47c-c166273262de', '11UCGP', 'Ballinger, South Heath and Chartridge'),
+	('19d8f8a7-2c96-4397-8f54-09541bc54e58', '11UCGQ', 'Central'),
 	('0a33759b-b995-440b-8591-716d4bc28b5f', '11UCGR', 'Chalfont Common'),
 	('3b6f0e03-b26a-4059-bb67-f35ab6d5921e', '11UCGS', 'Chalfont St Giles'),
 	('456604e5-f909-4b61-a6d9-505dddbb6765', '11UCGT', 'Chesham Bois and Weedon Hill'),
@@ -4594,7 +4589,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('cd176867-ef25-4d7b-9087-c5eea24ec207', '12UDGR', 'March North'),
 	('df607faa-d617-4552-9d77-f9d5badcfb89', '12UDGS', 'March West'),
 	('56982895-a866-44b3-b1d0-085aa0b22e82', '12UDGT', 'Medworth'),
-	('1722d6c2-4ffb-462c-92d8-7e20cde64f96', '15UHFB', 'St. Agnes'),
 	('a4997076-db8b-42e6-9fd8-8caa4480f9e3', '12UDGU', 'Parson Drove and Wisbech St Mary'),
 	('a378e54b-27d7-4bfa-9935-0e29587c86c4', '12UDGW', 'Peckover'),
 	('b4f5f4b1-f033-4f8b-8a23-15f0a0add31f', '12UDGX', 'Roman Bank'),
@@ -4835,8 +4829,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('e928f9a9-5001-4417-8ee2-4a0674c0ad8a', '13UHHS', 'Winsford Verdin'),
 	('c02114d3-eb63-4145-b29a-de1d8b29f75a', '13UHHT', 'Winsford Wharton'),
 	('6ec9f897-bdb7-4d0f-887c-a38ca3b3011e', '15UBGH', 'Callington'),
+	('ee1d3211-1c11-4427-9ef7-68e90760d8b2', '15UBGJ', 'Calstock'),
 	('c1805bcb-5f02-452d-8b63-87e374ba222c', '15UBGK', 'Deviock and Sheviock'),
-	('83d1bf03-e729-47dd-b4f5-339e364052d6', '15UHFC', 'St. Martin''s'),
 	('33b1a9af-8cf3-432f-a56e-e6a5095f5c6c', '15UBGL', 'Dobwalls and District'),
 	('313b82ee-1e35-4221-9a31-4b0e06a2a3a8', '15UBGM', 'Duloe, Lansallos and Pelynt'),
 	('b6d5a7ef-7767-4899-aab6-7cfffccdbc5e', '15UBGN', 'Landrake and St Dominick'),
@@ -4956,6 +4950,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('00ef0d39-e1a3-447c-889e-510a3888d4a7', '15UGGN', 'St Stephen'),
 	('d33d7810-8ba4-4fc9-b9f0-1818d144b347', '15UGGP', 'Treverbyn'),
 	('141885b7-1008-45c5-a5c8-cc8cc7a5e971', '15UHFA', 'Bryher'),
+	('1722d6c2-4ffb-462c-92d8-7e20cde64f96', '15UHFB', 'St. Agnes'),
+	('83d1bf03-e729-47dd-b4f5-339e364052d6', '15UHFC', 'St. Martin''s'),
 	('52888238-04c1-4aa6-976b-6f1272d7ca82', '15UHFD', 'St. Mary''s'),
 	('5287d972-dbac-4cf5-b0a9-4dd7e5f4a4b0', '15UHFE', 'Tresco'),
 	('024b08e5-e53e-4ecd-b4bd-6b9d1093244f', '16UBGM', 'All Saints'),
@@ -5027,12 +5023,12 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('6d836f7f-5e58-431a-8ec1-3adeb69e5384', '16UDGK', 'Great Corby and Geltsdale'),
 	('9c955339-026b-4a69-9f3b-0cb12831e6a4', '16UDGL', 'Harraby'),
 	('c36f0317-b72b-401b-ae3d-8589b6dccc2d', '16UDGM', 'Hayton'),
-	('188c7f6c-5ba5-4e21-a10f-901d04904321', '16UDGN', 'Irthing');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('188c7f6c-5ba5-4e21-a10f-901d04904321', '16UDGN', 'Irthing'),
 	('73d3907b-b662-480f-bde7-96c8e637e5f5', '16UDGP', 'Longtown & Rockcliffe'),
 	('f52e3c4c-1d89-46c4-80c2-7d1137fa3273', '16UDGQ', 'Lyne'),
 	('070af878-d173-418f-9c65-491bc07a6603', '16UDGR', 'Morton'),
-	('cad03e41-62b3-4734-95b0-6197dcd9f68c', '16UDGS', 'St Aidans'),
+	('cad03e41-62b3-4734-95b0-6197dcd9f68c', '16UDGS', 'St Aidans');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('62cefd70-5c76-45ea-b088-1f80cc6f0346', '16UDGT', 'Stanwix Rural'),
 	('e97726d8-0671-4695-bae2-677da3132fe3', '16UDGU', 'Stanwix Urban'),
 	('d37357db-2669-414a-ac81-87aa399cf44f', '16UDGW', 'Upperby'),
@@ -5677,6 +5673,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('defd178f-7a31-42a4-9115-c073d80a386e', '19UHJB', 'Yetminster'),
 	('137117bf-a011-44ce-b7a4-4777e6454598', '19UJFQ', 'Littlemoor'),
 	('f496af36-a78c-42aa-8e68-28e5b546de89', '19UJFR', 'Melcombe Regis'),
+	('a04043e2-3ec5-40aa-b31f-ad4aaa09daab', '19UJFS', 'Preston'),
 	('25ce1c11-108c-4b2e-b23d-e8f5a5d14ace', '19UJFT', 'Radipole'),
 	('e703beff-eebc-4c51-b6b9-4dd3e0063297', '19UJFU', 'Tophill East'),
 	('99941c2c-1702-49bd-86f5-8d5ad426e284', '19UJFW', 'Tophill West'),
@@ -6021,19 +6018,18 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('722ff788-8c74-47f8-9f9f-eda20bfad322', '22UFGZ', 'South Woodham-Elmwood and Woodville'),
 	('a4cce3be-3a1a-4ed0-b855-2ffeaec3083d', '22UFHA', 'Springfield North'),
 	('03ffb434-99bd-4846-8bde-c7b0e03a51a8', '22UFHB', 'The Lawns'),
-	('7cf06ab1-f7dc-43f2-8223-68c278758100', '22UFHC', 'Trinity'),
 	('971ad90b-ffc5-4ede-bc9b-2d184d595523', '22UFHD', 'Waterhouse Farm'),
 	('adf7bb64-da8f-4694-bc80-29fed2540f95', '22UFHE', 'Writtle'),
 	('26614118-cdc6-44ba-8acd-3b01dd337faf', '22UGGE', 'Berechurch'),
 	('7177c8ac-9dc9-4339-b5b0-7f42e93118a9', '22UGGF', 'Birch and Winstree'),
 	('fb5ea222-7b3d-46af-a6c4-a6f4559aadb7', '22UGGG', 'Castle'),
 	('b727ac1e-25c0-4672-b881-eca0784f1e41', '22UGGH', 'Christ Church'),
-	('ea4fc11d-5c25-43c8-b5ee-4fa4ab7a1e89', '22UGGJ', 'Copford and West Stanway');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('ea4fc11d-5c25-43c8-b5ee-4fa4ab7a1e89', '22UGGJ', 'Copford and West Stanway'),
 	('09534b0c-47b2-4a4a-b7a9-8251d492b4aa', '22UGGK', 'Dedham and Langham'),
 	('4b2b79fe-4398-4916-8980-6dc6783ca406', '22UGGL', 'East Donyland'),
 	('65f18435-dff6-4196-a477-a20b097be71b', '22UGGM', 'Fordham and Stour'),
-	('38fa188a-1cab-41ec-b1e7-ec3558cfce73', '22UGGN', 'Great Tey'),
+	('38fa188a-1cab-41ec-b1e7-ec3558cfce73', '22UGGN', 'Great Tey');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('e87d432f-ed2a-4dc7-8526-509184704681', '22UGGP', 'Harbour'),
 	('794a6f87-7456-4422-add4-3e871ee5a539', '22UGGQ', 'Highwoods'),
 	('82f09cae-ecc5-4902-940f-8329672ef052', '22UGGR', 'Lexden'),
@@ -7029,12 +7025,12 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c4762092-819e-4115-9775-72179c289c8c', '29UMGX', 'Sheerness East'),
 	('fe777d19-a1a6-4aa1-bbe7-b014dfd62f32', '29UMGY', 'Sheerness West'),
 	('4de7b601-6899-44f1-99dc-cd4b12349fd0', '29UMGZ', 'Sheppey Central'),
-	('542d7847-de2e-485b-afc0-423a57081ee2', '29UMHA', 'Teynham and Lynsted');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('542d7847-de2e-485b-afc0-423a57081ee2', '29UMHA', 'Teynham and Lynsted'),
 	('43806112-7c90-426f-8ecb-d4f6ebd1ebdc', '29UMHB', 'Watling'),
 	('cea579c4-c844-46a6-ad51-aeec0b1ed552', '29UMHC', 'West Downs'),
 	('77ca4507-535d-47e1-813d-8b1bf13b1c16', '29UMHD', 'Woodstock'),
-	('a1b7d90c-baed-4e0b-a2cd-f80ac8817165', '29UNGE', 'Beacon Road'),
+	('a1b7d90c-baed-4e0b-a2cd-f80ac8817165', '29UNGE', 'Beacon Road');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('49c165ed-106f-47c1-ba58-e52c9d6709af', '29UNGF', 'Birchington North'),
 	('157e6f2b-9337-4cd7-9f16-b8131eddf783', '29UNGG', 'Birchington South'),
 	('bb65b884-c3e0-4ae0-8f67-757d6ac8d6b3', '29UNGH', 'Bradstowe'),
@@ -8030,12 +8026,12 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('f6ee56d8-ab84-4fe7-b92a-72a6b4622b89', '35UBFY', 'Amble Central'),
 	('fdb690b4-3695-432c-9e9c-5b80f3cfe982', '35UBFZ', 'Amble East'),
 	('fc28d1b2-a2d7-4f54-bfe0-1af28a437e5e', '35UBGA', 'Amble West'),
-	('fdf9011f-7834-4920-941a-f799935e0487', '35UBGB', 'Embleton');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('fdf9011f-7834-4920-941a-f799935e0487', '35UBGB', 'Embleton'),
 	('a3bae8ea-a78a-44cc-99f3-e92545f7e1e3', '35UBGC', 'Harbottle and Elsdon'),
 	('a8c8e8cb-f0b9-4b67-9d83-ef3b48f9a0d4', '35UBGD', 'Hedgeley'),
 	('48f62661-4541-4535-bdfe-5574cf4ca997', '35UBGE', 'Longframlington'),
-	('83bc3917-a1f3-4c63-9431-ffbba43bc970', '35UBGF', 'Longhoughton with Craster and Rennington'),
+	('83bc3917-a1f3-4c63-9431-ffbba43bc970', '35UBGF', 'Longhoughton with Craster and Rennington');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('4576f2b6-de51-40e8-8f9e-f7ba2e32f0b4', '35UBGG', 'Rothbury and South Rural'),
 	('ac88d927-4333-41c0-8e2d-80413ee91f1d', '35UBGH', 'Shilbottle'),
 	('3c7acb87-e2b0-4bda-a4e5-4feb321e382c', '35UBGJ', 'Warkworth'),
@@ -8640,7 +8636,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('06fe1cf1-78d7-4a11-a17e-46a7513beb4a', '39UCGM', 'Market Drayton East'),
 	('e03f294e-c160-48e6-b71f-eaff6251d29e', '39UCGN', 'Market Drayton North'),
 	('e45c678d-2e51-4ed3-947d-1c9552079711', '39UCGP', 'Market Drayton South'),
-	('8ac009a8-cc86-490f-b5d2-e4283d623796', '39UCGQ', 'Prees'),
 	('52eb2e30-09a6-4e6f-aec4-3fdfd73d771e', '39UCGR', 'Shavington'),
 	('7053de11-4722-490c-910b-0d04a302c915', '39UCGS', 'Shawbury'),
 	('bc7a698e-19d0-4950-b71e-e896571ad24a', '39UCGT', 'Sutton'),
@@ -8993,7 +8988,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('e1f90eda-189a-4ef0-8063-7dcba16ee470', '41UGHH', 'Tillington'),
 	('a3974186-9736-4585-9f33-f94240f920ae', '41UGHJ', 'Walton'),
 	('eecccaab-53f2-43db-9762-b2a1f98b1050', '41UGHK', 'Weeping Cross'),
-	('5becc808-f74a-45fe-9b6e-efe9096100db', '41UHGF', 'Alton'),
 	('825b9f41-561d-46e7-9d34-ea9c06a7e992', '41UHGG', 'Bagnall and Stanley'),
 	('3e3ed96b-41e5-4d47-95a5-9ff20c24d0fa', '41UHGH', 'Biddulph East'),
 	('cb4ef0d7-3c73-430d-9dad-2edc11f4834e', '41UHGJ', 'Biddulph Moor'),
@@ -9031,14 +9025,14 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('3a77832d-b5af-46a8-b37c-381312b00d4e', '41UKFU', 'Trinity'),
 	('986dfc9f-db21-49ec-a12a-5f4f1f765d19', '41UKFW', 'Wilnecote'),
 	('e10fad00-2b6b-4b7b-a998-cb80f9bf9711', '42UBGH', 'Alton'),
-	('b933fc71-24f1-42fd-8206-e27f34051e73', '42UBGJ', 'Berners');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('b933fc71-24f1-42fd-8206-e27f34051e73', '42UBGJ', 'Berners'),
 	('421e1dc8-08e7-4925-a280-f365dd0cb7ba', '42UBGK', 'Boxford'),
 	('b3ffde52-29eb-466c-ba5b-6d69d04451ac', '42UBGL', 'Brett Vale'),
 	('1a39b4a7-9551-4e96-b2ac-33552efebc4e', '42UBGM', 'Brook'),
 	('bedb657a-ca7c-4dd1-82b3-3589aef87c7d', '42UBGN', 'Bures St Mary'),
 	('a56ff240-e7bc-4a6f-bd33-f3f432fa4e68', '42UBGP', 'Chadacre'),
-	('b539af69-c6ca-4c0c-a983-d38a7d6def35', '42UBGQ', 'Dodnash'),
+	('b539af69-c6ca-4c0c-a983-d38a7d6def35', '42UBGQ', 'Dodnash');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('9dfeb5a3-aa66-4975-8b10-e8339cb6d610', '42UBGR', 'Glemsford and Stanstead'),
 	('6c99b29a-623d-467c-ade3-c32e39ae846b', '42UBGS', 'Great Cornard North'),
 	('6d88ebe7-b0d1-441c-b7fc-ca046bea4e63', '42UBGT', 'Great Cornard South'),
@@ -9366,6 +9360,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('3782169e-8e6d-46a0-adcc-42c2a98eb13b', '43UKGT', 'Woldingham'),
 	('1fa443e9-548c-46a2-9f98-8c4efba988b8', '43UKGU', 'Bletchingley and Nutfield'),
 	('b2967739-67fa-4ee0-be11-bfa794ba56c9', '43UKGW', 'Burstow, Horne and Outwood'),
+	('719805b6-e574-4f9e-9c1b-99c623324ea6', '44UEHF', 'Sambourne'),
 	('784dd3fb-7cda-402c-bfda-2cf08228f732', '43ULGF', 'Alfold, Cranleigh Rural and Ellens Green'),
 	('96c9284d-6b2b-4e8d-ba6b-85cc802d361f', '43ULGG', 'Blackheath and Wonersh'),
 	('d23a77e5-4963-44f5-86a9-52ca6041d750', '43ULGH', 'Bramley, Busbridge and Hascombe'),
@@ -9482,7 +9477,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('da72387f-6597-40bf-aaf7-6e0472aa6b35', '44UEHC', 'Long Compton'),
 	('ea03b3ca-d4eb-4cfd-87dc-15d876ec7cc0', '44UEHD', 'Long Itchington'),
 	('1fe42936-1bf1-415c-b27a-ecf7a2b1d468', '44UEHE', 'Quinton'),
-	('719805b6-e574-4f9e-9c1b-99c623324ea6', '44UEHF', 'Sambourne'),
 	('8d5a5de5-1e3e-4fd8-864e-75f730218d2f', '44UEHG', 'Shipston'),
 	('6d1b5dfc-4c68-4b23-9540-22b7138045a4', '44UEHH', 'Snitterfield'),
 	('caa221f3-376a-4d33-80a8-c319549e38f7', '44UEHJ', 'Southam'),
@@ -9602,7 +9596,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('bb041b0d-da57-4c2d-b9b1-09904ef911c5', '45UEGD', 'Tilgate'),
 	('e71419c9-1939-41d3-9649-f5b8d83b9e11', '45UEGE', 'West Green'),
 	('8568e4c0-2a3b-41a8-8f7f-0d011236f832', '45UFGC', 'Billingshurst and Shipley'),
-	('0737d7d1-a5b1-4152-80c9-35eb21eac808', '47UEFS', 'Claines'),
 	('24f7a77b-b68c-43bd-9e22-c5697105884f', '45UFGD', 'Bramber, Upper Beeding and Woodmancote'),
 	('de2303f5-b082-4201-a9ac-bcc579df0308', '45UFGE', 'Broadbridge Heath'),
 	('802aed09-a530-4f2b-89f7-f09eb0ff4228', '45UFGF', 'Chanctonbury'),
@@ -9840,6 +9833,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('9ba1c842-8b39-4293-9085-6b436a077861', '47UEFP', 'Battenhall'),
 	('d3301637-4e06-4f29-9a47-08273e9729fa', '47UEFQ', 'Bedwardine'),
 	('6712a5dd-55bd-418f-b624-aee8eb17d7f4', '47UEFR', 'Cathedral'),
+	('0737d7d1-a5b1-4152-80c9-35eb21eac808', '47UEFS', 'Claines'),
 	('fd60cb71-0978-4b6d-ad23-f350af451a94', '47UEFT', 'Gorse Hill'),
 	('7be393c7-4f70-43c4-941c-c1378f9d881b', '47UEFU', 'Nunnery'),
 	('fb0f7e3c-e481-45f1-8439-16956b1ddd1d', '47UEFW', 'Rainbow Hill'),
@@ -10032,14 +10026,14 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('403fb699-1a15-41b1-a744-081665f151ef', '95G 18', 'Summerfield'),
 	('1c358102-9ddd-4e94-abd0-55deb61fab58', '95G 19', 'Castle Demesne'),
 	('1bf07b46-ca87-4a79-8c0e-e286f90b04a8', '95G 20', 'Ardeevin'),
-	('cb342218-6bfa-4148-a18f-04deebccb151', '95G 21', 'Harryville');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('cb342218-6bfa-4148-a18f-04deebccb151', '95G 21', 'Harryville'),
 	('a555645e-caaa-4551-a7b9-13ba3ecc7ede', '95G 22', 'Ballee'),
 	('23a88200-fb98-4749-a18d-cfe54a8d248f', '95G 23', 'Moat'),
 	('a408ee77-41d7-4edf-a388-0d99aac34bc9', '95G 24', 'Ballykeel'),
 	('12984a66-84c0-4199-a023-49bf3f5cf9d4', '95H 01', 'Swatragh'),
 	('9b2c542a-c225-43b0-91ef-13cf0c0b8c3b', '95H 02', 'Upperlands'),
-	('698c0611-00bd-4144-a2fc-6ffd387a89e1', '95H 03', 'Valley'),
+	('698c0611-00bd-4144-a2fc-6ffd387a89e1', '95H 03', 'Valley');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('19776a8e-60d6-4a64-9618-cef15e3c70af', '95H 04', 'Lower Glenshane'),
 	('880c38bd-9e86-4ac7-9357-4592a8611101', '95H 05', 'Maghera'),
 	('a1989960-24fb-4a63-ae71-d43ef1fcb730', '95H 06', 'Gulladuff'),
@@ -10696,7 +10690,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('7bc4f238-70ee-41bb-a678-3c90c0d498a4', 'E05000210', 'Town'),
 	('d2692fcf-defb-43a6-bc61-aba536cb9693', 'E05000211', 'Turkey Street'),
 	('0af2008b-7821-4321-a7ce-e2faa3a174c4', 'E05000212', 'Upper Edmonton'),
-	('bbc322c7-666e-4dfe-88f0-cd301c7bb937', 'E05000328', 'Charville'),
 	('8ea8e2ec-543f-490f-969b-d956ca685fef', 'E05000213', 'Winchmore Hill'),
 	('ef29eaf6-924d-409d-b712-35c725c8eb17', 'E05000214', 'Abbey Wood'),
 	('f6f9c065-014a-4868-93a6-a252fc4d2793', 'E05000215', 'Blackheath Westcombe'),
@@ -10812,6 +10805,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('26fee6e4-e8f3-425e-b011-32c8d1a2d2f0', 'E05000325', 'Botwell'),
 	('3747f269-c6bc-44df-86b4-c405892b75c6', 'E05000326', 'Brunel'),
 	('5b5afcc9-d5fd-4362-890b-a72af9880487', 'E05000327', 'Cavendish'),
+	('bbc322c7-666e-4dfe-88f0-cd301c7bb937', 'E05000328', 'Charville'),
 	('aa52d423-1445-440b-b77e-b79334e7fccb', 'E05000329', 'Eastcote and East Ruislip'),
 	('fa586f9d-4e82-43b5-b803-55b9600aaf6b', 'E05000330', 'Harefield'),
 	('d755ad76-0c35-40d9-86d1-2fe5a4b0b679', 'E05000331', 'Heathrow Villages'),
@@ -10931,6 +10925,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c1f2c492-54e6-4be2-bc2a-dc45f84d05b6', 'E05000445', 'Grove Park'),
 	('7e7c7f26-5735-4c15-bafb-110294638aab', 'E05000446', 'Ladywell'),
 	('49e6a3e2-c34f-4a22-a4d2-a277cf8d3d5a', 'E05000447', 'Lee Green'),
+	('ed50ac54-eef6-48ba-a5f8-014a2fe0f740', 'E05000563', 'Stonecot'),
 	('c8bd0b64-4f96-4611-9b04-05392ffb4dad', 'E05000448', 'Lewisham Central'),
 	('8f3af897-8f50-42c6-948a-0163640e146a', 'E05000449', 'New Cross'),
 	('10bf8996-7fef-4294-8f1b-765eb5f26a21', 'E05000450', 'Perry Vale'),
@@ -10938,6 +10933,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('626303d3-07c0-4506-9937-f3c2b689e394', 'E05000452', 'Sydenham'),
 	('2b8b0d1f-d6da-43f4-9d2d-777357653446', 'E05000453', 'Telegraph Hill'),
 	('61b74226-9e4a-4fb7-b02a-1253b5ef8760', 'E05000454', 'Whitefoot'),
+	('ac2de94c-1c98-46a0-80eb-de10124cee85', 'E05000455', 'Abbey'),
 	('392787d2-463f-4dc5-8d7f-3de41d7a0db2', 'E05000456', 'Cannon Hill'),
 	('8401a9b3-ef8e-4e30-a194-51d4739b8857', 'E05000457', 'Colliers Wood'),
 	('767cc872-961c-4386-81a9-9b877494a52c', 'E05000458', 'Cricket Green'),
@@ -11033,12 +11029,12 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('cb921580-bfa7-407e-b3c0-96748acb839a', 'E05000548', 'Riverside'),
 	('c77a3113-4d9e-4e22-ab7f-066a5cff8d84', 'E05000549', 'Rotherhithe'),
 	('7eef08b1-37be-4a5f-b494-f1fd4cf92b1f', 'E05000550', 'South Bermondsey'),
-	('32b6fd18-1192-4d1c-8e37-fb3b81b87438', 'E05000551', 'South Camberwell');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('32b6fd18-1192-4d1c-8e37-fb3b81b87438', 'E05000551', 'South Camberwell'),
 	('4346faa4-5787-4e86-95dc-9322d0ce2f2a', 'E05000552', 'Surrey Docks'),
 	('c232a1a2-5e87-4e46-b458-d2eec8c92848', 'E05000553', 'The Lane'),
 	('a2c6316b-cad6-464a-aec6-3d4ebdaca208', 'E05000554', 'Village'),
-	('0cd45257-2568-4c5d-9d0c-f3477f3a8ab6', 'E05000555', 'Beddington North'),
+	('0cd45257-2568-4c5d-9d0c-f3477f3a8ab6', 'E05000555', 'Beddington North');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('60806430-c062-4b9d-8aee-e7df417afe64', 'E05000556', 'Beddington South'),
 	('4745a54a-a03d-4284-aede-b3552b308e45', 'E05000557', 'Belmont'),
 	('fc31d285-0108-4c6a-9a40-eb4bd221d424', 'E05000558', 'Carshalton Central'),
@@ -11046,7 +11042,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('bde278da-de00-4f4f-adc4-aa1cdc2db0c4', 'E05000560', 'Cheam'),
 	('f7af3121-f9c9-4c77-8d42-edf09e317aad', 'E05000561', 'Nonsuch'),
 	('d843369b-aef6-4a53-8bd1-30ceefe4ccc9', 'E05000562', 'St Helier'),
-	('ed50ac54-eef6-48ba-a5f8-014a2fe0f740', 'E05000563', 'Stonecot'),
 	('717ee160-5bd9-4e85-beff-1cb8095bc678', 'E05000564', 'Sutton Central'),
 	('229ce263-f182-45bc-8d3f-ee7052967185', 'E05000565', 'Sutton North'),
 	('059b5ed8-f4f0-42a9-b9c7-d20c3cb8c518', 'E05000566', 'Sutton South'),
@@ -11155,6 +11150,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('edd0caf2-7b22-4601-999c-af458c11d5e1', 'E05000669', 'Westhoughton South'),
 	('59180910-0bfe-4b30-914e-c4e59e31f345', 'E05000670', 'Besses'),
 	('a9392a06-a966-4b45-8fb6-07d9789861f0', 'E05000671', 'Church'),
+	('40688c8a-5c17-4437-bf67-8be4156046a3', 'E05000672', 'East'),
 	('6244ed3e-5690-455f-8653-cba1106cad5f', 'E05000673', 'Elton'),
 	('5fcae3b6-8056-4f24-8c03-14bfd4334cf0', 'E05000674', 'Holyrood'),
 	('441d3712-f4c2-4ac2-831d-6971d512161c', 'E05000675', 'Moorside'),
@@ -11275,7 +11271,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c9ab16ea-b17b-4930-8d41-edeccc038ba6', 'E05000790', 'Heald Green'),
 	('ac741a5d-f689-4fc9-a6ea-4abf259320ff', 'E05000791', 'Heatons North'),
 	('da0631b8-c2dc-4230-87a9-1256bc2cbe2c', 'E05000792', 'Heatons South'),
-	('ecbeb8d4-014b-4620-acf2-b2672bddd9d5', 'E05000793', 'Manor'),
 	('d9f08f1a-8d4b-4b61-8015-ba87323bf92a', 'E05000794', 'Marple North'),
 	('d6f14c88-9081-4ee0-93bc-5c094246dfc6', 'E05000795', 'Marple South and High Lane'),
 	('e9019abe-1b8e-4e65-a398-3336acfe4663', 'E05000796', 'Offerton'),
@@ -11735,7 +11730,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('06bde4e5-0e9f-4e1e-926b-ee18284c176f', 'E05001250', 'Netherton, Woodside and St Andrews'),
 	('e285b184-bd60-47f5-8245-68717575447d', 'E05001251', 'Norton'),
 	('e940ae5b-6766-4ba4-bd12-3cc7ecb4deec', 'E05001252', 'Pedmore and Stourbridge East'),
-	('9acc884a-d48c-4698-bf0a-cde292d95ac0', 'E05001480', 'Stranton'),
 	('6c3b6136-7a52-42af-89e3-7e4d247d8509', 'E05001253', 'Quarry Bank and Dudley Wood'),
 	('725b6464-72fb-4f0f-80cd-916a1c486cba', 'E05001254', 'St James''s'),
 	('a21f7f21-5903-40b6-8ff7-69cae7716db7', 'E05001255', 'St Thomas''s'),
@@ -11963,6 +11957,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('ab662b5c-6475-4fbc-b3a4-b2a9f520595f', 'E05001477', 'Rossmere'),
 	('309b0ab1-e406-483c-aa95-79f80385bdf7', 'E05001478', 'St Hilda'),
 	('00412c01-617e-4fcb-9d62-6f47d7e6c7ec', 'E05001479', 'Seaton'),
+	('9acc884a-d48c-4698-bf0a-cde292d95ac0', 'E05001480', 'Stranton'),
 	('d615bc48-0c43-4af4-8d7e-9a469af034f2', 'E05001481', 'Throston'),
 	('345c42ca-965b-45c3-b3da-b11c6ad9ab87', 'E05001482', 'Acklam'),
 	('efec48a5-746e-4115-bf91-f1f0523c6841', 'E05001483', 'Ayresome'),
@@ -12034,13 +12029,13 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c7696e7c-fda7-4004-b246-4d6671b95500', 'E05001549', 'Stockton Town Centre'),
 	('79977b49-c4c1-4300-bcda-44dff59b04ea', 'E05001550', 'Village'),
 	('06bb6346-7929-4740-ab04-e47033afcba5', 'E05001551', 'Western Parishes'),
-	('73e28ef2-9b5a-4ff0-8207-3848b1d0e4dd', 'E05001552', 'Yarm');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('73e28ef2-9b5a-4ff0-8207-3848b1d0e4dd', 'E05001552', 'Yarm'),
 	('667a692a-aa74-4fd8-a9c4-4fd040d14ace', 'E05001553', 'Bank Top'),
 	('17724890-7280-4de1-8372-7d4ee3b37a80', 'E05001554', 'Central'),
 	('128c1e65-1ee4-4771-8813-8c8e6dc236ca', 'E05001555', 'Cockerton East'),
 	('167217f8-b706-4cf2-bf96-95d65970f6c6', 'E05001556', 'Cockerton West'),
-	('2c5b96b2-ec12-4e97-a737-8cb300c44bfe', 'E05001557', 'College'),
+	('2c5b96b2-ec12-4e97-a737-8cb300c44bfe', 'E05001557', 'College');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('ac6dc0f4-030a-40d3-8eb2-0f631564921f', 'E05001558', 'Eastbourne'),
 	('d5d4753e-3f39-497a-ab81-f07240faa1c2', 'E05001559', 'Faverdale'),
 	('98e928ab-4942-40ab-9b4b-8977bf40e48f', 'E05001560', 'Harrowgate Hill'),
@@ -12194,7 +12189,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('81b6df1f-6339-4402-b1bd-5ca3aedbcfcf', 'E05001708', 'South Hunsley'),
 	('4009561c-0c09-4fbb-805b-7be0c7438308', 'E05001709', 'South West Holderness'),
 	('d563db90-697c-4737-9032-fb9a7b3862b5', 'E05001710', 'Tranby'),
-	('99ec48c0-9aff-46f6-89ce-537eea757636', 'E05001828', 'Bridge'),
 	('2ce59e02-b06c-44b8-969a-b7e726d06fb5', 'E05001711', 'Willerby and Kirk Ella'),
 	('eb75194f-2d3f-43e9-b9e5-53f21df69086', 'E05001712', 'Wolds Weighton'),
 	('9abc5441-188c-4699-8506-cd153c461dbe', 'E05001713', 'Croft Baker'),
@@ -12312,6 +12306,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('457a5c57-67b7-42de-9ee2-cf475f970b8c', 'E05001825', 'Berridge'),
 	('2006218e-ca1e-41e9-81d4-3e12060edcf1', 'E05001826', 'Bestwood'),
 	('ea6d6367-9c8a-4d3f-8c5f-9f07ac374188', 'E05001827', 'Bilborough'),
+	('99ec48c0-9aff-46f6-89ce-537eea757636', 'E05001828', 'Bridge'),
 	('6f1de4af-7f9b-43e7-bed0-217b6a71a7b6', 'E05001829', 'Bulwell'),
 	('3545d28b-b238-4214-a3c1-39d3ac6e5384', 'E05001830', 'Bulwell Forest'),
 	('0143599a-175b-4239-9d8b-5b21a39e5fee', 'E05001831', 'Clifton North'),
@@ -13035,13 +13030,13 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('4f743300-856f-428b-b51d-3e919d9c38d3', 'E05002672', 'Taplow'),
 	('7f517feb-583a-48c4-b015-7881b4d67d36', 'E05002673', 'Wexham and Iver West'),
 	('cc721968-ad49-4d07-97fa-6eff18195bd9', 'E05002674', 'Abbey'),
-	('abd7b66e-76db-49d7-9735-232a2a72b445', 'E05002675', 'Bledlow and Bradenham');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('abd7b66e-76db-49d7-9735-232a2a72b445', 'E05002675', 'Bledlow and Bradenham'),
 	('091bfd93-71ca-4a08-b96a-9074a72e0583', 'E05002676', 'Booker and Cressex'),
 	('61352f6d-96c0-40b5-a2e4-44459565af65', 'E05002677', 'Bourne End-cum-Hedsor'),
 	('c1dfe3ff-cb59-4cbc-93e7-bf0d1909fbed', 'E05002678', 'Bowerdean'),
 	('8d8e2be4-bbf5-4d93-ba2d-076b40f07877', 'E05002679', 'Chiltern Rise'),
-	('fc54105b-3f4d-4c25-80e0-a763b50d89ee', 'E05002680', 'Disraeli'),
+	('fc54105b-3f4d-4c25-80e0-a763b50d89ee', 'E05002680', 'Disraeli');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('b02ba218-e613-4b15-ba7a-138dce99efa0', 'E05002681', 'Downley and Plomer Hill'),
 	('e31a547f-8c57-497a-b166-ae47282ea088', 'E05002682', 'Flackwell Heath and Little Marlow'),
 	('bef15350-60f3-46b7-9640-edb1307494f0', 'E05002683', 'Greater Hughenden'),
@@ -13793,7 +13788,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c3711847-bb61-476d-8f8a-be348e3918c1', 'E05003737', 'Beaminster'),
 	('0084555b-1517-4430-adf6-a2e5399ce3a0', 'E05003738', 'Bradford Abbas'),
 	('1c91ab9a-248b-427b-a240-0c072a2798d0', 'E05003739', 'Bradpole'),
-	('ec20d268-a45b-4f2a-9747-f17caf0584ba', 'E05004542', 'Lee West'),
 	('db8e2cad-f282-438d-8a16-2b26939e46b1', 'E05003740', 'Bridport North'),
 	('e10723bd-8f61-475e-af44-b6202c5559c1', 'E05003741', 'Bridport South and Bothenhampton'),
 	('9a47c205-2b42-47b5-8299-6bdd6819ca17', 'E05003742', 'Broadmayne'),
@@ -14017,8 +14011,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('82aeec85-f0b3-493b-b6fd-9acab1af8152', 'E05004095', 'Victoria'),
 	('9f558c31-77e4-4bd8-9b3c-fd2f8e05175d', 'E05004096', 'Bicknacre and East and West Hanningfield'),
 	('6a5118c2-4b84-43b5-9c33-006f598627c0', 'E05004097', 'Boreham and The Leighs'),
-	('a6ce9249-0f20-4bb9-b015-bb3f105c3685', 'E05004543', 'Leesland'),
 	('ca43d505-ad37-48ef-bc72-4cce2eed8774', 'E05004098', 'Broomfield and The Walthams'),
+	('d284f3f5-6870-479b-a38d-ff0a1500b745', 'E05004322', 'Fairford'),
 	('0f27d37c-ad8a-444b-aca4-82b35870e897', 'E05004099', 'Chelmer Village and Beaulieu Park'),
 	('bbe8742c-4c02-4177-ae9e-07947596af22', 'E05004100', 'Chelmsford Rural West'),
 	('483ba1f9-cc56-4ff0-b28d-fbae17e6c7ff', 'E05004101', 'Galleywood'),
@@ -14036,14 +14030,14 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('9fcedf33-df83-4b40-b4cd-564242ee0113', 'E05004113', 'South Woodham-Chetwood and Collingwood'),
 	('47bd8bf8-b291-4bdd-a929-88e25baa518d', 'E05004114', 'South Woodham-Elmwood and Woodville'),
 	('d1fab28c-1b92-4dab-bace-33de8e411fa5', 'E05004115', 'Springfield North'),
-	('8c142151-a38c-4bff-964f-70736de0cd43', 'E05004116', 'The Lawns');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('8c142151-a38c-4bff-964f-70736de0cd43', 'E05004116', 'The Lawns'),
 	('cce07f4f-6985-4405-bf9a-fd1a2793483f', 'E05004117', 'Trinity'),
 	('039b5313-7ea0-492d-9cea-fc1011e71892', 'E05004118', 'Waterhouse Farm'),
 	('38c71a40-7450-4708-9873-7f070d8cf3ff', 'E05004119', 'Writtle'),
 	('9a1f3bd5-b9a7-473e-bd8d-3610d61fa67b', 'E05004120', 'Berechurch'),
 	('4ca218c3-88f6-4c85-8367-6d53489544fd', 'E05004121', 'Birch and Winstree'),
-	('7bc167b4-1792-4fc5-8d99-f155d12419d4', 'E05004122', 'Castle'),
+	('7bc167b4-1792-4fc5-8d99-f155d12419d4', 'E05004122', 'Castle');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('ce8bcb55-e3b4-4a00-baa7-b4a6f1489c6f', 'E05004123', 'Christ Church'),
 	('c8053eb7-c6be-4d7d-a410-d7311d123c7e', 'E05004124', 'Copford and West Stanway'),
 	('a364c700-bc68-4fee-8824-9a533a48d842', 'E05004125', 'Dedham and Langham'),
@@ -14240,10 +14234,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8026e545-af3f-41ef-a8b6-36b5811f6935', 'E05004316', 'Cirencester Beeches'),
 	('b90119d6-100e-4974-a879-3179c92d3e53', 'E05004317', 'Cirencester Chesterton'),
 	('7182b274-06b6-4515-858a-3bcf4eb71eb5', 'E05004318', 'Cirencester Park'),
-	('d0d30135-6e8f-481b-afbf-dd258ecd2f0a', 'E05004544', 'Peel Common'),
 	('5275d84a-1d16-4d09-b158-f38347718cbd', 'E05004319', 'Cirencester Stratton-Whiteway'),
 	('87f82738-cb79-4bc0-9866-065ff66516c2', 'E05004320', 'Cirencester Watermoor'),
-	('d284f3f5-6870-479b-a38d-ff0a1500b745', 'E05004322', 'Fairford'),
 	('fbbf0e6f-8f3c-43a3-b15c-ede258458f30', 'E05004323', 'Fosseridge'),
 	('1cf6f7cc-52e0-441f-b7c5-7698051373d4', 'E05004324', 'Grumbolds Ash'),
 	('38b2cb91-5f7b-4842-b289-707ac5a0258a', 'E05004325', 'Hampton'),
@@ -14463,6 +14455,9 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('1e1f5504-3923-4c07-84c9-db836477b36c', 'E05004539', 'Grange'),
 	('fe39c688-92d7-4639-9324-75d3b406f5a7', 'E05004540', 'Hardway'),
 	('63c9af3d-c625-492e-b5e9-405e742bbd28', 'E05004541', 'Lee East'),
+	('ec20d268-a45b-4f2a-9747-f17caf0584ba', 'E05004542', 'Lee West'),
+	('a6ce9249-0f20-4bb9-b015-bb3f105c3685', 'E05004543', 'Leesland'),
+	('d0d30135-6e8f-481b-afbf-dd258ecd2f0a', 'E05004544', 'Peel Common'),
 	('e781e267-abd4-45c9-b771-ce20df7d50bb', 'E05004545', 'Privett'),
 	('69d5ec88-b3b5-4b22-9fe6-524592d0404a', 'E05004546', 'Rowner and Holbrook'),
 	('019598ab-de8f-434f-b53e-52b05767efdb', 'E05004547', 'Town'),
@@ -14576,6 +14571,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('fdc2d9b2-6b6d-4ec7-9f73-0800367942a9', 'E05004655', 'Colden Common and Twyford'),
 	('5e476594-c6d7-4b1e-832d-fa802799e72e', 'E05004656', 'Compton and Otterbourne'),
 	('de441a4a-0adb-4a57-8137-544182965fd4', 'E05004657', 'Denmead'),
+	('36c71bdf-f631-43bf-a262-c201e0a03c7a', 'E05005218', 'Rishton'),
 	('6304f9e6-cd8d-4a7d-a86d-c7a67dbc56f5', 'E05004658', 'Droxford, Soberton and Hambledon'),
 	('5b1197e6-5f79-4413-b7cc-d3e41aa03b66', 'E05004659', 'Itchen Valley'),
 	('068360f0-e0ec-4122-af9b-953c5cce3db5', 'E05004660', 'Kings Worthy'),
@@ -15025,7 +15021,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('2f80d415-1689-4318-a836-e54b47568de2', 'E05005104', 'Aylesford'),
 	('d5b6fb73-ecab-4a97-9559-794b126c87ce', 'E05005105', 'Blue Bell Hill and Walderslade'),
 	('475d7948-4e09-4771-b64a-1af7e3a1908a', 'E05005106', 'Borough Green and Long Mill'),
-	('36c71bdf-f631-43bf-a262-c201e0a03c7a', 'E05005218', 'Rishton'),
+	('d242e297-dad9-40c1-9653-fea4c9462a0f', 'E05005219', 'St Andrew''s'),
 	('bc9a6428-0155-4bc0-8f35-20130d370977', 'E05005107', 'Burham, Eccles and Wouldham'),
 	('ff39de5e-dacc-4331-b3a3-af2cc78c798c', 'E05005108', 'Cage Green'),
 	('d92ad5aa-4d8d-497c-8d0d-52a466ecbc56', 'E05005109', 'Castle'),
@@ -15037,12 +15033,12 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('964efcc0-421b-40a2-8ed6-6024e0316840', 'E05005115', 'Higham'),
 	('a9b178a0-b1d6-43a2-9567-17844909721e', 'E05005116', 'Hildenborough'),
 	('77038701-3ec0-40cb-ad37-85e2da6b5f8a', 'E05005117', 'Ightham'),
-	('76e8fc58-922f-4f7c-8efd-4983719aa87f', 'E05005118', 'Judd');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('76e8fc58-922f-4f7c-8efd-4983719aa87f', 'E05005118', 'Judd'),
 	('c77f4751-f39b-43e6-a11a-0266633d740b', 'E05005119', 'Kings Hill'),
 	('35ed138b-7fb5-43f8-9cc2-b919e4211e41', 'E05005120', 'Larkfield North'),
 	('eeb25cb5-bca1-4755-b7d5-18d31bed7a14', 'E05005121', 'Larkfield South'),
-	('de825f4b-e383-4883-9fea-032f4e3feff9', 'E05005122', 'Medway'),
+	('de825f4b-e383-4883-9fea-032f4e3feff9', 'E05005122', 'Medway');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('4c8375a4-ddbc-4a5c-bab3-68b301b650bd', 'E05005123', 'Snodland East'),
 	('c84cc42d-e009-405f-adc4-25123820b9c5', 'E05005124', 'Snodland West'),
 	('230a377f-b23f-458f-99c6-fa9da7934efa', 'E05005125', 'Trench'),
@@ -15138,7 +15134,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8b842072-ef58-4aeb-8b07-7625ae298b69', 'E05005215', 'Netherton'),
 	('21db0d47-01ed-472d-933b-fc0542ba5d04', 'E05005216', 'Overton'),
 	('dcbfb0b0-73c9-4047-86d9-2bff5cef57ee', 'E05005217', 'Peel'),
-	('d242e297-dad9-40c1-9653-fea4c9462a0f', 'E05005219', 'St Andrew''s'),
 	('ae980cb8-83b4-4932-9278-3b5ae455970c', 'E05005220', 'St Oswald''s'),
 	('a81c9ee9-3267-4089-a80a-08865247dbe5', 'E05005221', 'Spring Hill'),
 	('3ccc09c8-e9e3-4767-badc-3055ba61d88a', 'E05005222', 'Bare'),
@@ -15282,6 +15277,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c2eac1be-2ff8-4631-870a-25c0cd924110', 'E05005360', 'Birch Green'),
 	('cc46144e-d319-4bcc-923f-1b200880d472', 'E05005361', 'Burscough East'),
 	('467bf815-3a99-4f7e-8ecd-9886090e3baa', 'E05005362', 'Burscough West'),
+	('cc2df13c-3ebd-4153-976e-b892d5b13463', 'E05005363', 'Derby'),
 	('86a6a197-ff56-4d4a-bd66-90d571d41bd9', 'E05005364', 'Digmoor'),
 	('959549e3-db23-40e3-a96b-bcdfd846e756', 'E05005365', 'Halsall'),
 	('3c038bb5-db34-4d8a-994f-810821a3e6cc', 'E05005366', 'Hesketh-with-Becconsall'),
@@ -15767,6 +15763,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('46472da7-056e-4a09-83ea-ec36d471d0e0', 'E05005846', 'Corpusty'),
 	('14c5b521-9703-4e0f-8511-c50c7ed3af9f', 'E05005847', 'Cromer Town'),
 	('b834f5a1-7ee5-4d44-830d-c1e8436b18cf', 'E05005848', 'Erpingham'),
+	('53a76a1d-020f-40af-8ef4-52fbbfb40c33', 'E05005849', 'Gaunt'),
 	('e35d0fda-4801-4944-8d78-11579fab60ed', 'E05005850', 'Glaven Valley'),
 	('8c8f87e7-1a8e-42d5-9988-70a239a7bef8', 'E05005851', 'Happisburgh'),
 	('e1d71713-29b1-48b3-9f21-1403afca4967', 'E05005852', 'High Heath'),
@@ -16038,11 +16035,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('231b5ca7-4f25-4c38-ac3d-0144463bf673', 'E05006237', 'Whitestonecliffe'),
 	('7ea93588-8b72-4dad-b0e9-4394aafdf6a1', 'E05006238', 'Bilton'),
 	('2c41735a-b358-4236-8cc9-dc8f94d357d9', 'E05006239', 'Bishop Monkton'),
-	('3ae030cd-1f52-4397-bf6e-aafbfc4a75d6', 'E05006240', 'Boroughbridge');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('3ae030cd-1f52-4397-bf6e-aafbfc4a75d6', 'E05006240', 'Boroughbridge'),
 	('1da3d8f4-9240-460e-8df5-00b2b7c98b61', 'E05006241', 'Claro'),
 	('4fb7c8b0-3afa-454f-9730-a5d5e1aa4dfe', 'E05006242', 'Granby'),
-	('cacd7bb5-d84e-4a47-ba24-b28b90d8b9b5', 'E05006243', 'Harlow Moor'),
+	('cacd7bb5-d84e-4a47-ba24-b28b90d8b9b5', 'E05006243', 'Harlow Moor');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('132b42f2-49ed-4ea8-bdef-fd85d15ece58', 'E05006244', 'High Harrogate'),
 	('7c738c4d-0e46-4cac-b94b-1fa01903bbb5', 'E05006245', 'Hookstone'),
 	('0bda5f7b-a6a2-4638-b427-cbe3fa47bfbb', 'E05006246', 'Killinghall'),
@@ -16166,7 +16163,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('514054d3-ee66-4824-8838-25f82df8c0b8', 'E05006364', 'Hucknall North'),
 	('c36ae0ac-49c9-41b8-bc07-54858f6abd04', 'E05006365', 'Hucknall West'),
 	('59269abf-3e93-4b83-a6ac-f79cad8cc8a5', 'E05006366', 'Jacksdale'),
-	('f30c4932-cf38-4358-b353-f8c9dc716fd2', 'E05006480', 'Muskham'),
 	('2d1c8f65-2e76-4e17-994f-629e3a70fd93', 'E05006367', 'Kirkby in Ashfield Central'),
 	('414b8d92-5cfa-4ad6-9433-624a94dabe87', 'E05006368', 'Kirkby in Ashfield East'),
 	('29d5e699-d221-4d44-8ab0-b40cac7047d5', 'E05006369', 'Kirkby in Ashfield West'),
@@ -16280,6 +16276,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c4e102f2-0cc6-412c-a126-ee4d28f58ae1', 'E05006477', 'Farnsfield and Bilsthorpe'),
 	('3b20c708-6823-44f7-a28f-b30d798cdffb', 'E05006478', 'Lowdham'),
 	('64fe081e-c4b8-43d5-b84a-a201b3ea8374', 'E05006479', 'Magnus'),
+	('f30c4932-cf38-4358-b353-f8c9dc716fd2', 'E05006480', 'Muskham'),
 	('c29fba49-fa6a-4c32-9273-6c75c51eb9cc', 'E05006481', 'Ollerton'),
 	('7a0e79ab-5133-4b5f-acc3-81027efe4067', 'E05006482', 'Rainworth'),
 	('b832eace-ce29-4817-bfb6-d833e05bc60b', 'E05006483', 'Southwell East'),
@@ -16847,7 +16844,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('16dd66c7-935c-4c9e-8e78-98b59b20b129', 'E05007151', 'Rickinghall and Walsham'),
 	('af825023-1a97-4dc0-9c43-5b9a2727fd7b', 'E05007152', 'Ringshall'),
 	('505135bb-1fff-4e0e-abcd-ed85628e5398', 'E05007153', 'Stowmarket Central'),
-	('289d2df3-0f85-478a-8216-cd5ec47c1373', 'E05007385', 'St Michaels'),
 	('17429bac-2277-47b3-a66b-297dc3b162c5', 'E05007154', 'Stowmarket North'),
 	('76254682-7d4f-4f5d-b6be-3b86d5d99cb5', 'E05007155', 'Stowmarket South'),
 	('12aa054c-6ebc-4c7f-9f7e-16ebc12e18ea', 'E05007156', 'Stowupland'),
@@ -17039,12 +17035,12 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('ae6bcff0-808a-4649-9b15-345032678433', 'E05007343', 'Reigate Hill'),
 	('6e4c5d86-b8a6-48c6-ba03-ccd85695bf05', 'E05007344', 'Salfords and Sidlow'),
 	('41c7588f-242c-4b4f-b12e-193e4e79f8d9', 'E05007345', 'South Park and Woodhatch'),
-	('699c6b84-6472-4909-98db-fe0e1a2ff46f', 'E05007346', 'Tadworth and Walton');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('699c6b84-6472-4909-98db-fe0e1a2ff46f', 'E05007346', 'Tadworth and Walton'),
 	('1b392e6c-df65-418b-88e8-2b7ce65dbbd0', 'E05007347', 'Tattenhams'),
 	('d827de09-cb78-4371-9b24-00a75303e16e', 'E05007348', 'Addlestone Bourneside'),
 	('38730a27-c02b-45bf-9308-44ef55ec104c', 'E05007349', 'Addlestone North'),
-	('d6ce24bc-2d0f-4f06-96e3-f080e48ccea5', 'E05007350', 'Chertsey Meads'),
+	('d6ce24bc-2d0f-4f06-96e3-f080e48ccea5', 'E05007350', 'Chertsey Meads');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('e367cdfd-6971-488c-9659-f862344b797c', 'E05007351', 'Chertsey St Ann''s'),
 	('2d1ba5fe-3a61-4566-a73e-6a1726a6266f', 'E05007352', 'Chertsey South and Row Town'),
 	('a6f539e4-06d1-4610-9e06-3d2d4e1d4631', 'E05007353', 'Egham Hythe'),
@@ -17079,6 +17075,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('f94880e8-6f7f-49a8-92b7-3f7c8bdb9844', 'E05007382', 'Mytchett and Deepcut'),
 	('83bdef42-0276-45d1-aa7b-56e5d0a3b3ba', 'E05007383', 'Old Dean'),
 	('933a02bf-6e97-456f-a688-b4d541ab4cbb', 'E05007384', 'Parkside'),
+	('289d2df3-0f85-478a-8216-cd5ec47c1373', 'E05007385', 'St Michaels'),
 	('8010897f-5bda-441c-8b41-da71e840c261', 'E05007386', 'St Pauls'),
 	('bc05b6ad-fe3f-4dd2-9ea2-e84702e3225f', 'E05007387', 'Town'),
 	('3f995a86-ef0e-4b08-9c77-63f57c89aaa0', 'E05007388', 'Watchetts'),
@@ -17531,6 +17528,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('c587259d-ce28-4f7c-82e1-1dc8cb563ba1', 'E05007964', 'Blackhalls'),
 	('72397cd0-547a-4054-9239-7228900d4d2a', 'E05007965', 'Brandon'),
 	('bd4eea03-cd10-4941-a759-2d23befb85cb', 'E05007966', 'Burnopfield and Dipton'),
+	('76ab806d-8361-417a-9a0d-5ce9a1909e14', 'E05008080', 'Stakeford'),
 	('4bc9fdfe-75b2-4cae-9658-9fc144169cf1', 'E05007967', 'Chester-le-Street North and East'),
 	('29be9ad0-9acc-472c-a120-9de7d8541f7c', 'E05007968', 'Chester-le-Street South'),
 	('7803eac8-d8ac-43c4-89bc-6cca18ca85f0', 'E05007969', 'Chester-le-Street West Central'),
@@ -17644,8 +17642,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('a9348a8e-f8cc-40ee-9124-92e4fae8de3d', 'E05008077', 'Sleekburn'),
 	('81a2d15d-e50c-4f68-9adc-81e6ac856fc5', 'E05008078', 'South Blyth'),
 	('ebd6a44c-10c1-4a62-aef1-28f72f347807', 'E05008079', 'South Tynedale'),
-	('76ab806d-8361-417a-9a0d-5ce9a1909e14', 'E05008080', 'Stakeford'),
-	('3e9ea8ec-835a-4b94-a5b6-266bc94b7afa', 'E05008415', 'West Selkley'),
 	('3c17b967-dd20-40c9-bc2a-73eae789f8e5', 'E05008081', 'Stocksfield and Broomhaugh'),
 	('5a5365c3-8b4b-495b-837c-368097751348', 'E05008082', 'Ulgham'),
 	('dd1321d4-3f28-4210-a1d5-94e80889d47d', 'E05008083', 'Wensleydale'),
@@ -17756,6 +17752,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('fd5682df-2c00-41a6-bc47-dafc4446a258', 'E05008188', 'Shifnal North'),
 	('b4dfcf49-e4c7-4279-b0ab-cebbcf83bc75', 'E05008189', 'Shifnal South and Cosford'),
 	('8acdc7a0-ca76-4d99-bb5f-15634907e660', 'E05008190', 'Sundorne'),
+	('a6eab932-1bb9-4e40-babe-7a23a24da583', 'E05008191', 'Tern'),
 	('a3984171-8ce4-439f-a4c9-db96252df77a', 'E05008192', 'The Meres'),
 	('5511e9ae-e79d-4f5d-83ca-7515736e7064', 'E05008193', 'Underdale'),
 	('807e962a-5cbe-4061-9ed6-60f628242975', 'E05008194', 'Wem'),
@@ -17979,6 +17976,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('bd8f5780-cae0-4a68-a5ab-d2a65ac6e7cc', 'E05008412', 'Warminster East'),
 	('c8512c58-5bd0-467d-9fe7-d490fa9e401d', 'E05008413', 'Warminster West'),
 	('32044408-65e9-4791-b87e-f9c720cd1311', 'E05008414', 'Warminster Without'),
+	('3e9ea8ec-835a-4b94-a5b6-266bc94b7afa', 'E05008415', 'West Selkley'),
 	('a184410c-9e41-4505-a1a9-2941138b7193', 'E05008416', 'Westbury East'),
 	('9eae4c37-7560-4c7b-82f1-e69b39999d3f', 'E05008417', 'Westbury North'),
 	('223fc866-9f42-407d-8e97-025e70d521e4', 'E05008418', 'Westbury West'),
@@ -18040,10 +18038,10 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('3ebecdc1-b441-45c2-a8e9-a174c8ea0cd8', 'E05008474', 'Southcott'),
 	('160b9fb6-e903-4319-81b9-4fa0138f2e09', 'E05008475', 'Stotfold and Arlesey'),
 	('c29f1a78-1c5a-466e-982d-41ab2523586b', 'E05008476', 'Toddington'),
-	('5a47297b-2597-4672-9f0e-3faa65f1c70e', 'E05008477', 'Watling');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('5a47297b-2597-4672-9f0e-3faa65f1c70e', 'E05008477', 'Watling'),
 	('eabeb3d9-2ce8-48b7-a704-8db616c08f61', 'E05008478', 'Woburn and Harlington'),
-	('c1bbd53d-14a6-4a9c-811f-8a16194b7102', 'E05008479', 'Arreton and Newchurch'),
+	('c1bbd53d-14a6-4a9c-811f-8a16194b7102', 'E05008479', 'Arreton and Newchurch');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('cd617533-f23e-4492-86cb-73a6568800a3', 'E05008480', 'Binstead and Fishbourne'),
 	('1a49193f-0600-4d36-a12d-fec189a96bb2', 'E05008481', 'Brading, St Helens and Bembridge'),
 	('f9205d8a-8e74-4b26-8298-f1d2eff11e1e', 'E05008482', 'Carisbrooke'),
@@ -18230,7 +18228,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('0bd5ea59-db79-400f-9ab1-b0d2b33ac60e', 'E05008666', 'Davenham and Moulton'),
 	('21bc4035-bd20-4900-aef5-a05cee08b879', 'E05008667', 'Dodleston and Huntington'),
 	('9de9958f-b0d0-4ea9-8635-893d88e7db1b', 'E05008668', 'Ellesmere Port Town'),
-	('1377f8a4-e37a-4f9a-b7e8-ba4b749bcd5c', 'E05008669', 'Elton'),
 	('795fed9b-1bcd-4041-a872-0a9f6efc7de2', 'E05008670', 'Farndon'),
 	('86b15532-4f3c-421d-a658-1e413cac0f6e', 'E05008671', 'Frodsham'),
 	('6d440213-98e6-4d28-9e18-a285eda4049d', 'E05008672', 'Garden Quarter'),
@@ -19041,11 +19038,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('f5a010a3-6d34-4e80-9210-bbe00d0969c2', 'E05009478', 'Red Hill'),
 	('7d3d5f83-2c59-44d4-8232-6e79169b4f2b', 'E05009479', 'Ross East'),
 	('05cba257-d355-4cb1-a820-55dc74b4e488', 'E05009480', 'Ross North'),
-	('0614f039-0913-469a-94a8-366cc2e2bf74', 'E05009481', 'Ross West');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('0614f039-0913-469a-94a8-366cc2e2bf74', 'E05009481', 'Ross West'),
 	('8eba0068-b1a5-4fe0-a0de-349cf97f95d5', 'E05009482', 'Saxon Gate'),
 	('ec0759c4-0eed-49ed-b4e8-9d5d65cde498', 'E05009483', 'Stoney Street'),
-	('c995f529-79e7-4115-b193-3e4c62d485fd', 'E05009484', 'Sutton Walls'),
+	('c995f529-79e7-4115-b193-3e4c62d485fd', 'E05009484', 'Sutton Walls');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('cc6e7c3f-9252-4778-8c4d-e730483a227a', 'E05009485', 'Three Crosses'),
 	('df7dd67b-b143-415b-9ab6-45ecec97c991', 'E05009486', 'Tupsley'),
 	('700ac222-4126-42c3-b1f6-474ba62858e7', 'E05009487', 'Weobley'),
@@ -19496,6 +19493,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('a27d0305-c440-435c-8459-c61a3f77cb5c', 'E05009941', 'Hardhorn with High Cross'),
 	('aa8dbf7d-13fc-483b-bfac-0b8b95385f1f', 'E05009942', 'Jubilee'),
 	('e4590d4d-d21b-41a2-a5e3-0e65b94d705c', 'E05009943', 'Marsh Mill'),
+	('2b70d42b-da44-4836-a981-36142f7c6574', 'E05009944', 'Mount'),
 	('26f2da09-f177-4168-a33d-8bbad0a33a9d', 'E05009945', 'Park'),
 	('ffe2b2f2-74b0-4421-9053-b31789b58096', 'E05009946', 'Pharos'),
 	('8102edf3-853b-4172-8e9c-ba0762b87da2', 'E05009947', 'Pheasant''s Wood'),
@@ -19782,9 +19780,9 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('dd7e12a0-f1d5-466c-925d-046573f8c12c', 'E05010228', 'Lostock Hall'),
 	('a6a347a9-758f-47b2-9b67-47b78dc54850', 'E05010229', 'Middleforth'),
 	('f400c251-38cf-4eca-92ef-6dfd38e18622', 'E05010230', 'Moss Side'),
+	('0d48e01e-5ec8-402c-b5d7-c8db98bd0ba9', 'E05010791', 'Minster'),
 	('5d5b29ab-e34e-4f5e-bff5-27e8b4585801', 'E05010231', 'New Longton & Hutton East'),
 	('700e6303-7bdc-41c6-9b36-67d2d75b387d', 'E05010232', 'St Ambrose'),
-	('49f73c4b-90d8-448a-8699-fdf49762a355', 'E05010458', 'Abbey'),
 	('dd973ef7-06df-41aa-8270-f2f728027161', 'E05010233', 'Samlesbury & Walton'),
 	('4754816d-fa65-471e-895f-af3558c24d0a', 'E05010234', 'Seven Stars'),
 	('867e7867-3d4d-412a-a13e-3339ba4ee253', 'E05010235', 'Walton-le-Dale East'),
@@ -20006,9 +20004,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('80035dfe-d103-43d0-aa8f-b0a9e8d4cddb', 'E05010452', 'Saxmundham'),
 	('b12c4b62-cb45-461f-b5c1-a1091241736a', 'E05010453', 'The Trimleys'),
 	('81f506b6-7355-4044-96b5-f7e83fd6b795', 'E05010454', 'Tower'),
+	('ee95531d-49e2-4fe6-8713-b122a4728844', 'E05010792', 'Moorland'),
 	('c7083952-2f80-45e1-bb0a-fdda6c71c1f3', 'E05010455', 'Wenhaston & Westleton'),
 	('78f45816-3211-4bfd-93a3-5cb27f767dfe', 'E05010456', 'Wickham Market'),
 	('988f0f16-3d23-47d7-947c-e0b188d9f895', 'E05010457', 'Woodbridge'),
+	('49f73c4b-90d8-448a-8699-fdf49762a355', 'E05010458', 'Abbey'),
 	('577b6e0f-bdcf-438a-8296-776e5e2dd08e', 'E05010459', 'Aylestone'),
 	('939b7f33-d086-4de6-9445-ab89913361ee', 'E05010460', 'Beaumont Leys'),
 	('2895c489-185a-445a-bf3c-7b803b69a638', 'E05010461', 'Belgrave'),
@@ -20342,8 +20342,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('6a0917ff-f834-4ffc-998c-a01b81deb63a', 'E05010788', 'Castle'),
 	('5306beba-5003-4bfd-8acc-d1551abb7ee5', 'E05010789', 'Glebe'),
 	('4d9121d3-ed16-42f2-8245-9b8be97dad13', 'E05010790', 'Hartsholme'),
-	('0d48e01e-5ec8-402c-b5d7-c8db98bd0ba9', 'E05010791', 'Minster'),
-	('ee95531d-49e2-4fe6-8713-b122a4728844', 'E05010792', 'Moorland'),
 	('7dff67a9-3228-4890-b7dd-600d91fed637', 'E05010793', 'Park'),
 	('93b6880c-d329-48fd-999e-76753d2bb953', 'E05010794', 'Witham'),
 	('fae69232-79a8-4fea-afa1-c3f6be2b4e70', 'E05010795', 'Byfleet and West Byfleet'),
@@ -21043,10 +21041,10 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('7f3612ea-42f0-48e8-a6fa-f98f6dcfc96e', 'E05011495', 'Cartmel'),
 	('dc017876-365f-40ef-8c27-4c3d6f112269', 'E05011496', 'Furness Peninsula'),
 	('a52cff1b-9da0-459e-b9f2-fd86b76e971d', 'E05011497', 'Grange'),
-	('656977cd-6665-445b-bd92-6a20b2993ad8', 'E05011498', 'Kendal East');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('656977cd-6665-445b-bd92-6a20b2993ad8', 'E05011498', 'Kendal East'),
 	('c96a95b6-eb5e-45e6-a3da-c38a010f2781', 'E05011499', 'Kendal North'),
-	('eb4d28b1-4e38-4d63-8c5f-37dc64a18ff7', 'E05011500', 'Kendal Rural'),
+	('eb4d28b1-4e38-4d63-8c5f-37dc64a18ff7', 'E05011500', 'Kendal Rural');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('e11f6340-d3dc-4025-b890-617059ed5f59', 'E05011501', 'Kendal South & Natland'),
 	('739f171f-7827-47d6-b5de-514931fde949', 'E05011502', 'Kendal Town'),
 	('90d2e79f-ccf1-43b0-b3f3-c816a9c9857c', 'E05011503', 'Kendal West'),
@@ -21788,6 +21786,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('b30773f5-2fc7-4c9f-9c73-2e9d29ec8a59', 'E05012277', 'Castle'),
 	('744296c6-e347-433c-9df8-b30ec6b7cd32', 'E05012278', 'Clifton East'),
 	('1d24700f-062b-4940-9745-3cc7f2a8c4b5', 'E05012279', 'Clifton West'),
+	('0ba7d83e-ec78-4ce2-8971-731933218b79', 'E05012280', 'Dales'),
 	('06998f5f-e578-4839-9b23-e48941319c90', 'E05012281', 'Hyson Green & Arboretum'),
 	('02c58e35-0fcf-4afa-bdd2-720882986ff2', 'E05012282', 'Leen Valley'),
 	('7d549577-a022-43b5-aa36-666030880dad', 'E05012283', 'Lenton & Wollaton East'),
@@ -21909,7 +21908,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('effb9188-9f09-4844-885b-ba3da8b4e5bb', 'E05012398', 'Greenhithe & Knockhall'),
 	('347adec8-b25a-4868-88b5-32adfce6d026', 'E05012399', 'Heath'),
 	('6d366974-86d8-4a01-94a5-01cb00d91e87', 'E05012400', 'Joyden''s Wood'),
-	('ceb5debc-26c7-4dc5-82ab-01623515db20', 'E05012515', 'Bruton'),
 	('c5c955d8-c5a3-4c6a-9187-da89a6c2d561', 'E05012401', 'Longfield, New Barn & Southfleet'),
 	('c15f5c71-477b-4e97-b5b4-5231b8587744', 'E05012402', 'Maypole & Leyton Cross'),
 	('0376d49d-6bad-43e6-9ef3-acdc0501573d', 'E05012403', 'Newtown'),
@@ -22024,6 +22022,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('fd19c527-2536-4fca-98e2-f0d2fa883749', 'E05012512', 'Sunningdale & Cheapside'),
 	('2f970fd3-4486-4abb-8b43-39a867eb4cc7', 'E05012513', 'Blackdown & Tatworth'),
 	('f2e182be-5b43-47fa-a5e1-556cafc0894d', 'E05012514', 'Blackmoor Vale'),
+	('ceb5debc-26c7-4dc5-82ab-01623515db20', 'E05012515', 'Bruton'),
 	('e3b25ef8-eb9a-40bc-a273-c3909a42da7d', 'E05012516', 'Brympton'),
 	('56446003-60d2-4cfc-84c0-1fab04fcddaf', 'E05012517', 'Burrow Hill'),
 	('5d1f08a2-a121-4db3-8193-ca45ee1ad514', 'E05012518', 'Camelot'),
@@ -22044,9 +22043,9 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('2c7ef8d8-2859-450d-b386-f9a3741846db', 'E05012533', 'Milborne Port'),
 	('9389d674-9769-40f4-97dd-8701e49f8714', 'E05012534', 'Neroche'),
 	('29cc1805-f618-486e-82f3-451c88dbbfd9', 'E05012535', 'Northstone, Ivelchester & St Michael''s'),
-	('fd6215dc-f1fa-476d-a5d4-4c3f245707c7', 'E05012536', 'Parrett');
+	('fd6215dc-f1fa-476d-a5d4-4c3f245707c7', 'E05012536', 'Parrett'),
+	('ba05b82e-9949-44a2-821e-3b63997ee342', 'E05012537', 'South Petherton');
 INSERT INTO establishment.administrative_ward (id, code, name) VALUES
-	('ba05b82e-9949-44a2-821e-3b63997ee342', 'E05012537', 'South Petherton'),
 	('6263c3c0-0829-4c11-9b46-a64663dcd47b', 'E05012538', 'Tower'),
 	('66251d5f-27cc-47e5-adca-7691d78480c2', 'E05012539', 'Turn Hill'),
 	('ccda081c-be0c-417c-943e-b3fc49cfc07c', 'E05012540', 'Wessex'),
@@ -22578,7 +22577,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('6b976105-e734-4d03-9e82-4f4b05b80050', 'E05013066', 'Chorley East'),
 	('5b6fb9f9-58b4-4b16-97b3-cba8a79160f4', 'E05013067', 'Chorley North East'),
 	('2a828f32-6537-41b5-8e54-276347acee65', 'E05013068', 'Chorley North West'),
-	('2fba2782-21db-4673-a2be-cac842f0ac29', 'E05013873', 'Norcot'),
 	('f6fca28c-86ab-4485-9efd-9ff1fb809e48', 'E05013069', 'Chorley North & Astley'),
 	('d956302b-78c2-4705-a380-ec82c7831922', 'E05013070', 'Chorley South East & Heath Charnock'),
 	('c3be7176-cc8e-4229-99ea-0878193f36d4', 'E05013071', 'Chorley South West'),
@@ -22686,7 +22684,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('a7160df5-35ae-43e1-b56c-65b87a69d940', 'E05013173', 'Bridgewater'),
 	('48d287f5-f291-49c2-a1de-b4274d6f2b33', 'E05013174', 'Central & West Bank'),
 	('c5715113-0923-4a56-9f56-4bf541107f07', 'E05013175', 'Daresbury, Moore & Sandymoor'),
-	('45bed56c-7a72-4484-aa93-fc9c245b4e38', 'E05013874', 'Park'),
 	('ad30206a-ebdf-490a-9519-f66020bf8735', 'E05013176', 'Ditton, Hale Village & Halebank'),
 	('88de1313-6768-418f-8b3c-650c54930fef', 'E05013177', 'Farnworth'),
 	('b407f322-d9a5-4590-bb02-2c06ca4ed965', 'E05013178', 'Grange'),
@@ -23045,11 +23042,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('3dfd2502-3739-4936-b577-5d748963a13b', 'E05013561', 'Wealdstone North'),
 	('478eca5f-2eb3-4e31-a90e-cbb0ee7ad8a8', 'E05013562', 'Wealdstone South'),
 	('fc76baf4-bcaa-4329-b0d0-05136c02ae90', 'E05013563', 'West Harrow'),
-	('57bb118e-1eed-4afb-9824-d95e42a0bc7f', 'E05013564', 'Belmore');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('57bb118e-1eed-4afb-9824-d95e42a0bc7f', 'E05013564', 'Belmore'),
 	('ffca39e0-436a-4c89-90fb-c9f515248235', 'E05013565', 'Charville'),
 	('ea9a65bc-e5d8-4c80-b6cf-49e51f308802', 'E05013566', 'Colham & Cowley'),
-	('22fbce19-d2e2-47af-acf5-9974a60b9157', 'E05013567', 'Eastcote'),
+	('22fbce19-d2e2-47af-acf5-9974a60b9157', 'E05013567', 'Eastcote');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('7a96e57f-4d25-4980-b784-0a1f49ccfa25', 'E05013568', 'Harefield Village'),
 	('298f5c17-ccb8-40a3-b935-dced1b1cfbc2', 'E05013569', 'Hayes Town'),
 	('198520f7-72c6-42bc-8006-6d30b9daedd9', 'E05013570', 'Heathrow Villages'),
@@ -23155,6 +23152,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('279ef4c4-c516-4361-9eed-31c76ec1f17a', 'E05013670', 'South Hampstead'),
 	('219ddedd-517f-4de8-9ea5-15bfee0aa6e9', 'E05013671', 'West Hampstead'),
 	('d89e7f52-96ac-40a8-a6a1-4f4504a95602', 'E05013672', 'Arnos Grove'),
+	('4b1cebed-5767-414d-a6b2-dc7cd1ccc561', 'E05013673', 'Bowes'),
 	('4579d615-a2b7-44d7-9a03-4a5983a4ca2c', 'E05013674', 'Brimsdown'),
 	('ad916db9-124c-4c6e-829a-e9421671a31c', 'E05013675', 'Bullsmoor'),
 	('0a9a8264-0ed1-4479-b322-6b2fae7b9034', 'E05013676', 'Bush Hill Park'),
@@ -23354,6 +23352,8 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('b2b50bcb-fb82-420a-bbec-a86de247274d', 'E05013870', 'Emmer Green'),
 	('e05baf8d-902a-4d19-86f9-c50fb4db9094', 'E05013871', 'Katesgrove'),
 	('bb7fd8b5-6210-4a3f-b957-641f60b74dd5', 'E05013872', 'Kentwood'),
+	('2fba2782-21db-4673-a2be-cac842f0ac29', 'E05013873', 'Norcot'),
+	('45bed56c-7a72-4484-aa93-fc9c245b4e38', 'E05013874', 'Park'),
 	('6593325a-7ac0-4eaa-8c4c-d1672c6444ee', 'E05013875', 'Redlands'),
 	('f27dabd3-1f6e-4b02-a275-ce038012a5a6', 'E05013876', 'Southcote'),
 	('53f1d899-1663-47d8-a462-ee1549f01f3a', 'E05013877', 'Thames'),
@@ -23466,7 +23466,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('f1c13103-d53f-44c4-9f29-d08a18d01c45', 'E05013984', 'South Hornchurch'),
 	('13dac0f0-6d09-4260-8f3d-021ef2d16a2e', 'E05013985', 'Squirrels Heath'),
 	('48e521aa-72fd-4f29-9548-c41e529e61a5', 'E05013986', 'Upminster'),
-	('a9003a88-948c-49a2-98de-2b097c5f0fba', 'E05014212', 'Thursby'),
 	('cd429595-57e5-4e97-afcf-b9290c67a495', 'E05013987', 'Beckenham Town & Copers Cope'),
 	('2a0cb885-0aee-4db5-90e6-11d59b43d076', 'E05013988', 'Bickley & Sundridge'),
 	('255fb606-655d-4659-b310-7b816f8c40dd', 'E05013989', 'Biggin Hill'),
@@ -23588,7 +23587,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('6a2c0897-bca1-4fa7-95c7-ed4b30c356d9', 'E05014105', 'Kennington'),
 	('6c7ffb52-14aa-4193-8d21-cbb9e291cfc5', 'E05014106', 'Knight''s Hill'),
 	('9b74f0a1-99ec-4353-8df3-27adf0a7ab68', 'E05014107', 'Myatt''s Fields'),
-	('eb4c69b6-c894-4a1c-af30-d2c1a282b5bf', 'E05014108', 'Oval'),
 	('1e457690-fea9-4a8d-b3a0-56fbe381c86b', 'E05014109', 'St Martin''s'),
 	('65d27871-6a4f-4d71-8db4-7d819bfaee7e', 'E05014110', 'Stockwell East'),
 	('41de89cf-f21f-4934-871c-cc3b10dec8c9', 'E05014111', 'Stockwell West & Larkhall'),
@@ -23692,6 +23690,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('d5aec595-8741-4e16-90c6-b4ef00899f7c', 'E05014209', 'Seaton'),
 	('acf9e78f-6a32-4614-8432-6a60f26a3c6a', 'E05014210', 'Solway Coast'),
 	('5d5d4731-8329-44e4-92bb-8bb094d0e841', 'E05014211', 'Stanwix Urban'),
+	('a9003a88-948c-49a2-98de-2b097c5f0fba', 'E05014212', 'Thursby'),
 	('0582611f-d72a-413d-8afe-3c81edc59b46', 'E05014213', 'Upperby'),
 	('03193c63-23e3-4648-bf44-d5c7963f6896', 'E05014214', 'Wetheral'),
 	('2f996b03-890b-45ef-9bdc-7a04fee3c69d', 'E05014215', 'Wigton'),
@@ -23799,7 +23798,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('65b2bbdd-2341-4f71-abf0-2964dcdc6a61', 'E05014317', 'Sherburn in Elmet'),
 	('9d17bc29-629a-44e1-b1fe-c1d8ba9bc50b', 'E05014318', 'Sheriff Hutton & Derwent'),
 	('9843e434-e8b2-4a14-bd9c-cdbd3d732b38', 'E05014319', 'Skipton East & South'),
-	('7773d537-b747-43ec-a043-0f6fc1c9bed9', 'E05014876', 'Norton North'),
 	('221aba60-f1b6-4ce4-ae1e-1ae2c9d2442e', 'E05014320', 'Skipton North & Embsay-with-Eastby'),
 	('a109dd90-3fa8-4053-986f-cddeaddb34ca', 'E05014321', 'Skipton West & West Craven'),
 	('e9adcb80-8d5f-4160-8482-7cc260507e7a', 'E05014322', 'Sowerby & Topcliffe'),
@@ -24021,7 +24019,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('3246fc0a-4a24-4f7a-84a5-c759e101f58a', 'E05014538', 'Ansdell & Fairhaven'),
 	('db50c267-6d57-400f-9c1f-74aa7bd07f17', 'E05014539', 'Ashton'),
 	('e7444ac3-6127-4215-9604-676398733aad', 'E05014540', 'Carnegie'),
-	('4e1c8108-dbfa-4758-b4ba-0f8219f2b72e', 'E05014877', 'Norton South'),
 	('30460dca-8e8e-4d5c-a411-95c24b4455aa', 'E05014541', 'Freckleton Village'),
 	('b87d1c62-d145-43c9-bcb0-9bd5002126c3', 'E05014542', 'Heyhouses'),
 	('b0c12d7b-3d1c-4dbb-af47-1dadf4def328', 'E05014543', 'Kilgrimol'),
@@ -24046,11 +24043,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('643dc1ad-2d6a-4285-bcb2-c10d406a29d8', 'E05014562', 'Bradeley & Chell Heath'),
 	('c7d8779f-7935-4d0f-9034-dca13638752d', 'E05014563', 'Bucknall & Eaton Park'),
 	('e73f0fc2-114a-4772-a84e-5363b02ba34b', 'E05014564', 'Burslem'),
-	('e72d2c2e-2b3a-46d0-9ab7-a5fa94bad1a6', 'E05014565', 'Burslem Park');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('e72d2c2e-2b3a-46d0-9ab7-a5fa94bad1a6', 'E05014565', 'Burslem Park'),
 	('9ac56ef3-7f2b-4840-8722-40c1756eae6b', 'E05014566', 'Dresden & Florence'),
 	('cb650e80-659e-478b-b080-d0ca48a38e52', 'E05014567', 'Etruria & Hanley'),
-	('b642305b-c986-43be-a9a4-716c58852e51', 'E05014568', 'Fenton East'),
+	('b642305b-c986-43be-a9a4-716c58852e51', 'E05014568', 'Fenton East');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('51d48109-2d39-4682-9d44-6312855d7bdc', 'E05014569', 'Fenton West & Mount Pleasant'),
 	('c421cb87-f0fa-42f7-a841-417cea22d7d3', 'E05014570', 'Ford Green & Smallthorne'),
 	('bb67afac-9fd6-49ab-b48f-b4a27940aeea', 'E05014571', 'Goldenhill & Sandyford'),
@@ -24350,8 +24347,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8451c04b-8093-49bb-89cb-be299539bbc5', 'E05014871', 'Ingleby Barwick South'),
 	('b0d3efe4-1b26-4448-b372-dddefb62cdd4', 'E05014872', 'Mandale & Victoria'),
 	('c163a9f8-426a-41b0-949e-8291bf94e47d', 'E05014873', 'Newtown'),
+	('2fc86ed5-e9c7-4a95-a629-2aa515709b47', 'E05014989', 'Abram'),
 	('fd42c37e-5942-4e31-a063-bab06df568a0', 'E05014874', 'Northern Parishes'),
 	('877dd900-7416-4f81-9c1a-591552f8a2b0', 'E05014875', 'Norton Central'),
+	('7773d537-b747-43ec-a043-0f6fc1c9bed9', 'E05014876', 'Norton North'),
+	('4e1c8108-dbfa-4758-b4ba-0f8219f2b72e', 'E05014877', 'Norton South'),
 	('474a6b71-0e5e-47e2-855b-40e5d9265405', 'E05014878', 'Ropner'),
 	('a736c3aa-f81a-415a-998e-b9b1bb919d74', 'E05014879', 'Roseworth'),
 	('6907ac77-712c-42a7-9fba-6016c664731f', 'E05014880', 'Southern Villages'),
@@ -24463,7 +24463,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('5f335a91-702b-40f1-a367-d6cde09b7292', 'E05014986', 'Soar Valley'),
 	('5dcb2e4f-d58a-4f63-badc-e2f4f3d18cd1', 'E05014987', 'Tollerton'),
 	('9fcbfe9f-31d7-4a10-a24b-2a6a1596ab6f', 'E05014988', 'Trent Bridge'),
-	('2fc86ed5-e9c7-4a95-a629-2aa515709b47', 'E05014989', 'Abram'),
 	('ac2d3343-ea7c-4121-8373-e302aff1fe71', 'E05014990', 'Ashton-in-Makerfield South'),
 	('96ab90b0-7d98-4f9e-af47-3d4689f968c0', 'E05014991', 'Aspull, New Springs & Whelley'),
 	('d5faa625-2f26-4b33-96e0-ec44706a321c', 'E05014992', 'Astley'),
@@ -24565,6 +24564,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('dcb300e5-437d-4ba1-bd44-e2f359337c80', 'E05015088', 'Frodingham'),
 	('1ad0006e-d749-4de8-9975-0a3bb9e11b23', 'E05015089', 'Kingsway with Lincoln Gardens'),
 	('bb73f802-e992-4a55-90fb-1bc9fc77d6dc', 'E05015090', 'Messingham'),
+	('0ac34114-dc6b-45c4-88f3-9602498253c4', 'E05015091', 'Ridge'),
 	('563946d1-4935-45cf-9bfe-deb8b52c23d2', 'E05015092', 'Town'),
 	('4c6dda92-afcb-4728-b39e-b87522ef2c9f', 'E05015093', 'Auriol'),
 	('b7ecd65a-0f0d-4790-8827-025626064183', 'E05015094', 'College'),
@@ -25355,7 +25355,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('22a3d3aa-95d1-4888-a446-6b81e856f49e', 'E05015878', 'Shiremoor'),
 	('4e34d9f1-96a9-4ad0-8b68-bde6a55f37f7', 'E05015879', 'St Mary''s'),
 	('d6c74a61-b21c-4682-9024-6a1250ee96f1', 'E05015880', 'Tynemouth'),
-	('e68aabc0-9ec0-4dcd-8445-175121338f2a', 'E05016101', 'Cowpen'),
 	('f7a98347-6ca2-4687-bb4d-a28a46d80148', 'E05015881', 'Wallsend Central'),
 	('406e29e2-6ced-4124-9aab-d735729e7cf8', 'E05015882', 'Wallsend North'),
 	('85b0508c-d029-4241-ade0-08c5ac564a8e', 'E05015883', 'Weetslade'),
@@ -25576,6 +25575,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('b961d6b5-f121-4876-bc60-ab7e589b5e7a', 'E05016098', 'Choppington & Hepscott'),
 	('535d6ec5-2675-4b39-a811-6b9b23ebb4ad', 'E05016099', 'College with North Seaton'),
 	('293a9d59-d1b7-41f2-8a2d-b8bc228ca2f9', 'E05016100', 'Corbridge'),
+	('e68aabc0-9ec0-4dcd-8445-175121338f2a', 'E05016101', 'Cowpen'),
 	('226fe71c-f537-4f98-ba9f-86bcf8a52ba9', 'E05016102', 'Cramlington East & Double Row'),
 	('9e5aa001-ea03-4e41-a413-554aa881b35b', 'E05016103', 'Cramlington Eastfield'),
 	('8bac9e01-6b7c-4335-9d5e-b714f649f645', 'E05016104', 'Cramlington North'),
@@ -25796,7 +25796,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('9e58d613-5845-48f0-9ff0-e742ef8bb90e', 'E05016319', 'Stanford-le-Hope South'),
 	('6c4308e4-d355-4cae-93f8-8397033937fc', 'E05016320', 'Stifford'),
 	('a9c14817-3b41-41b7-a3a0-7727e164a5f4', 'E05016321', 'The Homesteads & Stanford-le-Hope North'),
-	('74a35199-6823-4f92-8cd4-a9698b983c04', 'N08000124', 'Jordanstown'),
 	('bfd584dc-08cb-4c6a-8131-9e1d570cbab0', 'E05016322', 'Tilbury Riverside'),
 	('d24e8a1b-4165-4d5f-a07f-a91a9943e5da', 'E05016323', 'Tilbury St Chads'),
 	('2bf2da4f-dbe9-4dc9-b1df-3b5eea3ca0eb', 'E05016324', 'West Thurrock & South Stifford'),
@@ -25902,7 +25901,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('af562ae4-9d3a-4658-802f-fa4372c20047', 'E05016424', 'Knowle'),
 	('241e1ca3-d4fe-450f-ac2f-e631a5f33244', 'E05016425', 'Lyndon'),
 	('a4fe538f-02cf-49c2-890e-94d6f8036ab0', 'E05016426', 'Meriden & Arden'),
-	('263ebc83-b5e7-4038-aa96-3974b9ed16fd', 'E05016427', 'Olton'),
 	('80036773-5706-4af9-8d6d-f4f77c1cc60d', 'E05016428', 'Shirley East & Sharmans Cross'),
 	('eff29d48-a0fa-439e-b550-ccad3c3b5da2', 'E05016429', 'Shirley South'),
 	('d1ea83fe-d3f9-464c-885f-b6553981b026', 'E05016430', 'Shirley West'),
@@ -26048,10 +26046,10 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('52897678-10a5-41fa-8fe6-20ac72ae1c87', 'E05016570', 'Darfield & Great Houghton'),
 	('ce40f7aa-6dd1-4cff-a440-7de6a71d3ad4', 'E05016571', 'Darton East'),
 	('89bf67d1-8aa3-466a-9144-84f3f10b6340', 'E05016572', 'Darton West'),
-	('4574878d-bd0d-4ade-8f2b-8d238b73eabb', 'E05016573', 'Dearne North');
-INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('4574878d-bd0d-4ade-8f2b-8d238b73eabb', 'E05016573', 'Dearne North'),
 	('5447536b-6cd7-4694-b763-ae8d8007b553', 'E05016574', 'Dearne South'),
-	('2f59435b-fa7c-411c-86ca-63b72d86ccd9', 'E05016575', 'Dodworth, Stainborough & Tankersley'),
+	('2f59435b-fa7c-411c-86ca-63b72d86ccd9', 'E05016575', 'Dodworth, Stainborough & Tankersley');
+INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('5fd5024f-1932-4ef6-a3d9-a3523d4fe68d', 'E05016576', 'Hoyland Milton'),
 	('03351554-6f7d-4036-a748-463aeac7d277', 'E05016577', 'Kingstone'),
 	('fb83bf3b-812a-4d59-8675-1349ba329af7', 'E05016578', 'Monk Bretton'),
@@ -26134,6 +26132,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8d7a1cee-32dd-4cf3-a50f-0d57a9143ed3', 'N08000121', 'Glengormley'),
 	('a798be2e-4824-4ba6-b445-f848cc103c1b', 'N08000122', 'Greystone'),
 	('f5deeaab-3c0e-4a27-ba4d-3335e4e2d9b2', 'N08000123', 'Hightown'),
+	('74a35199-6823-4f92-8cd4-a9698b983c04', 'N08000124', 'Jordanstown'),
 	('7c2db30f-37fd-40d9-b04a-74d29c650a77', 'N08000125', 'Mallusk'),
 	('29a750c4-0424-4bc0-976e-978708e0293f', 'N08000126', 'Monkstown'),
 	('c0d88753-413c-4cf4-86cc-e00f34a4269b', 'N08000127', 'Mossley'),
@@ -26707,6 +26706,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('b6121173-ecc0-4bb6-87af-4ef168d4d96d', 'S13002610', 'Grangemouth'),
 	('e60f0c83-37df-4496-b3e0-eab1517b0847', 'S13002611', 'Denny and Banknock'),
 	('27daac38-3719-461b-9692-83fb1be1522f', 'S13002612', 'Carse, Kinnaird and Tryst'),
+	('b0c8037d-d7c6-43bc-94da-a2c504510b1c', 'S13002723', 'Fortissat'),
 	('34af1359-eccd-4c44-be15-81afe6de26df', 'S13002613', 'Bonnybridge and Larbert'),
 	('f639e2c4-9f67-4460-ad02-8c892cdb9679', 'S13002614', 'Falkirk North'),
 	('339cf44f-b367-4ce8-bcba-cc762291fbdf', 'S13002615', 'Falkirk South'),
@@ -26815,7 +26815,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('b11ece52-1790-4d8b-8d9e-b07ba3ff9c69', 'S13002720', 'Coatbridge West'),
 	('f7f064da-2ad5-4b39-8bd0-c419fd7ddfb0', 'S13002721', 'Coatbridge South'),
 	('4a99adf8-7fa9-4d29-8bdb-04117654b845', 'S13002722', 'Airdrie South'),
-	('b0c8037d-d7c6-43bc-94da-a2c504510b1c', 'S13002723', 'Fortissat'),
 	('fada69e5-83be-4789-8148-1f56f439ded3', 'S13002724', 'Thorniewood'),
 	('59255f60-0133-477a-95c6-c23ab063418c', 'S13002725', 'Bellshill'),
 	('9dca05af-ff08-4349-bfce-ecec6baa93f9', 'S13002726', 'Mossend and Holytown'),
@@ -27023,6 +27022,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('8a7e2e41-3cad-434f-8cb0-e93044ebeda1', 'S13002928', 'Morningside'),
 	('250b4156-4fe8-45a1-8e25-94e08966d4d1', 'S13002929', 'City Centre'),
 	('cc194175-8f9f-435d-b56c-0024a79a2428', 'S13002930', 'Leith Walk'),
+	('49265460-5e74-4236-aaa3-6e1c3f094079', 'S13002931', 'Leith'),
 	('ba69786f-68e2-4c6f-8957-1ce4adcf4d9b', 'S13002932', 'Craigentinny/Duddingston'),
 	('60b7980a-fd73-4e25-9b5a-c8d8337f2c05', 'S13002933', 'Southside/Newington'),
 	('bf956a45-44a5-4543-b7fe-c96497064507', 'S13002934', 'Liberton/Gilmerton'),
@@ -27238,6 +27238,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('cddb9aa0-402f-41b9-b4e3-0c5a864f8169', 'S13003143', 'Uibhist a Deas, Ãˆirisgeigh agus Beinn na Faoghla'),
 	('e9a4a6d4-28d5-4432-b61a-8d09bea4642e', 'S13003144', 'Uibhist a Tuath'),
 	('81cff49d-c069-4e1a-820f-82d777032e43', 'S13003145', 'Ardrossan'),
+	('d839f066-4f15-4e12-a9e1-58011c3e86e7', 'S13003146', 'Arran'),
 	('1f8786ef-124e-454d-a30e-c847e2cd94a2', 'S13003147', 'Garnock Valley'),
 	('9dff77c9-ec79-4b8f-a501-a965c92bea7d', 'S13003148', 'North Coast'),
 	('50899a05-6f0d-4e7f-ae2d-e15778729d36', 'S13003149', 'Saltcoats and Stevenston'),
@@ -27471,6 +27472,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('9ab03d9e-dcfc-4864-8584-0cb03fa565b4', 'W05000234', 'Trelawnyd and Gwaenysgor'),
 	('e9131998-1fd1-4aa0-ab3c-58dacbe79cef', 'W05000235', 'Treuddyn'),
 	('fe1e38f7-6ade-4c89-9266-bc98b46fa61e', 'W05000236', 'Whitford'),
+	('189f44c8-1541-4679-a637-78cc9d9d0d8a', 'W05000237', 'Acton'),
 	('fb97b782-cb9d-4b5e-83e6-102085a60b04', 'W05000238', 'Borras Park'),
 	('3514b6df-a027-40c5-9c33-c92c36715919', 'W05000239', 'Bronington'),
 	('d2b20463-3204-4b87-b6e8-bcdf118f0663', 'W05000241', 'Brynyffynnon'),
@@ -27697,11 +27699,11 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('66090e03-4016-4d83-961e-21f338bc1a52', 'W05000473', 'Garnant'),
 	('0cd1511d-c568-4952-a264-de42b037e049', 'W05000474', 'Glanamman'),
 	('629874a2-0c91-43fd-9f67-f7bcd62b368b', 'W05000475', 'Glanymor'),
-	('100580d2-1ba7-43f4-ba91-cd5d499d0899', 'W05000476', 'Glyn'),
 	('c0739e54-7c1e-4940-8e76-050b8d78401f', 'W05000477', 'Gorslas'),
 	('3172575a-2ac8-47cc-a09c-185fdbc078e3', 'W05000478', 'Hendy'),
 	('22a27a31-57b0-411c-aec1-d86dde85aaa2', 'W05000479', 'Hengoed'),
 	('e43bc2c5-c52d-4207-bfbe-3270bccb2797', 'W05000480', 'Kidwelly'),
+	('93c02498-0002-47e7-a4ff-5939854c44b6', 'W05000601', 'Caerau'),
 	('6218a658-931f-4f0e-9712-bb44858c6360', 'W05000481', 'Laugharne Township'),
 	('10b9f3f5-7735-4b3e-b5bb-75a78cec7254', 'W05000482', 'Llanboidy'),
 	('f73d49ad-1a59-46de-ab3c-f3a2039dfb72', 'W05000483', 'Llanddarog'),
@@ -27820,7 +27822,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('46be12da-67d2-4fdb-afb8-2e302fd7991f', 'W05000596', 'Blaengarw'),
 	('af33c54c-1dc1-4f97-93ec-d5640f0d8700', 'W05000598', 'Bryncethin'),
 	('be1bf925-0c1e-48e0-8980-4b4bc710135e', 'W05000599', 'Bryncoch'),
-	('93c02498-0002-47e7-a4ff-5939854c44b6', 'W05000601', 'Caerau'),
 	('ee499146-0b6d-4361-acd5-d0a2533dac7d', 'W05000602', 'Cefn Cribwr'),
 	('c86626ed-895a-41dc-a03e-d9493a8e0550', 'W05000603', 'Cefn Glas'),
 	('fbef017b-1b38-4062-9fe6-f68b1454371e', 'W05000604', 'Coity'),
@@ -27999,7 +28000,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('9223a68a-f64c-423a-a234-674be8b2e681', 'W05000811', 'Llantilio Crossenny'),
 	('147566ad-d687-447f-b833-672f945b4d4d', 'W05000812', 'Llanwenarth Ultra'),
 	('4b4ed899-3689-458a-a69b-1d9db158eecb', 'W05000813', 'Mardy'),
-	('97670d96-d190-467e-9794-c15b06daec09', 'W05000814', 'Mill'),
 	('b876e613-9978-47e8-958d-3cd431988112', 'W05000815', 'Mitchel Troy'),
 	('ba6293fc-1f2b-45f1-9840-60fca2125403', 'W05000816', 'Overmonnow'),
 	('fa3f656a-3119-4724-a2b8-05f6c65a72ab', 'W05000817', 'Portskewett'),
@@ -28049,9 +28049,10 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('a42c8008-2e00-4dc2-be6c-224f82b29453', 'W05000861', 'Fairwater'),
 	('a31b386e-7868-41d9-919d-20697f05216b', 'W05000862', 'Gabalfa'),
 	('752d0721-43da-4969-9dff-9b6b1cf97363', 'W05000863', 'Grangetown'),
-	('fd972d53-a112-48fe-be8b-7446a35bfd3e', 'W05000865', 'Lisvane'),
-	('bc1ab02d-37f8-4a29-90bb-01d528a3bbbf', 'W05000866', 'Llandaff');
+	('01641023-f8b7-476b-a52d-03d4d3c53679', 'W05000864', 'Heath'),
+	('fd972d53-a112-48fe-be8b-7446a35bfd3e', 'W05000865', 'Lisvane');
 INSERT INTO establishment.administrative_ward (id, code, name) VALUES
+	('bc1ab02d-37f8-4a29-90bb-01d528a3bbbf', 'W05000866', 'Llandaff'),
 	('8da31cce-6d4d-4f74-a94a-050f4bff8e1e', 'W05000867', 'Llandaff North'),
 	('4ff93741-e7d6-4dd7-9eab-7cb8b87b748c', 'W05000868', 'Llanishen'),
 	('b9755f72-7bcb-4ad1-9636-842e2a4a50d2', 'W05000869', 'Llanrumney'),
@@ -28781,7 +28782,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('7583546e-8e87-4206-be9f-b88fc3665b90', 'W05001596', 'Holywell Central'),
 	('7573d050-203c-46c5-abe4-f2a0e5903960', 'W05001597', 'Holywell East'),
 	('46e2cb31-b6ad-4d28-bbf2-1de26a12ac88', 'W05001598', 'Holywell West'),
-	('9883b9d6-8eb7-4db0-b858-b68e6ee8ecdf', 'W05001599', 'Hope'),
 	('b9437ef1-da57-492b-889d-c1431e58d0fe', 'W05001600', 'Leeswood'),
 	('856fbdf6-d383-4e7f-8f9f-f6d534c3cafd', 'W05001601', 'Llanasa and Trelawnyd'),
 	('e0ad1b8f-ca2a-4c40-94dc-9a619fe5329c', 'W05001602', 'Llanfynydd'),
@@ -30188,6 +30188,24 @@ INSERT INTO establishment.local_authority_jurisdiction (local_authority_jurisdic
 --
 
 INSERT INTO establishment.local_authority (local_authority_id, code, name, local_authority_jurisdiction_id, gss_local_authority_code_id) VALUES
+	('3429bd17-3db3-42ad-a0bf-7b6682f9ea98', 670, 'Swansea', 2, NULL),
+	('10279260-69e5-4534-9feb-30c48c6d9b06', 201, 'City of London', 1, '50f171b1-f0a4-4ce4-88c6-34f2131bedc9'),
+	('0956c9af-2de2-4dea-94ed-b5c432eae45f', 202, 'Camden', 1, 'daffde1b-4db3-4c53-b9ea-fe960d076f70'),
+	('41ee14e6-dabb-4874-af14-2c93e5adebfa', 203, 'Greenwich', 1, 'fb5498f2-55c6-4da3-96cb-3f53b19ebffc'),
+	('a916541b-fd17-42f4-a8ac-186326f3817c', 204, 'Hackney', 1, 'f781b1e2-29c5-42ee-848b-170736ee685a'),
+	('6617fc31-5146-429b-8b1a-2b8a7c37204c', 205, 'Hammersmith and Fulham', 1, 'c10c219c-2c91-4246-8afe-5164380a47a6'),
+	('3574e75c-8870-449a-82e7-1b083e2efc42', 206, 'Islington', 1, 'b2a844ce-14a5-4d86-89b3-49341e942838'),
+	('6e8b3ded-c1b4-4a2f-817e-b9bfd3aa3e86', 207, 'Kensington and Chelsea', 1, 'cda03c92-9108-4ef2-be66-01e1b3ea291c'),
+	('b9f9a0d5-74cb-4bd4-b205-2b8c8fdf3697', 208, 'Lambeth', 1, 'b7c35927-ad2a-455f-81d7-1ad9b8bd359a'),
+	('5167896b-40e6-420c-8510-45c4106ac301', 209, 'Lewisham', 1, 'e590d972-c9be-4db6-8d70-8ffbaff9120b'),
+	('c0b0dbb1-9d64-4b93-9a52-6fe463541bc1', 210, 'Southwark', 1, '0cb8727c-ff5b-4bfc-ae87-bcb6a0c9c2c2'),
+	('20011641-8b10-45f9-acb2-4766b159b17d', 211, 'Tower Hamlets', 1, '0291a857-0648-4701-a1e1-0bb8440c39c8'),
+	('22b946b9-bc4f-4687-9177-31680e369c9c', 212, 'Wandsworth', 1, '42609d72-36c8-4909-9eb8-1af099e5d99f'),
+	('4f47e935-0285-478e-af4d-ce3220c144d1', 213, 'Westminster', 1, '01605454-839f-43ef-baa7-a4b2e7f52418'),
+	('dd41d40d-7a3b-469c-b49d-930cbe7d0dd5', 301, 'Barking and Dagenham', 1, 'cb24cfe5-b867-4d77-b222-d34804b7c671'),
+	('29a27929-4bba-49b9-8fb7-fbf94257fff8', 302, 'Barnet', 1, '6ce1ab21-b3c0-4766-9383-a932edfd93ad'),
+	('7265e4f9-7622-4944-8bd9-fb3825952c3f', 883, 'Thurrock', 1, NULL),
+	('75379562-3c0b-4270-944d-22df468d3cf7', 303, 'Bexley', 1, 'aa3c2214-9689-4feb-8a4f-a5ca11788fa1'),
 	('9ff7ac3e-71c5-4eb7-b74c-4a83a229261e', 304, 'Brent', 1, '8db2e3a7-3bdf-4795-9ed5-bdf0ad16bd7f'),
 	('5fc312d8-9428-4ee3-a9ed-9b204c8be91c', 305, 'Bromley', 1, '2763992b-c7bd-42d8-b183-6140a8fe8f63'),
 	('b852b15b-c92e-4f4c-a014-5a99cdf7025b', 306, 'Croydon', 1, '45b31c93-5821-4408-8329-19ccd1865519'),
@@ -30347,24 +30365,6 @@ INSERT INTO establishment.local_authority (local_authority_id, code, name, local
 	('39bbbc7d-18de-4c56-9072-3e2f053e745a', 912, 'Pre LGR (1997) Dorset', 1, '62a75e3c-da57-4104-9e7d-b6d7c8bb2823'),
 	('c09f8fc9-9f2d-4f77-bea5-80528c3533ae', 913, 'Pre LGR (1997) Durham', 1, '62a75e3c-da57-4104-9e7d-b6d7c8bb2823'),
 	('8ba06800-fec1-41da-b0a9-822f05fb9019', 914, 'Pre LGR (1997) East Sussex', 1, '62a75e3c-da57-4104-9e7d-b6d7c8bb2823'),
-	('10279260-69e5-4534-9feb-30c48c6d9b06', 201, 'City of London', 1, '50f171b1-f0a4-4ce4-88c6-34f2131bedc9'),
-	('0956c9af-2de2-4dea-94ed-b5c432eae45f', 202, 'Camden', 1, 'daffde1b-4db3-4c53-b9ea-fe960d076f70'),
-	('41ee14e6-dabb-4874-af14-2c93e5adebfa', 203, 'Greenwich', 1, 'fb5498f2-55c6-4da3-96cb-3f53b19ebffc'),
-	('a916541b-fd17-42f4-a8ac-186326f3817c', 204, 'Hackney', 1, 'f781b1e2-29c5-42ee-848b-170736ee685a'),
-	('6617fc31-5146-429b-8b1a-2b8a7c37204c', 205, 'Hammersmith and Fulham', 1, 'c10c219c-2c91-4246-8afe-5164380a47a6'),
-	('3574e75c-8870-449a-82e7-1b083e2efc42', 206, 'Islington', 1, 'b2a844ce-14a5-4d86-89b3-49341e942838'),
-	('6e8b3ded-c1b4-4a2f-817e-b9bfd3aa3e86', 207, 'Kensington and Chelsea', 1, 'cda03c92-9108-4ef2-be66-01e1b3ea291c'),
-	('b9f9a0d5-74cb-4bd4-b205-2b8c8fdf3697', 208, 'Lambeth', 1, 'b7c35927-ad2a-455f-81d7-1ad9b8bd359a'),
-	('5167896b-40e6-420c-8510-45c4106ac301', 209, 'Lewisham', 1, 'e590d972-c9be-4db6-8d70-8ffbaff9120b'),
-	('c0b0dbb1-9d64-4b93-9a52-6fe463541bc1', 210, 'Southwark', 1, '0cb8727c-ff5b-4bfc-ae87-bcb6a0c9c2c2'),
-	('20011641-8b10-45f9-acb2-4766b159b17d', 211, 'Tower Hamlets', 1, '0291a857-0648-4701-a1e1-0bb8440c39c8'),
-	('22b946b9-bc4f-4687-9177-31680e369c9c', 212, 'Wandsworth', 1, '42609d72-36c8-4909-9eb8-1af099e5d99f'),
-	('4f47e935-0285-478e-af4d-ce3220c144d1', 213, 'Westminster', 1, '01605454-839f-43ef-baa7-a4b2e7f52418'),
-	('dd41d40d-7a3b-469c-b49d-930cbe7d0dd5', 301, 'Barking and Dagenham', 1, 'cb24cfe5-b867-4d77-b222-d34804b7c671'),
-	('29a27929-4bba-49b9-8fb7-fbf94257fff8', 302, 'Barnet', 1, '6ce1ab21-b3c0-4766-9383-a932edfd93ad'),
-	('3429bd17-3db3-42ad-a0bf-7b6682f9ea98', 670, 'Swansea', 2, NULL),
-	('75379562-3c0b-4270-944d-22df468d3cf7', 303, 'Bexley', 1, 'aa3c2214-9689-4feb-8a4f-a5ca11788fa1'),
-	('7265e4f9-7622-4944-8bd9-fb3825952c3f', 883, 'Thurrock', 1, NULL),
 	('1e59b614-94db-427c-bfd3-99c0b393ad14', 915, 'Pre LGR (1998) Essex', 1, '62a75e3c-da57-4104-9e7d-b6d7c8bb2823'),
 	('3b110d34-2776-4827-969e-2af0d39a4aa2', 916, 'Gloucestershire', 1, 'c3b99c12-2468-48d5-9abe-99af8a9a122e'),
 	('200c738d-2f8f-4349-b600-f568a52f7389', 917, 'Pre LGR (1997) Hampshire', 1, '62a75e3c-da57-4104-9e7d-b6d7c8bb2823'),
@@ -30401,16 +30401,16 @@ INSERT INTO establishment.local_authority (local_authority_id, code, name, local
 --
 
 INSERT INTO establishment.local_authority_contact (local_authority_contact_id, local_authority_id, contact_email, contact_first_name, contact_last_name, contact_title, contact_phone, contact_role, is_current) VALUES
-	('68b45567-7364-4f3a-94b5-66d44bcc21e6', '10279260-69e5-4534-9feb-30c48c6d9b06', 'FAKE.local-authority-contact-01@example.invalid', 'FAKE Contact 01', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-01', 'FAKE Local Authority Contact 01', true),
-	('75cdee13-0114-4fbe-b6c0-da0bc45880a2', '0956c9af-2de2-4dea-94ed-b5c432eae45f', 'FAKE.local-authority-contact-02@example.invalid', 'FAKE Contact 02', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-02', 'FAKE Local Authority Contact 02', true),
-	('4db067e8-2652-45cb-a222-d72c4007699f', '41ee14e6-dabb-4874-af14-2c93e5adebfa', 'FAKE.local-authority-contact-03@example.invalid', 'FAKE Contact 03', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-03', 'FAKE Local Authority Contact 03', true),
-	('b2df54db-1f09-4bff-83e5-e23f3d62799b', 'a916541b-fd17-42f4-a8ac-186326f3817c', 'FAKE.local-authority-contact-04@example.invalid', 'FAKE Contact 04', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-04', 'FAKE Local Authority Contact 04', true),
-	('897ff04c-25d3-4775-9d51-c82f2a666e8f', '6617fc31-5146-429b-8b1a-2b8a7c37204c', 'FAKE.local-authority-contact-05@example.invalid', 'FAKE Contact 05', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-05', 'FAKE Local Authority Contact 05', true),
-	('5b0a7c98-ce6d-4d54-bdcb-7774ed3087a1', '3574e75c-8870-449a-82e7-1b083e2efc42', 'FAKE.local-authority-contact-06@example.invalid', 'FAKE Contact 06', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-06', 'FAKE Local Authority Contact 06', true),
-	('6bce0b25-e543-427e-a7cb-f6c18c5a9e4d', '6e8b3ded-c1b4-4a2f-817e-b9bfd3aa3e86', 'FAKE.local-authority-contact-07@example.invalid', 'FAKE Contact 07', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-07', 'FAKE Local Authority Contact 07', true),
-	('8ad4c23f-d454-4909-b5d5-413a42005c91', 'b9f9a0d5-74cb-4bd4-b205-2b8c8fdf3697', 'FAKE.local-authority-contact-08@example.invalid', 'FAKE Contact 08', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-08', 'FAKE Local Authority Contact 08', true),
-	('151e5eb3-f2dc-4ca9-956e-3a7edb40e284', '5167896b-40e6-420c-8510-45c4106ac301', 'FAKE.local-authority-contact-09@example.invalid', 'FAKE Contact 09', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-09', 'FAKE Local Authority Contact 09', true),
-	('e3ac53af-6ff6-47aa-bbc3-0e3bab4bf9d1', 'c0b0dbb1-9d64-4b93-9a52-6fe463541bc1', 'FAKE.local-authority-contact-10@example.invalid', 'FAKE Contact 10', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-10', 'FAKE Local Authority Contact 10', true);
+	('7755be67-45c4-426b-90e3-d2fbeef50364', '10279260-69e5-4534-9feb-30c48c6d9b06', 'FAKE.local-authority-contact-01@example.invalid', 'FAKE Contact 01', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-01', 'FAKE Local Authority Contact 01', true),
+	('b38a44ef-795d-44d1-92c8-22a39245c5a3', '0956c9af-2de2-4dea-94ed-b5c432eae45f', 'FAKE.local-authority-contact-02@example.invalid', 'FAKE Contact 02', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-02', 'FAKE Local Authority Contact 02', true),
+	('076d2c48-85b8-42f2-9c6f-6545a6e30c6a', '41ee14e6-dabb-4874-af14-2c93e5adebfa', 'FAKE.local-authority-contact-03@example.invalid', 'FAKE Contact 03', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-03', 'FAKE Local Authority Contact 03', true),
+	('90ada896-3668-4179-9177-1a4e490b1879', 'a916541b-fd17-42f4-a8ac-186326f3817c', 'FAKE.local-authority-contact-04@example.invalid', 'FAKE Contact 04', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-04', 'FAKE Local Authority Contact 04', true),
+	('d69f558b-903b-49c3-934f-52c9acaade2a', '6617fc31-5146-429b-8b1a-2b8a7c37204c', 'FAKE.local-authority-contact-05@example.invalid', 'FAKE Contact 05', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-05', 'FAKE Local Authority Contact 05', true),
+	('c917d8fb-ce12-4f74-8a95-859e56ea7d33', '3574e75c-8870-449a-82e7-1b083e2efc42', 'FAKE.local-authority-contact-06@example.invalid', 'FAKE Contact 06', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-06', 'FAKE Local Authority Contact 06', true),
+	('329fbcdf-c887-4acc-8824-3f246216f48a', '6e8b3ded-c1b4-4a2f-817e-b9bfd3aa3e86', 'FAKE.local-authority-contact-07@example.invalid', 'FAKE Contact 07', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-07', 'FAKE Local Authority Contact 07', true),
+	('c3863e40-c952-40a4-a2db-0fbd9d794373', 'b9f9a0d5-74cb-4bd4-b205-2b8c8fdf3697', 'FAKE.local-authority-contact-08@example.invalid', 'FAKE Contact 08', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-08', 'FAKE Local Authority Contact 08', true),
+	('40848067-442e-4200-b1dc-802310797ff3', '5167896b-40e6-420c-8510-45c4106ac301', 'FAKE.local-authority-contact-09@example.invalid', 'FAKE Contact 09', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-09', 'FAKE Local Authority Contact 09', true),
+	('5f55dc48-d144-4625-af00-d38ffe7f64c7', 'c0b0dbb1-9d64-4b93-9a52-6fe463541bc1', 'FAKE.local-authority-contact-10@example.invalid', 'FAKE Contact 10', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-10', 'FAKE Local Authority Contact 10', true);
 
 
 --
@@ -30629,7 +30629,6 @@ INSERT INTO establishment.local_authority_government_office_region (local_author
 --
 
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('ad361907-88d3-46e4-933c-a1d8c1be5bb1', 'S01012272', 'Stow'),
 	('b43c84ac-f75f-41ba-af33-1a53b8d34899', '95AA01S1', 'Aldergrove 1'),
 	('5387fb0d-5b87-42bd-8929-431b66ae7d30', '95AA01S2', 'Aldergrove 2'),
 	('42b4e4cb-3834-427b-9cc9-e33ec131541b', '95AA01S3', 'Aldergrove 3'),
@@ -31570,7 +31569,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('a6101b94-c253-40af-86d5-816508aa284c', 'E01000047', 'Barking and Dagenham 021A'),
 	('06cf6993-f73d-4e53-8dee-75d0af3b4b63', 'E01000048', 'Barking and Dagenham 021B'),
 	('633c8961-7254-4c7e-bbff-5cbe76b9cc62', 'E01000049', 'Barking and Dagenham 021C'),
-	('bd4503f2-e36e-42a2-b066-ee51cb79f664', 'E01000154', 'Barnet 026E'),
 	('8f08b6a8-6fd9-409e-a43c-3d57ba569a15', 'E01000050', 'Barking and Dagenham 019C'),
 	('95e353f4-2aee-4eb8-8645-0cc0237a460d', 'E01000051', 'Barking and Dagenham 021D'),
 	('0ec072ce-ceed-4c7c-808f-e292be81aedd', 'E01000052', 'Barking and Dagenham 019D'),
@@ -31628,10 +31626,10 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('cc22a2a8-0002-4bd6-80cd-5e561e40ca4a', 'E01000104', 'Barking and Dagenham 014B'),
 	('8a51f2ec-6368-4fbd-b33d-f71056a12776', 'E01000105', 'Barking and Dagenham 014C'),
 	('17c003e9-e60f-4481-8672-e72ebd826899', 'E01000106', 'Barking and Dagenham 014D'),
-	('f9ce8607-77c8-483c-882f-aeadfcc353d8', 'E01000107', 'Barking and Dagenham 010C');
-INSERT INTO establishment.lsoa (id, code, name) VALUES
+	('f9ce8607-77c8-483c-882f-aeadfcc353d8', 'E01000107', 'Barking and Dagenham 010C'),
 	('d5eba8fa-896d-4bc5-abdf-2c9a9590b3af', 'E01000108', 'Barking and Dagenham 010D'),
-	('88bcf604-5cf3-40fe-b7fb-7c51d9d27cfd', 'E01000109', 'Barking and Dagenham 004D'),
+	('88bcf604-5cf3-40fe-b7fb-7c51d9d27cfd', 'E01000109', 'Barking and Dagenham 004D');
+INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('2d7e9e0a-a79f-4842-88e6-d5859cab21aa', 'E01000110', 'Barking and Dagenham 002C'),
 	('91385084-3993-4af9-99b3-cb2ce6e2df82', 'E01000111', 'Barking and Dagenham 002D'),
 	('a018ca5a-bea9-4d57-9bfc-4ad39b66c822', 'E01000112', 'Barking and Dagenham 002E'),
@@ -31676,6 +31674,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('d7eb480a-cb91-4c47-86aa-06ef63b77ef8', 'E01000151', 'Barnet 026B'),
 	('e3a5dca1-982c-4351-9b15-522f02a9e544', 'E01000152', 'Barnet 026C'),
 	('372d2e66-951f-4852-9978-d7fd48f3913b', 'E01000153', 'Barnet 026D'),
+	('bd4503f2-e36e-42a2-b066-ee51cb79f664', 'E01000154', 'Barnet 026E'),
 	('5549c999-cf71-439f-ba2c-eebd532f10ed', 'E01000155', 'Barnet 030D'),
 	('fe77dc0c-bafc-49f7-8052-89b0559e3d64', 'E01000156', 'Barnet 022A'),
 	('6b5853a5-56bd-4230-b71e-dfb77f111262', 'E01000157', 'Barnet 022B'),
@@ -32629,9 +32628,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('d0b6b4b6-4d68-46f1-99d4-1ced9ec8dc45', 'E01001105', 'Croydon 039B'),
 	('d0509c57-add0-4359-8f4a-116318dbc586', 'E01001106', 'Croydon 039C'),
 	('4a4f3b9e-180b-4b89-9490-b63165fda283', 'E01001107', 'Croydon 035D'),
-	('5569010a-e266-4877-829a-992f814db63c', 'E01001108', 'Croydon 035E');
+	('5569010a-e266-4877-829a-992f814db63c', 'E01001108', 'Croydon 035E'),
+	('6f42f9b5-4a27-4323-8c98-3b9d26fac90e', 'E01001109', 'Croydon 013B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('6f42f9b5-4a27-4323-8c98-3b9d26fac90e', 'E01001109', 'Croydon 013B'),
 	('57fb5e54-46b8-4f45-bdaa-eac3b8096713', 'E01001110', 'Croydon 020D'),
 	('c057f0fc-9a8d-4cdc-9f99-26669f57734a', 'E01001111', 'Croydon 010D'),
 	('b34ebe7b-c69e-4ace-9039-4c39b661205e', 'E01001112', 'Croydon 013C'),
@@ -33630,9 +33629,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('35a7018b-4796-4670-95e8-a409558be1ec', 'E01002105', 'Haringey 007D'),
 	('7c0f71cb-d107-4745-95c9-c975324ef606', 'E01002106', 'Harrow 008A'),
 	('61058698-a311-433a-a904-6a4f6d0e6f46', 'E01002107', 'Harrow 012A'),
-	('ec6cb9b9-b355-4f4b-b8a9-467ccf4088f6', 'E01002108', 'Harrow 008B');
+	('ec6cb9b9-b355-4f4b-b8a9-467ccf4088f6', 'E01002108', 'Harrow 008B'),
+	('5ab3d63e-dcd0-4f5b-8bac-fb617afc61b6', 'E01002109', 'Harrow 008C');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('5ab3d63e-dcd0-4f5b-8bac-fb617afc61b6', 'E01002109', 'Harrow 008C'),
 	('54ad0433-6143-4793-8241-c58348a1cbd4', 'E01002110', 'Harrow 008D'),
 	('746943e9-9e6b-4397-a1ca-2a9866f4c044', 'E01002111', 'Harrow 008E'),
 	('9b2917e3-0ceb-45ac-81ec-2ec2da147f0c', 'E01002112', 'Harrow 001A'),
@@ -34631,9 +34630,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('fb396d12-fb83-4144-84de-06c4a29e1afc', 'E01003105', 'Lambeth 003B'),
 	('b634fec8-c8e9-4615-8856-71303116a20c', 'E01003106', 'Lambeth 003C'),
 	('347517ac-0a99-4e05-abeb-de74dcd76a98', 'E01003107', 'Lambeth 003D'),
-	('a1bb230b-73bf-493d-b401-cf85dc8d5d26', 'E01003108', 'Lambeth 002B');
+	('a1bb230b-73bf-493d-b401-cf85dc8d5d26', 'E01003108', 'Lambeth 002B'),
+	('753cfceb-9374-4042-86b9-8353d387b016', 'E01003109', 'Lambeth 003E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('753cfceb-9374-4042-86b9-8353d387b016', 'E01003109', 'Lambeth 003E'),
 	('a67810a7-1e99-46b0-9d6d-f0d2f466b2ea', 'E01003110', 'Lambeth 002C'),
 	('044b32e5-c659-4a75-83de-fc6643fd3ad4', 'E01003111', 'Lambeth 002D'),
 	('ceefe146-7dfb-48aa-8462-b70b5608fbea', 'E01003112', 'Lambeth 002E'),
@@ -35363,6 +35362,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('1c50b533-57b6-4022-b259-3af50c3312b9', 'E01003836', 'Richmond upon Thames 022C'),
 	('7e723ced-9dd9-4900-a6bb-799d182ef4dc', 'E01003837', 'Richmond upon Thames 022D'),
 	('77469572-8f9c-499d-8378-c90ec444f859', 'E01003838', 'Richmond upon Thames 022E'),
+	('00fca8af-eeee-411e-9e9e-adcd09ed6226', 'E01004161', 'Sutton 014E'),
 	('4c368c65-05c8-4d72-8cfc-8cd1f3f8faa4', 'E01003839', 'Richmond upon Thames 022F'),
 	('9a75abf3-9f6f-427f-896b-0c2cab14a9ae', 'E01003840', 'Richmond upon Thames 013A'),
 	('0e786460-cdbf-47c4-ad8b-299da74d2663', 'E01003841', 'Richmond upon Thames 013B'),
@@ -35462,7 +35462,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('986574d0-1f59-4347-83a6-3ceaa494bba1', 'E01003935', 'Southwark 002D'),
 	('41342e60-e021-48aa-bd65-86837888a91b', 'E01003936', 'Southwark 009A'),
 	('a324ce8d-3025-49d3-9867-58cc0f90d15b', 'E01003937', 'Southwark 009B'),
-	('00fca8af-eeee-411e-9e9e-adcd09ed6226', 'E01004161', 'Sutton 014E'),
+	('a2ce2279-f1a4-4d81-a95a-2a1541049733', 'E01004162', 'Sutton 018E'),
 	('5b60f22b-cffb-419f-bc3d-9d621d567c78', 'E01003938', 'Southwark 006A'),
 	('a39397a0-3f9d-491d-b189-05c6e2a8439f', 'E01003939', 'Southwark 002E'),
 	('3fcf2f35-b7e1-495c-9e2f-6b2e68b574f6', 'E01003940', 'Southwark 006B'),
@@ -35687,7 +35687,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('91e7e212-8eaf-4d83-9cd8-72322240b736', 'E01004158', 'Sutton 018D'),
 	('947d96b9-9dab-4bc8-91fc-ba69bd4e54af', 'E01004159', 'Sutton 014C'),
 	('0b23a2b9-2331-429e-86ba-7eead9ebda34', 'E01004160', 'Sutton 014D'),
-	('a2ce2279-f1a4-4d81-a95a-2a1541049733', 'E01004162', 'Sutton 018E'),
 	('a31507c3-055f-47ac-a140-cdf434c7b8e0', 'E01004163', 'Sutton 005B'),
 	('ea6c29f5-2c01-487c-8e37-632a42a26413', 'E01004164', 'Sutton 004A'),
 	('9fba7a77-55fe-4911-b49b-f8b87e07756b', 'E01004165', 'Sutton 005C'),
@@ -36633,9 +36632,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('b1d77065-6fe6-4eb4-be17-bd732a2b0637', 'E01005105', 'Manchester 015C'),
 	('24839288-a73d-4ad2-955a-93541ff6c364', 'E01005106', 'Manchester 015D'),
 	('767c3d2e-e00a-4d3e-b06e-95eef2a9a7e5', 'E01005107', 'Manchester 015E'),
-	('57a2f123-25a5-49aa-8477-ac34ce2b36db', 'E01005108', 'Manchester 017A');
+	('57a2f123-25a5-49aa-8477-ac34ce2b36db', 'E01005108', 'Manchester 017A'),
+	('02ce9b90-a5ad-4e5c-80a8-70d7ad9aeb4b', 'E01005109', 'Manchester 017B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('02ce9b90-a5ad-4e5c-80a8-70d7ad9aeb4b', 'E01005109', 'Manchester 017B'),
 	('69bcad2e-b48b-4f77-8d01-df7559efa7a1', 'E01005110', 'Manchester 017C'),
 	('cfc9abed-aad6-4e22-bf74-89a1bcc70f7a', 'E01005111', 'Manchester 047B'),
 	('57c20e69-4ffa-4df8-a976-6cce94b0b15f', 'E01005112', 'Manchester 048D'),
@@ -37634,9 +37633,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('95aafa66-6b35-4c94-9e18-b6456911e9b4', 'E01006105', 'Trafford 017B'),
 	('b419c06a-8ae0-4ce9-a49e-a5cf425d2db9', 'E01006106', 'Trafford 017C'),
 	('4c97fbed-9a20-4a9c-b7d0-cd40c529acec', 'E01006107', 'Trafford 017D'),
-	('a4afc619-a190-41a4-8a56-35a47c6dc07d', 'E01006108', 'Trafford 017E');
+	('a4afc619-a190-41a4-8a56-35a47c6dc07d', 'E01006108', 'Trafford 017E'),
+	('e03f8445-c0dc-4dcc-85c6-5ee9160a2df4', 'E01006109', 'Trafford 001A');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('e03f8445-c0dc-4dcc-85c6-5ee9160a2df4', 'E01006109', 'Trafford 001A'),
 	('c4603b56-bde7-4679-b6af-566f66817ea3', 'E01006110', 'Trafford 001B'),
 	('cf9962db-1932-4d55-a5e3-307e7d199429', 'E01006111', 'Trafford 001C'),
 	('3cf33870-9c39-42cd-b4f6-645465812ab4', 'E01006112', 'Trafford 001D'),
@@ -38081,6 +38080,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('7669ba34-8d37-462d-a91c-45cd8c020b22', 'E01006551', 'Liverpool 048E'),
 	('239f9ff2-fb28-4932-8ba9-6c8d631335d1', 'E01006552', 'Liverpool 039A'),
 	('35a752eb-5bf1-4cd4-8878-f0594a71d796', 'E01006553', 'Liverpool 042A'),
+	('ecd65d69-a3e0-4179-ab57-305b7c654cbf', 'E01006989', 'Sefton 013D'),
 	('f5fe67e4-1458-4ba1-a7be-c339b9944b4d', 'E01006554', 'Liverpool 048F'),
 	('11c1cf2c-e5a4-4400-a61c-08842cca37f1', 'E01006555', 'Liverpool 042B'),
 	('8c93e44c-b50f-4fe5-962e-be828cd3fa25', 'E01006556', 'Liverpool 039B'),
@@ -38516,7 +38516,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('83a53d36-c2af-477d-872c-a768908bd434', 'E01006986', 'Sefton 013B'),
 	('db861ff2-a61b-4551-bae9-7cfa92b0f76f', 'E01006987', 'Sefton 013C'),
 	('d4c41ea5-1c4c-499b-b006-5da3db685c1f', 'E01006988', 'Sefton 014A'),
-	('ecd65d69-a3e0-4179-ab57-305b7c654cbf', 'E01006989', 'Sefton 013D'),
 	('0cdd27e6-b319-4606-aeb8-bde658444110', 'E01006990', 'Sefton 013E'),
 	('39471805-a351-4e99-be82-ff510c40afce', 'E01006991', 'Sefton 015A'),
 	('bf54bebe-e07c-4bff-a61d-db80052bcc65', 'E01006992', 'Sefton 015B'),
@@ -38635,9 +38634,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('103ee424-3297-47fc-ab14-90f9cf33d212', 'E01007105', 'Sefton 025C'),
 	('8e590a4f-efba-451f-af70-98028b02dfd6', 'E01007106', 'Sefton 025D'),
 	('91dbf5df-9fd9-4c91-bd25-d090661f01f6', 'E01007107', 'Sefton 025E'),
-	('385e57e2-f1f2-4cac-98d5-ff1e64f122fb', 'E01007108', 'Sefton 025F');
+	('385e57e2-f1f2-4cac-98d5-ff1e64f122fb', 'E01007108', 'Sefton 025F'),
+	('bb324b3a-77ea-48c6-8fcc-cd24f7240378', 'E01007109', 'Sefton 028E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('bb324b3a-77ea-48c6-8fcc-cd24f7240378', 'E01007109', 'Sefton 028E'),
 	('e7a2e781-1b82-49d5-a63d-9e6ff1ee879e', 'E01007110', 'Wirral 035A'),
 	('18800a83-3c98-4945-8697-10dac7e80115', 'E01007111', 'Wirral 032A'),
 	('a8c30ba9-5bd1-4e40-b833-5e3456f3eabb', 'E01007112', 'Wirral 032B'),
@@ -39636,9 +39635,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('5a9a8b42-fb84-4031-b5f4-4025124a7b0a', 'E01008105', 'Sheffield 040A'),
 	('5a4c8284-eb71-49db-bcd1-d92141530128', 'E01008106', 'Sheffield 040B'),
 	('bb66b5fd-bf72-4cb1-8a9b-b527e969a74d', 'E01008107', 'Sheffield 040C'),
-	('d17afde8-7554-4371-bb9d-a002a6959a84', 'E01008108', 'Sheffield 042A');
+	('d17afde8-7554-4371-bb9d-a002a6959a84', 'E01008108', 'Sheffield 042A'),
+	('c3047285-b6a4-4f77-ac67-52d2f2ef11a2', 'E01008109', 'Sheffield 042B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('c3047285-b6a4-4f77-ac67-52d2f2ef11a2', 'E01008109', 'Sheffield 042B'),
 	('095c789b-7fb6-4e14-a6f8-6daabdfdb7e7', 'E01008110', 'Sheffield 042C'),
 	('4c745c83-f99e-48ac-87c9-7b7c684eff70', 'E01008111', 'Sheffield 040D'),
 	('a6b13504-e5ef-40f9-926d-467f86f2db2d', 'E01008112', 'Sheffield 042D'),
@@ -39850,6 +39849,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('020fe6b6-5c0e-47d3-bcd2-72dbc7c3d30a', 'E01008318', 'Newcastle upon Tyne 012D'),
 	('ed70d37b-b7fc-434a-90e2-317f768833d5', 'E01008319', 'Newcastle upon Tyne 007B'),
 	('67700bf3-5ab2-4f22-bec2-ef54c3098cb1', 'E01008320', 'Newcastle upon Tyne 007C'),
+	('4ab8d543-9c74-4ee3-9e03-d205d59d1ed7', 'E01009598', 'Coventry 002D'),
 	('a8cfae2a-6e24-4956-9a55-46a706251a89', 'E01008321', 'Newcastle upon Tyne 007D'),
 	('2f6b7029-9876-4cfa-ba0e-70dc8e4a5f8a', 'E01008322', 'Newcastle upon Tyne 007E'),
 	('a0502612-a327-495e-bf6d-380fffb586fd', 'E01008323', 'Newcastle upon Tyne 007F'),
@@ -40049,7 +40049,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('7ec27b75-cec0-4588-84f4-c7d3725ed8c0', 'E01008517', 'North Tyneside 005A'),
 	('4dede7e8-9934-454f-8e0d-79ba339af9cd', 'E01008518', 'North Tyneside 007A'),
 	('071e46c1-6078-403f-9dee-54f3f8000323', 'E01008519', 'North Tyneside 005B'),
-	('4ab8d543-9c74-4ee3-9e03-d205d59d1ed7', 'E01009598', 'Coventry 002D'),
+	('f78fc7c6-eca7-4c5a-883b-dd261e72dec2', 'E01009599', 'Coventry 013A'),
 	('dd358a28-518f-4d86-b0ea-dbef49ed09bc', 'E01008520', 'North Tyneside 003A'),
 	('47394188-77ca-45a8-9e02-7fa63a0df805', 'E01008521', 'North Tyneside 005C'),
 	('69f50c09-c40d-4615-bef5-f5a2eb0e18e8', 'E01008522', 'North Tyneside 005D'),
@@ -41129,7 +41129,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('1146eee8-501a-4b07-845a-be0fae1d1c64', 'E01009595', 'Coventry 003C'),
 	('808c4f22-4dfc-4870-85b6-36c07c5542bb', 'E01009596', 'Coventry 043C'),
 	('0f73d08a-d152-4019-99e1-10d9089bd1bf', 'E01009597', 'Coventry 043D'),
-	('f78fc7c6-eca7-4c5a-883b-dd261e72dec2', 'E01009599', 'Coventry 013A'),
 	('9d4b08bc-479e-4341-b6ca-e18d52f818e8', 'E01009600', 'Coventry 001B'),
 	('619eb1a2-882c-4785-a9b2-38d45d0ee3ec', 'E01009601', 'Coventry 001C'),
 	('6921d66f-f707-4e64-937f-7cf0b0fd6c63', 'E01009602', 'Coventry 001D'),
@@ -41638,9 +41637,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('0a7e262c-d73d-4af8-a27c-115742b486bd', 'E01010105', 'Sandwell 017F'),
 	('3955e9e4-aa7a-4cd3-ab18-b5dae2fb601c', 'E01010106', 'Sandwell 019D'),
 	('13c7a7b5-dcb9-4108-842c-0ac2c28789d6', 'E01010107', 'Sandwell 020D'),
-	('86ec7368-7ce8-455d-abe5-d3f6ec7b3696', 'E01010108', 'Solihull 017A');
+	('86ec7368-7ce8-455d-abe5-d3f6ec7b3696', 'E01010108', 'Solihull 017A'),
+	('8eb07fb2-1f67-445f-9a7d-c4cf35fea44a', 'E01010109', 'Solihull 009A');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('8eb07fb2-1f67-445f-9a7d-c4cf35fea44a', 'E01010109', 'Solihull 009A'),
 	('29184d79-906f-45d7-99cc-52fd796370af', 'E01010110', 'Solihull 009B'),
 	('60c5d01a-108f-438e-b3f3-9cbd8038c618', 'E01010111', 'Solihull 008A'),
 	('03d7761b-5fba-48cf-aafa-4fdfa2a906b6', 'E01010112', 'Solihull 009C'),
@@ -41967,6 +41966,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('961e7b92-2699-40a7-9a53-ea534ab49f6e', 'E01010433', 'Wolverhampton 035E'),
 	('5973298a-c2d6-4637-85b5-6f2690ec4bae', 'E01010434', 'Wolverhampton 001A'),
 	('fed18f4a-af80-4338-9a19-524ccba62a3c', 'E01010435', 'Wolverhampton 006A'),
+	('d63bf091-47f9-41e4-bdfa-d88f53a6f4ba', 'E01010660', 'Bradford 049B'),
 	('6a798ca3-3c0e-4186-b969-9f2529f1cead', 'E01010436', 'Wolverhampton 001B'),
 	('99aed90c-ca98-46a6-8c5f-0c7f3c097872', 'E01010437', 'Wolverhampton 001C'),
 	('06578d13-cd9f-4250-b521-d9bc2891dfec', 'E01010438', 'Wolverhampton 001D'),
@@ -42191,7 +42191,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('8553a0b5-a531-45f4-943b-7f9f52bbf8d1', 'E01010657', 'Bradford 026E'),
 	('5a2b9bf9-70c2-4962-8a76-c7277722a704', 'E01010658', 'Bradford 041A'),
 	('e5663d79-434f-4c73-8c4f-1a1e495ec66f', 'E01010659', 'Bradford 049A'),
-	('d63bf091-47f9-41e4-bdfa-d88f53a6f4ba', 'E01010660', 'Bradford 049B'),
 	('4369ab22-ded8-4b42-b3c2-cecccd937c43', 'E01010661', 'Bradford 049C'),
 	('dace1589-629b-456a-a5de-99766d110842', 'E01010662', 'Bradford 049D'),
 	('c069caff-09c5-4c77-bd3e-3e0dbec9474a', 'E01010663', 'Bradford 050A'),
@@ -42639,9 +42638,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('76c482fd-a0e3-4d46-9732-876ba9eceb14', 'E01011105', 'Kirklees 025D'),
 	('0d4dd0ae-69ee-4fa8-a9c7-d72f02829852', 'E01011106', 'Kirklees 029C'),
 	('58fd3711-4789-4878-a277-fd2a50a08062', 'E01011107', 'Kirklees 029D'),
-	('8d29bc9a-c9ca-47dc-ace2-567c5cca24c9', 'E01011108', 'Kirklees 022D');
+	('8d29bc9a-c9ca-47dc-ace2-567c5cca24c9', 'E01011108', 'Kirklees 022D'),
+	('42ba1984-e5ee-4f57-ab96-18a28fe688ed', 'E01011109', 'Kirklees 054A');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('42ba1984-e5ee-4f57-ab96-18a28fe688ed', 'E01011109', 'Kirklees 054A'),
 	('effe4577-7841-4d02-a1dd-0fab2bb778a9', 'E01011110', 'Kirklees 057A'),
 	('b80cfd18-0eaa-4b51-abef-ef65fa9f78d8', 'E01011111', 'Kirklees 057B'),
 	('977a0214-3637-440d-9fef-70443e75e34b', 'E01011112', 'Kirklees 057C'),
@@ -43640,9 +43639,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('fe58ba29-67be-4f40-acfa-943a3e4536a1', 'E01012105', 'Redcar and Cleveland 002A'),
 	('fdbbc740-7176-4d45-b09c-24b994e78afa', 'E01012106', 'Redcar and Cleveland 003C'),
 	('113e25fd-9385-4fc9-bee8-f8af5de1ef63', 'E01012107', 'Redcar and Cleveland 003D'),
-	('5629fdc8-8b42-4a5a-b75d-12daf8cc026f', 'E01012108', 'Redcar and Cleveland 011A');
+	('5629fdc8-8b42-4a5a-b75d-12daf8cc026f', 'E01012108', 'Redcar and Cleveland 011A'),
+	('419d0a55-cd59-4554-876e-4b72f90d42de', 'E01012109', 'Redcar and Cleveland 011B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('419d0a55-cd59-4554-876e-4b72f90d42de', 'E01012109', 'Redcar and Cleveland 011B'),
 	('42dda64f-ed4a-4e53-bb66-f934e06f74ef', 'E01012110', 'Redcar and Cleveland 011C'),
 	('10d7c1ac-129d-4fd2-9110-dd0bcf37152d', 'E01012111', 'Redcar and Cleveland 011D'),
 	('7dd7aa4f-7d65-414a-a742-a557e27d4649', 'E01012112', 'Redcar and Cleveland 015A'),
@@ -43681,7 +43680,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('9e4b931f-10a6-489a-9a54-53e3774a2809', 'E01012145', 'Redcar and Cleveland 015B'),
 	('5bf2a4d8-5bcf-4ab9-848c-2cac8f88e8d1', 'E01012146', 'Redcar and Cleveland 022A'),
 	('6f538c0e-fdfb-4c52-8437-63aeccc78987', 'E01012147', 'Redcar and Cleveland 015C'),
-	('951f842c-a4f7-483e-b634-c4b682af2772', 'E01013369', 'York 013C'),
 	('14b90a33-e295-455d-8d9a-2f67a6e0528b', 'E01012148', 'Redcar and Cleveland 021A'),
 	('e87cf233-2b80-4b22-8c12-137405210aff', 'E01012149', 'Redcar and Cleveland 015D'),
 	('f52c9aa6-5de6-46c5-a9ea-9cfc4153faf5', 'E01012150', 'Redcar and Cleveland 021B'),
@@ -44641,10 +44639,10 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('565fcba6-fa6b-464c-92df-e1ecf16cd2ec', 'E01013104', 'East Riding of Yorkshire 043D'),
 	('f1916eaa-6aa5-41b1-bb24-8801b01e0a04', 'E01013105', 'East Riding of Yorkshire 027A'),
 	('6684b3b0-0a12-457a-9d19-5d0e038731b6', 'E01013106', 'East Riding of Yorkshire 043E'),
-	('b6968f66-b65e-4354-b33d-9543a04a09bb', 'E01013107', 'East Riding of Yorkshire 034E');
-INSERT INTO establishment.lsoa (id, code, name) VALUES
+	('b6968f66-b65e-4354-b33d-9543a04a09bb', 'E01013107', 'East Riding of Yorkshire 034E'),
 	('838bd58c-949d-47f1-98e2-c1ae24cb9a8f', 'E01013108', 'East Riding of Yorkshire 028A'),
-	('31a90b82-83ff-4409-8462-e1c5e39939c2', 'E01013109', 'East Riding of Yorkshire 030F'),
+	('31a90b82-83ff-4409-8462-e1c5e39939c2', 'E01013109', 'East Riding of Yorkshire 030F');
+INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('69f42c84-23c1-4065-af54-e1da4dac59ba', 'E01013110', 'East Riding of Yorkshire 027B'),
 	('87db5bff-b531-4012-998f-76563c4d78d9', 'E01013111', 'East Riding of Yorkshire 027C'),
 	('361a417e-03b0-49db-8172-0c5ab96f2a20', 'E01013112', 'East Riding of Yorkshire 025D'),
@@ -44904,6 +44902,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('dc4cf65c-ad35-4092-b875-24fecd02df44', 'E01013366', 'York 013A'),
 	('28fded0e-2f7a-4b70-96cb-9d771517e2df', 'E01013367', 'York 013B'),
 	('1c4c24a1-7608-4b3e-8029-863dc843234e', 'E01013368', 'York 010B'),
+	('951f842c-a4f7-483e-b634-c4b682af2772', 'E01013369', 'York 013C'),
 	('a18ca4d0-9fe4-4289-a6aa-b91ce3b467ae', 'E01013370', 'York 002A'),
 	('a10789b3-e1e0-4a67-9eff-05200a3a7ebd', 'E01013371', 'York 003A'),
 	('893a3a29-ec54-4fae-b776-b95a4bbb7d9e', 'E01013372', 'York 003B'),
@@ -45143,6 +45142,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('ec0011d0-6908-4576-aef8-9be80e9c67ab', 'E01013606', 'Leicester 008A'),
 	('e633346a-8876-44d3-bba8-479f11b9afe6', 'E01013607', 'Leicester 008B'),
 	('2aed661c-67b5-45a5-a11d-89eb89d26fe1', 'E01013608', 'Leicester 034A'),
+	('e6ccf439-150d-4df8-b535-fd35af434a3e', 'E01014545', 'Bristol 030B'),
 	('fc234893-bb5b-4875-bf31-5b9a49d482e5', 'E01013609', 'Leicester 034B'),
 	('a6121505-c7be-4068-a5f0-ee9e1ab761f6', 'E01013610', 'Leicester 034C'),
 	('3845debc-c830-44e9-b615-af7ca4bd4f31', 'E01013611', 'Leicester 034D'),
@@ -45359,7 +45359,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('5d57b639-2042-4d2a-90f7-df3aa1d39776', 'E01013822', 'Nottingham 011C'),
 	('6796d715-096e-4315-87d4-04240e8ef27b', 'E01013823', 'Nottingham 013D'),
 	('ab82736c-8597-408a-8c7c-090d8109d02d', 'E01013824', 'Nottingham 013E'),
-	('e6ccf439-150d-4df8-b535-fd35af434a3e', 'E01014545', 'Bristol 030B'),
+	('5bd82e76-d0ec-4a03-838e-95655f3c3860', 'E01014546', 'Bristol 030C'),
 	('81e3c9a4-609d-40c9-b0b4-dd639462a975', 'E01013825', 'Nottingham 011D'),
 	('552cc248-34bd-4950-abc4-322badaefa78', 'E01013826', 'Nottingham 011E'),
 	('f0922e5b-7263-46ff-96b9-c951dbee3218', 'E01013827', 'Nottingham 008A'),
@@ -46081,7 +46081,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('68626b2c-c4ab-45cb-8930-af6d422ae6ca', 'E01014542', 'Bristol 032C'),
 	('c008dc9b-6445-40ef-8197-1396408ff8f4', 'E01014543', 'Bristol 032D'),
 	('128b689c-8581-4541-9b2b-c374e88401d6', 'E01014544', 'Bristol 030A'),
-	('5bd82e76-d0ec-4a03-838e-95655f3c3860', 'E01014546', 'Bristol 030C'),
 	('c24e071f-0dd1-4c03-964f-1e65d720a6c1', 'E01014547', 'Bristol 030D'),
 	('e93de3d8-02d9-42d5-94b7-8fe6cd8854ec', 'E01014548', 'Bristol 034A'),
 	('43a04a66-4d86-47b0-90a9-4bbaf954de0c', 'E01014549', 'Bristol 034B'),
@@ -46315,7 +46314,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('0012632a-9580-463b-ad2c-04800c3bea84', 'E01014777', 'North Somerset 009C'),
 	('14e03973-e927-469a-8b85-117fc66face6', 'E01014778', 'North Somerset 009D'),
 	('888ea22a-6985-4e10-b463-1caf03792ddb', 'E01014779', 'North Somerset 009E'),
-	('6c26b3ae-ef08-457d-b3ca-a2aeed6971d7', 'E01015091', 'Plymouth 005B'),
 	('4abbaca8-768c-41d9-8b53-4fbbf7402a12', 'E01014780', 'North Somerset 008A'),
 	('6c19661f-ce3e-4c30-bb4f-41bbcafec690', 'E01014781', 'North Somerset 008B'),
 	('8cf11b8e-23cc-4ec5-90d3-d3d56b9dc246', 'E01014782', 'North Somerset 008C'),
@@ -46420,8 +46418,8 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('497fb26c-25e8-4599-8b9e-01fbfec32a90', 'E01014881', 'South Gloucestershire 009F'),
 	('5f308214-3ae4-44bf-912b-0120f400f212', 'E01014882', 'South Gloucestershire 012E'),
 	('36df57bc-d7da-4808-a07f-7b4e32cf41ff', 'E01014883', 'South Gloucestershire 012F'),
-	('fc3974e6-4af3-4f01-93d5-4ae7453674b2', 'E01015092', 'Plymouth 005C'),
 	('064dab7e-bfcb-4700-a43a-e163693a5ca2', 'E01014884', 'South Gloucestershire 003A'),
+	('fc3974e6-4af3-4f01-93d5-4ae7453674b2', 'E01015092', 'Plymouth 005C'),
 	('f847e812-91cf-4c9b-9b5a-aa934862858c', 'E01014885', 'South Gloucestershire 003B'),
 	('f55c4067-1556-4d20-8d98-b61f305ae268', 'E01014886', 'South Gloucestershire 008A'),
 	('11961dde-81d0-461b-9100-3857e57e2bd1', 'E01014887', 'South Gloucestershire 008B'),
@@ -46628,6 +46626,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('f4c5126a-b258-4161-ac94-1c8bbae9b457', 'E01015088', 'Plymouth 006C'),
 	('22d8e243-9b6a-484a-91af-af18a246f3e4', 'E01015089', 'Plymouth 007E'),
 	('3e05d2eb-050e-4908-bc75-d93224cf4c83', 'E01015090', 'Plymouth 005A'),
+	('6c26b3ae-ef08-457d-b3ca-a2aeed6971d7', 'E01015091', 'Plymouth 005B'),
 	('e4266332-7bbc-40e8-b947-140f135862b8', 'E01015093', 'Plymouth 005D'),
 	('5e462520-80ca-4d1b-8760-613bd6f2b4b5', 'E01015094', 'Plymouth 005E'),
 	('d2eb19b8-cb70-49a3-ad18-b26bced8d3d3', 'E01015095', 'Plymouth 010D'),
@@ -46643,9 +46642,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('1789a2b9-6eb0-47f7-84cb-55b0d6d967be', 'E01015105', 'Plymouth 017E'),
 	('60d628a3-7d50-48c5-be03-582700ddf5f1', 'E01015106', 'Plymouth 013E'),
 	('75e6574f-3132-4a1e-ab93-e7b2965fd471', 'E01015107', 'Plymouth 018A'),
-	('7dbe885a-8c68-470d-a986-d10cc29f50d3', 'E01015108', 'Plymouth 022A');
+	('7dbe885a-8c68-470d-a986-d10cc29f50d3', 'E01015108', 'Plymouth 022A'),
+	('efb6956d-0bac-402d-a664-065ebc120d82', 'E01015109', 'Plymouth 022B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('efb6956d-0bac-402d-a664-065ebc120d82', 'E01015109', 'Plymouth 022B'),
 	('55f50c2a-f9ad-415c-a80e-7c58048db2c9', 'E01015110', 'Plymouth 018B'),
 	('b74dafa2-cf32-480c-94ac-116c190a4d00', 'E01015111', 'Plymouth 018C'),
 	('49a8510e-c95e-42fb-9858-fede6c747bd2', 'E01015112', 'Plymouth 019A'),
@@ -47644,9 +47643,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('bf8530a7-d36f-4324-a8cf-53e2003f4d56', 'E01016105', 'Medway 036D'),
 	('88ac6259-fd5e-45a2-8856-6d854dfbadf8', 'E01016106', 'Medway 036E'),
 	('bcea015f-4ff7-4a1f-856f-bc0c6d148b8e', 'E01016107', 'Medway 032D'),
-	('cff69e75-b221-4f57-a78f-37a559a81d47', 'E01016108', 'Medway 007B');
+	('cff69e75-b221-4f57-a78f-37a559a81d47', 'E01016108', 'Medway 007B'),
+	('55ab23a7-35a8-4947-8323-2dd5bd2ce094', 'E01016109', 'Medway 007C');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('55ab23a7-35a8-4947-8323-2dd5bd2ce094', 'E01016109', 'Medway 007C'),
 	('7043b05a-3bb5-45d5-b340-4c13d0058290', 'E01016110', 'Medway 015D'),
 	('f9cc2ac1-f046-491b-8f7e-c2ecd60598fd', 'E01016111', 'Medway 015E'),
 	('c5d00094-0d59-4460-ad52-52d20d578aa3', 'E01016112', 'Medway 007D'),
@@ -48645,9 +48644,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('00082447-bcec-4743-9605-431a8b220d2f', 'E01017105', 'Portsmouth 009D'),
 	('e75b931c-3392-4ba0-8c20-0781e0932e4f', 'E01017106', 'Portsmouth 010B'),
 	('383e6308-6d39-4e1c-a6ea-831043c68738', 'E01017107', 'Portsmouth 009E'),
-	('fcd433e9-df4a-413c-b242-3f026fecf59d', 'E01017108', 'Portsmouth 010C');
+	('fcd433e9-df4a-413c-b242-3f026fecf59d', 'E01017108', 'Portsmouth 010C'),
+	('43887728-93b1-469b-9816-e636de53db4c', 'E01017109', 'Portsmouth 010D');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('43887728-93b1-469b-9816-e636de53db4c', 'E01017109', 'Portsmouth 010D'),
 	('7c0f43f4-a7f5-441f-950a-1f70e41ec668', 'E01017110', 'Portsmouth 011E'),
 	('16a5ff8e-25a8-45e7-9fbd-d8623d306c04', 'E01017111', 'Portsmouth 011F'),
 	('9f8dbe44-667e-452a-927e-ab07d42e28e6', 'E01017112', 'Portsmouth 001A'),
@@ -49646,9 +49645,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('90d96c99-0ba4-4668-91cd-b28009ab69b0', 'E01018105', 'Fenland 011C'),
 	('75eb1136-a293-47a9-9ad6-0fa6166a9934', 'E01018106', 'Fenland 011D'),
 	('b6995234-f4ba-4a9b-9c50-b66e9b89e60c', 'E01018107', 'Fenland 002C'),
-	('e76ea129-823c-41a0-8391-1fb41589db91', 'E01018108', 'Fenland 002D');
+	('e76ea129-823c-41a0-8391-1fb41589db91', 'E01018108', 'Fenland 002D'),
+	('7f134ffc-8dfd-4cda-9d97-ffa5557a5575', 'E01018109', 'Fenland 002E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('7f134ffc-8dfd-4cda-9d97-ffa5557a5575', 'E01018109', 'Fenland 002E'),
 	('233cd456-b875-4029-8ba1-f80a26b09fb4', 'E01018110', 'Fenland 011E'),
 	('e31e868b-8d9c-4ca1-a52d-9b8e28103941', 'E01018111', 'Fenland 010C'),
 	('6dac4ade-17dd-4927-904b-aff6ca566fbb', 'E01018112', 'Huntingdonshire 010A'),
@@ -50647,9 +50646,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('f6057410-34a4-4a70-b71e-14e6e748dcc1', 'E01019105', 'Allerdale 012D'),
 	('7254ab8a-7667-4771-b60c-7459e8bd0652', 'E01019106', 'Allerdale 012E'),
 	('0b69dd8e-e9ca-4ec6-94f8-f1f9a7c7d337', 'E01019107', 'Allerdale 002B'),
-	('89a98098-e983-46f6-9a8a-272bc8f7d4a3', 'E01019108', 'Allerdale 010A');
+	('89a98098-e983-46f6-9a8a-272bc8f7d4a3', 'E01019108', 'Allerdale 010A'),
+	('b9013052-37b9-41b2-83a9-3d575aaacba4', 'E01019109', 'Allerdale 010B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('b9013052-37b9-41b2-83a9-3d575aaacba4', 'E01019109', 'Allerdale 010B'),
 	('d6e6a3a3-e234-49f1-b893-daad6028b761', 'E01019110', 'Allerdale 010C'),
 	('f785fbce-c66d-48a6-8c3f-f6e2e9045790', 'E01019111', 'Allerdale 009A'),
 	('fb7c8d5a-35e9-410d-bf83-4dad655f8de0', 'E01019112', 'Allerdale 009B'),
@@ -51648,9 +51647,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('140727a2-ac1b-423b-b4f5-e9559b23c6ba', 'E01020105', 'North Devon 011A'),
 	('c7af9a59-8f05-4cda-9f4e-2ac8cba4e9b6', 'E01020106', 'North Devon 011B'),
 	('f9ec0732-92f1-4270-83c3-df2d007cc732', 'E01020107', 'North Devon 011C'),
-	('f50ff661-5b74-4eb1-85d4-0eb5c59685a5', 'E01020108', 'North Devon 004B');
+	('f50ff661-5b74-4eb1-85d4-0eb5c59685a5', 'E01020108', 'North Devon 004B'),
+	('a18ad7cd-275b-4069-9c4e-6c9fc6b88e13', 'E01020109', 'North Devon 004C');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('a18ad7cd-275b-4069-9c4e-6c9fc6b88e13', 'E01020109', 'North Devon 004C'),
 	('4f02aebb-3844-45cd-a9a7-1bb0bd902ab3', 'E01020110', 'North Devon 005E'),
 	('bc6ee4e5-bbf2-42c0-a095-7427bd287805', 'E01020111', 'North Devon 001A'),
 	('95b41d71-74f3-4f5a-b264-a13b4f671153', 'E01020112', 'North Devon 001B'),
@@ -52649,9 +52648,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('8ac8a584-7c03-4933-b0c7-4717fccb2cde', 'E01021105', 'Rother 003E'),
 	('2809dcf1-0481-4623-b860-6e968f7aa650', 'E01021106', 'Rother 010B'),
 	('729d4cd2-2842-4b42-88d2-af4490e01f55', 'E01021107', 'Rother 010C'),
-	('49b5d76c-9d8f-4ff8-bd03-b662f8fae6d9', 'E01021108', 'Rother 010D');
+	('49b5d76c-9d8f-4ff8-bd03-b662f8fae6d9', 'E01021108', 'Rother 010D'),
+	('cbb34c37-881c-42d6-a4b2-eda2fc1910f2', 'E01021109', 'Rother 005D');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('cbb34c37-881c-42d6-a4b2-eda2fc1910f2', 'E01021109', 'Rother 005D'),
 	('0e492660-e9bb-4e7b-8cea-13891ef4d3a2', 'E01021110', 'Rother 005E'),
 	('19d6823f-0391-4187-9253-8bd38bb44eea', 'E01021111', 'Rother 007A'),
 	('3c8d9b2b-1dc7-438c-8d20-f1069862ff8f', 'E01021112', 'Rother 008A'),
@@ -53650,9 +53649,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('ced142b1-300f-4afc-922c-c1a1779a28ef', 'E01022105', 'Cheltenham 012C'),
 	('2dc682a4-db8b-45fe-8f10-a4781221cf62', 'E01022106', 'Cheltenham 010A'),
 	('9780f48d-814e-44af-8548-b7ec025922d9', 'E01022107', 'Cheltenham 010B'),
-	('66e82113-38e5-4f1c-8717-105a6835dc43', 'E01022108', 'Cheltenham 010C');
+	('66e82113-38e5-4f1c-8717-105a6835dc43', 'E01022108', 'Cheltenham 010C'),
+	('e2955b95-6578-44e0-ae4a-5e123edf5ffd', 'E01022109', 'Cheltenham 012D');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('e2955b95-6578-44e0-ae4a-5e123edf5ffd', 'E01022109', 'Cheltenham 012D'),
 	('6facf052-2784-4f70-ac5f-6f1b1ac0a96c', 'E01022110', 'Cheltenham 012E'),
 	('7da6c2ae-ec21-47f1-844b-2ac1d765d831', 'E01022111', 'Cheltenham 012F'),
 	('75fd57e8-f134-496d-8a19-4abff14780e8', 'E01022112', 'Cheltenham 012G'),
@@ -54651,9 +54650,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('c9010f48-58b6-4e8f-bc2f-d4072b20060e', 'E01023105', 'Rushmoor 002A'),
 	('079974b4-80c7-4c4a-b9ec-c263d3c592f4', 'E01023106', 'Rushmoor 001C'),
 	('490463e8-c5b9-4a3b-a303-870e3196902d', 'E01023107', 'Rushmoor 012A'),
-	('13b606bf-66a8-4681-8d6f-d44d50406fdd', 'E01023108', 'Rushmoor 012B');
+	('13b606bf-66a8-4681-8d6f-d44d50406fdd', 'E01023108', 'Rushmoor 012B'),
+	('719aa75c-eb01-4220-9735-c8854cbe85c6', 'E01023109', 'Rushmoor 011A');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('719aa75c-eb01-4220-9735-c8854cbe85c6', 'E01023109', 'Rushmoor 011A'),
 	('f08c9998-bd04-49de-9681-07e228a3ff09', 'E01023110', 'Rushmoor 012C'),
 	('1a1337f7-b750-4666-8fb0-4e986cda737d', 'E01023111', 'Rushmoor 004D'),
 	('5eac790d-2c3c-4b9d-9604-1c1779aa0c8b', 'E01023112', 'Rushmoor 004E'),
@@ -55652,9 +55651,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('5d98f605-8458-4cad-b940-a281c4dd0e0a', 'E01024105', 'Canterbury 009B'),
 	('5dad4399-0bd6-4228-92cb-a1d9046f6696', 'E01024106', 'Canterbury 008E'),
 	('92b6930c-9053-4afc-a65b-260b9e74c9c0', 'E01024107', 'Canterbury 009C'),
-	('5c2bc206-9197-4624-8d2c-bdd337b277f0', 'E01024108', 'Canterbury 009D');
+	('5c2bc206-9197-4624-8d2c-bdd337b277f0', 'E01024108', 'Canterbury 009D'),
+	('844f378b-d9e9-4221-8473-0576133492fc', 'E01024109', 'Canterbury 009E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('844f378b-d9e9-4221-8473-0576133492fc', 'E01024109', 'Canterbury 009E'),
 	('1ed95e2d-e753-49d0-85a2-ef11e38b3699', 'E01024110', 'Canterbury 011B'),
 	('e02db3ad-b9dd-443b-9e97-267049213304', 'E01024111', 'Canterbury 011C'),
 	('3229e393-194a-4133-ab53-f0cb7db1ec6e', 'E01024112', 'Canterbury 011D'),
@@ -56653,9 +56652,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('6b29d7ca-c9d2-4e70-af80-ef7247cdb6aa', 'E01025105', 'Lancaster 019A'),
 	('3d8b56fe-93fb-4e32-bb13-2aadc41ddfde', 'E01025106', 'Lancaster 019B'),
 	('8efe4247-62c5-4396-a134-02d541fe7f3b', 'E01025107', 'Lancaster 019C'),
-	('0c93d74a-9bd8-4d43-b559-30a8d2c8f0b5', 'E01025108', 'Lancaster 005A');
+	('0c93d74a-9bd8-4d43-b559-30a8d2c8f0b5', 'E01025108', 'Lancaster 005A'),
+	('8ca597f4-eff2-4d7a-98eb-99b1898cb6ff', 'E01025109', 'Lancaster 005B');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('8ca597f4-eff2-4d7a-98eb-99b1898cb6ff', 'E01025109', 'Lancaster 005B'),
 	('15c03416-c4a0-41c9-a79c-19f099702e48', 'E01025110', 'Lancaster 009A'),
 	('e9152121-e3d9-42a2-8570-ab758c09f96b', 'E01025111', 'Lancaster 008A'),
 	('8e937843-b88b-46a6-9f91-71154ae7e4c1', 'E01025112', 'Lancaster 006A'),
@@ -57654,9 +57653,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('180d9b22-8681-47bd-a9b0-443e5800512a', 'E01026105', 'East Lindsey 009D'),
 	('28aed9ba-da6a-48dd-963a-d1d383b3660e', 'E01026106', 'East Lindsey 001F'),
 	('a15becaa-fdd1-4eab-82f0-c0c61675e177', 'E01026107', 'East Lindsey 001G'),
-	('d7c30566-bfd9-4e24-8c2f-1875925348e1', 'E01026108', 'East Lindsey 003G');
+	('d7c30566-bfd9-4e24-8c2f-1875925348e1', 'E01026108', 'East Lindsey 003G'),
+	('5b33e389-126c-4c3f-a060-7fbdca6c0f66', 'E01026109', 'East Lindsey 006C');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('5b33e389-126c-4c3f-a060-7fbdca6c0f66', 'E01026109', 'East Lindsey 006C'),
 	('eba3b138-33a1-46c8-bd41-31038b56c713', 'E01026110', 'East Lindsey 017B'),
 	('0138d45e-8946-449f-9fd0-40e5cf77183a', 'E01026111', 'East Lindsey 017C'),
 	('00f369d2-a962-475d-87e5-8b3d646795ca', 'E01026112', 'East Lindsey 017D'),
@@ -58655,9 +58654,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('498b23bf-f9bf-4108-83ae-823c0fcdf235', 'E01027105', 'North Northamptonshire 017A'),
 	('dbb6c930-b60f-4fd3-8baa-d8e329125664', 'E01027106', 'North Northamptonshire 017B'),
 	('d010d006-5d81-42a2-b0d8-752016ee3925', 'E01027107', 'North Northamptonshire 013C'),
-	('2daedd6d-5c8b-400f-9637-f6c945649b74', 'E01027108', 'North Northamptonshire 013D');
+	('2daedd6d-5c8b-400f-9637-f6c945649b74', 'E01027108', 'North Northamptonshire 013D'),
+	('9ee88d76-3ed8-49e4-a9a9-b085592e8295', 'E01027109', 'North Northamptonshire 013E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('9ee88d76-3ed8-49e4-a9a9-b085592e8295', 'E01027109', 'North Northamptonshire 013E'),
 	('0882f899-4709-4b69-b024-405b89fa249b', 'E01027110', 'Kettering 007B'),
 	('c45deda1-98cb-4e8b-a17a-8cd38f2dc9e9', 'E01027111', 'North Northamptonshire 017C'),
 	('5ccdc552-5338-492d-8949-39782153a6b3', 'E01027112', 'North Northamptonshire 017D'),
@@ -59656,9 +59655,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('d2afcfc0-f333-4d1d-b848-2421350b103e', 'E01028105', 'Broxtowe 016A'),
 	('a02bb438-7564-43cb-8792-9828f274e22a', 'E01028106', 'Broxtowe 016B'),
 	('35c7258b-8f7a-4d34-838d-b055b1ff52c7', 'E01028107', 'Broxtowe 001C'),
-	('a6ffa9f9-0b50-4108-ba42-6ce8a7aec3dc', 'E01028108', 'Broxtowe 001D');
+	('a6ffa9f9-0b50-4108-ba42-6ce8a7aec3dc', 'E01028108', 'Broxtowe 001D'),
+	('0a937d79-36a6-42ad-aa12-2660ec3c557b', 'E01028109', 'Broxtowe 003A');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('0a937d79-36a6-42ad-aa12-2660ec3c557b', 'E01028109', 'Broxtowe 003A'),
 	('4d43dfc0-4cf9-4b21-976b-1f7d1852a4c7', 'E01028110', 'Broxtowe 002A'),
 	('56c95c53-8f6e-4ce3-b7a8-c07d890e7b06', 'E01028111', 'Broxtowe 002B'),
 	('ed292135-e0e4-4858-9024-64a56c862150', 'E01028112', 'Broxtowe 002C'),
@@ -60657,9 +60656,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('bee008a2-a2d8-4db8-892d-654cea22d2c4', 'E01029105', 'Sedgemoor 013E'),
 	('7cb4e37c-236a-40f4-8a56-e4f6c0caf943', 'E01029106', 'Sedgemoor 008C'),
 	('1631de94-ff3f-45d3-a03e-b41b6372b4f8', 'E01029107', 'Sedgemoor 008D'),
-	('413e6c7a-418c-41e9-b6e4-268009a0fd7d', 'E01029108', 'Sedgemoor 010D');
+	('413e6c7a-418c-41e9-b6e4-268009a0fd7d', 'E01029108', 'Sedgemoor 010D'),
+	('f7233e35-c682-4e37-ba55-38eec929d015', 'E01029109', 'Sedgemoor 008E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('f7233e35-c682-4e37-ba55-38eec929d015', 'E01029109', 'Sedgemoor 008E'),
 	('9303efaa-7278-43cc-986e-9c7995d01b1e', 'E01029110', 'Sedgemoor 009C'),
 	('71983377-29b0-4477-b6e2-fd104e8d97c6', 'E01029111', 'Sedgemoor 009D'),
 	('053f8c55-65c7-402f-b69f-690df00b71b6', 'E01029112', 'Sedgemoor 009E'),
@@ -61658,9 +61657,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('dedcdbe3-bbde-4fae-bf3e-097025981a68', 'E01030105', 'West Suffolk 020A'),
 	('3fe370da-ff7b-4392-bf6d-518f270217ef', 'E01030106', 'West Suffolk 020B'),
 	('4f3d6d5a-1b18-4be4-8042-100ff8f41e4e', 'E01030107', 'West Suffolk 020C'),
-	('ceeabb94-1855-426f-84da-bf8952b2151f', 'E01030108', 'West Suffolk 020D');
+	('ceeabb94-1855-426f-84da-bf8952b2151f', 'E01030108', 'West Suffolk 020D'),
+	('6cf4b824-17d2-4c7a-9f46-571d8b9da1cc', 'E01030109', 'West Suffolk 019A');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('6cf4b824-17d2-4c7a-9f46-571d8b9da1cc', 'E01030109', 'West Suffolk 019A'),
 	('1e1c4602-c1c3-4ae8-a840-deb854067dc9', 'E01030110', 'West Suffolk 019B'),
 	('9852ed4d-5212-482a-8ee4-5b99001bf558', 'E01030111', 'West Suffolk 019C'),
 	('674307d8-18b2-4da6-a0f3-cbfe22648716', 'E01030112', 'West Suffolk 019D'),
@@ -62659,9 +62658,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('da877983-4a54-4288-a35d-492ddf0394f5', 'E01031105', 'Nuneaton and Bedworth 012A'),
 	('1f18df1e-0770-47a6-b9ff-f5fc7e74a47a', 'E01031106', 'Nuneaton and Bedworth 012B'),
 	('fa4a025a-9c4c-445a-9101-46d2d3c66b07', 'E01031107', 'Nuneaton and Bedworth 012C'),
-	('24caf152-ebc2-45fb-b4bc-96646aaff94a', 'E01031108', 'Nuneaton and Bedworth 012D');
+	('24caf152-ebc2-45fb-b4bc-96646aaff94a', 'E01031108', 'Nuneaton and Bedworth 012D'),
+	('a7f6e590-eb4d-4955-aebd-eb9883adcc5e', 'E01031109', 'Nuneaton and Bedworth 012E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('a7f6e590-eb4d-4955-aebd-eb9883adcc5e', 'E01031109', 'Nuneaton and Bedworth 012E'),
 	('bce845e5-a08b-4241-baec-8e5288739e9f', 'E01031110', 'Nuneaton and Bedworth 001A'),
 	('840c15a5-f25f-4562-8096-a3b1f71bea6f', 'E01031111', 'Nuneaton and Bedworth 001B'),
 	('0c4b85a5-0de2-437e-973d-866870631d3c', 'E01031112', 'Nuneaton and Bedworth 001C'),
@@ -63660,9 +63659,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('007183ae-a6d2-4bd5-a6da-5aef2e6987d1', 'E01032105', 'Wiltshire 042B'),
 	('ef7ea948-23ad-4a07-9784-fb43bdf196c7', 'E01032106', 'Wiltshire 044B'),
 	('4bab46ba-d2bd-47d9-8a1a-19352de4fd0a', 'E01032107', 'Wiltshire 042C'),
-	('8b61e182-77a7-44b8-9410-26a1de498349', 'E01032108', 'Wiltshire 042D');
+	('8b61e182-77a7-44b8-9410-26a1de498349', 'E01032108', 'Wiltshire 042D'),
+	('014366db-dccf-41db-82c1-c5a0380fe08d', 'E01032109', 'Wiltshire 044C');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('014366db-dccf-41db-82c1-c5a0380fe08d', 'E01032109', 'Wiltshire 044C'),
 	('06492f5c-deb4-4872-bad4-43a9777df337', 'E01032110', 'Wiltshire 043A'),
 	('42bc0f45-aa0a-4923-92be-0f6d9211ecc8', 'E01032111', 'Wiltshire 043B'),
 	('1cfed9c1-1511-45ee-8bce-c71399927438', 'E01032112', 'Wiltshire 043C'),
@@ -64661,9 +64660,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('44b7e264-dddd-4811-bd6c-ed21fc00e3cb', 'E01033146', 'Enfield 025F'),
 	('de92572f-5829-4a6e-8ec2-ba06e4cfee95', 'E01033148', 'Enfield 003F'),
 	('0dcf4415-aa68-4be2-9f18-af517bf763f2', 'E01033150', 'Enfield 003G'),
-	('a85966bc-aa2a-42c1-a919-76247b045f15', 'E01033151', 'Enfield 025G');
+	('a85966bc-aa2a-42c1-a919-76247b045f15', 'E01033151', 'Enfield 025G'),
+	('485f4554-4cda-425c-9ae2-155417be023d', 'E01033153', 'Waltham Forest 020G');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('485f4554-4cda-425c-9ae2-155417be023d', 'E01033153', 'Waltham Forest 020G'),
 	('dccd9f9c-2257-4501-9553-338ddbfb30d8', 'E01033154', 'North Dorset 006E'),
 	('48a469a4-c2ea-4b75-8442-4815c7d464e6', 'E01033156', 'Dorset 002D'),
 	('3510b3da-c87c-424d-b107-224100083a20', 'E01033158', 'Dorset 002E'),
@@ -65662,9 +65661,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('e3b99e1c-92a9-4e00-96fa-e426952ce3b2', 'E01034222', 'Newham 040A'),
 	('8f5f7fcd-bd68-4954-b5f8-f55d673e0a76', 'E01034223', 'Newham 040B'),
 	('83adc400-16f0-43da-9d64-91f9151e449a', 'E01034224', 'Newham 041D'),
-	('64244a32-7da4-4662-90f8-c5215a877acd', 'E01034225', 'Newham 042B');
+	('64244a32-7da4-4662-90f8-c5215a877acd', 'E01034225', 'Newham 042B'),
+	('3f971e2d-314c-4b2f-84f0-9672f8a25e23', 'E01034226', 'Newham 042C');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('3f971e2d-314c-4b2f-84f0-9672f8a25e23', 'E01034226', 'Newham 042C'),
 	('16084730-13a1-403b-94aa-dd34335c0fe8', 'E01034227', 'Newham 042D'),
 	('d11dc13c-3b83-479c-a584-e2da2ef0956f', 'E01034228', 'Newham 042E'),
 	('f3068de0-bf99-4ff6-baeb-28df970f4b1c', 'E01034229', 'Newham 042F'),
@@ -66663,9 +66662,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('1ce27801-419d-4875-9d51-2613958efbdc', 'E01035266', 'Wokingham 017H'),
 	('2ec44494-c2ad-483e-94b3-b4f38bc636c1', 'E01035267', 'Wokingham 018E'),
 	('4fdcebd9-c19e-4302-93a0-5d95649fb8c9', 'E01035268', 'Wokingham 018F'),
-	('f76c83a2-bc8e-44b1-aa25-4c7562162fd1', 'E01035269', 'Wokingham 018G');
+	('f76c83a2-bc8e-44b1-aa25-4c7562162fd1', 'E01035269', 'Wokingham 018G'),
+	('2788718d-12a2-4d6f-90bd-b293d60d91bb', 'E01035270', 'Dartford 001E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('2788718d-12a2-4d6f-90bd-b293d60d91bb', 'E01035270', 'Dartford 001E'),
 	('46431657-8c1e-45ac-8a5d-83638d1fccbd', 'E01035271', 'Dartford 001F'),
 	('fdd2b8f4-bd48-4a63-ae83-f313b623c4ce', 'E01035272', 'Dartford 001G'),
 	('eb031a4d-8300-449f-8e72-775003721fbb', 'E01035273', 'Dartford 001H'),
@@ -67664,9 +67663,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('806cf4fd-7d65-43b2-85e6-550d31aa5695', 'N21000504', 'Mid_Tyrone_A'),
 	('dad34b09-0b94-4768-8e35-7d4b3b9b65b1', 'N21000505', 'Mid_Tyrone_B'),
 	('42d59902-ef85-46c3-80d1-74103798fdd2', 'N21000506', 'Mid_Tyrone_C'),
-	('75653817-85cc-4d0d-97ff-52feb4b468fb', 'N21000507', 'Mid_Tyrone_D');
+	('75653817-85cc-4d0d-97ff-52feb4b468fb', 'N21000507', 'Mid_Tyrone_D'),
+	('68afe65a-03a0-44e9-b6ae-24cb0be6be3f', 'N21000508', 'Mid_Tyrone_E');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('68afe65a-03a0-44e9-b6ae-24cb0be6be3f', 'N21000508', 'Mid_Tyrone_E'),
 	('38bbbf7c-46b0-4de4-bfe5-44df14930971', 'N21000509', 'Mid_Tyrone_F'),
 	('efd44a01-951a-4da0-8e6e-09ab349b5c5e', 'N21000510', 'Mid_Tyrone_G'),
 	('9a0f7494-3076-44d4-a057-adba8382a57b', 'N21000511', 'Downshire_West_A'),
@@ -68665,9 +68664,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('e03468fa-add7-4ab6-9475-9710ef6291fe', 'S01007155', 'Monifieth East - 07'),
 	('5b15ca0b-542b-4bfa-9c15-38ed2702d515', 'S01007156', 'Carnoustie West - 01'),
 	('c6dcd05d-14d0-48ea-9b93-444f064b5fa8', 'S01007157', 'Carnoustie West - 02'),
-	('9cfb27cb-6841-49f4-9836-af5b8acd2200', 'S01007158', 'Carnoustie West - 03');
+	('9cfb27cb-6841-49f4-9836-af5b8acd2200', 'S01007158', 'Carnoustie West - 03'),
+	('a86a4f78-4c1e-4371-af15-fe5f6d8e6a3a', 'S01007159', 'Carnoustie West - 04');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('a86a4f78-4c1e-4371-af15-fe5f6d8e6a3a', 'S01007159', 'Carnoustie West - 04'),
 	('93dacdcc-8b6e-454d-ae23-99dbbc73165f', 'S01007160', 'Carnoustie West - 05'),
 	('5cfa898b-3be4-45c6-abea-db9a4428af1a', 'S01007161', 'Carnoustie West - 06'),
 	('0a314896-54a7-4b6c-b89a-e320c8e45c66', 'S01007162', 'Carnoustie West - 07'),
@@ -69666,9 +69665,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('18fde81c-ce8a-4916-b8e4-58cf21b7d045', 'S01008158', 'Lennoxtown - 01'),
 	('7ff13130-412c-44eb-ae2a-0186c06e853d', 'S01008159', 'Lennoxtown - 02'),
 	('a58fdf48-b665-442b-bae7-0d5eec515f73', 'S01008160', 'Lennoxtown - 03'),
-	('d4a6343e-3e16-4027-96d5-d97cd1b05854', 'S01008161', 'Lennoxtown - 04');
+	('d4a6343e-3e16-4027-96d5-d97cd1b05854', 'S01008161', 'Lennoxtown - 04'),
+	('b81ba3eb-d0eb-48b3-a0fb-dd3ee14fdd6b', 'S01008162', 'Lennoxtown - 05');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('b81ba3eb-d0eb-48b3-a0fb-dd3ee14fdd6b', 'S01008162', 'Lennoxtown - 05'),
 	('e3a64f7f-1b0c-49ed-b08e-841daf955e22', 'S01008163', 'IZ01 - 01'),
 	('069d5557-54ba-4380-89c4-65d9cc5d552d', 'S01008164', 'IZ01 - 02'),
 	('fd0edde8-ede0-4a4b-8ed1-7c02e7696588', 'S01008165', 'IZ01 - 03'),
@@ -70667,9 +70666,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('7a7c7bf9-dd35-4418-a0b7-94e8e195ae23', 'S01009158', 'Falkirk - Bantaskin - 05'),
 	('f9976239-e9e3-4509-a58f-dca11410ad50', 'S01009159', 'Falkirk - Camelon East - 01'),
 	('18985eab-78f5-4641-94bb-5aa39a7d6abc', 'S01009160', 'Falkirk - Camelon East - 02'),
-	('38e6620b-6dee-4144-a12a-e2e590524707', 'S01009161', 'Falkirk - Camelon East - 03');
+	('38e6620b-6dee-4144-a12a-e2e590524707', 'S01009161', 'Falkirk - Camelon East - 03'),
+	('3e777fcc-d96f-4fc4-832c-43923d70c76b', 'S01009162', 'Falkirk - Camelon East - 04');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('3e777fcc-d96f-4fc4-832c-43923d70c76b', 'S01009162', 'Falkirk - Camelon East - 04'),
 	('6e668a60-6317-4893-a753-b29fa6bb73a0', 'S01009163', 'Falkirk - Camelon East - 05'),
 	('8f9b0d65-085b-4622-ad1c-faa200b3fd85', 'S01009164', 'Falkirk - Camelon West - 01'),
 	('789c78a4-747c-44cd-886c-f7b56e6a053a', 'S01009165', 'Falkirk - Camelon West - 02'),
@@ -71668,9 +71667,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('de703fac-a528-4fc1-ba69-68aeb2905d31', 'S01010158', 'Cranhill, Lightburn and Queenslie South - 03'),
 	('544af113-1788-4d78-bf0f-e596a0f4ebbb', 'S01010159', 'Cranhill, Lightburn and Queenslie South - 04'),
 	('64499893-cf96-43cc-9e2a-ec852bf64bf6', 'S01010160', 'Cranhill, Lightburn and Queenslie South - 05'),
-	('e7f8968e-a528-4634-ac16-90c49d65ed25', 'S01010161', 'Cranhill, Lightburn and Queenslie South - 06');
+	('e7f8968e-a528-4634-ac16-90c49d65ed25', 'S01010161', 'Cranhill, Lightburn and Queenslie South - 06'),
+	('cee7c6a2-6359-4a06-8748-93639cdfc694', 'S01010162', 'Cranhill, Lightburn and Queenslie South - 07');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('cee7c6a2-6359-4a06-8748-93639cdfc694', 'S01010162', 'Cranhill, Lightburn and Queenslie South - 07'),
 	('b463bc3a-ea15-4195-8c8e-84c79f99c5ca', 'S01010163', 'Cranhill, Lightburn and Queenslie South - 08'),
 	('2690e4fe-32ec-40a8-8435-936950299b62', 'S01010164', 'Cranhill, Lightburn and Queenslie South - 09'),
 	('0fb8f982-dae3-4249-8ccb-2417cc62ed56', 'S01010165', 'Craigend and Ruchazie - 01'),
@@ -72669,9 +72668,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('efffce02-3326-47fd-bfc2-f08091bd874b', 'S01011155', 'Forres Central East and seaward - 03'),
 	('aad1c28d-5629-467d-a586-0f8c9046b2d9', 'S01011156', 'Forres Central East and seaward - 04'),
 	('81787fba-1106-4fb3-8e32-d26e54f1dcac', 'S01011157', 'Forres Central East and seaward - 05'),
-	('580a77f4-64f9-49ca-8596-639dbe3d3c99', 'S01011158', 'Forres Central East and seaward - 06');
+	('580a77f4-64f9-49ca-8596-639dbe3d3c99', 'S01011158', 'Forres Central East and seaward - 06'),
+	('a2a532c3-3940-4041-a510-9c5ff8d3111e', 'S01011159', 'Forres South West and Mannachie - 01');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('a2a532c3-3940-4041-a510-9c5ff8d3111e', 'S01011159', 'Forres South West and Mannachie - 01'),
 	('0ac074c0-dee0-4655-aadb-d01ce40fd200', 'S01011160', 'Forres South West and Mannachie - 02'),
 	('0e0e27e9-3762-46c6-889a-32675d76899e', 'S01011161', 'Forres South West and Mannachie - 03'),
 	('0792656e-7dde-4666-9837-6ba3b57aa0f2', 'S01011162', 'Forres South West and Mannachie - 04'),
@@ -73620,7 +73619,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('148d100a-0937-456e-9ef8-cc910a637b5b', 'S01012108', 'Paisley South East - 01'),
 	('44606232-fa00-48be-8ecb-cfe33b0178a4', 'S01012109', 'Paisley South East - 02'),
 	('8b718fb8-e89a-4390-9e06-bd314c3f032e', 'S01012110', 'Paisley South East - 03'),
-	('3fd90a0c-7073-49c8-a445-c2f6919f57ab', 'S01013223', 'IZ16 - 01'),
+	('8d7849cf-5f1b-42d6-8d47-af9195774979', 'S01013222', 'IZ15 - 09'),
 	('d17ef222-e519-4e96-b078-004c7c8fcee5', 'S01012111', 'Paisley South East - 04'),
 	('f67347ff-b0e8-4a75-86e6-72695a069a02', 'S01012112', 'Paisley South East - 05'),
 	('1ea1611a-12da-490c-9f0f-eb7bddc58804', 'S01012113', 'Paisley South East - 06'),
@@ -73670,9 +73669,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('3dd95fdc-0372-48ad-9b61-1647402b461b', 'S01012157', 'Paisley North - 05'),
 	('eb9480ac-7350-4c6e-b8eb-fc85f1caa971', 'S01012158', 'Paisley North - 06'),
 	('bf337ce4-4665-4f26-b4b3-cda8b23518de', 'S01012159', 'Renfrew West - 01'),
-	('87880889-c3c9-48ed-9afb-77192b908708', 'S01012160', 'Renfrew West - 02');
+	('87880889-c3c9-48ed-9afb-77192b908708', 'S01012160', 'Renfrew West - 02'),
+	('40b3620d-09b0-4f69-af43-90b56a62beff', 'S01012161', 'Renfrew West - 03');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
-	('40b3620d-09b0-4f69-af43-90b56a62beff', 'S01012161', 'Renfrew West - 03'),
 	('2f1406e1-06c4-4d72-b5fa-9f4c2b5a73f0', 'S01012162', 'Renfrew West - 04'),
 	('a0e4c2d6-f4b9-46d2-81b4-fb0633667801', 'S01012163', 'Renfrew West - 05'),
 	('82f04c28-b379-431f-8cda-f5d56283fb8b', 'S01012164', 'Renfrew West - 06'),
@@ -73783,6 +73782,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('0af8f9ea-b842-4073-95af-cb5cefc815c3', 'S01012269', 'Earlston - West'),
 	('3d216390-76e7-4bb0-a74c-5e432a46628c', 'S01012270', 'Earlston - East'),
 	('17b9fdcf-2440-4fd8-8fc8-f67b66d59fce', 'S01012271', 'Heriot - Fountainhall - Stow Landward'),
+	('ad361907-88d3-46e4-933c-a1d8c1be5bb1', 'S01012272', 'Stow'),
 	('2eab6d42-7591-4a19-b567-01839e1e8394', 'S01012273', 'Clovenfords and Area'),
 	('9e71f134-1d7e-4a44-8f63-2bf8ce5937a6', 'S01012274', 'Galashiels - N - Halliburton'),
 	('ac029b02-31ce-42f8-823e-6c982f7b1a76', 'S01012275', 'Galashiels - N - Town Centre'),
@@ -74509,6 +74509,7 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('601d2c9d-0b36-40ce-b455-f2b40f0515a0', 'S01012996', 'Birniehill, Kelvin and Whitehills East - 02'),
 	('d694be9f-68a9-42f0-93df-9ce5c7cf8989', 'S01012997', 'Birniehill, Kelvin and Whitehills East - 03'),
 	('cc1afefb-dc5c-4814-bec1-f170b8c345ca', 'S01012998', 'Birniehill, Kelvin and Whitehills East - 04'),
+	('3fd90a0c-7073-49c8-a445-c2f6919f57ab', 'S01013223', 'IZ16 - 01'),
 	('90cefb89-3ede-4c00-a33d-8f9e0f124c81', 'S01012999', 'Birniehill, Kelvin and Whitehills East - 05'),
 	('c90f57f2-a531-432d-9a08-47efbc258010', 'S01013000', 'Birniehill, Kelvin and Whitehills East - 06'),
 	('36fdd7a4-4875-4e11-bde5-d3cfdf600f1c', 'S01013001', 'Blane Valley - 01'),
@@ -74670,9 +74671,9 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('7adabf4d-06ec-43f5-9822-de4966ed14ca', 'S01013157', 'IZ06 - 06'),
 	('5c2aba57-8511-4b8e-9fe1-7c1cb663090f', 'S01013158', 'IZ07 - 01'),
 	('0211c336-df69-4f7e-8255-f12a1fefb763', 'S01013159', 'IZ07 - 02'),
-	('5a584fd3-d01e-420b-9c09-8f544973700a', 'S01013160', 'IZ07 - 03'),
-	('69ee48f2-73c1-4a5d-8af9-c35cbd6a9df8', 'S01013161', 'IZ07 - 04');
+	('5a584fd3-d01e-420b-9c09-8f544973700a', 'S01013160', 'IZ07 - 03');
 INSERT INTO establishment.lsoa (id, code, name) VALUES
+	('69ee48f2-73c1-4a5d-8af9-c35cbd6a9df8', 'S01013161', 'IZ07 - 04'),
 	('c9ee5f85-1ad6-44f6-a0e8-a501a9814cae', 'S01013162', 'IZ07 - 05'),
 	('adf699a0-487a-42f5-8e9d-50ed67b1e9ca', 'S01013163', 'IZ07 - 06'),
 	('06933f73-c99f-4bdf-8832-cf50ae41d275', 'S01013164', 'IZ08 - 01'),
@@ -74733,7 +74734,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('1e2ceac5-463a-4718-8fe0-714d35ba377d', 'S01013219', 'IZ15 - 06'),
 	('53653b71-9193-41c7-a6ed-1a5e4dbbe13e', 'S01013220', 'IZ15 - 07'),
 	('8e546d9c-d585-409d-8785-d8d8f98851b2', 'S01013221', 'IZ15 - 08'),
-	('8d7849cf-5f1b-42d6-8d47-af9195774979', 'S01013222', 'IZ15 - 09'),
 	('4268b91e-cc65-498d-b9b1-c2d42e4a6c1e', 'S01013224', 'IZ16 - 02'),
 	('26504720-bd4c-428e-8511-d3c20bbcabb7', 'S01013225', 'IZ16 - 03'),
 	('c941c5ed-97eb-493e-80b2-64d3fdaf19aa', 'S01013226', 'IZ16 - 04'),
@@ -84440,7 +84440,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 --
 
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('9b5b1a18-07a9-47db-a01e-aca4ea5ca740', 'S02002798', 'Alva'),
 	('c038e763-0cab-480b-8c9f-fc15bdd3409c', 'S02003539', 'Isles'),
 	('a008d96a-c9a2-43bf-9152-87c0f01a3cf7', '999999999', 'Unknown'),
 	('f5981112-77f8-4ba3-bd5d-5088b8da9cbe', 'E02000001', 'City of London 001'),
@@ -85439,9 +85438,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('35ad9adc-8270-4db9-8ef4-9ae5b393170b', 'E02000994', 'Bolton 011'),
 	('b4a60635-38a1-470c-9de9-6c231bfd766e', 'E02000995', 'Bolton 012'),
 	('2a7dfd5b-39f3-4687-91c1-aedb5842f12f', 'E02000996', 'Bolton 013'),
-	('519ff8b5-e2f3-48ea-89b1-f45b54c2dd76', 'E02000997', 'Bolton 014');
+	('519ff8b5-e2f3-48ea-89b1-f45b54c2dd76', 'E02000997', 'Bolton 014'),
+	('ad4cd1b5-45f9-4e49-ae4c-b4290301a73b', 'E02000998', 'Bolton 015');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('ad4cd1b5-45f9-4e49-ae4c-b4290301a73b', 'E02000998', 'Bolton 015'),
 	('0e57e700-8f09-4f27-a379-79669593b93f', 'E02000999', 'Bolton 016'),
 	('edacf319-6af5-4916-aed5-b5ca870f5c09', 'E02001000', 'Bolton 017'),
 	('81fd122d-dd6f-4080-8ee2-d16e5a81b0ef', 'E02001001', 'Bolton 018'),
@@ -86440,9 +86439,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('735990a0-a324-4f54-a00d-7db4c4218e49', 'E02001994', 'Coventry 037'),
 	('ba13ef60-b1a7-48e3-ba45-67d1f1f78df1', 'E02001995', 'Coventry 038'),
 	('b73dc79f-4853-41e6-9817-80a9add4eb21', 'E02001996', 'Coventry 039'),
-	('e97b05a5-3f66-44c8-8f60-59d0b26fb7a7', 'E02001997', 'Coventry 040');
+	('e97b05a5-3f66-44c8-8f60-59d0b26fb7a7', 'E02001997', 'Coventry 040'),
+	('87598921-5cfc-45db-a987-2695c884017b', 'E02001998', 'Coventry 041');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('87598921-5cfc-45db-a987-2695c884017b', 'E02001998', 'Coventry 041'),
 	('ca7f9186-95bb-4f19-8c0a-e36c569f5d76', 'E02001999', 'Coventry 042'),
 	('4744b665-753c-42aa-931c-3c7c22368ba7', 'E02002000', 'Dudley 001'),
 	('e6f4971b-482b-4da8-84d4-fdd135f0fb1f', 'E02002001', 'Dudley 002'),
@@ -87441,9 +87440,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('c993bd6b-9bf3-496f-888e-ff5fa65a37f2', 'E02002994', 'Bath and North East Somerset 010'),
 	('fb42ce2b-4198-49ae-81b8-8b89144a77c5', 'E02002995', 'Bath and North East Somerset 011'),
 	('bd1a3462-1c43-46bc-92c1-a29a7183d0e6', 'E02002996', 'Bath and North East Somerset 012'),
-	('78d238ce-7e09-4c9a-89b6-a16be2cc2f2e', 'E02002997', 'Bath and North East Somerset 013');
+	('78d238ce-7e09-4c9a-89b6-a16be2cc2f2e', 'E02002997', 'Bath and North East Somerset 013'),
+	('a0d0971c-6e43-477b-ae5b-8044735d01b6', 'E02002998', 'Bath and North East Somerset 014');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('a0d0971c-6e43-477b-ae5b-8044735d01b6', 'E02002998', 'Bath and North East Somerset 014'),
 	('b05f5715-cc88-4d5a-b172-f3e3ee4a84da', 'E02002999', 'Bath and North East Somerset 015'),
 	('1f13bee7-2769-40b5-92f1-c4879c55a181', 'E02003000', 'Bath and North East Somerset 016'),
 	('4fb713b3-7436-4c23-9104-95cddbeb898a', 'E02003001', 'Bath and North East Somerset 017'),
@@ -88442,9 +88441,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('d4e38eee-1ce1-46f0-844d-81b12dacb59a', 'E02003994', 'Carlisle 008'),
 	('57b555e2-ce07-4718-a4e3-e5ee27798fca', 'E02003995', 'Carlisle 009'),
 	('fe279251-676e-4731-8f49-3ccc253794e3', 'E02003996', 'Carlisle 010'),
-	('f09468e3-a521-4fd1-a20a-aec10d62ae5c', 'E02003997', 'Carlisle 011');
+	('f09468e3-a521-4fd1-a20a-aec10d62ae5c', 'E02003997', 'Carlisle 011'),
+	('e22551d5-1d17-4790-9a11-17be48a89561', 'E02003998', 'Carlisle 012');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('e22551d5-1d17-4790-9a11-17be48a89561', 'E02003998', 'Carlisle 012'),
 	('f0dd44c2-599c-4b1f-9819-c9d2be8f32e8', 'E02003999', 'Carlisle 013'),
 	('308efae1-b273-4ab1-b6f9-adc57161f869', 'E02004000', 'Copeland 001'),
 	('6e6ff5d5-f1f4-4d24-87f6-6e57bb72ec50', 'E02004001', 'Copeland 002'),
@@ -89443,9 +89442,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('919c6f79-e418-49dc-8f4d-5e939c7f1d23', 'E02004992', 'Welwyn Hatfield 013'),
 	('71f93cd1-f962-4f99-99d3-6a43eb49a963', 'E02004993', 'Welwyn Hatfield 014'),
 	('d2fe0745-399d-440c-bdfe-08749188632b', 'E02004994', 'Welwyn Hatfield 015'),
-	('265683c0-2f4d-4519-acd0-841f9ba3f1e0', 'E02004995', 'Welwyn Hatfield 016');
+	('265683c0-2f4d-4519-acd0-841f9ba3f1e0', 'E02004995', 'Welwyn Hatfield 016'),
+	('89cacc9b-0489-446e-9449-0bf41f052900', 'E02004996', 'Ashford 001');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('89cacc9b-0489-446e-9449-0bf41f052900', 'E02004996', 'Ashford 001'),
 	('7100b4af-5ca3-4746-a8ef-4c5f46714353', 'E02004997', 'Ashford 002'),
 	('1b57d110-045d-4438-b966-9a80520f0524', 'E02004998', 'Ashford 003'),
 	('51f756c3-1fc0-4798-882d-4583cc38fc9c', 'E02004999', 'Ashford 004'),
@@ -90444,9 +90443,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('665131ab-dec1-464c-b5b9-693a1998e093', 'E02005993', 'West Oxfordshire 001'),
 	('90773412-1a66-4100-8d8d-c6c30495c615', 'E02005994', 'West Oxfordshire 002'),
 	('634cdc4e-643a-4a76-a18b-416e67fd12e9', 'E02005995', 'West Oxfordshire 003'),
-	('b989e035-0e53-49ee-9aec-64b3e2c60082', 'E02005996', 'West Oxfordshire 004');
+	('b989e035-0e53-49ee-9aec-64b3e2c60082', 'E02005996', 'West Oxfordshire 004'),
+	('47aa2863-c23d-4bee-af78-1118f63b0595', 'E02005997', 'West Oxfordshire 005');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('47aa2863-c23d-4bee-af78-1118f63b0595', 'E02005997', 'West Oxfordshire 005'),
 	('d7163e41-23e8-495b-a113-8b878c94ccb8', 'E02005998', 'West Oxfordshire 006'),
 	('8bf3bd65-2848-43b7-bc95-564de42dde80', 'E02005999', 'West Oxfordshire 007'),
 	('9d1b1bc5-3dee-4b49-8173-c96fb74bc73c', 'E02006000', 'West Oxfordshire 008'),
@@ -91445,9 +91444,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('78fad163-5334-4198-a6f2-e6775e41bf81', 'E02006997', 'Newham 040'),
 	('8190a898-4e1e-40ad-ae54-6e6b54417433', 'E02006998', 'Newham 041'),
 	('06a9ab7f-9592-4b6c-9883-64e7a2a7921c', 'E02006999', 'Newham 042'),
-	('96b38718-be25-4e40-a4ad-3e08da24447c', 'E02007000', 'Oldham 036');
+	('96b38718-be25-4e40-a4ad-3e08da24447c', 'E02007000', 'Oldham 036'),
+	('6e8e6e78-2968-485c-a337-e5e0b0da0a61', 'E02007001', 'Oldham 037');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('6e8e6e78-2968-485c-a337-e5e0b0da0a61', 'E02007001', 'Oldham 037'),
 	('ebb80254-30d9-44c0-8b6d-eb5fbca3bd57', 'E02007002', 'Rotherham 034'),
 	('291d9fa5-a5eb-462f-8cf3-26d5cc79d365', 'E02007003', 'Pendle 014'),
 	('085aa8dd-c5d3-4190-9600-686db8f36a8c', 'E02007004', 'Thurrock 021'),
@@ -92446,9 +92445,9 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('1e84c8ee-69e8-41a3-8a4a-dbd85b6965bd', 'S02002113', 'Ardrossan North West'),
 	('a7389256-5c63-49a2-af44-6596d8dbe73d', 'S02002114', 'Ardrossan North East'),
 	('98d03e7c-b959-46fe-8fee-0e3bd3ae97df', 'S02002115', 'Saltcoats North West'),
-	('c8d3d927-8fa8-431c-955f-444170d4f1e0', 'S02002116', 'Saltcoats North East');
+	('c8d3d927-8fa8-431c-955f-444170d4f1e0', 'S02002116', 'Saltcoats North East'),
+	('7fd01b4c-c325-47b8-975d-f95af7e35d0d', 'S02002117', 'Stevenston North West');
 INSERT INTO establishment.msoa (id, code, name) VALUES
-	('7fd01b4c-c325-47b8-975d-f95af7e35d0d', 'S02002117', 'Stevenston North West'),
 	('9fac62e4-30ab-4354-bc45-d94396c38f75', 'S02002118', 'Stevenston Hayocks'),
 	('6be35820-8a7e-4725-ae82-33c93e9d48b3', 'S02002119', 'Kilwinning Whitehirst Park and Woodside'),
 	('a84a4a29-b3ea-46df-8c73-0a7d2cc4bd8a', 'S02002120', 'Kilwinning Pennyburn'),
@@ -93092,7 +93091,7 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('2c78b9b6-7dd8-4b03-9c43-c4593a2ef220', 'S02002760', 'Broughton South'),
 	('4cf4a212-d88c-4e35-adc6-5a2e916aad1d', 'S02002761', 'New Town East and Gayfield'),
 	('edcb8436-99a7-4fd6-aae1-ddc101e5046d', 'S02002762', 'New Town West'),
-	('a7c59392-7e16-49c8-a665-df1f89764fef', 'S02002875', 'Menzieshill'),
+	('2ee0362d-69ff-4691-ab6e-cb4d34c3ba22', 'S02002874', 'Balgay'),
 	('9e3cc5ee-cb8a-4c9c-98c7-661502dfd19f', 'S02002763', 'Canonmills and New Town North'),
 	('8c394506-d8e7-459c-b353-fac546da259a', 'S02002764', 'Stockbridge'),
 	('03d5721e-ef8f-4fbb-bdab-f9b9432d581e', 'S02002765', 'Comely Bank'),
@@ -93128,6 +93127,7 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('7e6dece4-686b-4bad-8c7e-8a627d646fc1', 'S02002795', 'Tullibody South'),
 	('8abfd772-c326-4906-a58d-4710c86c3586', 'S02002796', 'Tullibody North and Glenochil'),
 	('af79b702-f0a8-452e-af47-6833487d11c4', 'S02002797', 'Menstrie'),
+	('9b5b1a18-07a9-47db-a01e-aca4ea5ca740', 'S02002798', 'Alva'),
 	('a0abd4dc-4a51-45ea-9cf8-a78b0fcee023', 'S02002799', 'Fishcross, Devon Village and Coalsnaughton'),
 	('426de0d0-83e9-4f0b-b6f1-9ea14aa49760', 'S02002800', 'Tillicoultry'),
 	('1ba69a35-f890-4f5d-92fc-2fbab04b7486', 'S02002801', 'Dollar and Muckhart'),
@@ -93203,7 +93203,7 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('6ae4eb9c-b162-4463-95ec-843c2d0e6b07', 'S02002871', 'Downfield'),
 	('2d9d2bd9-a65d-4936-8484-5e2beee3903d', 'S02002872', 'Fairmuir'),
 	('815b64a4-1617-49b0-a59c-5c7cdfb37fc3', 'S02002873', 'Law'),
-	('2ee0362d-69ff-4691-ab6e-cb4d34c3ba22', 'S02002874', 'Balgay'),
+	('a7c59392-7e16-49c8-a665-df1f89764fef', 'S02002875', 'Menzieshill'),
 	('ffd89058-a07f-4cef-886f-5bdbcc843763', 'S02002876', 'Charleston'),
 	('fa15b720-f4d3-443e-a9de-79e39bbaa341', 'S02002877', 'Lochee'),
 	('7d3f8d09-314a-4565-8bec-23a867e4ca8a', 'S02002878', 'Ardler and St Marys'),
@@ -93624,7 +93624,6 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('366e5c47-b74a-4e5e-b4d6-0cd86d7874d4', 'S02003292', 'Inverness Westhill'),
 	('b536cbc2-dd38-46c1-b9f3-f142c20a5174', 'S02003293', 'Inverness Inshes'),
 	('1ece879a-c902-4db4-a8a1-afce6df4c71a', 'S02003294', 'Inverness Slackbuie'),
-	('f9d1d24f-10da-4bf8-b0e7-9d391b5decb8', 'S02003502', 'Gartlea'),
 	('235abdc2-a58b-412c-910e-cf20f61d1993', 'S02003295', 'Inverness Lochardil and Holm Mains'),
 	('cbf189c5-f5b3-487e-9f31-d4ef8e5b27da', 'S02003296', 'Inverness Drummond'),
 	('cd83e1d7-aed8-45e1-bf87-050702f3b0d1', 'S02003297', 'Inverness Hilton'),
@@ -93725,7 +93724,7 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('28f6ca2b-9a5e-4633-8b06-040667bd5e82', 'S02003392', 'New Elgin East and The Wards'),
 	('299751c7-4a5b-4d7e-a824-f43804f83bae', 'S02003393', 'New Elgin West'),
 	('51a8839e-30f3-4674-b236-5d8c931137c3', 'S02003394', 'Elgin Central West'),
-	('acb16275-9375-4ce9-a22c-b993d70b0827', 'S02003503', 'Cairnhill'),
+	('f9d1d24f-10da-4bf8-b0e7-9d391b5decb8', 'S02003502', 'Gartlea'),
 	('aff2418d-d18b-4c4d-a5a5-258079b5fe72', 'S02003395', 'Elgin Bishopmill East, Ladyhill and High Street'),
 	('63106651-f732-40d8-8b26-0fddc8332093', 'S02003396', 'Elgin Bishopmill West and Newfield'),
 	('c1b24476-1e0d-4bff-b120-cc676e38c205', 'S02003397', 'Lossiemouth East and Seatown'),
@@ -93833,6 +93832,7 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('b159351f-f0a2-46bb-aa84-b35fc89e0b49', 'S02003499', 'Chapelhall East'),
 	('e51b5eb9-ccdf-4159-ab4c-493df781b773', 'S02003500', 'Craigneuk Airdrie'),
 	('15923751-a10d-46ff-8ec5-a8e332f10115', 'S02003501', 'Petersburn'),
+	('acb16275-9375-4ce9-a22c-b993d70b0827', 'S02003503', 'Cairnhill'),
 	('da4f1ae5-1de7-4eb9-a310-32c40e54a0e2', 'S02003504', 'Coatdyke and Whinhall'),
 	('9a439824-93f0-407e-b0ef-fda6d6f9f6cb', 'S02003505', 'Thrashbush'),
 	('6addd5dc-9724-4338-a84d-1db99bdf517d', 'S02003506', 'Airdrie North'),
@@ -97247,5 +97247,5 @@ INSERT INTO establishment.urban_rural (id, code, name) VALUES
 -- PostgreSQL database dump complete
 --
 
-\unrestrict JZwgLyn1Ayj8e9cgag2YE0W51knx7FcMGx6cYFwZazBINhcxuy1fDyaztj1TK2n
+\unrestrict zvwPEZ1emTXnL8g1N0hoROv3wdJbl3D9KrG8y7Eede64SN2ic555peobUPrgSyN
 

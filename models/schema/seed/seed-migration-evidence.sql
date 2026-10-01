@@ -14,3 +14,38 @@ VALUES
     ('ccf4f5a3-becd-4c3f-8d5e-555555555555', 'ccf4f5a3-becd-4c3f-8d5e-222222222222', 'dbo.EstablishmentGroup/GroupLink', '23869:134314', '23869', 134314),
     ('ccf4f5a3-becd-4c3f-8d5e-666666666666', 'ccf4f5a3-becd-4c3f-8d5e-222222222222', 'dbo.EstablishmentGroup/GroupLink', '2914:134314', '2914', 134314),
     ('ccf4f5a3-becd-4c3f-8d5e-888888888888', 'ccf4f5a3-becd-4c3f-8d5e-222222222222', 'dbo.EstablishmentGroup/GroupLink', '4737:134314', '4737', 134314);
+
+-- Resolve classifications through Companies House number and trust type rather
+-- than a generated UUID. A local BAU refresh deliberately regenerates UUIDs.
+WITH evidence_input (
+    evidence_id,
+    companies_house_number,
+    academy_trust_type,
+    source_record_id,
+    assertion_rule
+) AS (
+    VALUES
+        ('ccf4f5a3-becd-4c3f-8d5e-999999999991'::uuid, '07747126', 'Multi-academy trust', 'ccf4f5a3-becd-4c3f-8d5e-333333333333'::uuid, 'MR001'),
+        ('ccf4f5a3-becd-4c3f-8d5e-999999999992'::uuid, '07747126', 'Single-academy trust', 'ccf4f5a3-becd-4c3f-8d5e-777777777777'::uuid, 'MR005'),
+        ('ccf4f5a3-becd-4c3f-8d5e-999999999993'::uuid, '05412502', 'Multi-academy trust', 'ccf4f5a3-becd-4c3f-8d5e-555555555555'::uuid, 'MR001'),
+        ('ccf4f5a3-becd-4c3f-8d5e-999999999994'::uuid, '05412502', 'Single-academy trust', 'ccf4f5a3-becd-4c3f-8d5e-888888888888'::uuid, 'MR005')
+)
+INSERT INTO migration.academy_trust_classification_evidence
+    (evidence_id, academy_trust_classification_id, source_record_id, assertion_rule, review_status)
+SELECT input.evidence_id,
+       classification.academy_trust_classification_id,
+       input.source_record_id,
+       input.assertion_rule,
+       'accepted'
+FROM evidence_input AS input
+JOIN establishment.organisation_identifier_type AS identifier_type
+  ON identifier_type.name = 'Companies House number'
+JOIN establishment.organisation_identifier AS identifier
+  ON identifier.organisation_identifier_type_id = identifier_type.organisation_identifier_type_id
+ AND identifier.value = input.companies_house_number
+ AND identifier.is_current
+JOIN establishment.academy_trust_type AS trust_type
+  ON trust_type.name = input.academy_trust_type
+JOIN establishment.academy_trust_classification AS classification
+  ON classification.legal_entity_id = identifier.legal_entity_id
+ AND classification.academy_trust_type_id = trust_type.academy_trust_type_id;

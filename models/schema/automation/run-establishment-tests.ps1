@@ -35,7 +35,7 @@ try {
     & $rowCountTest -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
     if ($LASTEXITCODE -ne 0) { throw 'Establishment row-count approval test failed.' }
 
-    foreach ($urn in @(136102)) {
+    foreach ($urn in @(136102, 134314)) {
         & $approvalTest -Urn $urn -PostgresHost $PostgresHost -PostgresPort $PostgresPort -PostgresDatabase $PostgresDatabase -PostgresUser $PostgresUser -PostgresPassword $PostgresPassword
         if ($LASTEXITCODE -ne 0) { throw "Establishment approval test failed for URN $urn." }
     }

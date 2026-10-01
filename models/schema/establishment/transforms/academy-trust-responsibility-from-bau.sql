@@ -39,14 +39,11 @@ SELECT
         ELSE 'Run by academy trust'
     END AS responsibility_type,
     NULL AS role_start_date,
-    CONVERT(varchar(10), eg.closedDate, 23) AS role_end_date,
-    CASE
-        WHEN eg.closedDate IS NOT NULL THEN 'evidenced'
-    END AS role_end_date_basis,
-    CASE
-        WHEN eg.type_code IN ('06', '10', '11') THEN CONVERT(varchar(10), gl.effectiveDate, 23)
-    END AS classification_start_date,
-    CONVERT(varchar(10), eg.closedDate, 23) AS classification_end_date,
+    NULL AS role_end_date,
+    NULL AS role_end_date_basis,
+    NULL AS classification_start_date,
+    NULL AS classification_end_date,
+    CONVERT(bit, CASE WHEN gl.archived = 1 THEN 0 ELSE 1 END) AS is_current,
     CONVERT(integer, gl.urn) AS establishment_urn,
     CONVERT(varchar(10), gl.effectiveDate, 23) AS responsibility_start_date,
     CASE

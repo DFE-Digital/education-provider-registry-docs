@@ -392,21 +392,26 @@ CREATE TABLE establishment.academy_trust_type (
 
 CREATE TABLE establishment.academy_trust_classification (
     academy_trust_classification_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_party_role_id uuid NOT NULL
-        REFERENCES establishment.establishment_party_role (establishment_party_role_id),
+    legal_entity_id uuid NOT NULL
+        REFERENCES establishment.legal_entity (legal_entity_id),
     academy_trust_type_id integer NOT NULL
         REFERENCES establishment.academy_trust_type (academy_trust_type_id),
     start_date date,
     end_date date,
+    is_current boolean NOT NULL DEFAULT false,
     CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
 
 CREATE UNIQUE INDEX academy_trust_classification_period_unique
     ON establishment.academy_trust_classification (
-        establishment_party_role_id,
+        legal_entity_id,
         academy_trust_type_id,
         COALESCE(start_date, DATE '-infinity')
     );
+
+CREATE UNIQUE INDEX academy_trust_classification_current_legal_entity_unique
+    ON establishment.academy_trust_classification (legal_entity_id)
+    WHERE is_current;
 
 CREATE TABLE establishment.responsibility_type (
     responsibility_type_id integer PRIMARY KEY,
@@ -423,10 +428,14 @@ CREATE TABLE establishment.establishment_responsibility (
         REFERENCES establishment.person (person_id),
     responsibility_type_id integer NOT NULL
         REFERENCES establishment.responsibility_type (responsibility_type_id),
+    academy_trust_type_id integer
+        REFERENCES establishment.academy_trust_type (academy_trust_type_id),
     start_date date,
     end_date date,
+    is_current boolean NOT NULL DEFAULT false,
     CHECK ((legal_entity_id IS NOT NULL) <> (person_id IS NOT NULL)),
     CHECK (person_id IS NULL OR responsibility_type_id IN (3, 4)),
+    CHECK ((responsibility_type_id = 1) = (academy_trust_type_id IS NOT NULL)),
     CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
 
@@ -447,6 +456,10 @@ CREATE UNIQUE INDEX establishment_responsibility_person_period_unique
         COALESCE(start_date, DATE '-infinity')
     )
     WHERE person_id IS NOT NULL;
+
+CREATE UNIQUE INDEX establishment_responsibility_current_academy_trust_unique
+    ON establishment.establishment_responsibility (establishment_id)
+    WHERE is_current AND responsibility_type_id = 1;
 
 CREATE TABLE establishment.organisation_group_type (
     organisation_group_type_id integer PRIMARY KEY,

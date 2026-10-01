@@ -21,6 +21,7 @@ CREATE TEMP TABLE establishment_party_role_fixture (
     role_end_date_basis text,
     classification_start_date date,
     classification_end_date date,
+    is_current boolean NOT NULL,
     establishment_urn integer NOT NULL,
     responsibility_start_date date NOT NULL,
     responsibility_end_date date,
@@ -148,15 +149,17 @@ WHERE NOT EXISTS (
 );
 
 INSERT INTO establishment.academy_trust_classification (
-    establishment_party_role_id,
+    legal_entity_id,
     academy_trust_type_id,
     start_date,
-    end_date
+    end_date,
+    is_current
 )
-SELECT role.establishment_party_role_id,
+SELECT company_identifier.legal_entity_id,
        academy_type.academy_trust_type_id,
        f.classification_start_date,
-       f.classification_end_date
+       f.classification_end_date,
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.name = 'Companies House number'
@@ -164,22 +167,35 @@ JOIN establishment.organisation_identifier AS company_identifier
   ON company_identifier.organisation_identifier_type_id = company_type.organisation_identifier_type_id
  AND company_identifier.value = f.companies_house_number
  AND company_identifier.is_current
-JOIN establishment.establishment_party_role_type AS role_type
-  ON role_type.name = 'Academy trust'
-JOIN establishment.establishment_party_role AS role
-  ON role.legal_entity_id = company_identifier.legal_entity_id
- AND role.establishment_party_role_type_id = role_type.establishment_party_role_type_id
- AND role.start_date IS NOT DISTINCT FROM f.role_start_date
 JOIN establishment.academy_trust_type AS academy_type
   ON academy_type.name = f.academy_trust_type
 WHERE f.academy_trust_type IS NOT NULL
-  AND NOT EXISTS (
-      SELECT 1
-      FROM establishment.academy_trust_classification AS existing
-      WHERE existing.establishment_party_role_id = role.establishment_party_role_id
-        AND existing.academy_trust_type_id = academy_type.academy_trust_type_id
-        AND existing.start_date IS NOT DISTINCT FROM f.classification_start_date
-  );
+ON CONFLICT (
+    legal_entity_id,
+    academy_trust_type_id,
+    COALESCE(start_date, DATE '-infinity')
+) DO UPDATE SET is_current = EXCLUDED.is_current;
+
+INSERT INTO establishment.academy_trust_classification (
+    legal_entity_id, academy_trust_type_id, start_date, end_date, is_current
+)
+SELECT le.legal_entity_id,
+       academy_type.academy_trust_type_id,
+       f.classification_start_date,
+       f.classification_end_date,
+       f.is_current
+FROM establishment_party_role_fixture AS f
+JOIN establishment.legal_entity AS le
+  ON upper(btrim(le.name)) = upper(btrim(f.legal_entity_name))
+JOIN establishment.academy_trust_type AS academy_type
+  ON academy_type.name = f.academy_trust_type
+WHERE f.companies_house_number IS NULL
+  AND f.academy_trust_type IS NOT NULL
+ON CONFLICT (
+    legal_entity_id,
+    academy_trust_type_id,
+    COALESCE(start_date, DATE '-infinity')
+) DO UPDATE SET is_current = EXCLUDED.is_current;
 
 INSERT INTO establishment.group_identifier (
     establishment_party_role_id,
@@ -192,7 +208,7 @@ SELECT role.establishment_party_role_id,
        git.group_identifier_type_id,
        issuer.identifier_issuer_id,
        f.group_uid,
-       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.name = 'Companies House number'
@@ -229,7 +245,7 @@ SELECT role.establishment_party_role_id,
        git.group_identifier_type_id,
        issuer.identifier_issuer_id,
        f.group_id,
-       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.name = 'Companies House number'
@@ -260,14 +276,18 @@ INSERT INTO establishment.establishment_responsibility (
     establishment_id,
     legal_entity_id,
     responsibility_type_id,
+    academy_trust_type_id,
     start_date,
-    end_date
+    end_date,
+    is_current
 )
 SELECT e.establishment_id,
        company_identifier.legal_entity_id,
        rt.responsibility_type_id,
+       academy_type.academy_trust_type_id,
        f.responsibility_start_date,
-       f.responsibility_end_date
+       f.responsibility_end_date,
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.establishment AS e
   ON e.urn = f.establishment_urn
@@ -279,7 +299,17 @@ JOIN establishment.organisation_identifier AS company_identifier
  AND company_identifier.is_current
 JOIN establishment.responsibility_type AS rt
   ON rt.name = f.responsibility_type
-ON CONFLICT DO NOTHING;
+LEFT JOIN establishment.academy_trust_type AS academy_type
+  ON academy_type.name = f.academy_trust_type
+ON CONFLICT (
+    establishment_id,
+    legal_entity_id,
+    responsibility_type_id,
+    COALESCE(start_date, DATE '-infinity')
+) WHERE legal_entity_id IS NOT NULL DO UPDATE SET
+    academy_trust_type_id = EXCLUDED.academy_trust_type_id,
+    end_date = EXCLUDED.end_date,
+    is_current = EXCLUDED.is_current;
 
 INSERT INTO establishment.establishment_party_role (
     establishment_party_role_type_id, legal_entity_id, start_date, end_date
@@ -309,7 +339,7 @@ SELECT role.establishment_party_role_id,
        git.group_identifier_type_id,
        issuer.identifier_issuer_id,
        f.group_uid,
-       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
 JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
@@ -334,7 +364,7 @@ SELECT role.establishment_party_role_id,
        git.group_identifier_type_id,
        issuer.identifier_issuer_id,
        f.group_id,
-       (f.academy_trust_type IS NULL OR f.academy_trust_type <> 'Single-academy trust')
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
 JOIN establishment.establishment_party_role AS role ON role.legal_entity_id = le.legal_entity_id
@@ -354,19 +384,31 @@ ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
 
 INSERT INTO establishment.establishment_responsibility (
     establishment_id, legal_entity_id, responsibility_type_id,
-    start_date, end_date
+    academy_trust_type_id, start_date, end_date, is_current
 )
 SELECT e.establishment_id,
        le.legal_entity_id,
        rt.responsibility_type_id,
+       academy_type.academy_trust_type_id,
        f.responsibility_start_date,
-       f.responsibility_end_date
+       f.responsibility_end_date,
+       f.is_current
 FROM establishment_party_role_fixture AS f
 JOIN establishment.establishment AS e ON e.urn = f.establishment_urn
 JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
 JOIN establishment.responsibility_type AS rt ON rt.name = f.responsibility_type
+LEFT JOIN establishment.academy_trust_type AS academy_type
+  ON academy_type.name = f.academy_trust_type
 WHERE f.companies_house_number IS NULL
-ON CONFLICT DO NOTHING;
+ON CONFLICT (
+    establishment_id,
+    legal_entity_id,
+    responsibility_type_id,
+    COALESCE(start_date, DATE '-infinity')
+) WHERE legal_entity_id IS NOT NULL DO UPDATE SET
+    academy_trust_type_id = EXCLUDED.academy_trust_type_id,
+    end_date = EXCLUDED.end_date,
+    is_current = EXCLUDED.is_current;
 
 -- Keep source-derived dates and inference decisions outside the live model.
 CREATE TEMP TABLE migration_context (
@@ -402,6 +444,36 @@ SELECT context.source_snapshot_id,
        fixture.establishment_urn
 FROM establishment_party_role_fixture AS fixture
 CROSS JOIN migration_context AS context
+ON CONFLICT DO NOTHING;
+
+INSERT INTO migration.academy_trust_classification_evidence (
+    academy_trust_classification_id,
+    source_record_id,
+    assertion_rule,
+    review_status
+)
+SELECT classification.academy_trust_classification_id,
+       source_record.source_record_id,
+       CASE WHEN fixture.is_current THEN 'MR001' ELSE 'MR005' END,
+       'accepted'
+FROM establishment_party_role_fixture AS fixture
+JOIN establishment.organisation_identifier_type AS company_type
+  ON company_type.name = 'Companies House number'
+JOIN establishment.organisation_identifier AS company_identifier
+  ON company_identifier.organisation_identifier_type_id = company_type.organisation_identifier_type_id
+ AND company_identifier.value = fixture.companies_house_number
+ AND company_identifier.is_current
+JOIN establishment.academy_trust_type AS academy_type
+  ON academy_type.name = fixture.academy_trust_type
+JOIN establishment.academy_trust_classification AS classification
+  ON classification.legal_entity_id = company_identifier.legal_entity_id
+ AND classification.academy_trust_type_id = academy_type.academy_trust_type_id
+ AND classification.start_date IS NOT DISTINCT FROM fixture.classification_start_date
+JOIN migration_context AS context ON true
+JOIN migration.source_record AS source_record
+  ON source_record.source_snapshot_id = context.source_snapshot_id
+ AND source_record.source_key = fixture.group_uid || ':' || fixture.establishment_urn
+WHERE fixture.academy_trust_type IS NOT NULL
 ON CONFLICT DO NOTHING;
 
 INSERT INTO migration.establishment_party_role_evidence (

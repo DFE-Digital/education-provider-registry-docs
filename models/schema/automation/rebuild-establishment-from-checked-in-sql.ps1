@@ -33,7 +33,7 @@ $academyTrustReferenceDataSql = Join-Path $seedRoot 'seed-academy-trust-referenc
 $migrationEvidenceSql = Join-Path $seedRoot 'seed-migration-evidence.sql'
 $approvalTest = Join-Path $schemaRoot 'tests\assert-establishment-approval.ps1'
 $rowCountTest = Join-Path $schemaRoot 'tests\assert-establishment-row-counts.ps1'
-$approvalUrns = @(136102)
+$approvalUrns = @(136102, 134314)
 $seedPaths = @($SeedFile | ForEach-Object {
     if ([System.IO.Path]::IsPathRooted($_)) { $_ } else { Join-Path $seedRoot $_ }
 })

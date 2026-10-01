@@ -45,7 +45,7 @@ foreach ($path in @($transformSql, $loadSql, $migrationSchemaSql)) {
 
 $fixtureDirectory = Split-Path -Parent $FixturePath
 New-Item -ItemType Directory -Path $fixtureDirectory -Force | Out-Null
-$header = 'legal_entity_name|companies_house_number|ukprn|legal_entity_incorporation_date|group_uid|group_id|establishment_party_role_type|academy_trust_type|responsibility_type|role_start_date|role_end_date|role_end_date_basis|classification_start_date|classification_end_date|establishment_urn|responsibility_start_date|responsibility_end_date|end_date_basis'
+$header = 'legal_entity_name|companies_house_number|ukprn|legal_entity_incorporation_date|group_uid|group_id|establishment_party_role_type|academy_trust_type|responsibility_type|role_start_date|role_end_date|role_end_date_basis|classification_start_date|classification_end_date|is_current|establishment_urn|responsibility_start_date|responsibility_end_date|end_date_basis'
 [System.IO.File]::WriteAllText($FixturePath, $header + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
 
 $reader = $null; $command = $null; $connection = $null
