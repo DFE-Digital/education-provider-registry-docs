@@ -62,7 +62,7 @@ function Test-EstablishmentApproval {
         Write-Host $actual
         throw "Establishment approval test failed for URN $Urn."
     }
-    Write-Host "    Approval test passed for URN $Urn." -ForegroundColor Green
+    Write-Host "    🙂 Approval test passed for URN $Urn." -ForegroundColor Green
 }
 
 function Test-EstablishmentScope {
