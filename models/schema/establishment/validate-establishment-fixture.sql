@@ -26,7 +26,7 @@ BEGIN
               'organisation_identifier',
               'organisation_identifier_type',
               'person',
-              'responsibility_type',
+              'establishment_responsibility_type',
               'specialist_provision',
               'resourced_provision',
               'sen_unit_provision'
@@ -61,7 +61,7 @@ WHERE table_schema = 'establishment'
       'organisation_identifier',
       'organisation_identifier_type',
       'person',
-      'responsibility_type',
+      'establishment_responsibility_type',
       'specialist_provision',
       'resourced_provision',
       'sen_unit_provision'

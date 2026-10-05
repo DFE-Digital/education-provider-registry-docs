@@ -413,7 +413,7 @@ CREATE UNIQUE INDEX academy_trust_classification_current_legal_entity_unique
     ON establishment.academy_trust_classification (legal_entity_id)
     WHERE is_current;
 
-CREATE TABLE establishment.responsibility_type (
+CREATE TABLE establishment.establishment_responsibility_type (
     responsibility_type_id integer PRIMARY KEY,
     name text NOT NULL UNIQUE
 );
@@ -427,7 +427,7 @@ CREATE TABLE establishment.establishment_responsibility (
     person_id uuid
         REFERENCES establishment.person (person_id),
     responsibility_type_id integer NOT NULL
-        REFERENCES establishment.responsibility_type (responsibility_type_id),
+        REFERENCES establishment.establishment_responsibility_type (responsibility_type_id),
     academy_trust_type_id integer
         REFERENCES establishment.academy_trust_type (academy_trust_type_id),
     start_date date,

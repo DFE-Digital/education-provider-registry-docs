@@ -99,5 +99,4 @@ function Update-CheckedInSeed {
     foreach ($file in @($script:ReferenceSeedFile, $script:EstablishmentSeedFile)) {
         Copy-Item -LiteralPath (Join-Path $FromDirectory $file) -Destination (Join-Path $seedRoot $file) -Force
     }
-    Write-Host 'Checked-in SQL fixtures refreshed. Review them with git diff before committing.'
 }

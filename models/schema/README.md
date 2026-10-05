@@ -31,8 +31,15 @@ flowchart TD
 | Checked-in-fixture rebuild | You do not have the BAU SQL Server copy. | `rebuild-establishment-from-checked-in-sql.ps1` | [Rebuild Establishment From Checked-in SQL](automation/rebuild-establishment-from-checked-in-sql.md) |
 
 The BAU-source rebuild is the authoritative local refresh path. After its
-validation and approval tests pass, it automatically exports and refreshes the
-checked-in SQL fixtures for developers who do not have the local BAU copy.
+validation and approval tests pass, it exports and can refresh the checked-in
+SQL fixtures for developers who do not have the local BAU copy. The export is
+not committed automatically; review the resulting `git diff` before committing
+seed changes.
+
+The current checked-in fixture and approval directory are still the reviewed
+T1/T2 baseline. The selection manifest also contains T20, so the checked-in
+fixture path should be treated as T1/T2-only until the T20 BAU export and
+approval snapshot have been reviewed and committed.
 
 ## From zero to a populated local PostgreSQL database
 
@@ -61,8 +68,15 @@ checked-in SQL fixtures for developers who do not have the local BAU copy.
    With the approved local BAU copy:
 
    ```powershell
-   powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1"
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer SL646104
    ```
+
+   The BAU command prompts for the local SQL Server `reader` password. Use
+   `-UseWindowsAuthentication` when the local SQL Server is configured for
+   Windows authentication, or `-KeepFixture` to retain extracted CSVs for
+   troubleshooting. `-IncludeGovernance` additionally rebuilds and loads the
+   Governance schema. Use `-ExportDirectory` to write refreshed fixtures to a
+   review directory instead of changing `seed/`.
 
 
 
@@ -78,9 +92,13 @@ own by importing the module. See the [automation README](automation/README.md).
 
 ## Establishment approval tests
 
-The local Establishment schema has one approval snapshot per migrated case:
-T1, URN `136102`, and T2, URN `134314`. A scope test rejects any other
-establishment URN.
+The selected establishment cases are T1 (URN `136102`), T2 (URN `134314`) and
+T20 (URN `135905`). The selected URNs and group-link fixtures are defined in
+`seed/fixture-selection.json`; the scope test rejects any other establishment
+URN. Each selected URN requires an approval snapshot. The checked-in SQL
+fixture and approval directory currently contain the reviewed T1/T2 export;
+the T20 approval and seed are added when the corresponding local BAU run has
+been reviewed.
 
 The Establishment snapshots compare business data and stable reference keys;
 generated surrogate UUIDs are intentionally excluded because they are expected
@@ -92,6 +110,7 @@ To run them directly from the repository root:
 ```powershell
 .\models\schema\tests\assert-establishment-approval.ps1 -Urn 136102
 .\models\schema\tests\assert-establishment-approval.ps1 -Urn 134314
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 135905
 .\models\schema\tests\assert-establishment-row-counts.ps1
 ```
 
@@ -103,12 +122,12 @@ approval script:
 .\models\schema\tests\assert-establishment-approval.ps1 -UpdateApproval
 .\models\schema\tests\assert-establishment-approval.ps1 -Urn 136102 -UpdateApproval
 .\models\schema\tests\assert-establishment-approval.ps1 -Urn 134314 -UpdateApproval
+.\models\schema\tests\assert-establishment-approval.ps1 -Urn 135905 -UpdateApproval
 ```
 
-The commands update the approval files for URNs `136102` and `134314`.
-
-After updating an approval file, rerun the normal rebuild and review the
-snapshot diff before committing it.
+The commands update the approval file for the specified URN. Only update a
+snapshot after a deliberate, reviewed data or model change; then rerun the
+normal rebuild and review the snapshot diff before committing it.
 
 ## Establishment cases
 
@@ -121,6 +140,9 @@ file as part of reviewing an extract, before committing the refreshed seed.
 Use the T reference and URN in the filename, for example:
 
 `establishment/cases/t1-urn-136102-co-operative-academy-stoke-on-trent.md`
+
+For example, T20 is recorded in
+`establishment/cases/t20-urn-135905-manchester-creative-and-media-academy.md`.
 
 If one T covers more than one establishment, document each URN in its own
 section or companion case file and keep the shared T reference explicit.

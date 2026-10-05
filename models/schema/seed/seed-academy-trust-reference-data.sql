@@ -46,7 +46,7 @@ INSERT INTO establishment.establishment_party_role_type (establishment_party_rol
 ON CONFLICT (establishment_party_role_type_id) DO UPDATE
 SET name = EXCLUDED.name;
 
-INSERT INTO establishment.responsibility_type (responsibility_type_id, name) VALUES
+INSERT INTO establishment.establishment_responsibility_type (responsibility_type_id, name) VALUES
     (1, 'Run by academy trust'),
     (2, 'Supported by foundation trust'),
     (3, 'Sponsored by'),

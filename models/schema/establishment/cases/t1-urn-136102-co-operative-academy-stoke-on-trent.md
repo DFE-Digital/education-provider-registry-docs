@@ -80,7 +80,7 @@ responsibilities AS (
     SELECT er.*, rt.name AS responsibility_type
     FROM establishment.establishment_responsibility AS er
     JOIN target AS e USING (establishment_id)
-    JOIN establishment.responsibility_type AS rt
+    JOIN establishment.establishment_responsibility_type AS rt
       USING (responsibility_type_id)
 ),
 parties AS (
