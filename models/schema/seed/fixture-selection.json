@@ -1,6 +1,6 @@
 {
   "organisationType": "establishment-fixture-set",
-  "urns": [136102, 134314],
+  "urns": [136102, 134314, 135905],
   "establishmentPartyRoleResponsibilities": [
     {
       "urn": 136102,
@@ -33,6 +33,12 @@
       "urn": 134314,
       "sourceGroupId": 2914,
       "fixture": "T2-sponsor"
+    },
+    {
+      "urn": 135905,
+      "sourceGroupId": 3839,
+      "fixture": "T20-mat",
+      "includeArchived": true
     }
   ]
 }

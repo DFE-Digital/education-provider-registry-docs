@@ -57,6 +57,18 @@ OR (
     )
 );
 
+-- MR011: a Companies House-identified academy trust is migrated as a
+-- charitable company limited by guarantee. BAU does not provide a verified
+-- Charity Commission status, so this sets the legal-entity type only.
+UPDATE establishment.legal_entity AS le
+SET legal_entity_type_id = entity_type.legal_entity_type_id
+FROM establishment_party_role_fixture AS f
+JOIN establishment.legal_entity_type AS entity_type
+  ON entity_type.name = 'Charitable company limited by guarantee'
+WHERE upper(btrim(le.name)) = upper(btrim(f.legal_entity_name))
+  AND f.companies_house_number IS NOT NULL
+  AND f.academy_trust_type IS NOT NULL;
+
 INSERT INTO establishment.organisation_identifier (
     legal_entity_id,
     organisation_identifier_type_id,
@@ -297,7 +309,7 @@ JOIN establishment.organisation_identifier AS company_identifier
   ON company_identifier.organisation_identifier_type_id = company_type.organisation_identifier_type_id
  AND company_identifier.value = f.companies_house_number
  AND company_identifier.is_current
-JOIN establishment.responsibility_type AS rt
+JOIN establishment.establishment_responsibility_type AS rt
   ON rt.name = f.responsibility_type
 LEFT JOIN establishment.academy_trust_type AS academy_type
   ON academy_type.name = f.academy_trust_type
@@ -396,7 +408,7 @@ SELECT e.establishment_id,
 FROM establishment_party_role_fixture AS f
 JOIN establishment.establishment AS e ON e.urn = f.establishment_urn
 JOIN establishment.legal_entity AS le ON le.name = f.legal_entity_name
-JOIN establishment.responsibility_type AS rt ON rt.name = f.responsibility_type
+JOIN establishment.establishment_responsibility_type AS rt ON rt.name = f.responsibility_type
 LEFT JOIN establishment.academy_trust_type AS academy_type
   ON academy_type.name = f.academy_trust_type
 WHERE f.companies_house_number IS NULL
@@ -536,7 +548,7 @@ JOIN establishment.organisation_identifier AS company_identifier
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.organisation_identifier_type_id = company_identifier.organisation_identifier_type_id
  AND company_type.name = 'Companies House number'
-JOIN establishment.responsibility_type AS responsibility_type
+JOIN establishment.establishment_responsibility_type AS responsibility_type
   ON responsibility_type.name = fixture.responsibility_type
 JOIN establishment.establishment_responsibility AS responsibility
   ON responsibility.establishment_id = establishment.establishment_id

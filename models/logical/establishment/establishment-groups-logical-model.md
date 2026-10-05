@@ -31,7 +31,7 @@ erDiagram
     LEGAL_ENTITY ||--o{ ACADEMY_TRUST_CLASSIFICATION : "has trust classification"
     ACADEMY_TRUST_CLASSIFICATION }o--|| ACADEMY_TRUST_TYPE : "has type"
     ESTABLISHMENT ||--o{ ESTABLISHMENT_RESPONSIBILITY : "is subject of"
-    ESTABLISHMENT_RESPONSIBILITY }o--|| RESPONSIBILITY_TYPE : "has type"
+    ESTABLISHMENT_RESPONSIBILITY }o--|| ESTABLISHMENT_RESPONSIBILITY_TYPE : "has type"
     ESTABLISHMENT_RESPONSIBILITY }o--o| ACADEMY_TRUST_TYPE : "was trust type"
     ESTABLISHMENT_RESPONSIBILITY }o--o| LEGAL_ENTITY : "held by"
     ESTABLISHMENT_RESPONSIBILITY }o--o| PERSON : "held by"
@@ -102,7 +102,7 @@ erDiagram
         date end_date
         boolean is_current
     }
-    RESPONSIBILITY_TYPE {
+    ESTABLISHMENT_RESPONSIBILITY_TYPE {
         integer responsibility_type_id PK
         string name UK
     }
@@ -475,9 +475,9 @@ For a `run_by_academy_trust` responsibility, `academy_trust_type_id` records whe
 
 For example, the `run_by_academy_trust` responsibility links MARCH 2016 LIMITED to Manchester Creative and Media Academy for the period in which that company operated the academy. The row also records SAT or MAT where the source group type supplies it, and whether that relationship is current.
 
-#### Responsibility type
+#### Establishment responsibility type
 
-`responsibility_type` defines the kinds of responsibility that a party can have for a specific establishment. The controlled values in this slice are `run_by_academy_trust`, `sponsored_by`, `supported_by_foundation_trust` and `proprietor`.
+`establishment_responsibility_type` defines the kinds of responsibility that a party can have for a specific establishment. The controlled values in this slice are `run_by_academy_trust`, `sponsored_by`, `supported_by_foundation_trust` and `proprietor`.
 
 The type makes the relationship explicit. The same legal entity can have different responsibilities for different establishments, or even several distinct responsibilities across its wider portfolio. For example, Outwood Grange Academies Trust can run academies, sponsor establishments and act as the proprietor of an independent school.
 
@@ -773,6 +773,6 @@ Source tables and fields correspond to target concepts as follows; they do not d
 
 ## Physical-model boundary
 
-The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `group_identifier_type`, `identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
+The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `group_identifier_type`, `identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
 
 It references the existing establishment, local-authority and person tables by their opaque identifiers. Migration lineage is deliberately outside this schema.
