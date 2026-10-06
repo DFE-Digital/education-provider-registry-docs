@@ -17,8 +17,8 @@
 
 DECLARE @URN numeric(19, 0) = $(URN);
 
-IF @URN NOT BETWEEN 100000 AND 999999
-    THROW 51000, 'URN must be a six-digit establishment identifier.', 1;
+IF @URN NOT BETWEEN 1 AND 999999
+    THROW 51000, 'URN must be between 1 and 999999.', 1;
 
 WITH role_mapping AS (
     SELECT *

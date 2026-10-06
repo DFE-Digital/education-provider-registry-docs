@@ -33,7 +33,7 @@ When the local BAU copy is configured for Windows authentication:
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer SL646104 -UseWindowsAuthentication
 
 After validation succeeds, the command exports the target into the run's
-working folder and copies the reference and establishment seed files into
+working folder and copies the reference, establishment and migration-evidence seed files into
 `models/schema/seed/`. It does not commit those file changes; review them with
 `git diff` before committing. To export somewhere else for review without
 touching `seed/`, supply `-ExportDirectory`.
@@ -53,6 +53,21 @@ touching `seed/`, supply `-ExportDirectory`.
 After the run, add or update one establishment case file under `models/schema/establishment/cases/` for every T represented by the extract. Include its URN, name, establishment type and relevant group links.
 
 Each numbered step is a function in the `EprLocalAutomation` module, and can be run on its own. See the [automation README](README.md).
+
+T4 selects federation UID 1809 through `organisationGroups` in the fixture selection. The existing rebuild imports both member establishments, URNs 109443 and 109613, then the federation and memberships. The source member set must match the selection exactly. The federation creates an organisation group, not a legal entity or establishment responsibility. T4a's separate foundation-trust link 1094 is not selected. Federation validation and both establishment approval snapshots run through the existing test command.
+
+T5 selects children's-centre group UID 86052, Southend Children's Centres, through the same `organisationGroups` selection. It imports all nine centres and memberships, the recorded group authority Southend-on-Sea (882), and the explicit `ccLinkType` values: Cambridge Road (URN 20549) is the lead member; the other eight are standard members. The shared organisation-group transform and loader handle T4 and T5 without another PowerShell entry point. Missing school-capacity measures and statutory school-age ranges do not create empty optional rows. T5 membership/evidence validation and nine establishment approval snapshots run through the existing test command.
+
+T3 (Ridgewood School, URN 137603) is included in the selection. Its SAT 2055 and
+MAT 20364 are resolved to one legal entity using the reviewed identifiers and
+explicit predecessor/successor relationships. Each source link supplies its own
+responsibility: historical SAT from 1 November 2011 and current MAT from 30 March
+2021, both with unknown end dates. SAT/MAT classifications meet on 30 March
+2021; their dates are not copied into responsibility boundaries. The transform
+rejects missing or changed transition evidence. Migration
+evidence and identity decisions are exported alongside the target fixture.
+
+Each BAU establishment rebuild creates one `migration.migration_run` for its group evidence. Every selected party-link extract retains its own `source_snapshot` and `source_record` beneath that run, so source-level lineage is unchanged. The run is `running` during import and validation, `completed` after successful validation, or `failed` if the rebuild fails. The source database name is recorded from the connection settings. An independently invoked party-link loader, without a rebuild run ID, still creates a separate mini-migration run. A checked-in SQL rebuild restores the captured run rather than claiming that a fresh BAU extraction took place.
 
 Reference dictionaries are runtime inputs only for this current implementation;
 the target schema and checked-in seed remain the shared baseline for the

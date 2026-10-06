@@ -265,6 +265,8 @@ Sponsors Dene Free School
 
 Each establishment-specific period becomes one row in `establishment_responsibility`. A run-by relationship is split when its recorded trust type changes.
 
+For the same legal entity, a SAT responsibility and a MAT responsibility are separate establishment-specific records. The entity's SAT and MAT classifications are two further records. Each of these four periods has independent start and end dates. Responsibility dates describe the relationship with an establishment; classification dates describe the legal entity's status. Dates may coincide when independently evidenced, as in this example, but are not automatically copied between the two timelines. An unknown boundary remains null. Independently evidenced overlapping periods must agree on the trust type; a contradiction is reported for resolution.
+
 | Row | Party | Establishment | Responsibility type | Academy-trust type | Start date | End date | `is_current` at 2025-01-01 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | E1 | Northbridge Learning Limited | Alder Academy | `run_by_academy_trust` | SAT | 2012-09-01 | 2016-09-01 | False |
@@ -334,6 +336,7 @@ Examples include registered charity, exempt charity, excepted charity and not a 
 - Identifier types are Companies House number, UKPRN and Charity Commission number.
 - A legal entity can have several values of one type over time, but only one current value of a type.
 - A current value is unique within its identifier type. A replaced value cannot be current for another legal entity.
+- Each type/value pair has one retained ownership record, whether current or replaced. Its owner, type and value are not reassigned or overwritten. Replacement retires the old row using `is_current = false` and creates a new row for the new value; it does not delete the old ownership record. Corrections to recorded identity require a controlled administrative process rather than ordinary reassignment.
 - Values are stored as text so leading zeroes are retained.
 
 | Attribute | Required | Rule |
@@ -450,6 +453,8 @@ There is one row per party, establishment, responsibility type and period. Exact
 
 For a `run_by_academy_trust` responsibility, `academy_trust_type_id` records whether the source relationship is SAT, MAT or secure SAT. It is null for every other responsibility type. This is an establishment-specific fact: it says how the legal entity was recorded while responsible for that establishment. It does not replace the separately dated legal-entity status in `academy_trust_classification`.
 
+A change in the recorded trust type creates a separate responsibility period even when the legal entity and its academy-trust role remain the same. The SAT and MAT responsibility periods and the SAT and MAT classification periods are four independently dated records. A classification transition does not, by itself, establish the end date of an establishment responsibility. An archived responsibility can have an unknown end date and `is_current = false`; null does not mean that it continues indefinitely.
+
 `is_current` records whether the source currently identifies the relationship as current. It is populated from the source link's current or archived state, not calculated from the responsibility dates. This allows application queries to select the current relationship without interpreting incomplete historical dates.
 
 | Attribute | Required | Rule |
@@ -501,7 +506,7 @@ erDiagram
     ESTABLISHMENT_PARTY_ROLE ||--o{ GROUP_IDENTIFIER : "identified by"
     ORGANISATION_GROUP ||--o{ GROUP_IDENTIFIER : "identified by"
     GROUP_IDENTIFIER }o--|| GROUP_IDENTIFIER_TYPE : "has type"
-    GROUP_IDENTIFIER }o--|| IDENTIFIER_ISSUER : "issued by"
+    GROUP_IDENTIFIER }o--|| GROUP_IDENTIFIER_ISSUER : "issued by"
     ORGANISATION_GROUP }o--|| ORGANISATION_GROUP_TYPE : "has type"
     ORGANISATION_GROUP }o--o| LOCAL_AUTHORITY : "coordinated by"
     ORGANISATION_GROUP ||--o{ ORGANISATION_GROUP_MEMBER : "has"
@@ -528,14 +533,14 @@ erDiagram
         uuid establishment_id FK
         date joined_date
         date left_date
-        boolean is_lead_centre
+        boolean is_lead_member
     }
     GROUP_IDENTIFIER {
         uuid group_identifier_id PK
         uuid establishment_party_role_id FK
         uuid organisation_group_id FK
         integer group_identifier_type_id FK
-        integer identifier_issuer_id FK
+        integer group_identifier_issuer_id FK
         string value
         boolean is_current
     }
@@ -543,8 +548,8 @@ erDiagram
         integer group_identifier_type_id PK
         string name UK
     }
-    IDENTIFIER_ISSUER {
-        integer identifier_issuer_id PK
+    GROUP_IDENTIFIER_ISSUER {
+        integer group_identifier_issuer_id PK
         string name UK
     }
     ESTABLISHMENT {
@@ -609,7 +614,7 @@ Only establishments can be group members in this slice.
 | `establishment_id` | Yes | The member establishment. |
 | `joined_date` | No | First date on which membership applies; null means unknown. |
 | `left_date` | No | First date on which membership no longer applies. |
-| `is_lead_centre` | Conditional | Used only for children's-centre groups. True identifies the lead centre; null means the source does not say. Lead-centre history is not represented. |
+| `is_lead_member` | Conditional | Used only for children's-centre groups. True identifies the lead centre; null means the source does not say. Lead-centre history is not represented. |
 
 For example, two maintained schools in a federation each have their own establishment record and URN. Their membership rows link both establishments to the same federation and retain the dates on which each membership applied.
 
@@ -631,7 +636,7 @@ For example, two maintained schools in a federation each have their own establis
 | `establishment_party_role_id` | Conditional | The owning role. |
 | `organisation_group_id` | Conditional | The owning organisation group. |
 | `group_identifier_type_id` | Yes | Group UID or Group ID. |
-| `identifier_issuer_id` | Yes | GIAS or Establishment Registry. |
+| `group_identifier_issuer_id` | Yes | GIAS or Establishment Registry. |
 | `value` | Yes | The identifier as issued. |
 | `is_current` | Yes | True for the value the owner is known by now. False for a value kept so that old references still resolve. |
 
@@ -646,15 +651,15 @@ A Group UID is the numeric identifier historically used for a GIAS group record.
 | `group_identifier_type_id` | Yes | Stable reference to the group-identifier scheme. |
 | `name` | Yes | Unique name of the scheme. |
 
-#### Identifier issuer
+#### Group identifier issuer
 
-`identifier_issuer` records which service allocated a group identifier. The current issuers are GIAS for migrated values and Establishment Registry for values allocated after cutover.
+`group_identifier_issuer` records which service allocated a group identifier. The current issuers are GIAS for migrated values and Establishment Registry for values allocated after cutover.
 
 Separating issuer from identifier type allows the same Group UID scheme to continue across migration. For example, the T20 academy-trust role retains Group UID `3839` and Group ID `TR01385`, both with GIAS as their issuer.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
-| `identifier_issuer_id` | Yes | Stable reference to the issuing service. |
+| `group_identifier_issuer_id` | Yes | Stable reference to the issuing service. |
 | `name` | Yes | Unique business-friendly name of the issuer. |
 
 #### Establishment
@@ -735,7 +740,7 @@ An on-date view has three states:
 13. An establishment may have more than one current proprietor. Only independent school types, non-maintained special schools and city technology colleges may have a proprietor. Open other independent schools and other independent special schools must have at least one.
 14. An establishment is in at most one organisation group of each type on a date. Federation members are maintained schools; children's-centre group and collaboration members are children's centres.
 15. An open federation has at least two members.
-16. A children's-centre group has at most one member with `is_lead_centre = true`. `is_lead_centre` is null for all other group types.
+16. A children's-centre group has at most one member with `is_lead_member = true`. `is_lead_member` is null for all other group types.
 17. `local_authority_id` is required for children's-centre group types and absent for federations. Every member of a children's-centre group or collaboration is in the group's local authority; a member in another local authority is reported as a warning, because local-government reorganisation can move a centre.
 18. No stored collection restates a responsibility: an academy trust's academies are not organisation-group memberships.
 19. A relationship falls within the lifetime of its party or group where those dates are known. A conflict is reported; it does not invent a date to satisfy the rule.
@@ -773,6 +778,6 @@ Source tables and fields correspond to target concepts as follows; they do not d
 
 ## Physical-model boundary
 
-The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `group_identifier_type`, `identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
+The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
 
 It references the existing establishment, local-authority and person tables by their opaque identifiers. Migration lineage is deliberately outside this schema.

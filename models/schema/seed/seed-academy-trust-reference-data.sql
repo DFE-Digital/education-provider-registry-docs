@@ -67,8 +67,8 @@ INSERT INTO establishment.group_identifier_type (group_identifier_type_id, name)
 ON CONFLICT (group_identifier_type_id) DO UPDATE
 SET name = EXCLUDED.name;
 
-INSERT INTO establishment.identifier_issuer (identifier_issuer_id, name) VALUES
+INSERT INTO establishment.group_identifier_issuer (group_identifier_issuer_id, name) VALUES
     (1, 'GIAS'),
     (2, 'Establishment Registry')
-ON CONFLICT (identifier_issuer_id) DO UPDATE
+ON CONFLICT (group_identifier_issuer_id) DO UPDATE
 SET name = EXCLUDED.name;

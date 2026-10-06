@@ -139,11 +139,15 @@ function Invoke-FixtureLoad {
         [Parameter(Mandatory)][string]$LoadSqlFile,
         [Parameter(Mandatory)][string]$CsvPath,
         [Parameter(Mandatory)][string]$WorkingDirectory,
-        [Parameter(Mandatory)][string]$Description
+        [Parameter(Mandatory)][string]$Description,
+        [guid]$MigrationRunId = [guid]::Empty
     )
 
     Assert-FileExists -Path $LoadSqlFile
     $loadSql = (Get-Content -LiteralPath $LoadSqlFile -Raw).Replace('__FIXTURE_PATH__', ($CsvPath -replace '\\', '/'))
+    if ($MigrationRunId -ne [guid]::Empty) {
+        $loadSql = "SELECT set_config('epr.migration_run_id', '$MigrationRunId', false);`n" + $loadSql
+    }
     $workingCopy = Join-Path $WorkingDirectory ('load-' + [System.IO.Path]::GetFileNameWithoutExtension($CsvPath) + '.sql')
     [System.IO.File]::WriteAllText($workingCopy, $loadSql, [System.Text.UTF8Encoding]::new($false))
     Invoke-Psql -Target $Target -File $workingCopy -FailureMessage "PostgreSQL load failed for $Description"

@@ -335,6 +335,7 @@ SELECT e.establishment_id, s.school_capacity, s.pupil_count,
        s.free_school_meal_measure, NULL::date
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
+WHERE s.school_capacity IS NOT NULL OR s.pupil_count IS NOT NULL OR s.free_school_meal_measure IS NOT NULL
 ON CONFLICT (establishment_id) DO UPDATE SET
     school_capacity = EXCLUDED.school_capacity,
     pupil_count = EXCLUDED.pupil_count,
@@ -369,6 +370,7 @@ FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 JOIN establishment.education_admissions_and_provision AS eap
   ON eap.establishment_id = e.establishment_id
+WHERE s.lower_statutory_age IS NOT NULL OR s.upper_statutory_age IS NOT NULL
 ON CONFLICT (education_admissions_and_provision_id) DO UPDATE SET
     lower_statutory_age = EXCLUDED.lower_statutory_age,
     upper_statutory_age = EXCLUDED.upper_statutory_age;

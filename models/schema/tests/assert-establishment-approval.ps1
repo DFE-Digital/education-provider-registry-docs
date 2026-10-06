@@ -5,7 +5,7 @@ tests/approval, or updates the snapshot with -UpdateApproval.
 #>
 [CmdletBinding()]
 param(
-    [ValidateRange(100000, 999999)][int]$Urn = 136102,
+    [ValidateRange(1, 999999)][int]$Urn = 136102,
     [string]$PostgresHost = '127.0.0.1',
     [int]$PostgresPort = 5432,
     [string]$PostgresDatabase = 'establishment_local',
