@@ -4,7 +4,7 @@ Runs every establishment test against the current establishment_local database,
 without rebuilding or loading anything.
 
 .DESCRIPTION
-Runs core validation, establishment-groups validation, one approval snapshot
+Runs URN boundary tests, core validation, establishment-groups validation, one approval snapshot
 per selected URN, and the scope test. To run a single test, import
 EprLocalAutomation and call it directly, for example Test-EstablishmentApproval.
 #>

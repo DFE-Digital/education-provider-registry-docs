@@ -109,7 +109,7 @@ VALUES
 
 INSERT INTO establishment.group_identifier
     (group_identifier_id, establishment_party_role_id, group_identifier_type_id,
-     identifier_issuer_id, value, is_current)
+     group_identifier_issuer_id, value, is_current)
 VALUES
     ('13431400-0000-4000-8000-000000000025',
      '13431400-0000-4000-8000-000000000020', 1, 1, '23869', true),

@@ -99,12 +99,14 @@ Remove-RunWorkspace -Path $workspace
 | BAU import | `Import-GeographicReferenceData` | Loads all geographic reference data from BAU. |
 | | `Import-EstablishmentFromBau` | Loads one establishment. |
 | | `Import-EstablishmentPartyRoleFromBau` | Loads one group link as a legal entity, role, classification, group identifiers and responsibility. |
+| | `Import-OrganisationGroupFromBau` | Loads a federation or children's-centre group and its complete selected membership. Children's-centre groups retain their recorded authority and explicit lead flag. |
 | | `Import-GovernanceFromBau` | Loads one establishment's governance appointments. |
 | Checked-in SQL | `Import-CheckedInEstablishmentFixture` | Loads the checked-in establishment fixture and migration evidence. |
 | | `Export-EstablishmentFixture` | Exports the database as SQL with pg_dump. |
 | | `Update-CheckedInSeed` | Copies an export into `seed/`. |
-| Tests | `Test-EstablishmentCoreValidation` | Every core table populated and keys joining up. |
-| | `Test-EstablishmentGroupsValidation` | The establishment-groups rules. |
+| Tests | `Test-EstablishmentUrnValidation` | URN selection boundaries and parameter-validation ranges. Runs automatically with all establishment tests. |
+| | `Test-EstablishmentCoreValidation` | Core population and keys; URN and organisation-identifier constraint tests roll back their test records. |
+| | `Test-EstablishmentGroupsValidation` | Establishment-groups rules plus actual-loader tests for source-UID reuse and rejection of name-only merges; test loads roll back. The full test runner also validates selected federations and children's-centre groups and checks that all selected extracts sit beneath one rebuild migration run. |
 | | `Test-EstablishmentApproval` | One URN against its approved snapshot; `-UpdateApproval` refreshes it. |
 | | `Test-EstablishmentScope` | Exactly the selected establishments are loaded. |
 | | `Invoke-EstablishmentTests` | All of the above for the selection. |

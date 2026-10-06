@@ -46,6 +46,7 @@ Export-ModuleMember -Function @(
     'Import-GeographicReferenceData'
     'Import-EstablishmentFromBau'
     'Import-EstablishmentPartyRoleFromBau'
+    'Import-OrganisationGroupFromBau'
     'Import-GovernanceFromBau'
 
     # Checked-in fixtures
@@ -54,6 +55,7 @@ Export-ModuleMember -Function @(
     'Update-CheckedInSeed'
 
     # Tests and reports
+    'Test-EstablishmentUrnValidation'
     'Test-EstablishmentCoreValidation'
     'Test-EstablishmentGroupsValidation'
     'Test-EstablishmentApproval'

@@ -46,9 +46,20 @@ $source = New-BauSource -SqlServer $SqlServer -Database $SourceDatabase -SqlUser
 $target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
 $selection = Get-FixtureSelection
 $workspace = New-RunWorkspace -ParentDirectory $FixtureDirectory
+$migrationRunId = $null
+
+function Invoke-PsqlForRebuild {
+    param($Target, [string]$Command)
+    & (Get-Module EprLocalAutomation) {
+        param($runTarget, $runCommand)
+        Invoke-Psql -Target $runTarget -Command $runCommand -Output Scalar -FailureMessage 'Migration run update failed'
+    } $Target $Command
+}
 
 try {
     Initialize-EstablishmentDatabase -Target $target
+    $sourceDatabaseSql = $source.Database.Replace("'", "''")
+    $migrationRunId = [guid](Invoke-PsqlForRebuild -Target $target -Command "INSERT INTO migration.migration_run (run_type, source_system, source_database, source_snapshot_date, status, transform_version) VALUES ('establishment-rebuild', 'GIAS BAU', '$sourceDatabaseSql', CURRENT_DATE, 'running', 'establishment-party-responsibility-v2') RETURNING migration_run_id;")
     Import-GeographicReferenceData -Source $source -Target $target -WorkingDirectory $workspace
 
     foreach ($urn in $selection.Urns) {
@@ -56,11 +67,17 @@ try {
     }
     foreach ($link in $selection.PartyRoleLinks) {
         Import-EstablishmentPartyRoleFromBau -Source $source -Target $target -Urn $link.Urn `
-            -SourceGroupId $link.SourceGroupId -IncludeArchived:$link.IncludeArchived -WorkingDirectory $workspace
+            -SourceGroupId $link.SourceGroupId -IncludeArchived:$link.IncludeArchived -WorkingDirectory $workspace -MigrationRunId $migrationRunId
+    }
+
+    foreach ($group in $selection.OrganisationGroups) {
+        Import-OrganisationGroupFromBau -Source $source -Target $target -SourceGroupId $group.SourceGroupId `
+            -ExpectedMemberUrns $group.MemberUrns -WorkingDirectory $workspace -MigrationRunId $migrationRunId
     }
 
     Show-EstablishmentSummary -Target $target -Urn $selection.Urns
     Invoke-EstablishmentTests -Target $target -Selection $selection
+    $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'completed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"
 
     if ($ExportDirectory) {
         Export-EstablishmentFixture -Target $target -OutputDirectory $ExportDirectory
@@ -81,6 +98,14 @@ try {
     }
 
     Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
+}
+catch {
+    if ($migrationRunId) {
+        try {
+            $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'failed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"
+        } catch { Write-Warning 'Could not record the failed migration run.' }
+    }
+    throw
 }
 finally {
     Remove-RunWorkspace -Path $workspace -Keep:$KeepFixture

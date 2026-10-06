@@ -32,7 +32,7 @@ BEGIN
         WHERE source_governance_appointment_id IS NULL
            OR source_governance_appointment_id <= 0
            OR establishment_urn IS NULL
-           OR establishment_urn NOT BETWEEN 100000 AND 999999
+           OR establishment_urn NOT BETWEEN 1 AND 999999
     ) THEN
         RAISE EXCEPTION 'Fixture contains a missing or invalid appointment identifier or establishment URN.';
     END IF;

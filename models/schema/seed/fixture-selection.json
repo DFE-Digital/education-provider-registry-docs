@@ -1,6 +1,10 @@
 {
   "organisationType": "establishment-fixture-set",
-  "urns": [136102, 134314, 135905],
+  "urns": [136102, 134314, 135905, 137603, 109443, 109613, 20338, 20549, 20614, 21363, 22422, 22459, 22975, 23004, 23122],
+  "organisationGroups": [
+    { "sourceGroupId": 1809, "memberUrns": [109443, 109613], "fixture": "T4" },
+    { "sourceGroupId": 86052, "memberUrns": [20338, 20549, 20614, 21363, 22422, 22459, 22975, 23004, 23122], "fixture": "T5" }
+  ],
   "establishmentPartyRoleResponsibilities": [
     {
       "urn": 136102,
@@ -39,6 +43,17 @@
       "sourceGroupId": 3839,
       "fixture": "T20-mat",
       "includeArchived": true
+    },
+    {
+      "urn": 137603,
+      "sourceGroupId": 2055,
+      "fixture": "T3-sat",
+      "includeArchived": true
+    },
+    {
+      "urn": 137603,
+      "sourceGroupId": 20364,
+      "fixture": "T3-mat"
     }
   ]
 }

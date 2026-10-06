@@ -77,7 +77,7 @@ function Import-EstablishmentFromBau {
     param(
         [Parameter(Mandatory)]$Source,
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(100000, 999999)][int]$Urn,
+        [Parameter(Mandatory)][ValidateRange(1, 999999)][int]$Urn,
         [Parameter(Mandatory)][string]$WorkingDirectory
     )
 
@@ -103,10 +103,11 @@ function Import-EstablishmentPartyRoleFromBau {
     param(
         [Parameter(Mandatory)]$Source,
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(100000, 999999)][int]$Urn,
+        [Parameter(Mandatory)][ValidateRange(1, 999999)][int]$Urn,
         [Parameter(Mandatory)][ValidateRange(1, 999999999)][int]$SourceGroupId,
         [switch]$IncludeArchived,
-        [Parameter(Mandatory)][string]$WorkingDirectory
+        [Parameter(Mandatory)][string]$WorkingDirectory,
+        [guid]$MigrationRunId = [guid]::Empty
     )
 
     Write-Step "Loading establishment-party link: URN $Urn, source group $SourceGroupId"
@@ -119,7 +120,34 @@ function Import-EstablishmentPartyRoleFromBau {
         -Variables @{ URN = $Urn; GROUP_ID = $SourceGroupId; INCLUDE_ARCHIVED = $includeArchivedFlag } `
         -CsvPath $csvPath -RowCount 'ExactlyOne' -Description $description | Out-Null
     Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-academy-trust-responsibility-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description $description
+        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description $description -MigrationRunId $MigrationRunId
+}
+
+function Import-OrganisationGroupFromBau {
+    <#
+    .SYNOPSIS
+    Loads a current federation or children's-centre group and its complete
+    selected membership, including recorded authority and lead designation.
+    #>
+    param(
+        [Parameter(Mandatory)]$Source,
+        [Parameter(Mandatory)]$Target,
+        [Parameter(Mandatory)][ValidateRange(1, 999999999)][int]$SourceGroupId,
+        [Parameter(Mandatory)][int[]]$ExpectedMemberUrns,
+        [Parameter(Mandatory)][string]$WorkingDirectory,
+        [guid]$MigrationRunId = [guid]::Empty
+    )
+    Write-Step "Loading organisation group $SourceGroupId"
+    $csvPath = Join-Path $WorkingDirectory "organisation-group-$SourceGroupId.csv"
+    Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/organisation-group-membership-from-bau.sql') `
+        -Variables @{ GROUP_ID = $SourceGroupId } -CsvPath $csvPath -RowCount AtLeastOne -Description "organisation group $SourceGroupId" | Out-Null
+    $memberUrns = @(Import-Csv -LiteralPath $csvPath -Delimiter '|' | ForEach-Object { [int]$_.establishment_urn })
+    if ($memberUrns.Count -ne $ExpectedMemberUrns.Count -or
+        (Compare-Object ($ExpectedMemberUrns | Sort-Object) ($memberUrns | Sort-Object))) {
+        throw "Organisation group $SourceGroupId members differ from the approved selection."
+    }
+    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-organisation-group-membership-fixture.sql') `
+        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "organisation group $SourceGroupId" -MigrationRunId $MigrationRunId
 }
 
 function Import-GovernanceFromBau {
@@ -131,7 +159,7 @@ function Import-GovernanceFromBau {
     param(
         [Parameter(Mandatory)]$Source,
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(100000, 999999)][int]$Urn,
+        [Parameter(Mandatory)][ValidateRange(1, 999999)][int]$Urn,
         [Parameter(Mandatory)][string]$WorkingDirectory
     )
 

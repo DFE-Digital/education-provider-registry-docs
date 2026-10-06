@@ -89,14 +89,13 @@ function Export-EstablishmentFixture {
 function Update-CheckedInSeed {
     <#
     .SYNOPSIS
-    Copies exported reference and establishment SQL into seed/, replacing the
-    checked-in fixtures. The checked-in migration evidence is hand-written and
-    is not replaced. Review the change with git diff before committing.
+    Copies exported reference, establishment and migration evidence SQL into
+    seed/ as one consistent fixture. Review the change with git diff before committing.
     #>
     param([Parameter(Mandatory)][string]$FromDirectory)
 
     $seedRoot = Get-SchemaPath 'seed'
-    foreach ($file in @($script:ReferenceSeedFile, $script:EstablishmentSeedFile)) {
+    foreach ($file in @($script:ReferenceSeedFile, $script:EstablishmentSeedFile, $script:MigrationSeedFile)) {
         Copy-Item -LiteralPath (Join-Path $FromDirectory $file) -Destination (Join-Path $seedRoot $file) -Force
     }
 }

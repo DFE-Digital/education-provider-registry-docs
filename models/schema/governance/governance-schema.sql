@@ -39,7 +39,7 @@ INSERT INTO governance.governance_role_type (governance_role_type_id, name) VALU
 
 CREATE TABLE governance.governance_appointment (
     governance_appointment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_urn integer NOT NULL CHECK (establishment_urn BETWEEN 100000 AND 999999),
+    establishment_urn integer NOT NULL CHECK (establishment_urn BETWEEN 1 AND 999999),
     governance_role_type_id smallint NOT NULL
         REFERENCES governance.governance_role_type (governance_role_type_id)
 );

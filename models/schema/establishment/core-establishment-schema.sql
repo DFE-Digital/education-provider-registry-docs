@@ -145,7 +145,7 @@ CREATE TABLE establishment.urban_rural (
 
 CREATE TABLE establishment.establishment (
     establishment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 100000 AND 999999),
+    urn integer NOT NULL UNIQUE CHECK (urn BETWEEN 1 AND 999999),
     ukprn numeric CHECK (ukprn BETWEEN 10000000 AND 99999999),
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
@@ -338,9 +338,35 @@ CREATE TABLE establishment.organisation_identifier (
     is_current boolean NOT NULL DEFAULT true
 );
 
-CREATE UNIQUE INDEX organisation_identifier_current_value_unique
-    ON establishment.organisation_identifier (organisation_identifier_type_id, value)
+CREATE UNIQUE INDEX organisation_identifier_value_unique
+    ON establishment.organisation_identifier (organisation_identifier_type_id, value);
+
+CREATE UNIQUE INDEX organisation_identifier_current_owner_type_unique
+    ON establishment.organisation_identifier (legal_entity_id, organisation_identifier_type_id)
     WHERE is_current;
+
+-- Retain replaced identifiers on their original owners. Retirement changes
+-- is_current; it must not delete or rewrite the ownership history.
+CREATE FUNCTION establishment.protect_organisation_identifier_ownership()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    IF TG_OP = 'DELETE' THEN
+        RAISE EXCEPTION 'Retire an organisation identifier using is_current; its ownership must be retained'
+            USING ERRCODE = '23514';
+    END IF;
+    IF NEW.legal_entity_id IS DISTINCT FROM OLD.legal_entity_id
+       OR NEW.organisation_identifier_type_id IS DISTINCT FROM OLD.organisation_identifier_type_id
+       OR NEW.value IS DISTINCT FROM OLD.value THEN
+        RAISE EXCEPTION 'Organisation identifier owner, type and value cannot be reassigned'
+            USING ERRCODE = '23514';
+    END IF;
+    RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER organisation_identifier_ownership_protected
+BEFORE UPDATE OR DELETE ON establishment.organisation_identifier
+FOR EACH ROW EXECUTE FUNCTION establishment.protect_organisation_identifier_ownership();
 
 -- Minimal relationship endpoint for roles and responsibilities held by a
 -- person. Person identity and descriptive attributes belong to the people
@@ -486,7 +512,7 @@ CREATE TABLE establishment.organisation_group_member (
         REFERENCES establishment.establishment (establishment_id),
     joined_date date,
     left_date date,
-    is_lead_centre boolean,
+    is_lead_member boolean,
     CHECK (left_date IS NULL OR joined_date IS NULL OR left_date >= joined_date)
 );
 
@@ -495,8 +521,8 @@ CREATE TABLE establishment.group_identifier_type (
     name text NOT NULL UNIQUE
 );
 
-CREATE TABLE establishment.identifier_issuer (
-    identifier_issuer_id integer PRIMARY KEY,
+CREATE TABLE establishment.group_identifier_issuer (
+    group_identifier_issuer_id integer PRIMARY KEY,
     name text NOT NULL UNIQUE
 );
 
@@ -508,8 +534,8 @@ CREATE TABLE establishment.group_identifier (
         REFERENCES establishment.organisation_group (organisation_group_id),
     group_identifier_type_id integer NOT NULL
         REFERENCES establishment.group_identifier_type (group_identifier_type_id),
-    identifier_issuer_id integer NOT NULL
-        REFERENCES establishment.identifier_issuer (identifier_issuer_id),
+    group_identifier_issuer_id integer NOT NULL
+        REFERENCES establishment.group_identifier_issuer (group_identifier_issuer_id),
     value text NOT NULL CHECK (btrim(value) <> ''),
     is_current boolean NOT NULL DEFAULT true,
     CHECK ((establishment_party_role_id IS NOT NULL) <> (organisation_group_id IS NOT NULL)
