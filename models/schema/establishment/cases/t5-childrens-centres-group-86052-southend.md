@@ -1,5 +1,7 @@
 # T5 — Southend Children's Centres
 
+T5 tests that Southend Children's Centres is recorded as one organisation group with nine members, with Cambridge Road Children's Centre identified as its sole lead member.
+
 ## Children's-centre group
 
 T5 covers Southend Children's Centres, group UID 86052, and its nine member establishments.

@@ -45,6 +45,7 @@ Export-ModuleMember -Function @(
     # Loading from the local BAU copy
     'Import-GeographicReferenceData'
     'Import-EstablishmentFromBau'
+    'Import-ControlledProprietorFromBau'
     'Import-EstablishmentPartyRoleFromBau'
     'Import-OrganisationGroupFromBau'
     'Import-GovernanceFromBau'

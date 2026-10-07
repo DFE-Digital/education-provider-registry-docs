@@ -91,6 +91,54 @@ function Import-EstablishmentFromBau {
         -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "establishment URN $Urn"
 }
 
+function Import-ControlledProprietorFromBau {
+    # Reconcile the accepted extract assertions before loading the reviewed
+    # overlay. Never infer a body from obfuscated local proprietor names.
+    param(
+        [Parameter(Mandatory)]$Source,
+        [Parameter(Mandatory)]$Target,
+        [Parameter(Mandatory)]$Fixture,
+        [Parameter(Mandatory)][string]$WorkingDirectory,
+        [Parameter(Mandatory)][guid]$MigrationRunId
+    )
+    if ($MigrationRunId -eq [guid]::Empty) { throw 'Controlled proprietor import requires a migration run.' }
+    $workspaceRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $script:SchemaRoot))
+    $extractPath = [System.IO.Path]::GetFullPath((Join-Path $workspaceRoot $Fixture.extractPath))
+    if (-not $extractPath.StartsWith($workspaceRoot + [System.IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Controlled proprietor extract must be inside the workspace.'
+    }
+    Assert-FileExists -Path $extractPath
+    Write-Step "Loading reviewed proprietor fixture $($Fixture.fixture): $($Fixture.name)"
+    $selectedUrns = @($Fixture.schools | ForEach-Object { [int]$_.urn })
+    $extractRows = @(Import-Csv -LiteralPath $extractPath | Where-Object { [int]$_.URN -in $selectedUrns })
+    foreach ($school in $Fixture.schools) {
+        $rows = @($extractRows | Where-Object { [int]$_.URN -eq [int]$school.urn })
+        if ($rows.Count -ne 1 -or $rows[0].EstablishmentName -cne $school.name -or
+            $rows[0].PropsName -cne $school.propsName -or $rows[0].'EstablishmentStatus (name)' -ne 'Open' -or
+            $rows[0].'TypeOfEstablishment (name)' -ne 'Other independent special school') {
+            throw "Controlled proprietor extract assertion changed for URN $($school.urn); review required."
+        }
+    }
+    $csvPath = Join-Path $WorkingDirectory "controlled-proprietor-$($Fixture.legalEntityId).csv"
+    $count = Export-BauQueryToCsv -Source $Source `
+        -SqlFile (Get-SchemaPath 'establishment/transforms/controlled-proprietor-context-from-bau.sql') `
+        -Variables @{ URNS = ($selectedUrns -join ',') } -CsvPath $csvPath -RowCount AtLeastOne `
+        -Description "local context for controlled proprietor $($Fixture.fixture)"
+    if ($count -ne $selectedUrns.Count) { throw 'Controlled proprietor local context is incomplete or duplicated.' }
+    $context = @(Import-Csv -LiteralPath $csvPath -Delimiter '|')
+    foreach ($school in $Fixture.schools) {
+        $rows = @($context | Where-Object { [int]$_.urn -eq [int]$school.urn })
+        if ($rows.Count -ne 1 -or $rows[0].establishment_name -cne $school.name) {
+            throw "Controlled proprietor local school changed for URN $($school.urn); review required."
+        }
+    }
+    Invoke-FixtureLoad -Target $Target `
+        -LoadSqlFile (Get-SchemaPath 'establishment/load/load-controlled-proprietor-fixture.sql') `
+        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -MigrationRunId $MigrationRunId `
+        -TemplateValues @{ CONTROLLED_PROPRIETOR_JSON = ($Fixture | ConvertTo-Json -Depth 6 -Compress) } `
+        -Description "controlled proprietor $($Fixture.fixture)"
+}
+
 function Import-EstablishmentPartyRoleFromBau {
     <#
     .SYNOPSIS

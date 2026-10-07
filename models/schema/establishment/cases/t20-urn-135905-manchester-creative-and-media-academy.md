@@ -1,5 +1,7 @@
 # T20: URN 135905, Manchester Creative and Media Academy
 
+T20 tests that Manchester Creative and Media Academy's historical operating responsibility to MARCH 2016 LIMITED is retained, with its end date inferred from the academy's closure and the inference recorded as migration evidence.
+
 ## Establishment
 
 | Field | Value |

@@ -122,6 +122,7 @@ SELECT
         WHEN s.type_name = 'Academy secure 16 to 19' THEN 8
         WHEN s.type_name = 'Voluntary controlled school' THEN 10
         WHEN s.type_name = 'Foundation school' THEN 11
+        WHEN s.type_name = 'Other independent special school' THEN 15
         WHEN s.type_name = 'Children''s centre' THEN 35
         ELSE NULL
     END AS establishment_type_id,

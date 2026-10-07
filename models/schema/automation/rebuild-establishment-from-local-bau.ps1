@@ -75,6 +75,11 @@ try {
             -ExpectedMemberUrns $group.MemberUrns -WorkingDirectory $workspace -MigrationRunId $migrationRunId
     }
 
+    foreach ($proprietor in $selection.ControlledProprietors) {
+        Import-ControlledProprietorFromBau -Source $source -Target $target -Fixture $proprietor `
+            -WorkingDirectory $workspace -MigrationRunId $migrationRunId
+    }
+
     Show-EstablishmentSummary -Target $target -Urn $selection.Urns
     Invoke-EstablishmentTests -Target $target -Selection $selection
     $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'completed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"

@@ -18,7 +18,7 @@ $script:EstablishmentSeedTables = @(
     'establishment_lifecycle', 'address', 'site', 'establishment_to_site',
     'capacity_and_pupil_measures', 'education_admissions_and_provision',
     'statutory_age_range', 'specialist_provision', 'resourced_provision',
-    'sen_unit_provision', 'legal_entity', 'organisation_identifier',
+    'sen_unit_provision', 'legal_entity', 'person', 'organisation_identifier',
     'establishment_party_role', 'academy_trust_classification',
     'establishment_responsibility', 'organisation_group',
     'organisation_group_member', 'group_identifier'
