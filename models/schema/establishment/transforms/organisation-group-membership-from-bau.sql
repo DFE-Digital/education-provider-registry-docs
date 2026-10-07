@@ -1,12 +1,19 @@
 -- Current federations and children's-centre groups; no responsibility projection.
 DECLARE @GROUP_ID numeric(19, 0) = $(GROUP_ID);
+DECLARE @SELECTED_MEMBERS_ONLY bit = $(SELECTED_MEMBERS_ONLY);
+DECLARE @MEMBER_SCOPE table (urn numeric(19, 0) PRIMARY KEY);
+INSERT INTO @MEMBER_SCOPE (urn) VALUES $(MEMBER_URN_VALUES);
 IF NOT EXISTS (SELECT 1 FROM dbo.EstablishmentGroup WHERE id = @GROUP_ID AND type_code IN ('01','08') AND closedDate IS NULL)
     THROW 50001, 'Selected group must be an open federation or childrens-centre group.', 1;
+IF EXISTS (SELECT 1 FROM dbo.EstablishmentGroup WHERE id=@GROUP_ID AND type_code='01')
+   AND (SELECT count(DISTINCT urn) FROM dbo.GroupLink WHERE group_id=@GROUP_ID AND (archived=0 OR archived IS NULL)) < 2
+    THROW 50001, 'Source federation requires at least two current members.', 1;
 IF EXISTS (
     SELECT 1 FROM dbo.GroupLink gl
     JOIN dbo.EstablishmentGroup eg ON eg.id=gl.group_id
     LEFT JOIN dbo.Establishment e ON e.URN = gl.urn
     WHERE gl.group_id = @GROUP_ID AND (gl.archived = 0 OR gl.archived IS NULL)
+      AND (@SELECTED_MEMBERS_ONLY=0 OR gl.urn IN (SELECT urn FROM @MEMBER_SCOPE))
       AND (e.URN IS NULL OR e.status_code IS NULL OR e.status_code <> '1'
         OR (eg.type_code='08' AND (e.type_code IS NULL OR e.type_code<>'47'))
         OR (eg.type_code='01' AND e.type_code NOT IN (
@@ -22,6 +29,7 @@ IF EXISTS (SELECT 1 FROM dbo.EstablishmentGroup WHERE id=@GROUP_ID AND type_code
     THROW 50001, 'Childrens-centre group requires a recorded local authority.', 1;
 IF EXISTS (SELECT 1 FROM dbo.GroupLink gl JOIN dbo.EstablishmentGroup eg ON eg.id=gl.group_id
            WHERE eg.id=@GROUP_ID AND eg.type_code='08' AND (gl.archived=0 OR gl.archived IS NULL)
+             AND (@SELECTED_MEMBERS_ONLY=0 OR gl.urn IN (SELECT urn FROM @MEMBER_SCOPE))
              AND (gl.ccLinkType IS NULL OR gl.ccLinkType NOT IN ('LEAD','STANDARD')))
     THROW 50001, 'Missing or unrecognised childrens-centre lead code requires review.', 1;
 IF (SELECT count(*) FROM dbo.GroupLink WHERE group_id=@GROUP_ID AND ccLinkType='LEAD'
@@ -44,4 +52,5 @@ SELECT CONVERT(varchar(20), eg.id) AS group_uid,
 FROM dbo.EstablishmentGroup eg
 JOIN dbo.GroupLink gl ON gl.group_id = eg.id
 WHERE eg.id = @GROUP_ID AND (gl.archived = 0 OR gl.archived IS NULL)
+  AND (@SELECTED_MEMBERS_ONLY=0 OR gl.urn IN (SELECT urn FROM @MEMBER_SCOPE))
 ORDER BY gl.urn;

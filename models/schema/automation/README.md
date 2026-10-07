@@ -2,8 +2,10 @@
 
 PowerShell for rebuilding, loading, testing and exporting the local Education
 Provider Registry databases. It runs only against the laptop-local BAU copy
-(`gias_bau_test_local`) and local PostgreSQL (`establishment_local`,
-`governance_local`). Guards refuse any other server or database.
+(`gias_bau_test_local` by default, or another BAU copy named `*_local`) and local
+PostgreSQL (`establishment_local`, `governance_local`). Source guards recognise
+the current machine and local instances; remote/shared servers are refused.
+PostgreSQL target restrictions are unchanged.
 
 ## Layout
 
@@ -47,7 +49,11 @@ From `education-provider-registry-docs`:
 
 # With the local BAU copy: rebuild, test and refresh the checked-in SQL in seed/.
 # Review the refreshed files with git diff before committing.
-.\models\schema\automation\rebuild-establishment-from-local-bau.ps1 -SqlServer SL646104 -UseWindowsAuthentication
+$bauSqlServer = 'localhost' # Your local machine name or named instance.
+.\models\schema\automation\rebuild-establishment-from-local-bau.ps1 -SqlServer $bauSqlServer -UseWindowsAuthentication
+
+# Supply URNs: discover current groups, skip case-specific tests, leave seed/ unchanged.
+.\models\schema\automation\rebuild-establishment-from-local-bau.ps1 -SqlServer $bauSqlServer -Urn '109443,20338' -SkipTests
 
 # The same, also rebuilding governance_local and loading governance.
 .\models\schema\automation\rebuild-establishment-from-local-bau.ps1 -IncludeGovernance
@@ -59,6 +65,19 @@ From `education-provider-registry-docs`:
 Use `-KeepFixture` on the BAU rebuild to keep the run's working folder of CSV
 fixtures for troubleshooting.
 
+See the [schema README](../README.md#using-a-different-bau-dataset-and-your-own-urns)
+for choosing URNs and constructing a custom selection. `-SkipTests` does not
+bypass source/load checks or database constraints. Custom selections and
+skipped-test runs export only with an explicit `-ExportDirectory` and do not
+automatically replace checked-in seeds.
+
+`-Urn` accepts a quoted comma-separated list (also usable with `powershell.exe -File`).
+A URN-only `-SelectionFile` discovers groups too. Only supplied URNs
+are loaded, including federation/children's-centre memberships. Discovery is
+current-only unless `-IncludeArchivedLinks` opts into archived party links;
+historical organisation memberships and unreviewed proprietor identities are
+not inferred. The default explicit fixture manifest remains unchanged.
+
 ## Running one step on its own
 
 Import the module, create the connection objects once, then call any step:
@@ -66,7 +85,7 @@ Import the module, create the connection objects once, then call any step:
 ```powershell
 Import-Module .\models\schema\automation\EprLocalAutomation\EprLocalAutomation.psm1
 $target    = New-PostgresTarget                     # establishment_local
-$source    = New-BauSource -SqlServer SL646104 -UseWindowsAuthentication
+$source    = New-BauSource -SqlServer localhost -UseWindowsAuthentication
 $selection = Get-FixtureSelection                   # seed/fixture-selection.json
 $workspace = New-RunWorkspace
 
@@ -90,7 +109,8 @@ Remove-RunWorkspace -Path $workspace
 | --- | --- | --- |
 | Connections | `New-BauSource` | Describes the local BAU copy. Prompts for the reader password unless Windows authentication or `EPR_BAU_SQL_PASSWORD` is used. |
 | | `New-PostgresTarget` | Describes a local PostgreSQL database. |
-| Settings | `Get-FixtureSelection` | Reads and validates `seed/fixture-selection.json`: the URNs and the group links to load. |
+| Settings | `Get-FixtureSelection` | Reads a manifest with `-Path`, or validates direct `-Urn` input. URN-only selections request discovery. |
+| | `Find-EstablishmentGroupsFromBau` | Discovers supported source group links and selected-URN-only memberships before the target rebuild. |
 | | `New-RunWorkspace`, `Remove-RunWorkspace` | Create and delete a working folder for one run's files. |
 | Database | `Reset-EstablishmentSchema` | Drops and recreates the establishment and migration schemas. |
 | | `Import-ReferenceSeed` | Loads the checked-in reference seeds. |
@@ -106,6 +126,7 @@ Remove-RunWorkspace -Path $workspace
 | | `Export-EstablishmentFixture` | Exports the database as SQL with pg_dump. |
 | | `Update-CheckedInSeed` | Copies an export into `seed/`. |
 | Tests | `Test-EstablishmentUrnValidation` | URN selection boundaries and parameter-validation ranges. Runs automatically with all establishment tests. |
+| | `Test-EstablishmentGroupDiscovery` | Source-free checks of discovery routing, unchanged URN scope, archive opt-in and invalid/duplicate-link rejection. |
 | | `Test-EstablishmentCoreValidation` | Core population and keys; URN and organisation-identifier constraint tests roll back their test records. |
 | | `Test-EstablishmentGroupsValidation` | Establishment-groups rules plus actual-loader tests for source-UID reuse, person-endpoint reuse and rejection of name-only merges, party-kind conflicts and unreviewed person mappings; test loads roll back. The full test runner also validates selected person sponsorship, foundation-trust support, federations and children's-centre groups and checks that all selected extracts sit beneath one rebuild migration run. |
 | | `Test-EstablishmentApproval` | One URN against its approved snapshot; `-UpdateApproval` refreshes it. |

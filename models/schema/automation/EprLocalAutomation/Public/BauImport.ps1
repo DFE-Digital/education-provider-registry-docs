@@ -174,28 +174,35 @@ function Import-EstablishmentPartyRoleFromBau {
 function Import-OrganisationGroupFromBau {
     <#
     .SYNOPSIS
-    Loads a current federation or children's-centre group and its complete
-    selected membership, including recorded authority and lead designation.
+    Loads a current federation or children's-centre group, including recorded
+    authority and lead designation. By default requires complete membership;
+    -SelectedMembersOnly restricts extraction to ExpectedMemberUrns.
     #>
     param(
         [Parameter(Mandatory)]$Source,
         [Parameter(Mandatory)]$Target,
         [Parameter(Mandatory)][ValidateRange(1, 999999999)][int]$SourceGroupId,
-        [Parameter(Mandatory)][int[]]$ExpectedMemberUrns,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateRange(1, 999999)][int[]]$ExpectedMemberUrns,
+        [switch]$SelectedMembersOnly,
         [Parameter(Mandatory)][string]$WorkingDirectory,
         [guid]$MigrationRunId = [guid]::Empty
     )
     Write-Step "Loading organisation group $SourceGroupId"
     $csvPath = Join-Path $WorkingDirectory "organisation-group-$SourceGroupId.csv"
     Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/organisation-group-membership-from-bau.sql') `
-        -Variables @{ GROUP_ID = $SourceGroupId } -CsvPath $csvPath -RowCount AtLeastOne -Description "organisation group $SourceGroupId" | Out-Null
+        -Variables @{
+            GROUP_ID = $SourceGroupId
+            SELECTED_MEMBERS_ONLY = [int][bool]$SelectedMembersOnly
+            MEMBER_URN_VALUES = (($ExpectedMemberUrns | ForEach-Object { '(' + [string][int]$_ + ')' }) -join ',')
+        } -CsvPath $csvPath -RowCount AtLeastOne -Description "organisation group $SourceGroupId" | Out-Null
     $memberUrns = @(Import-Csv -LiteralPath $csvPath -Delimiter '|' | ForEach-Object { [int]$_.establishment_urn })
     if ($memberUrns.Count -ne $ExpectedMemberUrns.Count -or
         (Compare-Object ($ExpectedMemberUrns | Sort-Object) ($memberUrns | Sort-Object))) {
         throw "Organisation group $SourceGroupId members differ from the approved selection."
     }
     Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-organisation-group-membership-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "organisation group $SourceGroupId" -MigrationRunId $MigrationRunId
+        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "organisation group $SourceGroupId" -MigrationRunId $MigrationRunId `
+        -TemplateValues @{ MEMBERSHIP_SCOPE = $(if ($SelectedMembersOnly) { 'selected-urns' } else { 'complete' }) }
 }
 
 function Import-GovernanceFromBau {

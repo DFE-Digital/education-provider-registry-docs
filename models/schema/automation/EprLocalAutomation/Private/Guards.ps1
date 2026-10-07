@@ -2,8 +2,7 @@
 # write only to local PostgreSQL databases. It must never reach a shared,
 # Test, staging or production system.
 
-$script:AllowedBauServers = @('localhost', '127.0.0.1', 'SL646104')
-$script:AllowedBauDatabases = @('gias_bau_test_local')
+$script:AllowedBauServers = @('localhost', '127.0.0.1', '.', '(local)', [System.Environment]::MachineName)
 $script:AllowedPostgresHosts = @('localhost', '127.0.0.1')
 $script:AllowedPostgresDatabases = @('establishment_local', 'governance_local')
 
@@ -12,11 +11,14 @@ function Assert-LocalBauSource {
         [Parameter(Mandatory)][string]$SqlServer,
         [Parameter(Mandatory)][string]$Database
     )
-    if ($SqlServer -notin $script:AllowedBauServers) {
+    # Allow a local named instance and optional TCP port, but not arbitrary
+    # remote hosts or connection-string fragments.
+    $serverMatch = [regex]::Match($SqlServer, '^(?<host>[^\\,;]+)(?:\\[A-Za-z0-9_-]+)?(?:,[0-9]{1,5})?$')
+    if (-not $serverMatch.Success -or $serverMatch.Groups['host'].Value -notin $script:AllowedBauServers) {
         throw "The source SQL Server must be the local BAU copy. Received: $SqlServer"
     }
-    if ($Database -notin $script:AllowedBauDatabases) {
-        throw "The source database must be gias_bau_test_local. Received: $Database"
+    if ($Database -notmatch '^[A-Za-z0-9_]+_local$') {
+        throw "The source database must be a local BAU copy with a name ending '_local' (letters, digits and underscores only). Received: $Database"
     }
 }
 
