@@ -325,6 +325,61 @@ function Test-EstablishmentUrnValidation {
     }
 }
 
+function Test-EstablishmentGroupDiscovery {
+    # Source-free regression checks: discovery must never expand the requested
+    # URNs or infer identities. Real SQL extraction is checked separately.
+    Write-Step 'Test: URN-driven group discovery'
+    $selection = Get-FixtureSelection -Urn @(20001, 136102, 123456)
+    $rows = @(
+        [pscustomobject]@{ establishment_urn=20001; source_group_id=11; group_type_code='08'; source_archived=0; source_group_closed_date='NULL' },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=12; group_type_code='01'; source_archived=0; source_group_closed_date='NULL' },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=13; group_type_code='06'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=14; group_type_code='10'; source_archived=1 },
+        [pscustomobject]@{ establishment_urn=123456; source_group_id=13; group_type_code='06'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=15; group_type_code='05'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=123456; source_group_id=16; group_type_code='02'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=123456; source_group_id=17; group_type_code='11'; source_archived=0 }
+    )
+    $result = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks $rows
+    if ($result.Urns.Count -ne 3 -or (Compare-Object $selection.Urns $result.Urns) -or
+        $result.PartyRoleLinks.Count -ne 5 -or $result.OrganisationGroups.Count -ne 2 -or
+        $result.ControlledProprietors.Count -ne 0) {
+        throw 'Group discovery changed URNs, missed routes or invented proprietor mappings.'
+    }
+    foreach ($group in $result.OrganisationGroups) {
+        if (-not $group.SelectedMembersOnly -or $group.MemberUrns.Count -ne 1 -or
+            @($group.MemberUrns | Where-Object { $_ -notin $selection.Urns }).Count -gt 0) {
+            throw 'Discovered organisation memberships must be restricted to supplied URNs.'
+        }
+    }
+    $historical = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks $rows -IncludeArchivedLinks
+    if ($historical.PartyRoleLinks.Count -ne 6 -or
+        @($historical.PartyRoleLinks | Where-Object { $_.SourceGroupId -eq 14 -and $_.IncludeArchived }).Count -ne 1) {
+        throw 'Archived party-link opt-in failed.'
+    }
+    $empty = ConvertTo-DiscoveredGroupSelection -Selection $selection
+    if ($empty.Urns.Count -ne 3 -or $empty.PartyRoleLinks.Count -ne 0 -or $empty.OrganisationGroups.Count -ne 0) {
+        throw 'A URN with no group links must still be selectable.'
+    }
+    $rejectedRows = @(
+        [pscustomobject]@{ establishment_urn=999999; source_group_id=1; group_type_code='06'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=1; group_type_code='03'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=1; group_type_code='01'; source_archived=0; source_group_closed_date='2020-01-01' },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=0; group_type_code='06'; source_archived=0 },
+        [pscustomobject]@{ establishment_urn=136102; source_group_id=1; group_type_code='06'; source_archived=2 }
+    )
+    foreach ($row in $rejectedRows) {
+        $rejected = $false
+        try { $null = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($row) } catch { $rejected = $true }
+        if (-not $rejected) { throw 'An invalid or unsupported discovered link was accepted.' }
+    }
+    $duplicateRejected = $false
+    try { $null = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0], $rows[0]) }
+    catch { $duplicateRejected = $true }
+    if (-not $duplicateRejected) { throw 'Duplicate discovered source links were accepted.' }
+    Write-Host '    Discovery routes, selected-only scope, archive policy and rejection checks passed.'
+}
+
 function Invoke-EstablishmentTests {
     <#
     .SYNOPSIS
@@ -338,6 +393,7 @@ function Invoke-EstablishmentTests {
     )
 
     Test-EstablishmentUrnValidation
+    Test-EstablishmentGroupDiscovery
     Test-EstablishmentCoreValidation -Target $Target
     if ($Selection.PartyRoleLinks.Count -gt 0) {
         Test-EstablishmentGroupsValidation -Target $Target

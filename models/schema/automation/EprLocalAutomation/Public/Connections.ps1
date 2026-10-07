@@ -10,7 +10,7 @@ function New-BauSource {
     With SQL authentication, the password is taken from -SqlPassword, then from
     the EPR_BAU_SQL_PASSWORD environment variable, and otherwise prompted for.
     .EXAMPLE
-    $source = New-BauSource -SqlServer SL646104 -UseWindowsAuthentication
+    $source = New-BauSource -SqlServer localhost -UseWindowsAuthentication
     #>
     param(
         [string]$SqlServer = 'localhost',

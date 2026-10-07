@@ -1,4 +1,6 @@
 BEGIN;
+-- A partial local fixture is not a complete representation of the source group.
+SELECT set_config('epr.group_membership_scope', '__MEMBERSHIP_SCOPE__', true);
 CREATE TEMP TABLE group_membership_fixture (
     group_uid text NOT NULL, group_id text, group_name text NOT NULL,
     group_type text NOT NULL, local_authority_code integer,
@@ -37,7 +39,9 @@ BEGIN
         RAISE EXCEPTION 'Group type, authority, name and dates must agree across the extract';
     END IF;
     IF fixture.group_type='Federation' AND (
-        (SELECT count(*) FROM group_membership_fixture)<2 OR fixture.local_authority_code IS NOT NULL
+        ((SELECT count(*) FROM group_membership_fixture)<2
+         AND current_setting('epr.group_membership_scope', true) IS DISTINCT FROM 'selected-urns')
+        OR fixture.local_authority_code IS NOT NULL
         OR EXISTS (SELECT 1 FROM group_membership_fixture WHERE is_lead_member IS NOT NULL)
     ) THEN RAISE EXCEPTION 'Federation requires at least two members, no group authority and no lead flag'; END IF;
     IF fixture.group_type='Children''s-centre group' THEN
@@ -117,7 +121,9 @@ FROM group_membership_fixture f CROSS JOIN group_membership_context c;
 INSERT INTO migration.organisation_group_member_evidence (organisation_group_member_id, source_record_id, review_status, notes)
 SELECT m.organisation_group_member_id, s.source_record_id, 'accepted',
        'Source GroupLink ' || f.source_link_id || ': archived=' || f.source_archived ||
-       '; ' || CASE WHEN f.group_type='Children''s-centre group' THEN 'ccLinkType=' ELSE 'linkType=' END || COALESCE(f.source_link_type, 'NULL') || '; joined date from effectiveDate; leaving date unknown.'
+       '; ' || CASE WHEN f.group_type='Children''s-centre group' THEN 'ccLinkType=' ELSE 'linkType=' END || COALESCE(f.source_link_type, 'NULL') || '; joined date from effectiveDate; leaving date unknown.' ||
+       CASE WHEN current_setting('epr.group_membership_scope', true)='selected-urns'
+            THEN ' Membership scope: supplied URNs only; not the complete source group.' ELSE '' END
 FROM group_membership_fixture f CROSS JOIN group_membership_context c
 JOIN establishment.establishment e ON e.urn=f.establishment_urn
 JOIN establishment.organisation_group_member m ON m.organisation_group_id=c.organisation_group_id
