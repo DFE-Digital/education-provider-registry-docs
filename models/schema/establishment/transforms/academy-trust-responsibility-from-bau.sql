@@ -13,6 +13,40 @@ DECLARE @URN numeric(19, 0) = $(URN);
 DECLARE @GROUP_ID numeric(19, 0) = $(GROUP_ID);
 DECLARE @INCLUDE_ARCHIVED bit = $(INCLUDE_ARCHIVED);
 
+-- Reviewed person mapping for T7; missing company identifiers alone are not
+-- a rule for treating a sponsor as a person.
+IF @URN=135936 AND @GROUP_ID IN (2613,3147) AND NOT EXISTS (
+    SELECT 1 FROM dbo.EstablishmentGroup sponsor
+    JOIN dbo.EstablishmentGroup trust ON trust.id=3147
+    JOIN dbo.GroupLink sl ON sl.group_id=sponsor.id AND sl.urn=@URN
+    JOIN dbo.GroupLink tl ON tl.group_id=trust.id AND tl.urn=@URN
+    JOIN dbo.Establishment e ON e.URN=@URN
+    WHERE sponsor.id=2613 AND sponsor.name='Charles Dunstone' AND sponsor.type_code='05'
+      AND sponsor.groupId='SP00099' AND sponsor.companiesHouseNumber IS NULL AND sponsor.UKPRN IS NULL
+      AND sponsor.closedDate IS NULL AND CONVERT(date,sponsor.openDate)='1900-01-01'
+      AND trust.type_code='06' AND trust.groupId='TR00830' AND trust.companiesHouseNumber='06960253'
+      AND trust.UKPRN=10058269 AND trust.closedDate IS NULL AND trust.openDate='2009-07-13'
+      AND sl.id=3648 AND tl.id=5539 AND sl.archived=0 AND tl.archived=0
+      AND sl.effectiveDate='2009-09-01' AND tl.effectiveDate=sl.effectiveDate
+      AND e.status_code='1' AND e.CloseDate IS NULL
+      AND (SELECT count(*) FROM dbo.GroupLink WHERE urn=@URN)=2
+)
+    THROW 50001, 'T7 person-sponsor or operator evidence is missing or changed; review before loading.', 1;
+
+-- T6 is a bounded current foundation-support link, not a whole-trust import.
+IF @URN = 132141 AND @GROUP_ID = 1337 AND NOT EXISTS (
+    SELECT 1 FROM dbo.EstablishmentGroup eg
+    JOIN dbo.GroupLink gl ON gl.group_id=eg.id
+    JOIN dbo.Establishment e ON e.URN=gl.urn
+    WHERE eg.id=1337 AND eg.type_code='02' AND eg.closedDate IS NULL
+      AND eg.name='The North Tyneside Learning Trust' AND eg.openDate='2010-09-03'
+      AND eg.companiesHouseNumber IS NULL AND eg.UKPRN IS NULL AND eg.groupId IS NULL
+      AND gl.id=1029 AND gl.urn=132141 AND gl.archived=0 AND gl.effectiveDate='2011-09-01'
+      AND e.status_code='1' AND e.type_code='05' AND e.CloseDate IS NULL
+      AND (SELECT count(*) FROM dbo.GroupLink WHERE urn=132141)=1
+)
+    THROW 50001, 'T6 foundation-support evidence is missing or changed; review before loading.', 1;
+
 -- T3 is a reviewed identity consolidation, not a change of operator. Require
 -- both identity and explicit transition evidence before projecting either row.
 DECLARE @T3_TRANSITION date;
@@ -103,7 +137,14 @@ SELECT
     CASE WHEN @T3_TRANSITION IS NOT NULL THEN
         'T3: shared Group ID TR00009, UKPRN 10059335 and incorporation date; Companies House 07795736 supplied by MAT 20364. GroupRelationsLink 547 (2055 -> 20364, 1M) and 548 (20364 -> 2055, 1S) evidence classification transition 2021-03-30. Source GroupLink 4778 supplies the historical SAT responsibility start 2011-11-01; GroupLink 34277 supplies the current MAT responsibility start 2021-03-30. One continuing legal entity and role; separate SAT and MAT responsibilities. SAT responsibility end and initial SAT classification start unknown; classification dates are not copied into responsibility boundaries.'
     END AS consolidation_evidence,
-    CONVERT(bit, CASE WHEN gl.archived = 1 OR eg.closedDate IS NOT NULL THEN 0 ELSE 1 END) AS responsibility_is_current
+    CONVERT(bit, CASE WHEN gl.archived = 1 OR eg.closedDate IS NOT NULL THEN 0 ELSE 1 END) AS responsibility_is_current,
+    CONVERT(varchar(20), gl.id) AS source_link_id,
+    CONVERT(varchar(10), eg.openDate, 23) AS source_group_open_date,
+    CONVERT(integer, gl.archived) AS source_archived,
+    CASE WHEN @URN=135936 AND eg.id=2613 THEN 'person' ELSE 'legal_entity' END AS party_kind,
+    CASE WHEN @URN=135936 AND eg.id=2613 THEN
+        'T7 reviewed person sponsor: Charles Dunstone. Fulwood Academy identifies Sir Charles as its sponsor and states personal funding: https://www.fulwoodacademy.co.uk/page/?pid=53&title=Welcome+from+the+Sponsor. GroupLink 3648: archived=0; effectiveDate=2009-09-01. Source group openDate=1900-01-01 rejected as placeholder; role start unknown. No Companies House number applies to the person; do not merge with trust UID 3147.'
+    END AS party_mapping_evidence
 FROM dbo.EstablishmentGroup AS eg
 JOIN dbo.GroupLink AS gl
   ON gl.group_id = eg.id

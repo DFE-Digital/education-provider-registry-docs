@@ -1,5 +1,7 @@
 # T1: URN 136102, The Co-Operative Academy of Stoke-On-Trent
 
+T1 tests that The Co-Operative Academy of Stoke-On-Trent has separate former SAT and current MAT operators, with The Co-operative Group recorded as a third party holding its sponsorship responsibility.
+
 ## Establishment
 
 | Field | Value |

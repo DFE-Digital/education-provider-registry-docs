@@ -140,11 +140,18 @@ function Invoke-FixtureLoad {
         [Parameter(Mandatory)][string]$CsvPath,
         [Parameter(Mandatory)][string]$WorkingDirectory,
         [Parameter(Mandatory)][string]$Description,
-        [guid]$MigrationRunId = [guid]::Empty
+        [guid]$MigrationRunId = [guid]::Empty,
+        [hashtable]$TemplateValues
     )
 
     Assert-FileExists -Path $LoadSqlFile
     $loadSql = (Get-Content -LiteralPath $LoadSqlFile -Raw).Replace('__FIXTURE_PATH__', ($CsvPath -replace '\\', '/'))
+    if ($TemplateValues) {
+        foreach ($key in $TemplateValues.Keys) {
+            # Values are escaped SQL-literal contents, not executable SQL.
+            $loadSql = $loadSql.Replace("__$($key)__", ([string]$TemplateValues[$key]).Replace("'", "''"))
+        }
+    }
     if ($MigrationRunId -ne [guid]::Empty) {
         $loadSql = "SELECT set_config('epr.migration_run_id', '$MigrationRunId', false);`n" + $loadSql
     }

@@ -61,11 +61,37 @@ function Get-FixtureSelection {
         throw 'Organisation groups must not contain duplicate source IDs.'
     }
 
+    $proprietors = foreach ($proprietor in @($selection.controlledProprietors)) {
+        if ($null -eq $proprietor) { continue }
+        $partyId = [guid]$proprietor.legalEntityId
+        if ($partyId -eq [guid]::Empty -or [string]::IsNullOrWhiteSpace($proprietor.name) -or
+            [string]::IsNullOrWhiteSpace($proprietor.reviewEvidence)) {
+            throw 'Controlled proprietors require an explicit party ID, name and reviewed identity decision.'
+        }
+        if ([string]$proprietor.snapshotDate -notmatch '^\d{4}-\d{2}-\d{2}$') { throw 'Controlled proprietor snapshot date must be ISO formatted.' }
+        $null = [datetime]::ParseExact($proprietor.snapshotDate, 'yyyy-MM-dd', [cultureinfo]::InvariantCulture)
+        if ([string]::IsNullOrWhiteSpace($proprietor.fixture) -or [string]::IsNullOrWhiteSpace($proprietor.extractPath)) {
+            throw 'Controlled proprietor fixture and extract path are required.'
+        }
+        $schools = @($proprietor.schools)
+        if ($schools.Count -lt 1 -or @($schools.urn | Select-Object -Unique).Count -ne $schools.Count) {
+            throw 'Controlled proprietor schools must be non-empty and distinct.'
+        }
+        foreach ($school in $schools) {
+            if ([int]$school.urn -notin $urns -or [string]::IsNullOrWhiteSpace($school.name) -or
+                [string]::IsNullOrWhiteSpace($school.propsName)) { throw 'Controlled proprietor schools require selected URNs, names and exact extract assertions.' }
+        }
+        $proprietor
+    }
+    if (@($proprietors).Count -ne @($proprietors.legalEntityId | Select-Object -Unique).Count) {
+        throw 'Controlled proprietor party IDs must be distinct.'
+    }
     return [pscustomobject]@{
         PSTypeName     = 'Epr.FixtureSelection'
         Path           = $Path
         Urns           = $urns
         PartyRoleLinks = @($links)
         OrganisationGroups = @($groups)
+        ControlledProprietors = @($proprietors)
     }
 }

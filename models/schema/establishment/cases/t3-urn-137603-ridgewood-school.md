@@ -1,5 +1,7 @@
 # T3 — Ridgewood School
 
+T3 tests that Ridgewood School's trust remains one legal entity as it changes from SAT to MAT, with the trust's classification periods recorded separately from its responsibilities for the school.
+
 ## Establishment
 
 | Field | Value |

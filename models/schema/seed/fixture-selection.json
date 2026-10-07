@@ -1,6 +1,20 @@
 {
   "organisationType": "establishment-fixture-set",
-  "urns": [136102, 134314, 135905, 137603, 109443, 109613, 20338, 20549, 20614, 21363, 22422, 22459, 22975, 23004, 23122],
+  "urns": [136102, 134314, 135905, 137603, 109443, 109613, 20338, 20549, 20614, 21363, 22422, 22459, 22975, 23004, 23122, 132141, 135936, 112461, 119009],
+  "controlledProprietors": [
+    {
+      "fixture": "T9",
+      "legalEntityId": "5be037f1-12fc-4b40-829c-4135c96fc783",
+      "name": "Acorn Care and Education Ltd",
+      "extractPath": "docs/data/extract-data/establishment-fields/edubasealldata20260616.csv",
+      "snapshotDate": "2026-06-16",
+      "reviewEvidence": "T9 accepted proprietor-identity assumption: both selected extract assertions resolve to one body; local proprietor records are obfuscated, not evidence of Acorn's legal identity or ownership.",
+      "schools": [
+        { "urn": 112461, "name": "Underley Garden School", "propsName": "Acorn Care and Education Ltd" },
+        { "urn": 119009, "name": "Heath Farm School", "propsName": "Acorn Care and Education Ltd" }
+      ]
+    }
+  ],
   "organisationGroups": [
     { "sourceGroupId": 1809, "memberUrns": [109443, 109613], "fixture": "T4" },
     { "sourceGroupId": 86052, "memberUrns": [20338, 20549, 20614, 21363, 22422, 22459, 22975, 23004, 23122], "fixture": "T5" }
@@ -54,6 +68,21 @@
       "urn": 137603,
       "sourceGroupId": 20364,
       "fixture": "T3-mat"
+    },
+    {
+      "urn": 132141,
+      "sourceGroupId": 1337,
+      "fixture": "T6-foundation-trust"
+    },
+    {
+      "urn": 135936,
+      "sourceGroupId": 2613,
+      "fixture": "T7-person-sponsor"
+    },
+    {
+      "urn": 135936,
+      "sourceGroupId": 3147,
+      "fixture": "T7-mat"
     }
   ]
 }

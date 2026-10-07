@@ -1,5 +1,7 @@
 # T2: URN 134314, St Mary Magdalene Academy
 
+T2 tests that Hive Education Trust remains one legal entity as it changes from SAT to MAT for St Mary Magdalene Academy, while the Diocese of London holds a separate sponsorship responsibility.
+
 ## Establishment
 
 | Field | Value |

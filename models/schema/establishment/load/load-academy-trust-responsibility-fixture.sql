@@ -27,7 +27,12 @@ CREATE TEMP TABLE establishment_party_role_fixture (
     responsibility_end_date date,
     end_date_basis text,
     consolidation_evidence text,
-    responsibility_is_current boolean NOT NULL
+    responsibility_is_current boolean NOT NULL,
+    source_link_id text,
+    source_group_open_date date,
+    source_archived integer,
+    party_kind text NOT NULL DEFAULT 'legal_entity' CHECK (party_kind IN ('legal_entity','person')),
+    party_mapping_evidence text
 ) ON COMMIT DROP;
 
 \copy establishment_party_role_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
@@ -36,6 +41,7 @@ CREATE TEMP TABLE establishment_party_role_fixture (
 -- never a name join. A source UID identifies an already-mapped party.
 ALTER TABLE establishment_party_role_fixture
     ADD COLUMN resolved_legal_entity_id uuid,
+    ADD COLUMN resolved_person_id uuid,
     ADD COLUMN identity_resolution_method text;
 
 DO $$
@@ -48,6 +54,41 @@ DECLARE
     method text;
 BEGIN
     FOR fixture IN SELECT * FROM establishment_party_role_fixture LOOP
+        IF fixture.party_kind='person' THEN
+            IF fixture.establishment_party_role_type<>'School sponsor' OR fixture.responsibility_type<>'Sponsored by'
+               OR fixture.companies_house_number IS NOT NULL OR fixture.ukprn IS NOT NULL
+               OR fixture.academy_trust_type IS NOT NULL OR fixture.party_mapping_evidence IS NULL THEN
+                RAISE EXCEPTION 'Person sponsor requires an explicit reviewed mapping and no organisation identifiers';
+            END IF;
+            IF EXISTS (
+                SELECT 1 FROM establishment.group_identifier i
+                JOIN establishment.group_identifier_type t USING (group_identifier_type_id)
+                WHERE t.name='Group UID' AND i.value=fixture.group_uid AND NOT EXISTS (
+                    SELECT 1 FROM establishment.establishment_party_role role
+                    WHERE role.establishment_party_role_id=i.establishment_party_role_id AND role.person_id IS NOT NULL
+                )
+            ) THEN RAISE EXCEPTION 'Person source UID already belongs to a different party kind'; END IF;
+            SELECT role.person_id INTO resolved_id
+            FROM establishment.group_identifier i
+            JOIN establishment.group_identifier_type t USING (group_identifier_type_id)
+            JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer_id)
+            JOIN establishment.establishment_party_role role USING (establishment_party_role_id)
+            WHERE t.name='Group UID' AND issuer.name='GIAS' AND i.value=fixture.group_uid;
+            method := 'existing-source-group-uid';
+            IF resolved_id IS NULL THEN
+                INSERT INTO establishment.person DEFAULT VALUES RETURNING person_id INTO resolved_id;
+                method := 'reviewed-person-sponsor';
+            END IF;
+            UPDATE establishment_party_role_fixture SET resolved_person_id=resolved_id, identity_resolution_method=method
+            WHERE group_uid=fixture.group_uid AND establishment_urn=fixture.establishment_urn;
+            CONTINUE;
+        END IF;
+        IF EXISTS (
+            SELECT 1 FROM establishment.group_identifier i
+            JOIN establishment.group_identifier_type t USING (group_identifier_type_id)
+            JOIN establishment.establishment_party_role role USING (establishment_party_role_id)
+            WHERE t.name='Group UID' AND i.value=fixture.group_uid AND role.person_id IS NOT NULL
+        ) THEN RAISE EXCEPTION 'Legal-entity source UID already belongs to a person'; END IF;
         resolved_id := NULL;
         method := NULL;
         IF fixture.companies_house_number IS NOT NULL THEN
@@ -487,6 +528,40 @@ ON CONFLICT (
     end_date = EXCLUDED.end_date,
     is_current = EXCLUDED.is_current;
 
+-- A person has its own endpoint; it is never routed through legal_entity.
+INSERT INTO establishment.establishment_party_role (establishment_party_role_type_id, person_id, start_date, end_date)
+SELECT t.establishment_party_role_type_id, f.resolved_person_id, f.role_start_date, f.role_end_date
+FROM establishment_party_role_fixture f
+JOIN establishment.establishment_party_role_type t ON t.name=f.establishment_party_role_type
+WHERE f.party_kind='person'
+ON CONFLICT (person_id, establishment_party_role_type_id, COALESCE(start_date, DATE '-infinity'))
+WHERE person_id IS NOT NULL DO UPDATE SET end_date=EXCLUDED.end_date;
+
+INSERT INTO establishment.group_identifier (establishment_party_role_id, group_identifier_type_id,
+    group_identifier_issuer_id, value, is_current)
+SELECT role.establishment_party_role_id, t.group_identifier_type_id, issuer.group_identifier_issuer_id,
+       CASE WHEN t.name='Group UID' THEN f.group_uid ELSE f.group_id END, f.is_current
+FROM establishment_party_role_fixture f
+JOIN establishment.establishment_party_role role ON role.person_id=f.resolved_person_id
+  AND role.start_date IS NOT DISTINCT FROM f.role_start_date
+JOIN establishment.establishment_party_role_type rt ON rt.establishment_party_role_type_id=role.establishment_party_role_type_id
+  AND rt.name=f.establishment_party_role_type
+CROSS JOIN establishment.group_identifier_type t CROSS JOIN establishment.group_identifier_issuer issuer
+WHERE f.party_kind='person' AND issuer.name='GIAS' AND t.name IN ('Group UID','Group ID')
+  AND (t.name='Group UID' OR f.group_id IS NOT NULL)
+ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
+
+INSERT INTO establishment.establishment_responsibility (establishment_id, person_id, responsibility_type_id,
+    start_date, end_date, is_current)
+SELECT e.establishment_id, f.resolved_person_id, rt.responsibility_type_id,
+       f.responsibility_start_date, f.responsibility_end_date, f.responsibility_is_current
+FROM establishment_party_role_fixture f
+JOIN establishment.establishment e ON e.urn=f.establishment_urn
+JOIN establishment.establishment_responsibility_type rt ON rt.name=f.responsibility_type
+WHERE f.party_kind='person'
+ON CONFLICT (establishment_id, person_id, responsibility_type_id, COALESCE(start_date, DATE '-infinity'))
+WHERE person_id IS NOT NULL DO UPDATE SET end_date=EXCLUDED.end_date, is_current=EXCLUDED.is_current;
+
 -- Keep source-derived dates and inference decisions outside the live model.
 CREATE TEMP TABLE migration_context (
     migration_run_id uuid NOT NULL,
@@ -575,6 +650,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO migration.establishment_party_role_evidence (
     establishment_party_role_id,
     source_record_id,
+    first_observed_date,
     end_date_basis,
     inference_rule,
     review_status,
@@ -582,23 +658,23 @@ INSERT INTO migration.establishment_party_role_evidence (
 )
 SELECT role.establishment_party_role_id,
        source_record.source_record_id,
+       CASE WHEN (fixture.establishment_party_role_type='Foundation trust' OR fixture.party_kind='person') AND fixture.role_start_date IS NULL
+            THEN (SELECT snapshot_date FROM migration.source_snapshot WHERE source_snapshot_id=context.source_snapshot_id) END,
        fixture.role_end_date_basis,
        CASE WHEN fixture.role_end_date_basis = 'inferred'
             THEN 'Role end date inferred from the source establishment/group closure date.'
        END,
        'accepted',
-       fixture.consolidation_evidence
+       CASE WHEN fixture.establishment_party_role_type='Foundation trust' THEN
+           'Source GroupLink ' || fixture.source_link_id || ': archived=' || fixture.source_archived ||
+           '; source group openDate=' || COALESCE(fixture.source_group_open_date::text, 'NULL') ||
+           '; role start unknown; group openDate is not role start or incorporation; legal identity provisional.'
+       ELSE COALESCE(fixture.party_mapping_evidence, fixture.consolidation_evidence) END
 FROM establishment_party_role_fixture AS fixture
-JOIN establishment.organisation_identifier AS company_identifier
-  ON company_identifier.value = fixture.companies_house_number
- AND company_identifier.is_current
-JOIN establishment.organisation_identifier_type AS company_type
-  ON company_type.organisation_identifier_type_id = company_identifier.organisation_identifier_type_id
- AND company_type.name = 'Companies House number'
 JOIN establishment.establishment_party_role_type AS role_type
   ON role_type.name = fixture.establishment_party_role_type
 JOIN establishment.establishment_party_role AS role
-  ON role.legal_entity_id = company_identifier.legal_entity_id
+  ON (role.legal_entity_id = fixture.resolved_legal_entity_id OR role.person_id = fixture.resolved_person_id)
  AND role.establishment_party_role_type_id = role_type.establishment_party_role_type_id
  AND role.start_date IS NOT DISTINCT FROM fixture.role_start_date
 JOIN migration_context AS context ON true
@@ -626,21 +702,19 @@ SELECT responsibility.establishment_responsibility_id,
             THEN 'Responsibility end date inferred from the source establishment closure date.'
        END,
        'accepted',
-       fixture.consolidation_evidence
+       CASE WHEN fixture.establishment_party_role_type='Foundation trust' THEN
+           'Source GroupLink ' || fixture.source_link_id || ': archived=' || fixture.source_archived ||
+           '; responsibility start from effectiveDate; end unknown; source group openDate=' ||
+           COALESCE(fixture.source_group_open_date::text, 'NULL') || '; no name-based consolidation.'
+       ELSE COALESCE(fixture.party_mapping_evidence, fixture.consolidation_evidence) END
 FROM establishment_party_role_fixture AS fixture
 JOIN establishment.establishment AS establishment
   ON establishment.urn = fixture.establishment_urn
-JOIN establishment.organisation_identifier AS company_identifier
-  ON company_identifier.value = fixture.companies_house_number
- AND company_identifier.is_current
-JOIN establishment.organisation_identifier_type AS company_type
-  ON company_type.organisation_identifier_type_id = company_identifier.organisation_identifier_type_id
- AND company_type.name = 'Companies House number'
 JOIN establishment.establishment_responsibility_type AS responsibility_type
   ON responsibility_type.name = fixture.responsibility_type
 JOIN establishment.establishment_responsibility AS responsibility
   ON responsibility.establishment_id = establishment.establishment_id
- AND responsibility.legal_entity_id = company_identifier.legal_entity_id
+ AND (responsibility.legal_entity_id = fixture.resolved_legal_entity_id OR responsibility.person_id = fixture.resolved_person_id)
  AND responsibility.responsibility_type_id = responsibility_type.responsibility_type_id
  AND responsibility.start_date IS NOT DISTINCT FROM fixture.responsibility_start_date
 JOIN migration_context AS context ON true
@@ -659,14 +733,15 @@ INSERT INTO migration.identity_resolution (
     source_record_id, target_entity_type, target_entity_id,
     resolution_method, confidence, decision_status, rationale
 )
-SELECT source_record.source_record_id, 'legal_entity', fixture.resolved_legal_entity_id,
+SELECT source_record.source_record_id, fixture.party_kind, COALESCE(fixture.resolved_legal_entity_id, fixture.resolved_person_id),
        CASE WHEN fixture.consolidation_evidence IS NOT NULL
             THEN 'shared-identifiers-and-explicit-sat-mat-transition'
             ELSE fixture.identity_resolution_method END,
-       CASE WHEN fixture.companies_house_number IS NOT NULL OR fixture.identity_resolution_method = 'ukprn'
+       CASE WHEN fixture.party_kind='person' THEN 'reviewed'
+            WHEN fixture.companies_house_number IS NOT NULL OR fixture.identity_resolution_method = 'ukprn'
             THEN 'high' ELSE 'provisional' END,
        'accepted',
-       COALESCE(fixture.consolidation_evidence,
+       COALESCE(fixture.party_mapping_evidence, fixture.consolidation_evidence,
            'Resolved by ' || fixture.identity_resolution_method ||
            '. A new separate source party is not a verification of its registered legal identity; names do not authorise consolidation.')
 FROM establishment_party_role_fixture AS fixture

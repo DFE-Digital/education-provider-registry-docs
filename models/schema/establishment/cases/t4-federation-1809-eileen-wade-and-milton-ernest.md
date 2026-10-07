@@ -1,5 +1,7 @@
 # T4 — Federation of Eileen Wade and Milton Ernest
 
+T4 tests that Eileen Wade Primary School and Milton Ernest CofE Primary School are recorded as members of one federation, without creating a legal entity or operating responsibility for the federation.
+
 ## Establishments
 
 T4 is one federation scenario with two establishment records: T4a and T4b.
