@@ -111,11 +111,13 @@ function Import-ControlledProprietorFromBau {
     Write-Step "Loading reviewed proprietor fixture $($Fixture.fixture): $($Fixture.name)"
     $selectedUrns = @($Fixture.schools | ForEach-Object { [int]$_.urn })
     $extractRows = @(Import-Csv -LiteralPath $extractPath | Where-Object { [int]$_.URN -in $selectedUrns })
+    $expectedType = 'Other independent special school'
+    if ($Fixture.fixture -eq 'T13') { $expectedType = 'Other independent school' }
     foreach ($school in $Fixture.schools) {
         $rows = @($extractRows | Where-Object { [int]$_.URN -eq [int]$school.urn })
         if ($rows.Count -ne 1 -or $rows[0].EstablishmentName -cne $school.name -or
             $rows[0].PropsName -cne $school.propsName -or $rows[0].'EstablishmentStatus (name)' -ne 'Open' -or
-            $rows[0].'TypeOfEstablishment (name)' -ne 'Other independent special school') {
+            $rows[0].'TypeOfEstablishment (name)' -ne $expectedType) {
             throw "Controlled proprietor extract assertion changed for URN $($school.urn); review required."
         }
     }

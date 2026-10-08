@@ -417,6 +417,7 @@ function Invoke-EstablishmentTests {
             Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-federation-memberships.sql') -FailureMessage 'Federation validation failed'
             if (@($Selection.OrganisationGroups | Where-Object { $_.SourceGroupId -eq 86052 }).Count -gt 0) {
                 Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-childrens-centre-memberships.sql') -FailureMessage 'Childrens-centre validation failed'
+                Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-group-member-lead-periods.sql') -FailureMessage 'Group-member lead-period validation failed'
             }
         }
         $expectedExtracts = [int]($Selection.PartyRoleLinks.Count + $Selection.OrganisationGroups.Count)

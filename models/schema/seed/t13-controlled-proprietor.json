@@ -1,0 +1,12 @@
+{
+  "fixture": "T13",
+  "legalEntityId": "27546d94-e327-49fd-aecb-26c8c043a597",
+  "name": "The King's School",
+  "separatePartyCompanyNumber": "07706900",
+  "extractPath": "docs/data/extract-data/establishment-fields/edubasealldata20260616.csv",
+  "snapshotDate": "2026-06-16",
+  "reviewEvidence": "T13 accepted separate-party assumption: the Gloucester proprietor and Grantham SAT UID 3641 / TR01236, company 07706900, are distinct legal entities despite matching names. This controlled-fixture decision is not independently proven by BAU. Actual migration requires a recorded manual identity decision. Proprietor registered identifiers and business dates remain unknown.",
+  "schools": [
+    { "urn": 115780, "name": "The King's School, Gloucester", "propsName": "The King's School" }
+  ]
+}

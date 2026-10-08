@@ -1,9 +1,9 @@
 -- Validate the T1 and T2 responsibility history, the T3 consolidated
--- SAT-to-MAT classification transition, and the T20
+-- SAT-to-MAT classification transition, and the T16
 -- closed-lifecycle responsibility with an inferred end date.
 -- T1/T2 classification dates remain null because BAU supplies relationship
 -- dates rather than independently evidenced legal-entity classification
--- boundaries. T20 has an evidenced closed group boundary.
+-- boundaries. T16 has an evidenced closed group boundary.
 
 DO $$
 DECLARE
@@ -183,7 +183,7 @@ BEGIN
     WHERE establishment.urn = 135905;
 
     IF actual_count <> 1 THEN
-        RAISE EXCEPTION 'T20 expected one responsibility for URN 135905 but found %', actual_count;
+        RAISE EXCEPTION 'T16 expected one responsibility for URN 135905 but found %', actual_count;
     END IF;
 
     IF NOT EXISTS (
@@ -200,7 +200,7 @@ BEGIN
           AND responsibility.end_date = DATE '2016-02-29'
           AND NOT responsibility.is_current
     ) THEN
-        RAISE EXCEPTION 'T20 expected an inferred closed MAT responsibility from 2009-09-01 to 2016-02-29';
+        RAISE EXCEPTION 'T16 expected an inferred closed MAT responsibility from 2009-09-01 to 2016-02-29';
     END IF;
 
     IF NOT EXISTS (
@@ -215,7 +215,7 @@ BEGIN
           AND responsibility.end_date = DATE '2016-02-29'
           AND evidence.end_date_basis = 'inferred'
     ) THEN
-        RAISE EXCEPTION 'T20 expected migration evidence for an inferred responsibility end date';
+        RAISE EXCEPTION 'T16 expected migration evidence for an inferred responsibility end date';
     END IF;
 
     IF NOT EXISTS (
@@ -235,7 +235,7 @@ BEGIN
           AND identifier.value = '06888873'
           AND role.end_date = DATE '2016-02-29'
     ) THEN
-        RAISE EXCEPTION 'T20 expected the closed MARCH 2016 LIMITED academy-trust role';
+        RAISE EXCEPTION 'T16 expected the closed MARCH 2016 LIMITED academy-trust role';
     END IF;
 
     IF NOT EXISTS (
@@ -251,7 +251,7 @@ BEGIN
           AND classification.start_date IS NULL
           AND classification.end_date = DATE '2016-02-29'
     ) THEN
-        RAISE EXCEPTION 'T20 expected a non-current MAT classification ending 2016-02-29';
+        RAISE EXCEPTION 'T16 expected a non-current MAT classification ending 2016-02-29';
     END IF;
 
     IF NOT EXISTS (
@@ -262,7 +262,7 @@ BEGIN
         WHERE legal_entity.name = 'MARCH 2016 LIMITED'
           AND entity_type.name = 'Charitable company limited by guarantee'
     ) THEN
-        RAISE EXCEPTION 'T20 expected MR011 legal-entity type classification';
+        RAISE EXCEPTION 'T16 expected MR011 legal-entity type classification';
     END IF;
 END
 $$;

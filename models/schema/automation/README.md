@@ -103,7 +103,89 @@ identity, unknown dates and identifiers, stable reimport, and rejection of an
 unreviewed same-name identity match. It preserves other establishments and
 leaves the default fixture selection and checked-in seeds unchanged.
 
-Import the module, create the connection objects once, then call any step:
+To add T13, the Gloucester proprietor and separate Grantham single-academy trust:
+
+```powershell
+.\models\schema\automation\migrate-t13-from-local-bau.ps1
+```
+
+This uses `reader` and `EPR_BAU_SQL_PASSWORD`, with the accepted separate-party
+assumption in `seed/t13-controlled-proprietor.json`. It validates both import
+orders in rollback transactions, identifier ownership, unknown proprietor
+dates and registered identifiers, stable reimport, and rejection of unreviewed
+name matches or changed fixture decisions. It preserves other establishments
+and leaves the default selection and checked-in SQL seeds unchanged. As with
+T11R and T12, the target must already contain reference data and the migration
+schema. Repeated runs retain fresh source observations in migration evidence.
+
+To add T14R, Bury CofE Primary School with its separate Diocese of Ely sponsor
+and GRACE SCHOOLS operating trust:
+
+```powershell
+.\models\schema\automation\migrate-t14r-from-local-bau.ps1
+```
+
+This uses `reader` and `EPR_BAU_SQL_PASSWORD`. Both source links are checked
+before loading. Both import orders are tested in rollback transactions; the
+two party/responsibility loads are then committed together. Validation checks
+separate identity, provisional sponsor fields, placeholder-date rejection,
+identifier ownership, stable reverse-order reimport and unreviewed name-match
+rejection. The school load commits separately. Other establishments, the
+default fixture selection and checked-in SQL seeds are preserved. The target
+must already contain reference data and the migration schema. Fresh source
+observations may accumulate in migration evidence on repeat runs.
+
+To add T15R, Black Country UTC and its historical single-academy trust:
+
+```powershell
+.\models\schema\automation\migrate-t15r-from-local-bau.ps1
+```
+
+The runner uses `reader` and `EPR_BAU_SQL_PASSWORD`, checks the selected source
+assertions and commits the establishment and trust relationship atomically
+after a rollback validation probe. It retains the non-archived source link
+without making the closed responsibility current, records the inferred
+responsibility end and preserves the unknown company dissolution date.
+The company's legal form follows the explicit charitable-company migration
+assumption; charity-register status remains unknown. The accepted closed-SAT
+role/classification mapping is specific to this case. Repeat import preserves
+business identities. Other establishments, default selection and checked-in
+SQL seeds are unchanged; reference data and migration tables must already exist.
+
+To refresh T16, Manchester Creative and Media Academy's historical MARCH 2016
+LIMITED operating relationship, without rebuilding the database:
+
+```powershell
+.\models\schema\automation\migrate-t16-from-local-bau.ps1
+```
+
+T16 is already included in the default fixture. This standalone runner uses
+`reader` and `EPR_BAU_SQL_PASSWORD`, preflights the selected source assertions,
+validates an atomic rollback probe, then refreshes the establishment and its
+closed MAT relationship together. It checks historical identifiers, the
+distinct closure/inferred-end evidence and stable repeat import. The academy's
+two other source sponsor links are not imported. Existing business identities,
+other establishments, default selection and checked-in seeds are preserved.
+
+To add T17, Langley School's historical federation membership and foundation-trust
+support, without rebuilding the database:
+
+```powershell
+.\models\schema\automation\migrate-t17-from-local-bau.ps1
+```
+
+The runner uses `reader` and `EPR_BAU_SQL_PASSWORD`, checks the selected source
+assertions, validates an atomic rollback probe, then commits the school and both
+relationships together. A case-specific historical federation loader retains the
+archived link and selected-only membership scope. Both relationship ends are
+inferred from school closure; foundation support is not current despite its
+non-archived source flag. The open foundation trust's role dates stay unknown
+and its UID stays current. Registered trust identity remains provisional.
+Repeat import preserves business identities. Beaufort and the trust's wider
+portfolio are not imported; other establishments, default selection and checked-in
+seeds are preserved. Reference data and migration tables must already exist.
+
+For individual steps, import the module and create the connection objects:
 
 ```powershell
 Import-Module .\models\schema\automation\EprLocalAutomation\EprLocalAutomation.psm1
@@ -143,7 +225,7 @@ Remove-RunWorkspace -Path $workspace
 | | `Import-EstablishmentFromBau` | Loads one establishment. |
 | | `Import-ControlledProprietorFromBau` | Validates reviewed public-extract assertions against the selected schools, then loads a shared proprietor body and separate responsibilities. Retains obfuscated local context separately; requires the rebuild run ID. |
 | | `Import-EstablishmentPartyRoleFromBau` | Loads one group link as a legal entity or an explicitly reviewed person sponsor, with its role, applicable classification, group identifiers and responsibility. |
-| | `Import-OrganisationGroupFromBau` | Loads a federation or children's-centre group and its complete selected membership. Children's-centre groups retain their recorded authority and explicit lead flag. |
+| | `Import-OrganisationGroupFromBau` | Loads a federation or children's-centre group and its complete selected membership. Children's-centre groups retain their recorded authority and current lead assertion as a separate lead period with unknown business boundaries. Existing lead periods are retained on changes; the membership flag remains a current-state summary. |
 | | `Import-GovernanceFromBau` | Loads one establishment's governance appointments. |
 | Checked-in SQL | `Import-CheckedInEstablishmentFixture` | Loads the checked-in establishment fixture and migration evidence. |
 | | `Export-EstablishmentFixture` | Exports the database as SQL with pg_dump. |

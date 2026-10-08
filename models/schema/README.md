@@ -14,6 +14,18 @@ This directory contains the PostgreSQL physical schemas, SQL seeds and local aut
 
 ## Establishment rebuild paths
 
+### Dated group-member lead designation
+
+The physical model stores each spell as lead in `establishment.organisation_group_member_lead_period`, separately from membership joined and left dates. A member returning as lead has a new period. Start dates are inclusive and end dates exclusive. PostgreSQL enforces one current lead per group, non-overlap of fully known periods, and known membership boundaries. Lead-period changes update `organisation_group_member.is_lead_member` as a compatibility summary; applications should write designations through the period table, not that flag.
+
+BAU current lead flags become current assertions with unknown start/end dates. Snapshot observations remain in migration evidence and are not substituted for business dates. Incomplete periods require review before making historical claims. Current status is explicit, not automatically recalculated as dates pass.
+
+The baseline includes [lead-period DDL](establishment/organisation-group-member-lead-period-schema.sql), and both BAU loading and checked-in fixture replay include the new table. For an existing local database, use the [additive upgrade](establishment/upgrade-group-member-lead-periods.sql) instead of a rebuild. It preserves memberships and backfills existing current flags without inventing dates; repeat execution does not duplicate current assertions. The DDL requires the PostgreSQL `btree_gist` extension for group-wide exclusion constraints.
+
+Regression checks in [validate-group-member-lead-periods.sql](establishment/validate-group-member-lead-periods.sql) cover handovers, return as lead, independent membership dates, unknown boundaries and rejection of conflicts. Synthetic histories are rolled back.
+
+### Choosing a rebuild path
+
 Choose the path that matches the data available on your machine:
 
 ```mermaid
@@ -238,6 +250,6 @@ Use the T reference and URN in the filename, for example:
 
 `establishment/cases/t1-urn-136102-co-operative-academy-stoke-on-trent.md`
 
-For example, T20 is recorded in `establishment/cases/t20-urn-135905-manchester-creative-and-media-academy.md`.
+For example, T16 is recorded in `establishment/cases/t16-urn-135905-manchester-creative-and-media-academy.md`.
 
 If one T covers more than one establishment, document each URN in its own section or companion case file and keep the shared T reference explicit.

@@ -21,7 +21,7 @@ $script:EstablishmentSeedTables = @(
     'sen_unit_provision', 'legal_entity', 'person', 'organisation_identifier',
     'establishment_party_role', 'academy_trust_classification',
     'establishment_responsibility', 'organisation_group',
-    'organisation_group_member', 'group_identifier'
+    'organisation_group_member', 'organisation_group_member_lead_period', 'group_identifier'
 )
 $script:MigrationSeedTables = @(
     'migration_run', 'source_snapshot', 'source_record',
