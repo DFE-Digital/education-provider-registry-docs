@@ -4,7 +4,7 @@ This document describes the target database infrastructure, repository ownership
 
 ## DB topology
 
-Each environment has two Azure Database for PostgreSQL Flexible Server instances in S189. Both sit in the environment's web application resource group. Each environment has its own instances and databases.
+Each environment has two Azure Database for PostgreSQL Flexible Server instances in S189. Each environment has its own instances and databases.
 
 | Instance name | Database name | Schemas |
 | --- | --- | --- |
@@ -25,14 +25,14 @@ Read server:           s189p01-pg-epr-read
 
 ### C4 deployment diagram
 
-The diagram represents one environment. 
+The diagram represents one environment. S158 and S189 share the Microsoft Entra tenant **DfE Platform Identity**, with domain `platform.education.gov.uk` (confirmed by the technical architect on 8 October 2026).
 
 ```mermaid
 %%{init: {"wrap": true, "c4": {"width": 320}}}%%
 C4Deployment
 title EPR database deployment - one environment
 
-Deployment_Node(tenant, "Azure tenant", "Microsoft Entra tenant") {
+Deployment_Node(tenant, "DfE Platform Identity", "Microsoft Entra tenant") {
     Deployment_Node(subscription, "S189 environment subscription", "Azure subscription") {
         Deployment_Node(resource_group, "<resource-prefix>-<env-short>-rg", "Azure resource group") {
             Deployment_Node(read_server, "[subscription-identifier][env-identifier]-pg-epr-read", "Azure Database for PostgreSQL Flexible Server") {
