@@ -114,6 +114,27 @@ JOIN establishment.establishment e ON e.urn=f.establishment_urn
 WHERE m.organisation_group_id=c.organisation_group_id AND m.establishment_id=e.establishment_id
   AND m.joined_date IS NOT DISTINCT FROM f.joined_date;
 
+-- A current-only BAU snapshot can retire a current assertion, but cannot
+-- supply the business end date. Retain the old period with an unknown end.
+UPDATE establishment.organisation_group_member_lead_period p SET is_current=false
+FROM group_membership_fixture f CROSS JOIN group_membership_context c
+JOIN establishment.establishment e ON e.urn=f.establishment_urn
+JOIN establishment.organisation_group_member m ON m.organisation_group_id=c.organisation_group_id
+    AND m.establishment_id=e.establishment_id AND m.joined_date IS NOT DISTINCT FROM f.joined_date
+WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current
+  AND f.is_lead_member=false;
+
+INSERT INTO establishment.organisation_group_member_lead_period
+    (organisation_group_member_id,organisation_group_id,is_current)
+SELECT m.organisation_group_member_id,m.organisation_group_id,true
+FROM group_membership_fixture f CROSS JOIN group_membership_context c
+JOIN establishment.establishment e ON e.urn=f.establishment_urn
+JOIN establishment.organisation_group_member m ON m.organisation_group_id=c.organisation_group_id
+    AND m.establishment_id=e.establishment_id AND m.joined_date IS NOT DISTINCT FROM f.joined_date
+WHERE f.is_lead_member AND NOT EXISTS (
+    SELECT 1 FROM establishment.organisation_group_member_lead_period p
+    WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current);
+
 INSERT INTO migration.source_record (source_snapshot_id, source_table, source_key, source_group_id, source_urn)
 SELECT c.source_snapshot_id, 'dbo.EstablishmentGroup/GroupLink', f.source_link_id, f.group_uid, f.establishment_urn
 FROM group_membership_fixture f CROSS JOIN group_membership_context c;

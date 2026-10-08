@@ -27,6 +27,15 @@ BEGIN
              AND m.left_date IS NULL AND m.is_lead_member IS NOT DISTINCT FROM (e.urn=20549)) <> 9 THEN
         RAISE EXCEPTION 'T5 requires exactly nine centres with only Cambridge Road marked as lead';
     END IF;
+    IF (SELECT count(*) FROM establishment.organisation_group_member_lead_period WHERE organisation_group_id=group_id)<>1
+       OR NOT EXISTS (
+           SELECT 1 FROM establishment.organisation_group_member_lead_period p
+           JOIN establishment.organisation_group_member m USING (organisation_group_member_id)
+           JOIN establishment.establishment e USING (establishment_id)
+           WHERE p.organisation_group_id=group_id AND e.urn=20549 AND p.is_current
+             AND p.start_date IS NULL AND p.end_date IS NULL) THEN
+        RAISE EXCEPTION 'T5 requires one current Cambridge Road lead assertion without invented business dates';
+    END IF;
     IF (SELECT count(*) FROM establishment.group_identifier WHERE organisation_group_id=group_id) <> 1
        OR EXISTS (SELECT 1 FROM establishment.establishment_responsibility r
                   JOIN establishment.establishment e USING (establishment_id)

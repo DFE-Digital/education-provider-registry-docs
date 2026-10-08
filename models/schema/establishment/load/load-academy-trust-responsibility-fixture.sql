@@ -584,7 +584,7 @@ BEGIN
     ELSE
         IF NOT EXISTS (
             SELECT 1 FROM migration.migration_run
-            WHERE migration_run_id = run_id AND run_type = 'establishment-rebuild'
+            WHERE migration_run_id = run_id AND run_type IN ('establishment-rebuild','t13-additive')
               AND source_system = 'GIAS BAU' AND status = 'running'
         ) THEN
             RAISE EXCEPTION 'Shared migration run is missing, incompatible or not running: %', run_id;
@@ -626,7 +626,7 @@ SELECT classification.academy_trust_classification_id,
        source_record.source_record_id,
        CASE WHEN fixture.is_current THEN 'MR001' ELSE 'MR005' END,
        'accepted',
-       fixture.consolidation_evidence
+       COALESCE(fixture.consolidation_evidence, fixture.party_mapping_evidence)
 FROM establishment_party_role_fixture AS fixture
 JOIN establishment.organisation_identifier_type AS company_type
   ON company_type.name = 'Companies House number'
@@ -665,7 +665,8 @@ SELECT role.establishment_party_role_id,
             THEN 'Role end date inferred from the source establishment/group closure date.'
        END,
        'accepted',
-       CASE WHEN fixture.establishment_party_role_type='Foundation trust' THEN
+       CASE WHEN fixture.establishment_urn=103630 AND fixture.group_uid='1650' THEN fixture.party_mapping_evidence
+       WHEN fixture.establishment_party_role_type='Foundation trust' THEN
            'Source GroupLink ' || fixture.source_link_id || ': archived=' || fixture.source_archived ||
            '; source group openDate=' || COALESCE(fixture.source_group_open_date::text, 'NULL') ||
            '; role start unknown; group openDate is not role start or incorporation; legal identity provisional.'
@@ -702,7 +703,8 @@ SELECT responsibility.establishment_responsibility_id,
             THEN 'Responsibility end date inferred from the source establishment closure date.'
        END,
        'accepted',
-       CASE WHEN fixture.establishment_party_role_type='Foundation trust' THEN
+       CASE WHEN fixture.establishment_urn=103630 AND fixture.group_uid='1650' THEN fixture.party_mapping_evidence
+       WHEN fixture.establishment_party_role_type='Foundation trust' THEN
            'Source GroupLink ' || fixture.source_link_id || ': archived=' || fixture.source_archived ||
            '; responsibility start from effectiveDate; end unknown; source group openDate=' ||
            COALESCE(fixture.source_group_open_date::text, 'NULL') || '; no name-based consolidation.'

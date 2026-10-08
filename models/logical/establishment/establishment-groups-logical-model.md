@@ -12,7 +12,8 @@ The model contains:
 - dated establishment-party roles held by a legal entity or, for a school sponsor, a person;
 - dated academy-trust classifications for legal entities;
 - dated responsibilities held by a legal entity or person for an establishment;
-- dated membership of federations and children's-centre organisation groups; and
+- dated membership of federations and children's-centre organisation groups;
+- Dated children's-centre lead periods, separate from membership; and
 - the group UIDs and Group IDs that identify roles and organisation groups.
 
 ### Parties, roles and responsibilities
@@ -499,7 +500,7 @@ A person can hold a school-sponsor role and can be recorded as a sponsor or prop
 
 ### Organisation groups and group identifiers
 
-This diagram contains federations and children's-centre groups, their establishment memberships and identifiers issued for role or organisation-group records. `ESTABLISHMENT_PARTY_ROLE` is shown as the endpoint for role identifiers; its attributes are defined in the first diagram.
+This diagram contains federations and children's-centre groups, their establishment memberships, children's-centre lead periods and identifiers issued for role or organisation-group records. `ESTABLISHMENT_PARTY_ROLE` is shown as the endpoint for role identifiers; its attributes are defined in the first diagram.
 
 ```mermaid
 erDiagram
@@ -511,6 +512,7 @@ erDiagram
     ORGANISATION_GROUP }o--o| LOCAL_AUTHORITY : "coordinated by"
     ORGANISATION_GROUP ||--o{ ORGANISATION_GROUP_MEMBER : "has"
     ESTABLISHMENT ||--o{ ORGANISATION_GROUP_MEMBER : "is"
+    ORGANISATION_GROUP_MEMBER ||--o{ ORGANISATION_GROUP_MEMBER_LEAD_PERIOD : "has lead periods"
 
     ESTABLISHMENT_PARTY_ROLE {
         uuid establishment_party_role_id PK
@@ -534,6 +536,13 @@ erDiagram
         date joined_date
         date left_date
         boolean is_lead_member
+    }
+    ORGANISATION_GROUP_MEMBER_LEAD_PERIOD {
+        uuid organisation_group_member_lead_period_id PK
+        uuid organisation_group_member_id FK
+        date start_date
+        date end_date
+        boolean is_current
     }
     GROUP_IDENTIFIER {
         uuid group_identifier_id PK
@@ -614,9 +623,25 @@ Only establishments can be group members in this slice.
 | `establishment_id` | Yes | The member establishment. |
 | `joined_date` | No | First date on which membership applies; null means unknown. |
 | `left_date` | No | First date on which membership no longer applies. |
-| `is_lead_member` | Conditional | Used only for children's-centre groups. True identifies the lead centre; null means the source does not say. Lead-centre history is not represented. |
+| `is_lead_member` | Conditional | Current-state compatibility summary for children's-centre groups, maintained from current lead periods. True identifies the current lead; false is an explicit non-lead state; null means the source does not say. This flag is not the history. It is null for other group types. |
 
 For example, two maintained schools in a federation each have their own establishment record and URN. Their membership rows link both establishments to the same federation and retain the dates on which each membership applied.
+
+#### Organisation group member lead period
+
+`organisation_group_member_lead_period` records one continuous spell during which a member is designated as its group's lead. It belongs to the membership, not directly to the establishment, and does not create a legal entity or establishment responsibility. In this slice, lead designation applies only to children's-centre groups.
+
+| Attribute | Required | Rule |
+| --- | --- | --- |
+| `organisation_group_member_lead_period_id` | Yes | Generated opaque identifier for this spell as lead. |
+| `organisation_group_member_id` | Yes | The membership to which this designation applies. The group is determined by that membership. |
+| `start_date` | No | First day the member was lead; null means unknown. This is independent of the membership joined date. |
+| `end_date` | No | First day the member was no longer lead; null means unknown, not proof of an indefinite designation. |
+| `is_current` | Yes | Explicit current-state assertion. A source snapshot may identify the current lead without supplying either business boundary. |
+
+One membership can have several lead periods. Becoming lead again creates a new period rather than overwriting the earlier one. A handover ends one member's period and starts the next member's period on the same date, without ending either membership. Where both dates are known, the end must be later than the start, periods must not overlap within a group, and designation must fall within the known membership boundaries.
+
+Source observation dates remain separate migration evidence linked through the membership. A BAU `ccLinkType = LEAD` snapshot creates a current lead assertion with unknown start and end dates unless separate evidence supplies those dates. Neither the membership joined date nor the snapshot date becomes a lead start date. A later `STANDARD` observation can retire that assertion but does not establish its business end date. Incomplete periods require review before claiming a historical lead on a particular date.
 
 #### Group identifier
 
@@ -655,7 +680,7 @@ A Group UID is the numeric identifier historically used for a GIAS group record.
 
 `group_identifier_issuer` records which service allocated a group identifier. The current issuers are GIAS for migrated values and Establishment Registry for values allocated after cutover.
 
-Separating issuer from identifier type allows the same Group UID scheme to continue across migration. For example, the T20 academy-trust role retains Group UID `3839` and Group ID `TR01385`, both with GIAS as their issuer.
+Separating issuer from identifier type allows the same Group UID scheme to continue across migration. For example, the T16 academy-trust role retains Group UID `3839` and Group ID `TR01385`, both with GIAS as their issuer.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -740,7 +765,7 @@ An on-date view has three states:
 13. An establishment may have more than one current proprietor. Only independent school types, non-maintained special schools and city technology colleges may have a proprietor. Open other independent schools and other independent special schools must have at least one.
 14. An establishment is in at most one organisation group of each type on a date. Federation members are maintained schools; children's-centre group and collaboration members are children's centres.
 15. An open federation has at least two members.
-16. A children's-centre group has at most one member with `is_lead_member = true`. `is_lead_member` is null for all other group types.
+16. A children's-centre group has at most one current lead period, across all its members. Its fully known lead periods cannot overlap. Each lead period belongs to one membership and lies within that membership's known boundaries. Repeated designations use separate periods. `is_lead_member` summarises the current designation; it is null for all other group types. Unknown lead boundaries do not establish historical coverage and require review, not invented dates.
 17. `local_authority_id` is required for children's-centre group types and absent for federations. Every member of a children's-centre group or collaboration is in the group's local authority; a member in another local authority is reported as a warning, because local-government reorganisation can move a centre.
 18. No stored collection restates a responsibility: an academy trust's academies are not organisation-group memberships.
 19. A relationship falls within the lifetime of its party or group where those dates are known. A conflict is reported; it does not invent a date to satisfy the rule.
@@ -772,12 +797,14 @@ Source tables and fields correspond to target concepts as follows; they do not d
 | Umbrella-trust records | `legal_entity`, `establishment_party_role` | Create a legal entity and an umbrella-trust role. No establishment responsibility follows without relationship evidence. |
 | Proprietor names and proprietor records | `legal_entity` or `person`, then `establishment_responsibility` | Create `proprietor` periods after resolving a body or person. |
 | Federation and children's-centre records | `organisation_group` | Create the appropriate group type and lifecycle. |
-| Federation and children's-centre links | `organisation_group_member` | Create dated memberships and the current lead-centre indication where evidenced. |
+| Federation and children's-centre links | `organisation_group_member`, `organisation_group_member_lead_period` | Create dated memberships. An explicit children's-centre lead code also creates a current lead period with unknown business boundaries unless separately evidenced; retain observation dates in migration evidence. |
 | Group UIDs and Group IDs | `group_identifier` | Keep each value exactly as issued, with issuer GIAS, against the role or organisation group that the source record resolves to. SAT and MAT records of one company put both UIDs on one role, with the MAT's current; a shared Group ID is stored once. Non-standard Group IDs are corrected in GIAS before the production migration. |
 | Source group relationships | Migration lineage only | May support identity resolution but do not create a target group-to-group relationship. |
 
 ## Physical-model boundary
 
-The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
+The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `organisation_group_member_lead_period`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
+
+The physical lead-period table also stores `organisation_group_id` so PostgreSQL can enforce group-wide non-overlap and one-current-lead constraints. A composite foreign key ensures that this value matches the owning membership. Triggers check membership boundaries and update the compatibility flag when periods change. Current status must be changed explicitly; passing a business date does not automatically update it. Fully known ranges use inclusive starts and exclusive ends; incomplete ranges are retained for review, not treated as unbounded dates.
 
 It references the existing establishment, local-authority and person tables by their opaque identifiers. Migration lineage is deliberately outside this schema.

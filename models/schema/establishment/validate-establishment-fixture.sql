@@ -23,6 +23,7 @@ BEGIN
               'legal_entity',
               'organisation_group',
               'organisation_group_member',
+              'organisation_group_member_lead_period',
               'organisation_identifier',
               'organisation_identifier_type',
               'person',

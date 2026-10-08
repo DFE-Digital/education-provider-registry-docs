@@ -11,10 +11,19 @@ CREATE TEMP TABLE proprietor_local_context (
 \copy proprietor_local_context FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
 DO $$
-DECLARE d jsonb; party_id uuid; run_id uuid;
+DECLARE d jsonb; party_id uuid; run_id uuid; is_t13 boolean;
 BEGIN
     SELECT decision INTO STRICT d FROM controlled_proprietor;
     party_id := (d->>'legalEntityId')::uuid;
+    is_t13 := coalesce(d->>'fixture'='T13',false);
+    IF is_t13 AND (party_id<>'27546d94-e327-49fd-aecb-26c8c043a597'::uuid
+        OR d->>'name' IS DISTINCT FROM 'The King''s School'
+        OR d->>'separatePartyCompanyNumber' IS DISTINCT FROM '07706900'
+        OR d->>'snapshotDate' IS DISTINCT FROM '2026-06-16'
+        OR d->'schools' IS DISTINCT FROM '[{"urn":115780,"name":"The King''s School, Gloucester","propsName":"The King''s School"}]'::jsonb
+        OR d->>'reviewEvidence' NOT LIKE 'T13 accepted separate-party assumption:%') THEN
+        RAISE EXCEPTION 'T13 separate-party decision differs from the accepted bounded fixture';
+    END IF;
     run_id := NULLIF(current_setting('epr.migration_run_id',true),'')::uuid;
     IF run_id IS NULL OR NOT EXISTS (SELECT 1 FROM migration.migration_run
         WHERE migration_run_id=run_id AND status IN ('running','completed')) THEN
@@ -30,13 +39,19 @@ BEGIN
         LEFT JOIN proprietor_local_context l USING (urn)
         LEFT JOIN establishment.establishment e USING (urn)
         WHERE l.urn IS NULL OR l.establishment_name IS DISTINCT FROM s.name
-          OR l.establishment_type_code IS DISTINCT FROM '10' OR l.status_code IS DISTINCT FROM '1'
-          OR e.establishment_type_id IS DISTINCT FROM 15 OR e.name IS DISTINCT FROM s.name
+          OR l.establishment_type_code IS DISTINCT FROM CASE WHEN is_t13 THEN '11' ELSE '10' END OR l.status_code IS DISTINCT FROM '1'
+          OR e.establishment_type_id IS DISTINCT FROM CASE WHEN is_t13 THEN 17 ELSE 15 END OR e.name IS DISTINCT FROM s.name
           OR NULLIF(btrim(s."propsName"),'') IS NULL
     ) THEN RAISE EXCEPTION 'Controlled proprietor endpoints differ from the accepted selection'; END IF;
     IF EXISTS (SELECT 1 FROM establishment.legal_entity
         WHERE (legal_entity_id=party_id AND name IS DISTINCT FROM d->>'name')
-           OR (legal_entity_id<>party_id AND lower(btrim(name))=lower(btrim(d->>'name')))) THEN
+           OR (legal_entity_id<>party_id AND lower(btrim(name))=lower(btrim(d->>'name'))
+               AND NOT (is_t13 AND name='THE KING''S SCHOOL' AND EXISTS (
+                   SELECT 1 FROM establishment.organisation_identifier i
+                   JOIN establishment.organisation_identifier_type t USING (organisation_identifier_type_id)
+                   WHERE i.legal_entity_id=establishment.legal_entity.legal_entity_id
+                     AND t.name='Companies House number' AND i.value='07706900' AND i.is_current
+               )))) THEN
         RAISE EXCEPTION 'Controlled proprietor identity collision; review required';
     END IF;
 END $$;
@@ -114,7 +129,7 @@ INSERT INTO migration.identity_resolution
      confidence,decision_status,decided_at,decided_by,rationale)
 SELECT sr.source_record_id,'legal_entity',(l.decision->>'legalEntityId')::uuid,
        'controlled-reviewed-proprietor','accepted-fixture-assumption','accepted',now(),
-       'T9 accepted fixture decision',l.decision->>'reviewEvidence'
+       (l.decision->>'fixture') || ' accepted fixture decision',l.decision->>'reviewEvidence'
 FROM proprietor_lineage l
 JOIN migration.source_record sr ON sr.source_urn=l.urn
 JOIN migration.source_snapshot ss USING (source_snapshot_id)
@@ -136,7 +151,7 @@ SELECT l.establishment_responsibility_id,sr.source_record_id,
          'Local context only: proprietorType_code=' || coalesce(l.proprietor_type_code,'NULL') ||
          '; proprietor_type=' || coalesce(l.proprietor_type,'NULL') ||
          '; additional_proprietor_rows=' || l.additional_proprietor_rows ||
-         '. Obfuscated local proprietor identity is not resolved to Acorn; additional rows not imported.'
+         '. Obfuscated local proprietor identity is not resolved to the controlled party; additional rows not imported.'
        END
 FROM proprietor_lineage l
 JOIN migration.source_record sr ON sr.source_urn=l.urn

@@ -68,13 +68,14 @@ The graph shows the lead and two standard members for readability. Six further s
 | `establishment` | Nine separate children's-centre records, retaining their five-digit URNs and independently recorded establishment open dates. |
 | `organisation_group` | One children's-centre group named Southend Children's Centres, `open_date = 2016-10-01`, unknown `close_date`, and `local_authority_id` pointing to Southend-on-Sea. |
 | `organisation_group_member` | Nine memberships, each with `joined_date = 2016-10-01` and unknown `left_date`. Cambridge Road has `is_lead_member = true`; the other eight have false. |
+| `organisation_group_member_lead_period` | One current lead assertion belonging to Cambridge Road's membership. Its `start_date` and `end_date` are unknown: neither the membership effective date nor a source observation date establishes when lead designation started. |
 | `group_identifier` | One GIAS Group UID value `86052`, attached to the organisation group. No Group ID is invented. |
 | `legal_entity`, `organisation_identifier`, `establishment_party_role`, `academy_trust_classification`, `establishment_responsibility` | No records created merely to represent this group, its lead designation or its memberships. |
 | Migration evidence | Retain the nine source-link IDs, active-link state and `ccLinkType` values, with each membership linked to its own source record beneath the shared rebuild run. |
 
-The group is not a legal entity. The lead designation is an attribute of Cambridge Road's membership, not a separate legal entity, party role or operating responsibility. The group's local-authority association does not by itself create an establishment responsibility held by that authority.
+The group is not a legal entity. The lead designation is a separate period belonging to Cambridge Road's membership, not a separate legal entity, party role or operating responsibility. The group's local-authority association does not by itself create an establishment responsibility held by that authority.
 
-The active links establish the observed current membership. Unknown leaving dates do not prove indefinite membership. Lead-centre history is outside this slice; future updates change the current lead designation without fabricating an earlier lead period.
+The active links establish the observed current membership. Unknown leaving dates do not prove indefinite membership. The model can retain successive lead periods, but this source extract supplies only one current assertion with unknown boundaries. Future changes retain earlier assertions without fabricating historical business dates.
 
 All nine establishments are required to exercise this whole-group case. Importing only Cambridge Road would demonstrate a lead flag, but would not validate the full membership set or establish that it is the only lead among the group's members.
 
@@ -90,6 +91,7 @@ The reviewed group and membership fields have no placeholder dates, duplicate me
 - All nine members belong to that local authority and match the selected source membership set exactly.
 - Each joined date comes from its own GroupLink effective date, with no invented leaving date.
 - Exactly Cambridge Road, URN 20549, has `is_lead_member = true`; the other eight explicitly have false.
+- Cambridge Road has one current lead period with unknown start and end dates; no dated history is inferred from membership or snapshot dates.
 - Missing or unrecognised lead codes stop for assessment rather than defaulting to a standard member.
 - No Companies House number, organisation UKPRN, Group ID or group legal entity is invented.
 - Membership and lead designation create no establishment responsibility.
