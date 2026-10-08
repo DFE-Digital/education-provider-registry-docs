@@ -22,9 +22,19 @@ Network controls apply to the DB server instance endpoint, not to individual dat
 
 The separate read DB server instance enables the required isolation; subnet and network rules enforce it. Read consumers must reach only the read DB server instance. Transactional access is restricted to approved domain services, ETL, administration and the replication connection. Database roles and grants still restrict access within each DB server instance.
 
+These are target security requirements. The network controls needed to enforce them are not yet implemented.
+
+### Infrastructure requirements and practices
+
+* The current Terraform approach provisions DB server instances and databases; schema creation is expected to remain application-owned, as in the existing services. Existing PostgreSQL applications commonly use the `public` schema. The named `establishment` and `governance` schemas in this design remain the proposed target and must be created and maintained through application database migrations.
+* Each AKS cluster currently has a single `postgres-subnet`. A separate subnet for the read DB server instance can be tested, but has not yet been established as a supported deployment pattern.
+* AKS network security is not yet configured. A spike is planned, and the eventual security solution will follow its outcome. Implementation is expected to be at least a few months away; this is an indicative dependency, not a committed delivery date.
+
+The two-DB-server-instance topology remains the target. Its network-isolation implementation depends on the separate-subnet test and AKS network-security work. Provisioning the DB server instances alone does not demonstrate that the required isolation has been achieved.
+
 ### Recommended network layout
 
-Use a separate subnet and network security group (NSG) for each DB server instance. The proposed diagram uses private access through VNet integration, with both database subnets delegated to `Microsoft.DBforPostgreSQL/flexibleServers`. There is no public database endpoint in this layout. Configure private DNS and explicit NSG rules that allow the approved clients and deny unapproved traffic between security zones, including overriding Azure's default allowance for traffic within the VNet. Separate subnets alone do not isolate the DB server instances.
+The proposed target is a separate subnet and network security group (NSG) for each DB server instance, subject to the infrastructure team's subnet test and network-security spike. The diagram uses private access through VNet integration, with both database subnets delegated to `Microsoft.DBforPostgreSQL/flexibleServers`. There is no public database endpoint in this proposed layout. Private DNS and explicit NSG rules must allow the approved clients and deny unapproved traffic between security zones, including overriding Azure's default allowance for traffic within the VNet. Separate subnets alone do not isolate the DB server instances. The final controls and AKS-to-database access rules will be agreed from the spike's findings.
 
 
 
@@ -40,7 +50,7 @@ Read DB server instance:            s189p01-pg-epr-read
 
 ### C4 deployment diagram
 
-The diagram represents one environment and the proposed VNet-integration layout. Subnet names are descriptive placeholders; NSGs must enforce the two security zones.
+The diagram represents one environment and the proposed VNet-integration layout, not the current deployment. Subnet names are descriptive placeholders. The separate read subnet is subject to testing, and the security controls are subject to the AKS network-security spike.
 
 ```mermaid
 %%{init: {"wrap": true, "c4": {"width": 320}}}%%
@@ -50,12 +60,12 @@ title EPR database deployment - one environment
 Deployment_Node(tenant, "DfE Platform Identity", "Microsoft Entra tenant") {
     Deployment_Node(subscription, "S189 environment subscription", "Azure subscription") {
         Deployment_Node(vnet, "Environment VNet", "Azure virtual network") {
-            Deployment_Node(read_subnet, "Read database subnet", "Delegated PostgreSQL subnet", "Read security zone; dedicated NSG") {
+            Deployment_Node(read_subnet, "Read database subnet (proposed)", "Delegated PostgreSQL subnet", "Separate-subnet test pending; dedicated NSG proposed") {
                 Deployment_Node(read_server, "[subscription-identifier][env-identifier]-pg-epr-read", "DB server instance", "Azure Database for PostgreSQL Flexible Server") {
                     ContainerDb(read_db, "read_projection", "PostgreSQL database", "Schemas: establishment and governance")
                 }
             }
-            Deployment_Node(transactional_subnet, "Transactional database subnet", "Delegated PostgreSQL subnet", "Transactional security zone; dedicated NSG") {
+            Deployment_Node(transactional_subnet, "Transactional database subnet", "Delegated PostgreSQL subnet", "Transactional security zone; NSG controls pending spike") {
                 Deployment_Node(transactional, "[subscription-identifier][env-identifier]-pg-epr-transactional", "DB server instance", "Azure Database for PostgreSQL Flexible Server") {
                     ContainerDb(establishment_db, "establishment", "PostgreSQL database", "Schema: establishment")
                     ContainerDb(governance_db, "governance", "PostgreSQL database", "Schema: governance")
@@ -80,8 +90,8 @@ UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 
 
 
-* DevOps owns the DB server instance, database and schema infrastructure.
-* Development teams own the [Establishment](../models/schema/establishment) and [Governance](../models/schema/governance) schema contents and logical replication configuration.
+* DevOps owns the DB server instance and database infrastructure, together with network provisioning and controls agreed through the infrastructure work.
+* Development teams create and maintain the [Establishment](../models/schema/establishment) and [Governance](../models/schema/governance) schemas and their contents through application database migrations. They also own logical replication configuration and the required schemas and tables in the Read Projection database.
 ## Git repo structure
 
 Each component repository contains its database Terraform in a top-level `terraform` folder. 

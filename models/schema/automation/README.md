@@ -92,6 +92,17 @@ assumption and repeat imports. It preserves the existing database and leaves
 the default fixture selection and checked-in seeds unchanged. The database
 must already contain the Establishment reference data and migration schema.
 
+To add T12, New Fosseway School and its selected foundation-trust support link:
+
+```powershell
+.\models\schema\automation\migrate-t12-from-local-bau.ps1
+```
+
+This also uses `reader` and `EPR_BAU_SQL_PASSWORD`. It validates provisional
+identity, unknown dates and identifiers, stable reimport, and rejection of an
+unreviewed same-name identity match. It preserves other establishments and
+leaves the default fixture selection and checked-in seeds unchanged.
+
 Import the module, create the connection objects once, then call any step:
 
 ```powershell

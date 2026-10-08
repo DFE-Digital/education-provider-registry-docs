@@ -115,6 +115,7 @@ SELECT
     s.type_name AS source_establishment_type,
     CASE
         WHEN s.type_name = 'Community school' THEN 1
+        WHEN s.type_name = 'Foundation special school' THEN 3
         WHEN s.type_name IN ('Academy sponsor led', 'Academy converter') THEN 4
         WHEN s.type_name IN ('Academy special sponsor led', 'Academy special converter') THEN 5
         WHEN s.type_name IN ('Academy alternative provision sponsor led', 'Academy alternative provision converter') THEN 6
