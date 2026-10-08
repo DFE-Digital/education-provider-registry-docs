@@ -80,6 +80,18 @@ not inferred. The default explicit fixture manifest remains unchanged.
 
 ## Running one step on its own
 
+To add the bounded T11R Oasis case to an existing local Establishment database:
+
+```powershell
+.\models\schema\automation\migrate-t11r-from-local-bau.ps1
+```
+
+This uses the SQL Server `reader` login and `EPR_BAU_SQL_PASSWORD`, adds URN
+134311 and its two selected group links, and checks the accepted shared-entity
+assumption and repeat imports. It preserves the existing database and leaves
+the default fixture selection and checked-in seeds unchanged. The database
+must already contain the Establishment reference data and migration schema.
+
 Import the module, create the connection objects once, then call any step:
 
 ```powershell

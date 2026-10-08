@@ -13,6 +13,37 @@ DECLARE @URN numeric(19, 0) = $(URN);
 DECLARE @GROUP_ID numeric(19, 0) = $(GROUP_ID);
 DECLARE @INCLUDE_ARCHIVED bit = $(INCLUDE_ARCHIVED);
 
+-- T11R is an accepted test-case assumption, not automatic name matching.
+-- Fail closed if the inspected source assertions change.
+IF @URN=134311 AND @GROUP_ID IN (4075,4076)
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM dbo.EstablishmentGroup s
+        JOIN dbo.EstablishmentGroup t ON t.id=4076
+        JOIN dbo.GroupLink sl ON sl.group_id=s.id AND sl.urn=@URN
+        JOIN dbo.GroupLink tl ON tl.group_id=t.id AND tl.urn=@URN
+        JOIN dbo.Establishment e ON e.URN=@URN
+        WHERE s.id=4075 AND s.name='Oasis Community Learning' AND s.type_code='05'
+          AND s.groupId='SP00392' AND s.companiesHouseNumber IS NULL AND s.UKPRN IS NULL
+          AND CONVERT(date,s.openDate)='1900-01-01' AND s.closedDate IS NULL
+          AND t.name='OASIS COMMUNITY LEARNING' AND t.type_code='06'
+          AND t.groupId='TR01553' AND t.companiesHouseNumber='05398529' AND t.UKPRN=10058190
+          AND t.openDate='2005-03-18' AND t.closedDate IS NULL
+          AND sl.id=4024 AND tl.id=8088 AND sl.archived=0 AND tl.archived=0
+          AND sl.effectiveDate='2007-09-01' AND tl.effectiveDate=sl.effectiveDate
+          AND e.EstablishmentName='Oasis Academy Enfield' AND e.type_code='28'
+          AND e.status_code='1' AND e.OpenDate='2007-09-01' AND e.CloseDate IS NULL
+          AND e.UKPRN=10021087 AND (SELECT count(*) FROM dbo.GroupLink WHERE urn=@URN)=2
+    ) OR EXISTS (
+        SELECT urn FROM dbo.GroupLink WHERE group_id=4075 AND (archived=0 OR archived IS NULL)
+        EXCEPT SELECT urn FROM dbo.GroupLink WHERE group_id=4076 AND (archived=0 OR archived IS NULL)
+    ) OR EXISTS (
+        SELECT urn FROM dbo.GroupLink WHERE group_id=4076 AND (archived=0 OR archived IS NULL)
+        EXCEPT SELECT urn FROM dbo.GroupLink WHERE group_id=4075 AND (archived=0 OR archived IS NULL)
+    ) OR (SELECT count(DISTINCT urn) FROM dbo.GroupLink WHERE group_id=4075 AND (archived=0 OR archived IS NULL))<>47
+        THROW 50001, 'T11R Oasis source evidence changed; review the accepted identity assumption before loading.', 1;
+END;
+
 -- Reviewed person mapping for T7; missing company identifiers alone are not
 -- a rule for treating a sponsor as a person.
 IF @URN=135936 AND @GROUP_ID IN (2613,3147) AND NOT EXISTS (
@@ -142,7 +173,9 @@ SELECT
     CONVERT(varchar(10), eg.openDate, 23) AS source_group_open_date,
     CONVERT(integer, gl.archived) AS source_archived,
     CASE WHEN @URN=135936 AND eg.id=2613 THEN 'person' ELSE 'legal_entity' END AS party_kind,
-    CASE WHEN @URN=135936 AND eg.id=2613 THEN
+    CASE WHEN @URN=134311 AND eg.id IN (4075,4076) THEN
+        'T11R accepted test-case identity assumption: sponsor UID 4075 / SP00392 and MAT UID 4076 / TR01553 represent one Oasis Community Learning legal entity. Company 05398529 and organisation UKPRN 10058190 are supplied only by MAT 4076; sponsor source company and UKPRN are NULL. Names and the same 47 current academy URNs support the assumption but BAU does not explicitly assert shared identity. Retain two roles and responsibilities. Sponsor source openDate 1900-01-01 is a placeholder, not a business date. Actual migration requires a manual identity decision; this mapping is scoped to URN 134311.'
+    WHEN @URN=135936 AND eg.id=2613 THEN
         'T7 reviewed person sponsor: Charles Dunstone. Fulwood Academy identifies Sir Charles as its sponsor and states personal funding: https://www.fulwoodacademy.co.uk/page/?pid=53&title=Welcome+from+the+Sponsor. GroupLink 3648: archived=0; effectiveDate=2009-09-01. Source group openDate=1900-01-01 rejected as placeholder; role start unknown. No Companies House number applies to the person; do not merge with trust UID 3147.'
     END AS party_mapping_evidence
 FROM dbo.EstablishmentGroup AS eg
@@ -160,7 +193,8 @@ OUTER APPLY (
     WHERE ((eg.type_code = '05'
             AND NULLIF(LTRIM(RTRIM(eg.companiesHouseNumber)), '') IS NOT NULL
             AND LTRIM(RTRIM(eg.companiesHouseNumber)) = LTRIM(RTRIM(candidate.companiesHouseNumber)))
-           OR (@T3_TRANSITION IS NOT NULL AND eg.id = 2055 AND candidate.id = 20364))
+           OR (@T3_TRANSITION IS NOT NULL AND eg.id = 2055 AND candidate.id = 20364)
+           OR (@URN=134311 AND eg.id=4075 AND candidate.id=4076))
       AND candidate.type_code IN ('06', '10', '11')
       AND NULLIF(LTRIM(RTRIM(candidate.companiesHouseNumber)), '') IS NOT NULL
       -- A supplied company number must never be replaced by a different

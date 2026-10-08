@@ -6,7 +6,7 @@ T10 tests that Outwood Grange Academies Trust is recorded as one legal entity ru
 
 The selected slice contains two establishments, one legal entity, two party roles and three establishment responsibilities. The Academy trust and School sponsor roles have separate GIAS group identifiers. Proprietorship is a responsibility directly held by the same legal entity; it does not create a third party-role type.
 
-Only one academy is selected to exercise operator and sponsor coexistence. The wider Outwood portfolio is outside this slice. This is not a migration of all establishments mentioned in the [Outwood relationship case study](../../../../../docs/transformation/data/modelling/groups/outwood-grange-academies-trust-case-study.md).
+Only one academy is selected to exercise operator and sponsor coexistence. The wider Outwood portfolio is outside this slice.
 
 ## Establishments
 
@@ -22,7 +22,7 @@ Only one academy is selected to exercise operator and sponsor coexistence. The w
 | Accepted extract local authority | Redcar and Cleveland (807) | Wakefield (384) |
 | Exact extract `PropsName` | Outwood Grange Academies Trust | Empty |
 
-These establishment and proprietor assertions come from the checked-in [16 June 2026 establishment extract](../../../../../docs/data/extract-data/establishment-fields/edubasealldata20260616.csv). The academy's identity and lifecycle agree with the selected local source record; the independent school's do not, as described below.
+These establishment and proprietor assertions come from the 16 June 2026 establishment extract, `edubasealldata20260616.csv`. The selected values are reproduced above. The academy's identity and lifecycle agree with the selected local source record; the independent school's do not, as described below.
 
 The school's UKPRNs identify the establishments. Neither is the trust's organisation UKPRN.
 
@@ -45,13 +45,13 @@ The school's UKPRNs identify the establishments. Neither is the trust's organisa
 | Link archived / version | 0 / 0 | 0 / 0 |
 | Link `linkType` / `ccLinkType` | Both null | Both null |
 
-Both selected links are active and supply non-placeholder responsibility starts. The local active link sets for UIDs 4118 and 4119 are identical and non-empty, with 21 active links each. The full local sets contain 25 sponsor rows and 24 MAT rows, each covering 24 distinct URNs. These counts are local observations, not the 40-academy June-extract portfolio described in the wider case study, and they do not imply that every unselected link is clean.
+Both selected links are active and supply non-placeholder responsibility starts. The local active link sets for UIDs 4118 and 4119 are identical and non-empty, with 21 active links each. The full local sets contain 25 sponsor rows and 24 MAT rows, each covering 24 distinct URNs. These counts are local observations, not the 40-academy June-extract portfolio, and they do not imply that every unselected link is clean.
 
 The reviewed sponsor-to-trust identity resolution uses the matching names and shared active link set alongside the identified MAT party. The sponsor does not independently supply a company number or UKPRN. Preserve that identity decision rather than treating name equality alone as a universal matching rule.
 
 ## Controlled proprietor and establishment evidence
 
-The accepted proprietor assertion resolves the independent school's exact extract `PropsName` to the same Outwood legal entity. This follows the matrix's accepted proprietor-identity assumption, not a direct identity match from the obfuscated local proprietor fields.
+The accepted proprietor assertion resolves the independent school's exact extract `PropsName` to the same Outwood legal entity. This is an explicitly accepted proprietor-identity assumption for this controlled fixture, not a direct identity match from the obfuscated local proprietor fields.
 
 The local copy of URN 148341 differs from the accepted extract:
 
@@ -107,7 +107,7 @@ These expectations apply once the controlled establishment and proprietor assert
 | `person`, `organisation_group`, `organisation_group_member` | No records created to represent these three responsibilities. |
 | Migration evidence | Retain GroupLinks 5716 and 5254, the shared-party identity decisions, exact proprietor assertion and extract observation date 2026-06-16. Retain the local lifecycle/proprietor context and controlled establishment-field decisions separately beneath the import run. |
 
-The [groups logical model](../../../logical/establishment/establishment-groups-logical-model.md) defines proprietor as a responsibility without a corresponding party role. The [migration rule catalogue](../../migration/migration-rule-catalogue.md) distinguishes current academy-trust assumptions from deferred Companies House enrichment.
+Proprietor is a responsibility without a corresponding party role. The academy-trust legal form and incorporation date above are migration assumptions; authoritative Companies House verification and enrichment remain deferred.
 
 ## Dates and evidence limits
 

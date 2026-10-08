@@ -736,8 +736,14 @@ INSERT INTO migration.identity_resolution (
 SELECT source_record.source_record_id, fixture.party_kind, COALESCE(fixture.resolved_legal_entity_id, fixture.resolved_person_id),
        CASE WHEN fixture.consolidation_evidence IS NOT NULL
             THEN 'shared-identifiers-and-explicit-sat-mat-transition'
+            WHEN fixture.establishment_urn=134311 AND fixture.group_uid IN ('4075','4076')
+                 AND fixture.party_mapping_evidence LIKE 'T11R accepted test-case identity assumption:%'
+            THEN 'accepted-test-case-identity-assumption'
             ELSE fixture.identity_resolution_method END,
-       CASE WHEN fixture.party_kind='person' THEN 'reviewed'
+       CASE WHEN fixture.establishment_urn=134311 AND fixture.group_uid IN ('4075','4076')
+                 AND fixture.party_mapping_evidence LIKE 'T11R accepted test-case identity assumption:%'
+            THEN 'assumed'
+            WHEN fixture.party_kind='person' THEN 'reviewed'
             WHEN fixture.companies_house_number IS NOT NULL OR fixture.identity_resolution_method = 'ukprn'
             THEN 'high' ELSE 'provisional' END,
        'accepted',
