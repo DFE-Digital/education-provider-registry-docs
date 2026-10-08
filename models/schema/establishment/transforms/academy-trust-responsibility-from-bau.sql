@@ -78,6 +78,23 @@ IF @URN = 132141 AND @GROUP_ID = 1337 AND NOT EXISTS (
 )
     THROW 50001, 'T6 foundation-support evidence is missing or changed; review before loading.', 1;
 
+-- T12 imports only the selected foundation-support link. Registered identity
+-- is provisional; the similar-name comparison records are not merge inputs.
+IF @URN=109393 AND @GROUP_ID=1193 AND NOT EXISTS (
+    SELECT 1 FROM dbo.EstablishmentGroup eg
+    JOIN dbo.GroupLink gl ON gl.group_id=eg.id
+    JOIN dbo.Establishment e ON e.URN=gl.urn
+    WHERE eg.id=1193 AND eg.name='Trust in Learning' AND eg.type_code='02'
+      AND eg.companiesHouseNumber IS NULL AND eg.UKPRN IS NULL AND eg.groupId IS NULL
+      AND CONVERT(date,eg.openDate)='2008-09-01' AND eg.closedDate IS NULL
+      AND eg.localAuthority_code='999' AND gl.id=595 AND gl.urn=109393
+      AND gl.archived=0 AND CONVERT(date,gl.effectiveDate)='2010-09-01'
+      AND e.EstablishmentName='New Fosseway School' AND e.type_code='12' AND e.status_code='1'
+      AND e.UKPRN=10016445 AND e.OpenDate IS NULL AND e.CloseDate IS NULL
+      AND (SELECT count(*) FROM dbo.GroupLink WHERE urn=109393)=1
+)
+    THROW 50001, 'T12 foundation-trust source assertions changed; identity review required before loading.', 1;
+
 -- T3 is a reviewed identity consolidation, not a change of operator. Require
 -- both identity and explicit transition evidence before projecting either row.
 DECLARE @T3_TRANSITION date;
@@ -173,7 +190,9 @@ SELECT
     CONVERT(varchar(10), eg.openDate, 23) AS source_group_open_date,
     CONVERT(integer, gl.archived) AS source_archived,
     CASE WHEN @URN=135936 AND eg.id=2613 THEN 'person' ELSE 'legal_entity' END AS party_kind,
-    CASE WHEN @URN=134311 AND eg.id IN (4075,4076) THEN
+    CASE WHEN @URN=109393 AND eg.id=1193 THEN
+        'T12 bounded provisional foundation-trust allocation: Trust in Learning, UID 1193, supports New Fosseway School, URN 109393, through GroupLink 595 from 2010-09-01. BAU supplies no company number, organisation UKPRN or Group ID for UID 1193. Do not merge with similar-name sponsor UID 5121 or MAT UID 5122, AMPLIFY EDUCATION, or copy company 08089704 / UKPRN 10059816. Actual registered identity requires a manual migration decision. Source group openDate 2008-09-01 is not incorporation or role start; school opening date is unknown.'
+    WHEN @URN=134311 AND eg.id IN (4075,4076) THEN
         'T11R accepted test-case identity assumption: sponsor UID 4075 / SP00392 and MAT UID 4076 / TR01553 represent one Oasis Community Learning legal entity. Company 05398529 and organisation UKPRN 10058190 are supplied only by MAT 4076; sponsor source company and UKPRN are NULL. Names and the same 47 current academy URNs support the assumption but BAU does not explicitly assert shared identity. Retain two roles and responsibilities. Sponsor source openDate 1900-01-01 is a placeholder, not a business date. Actual migration requires a manual identity decision; this mapping is scoped to URN 134311.'
     WHEN @URN=135936 AND eg.id=2613 THEN
         'T7 reviewed person sponsor: Charles Dunstone. Fulwood Academy identifies Sir Charles as its sponsor and states personal funding: https://www.fulwoodacademy.co.uk/page/?pid=53&title=Welcome+from+the+Sponsor. GroupLink 3648: archived=0; effectiveDate=2009-09-01. Source group openDate=1900-01-01 rejected as placeholder; role start unknown. No Companies House number applies to the person; do not merge with trust UID 3147.'
