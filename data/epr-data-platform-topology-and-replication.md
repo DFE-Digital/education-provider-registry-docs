@@ -40,7 +40,7 @@ Read DB server instance:            s189p01-pg-epr-read
 
 ### C4 deployment diagram
 
-The diagram represents one environment and the proposed VNet-integration layout. Subnet names are descriptive placeholders; NSGs must enforce the two security zones. S158 and S189 share the Microsoft Entra tenant **DfE Platform Identity**, with domain `platform.education.gov.uk` (confirmed by the technical architect on 8 October 2026).
+The diagram represents one environment and the proposed VNet-integration layout. Subnet names are descriptive placeholders; NSGs must enforce the two security zones.
 
 ```mermaid
 %%{init: {"wrap": true, "c4": {"width": 320}}}%%
