@@ -9,7 +9,7 @@ T9 covers one accepted proprietor identity holding current responsibilities for 
 This is the smallest slice that tests reuse of a proprietor legal entity across schools. It does not migrate Acorn's whole portfolio.
 
 
-The proprietor identity is accepted for this controlled fixture under the matrix's proprietor-identity assumption. Repeated names alone must not become an automatic identity-resolution rule for wider migration.
+The proprietor identity is explicitly accepted for this controlled fixture: both selected proprietor assertions resolve to one shared legal entity. Repeated names alone must not become an automatic identity-resolution rule for wider migration.
 
 ## Establishment evidence
 
@@ -27,7 +27,7 @@ The proprietor identity is accepted for this controlled fixture under the matrix
 | Local `IndependentSchools.proprietorType_code` | 01 — Individual Proprietor | 01 — Individual Proprietor |
 | Additional `EstablishmentProprietors` rows | 1 | 1 |
 
-The establishment fields above were checked in the local source database. The exact `PropsName` assertions come from the checked-in [16 June 2026 establishment extract](../../../../../docs/data/extract-data/establishment-fields/edubasealldata20260616.csv), not from a local `PropsName` column. The [groups recommendation](../../../../../docs/transformation/data/modelling/groups/establishment-groups-logical-model-recommendation.md) identifies these same schools as examples of Acorn's multiple proprietor responsibilities.
+The establishment fields above were checked in the local source database. The exact `PropsName` assertions come from the 16 June 2026 establishment extract, `edubasealldata20260616.csv`, not from a local `PropsName` column. The selected assertions are reproduced above and exercise Acorn's multiple proprietor responsibilities.
 
 ## Controlled proprietor evidence
 
@@ -46,7 +46,7 @@ The controlled fixture supplies these accepted assertions separately from the un
 | Legal form, charity status and incorporation/dissolution dates | Unverified; no values inferred from the company-like name |
 | Evidence observation | 2026-06-16 for the accepted extract assertions; import date recorded separately |
 
-This is a documented fixture overlay, not a claim that the local source supplies the accepted proprietor party. Preserve the local source classification and the controlled identity decision separately in migration evidence. The matrix does not classify the accepted proprietor identity as a DQ case; it requires a controlled fixture because of local obfuscation.
+This is a documented fixture overlay, not a claim that the local source supplies the accepted proprietor party. Preserve the local source classification and the controlled identity decision separately in migration evidence. The accepted proprietor identity is not treated as a DQ case; a controlled fixture is required because of local obfuscation.
 
 No proprietor contact names, addresses, telephone numbers or email addresses are required for this case.
 
@@ -80,7 +80,7 @@ The school UKPRNs belong to the establishments, not to Acorn. This case creates 
 | `person`, `academy_trust_classification`, `organisation_group`, `organisation_group_member` | No records created by the selected proprietor assertions. |
 | Migration evidence | Retain each extract URN/name assertion, extract observation date, source provenance and accepted shared-party decision. Clearly distinguish controlled assertions from the local obfuscated proprietor records and retain the import-run context. |
 
-The relationship follows the current [groups logical model](../../../logical/establishment/establishment-groups-logical-model.md). Proprietorship is recorded directly as a responsibility, not as a group membership or a new proprietor-role type.
+Proprietorship is recorded directly as a responsibility, not as a group membership or a new proprietor-role type.
 
 ## Dates and current state
 

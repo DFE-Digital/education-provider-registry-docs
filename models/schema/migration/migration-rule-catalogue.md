@@ -29,3 +29,16 @@
 - Company incorporation does not establish when a proprietor responsibility began. The match does not establish ownership of a school's business, assets, land or buildings, or establish charity status by itself.
 
 **T9 example:** [ACORN CARE AND EDUCATION LIMITED, company 05019430](https://find-and-update.company-information.service.gov.uk/company/05019430) is the candidate register record identified during review. It supplies a private limited company classification and incorporation date of 19 January 2004. These details have not been applied to T9: the current migration deliberately leaves the registered company identifier, legal form and incorporation date absent until the enrichment and identity-verification step is supported and accepted.
+
+### MR014 - Manual identity review for sponsors and trusts with similar names
+
+**Recommendation; not implemented or formally agreed for production migration.** Where a sponsor and an academy trust have similar names, triage the pair for manual identity review to establish whether the source records represent one entity or separate entities. Name similarity identifies candidates for review; it must not trigger an automatic merge.
+
+- Compare the source Group UIDs, Group IDs, names, Companies House numbers, UKPRNs, available organisation identifiers and establishment link sets. Shared academy links support investigation but do not prove shared legal identity. Missing identifiers are not evidence of either shared or separate identity.
+- A reviewer must record one of three outcomes: same entity, separate entities, or unresolved. Record the source records, evidence, rationale, reviewer and decision date. Use authoritative register evidence where available and investigate conflicting identifiers rather than overwriting them.
+- Where the decision is same entity, map both source records to one target party while preserving separate Academy trust and School sponsor roles, source group identifiers and establishment responsibilities. Retain the provenance of identifiers supplied by only one source record.
+- Where the decision is separate entities, retain separate target parties with independently owned identifiers, roles and responsibilities.
+- Where the outcome is unresolved, hold the identity-dependent migration slice pending a decision. Do not default to either merging or creating separate parties.
+- Apply accepted decisions through an explicit, repeatable identity mapping so that subsequent runs reuse the same target identity. A test-case assumption does not constitute approval for production migration.
+
+**T11R example:** Sponsor UID 4075 (`Oasis Community Learning`, SP00392) and MAT UID 4076 (`OASIS COMMUNITY LEARNING`, TR01553) have matching names apart from case and the same 47 current linked establishments. Only the MAT supplies company number `05398529` and UKPRN `10058190`; the inspected BAU records contain no explicit shared-identity link. For the test case, they are assumed to represent one legal entity with two roles. Actual migration requires a recorded manual identity decision.
