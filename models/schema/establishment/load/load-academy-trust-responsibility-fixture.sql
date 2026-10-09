@@ -150,6 +150,37 @@ BEGIN
             IF resolved_id IS NOT NULL THEN method := 'existing-source-group-uid'; END IF;
         END IF;
 
+        -- T22's accepted historical pair can share a provisional entity without
+        -- borrowing the separate current SAT's company number or UKPRN.
+        IF fixture.establishment_urn=142869 AND fixture.group_uid IN ('16279','17115')
+           AND fixture.consolidation_evidence LIKE 'T22 accepted two-entity assertion:%' THEN
+            IF fixture.companies_house_number IS NOT NULL OR fixture.ukprn IS NOT NULL
+               OR fixture.legal_entity_name<>'THE NORTHAMPTON FREE SCHOOL TRUST'
+               OR fixture.legal_entity_incorporation_date IS NOT NULL THEN
+                RAISE EXCEPTION 'T22 historical party must retain unknown registered identifiers and incorporation';
+            END IF;
+            SELECT role.legal_entity_id INTO uid_owner
+            FROM establishment.group_identifier i
+            JOIN establishment.group_identifier_type t USING (group_identifier_type_id)
+            JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer_id)
+            JOIN establishment.establishment_party_role role USING (establishment_party_role_id)
+            WHERE t.name='Group UID' AND issuer.name='GIAS'
+              AND i.value=CASE WHEN fixture.group_uid='16279' THEN '17115' ELSE '16279' END;
+            IF resolved_id IS NOT NULL AND uid_owner IS NOT NULL AND resolved_id<>uid_owner THEN
+                RAISE EXCEPTION 'T22 historical pair already has conflicting identity mappings';
+            END IF;
+            resolved_id := COALESCE(resolved_id,uid_owner);
+            IF resolved_id IS NOT NULL AND (EXISTS (
+                SELECT 1 FROM establishment.organisation_identifier WHERE legal_entity_id=resolved_id
+            ) OR NOT EXISTS (
+                SELECT 1 FROM establishment.legal_entity WHERE legal_entity_id=resolved_id
+                  AND name='THE NORTHAMPTON FREE SCHOOL TRUST'
+            )) THEN
+                RAISE EXCEPTION 'T22 historical party conflicts with the accepted two-entity assertion; run the bounded correction first';
+            END IF;
+            method := 'accepted-historical-sat-mat-pair';
+        END IF;
+
         IF resolved_id IS NULL THEN
             IF fixture.companies_house_number IS NULL AND EXISTS (
                 SELECT 1 FROM establishment.legal_entity
@@ -584,7 +615,7 @@ BEGIN
     ELSE
         IF NOT EXISTS (
             SELECT 1 FROM migration.migration_run
-            WHERE migration_run_id = run_id AND run_type IN ('establishment-rebuild','t13-additive')
+            WHERE migration_run_id = run_id AND run_type IN ('establishment-rebuild','t13-additive','t10-additive')
               AND source_system = 'GIAS BAU' AND status = 'running'
         ) THEN
             RAISE EXCEPTION 'Shared migration run is missing, incompatible or not running: %', run_id;
@@ -628,16 +659,10 @@ SELECT classification.academy_trust_classification_id,
        'accepted',
        COALESCE(fixture.consolidation_evidence, fixture.party_mapping_evidence)
 FROM establishment_party_role_fixture AS fixture
-JOIN establishment.organisation_identifier_type AS company_type
-  ON company_type.name = 'Companies House number'
-JOIN establishment.organisation_identifier AS company_identifier
-  ON company_identifier.organisation_identifier_type_id = company_type.organisation_identifier_type_id
- AND company_identifier.value = fixture.companies_house_number
- AND company_identifier.is_current
 JOIN establishment.academy_trust_type AS academy_type
   ON academy_type.name = fixture.academy_trust_type
 JOIN establishment.academy_trust_classification AS classification
-  ON classification.legal_entity_id = company_identifier.legal_entity_id
+  ON classification.legal_entity_id = fixture.resolved_legal_entity_id
  AND classification.academy_trust_type_id = academy_type.academy_trust_type_id
  AND classification.start_date IS NOT DISTINCT FROM fixture.classification_start_date
 JOIN migration_context AS context ON true
@@ -736,13 +761,25 @@ INSERT INTO migration.identity_resolution (
     resolution_method, confidence, decision_status, rationale
 )
 SELECT source_record.source_record_id, fixture.party_kind, COALESCE(fixture.resolved_legal_entity_id, fixture.resolved_person_id),
-       CASE WHEN fixture.consolidation_evidence IS NOT NULL
+       CASE WHEN fixture.establishment_urn=135961 AND fixture.group_uid IN ('4118','4119')
+                 AND fixture.party_mapping_evidence LIKE 'T10 accepted shared-party assumption:%'
+            THEN 'accepted-test-case-identity-assumption'
+            WHEN fixture.establishment_urn=142869 AND fixture.group_uid IN ('16279','17115','17397')
+                 AND fixture.consolidation_evidence LIKE 'T22 accepted two-entity assertion:%'
+            THEN 'accepted-two-entity-test-case-assertion'
+            WHEN fixture.consolidation_evidence IS NOT NULL
             THEN 'shared-identifiers-and-explicit-sat-mat-transition'
             WHEN fixture.establishment_urn=134311 AND fixture.group_uid IN ('4075','4076')
                  AND fixture.party_mapping_evidence LIKE 'T11R accepted test-case identity assumption:%'
             THEN 'accepted-test-case-identity-assumption'
             ELSE fixture.identity_resolution_method END,
-       CASE WHEN fixture.establishment_urn=134311 AND fixture.group_uid IN ('4075','4076')
+       CASE WHEN fixture.establishment_urn=135961 AND fixture.group_uid IN ('4118','4119')
+                 AND fixture.party_mapping_evidence LIKE 'T10 accepted shared-party assumption:%'
+            THEN 'assumed'
+            WHEN fixture.establishment_urn=142869 AND fixture.group_uid IN ('16279','17115','17397')
+                 AND fixture.consolidation_evidence LIKE 'T22 accepted two-entity assertion:%'
+            THEN 'assumed'
+            WHEN fixture.establishment_urn=134311 AND fixture.group_uid IN ('4075','4076')
                  AND fixture.party_mapping_evidence LIKE 'T11R accepted test-case identity assumption:%'
             THEN 'assumed'
             WHEN fixture.party_kind='person' THEN 'reviewed'

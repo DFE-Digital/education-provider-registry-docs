@@ -352,11 +352,16 @@ BEGIN
     IF EXISTS (
         SELECT 1
         FROM establishment.establishment_responsibility AS responsibility
-        JOIN establishment.academy_trust_classification AS classification
-          ON classification.legal_entity_id = responsibility.legal_entity_id
-         AND classification.academy_trust_type_id = responsibility.academy_trust_type_id
         WHERE responsibility.responsibility_type_id = 1
-          AND responsibility.is_current <> classification.is_current
+          AND responsibility.is_current
+          -- SAT may recur after MAT. Historical responsibilities and earlier
+          -- classifications of that same type need not share current state.
+          AND NOT EXISTS (
+              SELECT 1 FROM establishment.academy_trust_classification AS classification
+              WHERE classification.legal_entity_id = responsibility.legal_entity_id
+                AND classification.academy_trust_type_id = responsibility.academy_trust_type_id
+                AND classification.is_current
+          )
     ) THEN
         RAISE EXCEPTION 'Current academy responsibilities must agree with their legal entity current classification';
     END IF;

@@ -6,7 +6,7 @@ CREATE TEMP TABLE group_membership_fixture (
     group_type text NOT NULL, local_authority_code integer,
     group_open_date date, group_close_date date, establishment_urn integer NOT NULL,
     joined_date date, source_link_id text NOT NULL, source_archived integer NOT NULL,
-    source_link_type text, is_lead_member boolean
+    source_link_type text
 ) ON COMMIT DROP;
 \copy group_membership_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
@@ -42,15 +42,13 @@ BEGIN
         ((SELECT count(*) FROM group_membership_fixture)<2
          AND current_setting('epr.group_membership_scope', true) IS DISTINCT FROM 'selected-urns')
         OR fixture.local_authority_code IS NOT NULL
-        OR EXISTS (SELECT 1 FROM group_membership_fixture WHERE is_lead_member IS NOT NULL)
     ) THEN RAISE EXCEPTION 'Federation requires at least two members, no group authority and no lead flag'; END IF;
     IF fixture.group_type='Children''s-centre group' THEN
         SELECT local_authority_id INTO authority_id FROM establishment.local_authority WHERE code=fixture.local_authority_code;
         IF authority_id IS NULL OR EXISTS (
             SELECT 1 FROM group_membership_fixture WHERE source_link_type IS NULL
               OR source_link_type NOT IN ('LEAD','STANDARD')
-              OR is_lead_member IS DISTINCT FROM (source_link_type='LEAD')
-        ) OR (SELECT count(*) FROM group_membership_fixture WHERE is_lead_member)>1 THEN
+        ) OR (SELECT count(*) FROM group_membership_fixture WHERE source_link_type='LEAD')>1 THEN
             RAISE EXCEPTION 'Childrens-centre group requires a mapped authority and valid single-lead membership flags';
         END IF;
     END IF;
@@ -99,20 +97,13 @@ WHERE issuer.name='GIAS' AND t.name IN ('Group UID', 'Group ID')
   AND (t.name='Group UID' OR f.group_id IS NOT NULL)
 ON CONFLICT (group_identifier_type_id, value) DO NOTHING;
 
-INSERT INTO establishment.organisation_group_member (organisation_group_id, establishment_id, joined_date, left_date, is_lead_member)
-SELECT c.organisation_group_id, e.establishment_id, f.joined_date, NULL, f.is_lead_member
+INSERT INTO establishment.organisation_group_member (organisation_group_id, establishment_id, joined_date, left_date)
+SELECT c.organisation_group_id, e.establishment_id, f.joined_date, NULL
 FROM group_membership_fixture f CROSS JOIN group_membership_context c
 JOIN establishment.establishment e ON e.urn=f.establishment_urn
 WHERE NOT EXISTS (SELECT 1 FROM establishment.organisation_group_member m
                   WHERE m.organisation_group_id=c.organisation_group_id AND m.establishment_id=e.establishment_id
                     AND m.joined_date IS NOT DISTINCT FROM f.joined_date);
-
-UPDATE establishment.organisation_group_member m
-SET is_lead_member=f.is_lead_member
-FROM group_membership_fixture f CROSS JOIN group_membership_context c
-JOIN establishment.establishment e ON e.urn=f.establishment_urn
-WHERE m.organisation_group_id=c.organisation_group_id AND m.establishment_id=e.establishment_id
-  AND m.joined_date IS NOT DISTINCT FROM f.joined_date;
 
 -- A current-only BAU snapshot can retire a current assertion, but cannot
 -- supply the business end date. Retain the old period with an unknown end.
@@ -122,7 +113,7 @@ JOIN establishment.establishment e ON e.urn=f.establishment_urn
 JOIN establishment.organisation_group_member m ON m.organisation_group_id=c.organisation_group_id
     AND m.establishment_id=e.establishment_id AND m.joined_date IS NOT DISTINCT FROM f.joined_date
 WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current
-  AND f.is_lead_member=false;
+  AND f.group_type='Children''s-centre group' AND f.source_link_type='STANDARD';
 
 INSERT INTO establishment.organisation_group_member_lead_period
     (organisation_group_member_id,organisation_group_id,is_current)
@@ -131,7 +122,7 @@ FROM group_membership_fixture f CROSS JOIN group_membership_context c
 JOIN establishment.establishment e ON e.urn=f.establishment_urn
 JOIN establishment.organisation_group_member m ON m.organisation_group_id=c.organisation_group_id
     AND m.establishment_id=e.establishment_id AND m.joined_date IS NOT DISTINCT FROM f.joined_date
-WHERE f.is_lead_member AND NOT EXISTS (
+WHERE f.group_type='Children''s-centre group' AND f.source_link_type='LEAD' AND NOT EXISTS (
     SELECT 1 FROM establishment.organisation_group_member_lead_period p
     WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current);
 

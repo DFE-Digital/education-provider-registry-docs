@@ -12,15 +12,11 @@ DECLARE
     rejected boolean;
 BEGIN
     IF EXISTS (
-        SELECT 1 FROM establishment.organisation_group_member m
+        SELECT 1 FROM establishment.organisation_group_member_lead_period p
         JOIN establishment.organisation_group g USING (organisation_group_id)
         JOIN establishment.organisation_group_type t USING (organisation_group_type_id)
-        WHERE (t.name='Children''s-centre group' AND
-            ((m.is_lead_member IS TRUE) IS DISTINCT FROM EXISTS (
-                SELECT 1 FROM establishment.organisation_group_member_lead_period p
-                WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current)))
-           OR (t.name<>'Children''s-centre group' AND m.is_lead_member IS NOT NULL)
-    ) THEN RAISE EXCEPTION 'Membership lead flags disagree with current lead periods or group type'; END IF;
+        WHERE t.name<>'Children''s-centre group'
+    ) THEN RAISE EXCEPTION 'Only childrens-centre groups may have lead periods'; END IF;
 
     -- This subtransaction rolls back even when all assertions pass.
     BEGIN
@@ -35,17 +31,17 @@ BEGIN
         SELECT federation_id,'Lead-period regression federation',organisation_group_type_id
         FROM establishment.organisation_group_type WHERE name='Federation';
         INSERT INTO establishment.organisation_group_member
-            (organisation_group_member_id,organisation_group_id,establishment_id,joined_date,left_date,is_lead_member)
-        VALUES (member_a,group_id,centre_id,'2016-10-01','2030-01-01',false);
+            (organisation_group_member_id,organisation_group_id,establishment_id,joined_date,left_date)
+        VALUES (member_a,group_id,centre_id,'2016-10-01','2030-01-01');
         INSERT INTO establishment.organisation_group_member
-            (organisation_group_member_id,organisation_group_id,establishment_id,joined_date,left_date,is_lead_member)
-        SELECT member_b,group_id,e.establishment_id,'2016-10-01','2030-01-01',false
+            (organisation_group_member_id,organisation_group_id,establishment_id,joined_date,left_date)
+        SELECT member_b,group_id,e.establishment_id,'2016-10-01','2030-01-01'
         FROM establishment.establishment e JOIN establishment.establishment_type t USING (establishment_type_id)
         WHERE t.name='Children''s centre' AND e.establishment_id<>centre_id ORDER BY e.urn LIMIT 1;
         IF NOT FOUND THEN RAISE EXCEPTION 'Lead regression requires two childrens centres'; END IF;
         INSERT INTO establishment.organisation_group_member
-            (organisation_group_member_id,organisation_group_id,establishment_id,joined_date,is_lead_member)
-        VALUES (federation_member,federation_id,centre_id,'2016-10-01',NULL);
+            (organisation_group_member_id,organisation_group_id,establishment_id,joined_date)
+        VALUES (federation_member,federation_id,centre_id,'2016-10-01');
 
         INSERT INTO establishment.organisation_group_member_lead_period
             (organisation_group_member_lead_period_id,organisation_group_member_id,organisation_group_id,start_date,end_date,is_current)
@@ -55,9 +51,9 @@ BEGIN
         IF (SELECT count(*) FROM establishment.organisation_group_member_lead_period
             WHERE organisation_group_member_id=member_a)<>2
            OR NOT EXISTS (SELECT 1 FROM establishment.organisation_group_member
-                          WHERE organisation_group_member_id=member_a AND is_lead_member AND joined_date='2016-10-01')
+                          WHERE organisation_group_member_id=member_a AND joined_date='2016-10-01')
            OR NOT EXISTS (SELECT 1 FROM establishment.organisation_group_member
-                          WHERE organisation_group_member_id=member_b AND NOT is_lead_member AND joined_date='2016-10-01') THEN
+                          WHERE organisation_group_member_id=member_b AND joined_date='2016-10-01') THEN
             RAISE EXCEPTION 'Returning as lead must retain separate periods without changing membership';
         END IF;
         IF EXISTS (
@@ -116,14 +112,14 @@ BEGIN
         EXCEPTION WHEN check_violation THEN rejected:=true; END;
         IF NOT rejected THEN RAISE EXCEPTION 'Membership update invalidating historical lead periods was accepted'; END IF;
 
-        -- Ending the current assertion updates the flag, not the unknown business date.
+        -- End the current assertion directly, without inventing a business date.
         UPDATE establishment.organisation_group_member_lead_period SET is_current=false WHERE organisation_group_member_lead_period_id=current_period;
         INSERT INTO establishment.organisation_group_member_lead_period
             (organisation_group_member_id,organisation_group_id,is_current) VALUES (member_b,group_id,true);
-        IF EXISTS (SELECT 1 FROM establishment.organisation_group_member WHERE organisation_group_member_id=member_a AND is_lead_member)
+        IF EXISTS (SELECT 1 FROM establishment.organisation_group_member_lead_period WHERE organisation_group_member_id=member_a AND is_current)
            OR NOT EXISTS (SELECT 1 FROM establishment.organisation_group_member_lead_period
                           WHERE organisation_group_member_id=member_b AND is_current AND start_date IS NULL AND end_date IS NULL) THEN
-            RAISE EXCEPTION 'Current-only lead assertions invented dates or failed to update flags';
+            RAISE EXCEPTION 'Current-only lead assertions invented dates or failed to change current designation';
         END IF;
         rejected:=false;
         BEGIN

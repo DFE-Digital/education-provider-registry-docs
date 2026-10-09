@@ -7,7 +7,7 @@ SQL Server or BAU copy is needed.
 Steps:
   1. Recreate the establishment and migration schemas and load reference seeds.
   2. Load the checked-in establishment fixture and migration evidence.
-  3. Run all establishment tests.
+  3. Validate all 22 active cases and the exact 41-establishment scope.
 
 To run one step on its own, import EprLocalAutomation and call that step's
 function (see README.md).
@@ -27,10 +27,10 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLocalAutomation.psm1') -Force
 
 $target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
-$selection = Get-FixtureSelection
+$null = Get-AllTestCases
 
 Initialize-EstablishmentDatabase -Target $target
 Import-CheckedInEstablishmentFixture -Target $target -SeedFile $SeedFile
-Invoke-EstablishmentTests -Target $target -Selection $selection
+Test-AllEstablishmentCases -Target $target
 
-Write-Host 'Establishment schema rebuilt from checked-in SQL and tested.' -ForegroundColor Green
+Write-Host 'Establishment schema rebuilt from checked-in SQL: all 22 active cases across 41 establishments validated.' -ForegroundColor Green

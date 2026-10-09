@@ -15,7 +15,10 @@ Steps:
      selections and skipped-test runs otherwise leave seed/ unchanged.
   6. With -IncludeGovernance, also rebuild governance_local and load governance.
 
-The selection defaults to seed/fixture-selection.json. Use -SelectionFile for
+The default build loads seed/fixture-selection.json and all additional cases
+in seed/all-test-cases.json, then validates and exports the complete catalogue.
+Custom selections remain bounded and do not run additional catalogue cases.
+Use -SelectionFile for
 your own curated URNs and links, and -SkipTests when the checked-in tests do not
 apply to your data. Custom selections and skipped-test runs never automatically
 refresh seed/; use -ExportDirectory for a separate export if needed. SQL load
@@ -81,6 +84,7 @@ else {
 }
 $defaultSelectionPath = [System.IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $PSScriptRoot) 'seed/fixture-selection.json'))
 $isCustomSelection = -not $selection.Path -or $selection.DiscoverGroups -or [System.IO.Path]::GetFullPath($selection.Path) -ne $defaultSelectionPath
+if (-not $isCustomSelection) { $null = Get-AllTestCases }
 if ($IncludeArchivedLinks -and -not $selection.DiscoverGroups) {
     throw '-IncludeArchivedLinks applies to URN-only discovery, not an explicit group-selection manifest.'
 }
@@ -140,6 +144,15 @@ try {
     if (-not $SkipTests) {
         Invoke-EstablishmentTests -Target $target -Selection $selection
     }
+    if (-not $isCustomSelection) {
+        foreach ($case in (Get-AllTestCases)) {
+            if ($case.runner) {
+                Write-Host "Migrating full catalogue case $($case.case)"
+                & (Join-Path $PSScriptRoot $case.runner) -BauSource $source -PostgresTarget $target
+            }
+        }
+        if (-not $SkipTests) { Test-AllEstablishmentCases -Target $target }
+    }
     $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'completed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"
 
     if ($ExportDirectory) {
@@ -163,7 +176,12 @@ try {
         Show-GovernanceSummary -Target $governanceTarget -Urn $selection.Urns
     }
 
-    Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
+    if ($isCustomSelection) {
+        Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
+    }
+    else {
+        Write-Host 'BAU-source rebuild completed: all 22 active cases across 41 establishments.' -ForegroundColor Green
+    }
     if ($SkipTests) { Write-Warning 'Data loaded, but establishment tests were not run.' }
 }
 catch {

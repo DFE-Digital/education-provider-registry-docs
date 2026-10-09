@@ -47,8 +47,7 @@ SELECT CONVERT(varchar(20), eg.id) AS group_uid,
        CONVERT(varchar(10), gl.effectiveDate, 23) AS joined_date,
        CONVERT(varchar(20), gl.id) AS source_link_id,
        CONVERT(integer, COALESCE(gl.archived, 0)) AS source_archived,
-       CASE WHEN eg.type_code='08' THEN gl.ccLinkType ELSE gl.linkType END AS source_link_type,
-       CASE WHEN eg.type_code='08' THEN CONVERT(bit, CASE gl.ccLinkType WHEN 'LEAD' THEN 1 WHEN 'STANDARD' THEN 0 END) END AS is_lead_member
+       CASE WHEN eg.type_code='08' THEN gl.ccLinkType ELSE gl.linkType END AS source_link_type
 FROM dbo.EstablishmentGroup eg
 JOIN dbo.GroupLink gl ON gl.group_id = eg.id
 WHERE eg.id = @GROUP_ID AND (gl.archived = 0 OR gl.archived IS NULL)

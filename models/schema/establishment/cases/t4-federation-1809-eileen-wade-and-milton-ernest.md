@@ -61,12 +61,12 @@ T4 contains two establishment records, federation UID 1809 and both memberships.
 | --- | --- |
 | `establishment` | Two separate establishments, URNs 109443 and 109613. |
 | `organisation_group` | One federation, using the local source name, `open_date = 2011-01-13` and unknown `close_date`. |
-| `organisation_group_member` | Two members, each with `joined_date = 2011-01-13`, unknown `left_date` and null `is_lead_member`. |
+| `organisation_group_member` | Two members, each with `joined_date = 2011-01-13`, unknown `left_date` and no lead periods. |
 | `group_identifier` | One GIAS Group UID value `1809`, attached to the organisation group. No Group ID row is created. |
 | `legal_entity`, `organisation_identifier`, `establishment_party_role`, `academy_trust_classification`, `establishment_responsibility` | No records created merely to represent this federation or its memberships. |
 | Migration evidence | Retain both source links and their active state, with separate member-evidence records beneath the rebuild run. |
 
-The federation is an organisation group, not a legal entity. Its members are establishments. The absent company number and UKPRN are not missing federation identifiers that must be manufactured. `is_lead_member` is not applicable to a federation.
+The federation is an organisation group, not a legal entity. Its members are establishments. The absent company number and UKPRN are not missing federation identifiers that must be manufactured. Lead designation is not applicable to a federation.
 
 The active source links establish the observed current membership, but a null `left_date` does not prove that the membership lasts indefinitely. Preserve the source assertion in migration evidence without inventing a historical end date.
 

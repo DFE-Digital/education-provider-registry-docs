@@ -1,0 +1,12 @@
+{
+  "fixture": "T21",
+  "legalEntityId": "73d09caa-5883-4fdb-b6b4-c4c45d56a221",
+  "name": "Mr & Mrs Readhead (Partnership)",
+  "legalEntityType": "Traditional partnership",
+  "extractPath": "docs/data/extract-data/establishment-fields/edubasealldata20260616.csv",
+  "snapshotDate": "2026-06-16",
+  "reviewEvidence": "T21 accepted controlled partnership assumption: the extract names Mr & Mrs Readhead (Partnership) as Summerhill's proprietor; allocate one Traditional partnership legal entity, not two people or a registered company. Legal form is a bounded fixture interpretation, not independently verified registered identity. Local obfuscated proprietor records are context only. The separately named charity is not identified as the proprietor. Proprietor start/end dates, registered identifiers, charity status and company dates remain unknown. Actual migration requires an accepted identity and legal-form review.",
+  "schools": [
+    { "urn": 124870, "name": "Summerhill School", "propsName": "Mr & Mrs Readhead (Partnership)" }
+  ]
+}

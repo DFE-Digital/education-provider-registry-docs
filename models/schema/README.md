@@ -16,13 +16,25 @@ This directory contains the PostgreSQL physical schemas, SQL seeds and local aut
 
 ### Dated group-member lead designation
 
-The physical model stores each spell as lead in `establishment.organisation_group_member_lead_period`, separately from membership joined and left dates. A member returning as lead has a new period. Start dates are inclusive and end dates exclusive. PostgreSQL enforces one current lead per group, non-overlap of fully known periods, and known membership boundaries. Lead-period changes update `organisation_group_member.is_lead_member` as a compatibility summary; applications should write designations through the period table, not that flag.
+The physical model stores each spell as lead in `establishment.organisation_group_member_lead_period`, separately from membership joined and left dates. A member returning as lead has a new period. Start dates are inclusive and end dates exclusive. PostgreSQL enforces one current lead per group, non-overlap of fully known periods, and known membership boundaries. Current lead designation is derived from lead periods using `is_current = true`; membership has no stored lead flag. No current row means no current lead recorded, not confirmed non-lead. Explicit source STANDARD/LEAD assertions remain in migration evidence.
 
 BAU current lead flags become current assertions with unknown start/end dates. Snapshot observations remain in migration evidence and are not substituted for business dates. Incomplete periods require review before making historical claims. Current status is explicit, not automatically recalculated as dates pass.
 
-The baseline includes [lead-period DDL](establishment/organisation-group-member-lead-period-schema.sql), and both BAU loading and checked-in fixture replay include the new table. For an existing local database, use the [additive upgrade](establishment/upgrade-group-member-lead-periods.sql) instead of a rebuild. It preserves memberships and backfills existing current flags without inventing dates; repeat execution does not duplicate current assertions. The DDL requires the PostgreSQL `btree_gist` extension for group-wide exclusion constraints.
+The baseline includes [lead-period DDL](establishment/organisation-group-member-lead-period-schema.sql), and both BAU loading and checked-in fixture replay include the new table. For an existing local database, use the [additive upgrade](establishment/upgrade-group-member-lead-periods.sql) instead of a rebuild. It preserves memberships and lead periods, backfills any legacy true flags without inventing dates, then removes the legacy column and its summary-maintenance trigger. Repeat execution does not duplicate current assertions. The DDL requires the PostgreSQL `btree_gist` extension for group-wide exclusion constraints.
 
 Regression checks in [validate-group-member-lead-periods.sql](establishment/validate-group-member-lead-periods.sql) cover handovers, return as lead, independent membership dates, unknown boundaries and rejection of conflicts. Synthetic histories are rolled back.
+
+The Establishment schema retains four consistency triggers. These reject invalid
+writes; none maintains a duplicate lead summary:
+
+- `check_group_member_lead_period`: Restricts lead periods to children's-centre groups and checks known membership boundaries and current eligibility.
+- `check_membership_lead_boundaries`: Rejects membership date changes that invalidate lead periods or end membership while a current lead assertion remains.
+- `check_group_lead_type`: Prevents changing a group with lead periods to an ineligible group type.
+- `organisation_identifier_ownership_protected`: Prevents deleting identifiers or reassigning their owner, type or value; identifiers are retired through `is_current` instead.
+
+Unique indexes and exclusion constraints separately enforce one current lead per
+group and non-overlap of fully known lead periods. Foreign keys enforce ownership
+and references.
 
 ### Choosing a rebuild path
 
@@ -128,6 +140,14 @@ Entry point: [rebuild-establishment-from-checked-in-sql.ps1](automation/rebuild-
 | 3. Run tests | PostgreSQL and PowerShell | Executes target SQL checks and compares approval snapshots and row counts. This path does not extract BAU data or regenerate the SQL exports. |
 
 Both paths rebuild disposable local schemas. They are modelling and repeatable test workflows, not the incremental daily production ETL.
+
+Both default paths restore all 22 active group test scenarios across 41 distinct
+establishments, including approved controlled fixtures and migration evidence.
+`seed/all-test-cases.json` defines the complete catalogue. The BAU rebuild runs
+the base selection and additional case runners before exporting the full SQL
+seeds; the checked-in SQL rebuild restores those seeds without source access.
+Both validate the complete catalogue. Explicit custom BAU selections remain
+limited to their requested scope and do not automatically refresh the seeds.
 
 
 ## From zero to a populated local PostgreSQL database

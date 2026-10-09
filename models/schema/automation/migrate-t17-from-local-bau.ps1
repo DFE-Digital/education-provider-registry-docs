@@ -8,15 +8,15 @@ historical federation membership and foundation support together. Tests stable r
 the default fixture selection or checked-in SQL seeds. Does not rebuild schemas.
 #>
 [CmdletBinding()]
-param([string]$SqlServer='SL646104')
+param([string]$SqlServer='SL646104', $BauSource, $PostgresTarget)
 $ErrorActionPreference='Stop'
-Import-Module (Join-Path $PSScriptRoot 'EprLocalAutomation/EprLocalAutomation.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'EprLocalAutomation/EprLocalAutomation.psm1')
 if (-not $env:EPR_BAU_SQL_PASSWORD) {
     $env:EPR_BAU_SQL_PASSWORD=[Environment]::GetEnvironmentVariable('EPR_BAU_SQL_PASSWORD','User')
 }
-if (-not $env:EPR_BAU_SQL_PASSWORD) { throw 'EPR_BAU_SQL_PASSWORD is required.' }
-$source=New-BauSource -SqlServer $SqlServer -SqlUser reader
-$target=New-PostgresTarget -PostgresHost localhost
+if (-not $BauSource -and -not $env:EPR_BAU_SQL_PASSWORD) { throw 'EPR_BAU_SQL_PASSWORD is required.' }
+$source=if($BauSource){$BauSource}else{New-BauSource -SqlServer $SqlServer -SqlUser reader}
+$target=if($PostgresTarget){$PostgresTarget}else{New-PostgresTarget -PostgresHost localhost}
 $workspace=New-RunWorkspace
 try {
     & (Get-Module EprLocalAutomation) {

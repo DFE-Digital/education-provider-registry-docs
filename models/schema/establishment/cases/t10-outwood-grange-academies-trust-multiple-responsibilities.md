@@ -66,9 +66,9 @@ The local copy of URN 148341 differs from the accepted extract:
 
 The local copy has no group links for URN 148341 and no additional `EstablishmentProprietors` rows for it. That does not contradict a proprietor responsibility: proprietors are not represented by GIAS group links.
 
-This case therefore needs more than a proprietor-name overlay. Before migration, explicitly review and accept a controlled establishment fixture based on the extract, or provide a suitable corrected local establishment record. Do not silently present the extract's open status, dates, UKPRN or geography as local BAU values. Do not import the local rejected-opening lifecycle together with a current open-school proprietor assertion and claim the result is a clean source migration.
+On 9 October 2026 the user approved a controlled establishment fixture based on the extract: Open, opened 2021-02-18, close date unknown, UKPRN 10092329 and local authority 807. The fixture also retains establishment number 6003, Other independent school and Not applicable education phase from the extract. Only these core fields are loaded for the independent school; unreviewed contact, address, measures and finer geography remain unset rather than importing conflicting local details. The academy is loaded from the verified BAU projection.
 
-The proprietor-identity assumption does not resolve the lifecycle discrepancy. The two observations must remain separate in migration evidence. No source database or target records are changed by this case document.
+The user also approved the shared sponsor/trust/proprietor identity assumption. It does not resolve the source discrepancy as fact: the local rejected-opening values and proprietor classification remain separate context evidence, while the approved extract fields and exact PropsName are recorded as a controlled migration decision. The migration changes only the local PostgreSQL fixture, never the BAU database. Actual migration requires a recorded manual identity and lifecycle decision.
 
 ## Relationship graph
 
@@ -79,7 +79,7 @@ flowchart LR
     SR["School-sponsor role<br/>GIAS UID 4118 / SP00396"]
     C["Multi-academy trust classification<br/>Source-current; dates unknown"]
     A["Outwood Grange Academy<br/>URN 135961<br/>School UKPRN 10028145"]
-    I["Outwood Alternative Provision Eston<br/>URN 148341<br/>Controlled establishment fixture required"]
+    I["Outwood Alternative Provision Eston<br/>URN 148341<br/>Approved controlled establishment fixture"]
     P -->|holds| AR
     P -->|holds| SR
     P -->|classified as| C
@@ -92,11 +92,11 @@ The academy-trust and sponsor arrows represent separate responsibilities held by
 
 ## Target interpretation
 
-These expectations apply once the controlled establishment and proprietor assertions have been accepted for migration.
+These expectations use the controlled establishment and proprietor assertions approved on 9 October 2026.
 
 | Target table | Expected records for T10 |
 | --- | --- |
-| `establishment` and core substructures | Two separate establishments. Load the academy from the reviewed local source; the independent school's lifecycle, identifiers and geography require an explicitly accepted controlled mapping before import. |
+| `establishment` and core substructures | Two separate establishments. Load the academy from the reviewed local source and the independent school's approved extract-based core fields without copying its rejected-opening BAU lifecycle or unrelated local details. |
 | `legal_entity` | One Outwood legal entity shared by all three responsibilities, not separate trust, sponsor and proprietor entities. |
 | `organisation_identifier` | Current Companies House number `06995649` and organisation UKPRN `10058273`, both attached to that one legal entity and sourced from MAT UID 4119. |
 | Legal form and company dates | The existing MR011 academy-trust mapping supplies Charitable company limited by guarantee as a migration assumption; the MAT group open date supplies the current mapping's incorporation date 2009-08-19. Neither is described as a fresh Companies House verification. Charity status and dissolution date are not invented. |
@@ -128,5 +128,26 @@ Proprietor is a responsibility without a corresponding party role. The academy-t
 - Both academy responsibility starts are 2009-09-01; the proprietor responsibility and role/classification boundaries remain unknown.
 - The sponsor placeholder date is excluded from target business dates and retained in migration evidence.
 - The controlled independent-school fields and proprietor identity decision are explicit, traceable and not substituted for raw local facts.
-- Re-running the eventual migration reuses the resolved party and does not duplicate its roles, identifiers or responsibilities.
+- Re-running the migration reuses the resolved party and does not duplicate its roles, identifiers or responsibilities.
+
+## Migration validation
+
+Migrated on 9 October 2026 using the approved controlled establishment and shared-party assertions. Both sponsor/trust import orders passed transaction rollback probes. The committed load and reverse-order repeat import retained business identities and unrelated establishments. Changed school UKPRN and unreviewed decision evidence were rejected without committing the probes. The source database was not changed. Conflicting local school values remain migration context, not target business facts.
+
+## Target query
+
+```sql
+SELECT e.urn, e.name, le.legal_entity_id, le.name AS responsible_party,
+       rt.name AS responsibility, tt.name AS trust_type,
+       r.start_date, r.end_date, r.is_current
+FROM establishment.establishment e
+JOIN establishment.establishment_responsibility r USING (establishment_id)
+JOIN establishment.legal_entity le USING (legal_entity_id)
+JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
+LEFT JOIN establishment.academy_trust_type tt USING (academy_trust_type_id)
+WHERE e.urn IN (148341,135961)
+ORDER BY e.urn, rt.name;
+```
+
+Expected: three rows sharing one legal_entity_id. Eston has only Proprietor with unknown dates; Outwood Grange Academy has Run by academy trust and Sponsored by from 2009-09-01. No Proprietor party role is created.
 

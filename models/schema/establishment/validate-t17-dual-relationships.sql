@@ -17,7 +17,7 @@ BEGIN
   AND g.open_date=DATE '2012-04-01' AND g.close_date=DATE '2020-07-01';
  SELECT organisation_group_member_id INTO STRICT member FROM establishment.organisation_group_member
  WHERE organisation_group_id=federation AND establishment_id=school AND joined_date=DATE '2012-04-01'
-  AND left_date=DATE '2020-06-16' AND is_lead_member IS NULL;
+  AND left_date=DATE '2020-06-16';
  SELECT r.legal_entity_id,r.establishment_party_role_id INTO STRICT party,role_id
  FROM establishment.group_identifier i JOIN establishment.group_identifier_type t USING(group_identifier_type_id)
  JOIN establishment.group_identifier_issuer issuer USING(group_identifier_issuer_id)

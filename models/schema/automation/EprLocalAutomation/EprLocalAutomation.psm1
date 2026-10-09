@@ -33,6 +33,8 @@ Export-ModuleMember -Function @(
     'New-BauSource'
     'New-PostgresTarget'
     'Get-FixtureSelection'
+    'Get-AllTestCases'
+    'Test-AllEstablishmentCases'
     'Find-EstablishmentGroupsFromBau'
     'New-RunWorkspace'
     'Remove-RunWorkspace'

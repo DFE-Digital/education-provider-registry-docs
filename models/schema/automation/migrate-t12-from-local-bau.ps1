@@ -7,15 +7,15 @@ New Fosseway School and foundation-trust link 595. Does not rebuild schemas
 or replace the default fixture selection or checked-in seeds.
 #>
 [CmdletBinding()]
-param([string]$SqlServer='SL646104')
+param([string]$SqlServer='SL646104', $BauSource, $PostgresTarget)
 $ErrorActionPreference='Stop'
-Import-Module (Join-Path $PSScriptRoot 'EprLocalAutomation/EprLocalAutomation.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'EprLocalAutomation/EprLocalAutomation.psm1')
 if (-not $env:EPR_BAU_SQL_PASSWORD) {
     $env:EPR_BAU_SQL_PASSWORD=[Environment]::GetEnvironmentVariable('EPR_BAU_SQL_PASSWORD','User')
 }
-if (-not $env:EPR_BAU_SQL_PASSWORD) { throw 'EPR_BAU_SQL_PASSWORD is required.' }
-$source=New-BauSource -SqlServer $SqlServer -SqlUser reader
-$target=New-PostgresTarget -PostgresHost localhost
+if (-not $BauSource -and -not $env:EPR_BAU_SQL_PASSWORD) { throw 'EPR_BAU_SQL_PASSWORD is required.' }
+$source=if($BauSource){$BauSource}else{New-BauSource -SqlServer $SqlServer -SqlUser reader}
+$target=if($PostgresTarget){$PostgresTarget}else{New-PostgresTarget -PostgresHost localhost}
 $workspace=New-RunWorkspace
 try {
     & (Get-Module EprLocalAutomation) {
@@ -61,15 +61,25 @@ INSERT INTO establishment_party_role_fixture (
         $collisionSql=[regex]::Replace($collisionSql,'(?m)^COMMIT;','ROLLBACK;')
         $collisionPath=Join-Path $workspace 't12-name-collision.sql'
         [System.IO.File]::WriteAllText($collisionPath,$collisionSql,[System.Text.UTF8Encoding]::new($false))
+        $collisionClient=Get-PostgresClientPath -Tool psql
+        $collisionArguments=Get-PsqlArgumentList -Target $target -File $collisionPath -Output Scalar
         $preCollisionErrorAction=$ErrorActionPreference
+        $preCollisionPassword=$env:PGPASSWORD
         try {
+            if ($target.Password) { $env:PGPASSWORD=$target.Password }
             $ErrorActionPreference='Continue'
-            $collisionOutput=(& (Get-PostgresClientPath -Tool psql) -X -w -h localhost -p 5432 -U postgres `
-                -d establishment_local -v ON_ERROR_STOP=1 -f $collisionPath 2>&1 | Out-String)
+            # Convert native stderr ErrorRecords to plain strings before
+            # Out-String can apply host-width-dependent error formatting.
+            $collisionOutput=(& $collisionClient @collisionArguments 2>&1 |
+                ForEach-Object { $_.ToString() } | Out-String)
             $collisionExit=$LASTEXITCODE
         }
-        finally { $ErrorActionPreference=$preCollisionErrorAction }
-        if ($collisionExit -eq 0 -or $collisionOutput -notlike '*only a name match; identity review required*') {
+        finally {
+            $ErrorActionPreference=$preCollisionErrorAction
+            $env:PGPASSWORD=$preCollisionPassword
+        }
+        $collisionMessage=[regex]::Replace($collisionOutput,'\s+',' ')
+        if ($collisionExit -eq 0 -or $collisionMessage -notlike '*Source group T12_UNREVIEWED_NAME_COLLISION has only a name match; identity review required*') {
             throw "T12 name-collision rejection did not produce the expected review requirement: $collisionOutput"
         }
         $after=Invoke-Psql -Target $target -Command $preservedUrnsSql -Output Scalar -FailureMessage 'Preserved URN check failed'

@@ -1,0 +1,22 @@
+{
+  "fixture": "T10",
+  "extractPath": "docs/data/extract-data/establishment-fields/edubasealldata20260616.csv",
+  "snapshotDate": "2026-06-16",
+  "approvedOn": "2026-10-09",
+  "companyNumber": "06995649",
+  "organisationUkprn": "10058273",
+  "propsName": "Outwood Grange Academies Trust",
+  "school": {
+    "urn": 148341,
+    "name": "Outwood Alternative Provision Eston",
+    "establishmentNumber": 6003,
+    "establishmentTypeId": 17,
+    "educationPhaseId": 8,
+    "statusCode": "1",
+    "openDate": "2021-02-18",
+    "closeDate": null,
+    "ukprn": 10092329,
+    "localAuthorityCode": "807"
+  },
+  "reviewEvidence": "T10 user-approved controlled establishment and shared-party assertion on 2026-10-09. Use the June extract's open school, dates, UKPRN and authority instead of the conflicting local rejected-opening record. Sponsor, trust and proprietor are one Outwood legal entity. Preserve local values separately as context; proprietor dates unknown; actual migration requires a manual identity and lifecycle decision."
+}
