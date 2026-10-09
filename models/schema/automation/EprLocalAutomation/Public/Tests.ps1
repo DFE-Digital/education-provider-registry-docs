@@ -383,13 +383,16 @@ function Test-EstablishmentGroupDiscovery {
 function Invoke-EstablishmentTests {
     <#
     .SYNOPSIS
-    Runs every establishment test for the fixture selection: URN boundaries,
+    Runs the base fixture tests: URN boundaries,
     core validation, groups validation, one approval snapshot per selected URN,
-    and scope.
+    and scope. ExpectedUrn can provide the full catalogue scope while retaining
+    the base approvals and base rebuild evidence checks. Use
+    Test-AllEstablishmentCases to additionally validate every catalogue case.
     #>
     param(
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)]$Selection
+        [Parameter(Mandatory)]$Selection,
+        [int[]]$ExpectedUrn
     )
 
     Test-EstablishmentUrnValidation
@@ -456,6 +459,7 @@ END $$;
     foreach ($urn in $Selection.Urns) {
         Test-EstablishmentApproval -Target $Target -Urn $urn
     }
-    Test-EstablishmentScope -Target $Target -ExpectedUrn $Selection.Urns
+    if (-not $ExpectedUrn) { $ExpectedUrn = $Selection.Urns }
+    Test-EstablishmentScope -Target $Target -ExpectedUrn $ExpectedUrn
     Write-Host 'All establishment tests passed.' -ForegroundColor Green
 }

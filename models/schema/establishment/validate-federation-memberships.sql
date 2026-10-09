@@ -20,7 +20,7 @@ BEGIN
        OR (SELECT count(*) FROM establishment.organisation_group_member m
            JOIN establishment.establishment e USING (establishment_id)
            WHERE m.organisation_group_id=federation_id AND e.urn IN (109443,109613)
-             AND m.joined_date=DATE '2011-01-13' AND m.left_date IS NULL AND m.is_lead_member IS NULL) <> 2 THEN
+             AND m.joined_date=DATE '2011-01-13' AND m.left_date IS NULL) <> 2 THEN
         RAISE EXCEPTION 'T4 requires exactly the two selected schools with independently evidenced joined dates';
     END IF;
     IF (SELECT count(*) FROM establishment.group_identifier WHERE organisation_group_id=federation_id) <> 1

@@ -24,7 +24,7 @@ BEGIN
            WHERE m.organisation_group_id=group_id
              AND e.urn IN (20338,20549,20614,21363,22422,22459,22975,23004,23122)
              AND t.name='Children''s centre' AND m.joined_date=DATE '2016-10-01'
-             AND m.left_date IS NULL AND m.is_lead_member IS NOT DISTINCT FROM (e.urn=20549)) <> 9 THEN
+             AND m.left_date IS NULL AND EXISTS (SELECT 1 FROM establishment.organisation_group_member_lead_period p WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current) = (e.urn=20549)) <> 9 THEN
         RAISE EXCEPTION 'T5 requires exactly nine centres with only Cambridge Road marked as lead';
     END IF;
     IF (SELECT count(*) FROM establishment.organisation_group_member_lead_period WHERE organisation_group_id=group_id)<>1

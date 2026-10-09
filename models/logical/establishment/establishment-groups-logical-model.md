@@ -535,7 +535,6 @@ erDiagram
         uuid establishment_id FK
         date joined_date
         date left_date
-        boolean is_lead_member
     }
     ORGANISATION_GROUP_MEMBER_LEAD_PERIOD {
         uuid organisation_group_member_lead_period_id PK
@@ -623,7 +622,6 @@ Only establishments can be group members in this slice.
 | `establishment_id` | Yes | The member establishment. |
 | `joined_date` | No | First date on which membership applies; null means unknown. |
 | `left_date` | No | First date on which membership no longer applies. |
-| `is_lead_member` | Conditional | Current-state compatibility summary for children's-centre groups, maintained from current lead periods. True identifies the current lead; false is an explicit non-lead state; null means the source does not say. This flag is not the history. It is null for other group types. |
 
 For example, two maintained schools in a federation each have their own establishment record and URN. Their membership rows link both establishments to the same federation and retain the dates on which each membership applied.
 
@@ -765,7 +763,7 @@ An on-date view has three states:
 13. An establishment may have more than one current proprietor. Only independent school types, non-maintained special schools and city technology colleges may have a proprietor. Open other independent schools and other independent special schools must have at least one.
 14. An establishment is in at most one organisation group of each type on a date. Federation members are maintained schools; children's-centre group and collaboration members are children's centres.
 15. An open federation has at least two members.
-16. A children's-centre group has at most one current lead period, across all its members. Its fully known lead periods cannot overlap. Each lead period belongs to one membership and lies within that membership's known boundaries. Repeated designations use separate periods. `is_lead_member` summarises the current designation; it is null for all other group types. Unknown lead boundaries do not establish historical coverage and require review, not invented dates.
+16. A children's-centre group has at most one current lead period, across all its members. Its fully known lead periods cannot overlap. Each lead period belongs to one membership and lies within that membership's known boundaries. Repeated designations use separate periods. Current designation is derived from a membership's lead period with `is_current = true`; no duplicate flag is stored on membership. Absence of such a row means no current lead is recorded, not confirmed non-lead status. Unknown lead boundaries do not establish historical coverage and require review, not invented dates.
 17. `local_authority_id` is required for children's-centre group types and absent for federations. Every member of a children's-centre group or collaboration is in the group's local authority; a member in another local authority is reported as a warning, because local-government reorganisation can move a centre.
 18. No stored collection restates a responsibility: an academy trust's academies are not organisation-group memberships.
 19. A relationship falls within the lifetime of its party or group where those dates are known. A conflict is reported; it does not invent a date to satisfy the rule.
@@ -805,6 +803,6 @@ Source tables and fields correspond to target concepts as follows; they do not d
 
 The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `organisation_group_member_lead_period`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
 
-The physical lead-period table also stores `organisation_group_id` so PostgreSQL can enforce group-wide non-overlap and one-current-lead constraints. A composite foreign key ensures that this value matches the owning membership. Triggers check membership boundaries and update the compatibility flag when periods change. Current status must be changed explicitly; passing a business date does not automatically update it. Fully known ranges use inclusive starts and exclusive ends; incomplete ranges are retained for review, not treated as unbounded dates.
+The physical lead-period table also stores `organisation_group_id` so PostgreSQL can enforce group-wide non-overlap and one-current-lead constraints. A composite foreign key ensures that this value matches the owning membership. Triggers check lead-period and membership boundaries and prevent changing a group with lead periods to an ineligible type. Current lead status is queried from the period table. Explicit source STANDARD/LEAD assertions remain in migration evidence; absence of a current lead row does not prove a source assertion of non-lead. Current status must be changed explicitly; passing a business date does not automatically update it. Fully known ranges use inclusive starts and exclusive ends; incomplete ranges are retained for review, not treated as unbounded dates.
 
 It references the existing establishment, local-authority and person tables by their opaque identifiers. Migration lineage is deliberately outside this schema.

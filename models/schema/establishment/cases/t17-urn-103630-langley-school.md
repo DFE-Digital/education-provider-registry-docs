@@ -77,7 +77,7 @@ flowchart LR
 | --- | --- |
 | `establishment` and lifecycle | One Langley School, retaining school UKPRN 10077032, unknown opening and closure 2020-06-16. |
 | `organisation_group` | One closed federation, with formation 2012-04-01, closure 2020-07-01 and no local-authority owner. |
-| `organisation_group_member` | One selected historical Langley membership, joined 2012-04-01 and inferred left date 2020-06-16. Lead flag is null. |
+| `organisation_group_member` | One selected historical Langley membership, joined 2012-04-01 and inferred left date 2020-06-16. No lead periods are created. |
 | `legal_entity` | One provisional Four Oaks Learning Trust For Excellence, with unknown registered legal form, charity status and company dates. |
 | `establishment_party_role` | One Foundation trust role with unknown boundaries. |
 | `establishment_responsibility` | One historical Supported by foundation trust responsibility, from 2013-05-20 to inferred end 2020-06-16, not current and with no academy-trust type. |

@@ -93,24 +93,6 @@ CREATE TRIGGER check_group_lead_type BEFORE UPDATE OF organisation_group_type_id
     ON establishment.organisation_group
     FOR EACH ROW EXECUTE FUNCTION establishment.check_group_lead_type();
 
-CREATE OR REPLACE FUNCTION establishment.refresh_member_lead_flag()
-RETURNS trigger LANGUAGE plpgsql AS $$
-BEGIN
-    IF TG_OP<>'INSERT' THEN
-        UPDATE establishment.organisation_group_member m SET is_lead_member=EXISTS (
-            SELECT 1 FROM establishment.organisation_group_member_lead_period p
-            WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current)
-        WHERE m.organisation_group_member_id=OLD.organisation_group_member_id;
-    END IF;
-    IF TG_OP<>'DELETE' THEN
-        UPDATE establishment.organisation_group_member m SET is_lead_member=EXISTS (
-            SELECT 1 FROM establishment.organisation_group_member_lead_period p
-            WHERE p.organisation_group_member_id=m.organisation_group_member_id AND p.is_current)
-        WHERE m.organisation_group_member_id=NEW.organisation_group_member_id;
-    END IF;
-    RETURN NULL;
-END $$;
+-- Current lead status is derived from lead periods; no stored member flag.
 DROP TRIGGER IF EXISTS refresh_member_lead_flag ON establishment.organisation_group_member_lead_period;
-CREATE TRIGGER refresh_member_lead_flag AFTER INSERT OR UPDATE OR DELETE
-    ON establishment.organisation_group_member_lead_period
-    FOR EACH ROW EXECUTE FUNCTION establishment.refresh_member_lead_flag();
+DROP FUNCTION IF EXISTS establishment.refresh_member_lead_flag();

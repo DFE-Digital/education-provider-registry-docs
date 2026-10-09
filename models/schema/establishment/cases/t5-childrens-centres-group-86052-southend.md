@@ -26,7 +26,7 @@ Unlike the T4 federation, this group has its own recorded local authority. Code 
 
 The local source returns exactly nine links for group 86052, all with `archived = 0`. Every member is an open children's centre, source establishment type 47 and status 1. The query for other group links held by these nine establishments returned no additional records.
 
-| URN | Establishment | Source GroupLink ID | Establishment open date | Membership effective date | `ccLinkType` | Target `is_lead_member` |
+| URN | Establishment | Source GroupLink ID | Establishment open date | Membership effective date | `ccLinkType` | Current lead assertion recorded |
 | --- | --- | --- | --- | --- | --- | --- |
 | 20338 | Blenheim Children's Centre | 25390 | 2008-02-07 | 2016-10-01 | STANDARD | False |
 | 20549 | Cambridge Road Children's Centre | 25391 | 2006-03-14 | 2016-10-01 | LEAD | True |
@@ -40,7 +40,7 @@ The local source returns exactly nine links for group 86052, all with `archived 
 
 All establishment close dates are null. The membership links do not provide end dates. Each membership joined date comes from its own effective date; those dates happen to match the group's open date. The earlier establishment open dates remain separate lifecycle facts and are not replaced with the group or membership dates.
 
-The lead flag comes from the explicit `ccLinkType` value: `LEAD` maps to true and `STANDARD` maps to false. An absent or unrecognised value must not silently become false. This case demonstrates one observed lead centre; it does not supply a history of changes to that flag.
+The explicit `ccLinkType` value controls lead periods: `LEAD` creates a current lead assertion and `STANDARD` does not. Both source codes remain in migration evidence; absence of a current lead row alone does not prove confirmed non-lead. An absent or unrecognised value must not silently become false. This case demonstrates one observed lead centre; it does not supply a history of changes to that flag.
 
 ## Relationship graph
 
@@ -54,9 +54,9 @@ flowchart LR
     C["Centre Place Family Centre<br/>URN 20614<br/>Standard member"]
     G -->|"identified by"| U
     G -->|"recorded local authority"| LA
-    L -->|"Member from 1 October 2016<br/>is_lead_member = true"| G
-    B -->|"Member from 1 October 2016<br/>is_lead_member = false"| G
-    C -->|"Member from 1 October 2016<br/>is_lead_member = false"| G
+    L -->|"Member from 1 October 2016<br/>Current lead recorded"| G
+    B -->|"Member from 1 October 2016<br/>Source STANDARD; no current lead recorded"| G
+    C -->|"Member from 1 October 2016<br/>Source STANDARD; no current lead recorded"| G
 ```
 
 The graph shows the lead and two standard members for readability. Six further standard members are listed in the evidence table. The group has nine members in total, not three. The local authority relationship shown is recorded on the group; each establishment also has its own local-authority information.
@@ -67,7 +67,7 @@ The graph shows the lead and two standard members for readability. Six further s
 | --- | --- |
 | `establishment` | Nine separate children's-centre records, retaining their five-digit URNs and independently recorded establishment open dates. |
 | `organisation_group` | One children's-centre group named Southend Children's Centres, `open_date = 2016-10-01`, unknown `close_date`, and `local_authority_id` pointing to Southend-on-Sea. |
-| `organisation_group_member` | Nine memberships, each with `joined_date = 2016-10-01` and unknown `left_date`. Cambridge Road has `is_lead_member = true`; the other eight have false. |
+| `organisation_group_member` | Nine memberships, each with `joined_date = 2016-10-01` and unknown `left_date`. Cambridge Road has `Current lead recorded`; the other eight have false. |
 | `organisation_group_member_lead_period` | One current lead assertion belonging to Cambridge Road's membership. Its `start_date` and `end_date` are unknown: neither the membership effective date nor a source observation date establishes when lead designation started. |
 | `group_identifier` | One GIAS Group UID value `86052`, attached to the organisation group. No Group ID is invented. |
 | `legal_entity`, `organisation_identifier`, `establishment_party_role`, `academy_trust_classification`, `establishment_responsibility` | No records created merely to represent this group, its lead designation or its memberships. |
@@ -90,7 +90,7 @@ The reviewed group and membership fields have no placeholder dates, duplicate me
 - The group's local authority resolves from source code 882 to Southend-on-Sea.
 - All nine members belong to that local authority and match the selected source membership set exactly.
 - Each joined date comes from its own GroupLink effective date, with no invented leaving date.
-- Exactly Cambridge Road, URN 20549, has `is_lead_member = true`; the other eight explicitly have false.
+- Exactly Cambridge Road, URN 20549, has `Current lead recorded`; the other eight explicitly have false.
 - Cambridge Road has one current lead period with unknown start and end dates; no dated history is inferred from membership or snapshot dates.
 - Missing or unrecognised lead codes stop for assessment rather than defaulting to a standard member.
 - No Companies House number, organisation UKPRN, Group ID or group legal entity is invented.

@@ -512,7 +512,6 @@ CREATE TABLE establishment.organisation_group_member (
         REFERENCES establishment.establishment (establishment_id),
     joined_date date,
     left_date date,
-    is_lead_member boolean,
     CHECK (left_date IS NULL OR joined_date IS NULL OR left_date >= joined_date)
 );
 

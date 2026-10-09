@@ -21,4 +21,4 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLocalAutomation.psm1') -Force
 
 $target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
-Invoke-EstablishmentTests -Target $target -Selection (Get-FixtureSelection)
+Test-AllEstablishmentCases -Target $target

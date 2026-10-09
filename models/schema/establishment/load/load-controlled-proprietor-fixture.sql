@@ -11,11 +11,23 @@ CREATE TEMP TABLE proprietor_local_context (
 \copy proprietor_local_context FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
 DO $$
-DECLARE d jsonb; party_id uuid; run_id uuid; is_t13 boolean;
+DECLARE d jsonb; party_id uuid; run_id uuid; is_t13 boolean; is_t21 boolean;
 BEGIN
     SELECT decision INTO STRICT d FROM controlled_proprietor;
     party_id := (d->>'legalEntityId')::uuid;
     is_t13 := coalesce(d->>'fixture'='T13',false);
+    is_t21 := coalesce(d->>'fixture'='T21',false);
+    IF is_t21 AND (party_id<>'73d09caa-5883-4fdb-b6b4-c4c45d56a221'::uuid
+        OR d->>'name' IS DISTINCT FROM 'Mr & Mrs Readhead (Partnership)'
+        OR d->>'legalEntityType' IS DISTINCT FROM 'Traditional partnership'
+        OR d->>'snapshotDate' IS DISTINCT FROM '2026-06-16'
+        OR d->'schools' IS DISTINCT FROM '[{"urn":124870,"name":"Summerhill School","propsName":"Mr & Mrs Readhead (Partnership)"}]'::jsonb
+        OR d->>'reviewEvidence' NOT LIKE 'T21 accepted controlled partnership assumption:%') THEN
+        RAISE EXCEPTION 'T21 partnership decision differs from the accepted bounded fixture';
+    END IF;
+    IF NOT is_t21 AND d ? 'legalEntityType' THEN
+        RAISE EXCEPTION 'Controlled legal form requires a reviewed case-specific mapping';
+    END IF;
     IF is_t13 AND (party_id<>'27546d94-e327-49fd-aecb-26c8c043a597'::uuid
         OR d->>'name' IS DISTINCT FROM 'The King''s School'
         OR d->>'separatePartyCompanyNumber' IS DISTINCT FROM '07706900'
@@ -39,8 +51,8 @@ BEGIN
         LEFT JOIN proprietor_local_context l USING (urn)
         LEFT JOIN establishment.establishment e USING (urn)
         WHERE l.urn IS NULL OR l.establishment_name IS DISTINCT FROM s.name
-          OR l.establishment_type_code IS DISTINCT FROM CASE WHEN is_t13 THEN '11' ELSE '10' END OR l.status_code IS DISTINCT FROM '1'
-          OR e.establishment_type_id IS DISTINCT FROM CASE WHEN is_t13 THEN 17 ELSE 15 END OR e.name IS DISTINCT FROM s.name
+          OR l.establishment_type_code IS DISTINCT FROM CASE WHEN is_t13 OR is_t21 THEN '11' ELSE '10' END OR l.status_code IS DISTINCT FROM '1'
+          OR e.establishment_type_id IS DISTINCT FROM CASE WHEN is_t13 OR is_t21 THEN 17 ELSE 15 END OR e.name IS DISTINCT FROM s.name
           OR NULLIF(btrim(s."propsName"),'') IS NULL
     ) THEN RAISE EXCEPTION 'Controlled proprietor endpoints differ from the accepted selection'; END IF;
     IF EXISTS (SELECT 1 FROM establishment.legal_entity
@@ -56,8 +68,11 @@ BEGIN
     END IF;
 END $$;
 
-INSERT INTO establishment.legal_entity (legal_entity_id,name)
-SELECT (decision->>'legalEntityId')::uuid,decision->>'name' FROM controlled_proprietor
+INSERT INTO establishment.legal_entity (legal_entity_id,name,legal_entity_type_id)
+SELECT (decision->>'legalEntityId')::uuid,decision->>'name',
+       CASE WHEN decision->>'fixture'='T21' THEN
+           (SELECT legal_entity_type_id FROM establishment.legal_entity_type WHERE name='Traditional partnership') END
+FROM controlled_proprietor
 ON CONFLICT (legal_entity_id) DO NOTHING;
 
 INSERT INTO establishment.establishment_responsibility
@@ -146,7 +161,9 @@ SELECT l.establishment_responsibility_id,sr.source_record_id,
        'accepted',
        CASE WHEN ss.source_system='GIAS public extract' THEN
          'Controlled accepted PropsName=' || l.accepted_name || '; ' || (l.decision->>'reviewEvidence') ||
-         ' Responsibility dates unknown; legal form unverified; ownership not asserted.'
+         CASE WHEN l.decision->>'fixture'='T21'
+              THEN ' Responsibility dates unknown; Traditional partnership is an explicit controlled-fixture assumption; registered identity unverified; ownership not asserted.'
+              ELSE ' Responsibility dates unknown; legal form unverified; ownership not asserted.' END
        ELSE
          'Local context only: proprietorType_code=' || coalesce(l.proprietor_type_code,'NULL') ||
          '; proprietor_type=' || coalesce(l.proprietor_type,'NULL') ||

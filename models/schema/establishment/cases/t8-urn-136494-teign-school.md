@@ -11,6 +11,7 @@ Both source trusts are classified as multi-academy trusts. Different Companies H
 | Establishment field | Local source value |
 | --- | --- |
 | URN | 136494 |
+| Establishment number | 5402 |
 | Name | Teign School |
 | UKPRN | 10033036 |
 | Establishment type | Academy converter (source code 34) |
@@ -20,6 +21,8 @@ Both source trusts are classified as multi-academy trusts. Different Companies H
 | Local authority | Devon (code 878) |
 
 ## Local source evidence
+
+The selected source assertions were rechecked against the local BAU copy on 9 October 2026 before migration.
 
 | Field | Former operator | Current operator |
 | --- | --- | --- |
@@ -76,7 +79,7 @@ Education South West                               +------> Current
 
 The display does not assert that Templer's responsibility ended on 2017-01-01. That is the new operator's recorded start date, not an independently recorded end date for the old operator. Preserve the historical assertion using `is_current = false`, leaving its end null.
 
-The group open dates, school open date and relationship effective dates describe separate facts. The existing academy-trust mapping uses group open dates as source-derived incorporation dates; it is not independent company-register verification. Do not use those dates to populate academy-trust role or MAT-classification starts.
+The group open dates, school open date and relationship effective dates describe separate facts. The existing academy-trust mapping uses group open dates as source-derived incorporation dates; it is not independent company-register verification. Do not use those dates to populate academy-trust role or MAT-classification starts. Charitable company limited by guarantee is the accepted migration legal-form assumption for both company-identified academy trusts, not verified registered legal form or charity-register status. Dissolution and charity-register status remain unknown.
 
 ## Target interpretation
 
@@ -90,7 +93,7 @@ The group open dates, school open date and relationship effective dates describe
 | `academy_trust_classification` | One source-current Multi-academy trust classification per legal entity, independently of each company's responsibility for Teign. Starts and ends remain unknown. The archived Teign link alone must not make Templer's classification historical. |
 | `establishment_responsibility` | Two Run by academy trust responsibilities, both typed MAT: Templer from 2011-03-01, unknown end, `is_current = false`; Education South West from 2017-01-01, unknown end, `is_current = true`. |
 | `organisation_group`, `organisation_group_member` | No records created for either operating trust or the transfer. |
-| Migration evidence | Separate source records retaining GroupLinks 7097 and 26320, their source UIDs, effective dates and independent archived states, alongside identity decisions beneath the rebuild run. Preserve the distinction between a source-open trust and an archived school relationship. |
+| Migration evidence | Separate source records retaining GroupLinks 7097 and 26320, their source UIDs, effective dates and independent archived states, alongside the standalone migration's identity decisions. Preserve the distinction between a source-open trust and an archived school relationship. |
 
 There are two legal-entity classification periods and two establishment-specific responsibility periods. They are separate assertions, even though both entities are MATs. The model does not collapse them into one operator or derive the trust-wide classification's current state from the school's relationship state.
 
@@ -152,3 +155,4 @@ The expected result is two operator rows for the same URN. Only Education South 
 - No successor start date is copied into a predecessor's unknown end date.
 - Source links 7097 and 26320 retain their separate evidence and archived states.
 - Sponsor link 26321 is not silently treated as an operating relationship or merged into either company.
+- Atomic rollback and load, reverse-order reimport and existing-case regressions preserve unrelated establishment identities. The standalone migration adds Teign without changing default fixture selection or checked-in seeds.

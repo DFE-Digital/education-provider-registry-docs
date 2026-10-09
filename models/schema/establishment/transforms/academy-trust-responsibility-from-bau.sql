@@ -207,6 +207,64 @@ IF @URN=137166 AND @GROUP_ID=3641 AND NOT EXISTS (
       AND NOT EXISTS (SELECT 1 FROM dbo.GroupLink WHERE urn=115780)
 ) THROW 50001, 'T13 source assertions changed; review the separate-party assumption before loading.', 1;
 
+-- T8 separates the archived school relationship from both source-open MATs.
+-- T10's user-approved identity assumption is bounded to these source records.
+IF @URN=135961 AND @GROUP_ID IN(4118,4119)
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM dbo.EstablishmentGroup s JOIN dbo.EstablishmentGroup t ON t.id=4119
+      JOIN dbo.GroupLink sl ON sl.group_id=s.id AND sl.urn=@URN
+      JOIN dbo.GroupLink tl ON tl.group_id=t.id AND tl.urn=@URN
+      WHERE s.id=4118 AND s.name='Outwood Grange Academies Trust' AND s.type_code='05'
+        AND s.groupId='SP00396' AND s.companiesHouseNumber IS NULL AND s.UKPRN IS NULL
+        AND CONVERT(date,s.openDate)='1900-01-01' AND s.closedDate IS NULL
+        AND t.name='OUTWOOD GRANGE ACADEMIES TRUST' AND t.type_code='06' AND t.groupId='TR01585'
+        AND t.companiesHouseNumber='06995649' AND t.UKPRN=10058273
+        AND CONVERT(date,t.openDate)='2009-08-19' AND t.closedDate IS NULL
+        AND sl.id=5254 AND tl.id=5716 AND sl.archived=0 AND tl.archived=0
+        AND CONVERT(date,sl.effectiveDate)='2009-09-01' AND tl.effectiveDate=sl.effectiveDate)
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE urn=@URN)<>2
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE group_id=4118)<>25
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE group_id=4119)<>24
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE group_id=4118 AND archived=0)<>21
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE group_id=4119 AND archived=0)<>21
+      OR EXISTS(SELECT urn FROM dbo.GroupLink WHERE group_id=4118 AND archived=0
+        EXCEPT SELECT urn FROM dbo.GroupLink WHERE group_id=4119 AND archived=0)
+      OR EXISTS(SELECT urn FROM dbo.GroupLink WHERE group_id=4119 AND archived=0
+        EXCEPT SELECT urn FROM dbo.GroupLink WHERE group_id=4118 AND archived=0)
+      OR NOT EXISTS(SELECT 1 FROM dbo.Establishment WHERE URN=@URN AND EstablishmentName='Outwood Grange Academy'
+        AND type_code='28' AND status_code='1' AND UKPRN=10028145 AND LA_code='384'
+        AND EstablishmentNumber=6905 AND educationPhase_code='4' AND CONVERT(date,OpenDate)='2009-09-01' AND CloseDate IS NULL)
+      OR NOT EXISTS(SELECT 1 FROM dbo.Establishment WHERE URN=148341 AND EstablishmentName='Outwood Alternative Provision Eston'
+        AND type_code='11' AND status_code='8' AND UKPRN IS NULL AND LA_code='865'
+        AND EstablishmentNumber=6003 AND educationPhase_code='0'
+        AND CONVERT(date,OpenDate)='2018-11-10' AND CONVERT(date,CloseDate)='2018-11-10')
+      OR NOT EXISTS(SELECT 1 FROM dbo.IndependentSchools WHERE urn=148341 AND proprietorType_code='03')
+      OR EXISTS(SELECT 1 FROM dbo.GroupLink WHERE urn=148341)
+      OR EXISTS(SELECT 1 FROM dbo.EstablishmentProprietors WHERE urn=148341)
+    THROW 50001, 'T10 source assertions changed; review the approved controlled fixture before loading.', 1;
+END;
+
+-- T8 separates the archived school relationship from both source-open MATs.
+IF @URN=136494 AND @GROUP_ID IN(4920,3643)
+BEGIN
+    IF (SELECT count(*) FROM dbo.EstablishmentGroup g JOIN dbo.GroupLink l ON l.group_id=g.id
+      JOIN (VALUES
+        (4920,'TEMPLER ACADEMY SCHOOLS TRUST','TR02256','07518252',10058494,CAST('2011-02-04' AS date),7097,1,CAST('2011-03-01' AS date)),
+        (3643,'EDUCATION SOUTH WEST','TR01237','07451553',10058417,CAST('2010-11-25' AS date),26320,0,CAST('2017-01-01' AS date))
+      ) v(uid,name,gid,company,ukprn,opened,link,archived,started) ON g.id=v.uid AND l.id=v.link
+      WHERE g.name=v.name AND g.type_code='06' AND g.groupId=v.gid AND g.companiesHouseNumber=v.company
+        AND g.UKPRN=v.ukprn AND CONVERT(date,g.openDate)=v.opened AND g.closedDate IS NULL
+        AND l.urn=@URN AND l.archived=v.archived AND CONVERT(date,l.effectiveDate)=v.started)<>2
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE urn=@URN)<>3
+      OR NOT EXISTS(SELECT 1 FROM dbo.GroupLink WHERE urn=@URN AND id=26321 AND group_id=3642
+        AND archived=0 AND CONVERT(date,effectiveDate)='2017-01-01')
+      OR EXISTS(SELECT 1 FROM dbo.GroupRelationsLink WHERE linking_group IN(4920,3643) OR linked_group IN(4920,3643))
+      OR NOT EXISTS(SELECT 1 FROM dbo.Establishment WHERE URN=@URN AND EstablishmentName='Teign School'
+        AND type_code='34' AND status_code='1' AND UKPRN=10033036 AND LA_code='878'
+        AND EstablishmentNumber=5402 AND educationPhase_code='4' AND CONVERT(date,OpenDate)='2011-03-01' AND CloseDate IS NULL)
+    THROW 50001, 'T8 operator-transfer or source-open trust assertions changed; review before loading.', 1;
+END;
+
 -- T3 is a reviewed identity consolidation, not a change of operator. Require
 -- both identity and explicit transition evidence before projecting either row.
 DECLARE @T3_TRANSITION date;
@@ -235,11 +293,46 @@ BEGIN
         THROW 50001, 'T3 Ridgewood identity or SAT-to-MAT transition evidence is missing or changed.', 1;
 END;
 
+-- T22 consolidates only the historical SAT/MAT pair. The current SAT is a
+-- separate legal entity under the user's accepted test-case assertion.
+DECLARE @T22 bit = 0;
+IF @URN=142869 AND @GROUP_ID IN (16279,17115,17397)
+BEGIN
+    IF (SELECT count(*) FROM dbo.EstablishmentGroup g JOIN (VALUES
+        (16279,'THE NORTHAMPTON FREE SCHOOL TRUST','10','TR03305.old',CAST(NULL AS varchar(20)),CAST(NULL AS bigint),CAST('2018-10-09' AS date)),
+        (17115,'THE NORTHAMPTON FREE SCHOOL TRUST','06','TR03305.old2',NULL,NULL,CAST('2019-07-09' AS date)),
+        (17397,'WOOTTON PARK ACADEMY TRUST','10','TR03305','08782697',10064301,NULL)
+    ) v(id,name,type_code,groupId,company,ukprn,closed) ON g.id=v.id
+      WHERE g.name=v.name AND g.type_code=v.type_code AND g.groupId=v.groupId
+        AND (g.companiesHouseNumber=v.company OR (g.companiesHouseNumber IS NULL AND v.company IS NULL))
+        AND (g.UKPRN=v.ukprn OR (g.UKPRN IS NULL AND v.ukprn IS NULL))
+        AND CONVERT(date,g.openDate)='2013-11-20'
+        AND (CONVERT(date,g.closedDate)=v.closed OR (g.closedDate IS NULL AND v.closed IS NULL)))<>3
+      OR (SELECT count(*) FROM dbo.GroupLink l JOIN (VALUES
+        (25267,16279,1,CAST('2016-09-01' AS date)),
+        (28287,17115,1,CAST('2018-10-09' AS date)),
+        (29262,17397,0,CAST('2019-07-09' AS date))
+      ) v(id,uid,archived,started) ON l.id=v.id
+        WHERE l.group_id=v.uid AND l.urn=@URN AND l.archived=v.archived AND CONVERT(date,l.effectiveDate)=v.started)<>3
+      OR (SELECT count(*) FROM dbo.GroupLink WHERE urn=@URN)<>3
+      OR (SELECT count(*) FROM dbo.GroupRelationsLink WHERE
+        ((id=25 AND linking_group=16279 AND linked_group=17115 AND type_code='1M') OR
+         (id=26 AND linking_group=17115 AND linked_group=16279 AND type_code='1S'))
+        AND CONVERT(date,establishedDate)='2018-10-09' AND CONVERT(date,systemLinkDate)='2018-10-09')<>2
+      OR (SELECT count(*) FROM dbo.GroupRelationsLink WHERE linking_group IN(16279,17115,17397) OR linked_group IN(16279,17115,17397))<>2
+      OR NOT EXISTS (SELECT 1 FROM dbo.Establishment WHERE URN=@URN AND EstablishmentName='Wootton Park School'
+        AND type_code='35' AND status_code='1' AND UKPRN=10056995 AND LA_code='928'
+        AND EstablishmentNumber=4020 AND educationPhase_code='7' AND CONVERT(date,OpenDate)='2016-09-01' AND CloseDate IS NULL)
+        THROW 50001, 'T22 identity or transition assertions changed; manual review required.', 1;
+    SET @T22=1;
+END;
+
 SELECT
     COALESCE(NULLIF(LTRIM(RTRIM(resolved_mat.name)), ''), NULLIF(LTRIM(RTRIM(eg.name)), '')) AS legal_entity_name,
     COALESCE(NULLIF(LTRIM(RTRIM(resolved_mat.companiesHouseNumber)), ''), NULLIF(LTRIM(RTRIM(eg.companiesHouseNumber)), '')) AS companies_house_number,
     COALESCE(CONVERT(varchar(20), resolved_mat.UKPRN), CONVERT(varchar(20), eg.UKPRN)) AS ukprn,
     CASE
+        WHEN @T22=1 AND eg.id IN(16279,17115) THEN NULL
         WHEN COALESCE(resolved_mat.type_code, eg.type_code) IN ('06', '10') THEN CONVERT(varchar(10), COALESCE(resolved_mat.openDate, eg.openDate), 23)
     END AS legal_entity_incorporation_date,
     CONVERT(varchar(20), eg.id) AS group_uid,
@@ -276,10 +369,13 @@ SELECT
          AND eg.closedDate = e.CloseDate
         THEN 'evidenced'
     END AS role_end_date_basis,
-    CASE WHEN @T3_TRANSITION IS NOT NULL AND eg.type_code = '06'
+    CASE WHEN @T22=1 AND eg.id=17115 THEN '2018-10-09'
+         WHEN @T3_TRANSITION IS NOT NULL AND eg.type_code = '06'
          THEN CONVERT(varchar(10), @T3_TRANSITION, 23)
     END AS classification_start_date,
     CASE
+        WHEN @T22=1 AND eg.id=16279 THEN '2018-10-09'
+        WHEN @T22=1 AND eg.id=17115 THEN '2019-07-09'
         WHEN @T3_TRANSITION IS NOT NULL AND eg.type_code = '10'
         THEN CONVERT(varchar(10), @T3_TRANSITION, 23)
         WHEN @T15R_ROLE_END IS NOT NULL THEN CONVERT(varchar(10),@T15R_ROLE_END,23)
@@ -288,7 +384,8 @@ SELECT
          AND eg.closedDate = e.CloseDate
         THEN CONVERT(varchar(10), eg.closedDate, 23)
     END AS classification_end_date,
-    CONVERT(bit, CASE WHEN gl.archived = 1 OR eg.closedDate IS NOT NULL THEN 0 ELSE 1 END) AS is_current,
+    CONVERT(bit, CASE WHEN @URN=136494 AND eg.id IN(4920,3643) THEN 1
+        WHEN gl.archived = 1 OR eg.closedDate IS NOT NULL THEN 0 ELSE 1 END) AS is_current,
     CONVERT(integer, gl.urn) AS establishment_urn,
     CONVERT(varchar(10), gl.effectiveDate, 23) AS responsibility_start_date,
     CASE
@@ -297,7 +394,9 @@ SELECT
     CASE
         WHEN e.CloseDate IS NOT NULL THEN 'inferred'
     END AS end_date_basis,
-    CASE WHEN @T3_TRANSITION IS NOT NULL THEN
+    CASE WHEN @T22=1 THEN
+        'T22 accepted two-entity assertion: historical SAT UID 16279 / TR03305.old and MAT UID 17115 / TR03305.old2 are one provisional THE NORTHAMPTON FREE SCHOOL TRUST legal entity; current SAT UID 17397 / TR03305 is a separate WOOTTON PARK ACADEMY TRUST legal entity. Only the current entity owns company 08782697 and organisation UKPRN 10064301. Historical company, organisation UKPRN, legal form and incorporation remain unknown. Relations 25 (1M) and 26 (1S) explicitly evidence the historical SAT-to-MAT transition 2018-10-09. MAT classification ends at source group closure 2019-07-09 under the bounded lifecycle interpretation; this is not a return to SAT within that entity. Current SAT classification start and both role boundaries unknown. Links 25267 / 28287 / 29262 retain archived flags 1 / 1 / 0 and starts 2016-09-01 / 2018-10-09 / 2019-07-09. All responsibility ends and company dissolution unknown. Shared Group ID stem and openDate 2013-11-20 do not authorise merging the current entity. Current company incorporation is source-derived only. Actual migration requires a recorded manual identity and lifecycle decision.'
+    WHEN @T3_TRANSITION IS NOT NULL THEN
         'T3: shared Group ID TR00009, UKPRN 10059335 and incorporation date; Companies House 07795736 supplied by MAT 20364. GroupRelationsLink 547 (2055 -> 20364, 1M) and 548 (20364 -> 2055, 1S) evidence classification transition 2021-03-30. Source GroupLink 4778 supplies the historical SAT responsibility start 2011-11-01; GroupLink 34277 supplies the current MAT responsibility start 2021-03-30. One continuing legal entity and role; separate SAT and MAT responsibilities. SAT responsibility end and initial SAT classification start unknown; classification dates are not copied into responsibility boundaries.'
     END AS consolidation_evidence,
     CONVERT(bit, CASE WHEN (@URN=103630 AND eg.id=1650) OR gl.archived = 1 OR eg.closedDate IS NOT NULL THEN 0 ELSE 1 END) AS responsibility_is_current,
@@ -305,7 +404,11 @@ SELECT
     CONVERT(varchar(10), eg.openDate, 23) AS source_group_open_date,
     CONVERT(integer, gl.archived) AS source_archived,
     CASE WHEN @URN=135936 AND eg.id=2613 THEN 'person' ELSE 'legal_entity' END AS party_kind,
-    CASE WHEN @URN=103630 AND eg.id=1650 THEN
+    CASE WHEN @URN=135961 AND eg.id IN(4118,4119) THEN
+        'T10 accepted shared-party assumption: sponsor UID 4118 / SP00396 and MAT UID 4119 / TR01585 are one OUTWOOD GRANGE ACADEMIES TRUST legal entity. Only MAT supplies company 06995649 and organisation UKPRN 10058273. Matching names and identical non-empty 21-school current link sets support the approved decision, not a general name-matching rule. GroupLinks 5254 and 5716: archived=0, effectiveDate=2009-09-01. Sponsor source openDate=1900-01-01 is a rejected placeholder, not incorporation or role start. MAT openDate=2009-08-19 is source-derived incorporation; charitable company limited by guarantee is the migration legal-form assumption. Role/classification boundaries, responsibility ends, dissolution and charity-register status unknown. Approved controlled proprietor assertion for school 148341 reuses this party without a Proprietor role. Actual migration requires a recorded manual identity decision.'
+    WHEN @URN=136494 AND eg.id IN(4920,3643) THEN
+        'T8 separate MAT operators: UID 4920 / TR02256 / company 07518252 / UKPRN 10058494 and UID 3643 / TR01237 / company 07451553 / UKPRN 10058417 remain separate legal entities. GroupLinks 7097 (archived=1, effectiveDate=2011-03-01) and 26320 (archived=0, effectiveDate=2017-01-01) supply historical and current responsibilities. Both source groups are open MATs: role identifiers and MAT classifications remain source-current independently of the school link. Responsibility ends, role boundaries and classification boundaries unknown; successor start is not predecessor end. Source group openDates 2011-02-04 and 2010-11-25 supply source-derived incorporation only, not independently verified company dates. Charitable company limited by guarantee is the migration legal-form assumption; charity-register status and dissolution unknown. Sponsor UID 3642 / link 26321 is outside this operating slice.'
+    WHEN @URN=103630 AND eg.id=1650 THEN
         'T17 accepted bounded foundation-support mapping: Four Oaks Learning Trust For Excellence, UID 1650, is provisionally allocated from its source UID; company number, organisation UKPRN and Group ID are NULL. Source GroupLink 1572: archived=0; effectiveDate=2013-05-20. Langley School closes 2020-06-16: responsibility end is inferred as that closure upper bound, and the responsibility is not current despite the source flag. The foundation-trust group remains open; its role dates and company dates remain unknown, and UID 1650 remains current. Source group openDate=2013-05-20 is not incorporation or role start. Federation membership is separate, not an operating responsibility. Registered trust identity and legal form require review.'
     WHEN @URN=135905 AND eg.id=3839 THEN
         'T16 historical MAT operator: MARCH 2016 LIMITED, UID 3839 / TR01385, company 06888873; organisation UKPRN NULL. Source GroupLink 6647: archived=0; effectiveDate=2009-09-01. Group closedDate=2016-02-29 and establishment CloseDate=2016-02-29. Role and MAT classification ends use the recorded group closure; responsibility end is inferred from establishment closure as an upper bound. Role/classification starts and company dissolution remain unknown. Source group openDate=2009-04-27 is the source-derived incorporation mapping. Charitable company limited by guarantee is the MR011 migration assumption, not verified charity-register status. Sponsor links 4014 / UID 4992 and 21588 / UID 15909 are outside this slice; narrative co-sponsor commentary is not a legal entity.'
@@ -340,7 +443,8 @@ OUTER APPLY (
             AND NULLIF(LTRIM(RTRIM(eg.companiesHouseNumber)), '') IS NOT NULL
             AND LTRIM(RTRIM(eg.companiesHouseNumber)) = LTRIM(RTRIM(candidate.companiesHouseNumber)))
            OR (@T3_TRANSITION IS NOT NULL AND eg.id = 2055 AND candidate.id = 20364)
-           OR (@URN=134311 AND eg.id=4075 AND candidate.id=4076))
+           OR (@URN=134311 AND eg.id=4075 AND candidate.id=4076)
+           OR (@URN=135961 AND eg.id=4118 AND candidate.id=4119))
       AND candidate.type_code IN ('06', '10', '11')
       AND NULLIF(LTRIM(RTRIM(candidate.companiesHouseNumber)), '') IS NOT NULL
       -- A supplied company number must never be replaced by a different

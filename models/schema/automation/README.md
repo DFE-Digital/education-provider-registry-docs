@@ -33,6 +33,7 @@ automation/
             BauImport.ps1         loading from the local BAU copy
             CheckedInFixture.ps1  loading and exporting the checked-in SQL
             Tests.ps1             validation, approval and scope tests
+            AllTestCases.ps1      complete catalogue manifest and validation
             Reports.ps1           read-only summaries
 ```
 
@@ -40,6 +41,26 @@ The entry-point scripts contain no logic of their own. Each is a short list of
 module steps, so reading one shows the whole flow.
 
 ## Running the whole flow
+
+Both default rebuild commands restore all 22 active scenarios across 41 distinct
+establishments. T20 reuses T2. `seed/all-test-cases.json` lists every case, its
+establishments and any additional runner and validator. `fixture-selection.json`
+remains the base 19-establishment slice, not the complete default build scope.
+
+The default BAU rebuild loads the base slice, runs every additional case with the
+same source and target connection settings, validates the complete catalogue and
+refreshes all three checked-in SQL seeds. Reviewed controlled fixtures, identity
+assumptions and migration evidence are included. A failure stops the build and
+prevents automatic seed refresh. The rebuild is not one database-wide transaction;
+an interrupted build can leave a partial target and must be rerun.
+
+The checked-in SQL rebuild restores that complete saved dataset and migration
+evidence, then runs the same catalogue validation without SQL Server, its password
+or the public extract. `run-establishment-tests.ps1` also validates the full scope.
+Explicit custom BAU selections still load only their requested scope.
+
+The case runners below remain usable independently and do not themselves refresh
+seeds. The default rebuild now invokes them automatically before its final export.
 
 From `education-provider-registry-docs`:
 
@@ -185,6 +206,96 @@ Repeat import preserves business identities. Beaufort and the trust's wider
 portfolio are not imported; other establishments, default selection and checked-in
 seeds are preserved. Reference data and migration tables must already exist.
 
+To add T18, the complete St Elphege's federation across Croydon and Sutton:
+
+```powershell
+.\models\schema\automation\migrate-t18-from-local-bau.ps1
+```
+
+The runner uses `reader` and `EPR_BAU_SQL_PASSWORD`, preflights all three schools
+and federation 1761, and commits their loads together after a validated rollback
+probe. Each school retains its own authority and joining date; the federation
+has no authority owner. It checks complete membership evidence and stable repeat
+import. Other establishments, default fixture selection and checked-in seeds
+remain unchanged. Reference data and migration tables must already exist.
+
+To add T19R, Hazelbury's complete seven-centre group in Enfield:
+
+```powershell
+.\models\schema\automation\migrate-t19r-from-local-bau.ps1
+```
+
+The runner uses `reader` and `EPR_BAU_SQL_PASSWORD`, preflights the complete
+source group and seven centres, validates a rollback probe, then commits all
+loads together. It preserves centre opening dates, later membership joining
+dates, Enfield authority and explicit lead codes. Hazelbury's sole current
+lead assertion has unknown business start/end dates. Repeat import checks
+business identities, including the lead period. Other establishments, default
+selection and checked-in seeds remain unchanged; reference and migration tables
+must already exist.
+
+To add T21, Summerhill School's controlled partnership proprietor:
+
+```powershell
+.\models\schema\automation\migrate-t21-from-local-bau.ps1
+```
+
+The runner checks the 16 June 2026 extract's exact proprietor assertion and
+reader-authenticated local school/context fields before target writes. A rollback
+probe precedes atomic school/partnership/responsibility commit. Traditional
+partnership is an explicit bounded fixture assumption, not verified registered
+identity. Responsibility dates and registered proprietor identifiers remain
+unknown; the separately named charity is not merged. Repeat import preserves
+business identities. Other establishments, default selection and checked-in SQL
+seeds remain unchanged. Reference and migration tables must already exist.
+
+To add or correct T22, Wootton Park School's historical SAT/MAT and separate current SAT:
+
+```powershell
+.\models\schema\automation\migrate-t22-from-local-bau.ps1
+```
+
+The reader-authenticated runner preflights all three trust records and the school
+before target writes. It tests an atomic rollback, commits one school and two
+separate parties/roles, then tests reverse-order reimport with stable business
+identities. The historical SAT/MAT pair shares a provisional entity; only the
+current SAT owns the company number and organisation UKPRN. Exact suffixed Group
+IDs remain on the historical role. A guarded correction splits the earlier
+one-entity mapping without deleting records or reassigning registered identifiers;
+its evidence is retained as superseded. Relations evidence the historical
+SAT-to-MAT transition, not shared identity with the current SAT. The case records
+the user's assertion and actual migration review requirement. Responsibility ends and role boundaries remain unknown. Other
+establishments, default selection and checked-in seeds remain unchanged.
+
+To migrate T8, Teign School's change between separate MAT operators:
+
+```powershell
+.\models\schema\automation\migrate-t8-from-local-bau.ps1
+```
+
+The reader-authenticated runner preflights the school and both source operators
+before writes, validates an atomic rollback, commits together and tests stable
+reverse-order reimport. Templer's responsibility is historical, not ended by
+the successor's start. Both source-open trusts retain current MAT classifications
+and GIAS identifiers with unknown role/classification boundaries. Sponsor 3642
+is outside this operating slice. Default selection, seeds and unrelated school
+identities remain unchanged; reference and migration tables must already exist.
+
+To migrate T10, Outwood's shared sponsor, trust and proprietor responsibilities:
+
+```powershell
+.\models\schema\automation\migrate-t10-from-local-bau.ps1 -SqlServer SL646104
+```
+
+Uses `reader` with `EPR_BAU_SQL_PASSWORD`. Requires the existing reference and
+migration tables and the local June 2026 public extract. The reviewed decision
+is retained in `seed/t10-controlled-decision.json`. Eston's core uses the approved
+extract values, not the conflicting BAU rejected-opening record. BAU is unchanged;
+both sources and the shared-party assumption are preserved in migration evidence.
+Both import orders, rollback/load, reverse reimport and unreviewed-decision
+rejection are tested. Default fixture selection and checked-in seeds are unchanged;
+the default rebuild now recreates this case before its complete fixture export.
+
 For individual steps, import the module and create the connection objects:
 
 ```powershell
@@ -225,7 +336,7 @@ Remove-RunWorkspace -Path $workspace
 | | `Import-EstablishmentFromBau` | Loads one establishment. |
 | | `Import-ControlledProprietorFromBau` | Validates reviewed public-extract assertions against the selected schools, then loads a shared proprietor body and separate responsibilities. Retains obfuscated local context separately; requires the rebuild run ID. |
 | | `Import-EstablishmentPartyRoleFromBau` | Loads one group link as a legal entity or an explicitly reviewed person sponsor, with its role, applicable classification, group identifiers and responsibility. |
-| | `Import-OrganisationGroupFromBau` | Loads a federation or children's-centre group and its complete selected membership. Children's-centre groups retain their recorded authority and current lead assertion as a separate lead period with unknown business boundaries. Existing lead periods are retained on changes; the membership flag remains a current-state summary. |
+| | `Import-OrganisationGroupFromBau` | Loads a federation or children's-centre group and its complete selected membership. Children's-centre groups retain their recorded authority and current lead assertion as a separate lead period with unknown business boundaries. Existing lead periods are retained on changes; current lead status is derived from lead periods, not a stored membership flag. |
 | | `Import-GovernanceFromBau` | Loads one establishment's governance appointments. |
 | Checked-in SQL | `Import-CheckedInEstablishmentFixture` | Loads the checked-in establishment fixture and migration evidence. |
 | | `Export-EstablishmentFixture` | Exports the database as SQL with pg_dump. |

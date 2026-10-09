@@ -50,8 +50,8 @@ WHERE t.name='Group UID' AND issuer.name='GIAS' AND i.value='1537' AND NOT i.is_
 DO $$ BEGIN IF (SELECT count(*) FROM t17_group_context)<>1
  THEN RAISE EXCEPTION 'T17 existing federation UID has a conflicting identity or lifecycle'; END IF; END $$;
 INSERT INTO establishment.organisation_group_member
- (organisation_group_id,establishment_id,joined_date,left_date,is_lead_member)
-SELECT c.organisation_group_id,e.establishment_id,f.joined_date,f.left_date,NULL
+ (organisation_group_id,establishment_id,joined_date,left_date)
+SELECT c.organisation_group_id,e.establishment_id,f.joined_date,f.left_date
 FROM t17_federation_fixture f CROSS JOIN t17_group_context c
 JOIN establishment.establishment e ON e.urn=f.establishment_urn
 WHERE NOT EXISTS (SELECT 1 FROM establishment.organisation_group_member m

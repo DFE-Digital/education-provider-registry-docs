@@ -1,0 +1,26 @@
+{
+  "cases": [
+    {"case":"T1","urns":[136102]},
+    {"case":"T2","urns":[134314]},
+    {"case":"T3","urns":[137603]},
+    {"case":"T4","urns":[109443,109613]},
+    {"case":"T5","urns":[20338,20549,20614,21363,22422,22459,22975,23004,23122]},
+    {"case":"T6","urns":[132141]},
+    {"case":"T7","urns":[135936]},
+    {"case":"T8","urns":[136494],"runner":"migrate-t8-from-local-bau.ps1","validator":"validate-t8-operator-transfer.sql"},
+    {"case":"T9","urns":[112461,119009]},
+    {"case":"T10","urns":[148341,135961],"runner":"migrate-t10-from-local-bau.ps1","validator":"validate-t10-shared-responsibilities.sql"},
+    {"case":"T11R","urns":[134311],"runner":"migrate-t11r-from-local-bau.ps1","validator":"validate-oasis-identity-assumption.sql"},
+    {"case":"T12","urns":[109393],"runner":"migrate-t12-from-local-bau.ps1","validator":"validate-t12-foundation-trust.sql"},
+    {"case":"T13","urns":[115780,137166],"runner":"migrate-t13-from-local-bau.ps1","validator":"validate-t13-distinct-parties.sql"},
+    {"case":"T14R","urns":[139844],"runner":"migrate-t14r-from-local-bau.ps1","validator":"validate-t14r-external-sponsor.sql"},
+    {"case":"T15R","urns":[136933],"runner":"migrate-t15r-from-local-bau.ps1","validator":"validate-t15r-closed-sat.sql"},
+    {"case":"T16","urns":[135905],"runner":"migrate-t16-from-local-bau.ps1","validator":"validate-t16-closed-mat.sql"},
+    {"case":"T17","urns":[103630],"runner":"migrate-t17-from-local-bau.ps1","validator":"validate-t17-dual-relationships.sql"},
+    {"case":"T18","urns":[101800,102996,102997],"runner":"migrate-t18-from-local-bau.ps1","validator":"validate-t18-cross-authority-federation.sql"},
+    {"case":"T19R","urns":[20048,20575,21240,21423,21425,21547,22423],"runner":"migrate-t19r-from-local-bau.ps1","validator":"validate-t19r-hazelbury.sql"},
+    {"case":"T20","urns":[134314],"coveredBy":"T2"},
+    {"case":"T21","urns":[124870],"runner":"migrate-t21-from-local-bau.ps1","validator":"validate-t21-partnership-proprietor.sql"},
+    {"case":"T22","urns":[142869],"runner":"migrate-t22-from-local-bau.ps1","validator":"validate-t22-trust-classification-history.sql"}
+  ]
+}
