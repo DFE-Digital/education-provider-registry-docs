@@ -42,6 +42,28 @@ module steps, so reading one shows the whole flow.
 
 ## Running the whole flow
 
+T1 group addresses are included in both default rebuilds. The BAU path runs
+`migrate-t1-addresses-from-local-bau.ps1` after the base parties are loaded;
+the checked-in path restores the address associations and six-block provenance.
+The scoped runner can also run independently without rebuilding:
+
+```powershell
+.\models\schema\automation\migrate-t1-addresses-from-local-bau.ps1 -SqlServer SL646104
+```
+
+T1 imports only the two available primary blocks as administrative addresses,
+not verified registered offices. Blank contact/sponsor blocks create no defaults.
+Unresolved county labels remain null; raw county/country/property/site metadata
+is retained in migration evidence. Changed existing addresses require a reviewed
+decision, not silent replacement. Rollback/load, repeat-import, conflict rejection,
+foreign-key, purpose, uniqueness and writer-permission checks cover this slice.
+
+T1's associations have `is_current = true` and null `start_date`/`end_date`.
+Source observation dates are not effective business dates. Reruns retain the
+existing periods. History tests exercise atomic moves, adjacent periods and
+overlap rejection using synthetic rows that are rolled back. Postal values
+are append-only for ordinary writers, including values shared with school sites.
+
 Both default rebuild commands restore all 22 active scenarios across 41 distinct
 establishments. T20 reuses T2. `seed/all-test-cases.json` lists every case, its
 establishments and any additional runner and validator. `fixture-selection.json`

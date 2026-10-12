@@ -1,6 +1,6 @@
 {
   "cases": [
-    {"case":"T1","urns":[136102]},
+    {"case":"T1","urns":[136102],"runner":"migrate-t1-addresses-from-local-bau.ps1","validator":"validate-t1-group-addresses.sql"},
     {"case":"T2","urns":[134314]},
     {"case":"T3","urns":[137603]},
     {"case":"T4","urns":[109443,109613]},

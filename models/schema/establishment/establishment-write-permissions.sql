@@ -87,7 +87,7 @@ GRANT USAGE ON SCHEMA establishment TO epr_establishment_writer,epr_establishmen
 GRANT SELECT ON ALL TABLES IN SCHEMA establishment TO epr_establishment_writer;
 GRANT INSERT,UPDATE,DELETE ON establishment.establishment,establishment.establishment_geography,
     establishment.establishment_contact,establishment.establishment_lifecycle,
-    establishment.address,establishment.site,establishment.establishment_to_site,
+    establishment.site,establishment.establishment_to_site,
     establishment.capacity_and_pupil_measures,establishment.education_admissions_and_provision,
     establishment.statutory_age_range,establishment.specialist_provision,
     establishment.resourced_provision,establishment.sen_unit_provision,
@@ -95,6 +95,22 @@ GRANT INSERT,UPDATE,DELETE ON establishment.establishment,establishment.establis
     establishment.academy_trust_classification,establishment.establishment_responsibility,
     establishment.organisation_group_member,establishment.organisation_group_member_lead_period,
     establishment.group_identifier TO epr_establishment_writer;
+DO $$ BEGIN
+    IF to_regclass('establishment.legal_entity_address') IS NOT NULL THEN
+        REVOKE ALL(legal_entity_address_id,legal_entity_id,address_id,address_purpose_id,start_date,end_date,is_current)
+            ON establishment.legal_entity_address FROM PUBLIC,epr_establishment_writer,epr_establishment_corrector;
+        GRANT INSERT ON establishment.legal_entity_address TO epr_establishment_writer;
+        GRANT UPDATE(end_date,is_current) ON establishment.legal_entity_address TO epr_establishment_writer;
+    END IF;
+    IF to_regclass('establishment.organisation_group_address') IS NOT NULL THEN
+        REVOKE ALL(organisation_group_address_id,organisation_group_id,address_id,address_purpose_id,start_date,end_date,is_current)
+            ON establishment.organisation_group_address FROM PUBLIC,epr_establishment_writer,epr_establishment_corrector;
+        GRANT INSERT ON establishment.organisation_group_address TO epr_establishment_writer;
+        GRANT UPDATE(end_date,is_current) ON establishment.organisation_group_address TO epr_establishment_writer;
+    END IF;
+END $$;
+-- Postal values are append-only for ordinary writers, including shared site values.
+GRANT INSERT ON establishment.address TO epr_establishment_writer;
 GRANT INSERT ON establishment.organisation_identifier TO epr_establishment_writer;
 GRANT UPDATE(is_current) ON establishment.organisation_identifier TO epr_establishment_writer;
 GRANT INSERT,DELETE ON establishment.organisation_group TO epr_establishment_writer;

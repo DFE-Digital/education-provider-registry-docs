@@ -4,7 +4,9 @@ This document defines the logical model for legal entities, responsibilities and
 
 ## Establishment groups ERD
 
-The groups branch is shown separately so that the main establishment ERD remains readable. The model is split into two diagrams: one for parties, roles and responsibilities, and one for organisation groups and group identifiers. A legal entity can hold dated establishment-party roles and can have dated responsibilities for establishments. A person can hold a school-sponsor role and permitted responsibilities. A federation or children's-centre grouping is instead a named group of establishments; it is not a legal entity.
+The groups branch is shown separately so that the main establishment ERD remains readable. The model is split into two diagrams: one for parties, roles and responsibilities, and one for organisation groups and group identifiers. A legal entity can hold dated establishment-party roles and can have dated responsibilities for establishments. A person can hold a school-sponsor role and permitted responsibilities. A federation or children's-centre grouping is instead a named group of establishments; it is not a legal entity in this model.
+
+Group and legal-entity address associations are defined separately in the [Group addresses logical model](group-addresses-logical-model.md).
 
 The model contains:
 
@@ -14,7 +16,7 @@ The model contains:
 - dated responsibilities held by a legal entity or person for an establishment;
 - dated membership of federations and children's-centre organisation groups;
 - Dated children's-centre lead periods, separate from membership; and
-- the group UIDs and Group IDs that identify roles and organisation groups.
+- The group UIDs and Group IDs that identify roles and organisation groups.
 
 ### Parties, roles and responsibilities
 
@@ -697,6 +699,7 @@ The establishment keeps its own identity throughout changes in group membership.
 
 For example, a children's-centre collaboration can be linked to the local authority responsible for coordinating it. Federations do not use this relationship, because the model does not treat a local authority as the owner of a federation.
 
+
 ## Model scope
 
 ### Included concepts
@@ -711,7 +714,8 @@ For example, a children's-centre collaboration can be linked to the local author
 
 ### Excluded attributes and relationships
 
-- Legal-entity addresses, contacts, head-of-group details and proprietor contact details.
+- Group and legal-entity address associations, which are defined in the separate address model.
+- Other contacts, head-of-group details and proprietor contact details.
 - Name history.
 - Local-authority maintenance, which belongs to the accountability slice.
 - Succession between legal entities beyond a change from SAT to MAT.
@@ -801,7 +805,7 @@ Source tables and fields correspond to target concepts as follows; they do not d
 
 ## Physical-model boundary
 
-The target physical schema for this slice will contain the target tables represented in the ERD: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `organisation_group_member_lead_period`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
+The target physical schema for this slice will contain the target tables represented in the ERDs: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `organisation_group_member_lead_period`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
 
 The physical lead-period table also stores `organisation_group_id` so PostgreSQL can enforce group-wide non-overlap and one-current-lead constraints. A composite foreign key ensures that this value matches the owning membership. Two triggers check lead-period and membership boundaries. Ordinary-writer permissions prevent group-type changes and organisation-identifier rewriting or deletion. Exceptional protected-data corrections require an authorised function with a reason and transactional before/after audit; it rejects group-type changes that would invalidate existing lead periods. Current lead status is queried from the period table. Explicit source STANDARD/LEAD assertions remain in migration evidence; absence of a current lead row does not prove a source assertion of non-lead. Current status must be changed explicitly; passing a business date does not automatically update it. Fully known ranges use inclusive starts and exclusive ends; incomplete ranges are retained for review, not treated as unbounded dates.
 

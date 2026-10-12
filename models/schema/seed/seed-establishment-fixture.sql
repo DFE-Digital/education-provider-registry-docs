@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict JpiivUqZJvtjDLGoqzkpkY05UgMINMLS1fSqVXzs8cuuBm0zczV0vf2sWiBOl4O
+\restrict flgJrhQPUKE5GayHQNVmsqQw0r4vWKOIiquvaNzHETx6QLs7p0GoZMaxGLloN2B
 
 -- Dumped from database version 18.6
 -- Dumped by pg_dump version 18.6
@@ -120,7 +120,8 @@ INSERT INTO establishment.address (address_id, address_line_1, address_line_2, a
 	('cf146daa-a92f-4782-a8e1-f418cdcbdd99', 'obfuscated', 'Hazelwood School', 'obfuscated', 'obfuscated', '058', 'N13 5HE'),
 	('ed93cdb0-bb28-4e85-aa22-e9e30db43116', 'obfuscated', 'Enfield', NULL, 'obfuscated', '058', 'EN1 4RE'),
 	('056aca12-1498-4c54-beb9-c2c9bf3cac1e', 'obfuscated', NULL, NULL, 'obfuscated', '000', 'EN3 6HG'),
-	('0fdedd1c-be52-4881-9a06-0142cf64e36e', 'WESTWARD HO', 'LEISTON', 'SUFFOLK', 'Leiston', '033', 'IP16 4HY');
+	('0fdedd1c-be52-4881-9a06-0142cf64e36e', 'WESTWARD HO', 'LEISTON', 'SUFFOLK', 'Leiston', '033', 'IP16 4HY'),
+	('fdf88c8d-831c-4ae7-9378-d183f087d931', '1 Angel Square', NULL, NULL, 'Manchester', NULL, 'M60 0AG');
 
 
 --
@@ -200,6 +201,12 @@ INSERT INTO establishment.capacity_and_pupil_measures (capacity_and_pupil_measur
 	('b892956c-5541-4728-99a7-48656733074c', '998775ca-c521-4df1-8cf6-5304b20b5a5e', 5534, 321, 43, NULL),
 	('7ad5297f-1bbb-466b-8e92-b7c881e99d6f', '147a02bd-e737-4d3b-94c0-c2185db187bc', 51776, 51, NULL, NULL),
 	('29cf1c39-e717-4a22-90a2-ebb16c97a879', 'bbd5f265-3f34-426f-b2b2-f5eefa753d0f', 1290, 1670, 131, NULL);
+
+
+--
+-- Data for Name: data_correction_audit; Type: TABLE DATA; Schema: establishment; Owner: -
+--
+
 
 
 --
@@ -638,6 +645,21 @@ INSERT INTO establishment.group_identifier (group_identifier_id, establishment_p
 
 
 --
+-- Data for Name: legal_entity_address; Type: TABLE DATA; Schema: establishment; Owner: -
+--
+
+INSERT INTO establishment.legal_entity_address (legal_entity_address_id, legal_entity_id, address_id, address_purpose_id, start_date, end_date, is_current) VALUES
+	('27510e70-5a1b-42fa-81b8-153ed0e1eba8', '05248c5c-bce4-4819-afb8-95d6304aad86', 'fdf88c8d-831c-4ae7-9378-d183f087d931', 3, NULL, NULL, true),
+	('76227379-7338-4f2c-800e-409da9d8d663', '980686ef-fef1-4cb2-81ba-f9df2b6e4df1', 'fdf88c8d-831c-4ae7-9378-d183f087d931', 3, NULL, NULL, true);
+
+
+--
+-- Data for Name: organisation_group_address; Type: TABLE DATA; Schema: establishment; Owner: -
+--
+
+
+
+--
 -- Data for Name: organisation_group_member; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
@@ -761,5 +783,5 @@ INSERT INTO establishment.statutory_age_range (statutory_age_range_id, education
 -- PostgreSQL database dump complete
 --
 
-\unrestrict JpiivUqZJvtjDLGoqzkpkY05UgMINMLS1fSqVXzs8cuuBm0zczV0vf2sWiBOl4O
+\unrestrict flgJrhQPUKE5GayHQNVmsqQw0r4vWKOIiquvaNzHETx6QLs7p0GoZMaxGLloN2B
 

@@ -15,6 +15,8 @@ BEGIN
           AND table_type = 'BASE TABLE'
           AND table_name NOT IN (
               'data_correction_audit',
+              'legal_entity_address',
+              'organisation_group_address',
               'academy_trust_classification',
               'academy_trust_type',
               'establishment_party_role',

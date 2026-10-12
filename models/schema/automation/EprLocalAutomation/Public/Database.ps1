@@ -28,6 +28,7 @@ function Import-ReferenceSeed {
 
     Write-Step 'Loading the academy-trust reference seed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql') -FailureMessage 'Academy-trust reference-data seed failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-address-purposes.sql') -FailureMessage 'Address-purpose seed failed'
 }
 
 function Initialize-EstablishmentDatabase {
