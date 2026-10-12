@@ -35,6 +35,32 @@ The sponsor responsibility starts on 1 September 2010. The academy-trust respons
 
 The source does not provide dates for the academy-trust or school-sponsor party roles, so their start and end dates are also `NULL`.
 
+## Group address coverage
+
+Each address association records an explicit period using `start_date`, `end_date` and `is_current`. The two source-derived associations are current, with both dates null: the source does not establish effective business dates. Neither the observation date nor a trust responsibility date is substituted. Unchanged imports retain the same association IDs and create no new periods. A changed source address requires a reviewed migration decision, not silent replacement of postal values or an invented move date.
+
+The local source observation on 12 October 2026 supplies a primary postal address for former SAT UID 2779 and current MAT UID 2777. Both blocks have the same postal components, but the parties remain two different legal entities. They therefore have two administrative-purpose `legal_entity_address` associations referencing one shared postal-address record.
+
+These source fields establish recorded group addresses, not verified legal registered offices. No registered-office association is created. All three contact blocks are blank, and sponsor UID 4949 has no primary postal-address block, so no contact or sponsor address is invented. Six source blocks, including the four blank blocks, retain separate migration evidence.
+
+The local source supplies county code 099 but no accessible county-label lookup. The target county remains unknown rather than storing 099 as a county name. County/country codes, UPRN and site-name metadata remain evidence; they do not create new school sites or prove property ownership. The observation date is not an address effective date.
+
+Expected results: two administrative associations, one shared address, no registered/contact associations for these parties, and unchanged school/site addresses. Atomic rollback/load, repeat import with stable address/association identities and same-run evidence, and rejection of an unreviewed changed address must pass.
+
+```sql
+SELECT i.value AS source_group_uid,le.name,p.code AS address_purpose,
+       link.legal_entity_address_id,a.*
+FROM establishment.group_identifier i
+JOIN establishment.group_identifier_type t USING(group_identifier_type_id)
+JOIN establishment.establishment_party_role r USING(establishment_party_role_id)
+JOIN establishment.legal_entity le USING(legal_entity_id)
+JOIN establishment.legal_entity_address link USING(legal_entity_id)
+JOIN establishment.address_purpose p USING(address_purpose_id)
+JOIN establishment.address a USING(address_id)
+WHERE t.name='Group UID' AND i.value IN ('2779','2777','4949')
+ORDER BY i.value;
+```
+
 ## Relationship graph
 
 ```mermaid

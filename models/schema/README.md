@@ -2,6 +2,21 @@
 
 This directory contains the PostgreSQL physical schemas, SQL seeds and local automation used to build the Education Provider Registry model.
 
+Group postal-address associations are implemented in
+[group-address-schema.sql](establishment/group-address-schema.sql), with
+registered-office, contact and administrative purpose reference data. Organisation
+groups cannot use registered-office purpose. T1's two primary SAT/MAT blocks are
+migrated as administrative addresses; blank contact/sponsor blocks remain evidence.
+The additive [upgrade](establishment/upgrade-group-addresses.sql), both default
+rebuilds and SQL fixture exports preserve this slice without adding triggers.
+
+Both address association tables retain explicit `start_date`, `end_date` and
+`is_current` history. T1's current dates remain unknown. Ordinary writers can
+end a period and insert another, but cannot overwrite shared postal values,
+delete associations or rewrite their address/start fields. Fully known periods
+cannot overlap; each owner/purpose has at most one current association. Reviewed
+address-correction auditing remains outstanding.
+
 ## What is here
 
 | Directory | Purpose |

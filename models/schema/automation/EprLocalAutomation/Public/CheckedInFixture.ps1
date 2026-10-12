@@ -11,7 +11,7 @@ $script:ReferenceSeedTables = @(
     'reason_establishment_closed', 'local_authority', 'government_office_region',
     'gss_local_authority_code', 'district_administrative', 'administrative_ward',
     'parliamentary_constituency', 'lsoa', 'msoa', 'urban_rural',
-    'local_authority_contact', 'local_authority_government_office_region'
+    'local_authority_contact', 'local_authority_government_office_region', 'address_purpose'
 )
 $script:EstablishmentSeedTables = @(
     'establishment', 'establishment_geography', 'establishment_contact',
@@ -21,13 +21,14 @@ $script:EstablishmentSeedTables = @(
     'sen_unit_provision', 'legal_entity', 'person', 'organisation_identifier',
     'establishment_party_role', 'academy_trust_classification',
     'establishment_responsibility', 'organisation_group',
-    'organisation_group_member', 'organisation_group_member_lead_period', 'group_identifier', 'data_correction_audit'
+    'organisation_group_member', 'organisation_group_member_lead_period', 'group_identifier', 'data_correction_audit',
+    'legal_entity_address', 'organisation_group_address'
 )
 $script:MigrationSeedTables = @(
     'migration_run', 'source_snapshot', 'source_record',
     'establishment_party_role_evidence', 'establishment_responsibility_evidence',
     'academy_trust_classification_evidence', 'organisation_group_member_evidence',
-    'identity_resolution'
+    'identity_resolution', 'group_address_evidence'
 )
 
 # File names in seed/.

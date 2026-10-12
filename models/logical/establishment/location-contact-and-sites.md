@@ -136,7 +136,7 @@ What is the current postal address for this site?
 ```
 
 - The address does not point back to a site; the using relationship holds `address_id`.
-- The address text is mutable current-value data.
+- School-site address text is current-value data in this slice. When an address is referenced by the dated associations in the [Group addresses logical model](group-addresses-logical-model.md), preserve its postal values: an address change uses another address record rather than overwriting values used by history. General school-site address history remains deferred.
 - UPRN is deliberately modelled on `site` because it identifies the property, not one rendering of its address.
 
 | Column | Required | Meaning and rule |

@@ -531,4 +531,5 @@ CREATE UNIQUE INDEX group_identifier_group_current_type_unique
     WHERE organisation_group_id IS NOT NULL AND is_current;
 
 \ir organisation-group-member-lead-period-schema.sql
+\ir group-address-schema.sql
 \ir establishment-write-permissions.sql

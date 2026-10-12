@@ -106,3 +106,5 @@ CREATE INDEX ix_group_member_evidence_member
     ON migration.organisation_group_member_evidence (organisation_group_member_id);
 CREATE INDEX ix_identity_resolution_source
     ON migration.identity_resolution (source_record_id);
+
+\ir group-address-evidence-schema.sql
