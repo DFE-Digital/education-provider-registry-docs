@@ -345,28 +345,6 @@ CREATE UNIQUE INDEX organisation_identifier_current_owner_type_unique
     ON establishment.organisation_identifier (legal_entity_id, organisation_identifier_type_id)
     WHERE is_current;
 
--- Retain replaced identifiers on their original owners. Retirement changes
--- is_current; it must not delete or rewrite the ownership history.
-CREATE FUNCTION establishment.protect_organisation_identifier_ownership()
-RETURNS trigger LANGUAGE plpgsql AS $$
-BEGIN
-    IF TG_OP = 'DELETE' THEN
-        RAISE EXCEPTION 'Retire an organisation identifier using is_current; its ownership must be retained'
-            USING ERRCODE = '23514';
-    END IF;
-    IF NEW.legal_entity_id IS DISTINCT FROM OLD.legal_entity_id
-       OR NEW.organisation_identifier_type_id IS DISTINCT FROM OLD.organisation_identifier_type_id
-       OR NEW.value IS DISTINCT FROM OLD.value THEN
-        RAISE EXCEPTION 'Organisation identifier owner, type and value cannot be reassigned'
-            USING ERRCODE = '23514';
-    END IF;
-    RETURN NEW;
-END
-$$;
-
-CREATE TRIGGER organisation_identifier_ownership_protected
-BEFORE UPDATE OR DELETE ON establishment.organisation_identifier
-FOR EACH ROW EXECUTE FUNCTION establishment.protect_organisation_identifier_ownership();
 
 -- Minimal relationship endpoint for roles and responsibilities held by a
 -- person. Person identity and descriptive attributes belong to the people
@@ -553,3 +531,4 @@ CREATE UNIQUE INDEX group_identifier_group_current_type_unique
     WHERE organisation_group_id IS NOT NULL AND is_current;
 
 \ir organisation-group-member-lead-period-schema.sql
+\ir establishment-write-permissions.sql
