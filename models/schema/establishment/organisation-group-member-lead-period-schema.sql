@@ -76,22 +76,6 @@ CREATE TRIGGER check_membership_lead_boundaries BEFORE UPDATE OF joined_date,lef
     ON establishment.organisation_group_member
     FOR EACH ROW EXECUTE FUNCTION establishment.check_membership_lead_boundaries();
 
-CREATE OR REPLACE FUNCTION establishment.check_group_lead_type()
-RETURNS trigger LANGUAGE plpgsql AS $$
-BEGIN
-    IF EXISTS (SELECT 1 FROM establishment.organisation_group_member_lead_period p
-               WHERE p.organisation_group_id=NEW.organisation_group_id)
-       AND NOT EXISTS (SELECT 1 FROM establishment.organisation_group_type t
-                       WHERE t.organisation_group_type_id=NEW.organisation_group_type_id
-                         AND t.name='Children''s-centre group') THEN
-        RAISE EXCEPTION 'A group with lead periods must remain a childrens-centre group' USING ERRCODE='23514';
-    END IF;
-    RETURN NEW;
-END $$;
-DROP TRIGGER IF EXISTS check_group_lead_type ON establishment.organisation_group;
-CREATE TRIGGER check_group_lead_type BEFORE UPDATE OF organisation_group_type_id
-    ON establishment.organisation_group
-    FOR EACH ROW EXECUTE FUNCTION establishment.check_group_lead_type();
 
 -- Current lead status is derived from lead periods; no stored member flag.
 DROP TRIGGER IF EXISTS refresh_member_lead_flag ON establishment.organisation_group_member_lead_period;

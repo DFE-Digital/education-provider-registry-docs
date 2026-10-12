@@ -24,13 +24,21 @@ The baseline includes [lead-period DDL](establishment/organisation-group-member-
 
 Regression checks in [validate-group-member-lead-periods.sql](establishment/validate-group-member-lead-periods.sql) cover handovers, return as lead, independent membership dates, unknown boundaries and rejection of conflicts. Synthetic histories are rolled back.
 
-The Establishment schema retains four consistency triggers. These reject invalid
+The Establishment schema retains two consistency triggers. These reject invalid
 writes; none maintains a duplicate lead summary:
 
 - `check_group_member_lead_period`: Restricts lead periods to children's-centre groups and checks known membership boundaries and current eligibility.
 - `check_membership_lead_boundaries`: Rejects membership date changes that invalidate lead periods or end membership while a current lead assertion remains.
-- `check_group_lead_type`: Prevents changing a group with lead periods to an ineligible group type.
-- `organisation_identifier_ownership_protected`: Prevents deleting identifiers or reassigning their owner, type or value; identifiers are retired through `is_current` instead.
+
+Identifier ownership and group type are protected by column-level permissions,
+not triggers. See [write permissions and corrections](establishment/write-permissions-and-corrections.md).
+Ordinary writers use the non-owning `epr_establishment_writer` role. They can
+retire identifiers through `is_current`, but cannot delete or rewrite them or
+change group type. Reference tables are read-only. Exceptional corrections use
+`epr_establishment_corrector` and a restricted function that records the caller,
+reason and before/after values without permitting direct writes to the audit.
+Schema owners and superusers bypass these permissions: local rebuild commands
+still use the trusted `postgres` account, not an application runtime identity.
 
 Unique indexes and exclusion constraints separately enforce one current lead per
 group and non-overlap of fully known lead periods. Foreign keys enforce ownership

@@ -10,6 +10,7 @@ function Test-EstablishmentCoreValidation {
 
     Write-Step 'Test: core establishment validation'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-establishment-fixture.sql') -FailureMessage 'Core establishment validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-write-permissions.sql') -FailureMessage 'Write-permission validation failed'
 }
 
 function Test-EstablishmentGroupsValidation {

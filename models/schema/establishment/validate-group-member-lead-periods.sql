@@ -99,11 +99,13 @@ BEGIN
         EXCEPTION WHEN check_violation THEN rejected:=true; END;
         IF NOT rejected THEN RAISE EXCEPTION 'Federation lead period was accepted'; END IF;
         rejected:=false;
+        SET LOCAL ROLE epr_establishment_writer;
         BEGIN
             UPDATE establishment.organisation_group SET organisation_group_type_id=
                 (SELECT organisation_group_type_id FROM establishment.organisation_group_type WHERE name='Federation')
             WHERE organisation_group_id=group_id;
-        EXCEPTION WHEN check_violation THEN rejected:=true; END;
+        EXCEPTION WHEN insufficient_privilege THEN rejected:=true; END;
+        RESET ROLE;
         IF NOT rejected THEN RAISE EXCEPTION 'Changing the type of a group with lead periods was accepted'; END IF;
         rejected:=false;
         BEGIN

@@ -14,6 +14,7 @@ BEGIN
         WHERE table_schema = 'establishment'
           AND table_type = 'BASE TABLE'
           AND table_name NOT IN (
+              'data_correction_audit',
               'academy_trust_classification',
               'academy_trust_type',
               'establishment_party_role',
@@ -118,22 +119,24 @@ BEGIN
             VALUES (second_owner, scheme, 'M1_TEST_ORIGINAL');
             RAISE EXCEPTION 'M1 allowed another owner to reuse a historical identifier';
         EXCEPTION WHEN unique_violation THEN NULL; END;
+        SET LOCAL ROLE epr_establishment_writer;
         BEGIN
             UPDATE establishment.organisation_identifier SET legal_entity_id = second_owner WHERE organisation_identifier_id = identifier_id;
             RAISE EXCEPTION 'M1 allowed ownership reassignment';
-        EXCEPTION WHEN check_violation THEN NULL; END;
+        EXCEPTION WHEN insufficient_privilege THEN NULL; END;
         BEGIN
             UPDATE establishment.organisation_identifier SET value = 'M1_TEST_REWRITE' WHERE organisation_identifier_id = identifier_id;
             RAISE EXCEPTION 'M1 allowed identifier value rewriting';
-        EXCEPTION WHEN check_violation THEN NULL; END;
+        EXCEPTION WHEN insufficient_privilege THEN NULL; END;
         BEGIN
             UPDATE establishment.organisation_identifier SET organisation_identifier_type_id = other_scheme WHERE organisation_identifier_id = identifier_id;
             RAISE EXCEPTION 'M1 allowed identifier scheme rewriting';
-        EXCEPTION WHEN check_violation THEN NULL; END;
+        EXCEPTION WHEN insufficient_privilege THEN NULL; END;
         BEGIN
             DELETE FROM establishment.organisation_identifier WHERE organisation_identifier_id = identifier_id;
             RAISE EXCEPTION 'M1 allowed deletion of ownership history';
-        EXCEPTION WHEN check_violation THEN NULL; END;
+        EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+        RESET ROLE;
         RAISE EXCEPTION USING ERRCODE = 'ZX001', MESSAGE = 'Rollback identifier tests';
     EXCEPTION WHEN SQLSTATE 'ZX001' THEN NULL;
     END;
