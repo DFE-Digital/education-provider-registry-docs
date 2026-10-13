@@ -33,7 +33,7 @@ try {
         foreach ($group in @(4075,4076)) {
             Import-EstablishmentPartyRoleFromBau -Source $source -Target $target -Urn 134311 -SourceGroupId $group -WorkingDirectory $workspace
         }
-        $validation=Get-SchemaPath 'establishment/validate-oasis-identity-assumption.sql'
+        $validation=Get-SchemaPath 'migration/validate-scripts/validate-oasis-identity-assumption.sql'
         Invoke-Psql -Target $target -File $validation -FailureMessage 'T11R validation failed'
         $stateSql=@'
 SELECT json_build_object(

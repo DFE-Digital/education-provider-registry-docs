@@ -20,24 +20,31 @@ try {
   param($source,$target,$workspace)
   $fixture=Get-Content (Get-SchemaPath 'seed/t10-controlled-decision.json') -Raw -Encoding UTF8 | ConvertFrom-Json
   $root=Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $script:SchemaRoot))
-  $rows=@(Import-Csv (Join-Path $root $fixture.extractPath) | Where-Object {$_.URN -in @('148341','135961')})
-  $eston=@($rows | Where-Object URN -eq '148341')
-  $academy=@($rows | Where-Object URN -eq '135961')
-  if($eston.Count -ne 1 -or $academy.Count -ne 1 -or $eston[0].EstablishmentName -cne $fixture.school.name -or $eston[0].PropsName -cne $fixture.propsName -or $eston[0].UKPRN -ne '10092329' -or $eston[0].'LA (code)' -ne '807' -or $eston[0].'EstablishmentStatus (code)' -ne '1' -or $eston[0].'TypeOfEstablishment (code)' -ne '11' -or $eston[0].EstablishmentNumber -ne '6003' -or $eston[0].'PhaseOfEducation (code)' -ne '0' -or $eston[0].OpenDate -ne '18-02-2021' -or $eston[0].CloseDate -ne '' -or $academy[0].EstablishmentName -cne 'Outwood Grange Academy' -or $academy[0].UKPRN -ne '10028145' -or $academy[0].'LA (code)' -ne '384' -or $academy[0].'EstablishmentStatus (code)' -ne '1' -or $academy[0].OpenDate -ne '01-09-2009' -or $academy[0].CloseDate -ne ''){throw 'T10 approved extract assertions changed; review required.'}
+  $extractUrns=@($fixture.extractAssertions | ForEach-Object { $_.URN })
+  $rows=@(Import-Csv (Join-Path $root $fixture.extractPath) | Where-Object { $_.URN -in $extractUrns })
+  foreach($expected in $fixture.extractAssertions){
+   $matches=@($rows | Where-Object URN -eq $expected.URN)
+   if($matches.Count -ne 1){throw 'Approved extract row scope changed; review required.'}
+   foreach($field in $expected.PSObject.Properties){
+    if([string]$matches[0].($field.Name) -cne [string]$field.Value){throw "Approved extract assertion changed: $($field.Name); review required."}
+   }
+  }
+  $groupUids=@($fixture.associatedGroupUids)
+  if($groupUids.Count -ne 2){throw 'The import-order probe requires two reviewed party groups.'}
   $partyLoads=@{}
-  foreach($uid in @(4118,4119)){
+  foreach($uid in $groupUids){
    $csv=Join-Path $workspace "t10-party-$uid.csv"
-   $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/academy-trust-responsibility-from-bau.sql') -Variables @{URN=135961;GROUP_ID=$uid;INCLUDE_ARCHIVED=0} -CsvPath $csv -RowCount ExactlyOne -Description "T10 group $uid preflight"
+   $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/academy-trust-responsibility-from-bau.sql') -Variables @{URN=$fixture.associatedEstablishmentUrn;GROUP_ID=$uid;INCLUDE_ARCHIVED=0} -CsvPath $csv -RowCount ExactlyOne -Description "T10 group $uid preflight"
    $sql=(Get-Content (Get-SchemaPath 'establishment/load/load-academy-trust-responsibility-fixture.sql') -Raw -Encoding UTF8).Replace('__FIXTURE_PATH__',($csv -replace '\\','/'))
    $partyLoads[$uid]=[regex]::Replace($sql,'(?m)^(BEGIN|COMMIT);\r?$','')+"`nDROP TABLE pg_temp.migration_context,pg_temp.establishment_party_role_fixture;`n"
   }
   $contextCsv=Join-Path $workspace 't10-context.csv'
-  $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/t10-local-context-from-bau.sql') -CsvPath $contextCsv -RowCount ExactlyOne -Description 'T10 raw local context'
+  $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/reviewed-proprietor-context-from-bau.sql') -Variables @{URN=$fixture.school.urn} -CsvPath $contextCsv -RowCount ExactlyOne -Description 'T10 raw local context'
   $academyCsv=Join-Path $workspace 't10-academy.csv'
-  $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-from-bau.sql') -Variables @{URN=135961} -Columns $script:EstablishmentFixtureColumns -CsvPath $academyCsv -RowCount ExactlyOne -Description 'T10 academy preflight'
+  $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-from-bau.sql') -Variables @{URN=$fixture.associatedEstablishmentUrn} -Columns $script:EstablishmentFixtureColumns -CsvPath $academyCsv -RowCount ExactlyOne -Description 'T10 academy preflight'
   # Minimal reviewed extract projection. No conflicting BAU geography, contact,
   # address or other unreviewed local school fields leak into the approved core.
-  $controlled=@{urn=148341;ukprn=10092329;local_authority_code='807';establishment_number=6003;name=$fixture.school.name;source_establishment_status_code='1';open_date='2021-02-18';establishment_type_id=17;education_phase_id=8}
+  $controlled=@{urn=$fixture.school.urn;ukprn=$fixture.school.ukprn;local_authority_code=$fixture.school.localAuthorityCode;establishment_number=$fixture.school.establishmentNumber;name=$fixture.school.name;source_establishment_status_code=$fixture.school.statusCode;open_date=$fixture.school.openDate;close_date=$fixture.school.closeDate;establishment_type_id=$fixture.school.establishmentTypeId;education_phase_id=$fixture.school.educationPhaseId}
   $values=foreach($column in $script:EstablishmentFixtureColumns){if($controlled.ContainsKey($column)){ConvertTo-FixtureValue $controlled[$column]}else{'NULL'}}
   $mergedCsv=Join-Path $workspace 't10-schools.csv'
   $lines=[System.Collections.Generic.List[string]]::new()
@@ -46,20 +53,25 @@ try {
   [System.IO.File]::WriteAllLines($mergedCsv,$lines,[System.Text.UTF8Encoding]::new($false))
   $schoolSql=(Get-Content (Get-SchemaPath 'establishment/load/load-establishment-fixture.sql') -Raw -Encoding UTF8).Replace('__FIXTURE_PATH__',($mergedCsv -replace '\\','/'))
   $schoolSql=[regex]::Replace($schoolSql,'(?m)^(BEGIN|COMMIT);\r?$','')
-  $proprietorSql=(Get-Content (Get-SchemaPath 'establishment/load/load-t10-approved-proprietor.sql') -Raw -Encoding UTF8).Replace('__FIXTURE_PATH__',($contextCsv -replace '\\','/')).Replace('__T10_DECISION_JSON__',($fixture | ConvertTo-Json -Depth 8 -Compress).Replace("'","''"))
-  $validation=Get-Content (Get-SchemaPath 'establishment/validate-t10-shared-responsibilities.sql') -Raw -Encoding UTF8
+  $decisionJson=$fixture | ConvertTo-Json -Depth 12 -Compress
+  $proprietorTemplate=Get-Content (Get-SchemaPath 'establishment/load/load-reviewed-proprietor.sql') -Raw -Encoding UTF8
+  $proprietorSql=(ConvertTo-ReviewedFixtureSql -Template $proprietorTemplate -FixtureJson $decisionJson).Replace('__FIXTURE_PATH__',($contextCsv -replace '\\','/'))
+  $validation=Get-Content (Get-SchemaPath 'migration/validate-scripts/validate-t10-shared-responsibilities.sql') -Raw -Encoding UTF8
   $runId=[guid]::NewGuid()
-  $runSql="INSERT INTO migration.migration_run(migration_run_id,run_type,source_system,source_database,source_snapshot_date,status,transform_version,notes) VALUES('$runId','t10-additive','GIAS BAU','gias_bau_test_local','2026-10-09','running','t10-approved-v1','User-approved controlled Eston fixture and shared Outwood party; raw BAU context preserved.') ON CONFLICT(migration_run_id) DO UPDATE SET status='running';`nSET LOCAL epr.migration_run_id='$runId';`n"
+  $runType=$fixture.runType.Replace("'","''");$version=$fixture.transformVersion.Replace("'","''")
+  $sourceDatabase=$source.Database.Replace("'","''");$observed=$fixture.contextObservationDate
+  $review=$fixture.reviewEvidence.Replace("'","''")
+  $runSql="INSERT INTO migration.migration_run(migration_run_id,run_type,source_system,source_database,source_snapshot_date,status,transform_version,notes) VALUES('$runId','$runType','GIAS BAU','$sourceDatabase','$observed','running','$version','$review') ON CONFLICT(migration_run_id) DO UPDATE SET status='running';`nSET LOCAL epr.migration_run_id='$runId';`n"
   $finishSql="UPDATE migration.migration_run SET status='completed',completed_at=now() WHERE migration_run_id='$runId';`n"
-  $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn NOT IN(148341,135961);"
+  $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn NOT IN($($fixture.school.urn),$($fixture.associatedEstablishmentUrn));"
   $before=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'T10 scope check failed'
   $path=Join-Path $workspace 't10-load.sql'
-  foreach($order in @(@(4118,4119),@(4119,4118))){
+  foreach($order in @(@($groupUids[0],$groupUids[1]),@($groupUids[1],$groupUids[0]))){
    $batch="BEGIN;`n"+$runSql+$schoolSql+$partyLoads[$order[0]]+$partyLoads[$order[1]]+$proprietorSql+$finishSql+$validation+"`nROLLBACK;"
    [System.IO.File]::WriteAllText($path,$batch,[System.Text.UTF8Encoding]::new($false))
    Invoke-Psql -Target $target -File $path -FailureMessage 'T10 atomic import-order probe failed'
   }
-  $batch="BEGIN;`n"+$runSql+$schoolSql+$partyLoads[4118]+$partyLoads[4119]+$proprietorSql+$finishSql+$validation+"`nCOMMIT;"
+  $batch="BEGIN;`n"+$runSql+$schoolSql+$partyLoads[$groupUids[0]]+$partyLoads[$groupUids[1]]+$proprietorSql+$finishSql+$validation+"`nCOMMIT;"
   [System.IO.File]::WriteAllText($path,$batch,[System.Text.UTF8Encoding]::new($false))
   Invoke-Psql -Target $target -File $path -FailureMessage 'T10 atomic migration failed'
   $stateSql=@'
@@ -73,13 +85,20 @@ SELECT json_build_object(
 'group_identifiers',(SELECT string_agg(group_identifier_id::text,',' ORDER BY group_identifier_id) FROM establishment.group_identifier))::text;
 '@
   $first=Invoke-Psql -Target $target -Command $stateSql -Output Scalar -FailureMessage 'T10 state check failed'
-  $batch="BEGIN;`n"+$runSql+$schoolSql+$partyLoads[4119]+$partyLoads[4118]+$proprietorSql+$finishSql+$validation+"`nCOMMIT;"
+  $batch="BEGIN;`n"+$runSql+$schoolSql+$partyLoads[$groupUids[1]]+$partyLoads[$groupUids[0]]+$proprietorSql+$finishSql+$validation+"`nCOMMIT;"
   [System.IO.File]::WriteAllText($path,$batch,[System.Text.UTF8Encoding]::new($false))
   Invoke-Psql -Target $target -File $path -FailureMessage 'T10 reverse reimport failed'
   $second=Invoke-Psql -Target $target -Command $stateSql -Output Scalar -FailureMessage 'T10 repeated state check failed'
   if($first -cne $second){throw 'T10 reimport changed business identities or counts.'}
-  $approvedJson=($fixture | ConvertTo-Json -Depth 8 -Compress).Replace("'","''")
-  foreach($badJson in @($approvedJson.Replace('"ukprn":10092329','"ukprn":10000000'),$approvedJson.Replace('T10 user-approved controlled establishment and shared-party assertion','Unreviewed assertion'))){
+  $approvedJson=$decisionJson.Replace("'","''")
+  $badDecisions=@()
+  $changed=$decisionJson | ConvertFrom-Json
+  $changed.school.ukprn=[long]$changed.school.ukprn+1
+  $badDecisions+=($changed | ConvertTo-Json -Depth 12 -Compress).Replace("'","''")
+  $changed=$decisionJson | ConvertFrom-Json
+  $changed.reviewEvidence='Unreviewed assertion'
+  $badDecisions+=($changed | ConvertTo-Json -Depth 12 -Compress).Replace("'","''")
+  foreach($badJson in $badDecisions){
    $badSql=$proprietorSql.Replace($approvedJson,$badJson)
    if($badSql -ceq $proprietorSql){throw 'T10 rejection probe did not alter the decision.'}
    [System.IO.File]::WriteAllText($path,"BEGIN;`n"+$runSql+$badSql+"`nROLLBACK;",[System.Text.UTF8Encoding]::new($false))
@@ -93,9 +112,9 @@ SELECT json_build_object(
     $messages=(& $psql @arguments 2>&1 | ForEach-Object { $_.ToString() } | Out-String)
     $result=[pscustomobject]@{ExitCode=$LASTEXITCODE;Messages=$messages}
    } finally {$ErrorActionPreference=$previousPreference;$env:PGPASSWORD=$passwordBefore}
-   if($result.ExitCode -eq 0 -or $result.Messages -notlike '*T10 approved decision changed; manual review required*'){throw "T10 unreviewed decision was not rejected: $($result.Messages)"}
+   if($result.ExitCode -eq 0 -or $result.Messages -notlike '*approved decision changed; manual review required*'){throw "T10 unreviewed decision was not rejected: $($result.Messages)"}
   }
-  Invoke-Psql -Target $target -File (Get-SchemaPath 'establishment/validate-t10-shared-responsibilities.sql') -FailureMessage 'T10 validation after rejection probes failed'
+  Invoke-Psql -Target $target -File (Get-SchemaPath 'migration/validate-scripts/validate-t10-shared-responsibilities.sql') -FailureMessage 'T10 validation after rejection probes failed'
   $after=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'T10 preserved scope check failed'
   if($before -cne $after){throw 'T10 changed unrelated school scope or identities.'}
   Write-Host 'T10 migrated: two schools, one Outwood entity, two roles, three responsibilities; approved extract and conflicting BAU context retained; reverse reimport stable.'

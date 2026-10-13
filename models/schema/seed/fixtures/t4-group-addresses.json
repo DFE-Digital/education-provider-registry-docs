@@ -1,0 +1,34 @@
+{
+  "fixture": "T4",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urns": [109443, 109613],
+  "runType": "group-addresses-t4",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t4-group-addresses.sql",
+  "reviewEvidence": "Federation UID 1809 is an organisation group, not a legal entity. Both source address blocks are blank. Retain their raw values and source codes as evidence; create no postal address or association and infer no address from member schools or the federation opening date.",
+  "snapshotName": "T4 federation primary/contact addresses",
+  "sourceGroups": [
+    {
+      "uid": 1809,
+      "typeCode": "01",
+      "ownerKind": "organisation_group",
+      "ownerKey": "federation"
+    }
+  ],
+  "blockMappings": [
+    {
+      "groupUid": 1809,
+      "block": "primary",
+      "purposeId": null
+    },
+    {
+      "groupUid": 1809,
+      "block": "contact",
+      "purposeId": null
+    }
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 1809
+}

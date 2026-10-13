@@ -37,7 +37,7 @@ try {
         $sql=(Get-Content -LiteralPath (Get-SchemaPath 'establishment/load/load-establishment-fixture.sql') -Raw -Encoding UTF8).Replace('__FIXTURE_PATH__',($establishmentCsv -replace '\\','/'))
         $schoolLoad=[regex]::Replace($sql,'(?m)^(BEGIN|COMMIT);\r?$','') + "`n"
         $loadSql=$schoolLoad+($partyLoads -join "`n")
-        $validation=Get-SchemaPath 'establishment/validate-t8-operator-transfer.sql'
+        $validation=Get-SchemaPath 'migration/validate-scripts/validate-t8-operator-transfer.sql'
         $validationSql=Get-Content -LiteralPath $validation -Raw
         $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn<>136494;"
         $before=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'Existing scope check failed'

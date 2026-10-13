@@ -46,6 +46,8 @@ There are exactly two academy-trust links for this establishment: one archived a
 
 The company and provider identifiers establish separate source parties. A matching establishment URN preserves the establishment's identity across the transfer. The school's own UKPRN 10033036 must not be assigned to either trust.
 
+Both trusts have blank contact blocks. Templer's primary block is `Teign School Chudleigh Road`, `Kingsteignton`, `Newton Abbot`, `TQ12 3JG`. Education South West's primary block has a blank first line, then `Balkwill Road`, `Kingsbridge`, `TQ7 1PL`. Neither has a county label, UPRN or site name. Both primary blocks are current administrative associations with unknown business dates. The former responsibility's historical state does not make Templer's source-current address historical.
+
 ## Relationship graph
 
 ```mermaid
@@ -92,6 +94,7 @@ The group open dates, school open date and relationship effective dates describe
 | `group_identifier` | UID `4920` and Group ID `TR02256` belong to Templer's role; UID `3643` and Group ID `TR01237` belong to Education South West's role. Both source groups are open, so the archived school link alone must not retire those identifiers. |
 | `academy_trust_classification` | One source-current Multi-academy trust classification per legal entity, independently of each company's responsibility for Teign. Starts and ends remain unknown. The archived Teign link alone must not make Templer's classification historical. |
 | `establishment_responsibility` | Two Run by academy trust responsibilities, both typed MAT: Templer from 2011-03-01, unknown end, `is_current = false`; Education South West from 2017-01-01, unknown end, `is_current = true`. |
+| `legal_entity_address`, `address` | One current administrative association for each separate trust, using its source primary block. Both dates remain unknown; no contact or registered-office association is inferred. |
 | `organisation_group`, `organisation_group_member` | No records created for either operating trust or the transfer. |
 | Migration evidence | Separate source records retaining GroupLinks 7097 and 26320, their source UIDs, effective dates and independent archived states, alongside the standalone migration's identity decisions. Preserve the distinction between a source-open trust and an archived school relationship. |
 
@@ -116,7 +119,13 @@ SELECT e.urn, e.name AS establishment,
        role.start_date AS role_start, role.end_date AS role_end,
        classification_type.name AS trust_classification,
        c.start_date AS classification_start, c.end_date AS classification_end,
-       c.is_current AS classification_current
+       c.is_current AS classification_current,
+       address_purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       legal_address.start_date AS address_start_date,
+       legal_address.end_date AS address_end_date,
+       legal_address.is_current AS address_is_current
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
@@ -129,6 +138,9 @@ LEFT JOIN establishment.academy_trust_classification c
   ON c.legal_entity_id=le.legal_entity_id AND c.is_current
 LEFT JOIN establishment.academy_trust_type classification_type
   ON classification_type.academy_trust_type_id=c.academy_trust_type_id
+LEFT JOIN establishment.legal_entity_address legal_address USING (legal_entity_id)
+LEFT JOIN establishment.address_purpose address_purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
 LEFT JOIN LATERAL (
     SELECT max(i.value) FILTER (WHERE t.name='Group UID') AS gias_group_uid,
            max(i.value) FILTER (WHERE t.name='Group ID') AS gias_group_id
@@ -155,4 +167,5 @@ The expected result is two operator rows for the same URN. Only Education South 
 - No successor start date is copied into a predecessor's unknown end date.
 - Source links 7097 and 26320 retain their separate evidence and archived states.
 - Sponsor link 26321 is not silently treated as an operating relationship or merged into either company.
+- Both primary trust blocks are retained as administrative addresses; blank contact blocks are retained as evidence.
 - Atomic rollback and load, reverse-order reimport and existing-case regressions preserve unrelated establishment identities. The standalone migration adds Teign without changing default fixture selection or checked-in seeds.

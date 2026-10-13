@@ -1,0 +1,24 @@
+{
+  "fixture": "T10",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 148341,
+  "runType": "group-addresses-t10",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t10-group-addresses.sql",
+  "reviewEvidence": "Sponsor UID 4118 and academy-trust UID 4119 are the same accepted Outwood legal entity. The sponsor blocks and trust contact block are blank. The trust primary block is recorded as one current administrative association with unknown business dates, not a verified registered office. Its third address line is retained as supplied, including the source-obfuscated value.",
+  "snapshotName": "T10 Outwood sponsor/trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 4118, "typeCode": "05", "ownerKind": "legal_entity", "ownerKey": "outwood"},
+    {"uid": 4119, "typeCode": "06", "ownerKind": "legal_entity", "ownerKey": "outwood"}
+  ],
+  "blockMappings": [
+    {"groupUid": 4118, "block": "primary", "purposeId": null},
+    {"groupUid": 4118, "block": "contact", "purposeId": null},
+    {"groupUid": 4119, "block": "primary", "purposeId": 3},
+    {"groupUid": 4119, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 4119
+}

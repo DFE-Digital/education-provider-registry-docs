@@ -37,6 +37,8 @@ The local source records federation UID 1809 with exactly two membership links, 
 
 Both memberships start on 13 January 2011, as recorded by their own link effective dates. Those dates happen to match the federation's open date; they are not copied from it. Neither link supplies a membership end date. The null establishment open dates are not replaced with the membership dates.
 
+The local BAU `EstablishmentGroup` record has both `primary` and `contact` address blocks blank: no street, locality, third line, town or postcode in either block. The raw county and country codes are `099` and `00`; these codes do not make a postal address. The two blank blocks are retained as source evidence for federation UID 1809. No address is copied from either member school, and the federation's open date is not treated as an address start date.
+
 ## Relationship graph
 
 ```mermaid
@@ -63,8 +65,9 @@ T4 contains two establishment records, federation UID 1809 and both memberships.
 | `organisation_group` | One federation, using the local source name, `open_date = 2011-01-13` and unknown `close_date`. |
 | `organisation_group_member` | Two members, each with `joined_date = 2011-01-13`, unknown `left_date` and no lead periods. |
 | `group_identifier` | One GIAS Group UID value `1809`, attached to the organisation group. No Group ID row is created. |
+| `organisation_group_address`, `address` | No federation address association or new postal address from its blank source blocks. |
 | `legal_entity`, `organisation_identifier`, `establishment_party_role`, `academy_trust_classification`, `establishment_responsibility` | No records created merely to represent this federation or its memberships. |
-| Migration evidence | Retain both source links and their active state, with separate member-evidence records beneath the rebuild run. |
+| Migration evidence | Retain both source links and their active state beneath the rebuild run; retain the two blank group address blocks separately with raw values and the no-address decision. |
 
 The federation is an organisation group, not a legal entity. Its members are establishments. The absent company number and UKPRN are not missing federation identifiers that must be manufactured. Lead designation is not applicable to a federation.
 
@@ -81,13 +84,21 @@ T4 tests the federation and its two memberships. It does not establish that ever
 ```sql
 SELECT e.urn, e.name AS establishment_name,
        g.organisation_group_id, g.name AS federation_name,
-       i.value AS gias_group_uid, m.joined_date, m.left_date
+       i.value AS gias_group_uid, m.joined_date, m.left_date,
+       a.address_purpose_id, a.address_id, a.start_date AS address_start_date,
+       a.end_date AS address_end_date, a.is_current AS address_is_current,
+       postal.address_line_1, postal.address_line_2, postal.address_line_3,
+       postal.town, postal.county, postal.postcode,
+       (SELECT count(*) FROM migration.organisation_group_address_evidence evidence
+        WHERE evidence.organisation_group_id=g.organisation_group_id) AS address_source_blocks_retained
 FROM establishment.organisation_group g
 JOIN establishment.group_identifier i USING (organisation_group_id)
 JOIN establishment.group_identifier_type t USING (group_identifier_type_id)
 JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer_id)
 JOIN establishment.organisation_group_member m USING (organisation_group_id)
 JOIN establishment.establishment e USING (establishment_id)
+LEFT JOIN establishment.organisation_group_address a USING (organisation_group_id)
+LEFT JOIN establishment.address postal USING (address_id)
 WHERE t.name = 'Group UID' AND issuer.name = 'GIAS' AND i.value = '1809'
 ORDER BY e.urn;
 ```
@@ -102,3 +113,4 @@ ORDER BY e.urn;
 - Federation membership creates no legal entity, trust classification or operating responsibility.
 - The foundation-trust link is not loaded as federation membership.
 - Each member's migration evidence points to the correct source link and the shared rebuild run.
+- Both blank address blocks are retained as evidence against the federation; no postal address or address association is invented.

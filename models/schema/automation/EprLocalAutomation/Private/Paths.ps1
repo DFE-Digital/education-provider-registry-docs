@@ -5,7 +5,7 @@ function Get-SchemaPath {
     .SYNOPSIS
     Returns the full path of a file under models/schema.
     .EXAMPLE
-    Get-SchemaPath 'establishment/core-establishment-schema.sql'
+    Get-SchemaPath 'establishment/establishment-schema.sql'
     #>
     param([Parameter(Mandatory)][string]$RelativePath)
 

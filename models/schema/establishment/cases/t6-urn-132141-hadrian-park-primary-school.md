@@ -34,6 +34,8 @@ This is the smallest slice that exercises the trust's legal entity, foundation-t
 
 The establishment has exactly one group link in the returned source records: link 1029 to UID 1337. The source group type supplies the foundation-trust interpretation; the null `linkType` is not treated as an unknown academy-trust classification.
 
+The trust record's primary and contact address blocks are both blank. Neither contains a street, locality, third address line, town, postcode, UPRN or site name. Raw county and country codes `099` and `00` are retained in evidence but do not constitute an address. No address is copied from Hadrian Park Primary School.
+
 ## Relationship graph
 
 ```mermaid
@@ -63,6 +65,7 @@ The foundation trust is represented as a legal entity with a role, not as an `or
 | `group_identifier` | One current GIAS Group UID value `1337`, attached to the foundation-trust role, not directly to the legal entity or an organisation group. No Group ID is invented. |
 | `establishment_responsibility` | One current Supported by foundation trust responsibility for URN 132141, starting on 2011-09-01 with unknown end date. `academy_trust_type_id` and `person_id` are null. |
 | `organisation_identifier` | No company number or UKPRN is supplied by this source record. |
+| `legal_entity_address`, `address` | No trust address association or new postal address is created from the two blank source blocks. |
 | `academy_trust_classification`, `organisation_group`, `organisation_group_member` | No records created merely to represent this foundation trust or its school-support relationship. |
 | Migration evidence | Preserve source UID 1337, GroupLink 1029, URN 132141, the active-link assertion and the separate source group open date. Record provisional identity allocation and link the role and responsibility to their evidence beneath the rebuild run. The role's `first_observed_date` is the import snapshot date, not the source group open date. |
 
@@ -90,7 +93,15 @@ SELECT e.urn, e.name AS establishment,
        rt.name AS responsibility,
        r.start_date AS responsibility_start_date,
        r.end_date AS responsibility_end_date,
-       r.is_current
+       r.is_current,
+       purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       legal_address.start_date AS address_start_date,
+       legal_address.end_date AS address_end_date,
+       legal_address.is_current AS address_is_current,
+       (SELECT count(*) FROM migration.group_address_evidence evidence
+        WHERE evidence.legal_entity_id=le.legal_entity_id) AS address_source_blocks_retained
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
@@ -100,6 +111,9 @@ JOIN establishment.establishment_party_role_type role_type USING (establishment_
 JOIN establishment.group_identifier gi USING (establishment_party_role_id)
 JOIN establishment.group_identifier_type git USING (group_identifier_type_id)
 JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer_id)
+LEFT JOIN establishment.legal_entity_address legal_address USING (legal_entity_id)
+LEFT JOIN establishment.address_purpose purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
 WHERE e.urn=132141
   AND rt.name='Supported by foundation trust'
   AND role_type.name='Foundation trust'
@@ -117,3 +131,4 @@ ORDER BY r.start_date;
 - No Group ID, company number, UKPRN, registered legal type or incorporation date is invented.
 - Source record 1596 is not merged on name alone; the other 39 link records are not implicitly selected.
 - Evidence retains GroupLink 1029, the source identity decision and the shared rebuild-run association.
+- Both blank trust address blocks are retained as evidence; no legal-entity address is invented.

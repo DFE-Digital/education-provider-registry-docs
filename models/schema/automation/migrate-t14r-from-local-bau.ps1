@@ -38,7 +38,7 @@ try {
         $preservedSql="SELECT coalesce(string_agg(urn::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn<>139844;"
         $before=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'Existing scope check failed'
         Import-EstablishmentFromBau -Source $source -Target $target -Urn 139844 -WorkingDirectory $workspace
-        $validation=Get-SchemaPath 'establishment/validate-t14r-external-sponsor.sql'
+        $validation=Get-SchemaPath 'migration/validate-scripts/validate-t14r-external-sponsor.sql'
         $validationSql=Get-Content -LiteralPath $validation -Raw
         foreach ($order in @('sponsor-first','trust-first')) {
             $groups=@(2904,2905)

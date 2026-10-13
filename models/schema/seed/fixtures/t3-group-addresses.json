@@ -1,0 +1,48 @@
+{
+  "fixture": "T3",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 137603,
+  "runType": "group-addresses-t3",
+  "transformVersion": "reviewed-group-addresses-v2",
+  "validator": "validate-t3-group-addresses.sql",
+  "reviewEvidence": "Current administrative association with unknown business start/end dates, not observation dates. Primary address is not a verified registered office. Blank blocks create no address. County label lookup unavailable: county remains unknown; raw codes retained. No person contact fields extracted.",
+  "snapshotName": "T3 group primary/contact addresses",
+  "sourceGroups": [
+    {
+      "uid": 20364,
+      "typeCode": "06",
+      "ownerKey": "trust"
+    },
+    {
+      "uid": 2055,
+      "typeCode": "10",
+      "ownerKey": "trust"
+    }
+  ],
+  "blockMappings": [
+    {
+      "groupUid": 20364,
+      "block": "primary",
+      "purposeId": 3
+    },
+    {
+      "groupUid": 20364,
+      "block": "contact",
+      "purposeId": null
+    },
+    {
+      "groupUid": 2055,
+      "block": "primary",
+      "purposeId": 3
+    },
+    {
+      "groupUid": 2055,
+      "block": "contact",
+      "purposeId": null
+    }
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 20364
+}

@@ -28,7 +28,7 @@ try {
         $before=Invoke-Psql -Target $target -Command $preservedUrnsSql -Output Scalar -FailureMessage 'Existing URN check failed'
         Import-EstablishmentFromBau -Source $source -Target $target -Urn 109393 -WorkingDirectory $workspace
         Import-EstablishmentPartyRoleFromBau -Source $source -Target $target -Urn 109393 -SourceGroupId 1193 -WorkingDirectory $workspace
-        $validation=Get-SchemaPath 'establishment/validate-t12-foundation-trust.sql'
+        $validation=Get-SchemaPath 'migration/validate-scripts/validate-t12-foundation-trust.sql'
         Invoke-Psql -Target $target -File $validation -FailureMessage 'T12 validation failed'
         $stateSql=@'
 SELECT json_build_object(

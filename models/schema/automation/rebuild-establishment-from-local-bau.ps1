@@ -150,6 +150,10 @@ try {
                 Write-Host "Migrating full catalogue case $($case.case)"
                 & (Join-Path $PSScriptRoot $case.runner) -BauSource $source -PostgresTarget $target
             }
+            if ($case.addressRunner) {
+                Write-Host "Migrating group addresses for full catalogue case $($case.case)"
+                & (Join-Path $PSScriptRoot $case.addressRunner) -BauSource $source -PostgresTarget $target
+            }
         }
         if (-not $SkipTests) { Test-AllEstablishmentCases -Target $target }
     }

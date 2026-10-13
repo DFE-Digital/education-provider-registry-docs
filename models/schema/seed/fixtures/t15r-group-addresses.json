@@ -1,0 +1,21 @@
+{
+  "fixture": "T15R",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 136933,
+  "runType": "group-addresses-t15r",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t15r-group-addresses.sql",
+  "reviewEvidence": "Closed SAT UID 2347 resolves to T15R's BLACK COUNTRY UTC legal entity. Its primary source block is retained as one current administrative address with unknown business dates. The blank contact block is retained as evidence. Closure of the group does not by itself supply an address end date.",
+  "snapshotName": "T15R closed SAT primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 2347, "typeCode": "10", "ownerKind": "legal_entity", "ownerKey": "black-country-utc"}
+  ],
+  "blockMappings": [
+    {"groupUid": 2347, "block": "primary", "purposeId": 3},
+    {"groupUid": 2347, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 2347
+}

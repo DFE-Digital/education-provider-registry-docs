@@ -9,6 +9,14 @@ PostgreSQL target restrictions are unchanged.
 
 ## Layout
 
+T1-T8 and T10-T15R use one shared address workflow in `Public/ReviewedGroupAddresses.ps1` and
+one `load-reviewed-group-addresses.sql` loader. Their case-named commands simply
+select JSON fixtures. T10 uses `load-reviewed-proprietor.sql`; T17 uses
+`load-reviewed-historical-membership.sql`. Source assertions, identity decisions
+and evidence are fixture data, not hard-coded into these loading algorithms.
+See [reviewed fixtures](../seed/fixtures/README.md). Catalogue preflight checks
+fixture/loader paths, and the test suite rejects mutated rendered decisions.
+
 ```text
 automation/
     rebuild-establishment-from-local-bau.ps1        entry point: rebuild from the local BAU copy
@@ -56,13 +64,26 @@ not verified registered offices. Blank contact/sponsor blocks create no defaults
 Unresolved county labels remain null; raw county/country/property/site metadata
 is retained in migration evidence. Changed existing addresses require a reviewed
 decision, not silent replacement. Rollback/load, repeat-import, conflict rejection,
-foreign-key, purpose, uniqueness and writer-permission checks cover this slice.
+foreign-key, purpose, uniqueness and period checks cover this slice.
 
 T1's associations have `is_current = true` and null `start_date`/`end_date`.
 Source observation dates are not effective business dates. Reruns retain the
 existing periods. History tests exercise atomic moves, adjacent periods and
-overlap rejection using synthetic rows that are rolled back. Postal values
-are append-only for ordinary writers, including values shared with school sites.
+overlap rejection using synthetic rows that are rolled back. The loaders preserve
+postal values, including values shared with school sites. Direct-write permissions
+and correction workflows are not defined in this WIP schema.
+
+T2 also runs `migrate-t2-addresses-from-local-bau.ps1` in the default BAU
+rebuild. Its SAT and MAT primary blocks resolve to the same Hive legal entity
+and identical address, so one current administrative association retains both
+observations. Business dates remain null; blank sponsor/contact blocks create
+no defaults. The checked-in rebuild restores this association and its evidence.
+
+T3 runs `migrate-t3-addresses-from-local-bau.ps1` in the default BAU rebuild.
+Its SAT/MAT observations resolve to one continuing Ridgewood trust and one
+current administrative association. Four source blocks retain evidence, including
+two blank contact blocks. Address dates remain unknown, independently of the
+evidenced trust-classification transition. Checked-in fixtures retain this slice.
 
 Both default rebuild commands restore all 22 active scenarios across 41 distinct
 establishments. T20 reuses T2. `seed/all-test-cases.json` lists every case, its

@@ -41,6 +41,8 @@ The case exercises two different party kinds holding two different responsibilit
 
 The source returns exactly these two group links for Fulwood. No `GroupRelationsLink` records involving either UID were returned. Different group types establish the different source assertions; the links' matching effective dates do not establish a shared party identity.
 
+Charles Dunstone's primary and contact address blocks are both blank. DUNSTONE EDUCATION TRUST has a populated primary block: `Dunstone Education Trust Black Bull Lane`, `Fulwood`, `Preston`, `PR2 9YR`; its contact block is blank. No UPRN, site name or county label is supplied. The trust primary address is recorded as administrative because the source does not establish registered-office meaning. Its business start and end dates remain unknown. The person's blank blocks remain migration evidence; the current business model has no person-address association.
+
 The academy UKPRN 10027711 belongs to the establishment. The trust UKPRN 10058269 belongs to the legal entity. Neither value belongs to the person sponsor.
 
 ## Relationship graph
@@ -79,6 +81,7 @@ The role identifiers remain separate: sponsor UID 2613 and SP00099 belong to the
 | `academy_trust_classification` | One current Multi-academy trust classification for the operating legal entity, with unknown start and end dates. None for the person. |
 | `establishment_responsibility` | One current Sponsored by responsibility held by the person and one current Run by academy trust responsibility held by the trust, both starting on 2009-09-01 with unknown ends. Trust type is Multi-academy trust on the operating responsibility and null on sponsorship. |
 | `organisation_group`, `organisation_group_member` | No records created from these sponsor and trust links. |
+| `legal_entity_address`, `address` | One current administrative association for DUNSTONE EDUCATION TRUST using its populated primary block, with unknown start/end dates. No registered or contact association is inferred. |
 | Migration evidence | Separate source records for links 3648 and 5539, retaining the source party kinds, active assertions and identity decisions beneath the shared rebuild run. Preserve the rejected raw sponsor open date with its placeholder assessment. Where role observation dates are recorded, use the snapshot date rather than either source open date. |
 
 Every role and responsibility has exactly one holder: a person or a legal entity, never both. The trust's incorporation mapping, academy-trust role, MAT classification and operating responsibility remain independently dated facts. The school opening and responsibility dates happen to match; this does not justify populating the role or classification starts.
@@ -102,7 +105,20 @@ SELECT e.urn, e.name AS establishment,
        role_type.name AS party_role,
        ids.gias_group_uid, ids.gias_group_id,
        trust_type.name AS responsibility_trust_type,
-       r.start_date, r.end_date, r.is_current
+       r.start_date, r.end_date, r.is_current,
+       purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       legal_address.start_date AS address_start_date,
+       legal_address.end_date AS address_end_date,
+       legal_address.is_current AS address_is_current,
+       CASE WHEN r.person_id IS NOT NULL THEN
+           (SELECT count(*) FROM migration.person_address_evidence evidence
+            WHERE evidence.person_id=r.person_id)
+       ELSE
+           (SELECT count(*) FROM migration.group_address_evidence evidence
+            WHERE evidence.legal_entity_id=r.legal_entity_id)
+       END AS address_source_blocks_retained
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
@@ -113,6 +129,10 @@ JOIN establishment.establishment_party_role role
 JOIN establishment.establishment_party_role_type role_type USING (establishment_party_role_type_id)
 LEFT JOIN establishment.academy_trust_type trust_type
   ON trust_type.academy_trust_type_id=r.academy_trust_type_id
+LEFT JOIN establishment.legal_entity_address legal_address
+  ON legal_address.legal_entity_id=r.legal_entity_id
+LEFT JOIN establishment.address_purpose purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
 LEFT JOIN LATERAL (
     SELECT max(i.value) FILTER (WHERE t.name='Group UID') AS gias_group_uid,
            max(i.value) FILTER (WHERE t.name='Group ID') AS gias_group_id
@@ -140,3 +160,4 @@ The expected result is two rows: a person sponsor identified through role UID 26
 - Sponsor source date 1900-01-01 is retained only as rejected source evidence, never as a target business date.
 - Neither role start nor MAT classification start is inferred from the school or trust opening date.
 - Source links 3648 and 5539 each retain their own evidence; person classification is an explicit mapping, not a name-only identity merge.
+- Both blank person-sponsor blocks and the trust's blank contact block are retained as evidence. The trust primary block creates one administrative address association with unknown business dates.

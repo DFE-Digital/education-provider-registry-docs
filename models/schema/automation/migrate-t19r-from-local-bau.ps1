@@ -49,7 +49,7 @@ try {
             $sql=$sql.Replace('__MEMBERSHIP_SCOPE__','all-current-source-members')
             $loadSql += [regex]::Replace($sql,'(?m)^(BEGIN|COMMIT);\r?$','') + "`n"
         }
-        $validationSql=Get-Content -LiteralPath (Get-SchemaPath 'establishment/validate-t19r-hazelbury.sql') -Raw
+        $validationSql=Get-Content -LiteralPath (Get-SchemaPath 'migration/validate-scripts/validate-t19r-hazelbury.sql') -Raw
         $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn NOT IN(20048,20575,21240,21423,21425,21547,22423);"
         $before=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'T19R existing scope check failed'
         $path=Join-Path $workspace 't19r-load.sql'

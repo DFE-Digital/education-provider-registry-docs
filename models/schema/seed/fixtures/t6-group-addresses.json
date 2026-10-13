@@ -1,0 +1,21 @@
+{
+  "fixture": "T6",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 132141,
+  "runType": "group-addresses-t6",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t6-group-addresses.sql",
+  "reviewEvidence": "Foundation trust UID 1337 resolves to the existing provisional legal entity. Both source address blocks are blank. Retain their raw values and source codes as evidence; create no postal address or association and infer no address from the supported school.",
+  "snapshotName": "T6 foundation-trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 1337, "typeCode": "02", "ownerKind": "legal_entity", "ownerKey": "foundation-trust"}
+  ],
+  "blockMappings": [
+    {"groupUid": 1337, "block": "primary", "purposeId": null},
+    {"groupUid": 1337, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 1337
+}

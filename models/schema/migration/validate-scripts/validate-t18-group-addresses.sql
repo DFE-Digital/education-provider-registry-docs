@@ -1,0 +1,2 @@
+DO $$ BEGIN IF EXISTS(SELECT 1 FROM establishment.organisation_group_address a JOIN establishment.group_identifier i USING(organisation_group_id) JOIN establishment.group_identifier_type t USING(group_identifier_type_id) WHERE t.name='Group UID' AND i.value='1761') THEN RAISE EXCEPTION 'T18 blank federation blocks must not create an address'; END IF; END $$;
+SELECT 'T18 group-address checks passed' AS result;

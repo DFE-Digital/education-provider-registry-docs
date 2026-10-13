@@ -1,0 +1,21 @@
+{
+  "fixture": "T13",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urns": [115780, 137166],
+  "runType": "group-addresses-t13",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t13-group-addresses.sql",
+  "reviewEvidence": "The controlled Gloucester proprietor has no GIAS group record. SAT UID 3641 resolves to the separate Grantham academy-trust legal entity under T13's accepted separate-party decision. Its primary source block is one current administrative address with unknown business dates; its contact block is blank and is retained as evidence.",
+  "snapshotName": "T13 Grantham academy-trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 3641, "typeCode": "10", "ownerKind": "legal_entity", "ownerKey": "grantham-academy-trust"}
+  ],
+  "blockMappings": [
+    {"groupUid": 3641, "block": "primary", "purposeId": 3},
+    {"groupUid": 3641, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 3641
+}

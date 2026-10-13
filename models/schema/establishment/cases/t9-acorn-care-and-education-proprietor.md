@@ -50,6 +50,8 @@ This is a documented fixture overlay, not a claim that the local source supplies
 
 No proprietor contact names, addresses, telephone numbers or email addresses are required for this case.
 
+T9 has no selected GIAS group owner for the accepted proprietor. The only nearby BAU group record is closed sponsor UID 2068, `Acorn Care`, which is explicitly outside this case and must not be merged into Acorn Care and Education Ltd without a separate identity decision. Its primary and contact address blocks are both blank. They are not migrated as T9 proprietor address evidence because the controlled proprietor assertion has no source-GIAS-group identity.
+
 ## Relationship graph
 
 ```mermaid
@@ -76,6 +78,7 @@ The school UKPRNs belong to the establishments, not to Acorn. This case creates 
 | `legal_entity` | One accepted proprietor party named Acorn Care and Education Ltd, reused by both responsibilities. Unverified legal form, charity status and company dates remain null. |
 | `establishment_responsibility` | Two current Proprietor responsibilities sharing the same `legal_entity_id`, one per school. Both have null start/end dates, `person_id` and `academy_trust_type_id`. |
 | `organisation_identifier` | None supplied for Acorn. Do not copy either school's UKPRN to its proprietor. |
+| Group-address migration | None. The accepted proprietor is a controlled extract assertion, not a selected BAU group; excluded sponsor UID 2068 is not linked or merged. |
 | `establishment_party_role`, `group_identifier` | No records created merely for proprietorship: the logical model has no corresponding proprietor party role or GIAS group record. |
 | `person`, `academy_trust_classification`, `organisation_group`, `organisation_group_member` | No records created by the selected proprietor assertions. |
 | Migration evidence | Retain each extract URN/name assertion, extract observation date, source provenance and accepted shared-party decision. Clearly distinguish controlled assertions from the local obfuscated proprietor records and retain the import-run context. |

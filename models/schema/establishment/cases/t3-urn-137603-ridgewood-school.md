@@ -43,6 +43,10 @@ The identity search by Group ID, Companies House number or UKPRN returned exactl
 
 The type names were verified against `dbo.GroupLinkType`. The transition date is supported by the explicit relationship records, SAT closure and MAT link effective date; it is not derived from the closure date alone.
 
+The local address observation on 12 October 2026 supplies identical primary addresses for SAT UID `2055` and MAT UID `20364`: Ridgewood School Barnsley Road, Scawsby, Doncaster, DN5 7UB. These resolve to one current administrative address association for the continuing trust, with separate evidence for both source records. Matching the school's postal values can reuse its address record, but does not create another school site, establish property ownership or merge the school and trust.
+
+Both contact blocks are blank and no registered-office purpose is evidenced. The migration therefore creates neither a contact nor a registered-office association. Four source blocks retain evidence, including the two blank blocks. County/country codes remain raw evidence and the unavailable county label stays null. Address start/end dates remain null: the classification transition on 30 March 2021 does not prove an address change. Unchanged reimports retain the same period; changed or conflicting source addresses require review.
+
 ## Relationship graph
 
 ```mermaid
@@ -81,4 +85,81 @@ The historical SAT responsibility starts on 1 November 2011, from GroupLink 4778
 The historical SAT classification ends at the transition on 30 March 2021 and the current MAT classification starts at that transition. The initial SAT classification start remains unknown: neither incorporation nor the establishment link alone establishes when that classification began. The source SAT closure does not end the continuing legal entity or academy-trust role, and its classification end date is not copied into the SAT responsibility's end date. The MAT responsibility and classification start dates coincide because each is supported by its own evidence, not because one is derived from the other.
 
 No structural DQ concern was identified in these checks. This assessment concerns the local fixture evidence, rather than independent verification of the live trust's history.
+
+## Target query
+
+Run against `establishment_local` to display the school, responsibilities, continuing legal entity, role, classifications, identifiers and address periods together. Expect one administrative address association, current with unknown business dates, independently of the two trust classifications.
+
+```sql
+WITH target AS (
+    SELECT *
+    FROM establishment.establishment
+    WHERE urn = 137603
+),
+responsibilities AS (
+    SELECT er.*, rt.name AS responsibility_type
+    FROM establishment.establishment_responsibility AS er
+    JOIN target AS e USING (establishment_id)
+    JOIN establishment.establishment_responsibility_type AS rt
+      USING (responsibility_type_id)
+),
+parties AS (
+    SELECT DISTINCT le.*
+    FROM establishment.legal_entity AS le
+    JOIN responsibilities AS er USING (legal_entity_id)
+),
+roles AS (
+    SELECT r.*, rpt.name AS role_type
+    FROM establishment.establishment_party_role AS r
+    JOIN parties AS le USING (legal_entity_id)
+    JOIN establishment.establishment_party_role_type AS rpt
+      USING (establishment_party_role_type_id)
+),
+classifications AS (
+    SELECT atc.*, att.name AS academy_trust_type
+    FROM establishment.academy_trust_classification AS atc
+    JOIN parties AS le USING (legal_entity_id)
+    JOIN establishment.academy_trust_type AS att
+      USING (academy_trust_type_id)
+),
+identifiers AS (
+    SELECT gi.*, git.name AS identifier_type, issuer.name AS issuer
+    FROM establishment.group_identifier AS gi
+    JOIN roles AS r USING (establishment_party_role_id)
+    JOIN establishment.group_identifier_type AS git
+      USING (group_identifier_type_id)
+    JOIN establishment.group_identifier_issuer AS issuer
+      USING (group_identifier_issuer_id)
+),
+addresses AS (
+    SELECT link.*, purpose.code AS address_purpose,
+           a.address_line_1, a.address_line_2, a.address_line_3,
+           a.town, a.county, a.postcode
+    FROM establishment.legal_entity_address AS link
+    JOIN parties AS le USING (legal_entity_id)
+    JOIN establishment.address_purpose AS purpose USING (address_purpose_id)
+    JOIN establishment.address AS a USING (address_id)
+)
+SELECT 'establishment' AS record_type, to_jsonb(e) AS data
+FROM target AS e
+UNION ALL
+SELECT 'responsibility', to_jsonb(er)
+FROM responsibilities AS er
+UNION ALL
+SELECT 'legal_entity', to_jsonb(le)
+FROM parties AS le
+UNION ALL
+SELECT 'party_role', to_jsonb(r)
+FROM roles AS r
+UNION ALL
+SELECT 'academy_trust_classification', to_jsonb(c)
+FROM classifications AS c
+UNION ALL
+SELECT 'group_identifier', to_jsonb(i)
+FROM identifiers AS i
+UNION ALL
+SELECT 'legal_entity_address', to_jsonb(a)
+FROM addresses AS a
+ORDER BY record_type;
+```
 

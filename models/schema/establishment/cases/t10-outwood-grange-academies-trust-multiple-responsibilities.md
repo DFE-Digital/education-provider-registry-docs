@@ -49,6 +49,8 @@ Both selected links are active and supply non-placeholder responsibility starts.
 
 The reviewed sponsor-to-trust identity resolution uses the matching names and shared active link set alongside the identified MAT party. The sponsor does not independently supply a company number or UKPRN. Preserve that identity decision rather than treating name equality alone as a universal matching rule.
 
+Both sponsor address blocks and the trust contact block are blank. The MAT primary block is `Potovens Lane`, `Outwood`, `obfuscated`, `Wakefield`, `WF1 2PF`. The source supplies no county, UPRN or site name. The primary block is one current administrative association on the accepted shared legal entity, with unknown business dates. The source does not establish registered-office meaning, and the source-obfuscated third line is retained unchanged.
+
 ## Controlled proprietor and establishment evidence
 
 The accepted proprietor assertion resolves the independent school's exact extract `PropsName` to the same Outwood legal entity. This is an explicitly accepted proprietor-identity assumption for this controlled fixture, not a direct identity match from the obfuscated local proprietor fields.
@@ -104,6 +106,7 @@ These expectations use the controlled establishment and proprietor assertions ap
 | `group_identifier` | UID 4119 / TR01585 on the Academy trust role; UID 4118 / SP00396 on the School sponsor role. All four are source-current, with issuer GIAS. No group identifier is created for proprietorship. |
 | `academy_trust_classification` | One source-current MAT classification with unknown start/end dates. |
 | `establishment_responsibility` | Run by academy trust (MAT) and Sponsored by responsibilities for URN 135961, both current from 2009-09-01 with unknown ends; one current Proprietor responsibility for URN 148341 from the accepted extract assertion, with unknown start/end dates. |
+| `legal_entity_address`, `address` | One current administrative association for the shared Outwood legal entity, using the MAT primary block with unknown business dates. No contact or registered-office association is inferred. |
 | `person`, `organisation_group`, `organisation_group_member` | No records created to represent these three responsibilities. |
 | Migration evidence | Retain GroupLinks 5716 and 5254, the shared-party identity decisions, exact proprietor assertion and extract observation date 2026-06-16. Retain the local lifecycle/proprietor context and controlled establishment-field decisions separately beneath the import run. |
 
@@ -139,12 +142,21 @@ Migrated on 9 October 2026 using the approved controlled establishment and share
 ```sql
 SELECT e.urn, e.name, le.legal_entity_id, le.name AS responsible_party,
        rt.name AS responsibility, tt.name AS trust_type,
-       r.start_date, r.end_date, r.is_current
+       r.start_date, r.end_date, r.is_current,
+       address_purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       legal_address.start_date AS address_start_date,
+       legal_address.end_date AS address_end_date,
+       legal_address.is_current AS address_is_current
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.legal_entity le USING (legal_entity_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
 LEFT JOIN establishment.academy_trust_type tt USING (academy_trust_type_id)
+LEFT JOIN establishment.legal_entity_address legal_address USING (legal_entity_id)
+LEFT JOIN establishment.address_purpose address_purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
 WHERE e.urn IN (148341,135961)
 ORDER BY e.urn, rt.name;
 ```

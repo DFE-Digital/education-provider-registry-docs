@@ -1,0 +1,21 @@
+{
+  "fixture": "T5",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urns": [20338, 20549, 20614, 21363, 22422, 22459, 22975, 23004, 23122],
+  "runType": "group-addresses-t5",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t5-group-addresses.sql",
+  "reviewEvidence": "Children's-centre group UID 86052 is an organisation group. Both source address blocks are blank. Retain their raw values and source codes as evidence; create no postal address or association and infer no address from a member centre or the recorded local authority.",
+  "snapshotName": "T5 children's-centre group primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 86052, "typeCode": "08", "ownerKind": "organisation_group", "ownerKey": "childrens-centre-group"}
+  ],
+  "blockMappings": [
+    {"groupUid": 86052, "block": "primary", "purposeId": null},
+    {"groupUid": 86052, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 86052
+}

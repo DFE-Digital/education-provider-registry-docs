@@ -18,5 +18,59 @@
     "ukprn": 10092329,
     "localAuthorityCode": "807"
   },
-  "reviewEvidence": "T10 user-approved controlled establishment and shared-party assertion on 2026-10-09. Use the June extract's open school, dates, UKPRN and authority instead of the conflicting local rejected-opening record. Sponsor, trust and proprietor are one Outwood legal entity. Preserve local values separately as context; proprietor dates unknown; actual migration requires a manual identity and lifecycle decision."
+  "reviewEvidence": "T10 user-approved controlled establishment and shared-party assertion on 2026-10-09. Use the June extract's open school, dates, UKPRN and authority instead of the conflicting local rejected-opening record. Sponsor, trust and proprietor are one Outwood legal entity. Preserve local values separately as context; proprietor dates unknown; actual migration requires a manual identity and lifecycle decision.",
+  "reviewStatus": "accepted",
+  "mode": "shared-existing-proprietor",
+  "runType": "t10-additive",
+  "transformVersion": "reviewed-proprietor-v2",
+  "sourceDatabase": "gias_bau_test_local",
+  "contextObservationDate": "2026-10-09",
+  "contextExtractName": "T10 conflicting local context",
+  "approvedSourceTable": "Establishment extract approved T10 fixture",
+  "contextSourceTable": "dbo.Establishment/IndependentSchools (context only)",
+  "targetSchoolStatus": "Open",
+  "approvedBy": "User approval 2026-10-09",
+  "associatedEstablishmentUrn": 135961,
+  "associatedGroupUids": [
+    4118,
+    4119
+  ],
+  "expectedLocalContext": [
+    {
+      "urn": 148341,
+      "establishment_name": "Outwood Alternative Provision Eston",
+      "type_code": "11",
+      "status_code": "8",
+      "open_date": "2018-11-10",
+      "close_date": "2018-11-10",
+      "ukprn": null,
+      "local_authority_code": "865",
+      "proprietortype_code": "03",
+      "additional_proprietor_rows": 0
+    }
+  ],
+  "extractAssertions": [
+    {
+      "URN": "148341",
+      "EstablishmentName": "Outwood Alternative Provision Eston",
+      "PropsName": "Outwood Grange Academies Trust",
+      "UKPRN": "10092329",
+      "LA (code)": "807",
+      "EstablishmentStatus (code)": "1",
+      "TypeOfEstablishment (code)": "11",
+      "EstablishmentNumber": "6003",
+      "PhaseOfEducation (code)": "0",
+      "OpenDate": "18-02-2021",
+      "CloseDate": ""
+    },
+    {
+      "URN": "135961",
+      "EstablishmentName": "Outwood Grange Academy",
+      "UKPRN": "10028145",
+      "LA (code)": "384",
+      "EstablishmentStatus (code)": "1",
+      "OpenDate": "01-09-2009",
+      "CloseDate": ""
+    }
+  ]
 }
