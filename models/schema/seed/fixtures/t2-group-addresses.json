@@ -1,0 +1,63 @@
+{
+  "fixture": "T2",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 134314,
+  "runType": "group-addresses-t2",
+  "transformVersion": "reviewed-group-addresses-v2",
+  "validator": "validate-t2-group-addresses.sql",
+  "reviewEvidence": "Current administrative association with unknown business start/end dates, not observation dates. Primary address is not a verified registered office. Blank blocks create no address. County label lookup unavailable: county remains unknown; raw codes retained. No person contact fields extracted.",
+  "snapshotName": "T2 group primary/contact addresses",
+  "sourceGroups": [
+    {
+      "uid": 23869,
+      "typeCode": "06",
+      "ownerKey": "trust"
+    },
+    {
+      "uid": 4737,
+      "typeCode": "10",
+      "ownerKey": "trust"
+    },
+    {
+      "uid": 2914,
+      "typeCode": "05",
+      "ownerKey": "sponsor"
+    }
+  ],
+  "blockMappings": [
+    {
+      "groupUid": 23869,
+      "block": "primary",
+      "purposeId": 3
+    },
+    {
+      "groupUid": 23869,
+      "block": "contact",
+      "purposeId": null
+    },
+    {
+      "groupUid": 4737,
+      "block": "primary",
+      "purposeId": 3
+    },
+    {
+      "groupUid": 4737,
+      "block": "contact",
+      "purposeId": null
+    },
+    {
+      "groupUid": 2914,
+      "block": "primary",
+      "purposeId": null
+    },
+    {
+      "groupUid": 2914,
+      "block": "contact",
+      "purposeId": null
+    }
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 23869
+}

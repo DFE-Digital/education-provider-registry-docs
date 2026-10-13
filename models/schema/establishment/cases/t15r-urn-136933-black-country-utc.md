@@ -87,6 +87,7 @@ flowchart LR
 | `academy_trust_classification` | One SAT classification with unknown start, end 2015-08-31 and `is_current = false`. No MAT classification or SAT-to-MAT transition is invented. |
 | `establishment_responsibility` | One Run by academy trust responsibility, typed SAT, from 2011-09-01 to 2015-08-31, with `is_current = false`. |
 | `group_identifier` | GIAS Group UID 2347 and Group ID TR00230 on the Academy trust role, both historical and both issued by GIAS. |
+| `legal_entity_address` and `address` | One current administrative address with unknown business dates belongs to the legal entity: Walsall College, Littleton Street West, Walsall, WS2 8ES. The contact block is blank and retained as source evidence. The historical SAT lifecycle does not by itself establish an address end date. |
 | Migration evidence | Retain GroupLink 5319, its effective date and original `archived = 0`, the two source closure assertions, the accepted lifecycle interpretation and the inferred responsibility-end basis. |
 | `person`, sponsor responsibility and `organisation_group_member` | No records created merely to represent the SAT, UTC or their operating relationship. |
 
@@ -103,16 +104,22 @@ SELECT e.urn, e.name AS establishment,
        le.name AS responsible_party,
        le.incorporation_date, le.dissolution_date,
        rt.name AS responsibility, trust_type.name AS responsibility_trust_type,
-       r.start_date, r.end_date, r.is_current
+       r.start_date, r.end_date, r.is_current,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
 JOIN establishment.legal_entity le USING (legal_entity_id)
 JOIN establishment.academy_trust_type trust_type USING (academy_trust_type_id)
+LEFT JOIN establishment.legal_entity_address entity_address
+  ON entity_address.legal_entity_id=le.legal_entity_id
+ AND entity_address.address_purpose_id=3 AND entity_address.is_current
+LEFT JOIN establishment.address address USING (address_id)
 WHERE e.urn=136933;
 ```
 
-After migration, the expected result is one historical Run by academy trust row typed SAT, starting 2011-09-01 and ending 2015-08-31. Incorporation is mapped to 2011-03-08; dissolution is null.
+After migration, the expected result is one historical Run by academy trust row typed SAT, starting 2011-09-01 and ending 2015-08-31. Its legal entity retains the current administrative address with unknown dates. Incorporation is mapped to 2011-03-08; dissolution is null.
 
 ## Expected checks
 

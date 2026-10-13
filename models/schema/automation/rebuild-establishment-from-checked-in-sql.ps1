@@ -20,7 +20,7 @@ param(
     [string]$PostgresUser = 'postgres',
     [string]$PostgresPassword = $env:PGPASSWORD,
     # The checked-in establishment fixture, holding every selected establishment.
-    [string[]]$SeedFile = @('seed-establishment-fixture.sql')
+    [ValidateNotNullOrEmpty()][string[]]$SeedFile = @('seed-establishment-fixture.sql')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -28,6 +28,7 @@ Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLoca
 
 $target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
 $null = Get-AllTestCases
+Assert-EstablishmentBuildInputs -IncludeReferenceSeed -FixtureSeedFile $SeedFile
 
 Initialize-EstablishmentDatabase -Target $target
 Import-CheckedInEstablishmentFixture -Target $target -SeedFile $SeedFile

@@ -1,0 +1,24 @@
+{
+  "fixture": "T14R",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 139844,
+  "runType": "group-addresses-t14r",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t14r-group-addresses.sql",
+  "reviewEvidence": "Sponsor UID 2904 and academy-trust UID 2905 resolve to separate legal entities under T14R's accepted separate-party decision. The sponsor primary and contact blocks are blank. The academy trust's primary block is one current administrative address with unknown business dates; its contact block is blank and all blank observations are retained as evidence.",
+  "snapshotName": "T14R sponsor and academy-trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 2904, "typeCode": "05", "ownerKind": "legal_entity", "ownerKey": "diocese-of-ely"},
+    {"uid": 2905, "typeCode": "06", "ownerKind": "legal_entity", "ownerKey": "grace-schools"}
+  ],
+  "blockMappings": [
+    {"groupUid": 2904, "block": "primary", "purposeId": null},
+    {"groupUid": 2904, "block": "contact", "purposeId": null},
+    {"groupUid": 2905, "block": "primary", "purposeId": 3},
+    {"groupUid": 2905, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 2905
+}

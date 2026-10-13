@@ -1,0 +1,24 @@
+{
+  "fixture": "T8",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 136494,
+  "runType": "group-addresses-t8",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t8-group-addresses.sql",
+  "reviewEvidence": "Former operator UID 4920 and current operator UID 3643 resolve to separate legal entities. Their populated primary blocks are current administrative associations with unknown business dates, not verified registered offices. Both contact blocks are blank. The historical responsibility state of UID 4920 does not make its current source address historical.",
+  "snapshotName": "T8 operating-trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 4920, "typeCode": "06", "ownerKind": "legal_entity", "ownerKey": "former-operator"},
+    {"uid": 3643, "typeCode": "06", "ownerKind": "legal_entity", "ownerKey": "current-operator"}
+  ],
+  "blockMappings": [
+    {"groupUid": 4920, "block": "primary", "purposeId": 3},
+    {"groupUid": 4920, "block": "contact", "purposeId": null},
+    {"groupUid": 3643, "block": "primary", "purposeId": 3},
+    {"groupUid": 3643, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 3643
+}

@@ -37,7 +37,7 @@ try {
             Replace('__CONTROLLED_PROPRIETOR_JSON__',($fixture | ConvertTo-Json -Depth 6 -Compress).Replace("'","''"))
           $loadSql += [regex]::Replace($sql,'(?m)^(BEGIN|COMMIT);\r?$','') + "`n"
         }
-        $validation=Get-Content -LiteralPath (Get-SchemaPath 'establishment/validate-t21-partnership-proprietor.sql') -Raw
+        $validation=Get-Content -LiteralPath (Get-SchemaPath 'migration/validate-scripts/validate-t21-partnership-proprietor.sql') -Raw
         $runId=[guid]::NewGuid()
         $runSql="INSERT INTO migration.migration_run(migration_run_id,run_type,source_system,source_database,source_snapshot_date,status,transform_version,notes) VALUES('$runId','t21-additive','GIAS BAU','gias_bau_test_local',CURRENT_DATE,'running','t21-v1','Controlled traditional partnership assumption, not verified registered identity.') ON CONFLICT DO NOTHING; SELECT set_config('epr.migration_run_id','$runId',true);"
         $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn<>124870;"

@@ -1,0 +1,31 @@
+{
+  "fixture": "T17",
+  "schoolUrn": 103630,
+  "foundationGroupUid": 1650,
+  "reviewStatus": "accepted",
+  "mode": "historical-group-membership",
+  "groupType": "Federation",
+  "identifierCurrent": false,
+  "sourceSystem": "GIAS BAU",
+  "sourceDatabase": "gias_bau_test_local",
+  "runType": "t17-historical-membership",
+  "transformVersion": "reviewed-historical-membership-v2",
+  "extractName": "t17-historical-federation-1537",
+  "sourceTable": "dbo.EstablishmentGroup/GroupLink",
+  "leftDateBasis": "inferred",
+  "inferenceRule": "Membership end is the earlier known establishment/group closure upper bound.",
+  "reviewEvidence": "T17 Source GroupLink 1245: archived=1; effectiveDate=2012-04-01; membership end 2020-06-16 inferred from Langley closure, before federation closure 2020-07-01. Source member Beaufort 103627 / link 1246 not imported. Membership scope: supplied URNs only; not the complete source group. Federation is not a legal entity or responsibility.",
+  "expectedSourceRows": [
+    {
+      "group_uid": "1537",
+      "group_name": "The Federation of Beaufort School and Langley School",
+      "group_open_date": "2012-04-01",
+      "group_close_date": "2020-07-01",
+      "establishment_urn": 103630,
+      "joined_date": "2012-04-01",
+      "left_date": "2020-06-16",
+      "source_link_id": "1245",
+      "source_archived": 1
+    }
+  ]
+}

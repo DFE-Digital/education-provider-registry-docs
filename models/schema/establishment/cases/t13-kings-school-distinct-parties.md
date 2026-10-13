@@ -78,6 +78,7 @@ Proprietorship is recorded directly as a responsibility. It does not create a Pr
 | `group_identifier` | Current GIAS Group UID `3641` and Group ID `TR01236` belong to the Academy trust role. No GIAS group identifier is created for the proprietor. |
 | `academy_trust_classification` | One current SAT classification on the academy-trust legal entity, with unknown start and end dates. No academy-trust classification on the proprietor. |
 | `establishment_responsibility` | One current Proprietor responsibility for Gloucester, with unknown start/end dates and no academy-trust type; one current Run by academy trust responsibility for Grantham, typed SAT, starting on 2011-08-01 with unknown end. |
+| `legal_entity_address` and `address` | One current administrative address with unknown business dates belongs to the Grantham academy trust: The King's School, Brook Street, Grantham, NG31 6RP. The controlled Gloucester proprietor has no GIAS group address block. The trust contact block is blank and retained as source evidence. |
 | `person`, `organisation_group`, `organisation_group_member` | No records created to represent the selected relationships. |
 | Migration evidence | Preserve the Gloucester proprietor assertion, extract observation date 2026-06-16, controlled allocation and accepted separate-party assumption. Separately retain SAT UID 3641, GroupLink 9005 and its current-state assertion. |
 
@@ -98,18 +99,24 @@ SELECT e.urn, e.name AS establishment,
        le.legal_entity_id, le.name AS responsible_party,
        rt.name AS responsibility,
        r.start_date, r.end_date, r.is_current,
-       trust_type.name AS responsibility_trust_type
+       trust_type.name AS responsibility_trust_type,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
 JOIN establishment.legal_entity le USING (legal_entity_id)
 LEFT JOIN establishment.academy_trust_type trust_type USING (academy_trust_type_id)
+LEFT JOIN establishment.legal_entity_address entity_address
+  ON entity_address.legal_entity_id=le.legal_entity_id
+ AND entity_address.address_purpose_id=3 AND entity_address.is_current
+LEFT JOIN establishment.address address USING (address_id)
 WHERE (e.urn=115780 AND rt.name='Proprietor')
    OR (e.urn=137166 AND rt.name='Run by academy trust')
 ORDER BY e.urn;
 ```
 
-After migration, the expected result is two rows with different `legal_entity_id` values despite the matching party names. Only the Grantham operating responsibility is typed SAT. The Gloucester proprietor responsibility has unknown dates.
+After migration, the expected result is two rows with different `legal_entity_id` values despite the matching party names. Only the Grantham operating responsibility is typed SAT and has the administrative address. The Gloucester proprietor responsibility has unknown dates and no address from this source scope.
 
 ## Expected checks
 

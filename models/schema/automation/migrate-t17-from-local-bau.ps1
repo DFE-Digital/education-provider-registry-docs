@@ -21,29 +21,33 @@ $workspace=New-RunWorkspace
 try {
     & (Get-Module EprLocalAutomation) {
         param($source,$target,$workspace)
+        $membershipFixture=Get-Content (Get-SchemaPath 'seed/fixtures/t17-historical-membership.json') -Raw -Encoding UTF8
+        $reviewed=$membershipFixture | ConvertFrom-Json
         $establishmentCsv=Join-Path $workspace 't17-establishment.csv'
         $partyCsv=Join-Path $workspace 't17-party.csv'
         $federationCsv=Join-Path $workspace 't17-federation.csv'
         $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/t17-historical-federation-from-bau.sql') `
             -CsvPath $federationCsv -RowCount ExactlyOne -Description 'T17 historical federation preflight'
         $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/academy-trust-responsibility-from-bau.sql') `
-            -Variables @{URN=103630;GROUP_ID=1650;INCLUDE_ARCHIVED=0} -CsvPath $partyCsv `
+            -Variables @{URN=$reviewed.schoolUrn;GROUP_ID=$reviewed.foundationGroupUid;INCLUDE_ARCHIVED=0} -CsvPath $partyCsv `
             -RowCount ExactlyOne -Description 'T17 foundation-support source preflight'
         $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-from-bau.sql') `
-            -Variables @{URN=103630} -Columns $script:EstablishmentFixtureColumns -CsvPath $establishmentCsv `
+            -Variables @{URN=$reviewed.schoolUrn} -Columns $script:EstablishmentFixtureColumns -CsvPath $establishmentCsv `
             -RowCount ExactlyOne -Description 'T17 establishment source preflight'
         $loadSql=''
         foreach ($load in @(
             @{Path='establishment/load/load-establishment-fixture.sql';Csv=$establishmentCsv},
             @{Path='establishment/load/load-academy-trust-responsibility-fixture.sql';Csv=$partyCsv},
-            @{Path='establishment/load/load-t17-historical-federation.sql';Csv=$federationCsv}
+            @{Path='establishment/load/load-reviewed-historical-membership.sql';Csv=$federationCsv;ReviewedFixture=$membershipFixture}
         )) {
-            $sql=(Get-Content -LiteralPath (Get-SchemaPath $load.Path) -Raw).Replace('__FIXTURE_PATH__',($load.Csv -replace '\\','/'))
+            $sql=Get-Content -LiteralPath (Get-SchemaPath $load.Path) -Raw -Encoding UTF8
+            if($load.ReviewedFixture){$sql=ConvertTo-ReviewedFixtureSql -Template $sql -FixtureJson $load.ReviewedFixture}
+            $sql=$sql.Replace('__FIXTURE_PATH__',($load.Csv -replace '\\','/'))
             $loadSql += [regex]::Replace($sql,'(?m)^(BEGIN|COMMIT);\r?$','') + "`n"
         }
-        $validation=Get-SchemaPath 'establishment/validate-t17-dual-relationships.sql'
+        $validation=Get-SchemaPath 'migration/validate-scripts/validate-t17-dual-relationships.sql'
         $validationSql=Get-Content -LiteralPath $validation -Raw
-        $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn<>103630;"
+        $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn<>$($reviewed.schoolUrn);"
         $before=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'Existing scope check failed'
         $path=Join-Path $workspace 't17-load.sql'
         foreach ($ending in @('ROLLBACK','COMMIT')) {

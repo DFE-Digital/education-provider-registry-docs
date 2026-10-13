@@ -38,7 +38,7 @@ try {
         $schoolLoad=[regex]::Replace($sql,'(?m)^(BEGIN|COMMIT);\r?$','') + "`n"
         $correctionSql=Get-Content -LiteralPath (Get-SchemaPath 'establishment/load/correct-t22-two-entity-assertion.sql') -Raw -Encoding UTF8
         $loadSql=$correctionSql+$schoolLoad+($partyLoads -join "`n")
-        $validation=Get-SchemaPath 'establishment/validate-t22-trust-classification-history.sql'
+        $validation=Get-SchemaPath 'migration/validate-scripts/validate-t22-trust-classification-history.sql'
         $validationSql=Get-Content -LiteralPath $validation -Raw
         $preservedSql="SELECT coalesce(string_agg(urn::text || ':' || establishment_id::text,',' ORDER BY urn),'') FROM establishment.establishment WHERE urn<>142869;"
         $before=Invoke-Psql -Target $target -Command $preservedSql -Output Scalar -FailureMessage 'Existing scope check failed'

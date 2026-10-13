@@ -2,28 +2,59 @@
 
 This directory contains the PostgreSQL physical schemas, SQL seeds and local automation used to build the Education Provider Registry model.
 
+This is a work-in-progress business schema. Application/database roles, grants,
+write restrictions and correction-audit machinery are not defined here. Those
+require separate decisions. Local modelling runs use the existing administrator
+connection; they do not establish a production permissions design.
+
+## One Establishment creation file
+
+[establishment-schema.sql](establishment/establishment-schema.sql) creates the
+whole Establishment schema, including address history, lead periods, indexes,
+constraints and both triggers. It is plain PostgreSQL SQL with no file includes.
+Run it in an existing database where the `establishment` schema does not exist:
+
+```powershell
+psql.exe -X -w -h localhost -U postgres -d establishment_local -v ON_ERROR_STOP=1 -f ".\models\schema\establishment\establishment-schema.sql"
+```
+
+It creates structure only, not reference seeds, test data or the separate migration
+evidence schema. It does not drop an existing schema. The explicit rebuild commands
+perform the destructive reset separately and then invoke this creation file.
+
 Group postal-address associations are implemented in
-[group-address-schema.sql](establishment/group-address-schema.sql), with
+[establishment-schema.sql](establishment/establishment-schema.sql), with
 registered-office, contact and administrative purpose reference data. Organisation
 groups cannot use registered-office purpose. T1's two primary SAT/MAT blocks are
 migrated as administrative addresses; blank contact/sponsor blocks remain evidence.
-The additive [upgrade](establishment/upgrade-group-addresses.sql), both default
-rebuilds and SQL fixture exports preserve this slice without adding triggers.
+Both default rebuilds and SQL fixture exports preserve this slice without adding
+triggers. Scoped address runners require the current schemas to be created first.
 
 Both address association tables retain explicit `start_date`, `end_date` and
-`is_current` history. T1's current dates remain unknown. Ordinary writers can
-end a period and insert another, but cannot overwrite shared postal values,
-delete associations or rewrite their address/start fields. Fully known periods
-cannot overlap; each owner/purpose has at most one current association. Reviewed
-address-correction auditing remains outstanding.
+`is_current` history. T1's current dates remain unknown. Fully known periods
+cannot overlap; each owner/purpose has at most one current association. Migration
+loaders preserve existing periods and reject unreviewed source conflicts.
+Protection against direct rewriting/deleting history and the correction workflow
+remain undecided; the schema does not enforce them through permissions.
+
+T2 also retains one current administrative association for Hive Education Trust,
+with separate evidence from its identical SAT and MAT primary address blocks.
+Its business dates are unknown; no sponsor/contact or registered-office address
+is inferred. Both default rebuilds include this slice.
 
 ## What is here
 
+Reviewed assumptions, source scope and expected values for T1-T8, T10-T15R and T17
+are kept in [fixtures](seed/fixtures/README.md), separately from reusable loading
+SQL. Five case-specific loaders have been replaced by three shared loaders for
+addresses, reviewed shared-party proprietorship and historical federation
+membership. Blank organisation-group, legal-entity and person-source address blocks are retained as evidence without inventing associations. T7, T8, T10, T11R, T13, T14R and T15R add reviewed administrative legal-entity addresses. Case-specific validators and existing runner commands remain.
+
 | Directory | Purpose |
 | --- | --- |
-| `establishment/` | Establishment PostgreSQL schema, loading SQL and validation SQL. |
+| `establishment/` | Complete Establishment creation SQL, source transforms, fixture loaders and standalone case documentation. |
 | `governance/` | Governance PostgreSQL schema and migration SQL. |
-| `migration/` | PostgreSQL schema for migration runs, source evidence and identity-resolution records. |
+| `migration/` | Migration-evidence schema and identity-resolution records; `validate-scripts/` contains all validation SQL. |
 | `seed/` | Checked-in reference data, sample Establishment data and the BAU selection manifest. |
 | `automation/` | PowerShell commands for rebuilding local databases, extracting BAU data and validating the result. |
 
@@ -35,9 +66,9 @@ The physical model stores each spell as lead in `establishment.organisation_grou
 
 BAU current lead flags become current assertions with unknown start/end dates. Snapshot observations remain in migration evidence and are not substituted for business dates. Incomplete periods require review before making historical claims. Current status is explicit, not automatically recalculated as dates pass.
 
-The baseline includes [lead-period DDL](establishment/organisation-group-member-lead-period-schema.sql), and both BAU loading and checked-in fixture replay include the new table. For an existing local database, use the [additive upgrade](establishment/upgrade-group-member-lead-periods.sql) instead of a rebuild. It preserves memberships and lead periods, backfills any legacy true flags without inventing dates, then removes the legacy column and its summary-maintenance trigger. Repeat execution does not duplicate current assertions. The DDL requires the PostgreSQL `btree_gist` extension for group-wide exclusion constraints.
+The single [Establishment creation file](establishment/establishment-schema.sql) includes the lead-period table and its two consistency triggers. Both BAU loading and checked-in fixture replay include the table. Separate DDL fragments and legacy additive local upgrades have been retired; rebuild the WIP local target using the supported commands when its structure changes. The DDL requires PostgreSQL `btree_gist` for group-wide exclusion constraints.
 
-Regression checks in [validate-group-member-lead-periods.sql](establishment/validate-group-member-lead-periods.sql) cover handovers, return as lead, independent membership dates, unknown boundaries and rejection of conflicts. Synthetic histories are rolled back.
+Regression checks in [validate-group-member-lead-periods.sql](migration/validate-scripts/validate-group-member-lead-periods.sql) cover handovers, return as lead, independent membership dates, unknown boundaries and rejection of conflicts. Synthetic histories are rolled back.
 
 The Establishment schema retains two consistency triggers. These reject invalid
 writes; none maintains a duplicate lead summary:
@@ -45,15 +76,10 @@ writes; none maintains a duplicate lead summary:
 - `check_group_member_lead_period`: Restricts lead periods to children's-centre groups and checks known membership boundaries and current eligibility.
 - `check_membership_lead_boundaries`: Rejects membership date changes that invalidate lead periods or end membership while a current lead assertion remains.
 
-Identifier ownership and group type are protected by column-level permissions,
-not triggers. See [write permissions and corrections](establishment/write-permissions-and-corrections.md).
-Ordinary writers use the non-owning `epr_establishment_writer` role. They can
-retire identifiers through `is_current`, but cannot delete or rewrite them or
-change group type. Reference tables are read-only. Exceptional corrections use
-`epr_establishment_corrector` and a restricted function that records the caller,
-reason and before/after values without permitting direct writes to the audit.
-Schema owners and superusers bypass these permissions: local rebuild commands
-still use the trusted `postgres` account, not an application runtime identity.
+Identifier rewrite/delete policy, parent group-type changes and permissions are
+deferred. No additional trigger or permission role is introduced to enforce them
+in this WIP schema. Existing keys, uniqueness and foreign keys remain in place;
+the migrations still reject unreviewed identity/source conflicts.
 
 Unique indexes and exclusion constraints separately enforce one current lead per
 group and non-overlap of fully known lead periods. Foreign keys enforce ownership

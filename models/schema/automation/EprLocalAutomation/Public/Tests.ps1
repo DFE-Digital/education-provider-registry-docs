@@ -9,9 +9,98 @@ function Test-EstablishmentCoreValidation {
     param([Parameter(Mandatory)]$Target)
 
     Write-Step 'Test: core establishment validation'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-establishment-fixture.sql') -FailureMessage 'Core establishment validation failed'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-write-permissions.sql') -FailureMessage 'Write-permission validation failed'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-group-address-constraints.sql') -FailureMessage 'Group-address constraints failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-establishment-fixture.sql') -FailureMessage 'Core establishment validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-group-address-constraints.sql') -FailureMessage 'Group-address constraints failed'
+}
+
+function Test-ReviewedFixtureIntegrity {
+    param([Parameter(Mandatory)]$Target)
+    Write-Step 'Test: shared-loader reviewed fixture integrity'
+    $workspace=New-RunWorkspace
+    try {
+        $reviewedFixtures=@()
+        foreach($catalogueCase in (Get-AllTestCases)) {
+            if($catalogueCase.loader) {
+                $reviewedFixtures += [pscustomobject]@{case=$catalogueCase.case;fixture=$catalogueCase.fixture;loader=$catalogueCase.loader}
+            }
+            if($catalogueCase.addressFixture) {
+                $reviewedFixtures += [pscustomobject]@{case=$catalogueCase.case;fixture=$catalogueCase.addressFixture;loader='load-reviewed-group-addresses.sql'}
+            }
+        }
+        foreach($case in $reviewedFixtures) {
+            $json=Get-Content (Get-SchemaPath ("seed/"+$case.fixture)) -Raw -Encoding UTF8
+            $template=Get-Content (Get-SchemaPath ("establishment/load/"+$case.loader)) -Raw -Encoding UTF8
+            $rendered=ConvertTo-ReviewedFixtureSql -Template $template -FixtureJson $json
+            $changed=$json | ConvertFrom-Json
+            $changed.reviewEvidence='Runtime mutation without renewed fixture rendering'
+            $changedJson=$changed | ConvertTo-Json -Depth 12 -Compress
+            $rendered=$rendered.Replace($json.Replace("'","''"),$changedJson.Replace("'","''"))
+            if($rendered -ceq (ConvertTo-ReviewedFixtureSql -Template $template -FixtureJson $json)) {
+                throw 'Fixture integrity probe did not change the rendered decision.'
+            }
+            switch ($case.loader) {
+                'load-reviewed-group-addresses.sql' {
+                    $header='source_group_id|source_type_code|source_address_block|address_line_1|address_line_2|address_line_3|town|county|postcode|source_county_code|source_country_code|source_uprn|source_site_name'
+                    $expected='*Reviewed address mapping changed; manual migration decision required*'
+                }
+                'load-reviewed-proprietor.sql' {
+                    $header='urn|establishment_name|type_code|status_code|open_date|close_date|ukprn|local_authority_code|proprietortype_code|additional_proprietor_rows'
+                    $expected='*approved decision changed; manual review required*'
+                }
+                'load-reviewed-historical-membership.sql' {
+                    $header='group_uid|group_name|group_open_date|group_close_date|establishment_urn|joined_date|left_date|source_link_id|source_archived'
+                    $expected='*Historical membership decision changed; manual review required*'
+                }
+                default { throw 'Unknown reviewed loader integrity contract.' }
+            }
+            $csv=Join-Path $workspace 'empty-source.csv'
+            [IO.File]::WriteAllText($csv,$header+"`n",[Text.UTF8Encoding]::new($false))
+            $sqlPath=Join-Path $workspace 'changed-decision.sql'
+            $rendered=$rendered.Replace('__FIXTURE_PATH__',$csv.Replace('\','/'))
+            [IO.File]::WriteAllText($sqlPath,"BEGIN;`n"+$rendered+"`nROLLBACK;",[Text.UTF8Encoding]::new($false))
+            $arguments=Get-PsqlArgumentList -Target $Target -File $sqlPath -Output Scalar
+            $psql=Get-PostgresClientPath -Tool psql
+            $previousPreference=$ErrorActionPreference; $passwordBefore=$env:PGPASSWORD
+            try {
+                if($Target.Password){$env:PGPASSWORD=$Target.Password}
+                $ErrorActionPreference='Continue'
+                $messages=(& $psql @arguments 2>&1 | ForEach-Object {$_.ToString()} | Out-String)
+                $exitCode=$LASTEXITCODE
+            }
+            finally {$ErrorActionPreference=$previousPreference; $env:PGPASSWORD=$passwordBefore}
+            if($exitCode -eq 0 -or $messages -notlike $expected) {
+                throw "Reviewed fixture mutation was not rejected for $($case.case): $messages"
+            }
+        }
+        Write-Host '    All reviewed fixtures reject runtime decision mutations; probes rolled back.'
+    }
+    finally {Remove-RunWorkspace -Path $workspace}
+}
+
+function Test-EstablishmentBuildInputPreflight {
+    Write-Step 'Test: missing rebuild input preflight'
+    Assert-EstablishmentBuildInputs -IncludeReferenceSeed -FixtureSeedFile @('seed-establishment-fixture.sql')
+    $missingInput = Join-Path ([System.IO.Path]::GetTempPath()) ('epr-missing-input-' + [guid]::NewGuid())
+    $originalRoot = $script:SchemaRoot
+    $rejected = $false
+    try {
+        $script:SchemaRoot = $missingInput
+        try { Assert-EstablishmentBuildInputs }
+        catch {
+            if ($_.Exception.Message -notlike '*Required file not found:*establishment-schema.sql*') { throw }
+            $rejected = $true
+        }
+    }
+    finally { $script:SchemaRoot = $originalRoot }
+    if (-not $rejected) { throw 'Missing schema creation input was accepted.' }
+    $rejected = $false
+    try { Assert-EstablishmentBuildInputs -IncludeReferenceSeed -FixtureSeedFile @($missingInput) }
+    catch {
+        if ($_.Exception.Message -notlike '*Required file not found:*') { throw }
+        $rejected = $true
+    }
+    if (-not $rejected) { throw 'Missing fixture input was accepted.' }
+    Write-Host '    Missing schema/fixture inputs rejected by read-only preflight.'
 }
 
 function Test-EstablishmentGroupsValidation {
@@ -23,7 +112,7 @@ function Test-EstablishmentGroupsValidation {
     param([Parameter(Mandatory)]$Target)
 
     Write-Step 'Test: establishment-groups validation'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-academy-trust-responsibilities.sql') -FailureMessage 'Establishment-groups validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-academy-trust-responsibilities.sql') -FailureMessage 'Establishment-groups validation failed'
     Test-EstablishmentIdentityResolution -Target $Target
 }
 
@@ -397,6 +486,8 @@ function Invoke-EstablishmentTests {
         [int[]]$ExpectedUrn
     )
 
+    Test-EstablishmentBuildInputPreflight
+    Test-ReviewedFixtureIntegrity -Target $Target
     Test-EstablishmentUrnValidation
     Test-EstablishmentGroupDiscovery
     Test-EstablishmentCoreValidation -Target $Target
@@ -404,25 +495,25 @@ function Invoke-EstablishmentTests {
         Test-EstablishmentGroupsValidation -Target $Target
         if (@($Selection.PartyRoleLinks | Where-Object { $_.Urn -eq 135936 -and $_.SourceGroupId -eq 2613 }).Count -gt 0) {
             Write-Step 'Test: person sponsorship and separate academy-trust operation'
-            Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-person-sponsor-responsibilities.sql') -FailureMessage 'Person-sponsor validation failed'
+            Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-person-sponsor-responsibilities.sql') -FailureMessage 'Person-sponsor validation failed'
         }
         if (@($Selection.PartyRoleLinks | Where-Object { $_.Urn -eq 132141 -and $_.SourceGroupId -eq 1337 }).Count -gt 0) {
             Write-Step 'Test: foundation-trust support'
-            Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-foundation-trust-responsibilities.sql') -FailureMessage 'Foundation-trust validation failed'
+            Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-foundation-trust-responsibilities.sql') -FailureMessage 'Foundation-trust validation failed'
         }
     }
     if (@($Selection.ControlledProprietors | Where-Object { $_.fixture -eq 'T9' }).Count -gt 0) {
         Write-Step 'Test: shared proprietor responsibilities and controlled evidence'
-        Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-proprietor-responsibilities.sql') -FailureMessage 'Proprietor validation failed'
+        Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-proprietor-responsibilities.sql') -FailureMessage 'Proprietor validation failed'
         Test-ControlledProprietorReimport -Target $Target -Fixture ($Selection.ControlledProprietors | Where-Object { $_.fixture -eq 'T9' })
     }
     if ($Selection.PartyRoleLinks.Count -gt 0 -or $Selection.OrganisationGroups.Count -gt 0 -or $Selection.ControlledProprietors.Count -gt 0) {
         Write-Step 'Test: rebuild migration-evidence grouping'
         if ($Selection.OrganisationGroups.Count -gt 0) {
-            Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-federation-memberships.sql') -FailureMessage 'Federation validation failed'
+            Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-federation-memberships.sql') -FailureMessage 'Federation validation failed'
             if (@($Selection.OrganisationGroups | Where-Object { $_.SourceGroupId -eq 86052 }).Count -gt 0) {
-                Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-childrens-centre-memberships.sql') -FailureMessage 'Childrens-centre validation failed'
-                Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/validate-group-member-lead-periods.sql') -FailureMessage 'Group-member lead-period validation failed'
+                Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-childrens-centre-memberships.sql') -FailureMessage 'Childrens-centre validation failed'
+                Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-group-member-lead-periods.sql') -FailureMessage 'Group-member lead-period validation failed'
             }
         }
         $expectedExtracts = [int]($Selection.PartyRoleLinks.Count + $Selection.OrganisationGroups.Count)

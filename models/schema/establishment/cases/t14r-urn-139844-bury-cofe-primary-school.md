@@ -84,6 +84,7 @@ The graph does not assert ownership, organisational membership or a corporate re
 | `group_identifier` | UID `2904` and Group ID `SP00160` identify the sponsor role; UID `2905` and Group ID `TR00661` identify the academy-trust role. All four identifiers are current. |
 | `academy_trust_classification` | One current Multi-academy trust classification on GRACE SCHOOLS, with unknown start/end dates. None on the sponsor. |
 | `establishment_responsibility` | One current Sponsored by responsibility held by the Diocese of Ely, with no academy-trust type; one current Run by academy trust responsibility held by GRACE SCHOOLS, typed MAT. Both start on 2013-07-01 and have unknown ends. |
+| `legal_entity_address` and `address` | One current administrative address with unknown business dates belongs to GRACE SCHOOLS: Grace Building, 8 High Street, Ely, CB7 4JU. Both Diocese of Ely blocks and the GRACE SCHOOLS contact block are blank and retained as source evidence. |
 | `person`, `organisation_group`, `organisation_group_member` | No records created for the selected relationships. Shared portfolios are not organisation-group membership. |
 | Migration evidence | Retain both source group assertions, GroupLinks 3115 and 6303, the sponsor's raw placeholder date and its rejection, and the bounded separate-party decision. Record provisional sponsor identity separately from the trust's supplied registered identifiers. |
 
@@ -100,17 +101,23 @@ SELECT e.urn, e.name AS establishment,
        le.legal_entity_id, le.name AS responsible_party,
        rt.name AS responsibility,
        r.start_date, r.end_date, r.is_current,
-       trust_type.name AS responsibility_trust_type
+       trust_type.name AS responsibility_trust_type,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
 JOIN establishment.legal_entity le USING (legal_entity_id)
 LEFT JOIN establishment.academy_trust_type trust_type USING (academy_trust_type_id)
+LEFT JOIN establishment.legal_entity_address entity_address
+  ON entity_address.legal_entity_id=le.legal_entity_id
+ AND entity_address.address_purpose_id=3 AND entity_address.is_current
+LEFT JOIN establishment.address address USING (address_id)
 WHERE e.urn=139844
 ORDER BY rt.name;
 ```
 
-After migration, the expected result is two rows with different `legal_entity_id` values. Both responsibilities start on 2013-07-01 and are current; only Run by academy trust is typed MAT.
+After migration, the expected result is two rows with different `legal_entity_id` values. Both responsibilities start on 2013-07-01 and are current; only Run by academy trust is typed MAT and has the administrative address.
 
 ## Expected checks
 

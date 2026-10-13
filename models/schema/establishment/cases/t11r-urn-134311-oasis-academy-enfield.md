@@ -41,6 +41,8 @@ The selected case is Oasis Academy Enfield. The source evidence covers groups 40
 
 The complete local group-link slice for URN 134311 contains exactly these two links. Both are current and have valid responsibility start dates.
 
+Both sponsor address blocks and the MAT contact block are blank. The MAT primary block is `75 Westminster Bridge Road`, London, `SE1 7HS`; no county, UPRN or site name is supplied. It is one current administrative association on the legal entity shared under the accepted T11R identity assumption. Its business start and end dates are unknown, and the source does not establish registered-office meaning.
+
 Each group has 47 current links covering 47 distinct URNs, with no difference between the two current URN sets. Across current and archived links, both cover the same 48 distinct URNs. The sponsor has 49 total rows, including two archived rows; the MAT has 48 total rows, including one archived row. Equal distinct URN sets do not imply identical relationship-row histories. Unselected historical rows are outside this case's clean migration claim.
 
 ## Relationship graph
@@ -79,6 +81,7 @@ The target model separates legal-entity identity, party roles, academy-trust cla
 | `group_identifier` | UID 4076 / TR01553 belongs to the Academy trust role; UID 4075 / SP00392 belongs to the School sponsor role. All four identifiers are source-current, with issuer GIAS. |
 | `academy_trust_classification` | One current MAT classification, with unknown start and end dates. |
 | `establishment_responsibility` | Two current responsibilities for URN 134311, both starting 2007-09-01 with unknown ends. Only Run by academy trust carries the MAT type. |
+| `legal_entity_address`, `address` | One current administrative association for the shared Oasis legal entity, using the MAT primary block with unknown business dates. No contact or registered-office association is inferred. |
 | `person`, `organisation_group`, `organisation_group_member` | No records created to represent this slice. |
 | Migration evidence | Retain both raw group records, GroupLinks 4024 and 8088, the accepted test-case identity assumption and supporting link-set comparison beneath the import run. For actual migration, retain the manual review evidence and accepted identity decision. |
 
@@ -100,7 +103,13 @@ SELECT e.urn, e.name AS establishment,
        rt.name AS responsibility,
        trust_type.name AS responsibility_trust_type,
        r.start_date, r.end_date, r.is_current,
-       role.start_date AS role_start, role.end_date AS role_end
+       role.start_date AS role_start, role.end_date AS role_end,
+       address_purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       legal_address.start_date AS address_start_date,
+       legal_address.end_date AS address_end_date,
+       legal_address.is_current AS address_is_current
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
@@ -110,6 +119,9 @@ JOIN establishment.establishment_party_role role
 JOIN establishment.establishment_party_role_type role_type USING (establishment_party_role_type_id)
 LEFT JOIN establishment.academy_trust_type trust_type
   ON trust_type.academy_trust_type_id=r.academy_trust_type_id
+LEFT JOIN establishment.legal_entity_address legal_address USING (legal_entity_id)
+LEFT JOIN establishment.address_purpose address_purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
 LEFT JOIN LATERAL (
     SELECT max(i.value) FILTER (WHERE t.name='Group UID') AS gias_group_uid,
            max(i.value) FILTER (WHERE t.name='Group ID') AS gias_group_id

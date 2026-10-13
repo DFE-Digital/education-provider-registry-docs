@@ -40,6 +40,7 @@ Export-ModuleMember -Function @(
     'Remove-RunWorkspace'
 
     # Database build
+    'Assert-EstablishmentBuildInputs'
     'Reset-EstablishmentSchema'
     'Import-ReferenceSeed'
     'Initialize-EstablishmentDatabase'

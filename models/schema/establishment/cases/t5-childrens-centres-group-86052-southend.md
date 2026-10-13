@@ -26,6 +26,8 @@ Unlike the T4 federation, this group has its own recorded local authority. Code 
 
 The local source returns exactly nine links for group 86052, all with `archived = 0`. Every member is an open children's centre, source establishment type 47 and status 1. The query for other group links held by these nine establishments returned no additional records.
 
+The group record's primary and contact address blocks are both blank. Neither block contains a street, locality, third address line, town, postcode, UPRN or site name. The raw county and country codes are `099` and `00`, but these codes alone are not a postal address. Both blank blocks are retained as source evidence against group UID 86052. No address is copied from a member centre or inferred from the group's Southend-on-Sea local-authority relationship.
+
 | URN | Establishment | Source GroupLink ID | Establishment open date | Membership effective date | `ccLinkType` | Current lead assertion recorded |
 | --- | --- | --- | --- | --- | --- | --- |
 | 20338 | Blenheim Children's Centre | 25390 | 2008-02-07 | 2016-10-01 | STANDARD | False |
@@ -70,6 +72,7 @@ The graph shows the lead and two standard members for readability. Six further s
 | `organisation_group_member` | Nine memberships, each with `joined_date = 2016-10-01` and unknown `left_date`. Cambridge Road has `Current lead recorded`; the other eight have false. |
 | `organisation_group_member_lead_period` | One current lead assertion belonging to Cambridge Road's membership. Its `start_date` and `end_date` are unknown: neither the membership effective date nor a source observation date establishes when lead designation started. |
 | `group_identifier` | One GIAS Group UID value `86052`, attached to the organisation group. No Group ID is invented. |
+| `organisation_group_address`, `address` | No group address association or new postal address is created from the two blank source blocks. |
 | `legal_entity`, `organisation_identifier`, `establishment_party_role`, `academy_trust_classification`, `establishment_responsibility` | No records created merely to represent this group, its lead designation or its memberships. |
 | Migration evidence | Retain the nine source-link IDs, active-link state and `ccLinkType` values, with each membership linked to its own source record beneath the shared rebuild run. |
 
@@ -82,6 +85,32 @@ All nine establishments are required to exercise this whole-group case. Importin
 ## Evidence limits
 
 The reviewed group and membership fields have no placeholder dates, duplicate member links, multiple lead flags or local-authority disagreement. This is a bounded assessment of those fields, not a claim that every source field is accurate. Core establishment approval snapshots retain the source values, including obfuscated contact and address data. Missing school-capacity measures and statutory school-age ranges remain absent rather than being invented for children's centres.
+
+## Target query
+
+```sql
+SELECT e.urn, e.name AS establishment_name,
+       g.name AS group_name, i.value AS gias_group_uid,
+       m.joined_date, m.left_date,
+       purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       group_address.start_date AS address_start_date,
+       group_address.end_date AS address_end_date,
+       group_address.is_current AS address_is_current,
+       (SELECT count(*) FROM migration.organisation_group_address_evidence evidence
+        WHERE evidence.organisation_group_id=g.organisation_group_id) AS address_source_blocks_retained
+FROM establishment.organisation_group g
+JOIN establishment.group_identifier i USING (organisation_group_id)
+JOIN establishment.group_identifier_type identifier_type USING (group_identifier_type_id)
+JOIN establishment.organisation_group_member m USING (organisation_group_id)
+JOIN establishment.establishment e USING (establishment_id)
+LEFT JOIN establishment.organisation_group_address group_address USING (organisation_group_id)
+LEFT JOIN establishment.address_purpose purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
+WHERE identifier_type.name='Group UID' AND i.value='86052'
+ORDER BY e.urn;
+```
 
 ## Expected checks
 
@@ -96,3 +125,4 @@ The reviewed group and membership fields have no placeholder dates, duplicate me
 - No Companies House number, organisation UKPRN, Group ID or group legal entity is invented.
 - Membership and lead designation create no establishment responsibility.
 - Each member's evidence points to the correct source link and retains the original `ccLinkType` beneath the shared rebuild run.
+- Both blank group address blocks are retained as evidence; no address association is invented.

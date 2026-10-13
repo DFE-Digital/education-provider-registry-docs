@@ -1,6 +1,6 @@
 # Group addresses logical model
 
-Implementation position: both association tables now have start/end dates and a current flag, with at-most-one-current and fully known period non-overlap constraints. T1 has two current administrative associations for its separate former SAT and current MAT, sharing one postal-address record with unknown business dates. Ordinary writers cannot overwrite postal values, delete associations or rewrite their address/start fields. Reviewed address-correction auditing and coverage of other cases remain outstanding.
+Implementation position: both association tables now have start/end dates and a current flag, with at-most-one-current and fully known period non-overlap constraints. T1 has two current administrative associations for its separate former SAT and current MAT, sharing one postal-address record with unknown business dates. T2 and T3 add continuing-trust observations. T4 and T5 retain blank organisation-group blocks, while T6 and T12 retain blank foundation-trust blocks. T7 adds one current administrative address for Dunstone Education Trust and retains its blank contact block plus two blank person-sponsor blocks. T8 records distinct former and current operator addresses. T10 and T11R each combine sponsor and MAT observations into one shared legal-entity administrative address. The shared loader resolves legal-entity and organisation-group owners and can preserve blank person-source blocks as migration evidence. The business model does not yet include person-address associations. Loaders preserve existing values and reject unreviewed conflicts; direct-write permissions and rewrite/delete protections are not yet defined. Reviewed address-correction auditing and coverage of other cases remain outstanding.
 
 This document defines current and historical address use for legal entities and organisation groups in the Establishment Registry. It is the separate address branch of the [Establishment groups model](establishment-groups-logical-model.md), not an extension of school-site membership or academy-trust classification.
 
@@ -134,7 +134,7 @@ For example, Registered office and Contact can both qualify associations to the 
 
 The owner, purpose and business dates are held in the association tables. An address can be referenced by several associations where that sharing is evidenced; identical address text alone does not prove shared legal identity.
 
-Once used by an address-history association, the postal components are preserved. A different address or corrected spelling uses a new address record, or reuses an existing record with the required unchanged values. Do not overwrite the old postal text: doing so would make every historical period pointing to that record appear to have used the new address. This preservation rule also prevents unintended changes to other owners or school sites sharing the record. Ordinary writer permissions now enforce append-only postal values across these users; schema owners remain trusted administrators.
+Once used by an address-history association, the postal components are preserved. A different address or corrected spelling uses a new address record, or reuses an existing record with the required unchanged values. Do not overwrite the old postal text: doing so would make every historical period pointing to that record appear to have used the new address. This preservation rule also prevents unintended changes to other owners or school sites sharing the record. This is a logical preservation rule followed by the migration loaders, not a permissions restriction in the WIP physical schema. Enforcement for direct writes remains undecided.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -242,9 +242,11 @@ A sponsor record and academy-trust record may resolve to the same company while 
 
 ## Physical implementation follow-through
 
-The physical tables and T1 migration now support multiple periods, unknown boundaries, one current association and non-overlapping fully known periods. Ordinary writers can end a period and insert another within one transaction, but cannot overwrite the old postal values. Schema owners remain trusted administrators. Remaining implementation work includes:
+T2 also exercises this model: identical primary addresses from its SAT and MAT source records resolve to one Hive Education Trust association, with separate evidence for each observation and unknown business dates. A classification change does not itself create another address period. Its blank sponsor and contact blocks remain evidence only.
 
-- Introduce the reviewed address-correction audit path. The existing protected-data correction function does not yet accept address associations.
+The physical tables and T1 migration now support multiple periods, unknown boundaries, one current association and non-overlapping fully known periods. Loaders preserve postal values and existing periods. Direct-write permissions, rewrite/delete protection and correction mechanisms are deferred. Remaining implementation work includes:
+
+- Decide the reviewed address-correction and enforcement approach separately from the WIP business schema; no correction function, audit table or permission roles are currently defined.
 - Extend reviewed source mappings to other cases and to actual address changes. T1 currently rejects changed source addresses pending review; it does not infer effective dates.
 
 T1 fixtures retain both current associations with unknown business dates. Constraint tests exercise synthetic dated changes and adjacent historical periods within a rolled-back transaction. No synthetic move is stored as T1 source history, and no extra trigger has been added.

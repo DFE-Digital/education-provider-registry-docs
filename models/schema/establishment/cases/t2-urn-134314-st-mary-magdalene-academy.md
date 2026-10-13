@@ -29,6 +29,12 @@ The source does not provide dates for the legal entities' party roles or trust c
 
 The active MAT group makes the MAT responsibility and the MAT classification current. The archived SAT group makes the SAT responsibility and SAT classification historical. This current-state assertion is explicit; it is not derived from the dates.
 
+The local source observation on 12 October 2026 supplies identical primary addresses for archived SAT UID `4737` and active MAT UID `23869`: Liverpool Road, Islington, London, N7 8PG. These are two observations of the same Hive Education Trust legal entity, not evidence of a move or two address periods. One current administrative-purpose `legal_entity_address` association references one postal-address record. Both observations retain separate source evidence linked to that association.
+
+The address is recorded as administrative, not a verified registered office. Both business dates remain null; neither the observation date nor the SAT/MAT responsibility dates establishes an address start or end. All three contact blocks and sponsor UID `2914`'s primary block are blank, so no contact or sponsor address is invented. All six source blocks, including four blank blocks, retain evidence. County/country codes are retained as raw evidence; the unavailable county label remains null.
+
+Unchanged imports retain the association and postal IDs without creating new periods. Conflicting SAT/MAT address observations or a changed existing address require a reviewed migration decision, rather than silent replacement or an invented move date. Academy-trust classification changes do not themselves change address ownership.
+
 ## Relationship graph
 
 ```mermaid
@@ -58,3 +64,80 @@ The migration should create:
 - one `Sponsored by` responsibility beginning 1 September 2007, with no academy-trust type and `is_current = true`.
 
 The two responsibilities must remain distinguishable even though they refer to the same establishment. The sponsor's missing Companies House number should be retained as missing rather than invented or copied from the academy trust.
+
+## Target query
+
+Run against `establishment_local` to display the establishment, responsibilities, parties, roles, classifications, identifiers and address periods together. Address rows are independent of classifications and responsibilities, so Hive's one current administrative association appears once, with null business dates. The Diocese of London has no address association.
+
+```sql
+WITH target AS (
+    SELECT *
+    FROM establishment.establishment
+    WHERE urn = 134314
+),
+responsibilities AS (
+    SELECT er.*, rt.name AS responsibility_type
+    FROM establishment.establishment_responsibility AS er
+    JOIN target AS e USING (establishment_id)
+    JOIN establishment.establishment_responsibility_type AS rt
+      USING (responsibility_type_id)
+),
+parties AS (
+    SELECT DISTINCT le.*
+    FROM establishment.legal_entity AS le
+    JOIN responsibilities AS er USING (legal_entity_id)
+),
+roles AS (
+    SELECT r.*, rpt.name AS role_type
+    FROM establishment.establishment_party_role AS r
+    JOIN parties AS le USING (legal_entity_id)
+    JOIN establishment.establishment_party_role_type AS rpt
+      USING (establishment_party_role_type_id)
+),
+classifications AS (
+    SELECT atc.*, att.name AS academy_trust_type
+    FROM establishment.academy_trust_classification AS atc
+    JOIN parties AS le USING (legal_entity_id)
+    JOIN establishment.academy_trust_type AS att
+      USING (academy_trust_type_id)
+),
+identifiers AS (
+    SELECT gi.*, git.name AS identifier_type, issuer.name AS issuer
+    FROM establishment.group_identifier AS gi
+    JOIN roles AS r USING (establishment_party_role_id)
+    JOIN establishment.group_identifier_type AS git
+      USING (group_identifier_type_id)
+    JOIN establishment.group_identifier_issuer AS issuer
+      USING (group_identifier_issuer_id)
+),
+addresses AS (
+    SELECT link.*, purpose.code AS address_purpose,
+           a.address_line_1, a.address_line_2, a.address_line_3,
+           a.town, a.county, a.postcode
+    FROM establishment.legal_entity_address AS link
+    JOIN parties AS le USING (legal_entity_id)
+    JOIN establishment.address_purpose AS purpose USING (address_purpose_id)
+    JOIN establishment.address AS a USING (address_id)
+)
+SELECT 'establishment' AS record_type, to_jsonb(e) AS data
+FROM target AS e
+UNION ALL
+SELECT 'responsibility', to_jsonb(er)
+FROM responsibilities AS er
+UNION ALL
+SELECT 'legal_entity', to_jsonb(le)
+FROM parties AS le
+UNION ALL
+SELECT 'party_role', to_jsonb(r)
+FROM roles AS r
+UNION ALL
+SELECT 'academy_trust_classification', to_jsonb(c)
+FROM classifications AS c
+UNION ALL
+SELECT 'group_identifier', to_jsonb(i)
+FROM identifiers AS i
+UNION ALL
+SELECT 'legal_entity_address', to_jsonb(a)
+FROM addresses AS a
+ORDER BY record_type;
+```

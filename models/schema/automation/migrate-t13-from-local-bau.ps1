@@ -57,7 +57,7 @@ try {
                 Replace('__FIXTURE_PATH__',($trustCsv -replace '\\','/'))
             $proprietorSql=[regex]::Replace($proprietorSql,'(?m)^(BEGIN|COMMIT);\r?$','')
             $trustSql=[regex]::Replace($trustSql,'(?m)^(BEGIN|COMMIT);\r?$','')
-            $validation=Get-SchemaPath 'establishment/validate-t13-distinct-parties.sql'
+            $validation=Get-SchemaPath 'migration/validate-scripts/validate-t13-distinct-parties.sql'
             foreach ($order in @('trust-first','proprietor-first')) {
                 $parts=@($trustSql,$proprietorSql)
                 if ($order -eq 'proprietor-first') { $parts=@($proprietorSql,$trustSql) }

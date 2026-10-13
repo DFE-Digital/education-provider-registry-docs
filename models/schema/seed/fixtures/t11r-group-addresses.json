@@ -1,0 +1,24 @@
+{
+  "fixture": "T11R",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 134311,
+  "runType": "group-addresses-t11r",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t11r-group-addresses.sql",
+  "reviewEvidence": "Sponsor UID 4075 and academy-trust UID 4076 are the same legal entity under T11R's accepted Oasis identity assumption. The sponsor blocks and trust contact block are blank. The trust primary block is one current administrative association with unknown business dates, not a verified registered office.",
+  "snapshotName": "T11R Oasis sponsor/trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 4075, "typeCode": "05", "ownerKind": "legal_entity", "ownerKey": "oasis"},
+    {"uid": 4076, "typeCode": "06", "ownerKind": "legal_entity", "ownerKey": "oasis"}
+  ],
+  "blockMappings": [
+    {"groupUid": 4075, "block": "primary", "purposeId": null},
+    {"groupUid": 4075, "block": "contact", "purposeId": null},
+    {"groupUid": 4076, "block": "primary", "purposeId": 3},
+    {"groupUid": 4076, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 4076
+}

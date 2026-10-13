@@ -41,6 +41,8 @@ The school has no recorded open date in the selected source record. Its current 
 
 The school has exactly one source group link: GroupLink 595 to UID 1193. The foundation trust has four links covering four distinct establishments, all marked non-archived. Only the New Fosseway link is selected; links 343, 341 and 342 to URNs 109127, 109282 and 109286 are outside this slice. Their non-archived flags alone do not establish valid current responsibilities.
 
+The selected foundation-trust record's primary and contact address blocks are both blank. Neither contains a street, locality, town, postcode, UPRN or site name. Raw county and country codes `099` and `00` are retained as evidence but are not a postal address. No address is copied from New Fosseway School or the similarly named comparison records.
+
 The source also contains the following comparison records:
 
 | Field | Similar-name sponsor | Academy trust |
@@ -84,6 +86,7 @@ The comparison records have no shared-identity edge to the selected foundation t
 | `group_identifier` | One current GIAS Group UID `1193` on the Foundation trust role. No Group ID is invented. |
 | `establishment_responsibility` | One current Supported by foundation trust responsibility for URN 109393, starting on 2010-09-01 with unknown end. `academy_trust_type_id` and `person_id` remain null. |
 | `organisation_identifier` | No company number or organisation UKPRN is supplied by the selected group record. Do not copy Amplify's identifiers or the school's UKPRN to the foundation trust. |
+| `legal_entity_address`, `address` | No foundation-trust address association or postal address is created from the two blank source blocks. |
 | `academy_trust_classification`, `organisation_group`, `organisation_group_member`, `person` | No records created to represent this foundation-trust support relationship. |
 | Migration evidence | Retain UID 1193, GroupLink 595, the source group open date and active-link assertion, plus the provisional identity allocation and outstanding review requirement. |
 
@@ -111,7 +114,13 @@ SELECT e.urn, e.name AS establishment,
        rt.name AS responsibility,
        r.start_date AS responsibility_start_date,
        r.end_date AS responsibility_end_date,
-       r.is_current
+       r.is_current,
+       address_purpose.code AS address_purpose,
+       address.address_line_1, address.address_line_2, address.address_line_3,
+       address.town, address.county, address.postcode,
+       legal_address.start_date AS address_start_date,
+       legal_address.end_date AS address_end_date,
+       legal_address.is_current AS address_is_current
 FROM establishment.establishment e
 JOIN establishment.establishment_responsibility r USING (establishment_id)
 JOIN establishment.establishment_responsibility_type rt USING (responsibility_type_id)
@@ -121,6 +130,9 @@ JOIN establishment.establishment_party_role_type role_type USING (establishment_
 JOIN establishment.group_identifier gi USING (establishment_party_role_id)
 JOIN establishment.group_identifier_type git USING (group_identifier_type_id)
 JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer_id)
+LEFT JOIN establishment.legal_entity_address legal_address USING (legal_entity_id)
+LEFT JOIN establishment.address_purpose address_purpose USING (address_purpose_id)
+LEFT JOIN establishment.address address USING (address_id)
 WHERE e.urn=109393
   AND rt.name='Supported by foundation trust'
   AND role_type.name='Foundation trust'

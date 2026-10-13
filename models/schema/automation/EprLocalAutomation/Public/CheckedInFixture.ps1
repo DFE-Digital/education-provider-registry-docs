@@ -21,14 +21,15 @@ $script:EstablishmentSeedTables = @(
     'sen_unit_provision', 'legal_entity', 'person', 'organisation_identifier',
     'establishment_party_role', 'academy_trust_classification',
     'establishment_responsibility', 'organisation_group',
-    'organisation_group_member', 'organisation_group_member_lead_period', 'group_identifier', 'data_correction_audit',
+    'organisation_group_member', 'organisation_group_member_lead_period', 'group_identifier',
     'legal_entity_address', 'organisation_group_address'
 )
 $script:MigrationSeedTables = @(
     'migration_run', 'source_snapshot', 'source_record',
     'establishment_party_role_evidence', 'establishment_responsibility_evidence',
     'academy_trust_classification_evidence', 'organisation_group_member_evidence',
-    'identity_resolution', 'group_address_evidence'
+    'identity_resolution', 'group_address_evidence', 'organisation_group_address_evidence',
+    'person_address_evidence'
 )
 
 # File names in seed/.

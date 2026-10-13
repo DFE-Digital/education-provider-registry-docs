@@ -1,0 +1,24 @@
+{
+  "fixture": "T7",
+  "reviewStatus": "accepted",
+  "mode": "current-observation",
+  "urn": 135936,
+  "runType": "group-addresses-t7",
+  "transformVersion": "reviewed-group-addresses-v3",
+  "validator": "validate-t7-group-addresses.sql",
+  "reviewEvidence": "Sponsor UID 2613 resolves to the existing person and has two blank source address blocks, retained as evidence without a person-address association. Operating trust UID 3147 resolves to the existing legal entity. Its populated primary block is a current administrative association with unknown business dates, not a verified registered office; its contact block is blank.",
+  "snapshotName": "T7 sponsor and operating-trust primary/contact addresses",
+  "sourceGroups": [
+    {"uid": 2613, "typeCode": "05", "ownerKind": "person", "ownerKey": "person-sponsor"},
+    {"uid": 3147, "typeCode": "06", "ownerKind": "legal_entity", "ownerKey": "operating-trust"}
+  ],
+  "blockMappings": [
+    {"groupUid": 2613, "block": "primary", "purposeId": null},
+    {"groupUid": 2613, "block": "contact", "purposeId": null},
+    {"groupUid": 3147, "block": "primary", "purposeId": 3},
+    {"groupUid": 3147, "block": "contact", "purposeId": null}
+  ],
+  "sourceCountyCode": "099",
+  "sourceCountryCode": "00",
+  "conflictProbeGroupUid": 3147
+}

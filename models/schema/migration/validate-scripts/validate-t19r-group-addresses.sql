@@ -1,0 +1,2 @@
+DO $$ BEGIN IF EXISTS(SELECT 1 FROM establishment.organisation_group_address a JOIN establishment.group_identifier i USING(organisation_group_id) JOIN establishment.group_identifier_type t USING(group_identifier_type_id) WHERE t.name='Group UID' AND i.value='86008') THEN RAISE EXCEPTION 'T19R blank group blocks must not create an address'; END IF; END $$;
+SELECT 'T19R group-address checks passed' AS result;

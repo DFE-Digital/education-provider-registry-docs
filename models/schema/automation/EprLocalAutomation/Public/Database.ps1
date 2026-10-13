@@ -1,5 +1,30 @@
 # Building the local databases: schemas and reference seed data.
 
+function Assert-EstablishmentBuildInputs {
+    # Resolve and check every requested input before any destructive reset.
+    param([switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @())
+
+    $paths = @(
+        (Get-SchemaPath 'establishment/establishment-schema.sql'),
+        (Get-SchemaPath 'migration/migration-schema.sql'),
+        (Get-SchemaPath 'migration/group-address-evidence-schema.sql')
+    )
+    if ($IncludeReferenceSeed) {
+        $paths += @(
+            (Get-SchemaPath 'seed/seed-reference-data.sql'),
+            (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql'),
+            (Get-SchemaPath 'seed/seed-address-purposes.sql')
+        )
+    }
+    if ($FixtureSeedFile.Count -gt 0) {
+        foreach ($file in $FixtureSeedFile) {
+            $paths += if ([System.IO.Path]::IsPathRooted($file)) { $file } else { Get-SchemaPath "seed/$file" }
+        }
+        $paths += Get-SchemaPath 'seed/seed-migration-evidence.sql'
+    }
+    Assert-FileExists -Path $paths
+}
+
 function Reset-EstablishmentSchema {
     <#
     .SYNOPSIS
@@ -8,8 +33,10 @@ function Reset-EstablishmentSchema {
     #>
     param([Parameter(Mandatory)]$Target)
 
+    Assert-EstablishmentBuildInputs
     Write-Step 'Recreating the establishment schema'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/core-establishment-schema.sql') -FailureMessage 'Establishment schema rebuild failed'
+    Invoke-Psql -Target $Target -Command 'DROP SCHEMA IF EXISTS establishment CASCADE;' -FailureMessage 'Establishment schema reset failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/establishment-schema.sql') -FailureMessage 'Establishment schema creation failed'
 
     Write-Step 'Recreating the migration schema'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/migration-schema.sql') -FailureMessage 'Migration schema rebuild failed'
@@ -39,6 +66,7 @@ function Initialize-EstablishmentDatabase {
     #>
     param([Parameter(Mandatory)]$Target)
 
+    Assert-EstablishmentBuildInputs -IncludeReferenceSeed
     Reset-EstablishmentSchema -Target $Target
     Import-ReferenceSeed -Target $Target
 }
