@@ -1,10 +1,10 @@
-﻿# Academy trust member
+# Academy trust member
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/AcademyTrustMember/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/AcademyTrustMember/> |
 | Compact identifier | `gov:AcademyTrustMember` |
 | Preferred label | Academy trust member |
 | Alternative labels |  |

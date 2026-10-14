@@ -10,7 +10,7 @@ Short notes on specific modelling decisions in the establishment model — where
 
 | Note | Covers |
 |---|---|
-| [Group membership and sponsorship](./group-membership-and-sponsorship/) | Why one `est:EstablishmentGroup` replaces GIAS's paired "Multi-academy trust" and "School sponsor" group records for a single organisation, and how the sponsor link becomes a dated `est:Sponsorship` rather than a second group membership |
+| [Trusts, sponsors and group membership](./group-membership-and-sponsorship/) | Why trusts and sponsors are legal entities holding dated roles (ontology v2.0), how running, supporting, sponsoring and proprietorship become dated establishment responsibilities, and why only federations and children's centre groups remain establishment groups. |
 
 ---
 

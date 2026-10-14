@@ -1,10 +1,10 @@
-﻿# Noticeboard
+# Noticeboard
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Noticeboard/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Noticeboard/> |
 | Compact identifier | `gov:Noticeboard` |
 | Preferred label | Noticeboard |
 | Alternative labels |  |

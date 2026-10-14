@@ -1,10 +1,10 @@
-﻿# Office-holder
+# Office-holder
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/OfficeHolder/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/OfficeHolder/> |
 | Compact identifier | `gov:OfficeHolder` |
 | Preferred label | Office-holder |
 | Alternative labels |  |

@@ -94,7 +94,7 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    T["inst:green-school-trust<br/>(est:AcademyTrust)"]
+    T["inst:green-school-trust<br/>(est:LegalEntity)"]
     G["inst:green-school-girls<br/>(est:MainstreamAcademy)"]
     B["inst:green-school-boys<br/>(est:MainstreamFreeSchool)"]
     TB["ginst:green-board-of-directors<br/>(gov:BoardOfDirectors)"]
@@ -143,9 +143,10 @@ This Trust calls its board a "Board of Directors" rather than a "Trust Board" - 
 
 ```
 inst:green-school-trust
-    a est:AcademyTrust ;
+    a est:LegalEntity ;
+    esto:holdsRole [ a est:RecognisedRole ; esto:hasRoleType est:AcademyTrust ] ;
     rdfs:label "The Green School Trust"@en ;
-    esto:hasGroupCompaniesHouseNumber [
+    esto:hasCompaniesHouseRegistration [
         a est:CompaniesHouseNumber ;
         rdf:value "08608665"
     ] .
@@ -423,7 +424,7 @@ inst:green-school-trust
 
 | Real-world concept | Green School Trust evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust | The Green School Trust, GIAS UID 3240, Companies House 08608665 | `est:AcademyTrust` | Direct |
+| Academy Trust | The Green School Trust, GIAS UID 3240, Companies House 08608665 | `est:LegalEntity` holding the `est:AcademyTrust` role | Direct |
 | Academies of different types | Girls (Academy converter), Boys (Free school) | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:ConverterRoute`; `est:MainstreamFreeSchool` | Direct |
 | Board known as "Board of Directors" | The Trust's own term for its Trust Board | `gov:BoardOfDirectors` | Direct - the class exists precisely for this naming convention |
 | Academy Trust Membership, including a corporate Member | LDBS (corporate, represented by PR), SS, KD, EI (ex officio), MCA | `gov:AcademyTrustMember`; `gov:CorporateGovernanceParticipant` for LDBS | Direct |

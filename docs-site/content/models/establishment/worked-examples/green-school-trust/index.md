@@ -51,7 +51,7 @@ flowchart LR
     B -->|"led by"| HT
 ```
 
-The GIAS extract's real group type for UID 3240 is "Multi-academy trust" (code 06) - the governance worked example's own source didn't confirm this specific type and modelled the Trust as generic `est:AcademyTrust`; this page uses the confirmed type. Both academies share one real headteacher (`HS`) - the first time a shared headteacher has appeared across two academies of the same trust in these worked examples, rather than across two schools in a federation. Both are sponsored by the Diocese of London and share the same religious character, but differ by gender of entry, establishment type (converter academy vs free school) and, in the real extract, `ReligiousEthos` ("Does not apply" for Girls, "None" for Boys - two different real free-text values for the same underlying fact).
+The GIAS extract's real group type for UID 3240 is "Multi-academy trust" (code 06), so this page classifies the trust as a multi-academy trust. The governance worked example's own source didn't confirm the type, and models the trust only as a legal entity. Both academies share one real headteacher (`HS`) - the first time a shared headteacher has appeared across two academies of the same trust in these worked examples, rather than across two schools in a federation. Both are sponsored by the Diocese of London and share the same religious character, but differ by gender of entry, establishment type (converter academy vs free school) and, in the real extract, `ReligiousEthos` ("Does not apply" for Girls, "None" for Boys - two different real free-text values for the same underlying fact).
 
 ---
 
@@ -73,22 +73,24 @@ The GIAS extract's real group type for UID 3240 is "Multi-academy trust" (code 0
 
 ```
 inst:green-school-trust
-    a est:MultiAcademyTrust ;
+    a est:LegalEntity ;
     rdfs:label "The Green School Trust"@en ;
 
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "3240"^^xsd:positiveInteger
-    ] ;
-
-    esto:identifiedByGroupId [
-        a est:GroupId ;
-        rdf:value "TR00905"
-    ] ;
-
-    esto:hasGroupCompaniesHouseNumber [
+    esto:hasCompaniesHouseRegistration [
         a est:CompaniesHouseNumber ;
         rdf:value "08608665"
+    ] ;
+
+    esto:hasCharityStatus est:ExemptCharity ;
+
+    esto:holdsRole [
+        a est:RecognisedRole ;
+        esto:hasRoleType est:AcademyTrust
+    ] ;
+
+    esto:hasAcademyTrustClassification [
+        a est:AcademyTrustClassification ;
+        esto:hasAcademyTrustType est:MultiAcademyTrust
     ] .
 
 inst:green-school-girls
@@ -107,11 +109,14 @@ inst:green-school-girls
         ]
     ] ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:green-school-trust ;
-        esto:hasGroupMembershipDate [
-            a est:GroupMembershipDate ;
+    esto:runByAcademyTrust inst:green-school-trust ;
+
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:AcademyTrustResponsibility ;
+        esto:hasResponsibleParty inst:green-school-trust ;
+        esto:hasStartDate [
+            a est:PeriodStartDate ;
             rdf:value "2013-08-01"^^xsd:date
         ]
     ] .
@@ -132,32 +137,41 @@ inst:green-school-boys
         ]
     ] ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:green-school-trust ;
-        esto:hasGroupMembershipDate [
-            a est:GroupMembershipDate ;
+    esto:runByAcademyTrust inst:green-school-trust ;
+
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:AcademyTrustResponsibility ;
+        esto:hasResponsibleParty inst:green-school-trust ;
+        esto:hasStartDate [
+            a est:PeriodStartDate ;
             rdf:value "2017-09-03"^^xsd:date
         ]
     ] .
 ```
 
-### Example 2 — Accountability, sponsorship and shared headteacher
+### Example 2 — Sponsorship and shared headteacher
 
-Both academies are sponsored by the same organisation, the Diocese of London - the first worked example where `esto:sponsoredBy` points at a diocese rather than a trust (contrast Medlock's sponsor, a Multi Academy Trust). `HS` is asserted independently on each academy's own location-and-contact record, the same pattern used for shared headteachers across federated schools (Eileen Wade/Milton Ernest, Long Ditton), here applied across two academies of one trust instead.
+Both academies are sponsored by the same body, the Diocese of London - the first worked example where the sponsor is a diocese rather than the academy's own trust (contrast Medlock, sponsored by its own trust). The diocese is a legal entity holding the academy sponsor role, and each academy has a sponsor responsibility. The source gives no sponsorship start date, so none is asserted. `HS` is asserted independently on each academy's own location-and-contact record, the same pattern used for shared headteachers across federated schools (Eileen Wade/Milton Ernest, Long Ditton), here applied across two academies of one trust instead.
 
 ```
 inst:diocese-of-london-sponsor
-    a est:Organisation ;
-    rdfs:label "Diocese of London"@en .
+    a est:LegalEntity ;
+    rdfs:label "Diocese of London"@en ;
+
+    esto:holdsRole [
+        a est:RecognisedRole ;
+        esto:hasRoleType est:AcademySponsor
+    ] .
 
 inst:green-school-girls
-    esto:hasAccountabilityRelationship [
-        a est:EstablishmentAccountability ;
-        esto:accountableToAcademyTrust inst:green-school-trust
-    ] ;
-
     esto:sponsoredBy inst:diocese-of-london-sponsor ;
+
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:SponsorResponsibility ;
+        esto:hasResponsibleParty inst:diocese-of-london-sponsor
+    ] ;
 
     esto:hasEstablishmentLeadership [
         a est:EstablishmentLeadership ;
@@ -201,12 +215,13 @@ inst:green-school-girls
     ] .
 
 inst:green-school-boys
-    esto:hasAccountabilityRelationship [
-        a est:EstablishmentAccountability ;
-        esto:accountableToAcademyTrust inst:green-school-trust
-    ] ;
-
     esto:sponsoredBy inst:diocese-of-london-sponsor ;
+
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:SponsorResponsibility ;
+        esto:hasResponsibleParty inst:diocese-of-london-sponsor
+    ] ;
 
     esto:hasEstablishmentLeadership [
         a est:EstablishmentLeadership ;
@@ -365,9 +380,9 @@ No `esto:classifiedByAdmissionsPolicy` and no `esto:classifiedByBoardingProvisio
 ## What this example found
 
 - **First shared headteacher across two academies of one trust**, rather than across two schools in a federation - the same "assert independently on each establishment" pattern from Eileen Wade/Milton Ernest and Long Ditton, now confirmed to apply beyond federations.
-- **First sponsor that is a diocese rather than a trust.** `esto:sponsoredBy` previously only pointed at `est:MultiAcademyTrust` instances (Medlock); here it points at a generic `est:Organisation` instance representing the Diocese of London - a real, common pattern (607 open establishments have a diocese-named sponsor in the live extract), not a one-off.
+- **First sponsor that is a diocese rather than the academy's own trust.** Medlock and Oasis are sponsored by their own trusts; here the Diocese of London, a separate legal entity holding the academy sponsor role, sponsors both academies - a real, common pattern (607 open establishments have a diocese-named sponsor in the live extract), not a one-off. The same responsibility pattern covers both cases.
 - **A real GIAS data-quality gap, not modelled around.** The Boys academy's `AdmissionsPolicy` and `Boarders` fields carry a numeric code (9) with no corresponding name value in the extract - genuinely different from the usual "Not applicable" (code 0) absence. Both properties are simply omitted, since neither a real value nor a documented "not applicable" state can be asserted from what the source actually contains.
-- **A confirmed group type the governance-side source left unstated.** The governance worked example modelled the Trust as generic `est:AcademyTrust` since its own source didn't specify the type; the establishment extract confirms GIAS group type code 06 (Multi-academy trust), so this page uses `est:MultiAcademyTrust`.
+- **A confirmed classification the governance-side source left unstated.** The governance worked example's source didn't specify the trust's type; the establishment extract confirms GIAS group type code 06 (Multi-academy trust), so this page classifies the trust as `est:MultiAcademyTrust`.
 - **Two single-sex academies under one trust**, first real use of both `est:GirlsOnlyGenderEntry` and `est:BoysOnlyGenderEntry` together.
 - **Not exercised by this example:** SEN and resourced provision (both "Not applicable" for both academies); Section 41 approval.
 
@@ -377,9 +392,9 @@ No `esto:classifiedByAdmissionsPolicy` and no `esto:classifiedByBoardingProvisio
 
 | Real-world concept | Evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Multi-academy trust | GIAS UID 3240, group type code 06, two academies | `est:MultiAcademyTrust` | Direct |
-| Academy Trust accountability | Both academies accountable to the Trust | `esto:accountableToAcademyTrust` | Direct |
-| Sponsor (diocese, not a trust) | Diocese of London sponsors both academies | `esto:sponsoredBy` + `est:Organisation` | Direct - first non-trust sponsor |
+| Academy trust | The Green School Trust (GIAS UID 3240, group type code 06), two academies | `est:LegalEntity` + `est:AcademyTrust` role + `est:MultiAcademyTrust` classification | Direct |
+| Run by academy trust | Both academies run by the trust, from their joining dates | `est:EstablishmentResponsibility` (`est:AcademyTrustResponsibility`) + `esto:runByAcademyTrust` | Direct |
+| Sponsor (diocese, not the trust) | Diocese of London sponsors both academies | `est:LegalEntity` with the `est:AcademySponsor` role, `est:SponsorResponsibility` + `esto:sponsoredBy` | Direct - first sponsor that isn't the academy's trust |
 | Establishment types | Academy converter (Girls), Free school (Boys) | `est:MainstreamAcademy` + `est:ConverterRoute`, `est:MainstreamFreeSchool` | Direct |
 | Faith context (real value) | Both: Church of England, Diocese of London | `est:ChurchOfEnglandCharacter` + `est:Diocese` | Direct |
 | Religious ethos (real, differing free text) | Girls: "Does not apply"; Boys: "None" | Absence (Girls) vs `esto:classifiedByReligiousEthos` (Boys) | Direct - two different real values for the same underlying fact |

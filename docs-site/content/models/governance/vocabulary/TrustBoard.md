@@ -1,10 +1,10 @@
-﻿# Trust board
+# Trust board
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/TrustBoard/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/TrustBoard/> |
 | Compact identifier | `gov:TrustBoard` |
 | Preferred label | Trust board |
 | Alternative labels |  |

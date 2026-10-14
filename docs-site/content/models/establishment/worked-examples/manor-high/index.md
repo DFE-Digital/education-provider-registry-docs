@@ -73,15 +73,15 @@ The same record from Section 1, expressed in Turtle using `establishment-ontolog
 
 ```mermaid
 flowchart LR
-    AT["inst:oak-mat<br/>(est:MultiAcademyTrust)"]
+    AT["inst:oak-mat<br/>(est:LegalEntity)"]
     MH["inst:manor-high<br/>(est:MainstreamAcademy)"]
 
-    AT -->|esto:hasMembership| GM["est:GroupMembership<br/>joined 2011-08-01"]
-    GM -->|esto:memberOf| AT
-    MH -->|esto:hasMembership| GM
+    AT -->|esto:holdsRole| RO["est:RecognisedRole<br/>est:AcademyTrust"]
+    AT -->|esto:hasAcademyTrustClassification| CLS["est:AcademyTrustClassification<br/>est:MultiAcademyTrust"]
 
-    MH -->|esto:hasAccountabilityRelationship| ACC["est:EstablishmentAccountability"]
-    ACC -->|esto:accountableToAcademyTrust| AT
+    MH -->|esto:hasResponsibility| RESP["est:EstablishmentResponsibility<br/>est:AcademyTrustResponsibility<br/>from 2011-08-01"]
+    RESP -->|esto:hasResponsibleParty| AT
+    MH -->|esto:runByAcademyTrust| AT
 
     MH -->|esto:hasEstablishmentClassification| CL["est:EstablishmentClassification"]
     CL -->|esto:hasEstablishmentType| TY["est:MainstreamAcademy"]
@@ -119,28 +119,30 @@ All examples in this section use the following prefixes.
 @prefix inst:  <https://dfe-digital.github.io/education-provider-registry-docs/establishment/> .
 ```
 
-### Example 1 — Establishment and Academy Trust identity
+### Example 1 — Establishment and academy trust identity
 
-`inst:oak-mat` and `inst:manor-high` are the same instances used in the [governance worked example](../../../governance/worked-examples/manor-high/) - there, they appear as type stubs; here, they carry their full establishment-model detail.
+`inst:oak-mat` and `inst:manor-high` are the same instances used in the [governance worked example](../../../governance/worked-examples/manor-high/) - there, they appear as type stubs; here, they carry their full establishment-model detail. Since ontology v2.0 the trust is a legal entity holding the academy trust role, classified as a multi-academy trust. Its GIAS group UID (16991) and Group ID (TR01390) are source evidence, held in the logical and physical models, not the conceptual model.
 
 ```
 inst:oak-mat
-    a est:MultiAcademyTrust ;
+    a est:LegalEntity ;
     rdfs:label "OAK Multi Academy Trust"@en ;
 
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "16991"^^xsd:positiveInteger
-    ] ;
-
-    esto:identifiedByGroupId [
-        a est:GroupId ;
-        rdf:value "TR01390"
-    ] ;
-
-    esto:hasGroupCompaniesHouseNumber [
+    esto:hasCompaniesHouseRegistration [
         a est:CompaniesHouseNumber ;
         rdf:value "07695364"
+    ] ;
+
+    esto:hasCharityStatus est:ExemptCharity ;
+
+    esto:holdsRole [
+        a est:RecognisedRole ;
+        esto:hasRoleType est:AcademyTrust
+    ] ;
+
+    esto:hasAcademyTrustClassification [
+        a est:AcademyTrustClassification ;
+        esto:hasAcademyTrustType est:MultiAcademyTrust
     ] .
 
 inst:manor-high
@@ -186,22 +188,20 @@ inst:manor-high
     ] .
 ```
 
-### Example 3 — Accountability and group membership
+### Example 3 — Academy trust responsibility
 
-Unlike Medlock, there is no sponsor-type duplication to resolve here - Manor High has exactly one group link in the GIAS extract, so `esto:hasMembership` and `esto:accountableToAcademyTrust` both point at the same, single `inst:oak-mat` instance without needing `esto:sponsoredBy` at all.
+Manor High is run by OAK Multi Academy Trust. The dated `est:EstablishmentResponsibility` records that it has been run by the trust since 1 August 2011, the day it converted, and `esto:runByAcademyTrust` names the trust that runs it now. An academy is not a member of its trust: membership is only for federations and children's centre groups. Unlike Medlock, there is no sponsor to record - Manor High has exactly one group link in the GIAS extract.
 
 ```
 inst:manor-high
-    esto:hasAccountabilityRelationship [
-        a est:EstablishmentAccountability ;
-        esto:accountableToAcademyTrust inst:oak-mat
-    ] ;
+    esto:runByAcademyTrust inst:oak-mat ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:oak-mat ;
-        esto:hasGroupMembershipDate [
-            a est:GroupMembershipDate ;
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:AcademyTrustResponsibility ;
+        esto:hasResponsibleParty inst:oak-mat ;
+        esto:hasStartDate [
+            a est:PeriodStartDate ;
             rdf:value "2011-08-01"^^xsd:date
         ]
     ] .
@@ -340,10 +340,10 @@ inst:manor-high
 
 - **A clean converter-route contrast to Medlock's sponsor-led route.** Both resolve to `est:MainstreamAcademy`, distinguished only by `esto:hasAcademyRoute` (`est:ConverterRoute` here, `est:SponsorLedRoute` at Medlock) - confirms the type/route split works as intended across both academy formation routes, not just one.
 - **First real use of `est:AcademyConverterOpenReason`.** Added earlier the same day as a named individual for `est:ReasonEstablishmentOpened`, alongside 12 sibling values, after checking the real GIAS extract showed a genuine closed list rather than open text. This is the first worked example to actually assert one.
-- **No sponsor-duplication to resolve.** Medlock's GIAS extract records the same trust twice, once as a "Multi-academy trust" group and once as a "School sponsor" group - Manor High has exactly one group link, so `esto:sponsoredBy` isn't needed here at all.
+- **No sponsor to record.** Medlock's GIAS extract records the same trust twice, once as a "Multi-academy trust" group and once as a "School sponsor" group - Manor High has exactly one group link, so it has no sponsor responsibility and no `esto:sponsoredBy`.
 - **This example found three more mandatory-field SHACL shapes that were the same anti-pattern as the faith-context fix earlier the same day.** `esto:sponsoredBy`, `esto:hasSenAndResourcedProvision` (and its children `hasSenUnitMeasure`, `classifiedByTypeOfResourcedProvision`, `hasResourcedProvisionMeasure`, `hasSpecialPupilMeasure`) all had `sh:minCount 1` for mainstream academies - checked against the real extract and found genuinely per-instance-optional (only 8166 of 10527 open mainstream academies have a sponsor; only 1334 have any SEN provision at all). Relaxed the same way. `est:Section41Approval` was a different shape of the same underlying problem: **100%** of open mainstream academies show "Not applicable" - not per-instance variability, but a field GIAS never populates for this type at all. Changed from `sh:minCount 1` to `sh:maxCount 0`, correcting the shape's direction rather than just relaxing it.
 - **Most of the record is legitimately absent, not "not applicable".** Faith context, SEN and resourced provision, admissions policy, nursery provision and Section 41 approval are all omitted entirely for `inst:manor-high` - a much larger share of the record than Medlock, which had real values for several of these. Demonstrates the RDF-idiomatic absence principle across a genuinely typical secondary academy record, not just an edge case.
-- **Not exercised by this example:** `est:SingleAcademyTrust`, `est:Federation`, `est:LocalAuthority`-accountable establishment types, and any faith, SEN or resourced-provision content (all absent for this establishment).
+- **Not exercised by this example:** a single-academy trust classification, `est:Federation`, `est:LocalAuthority`-accountable establishment types, and any faith, SEN or resourced-provision content (all absent for this establishment).
 
 ---
 
@@ -351,14 +351,13 @@ inst:manor-high
 
 | Real-world concept | Manor High evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust (legal entity, group) | GIAS UID 16991, Group ID TR01390, Companies House 07695364 | `est:MultiAcademyTrust` (`rdfs:subClassOf est:AcademyTrust`) | Direct |
+| Academy trust | OAK Multi Academy Trust, Companies House 07695364 (GIAS UID 16991, Group ID TR01390) | `est:LegalEntity` + `est:RecognisedRole` (`est:AcademyTrust`) + `est:AcademyTrustClassification` (`est:MultiAcademyTrust`) | Direct |
 | Academy | Manor High School, URN 137120, UKPRN 10034675 | `est:MainstreamAcademy` | Direct |
 | Establishment type (legacy GIAS code 34) | "Academy converter" | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:ConverterRoute` | Direct |
 | Education phase | Secondary, ages 11-16 | `est:SecondaryPhase` | Direct |
 | Lifecycle, status and reason opened | Open since 2011-08-01, "Academy Converter" | `est:OpenStatus` + `esto:hasOpenDate` + `est:AcademyConverterOpenReason` | Direct |
-| Accountability | Academy accountable to its trust | `esto:accountableToAcademyTrust` | Direct |
-| Group membership | Joined Group UID 16991, 2011-08-01 (same date as OpenDate) | `est:GroupMembership` + `esto:memberOf` + `esto:hasGroupMembershipDate` | Direct |
-| Sponsorship | Not applicable - single, clean group link | Not asserted (`esto:sponsoredBy` omitted) | Direct - confirms the property is genuinely optional |
+| Run by academy trust | Run by OAK Multi Academy Trust since 2011-08-01 (same date as OpenDate) | `est:EstablishmentResponsibility` (`est:AcademyTrustResponsibility`) + `esto:runByAcademyTrust` | Direct |
+| Sponsorship | None - single, clean group link | No sponsor responsibility, `esto:sponsoredBy` omitted | Direct - confirms sponsorship is genuinely optional |
 | Location and site | Copse Close, Oadby, LE2 4FU | `est:Site` + `est:Address` | Direct |
 | Administrative geography | East Midlands region, Oadby Uplands ward, Harborough Oadby and Wigston constituency | `est:AdministrativeGeography` | Direct |
 | Headteacher | SG | `est:HeadteacherOrPrincipal` | Direct |

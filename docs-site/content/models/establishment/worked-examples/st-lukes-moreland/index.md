@@ -74,12 +74,7 @@ Unlike Eileen Wade/Milton Ernest and Long Ditton, this federation's two schools 
 ```
 inst:st-lukes-moreland-federation
     a est:Federation ;
-    rdfs:label "The Federated Governing Body of St Luke's CE and Moreland Community Primary Schools"@en ;
-
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "1456"^^xsd:positiveInteger
-    ] .
+    rdfs:label "The Federated Governing Body of St Luke's CE and Moreland Community Primary Schools"@en .
 
 inst:st-lukes
     a est:VoluntaryAidedSchool ;

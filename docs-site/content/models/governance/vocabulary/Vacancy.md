@@ -1,10 +1,10 @@
-﻿# Vacancy
+# Vacancy
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Vacancy/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Vacancy/> |
 | Compact identifier | `gov:Vacancy` |
 | Preferred label | Vacancy |
 | Alternative labels |  |

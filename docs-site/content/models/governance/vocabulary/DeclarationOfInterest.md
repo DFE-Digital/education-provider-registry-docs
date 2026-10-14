@@ -1,10 +1,10 @@
-﻿# Declaration of interest
+# Declaration of interest
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/DeclarationOfInterest/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/DeclarationOfInterest/> |
 | Compact identifier | `gov:DeclarationOfInterest` |
 | Preferred label | Declaration of interest |
 | Alternative labels |  |

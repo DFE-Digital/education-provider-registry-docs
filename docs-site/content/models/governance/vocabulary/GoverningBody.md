@@ -1,10 +1,10 @@
-﻿# Governing body
+# Governing body
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/GoverningBody/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/GoverningBody/> |
 | Compact identifier | `gov:GoverningBody` |
 | Preferred label | Governing body |
 | Alternative labels |  |

@@ -1,10 +1,10 @@
-﻿# Board membership
+# Board membership
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/BoardMembership/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/BoardMembership/> |
 | Compact identifier | `gov:BoardMembership` |
 | Preferred label | Board membership |
 | Alternative labels |  |

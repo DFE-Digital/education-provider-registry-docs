@@ -1,10 +1,10 @@
-﻿# Academy trustee
+# Academy trustee
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/AcademyTrustee/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/AcademyTrustee/> |
 | Compact identifier | `gov:AcademyTrustee` |
 | Preferred label | Academy trustee |
 | Alternative labels |  |

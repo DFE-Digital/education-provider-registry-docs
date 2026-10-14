@@ -35,20 +35,20 @@ These two representations are complementary. The `EstablishmentClassification` p
 ---
 
 ### Can they tell which "Provider Organisations" each school is linked to? How is this represented in the ontology diagram? There is an "accountable for" relationship — is it different when there is a Federation? Is the Federation considered "accountable" as well?
+Yes. Since ontology v2.0 there are three separate patterns, depending on the relationship.
 
-Yes, provider organisation linkage is represented — but it is split between two distinct patterns depending on the type of relationship.
+**Responsibilities** say which legal entity or person is responsible for a school, in which way, for which period. They are `est:EstablishmentResponsibility` records with four types:
 
-**Accountability relationships** are captured via `EstablishmentAccountability` with three typed object properties:
+- run by academy trust (`est:AcademyTrustResponsibility`), for academies and free schools
+- supported by foundation trust (`est:FoundationTrustResponsibility`), for foundation and foundation special schools
+- sponsored by (`est:SponsorResponsibility`), for academies and free schools
+- proprietor (`est:ProprietorResponsibility`), for independent schools and other proprietor-run types. A proprietor is responsible for running the school; it need not own its business or premises.
 
-- `esto:accountableToLocalAuthority` → `est:LocalAuthority` (all establishment types where LA is the maintaining body)
-- `esto:accountableToAcademyTrust` → `est:AcademyTrust` (academies and free schools)
-- `esto:accountableToProprietor` → `est:Organisation` or `est:Person` (independent schools — the proprietor may be a company, charity, or natural person)
+`esto:runByAcademyTrust`, `esto:sponsoredBy` and `esto:hasProprietor` name the present-day trust, sponsor and proprietors.
 
-These represent the legal accountability relationship — who is responsible for the school in a statutory or funding-agreement sense.
+**Local authority maintenance** is still recorded through `est:EstablishmentAccountability` and `esto:accountableToLocalAuthority`, for maintained schools.
 
-**Federation membership is modelled differently and is not accountability.** A Federation is an `EstablishmentGroup` (subclass). Membership of a Federation is expressed through `GroupMembership`, not through any accountability property. The school's accountability remains with the local authority (it is still an LA-maintained school); the Federation is an organisational grouping sitting alongside that accountability, not replacing it.
-
-In short: the ontology keeps accountability (legal/funding responsibility) and group membership (organisational structure) deliberately separate. Federations do not carry the "accountable for" relationship. If you want to know what group-type organisations a school is linked to, you follow `hasGroupMembership → GroupMembership → memberOf → EstablishmentGroup`. If you want to know who is accountable for the school, you follow `hasEstablishmentAccountability → accountableTo*`.
+**Federation membership is not a responsibility.** A federation is an `est:EstablishmentGroup`, and its member schools are linked through `est:GroupMembership`. The schools stay maintained by their local authority, and a federation can include schools in more than one local authority. The federation is a grouping alongside that, not a body responsible for the schools.
 
 ---
 
@@ -73,66 +73,58 @@ So: PRU is a type of establishment (an OWL subtype), and the operational record 
 ---
 
 ### Do we deal with other types of accountability owner organisations other than Academies — e.g. Charities?
+Yes. Since ontology v2.0 the bodies responsible for schools are **legal entities** (`est:LegalEntity`), whatever their form: a charitable company, a company, a charitable incorporated organisation, a partnership, a sole trader, an unincorporated trust or a public body. A natural person can also be a proprietor or a sponsor.
 
-The accountability model has three typed relationships, covering the main accountability body types:
+A legal entity can record:
 
-- Local authority — `esto:accountableToLocalAuthority`
-- Academy trust — `esto:accountableToAcademyTrust`
-- Proprietor — `esto:accountableToProprietor`
+- its legal form (`est:LegalForm`)
+- its charity status: registered, exempt or excepted (`est:CharityStatus`)
+- its Companies House number and its own UKPRN
+- its incorporation and dissolution dates
+- its registered office.
 
-**Proprietors** cover independent schools and they can be any legal form — an individual, a company, a charity, a religious body. The model does not break `Proprietor` into further subtypes by legal form (e.g. no separate `ProprietorCharity` class). The Proprietor carries its name and identity, but its legal form is not separately classified in the current ontology.
-
-So if the question is: do we record a charity as the accountability body for an independent school? Yes — through `Proprietor`. If the question is: do we explicitly model the charity-as-legal-entity with Companies House registration or charity number? Not in the current EPR model. The `CompaniesHouseNumber` class exists for groups and online providers; it is not currently scoped to Proprietors.
-
-If a consuming data model needs to distinguish the legal form of a Proprietor, that would require either sub-typing `Proprietor` or adding an identifier property for charity number or company number.
+So a charity that is the proprietor of an independent school is a legal entity with a proprietor responsibility for that school, and its charity status is recorded on the legal entity. Charity numbers are not yet modelled as an identifier.
 
 ---
 
 ### Do we record independent schools' accountability?
-
-Yes. Independent schools are accountable to a Proprietor, captured via:
+Yes. An independent school's proprietor is a legal entity or person holding a proprietor responsibility for it:
 
 ```
 Establishment
-  → hasEstablishmentAccountability → EstablishmentAccountability
-    → accountableToProprietor → Proprietor
+  → hasResponsibility → EstablishmentResponsibility (type: Proprietor)
+    → hasResponsibleParty → LegalEntity or Person
 ```
 
-`Proprietor` is a first-class OWL class in the ontology. The SHACL enforces that the `accountableToProprietor` path is applicable to independent school types and is not used for maintained or academy types.
+`esto:hasProprietor` names the present-day proprietors directly. A school can have more than one. The SHACL rules for each establishment type say where a proprietor applies; it is not used for maintained schools or academies.
 
 ---
 
 ### What types of groups are recorded and is the parent entity of a group a type of organisation? It appears that a group is a type of organisation as it has a Group Identifier and a UKPRN.
-
-Correct observation. `EstablishmentGroup` is organisation-like in the model — it carries identifiers (Group ID, Group UKPRN), addresses (registered address, contact address), status, lifecycle dates, governance appointments, and a Companies House number where applicable. `EstablishmentGroup` is a subclass of `est:Organisation`, which is the common superclass for all organisation-like things in the EPR ontology.
-
-The group types currently modelled as OWL subclasses of `EstablishmentGroup` are:
+Since ontology v2.0, an `est:EstablishmentGroup` is a group of establishments that is **not** itself a legal entity. Only three kinds remain:
 
 | OWL class | Plain name |
 | --- | --- |
-| `est:MultiAcademyTrust` | Multi-academy trust |
-| `est:SingleAcademyTrust` | Single-academy trust |
-| `est:SecureSingleAcademyTrust` | Secure single-academy trust |
 | `est:Federation` | Federation |
-| `est:GenericTrust` | Trust (non-academy) |
-| `est:ChildrensCentreGroup` | Children's Centre Group |
-| `est:ChildrensCentreCollaboration` | Children's Centre Collaboration |
+| `est:ChildrensCentreGroup` | Children's centre group |
+| `est:ChildrensCentreCollaboration` | Children's centre collaboration |
 
-Note that `AcademyTrust` has dual inheritance — it is both a subclass of `EstablishmentGroup` (organisational structure role) and sits in the accountability hierarchy (accountability body role). This dual role is the key modelling point for trusts. `est:SchoolSponsor` was previously listed here as a GIAS group type (code 05); it has been removed as an OWL class — sponsors are now modelled as `est:Organisation` instances linked via `esto:sponsoredBy` on `est:Establishment`.
+Trusts are no longer groups. An academy trust, foundation trust or umbrella trust is a **legal entity** (`est:LegalEntity`, a subclass of `est:Organisation`) holding a dated **recognised role**. An academy trust also has dated classifications as a single-academy, multi-academy or secure single-academy trust, so a conversion is a change of classification on one organisation, not a new one. Academy sponsor is a role too.
+
+The identifiers and addresses that made GIAS groups look like organisations - Companies House number, UKPRN, incorporation date, registered office - belong to the legal entity. GIAS group numbers (group UID and Group ID) are a GIAS and migration concern, held in the logical and physical models rather than the conceptual model.
 
 ---
 
 ### Is there always an Organisation that acts as the head of a Group?
+Not always, and since ontology v2.0 the question mostly answers itself.
 
-Not always, and it varies by group type.
+**Academy trusts** are no longer groups. A trust is a legal entity that runs its academies through establishment responsibilities. There is no group above it.
 
-For **academy trusts** (MAT, SAT, SSAT): the trust itself is the incorporated organisation. There is no separate "head organisation" sitting above the trust. The trust is the group and the legal entity simultaneously.
+**Federations** have no head organisation. A federation is a group of maintained schools with a shared governing body. It has no local authority owner, and its schools stay maintained by their own local authorities.
 
-For **Federations**: there is typically a "lead school" within the federation, but this is not modelled as a "head organisation" in the current ontology. Federation membership uses `GroupMembership`, and `GroupRelationship` (with named individuals like `SuccessorMultiAcademyTrust`, `PredecessorSingleAcademyTrust`) captures succession or merger relationships between groups. There is no `hasLeadSchool` or `hasHeadOrganisation` property in the current model. The local authority remains accountable for the constituent schools; the Federation is an organisational grouping without a separate accountability head.
+**Children's centre groups** can have a lead centre. This is recorded as a dated `est:LeadCentreDesignation` on the lead centre's membership, because which centre leads can change while the membership continues. The group's local authority is recorded through `esto:hasLocalAuthorityForGroup`, which only children's centre groups and collaborations use.
 
-For **Children's Centre Groups and Collaborations**: local authorities play a coordination role, but this is not modelled as "head of group" in the ontology. The `hasLocalAuthorityForGroup` property (scoped in SHACL to children's centre group types) records the LA in context, but this is a classification / maintaining-authority link, not a head-organisation relationship.
-
-So the short answer is: there is no modelled guarantee that a group always has a head organisation. For trusts the trust is the organisation; for other group types the head-organisation concept is absent from the current model.
+Relationships between GIAS group records, such as a predecessor single-academy trust and a successor multi-academy trust, are no longer modelled: a conversion is a change of classification on one legal entity.
 
 ---
 
@@ -154,17 +146,10 @@ Further Education colleges and universities/higher education institutions are al
 ---
 
 ### What kind of Groups have a Companies House number? This implies the Group is actually an Organisation.
+Since ontology v2.0 this is answered directly: a Companies House number belongs to a **legal entity** (`esto:hasCompaniesHouseRegistration` on `est:LegalEntity`), not to a group.
 
-Correct implication. In the ontology, `esto:hasGroupCompaniesHouseNumber` has domain `est:EstablishmentGroup`. In practice, the groups that hold a Companies House number are incorporated legal entities:
+Academy trusts - single-academy, multi-academy and secure single-academy - are charitable companies limited by guarantee, so they have a Companies House number. Other legal entities that run, support, sponsor or own schools may be companies too, or may be charities, partnerships, individuals or public bodies without one.
 
-- **Multi-academy trusts** — charitable companies limited by guarantee, registered at Companies House
-- **Single-academy trusts** — same legal form
-- **Secure single-academy trusts** — same legal form
+The remaining establishment groups - federations and children's centre groups and collaborations - are not legal entities, so they have no Companies House number. The same `est:CompaniesHouseNumber` class is also used for online providers through their accreditation record.
 
-Other group types (Federations, Children's Centre Groups, School Sponsors, GenericTrust) may or may not be incorporated entities; the Companies House number is not guaranteed for these types.
-
-The model uses a single `est:CompaniesHouseNumber` class reused across group types and online providers. It is a property of `EstablishmentGroup` as a whole (`esto:hasGroupCompaniesHouseNumber`), but in practice it is populated only for incorporated trust types.
-
-This is exactly why the dual-inheritance design for `AcademyTrust` matters: it is simultaneously an `EstablishmentGroup` (the organisational structure) and an accountability body (the legal entity holding the funding agreement). A MAT with a Companies House number is both a group containing establishments and an organisation with legal personality. The model acknowledges this rather than forcing a single parent class.
-
-The concept of "legal entity" is not modelled generically in EPR — it surfaces only as a Companies House number identifier property. If an external data model has a `LegalEntity` concept, MATs and SATs should be mapped there as well as to the organisation / group concepts.
+This matches the enterprise data model's `LEGAL_ENTITY` concept: academy trusts and other responsible bodies map to it.

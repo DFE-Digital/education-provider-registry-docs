@@ -44,7 +44,7 @@ flowchart LR
 
     E -->|"type"| TY["Mainstream academy (code 34)"]
     E -->|"status"| ST["Open"]
-    E -->|"accountable to"| AT
+    E -->|"run by"| AT
 
     E -->|"led by"| HT["GB<br/>Headteacher"]
 
@@ -71,18 +71,30 @@ Brookside is Leicestershire's converter academy of the same trust behind Manor H
 @prefix inst:  <https://dfe-digital.github.io/education-provider-registry-docs/establishment/> .
 ```
 
-### Example 1 — Establishment identity and Academy Trust accountability
+### Example 1 — Establishment identity and academy trust responsibility
 
-`inst:oak-mat` is declared identically to the Manor High example - the same Trust, not a new instance.
+`inst:oak-mat` is declared identically to the Manor High example - the same trust, not a new instance: a legal entity holding the academy trust role, classified as a multi-academy trust. Brookside's dated `est:EstablishmentResponsibility` records that the trust has run it since 1 April 2018. An academy is not a member of its trust: membership is only for federations and children's centre groups.
 
 ```
 inst:oak-mat
-    a est:MultiAcademyTrust ;
+    a est:LegalEntity ;
     rdfs:label "OAK Multi Academy Trust"@en ;
 
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "16991"^^xsd:positiveInteger
+    esto:hasCompaniesHouseRegistration [
+        a est:CompaniesHouseNumber ;
+        rdf:value "07695364"
+    ] ;
+
+    esto:hasCharityStatus est:ExemptCharity ;
+
+    esto:holdsRole [
+        a est:RecognisedRole ;
+        esto:hasRoleType est:AcademyTrust
+    ] ;
+
+    esto:hasAcademyTrustClassification [
+        a est:AcademyTrustClassification ;
+        esto:hasAcademyTrustType est:MultiAcademyTrust
     ] .
 
 inst:brookside-primary
@@ -101,16 +113,14 @@ inst:brookside-primary
         ]
     ] ;
 
-    esto:hasAccountabilityRelationship [
-        a est:EstablishmentAccountability ;
-        esto:accountableToAcademyTrust inst:oak-mat
-    ] ;
+    esto:runByAcademyTrust inst:oak-mat ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:oak-mat ;
-        esto:hasGroupMembershipDate [
-            a est:GroupMembershipDate ;
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:AcademyTrustResponsibility ;
+        esto:hasResponsibleParty inst:oak-mat ;
+        esto:hasStartDate [
+            a est:PeriodStartDate ;
             rdf:value "2018-04-01"^^xsd:date
         ]
     ] .
@@ -254,10 +264,9 @@ inst:brookside-primary
 
 | Real-world concept | Brookside evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Multi-academy trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:MultiAcademyTrust` | Direct - same instance as Manor High |
+| Academy trust | OAK Multi Academy Trust (GIAS UID 16991) | `est:LegalEntity` + `est:AcademyTrust` role + `est:MultiAcademyTrust` classification | Direct - same instance as Manor High |
 | Establishment type | Mainstream academy, converter route (GIAS type code 34) | `est:MainstreamAcademy`, `est:ConverterRoute` | Direct |
-| Academy Trust accountability | Accountable to OAK Multi Academy Trust | `esto:accountableToAcademyTrust` | Direct |
-| Group membership | Joined 1 April 2018 | `est:GroupMembership` + `esto:hasGroupMembershipDate` | Direct |
+| Run by academy trust | Run by OAK Multi Academy Trust since 1 April 2018 | `est:EstablishmentResponsibility` (`est:AcademyTrustResponsibility`) + `esto:runByAcademyTrust` | Direct |
 | Headteacher | GB | `est:HeadteacherOrPrincipal` | Direct |
 | Capacity and pupil numbers | 440 capacity, 440 on roll (249 boys, 191 girls), 61 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct - roll exactly matches capacity |
 | Special classes | Has special classes | `est:HasSpecialClasses` | Direct |

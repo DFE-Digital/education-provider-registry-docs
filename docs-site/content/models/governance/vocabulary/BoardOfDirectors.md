@@ -1,10 +1,10 @@
-﻿# Board of directors
+# Board of directors
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/BoardOfDirectors/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/BoardOfDirectors/> |
 | Compact identifier | `gov:BoardOfDirectors` |
 | Preferred label | Board of directors |
 | Alternative labels |  |

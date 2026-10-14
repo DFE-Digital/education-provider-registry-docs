@@ -1,4 +1,4 @@
-﻿# UI field coverage
+# UI field coverage
 
 These pages show which GIAS UI fields are visible for each establishment type on each tab.
 They are generated from `models/provider-field-coverage.ttl`, which is the single source of truth.

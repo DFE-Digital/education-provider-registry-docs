@@ -83,7 +83,7 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:oak-mat<br/>(est:AcademyTrust)<br/>OAK Multi Academy Trust"]
+    AT["inst:oak-mat<br/>(est:LegalEntity)<br/>OAK Multi Academy Trust"]
     S["inst:manor-high<br/>(est:MainstreamAcademy)<br/>Manor High School"]
     TB["ginst:oak-trust-board<br/>(gov:TrustBoard)"]
     LGB["ginst:manor-lgb<br/>(gov:LocalGoverningBody)"]
@@ -142,7 +142,8 @@ inst:manor-high
     ] .
 
 inst:oak-mat
-    a est:AcademyTrust ;
+    a est:LegalEntity ;
+    esto:holdsRole [ a est:RecognisedRole ; esto:hasRoleType est:AcademyTrust ] ;
     rdfs:label "OAK Multi Academy Trust"@en .
 
 ginst:oak-trust-board
@@ -359,7 +360,7 @@ ginst:manor-lgb
 | Real-world concept | Manor High evidence | Ontology mapping | Fit |
 |---|---|---|---|
 | Academy (converter) | Manor High School, URN 137120 | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:ConverterRoute` | Direct - reused leaf type and route property from the main EPR ontology |
-| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:AcademyTrust` | Direct |
+| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:LegalEntity` holding the `est:AcademyTrust` role | Direct |
 | Trust Board | The board accountable for OAK Multi Academy Trust | `gov:TrustBoard` + `govo:hasGovernanceBody` | Direct |
 | Local Governing Body | Manor's local governing body, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` (delegation) + `govo:hasGovernanceBody` (scope over the academy) | Direct |
 | Governor categories | Parent, Staff, Appointed, MAT Representative | `govo:hasRoleType` (`gov:ParentGovernor`, `gov:StaffGovernor`, `gov:CoOptedGovernor`, `gov:Governor`) | Candidate - Manor's Local Governing Body is not constituted under SI 2012/1034, unlike a maintained school's governing body |

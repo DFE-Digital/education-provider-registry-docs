@@ -22,7 +22,7 @@ gov:governanceTaxonomy
     dcterms:title "Governance Taxonomy"@en ;
     dcterms:description "Faceted taxonomy for classifying governance concepts in the Education Provider Registry."@en ;
     dcterms:created "2026-07-27"^^xsd:date ;
-    dcterms:modified "2026-07-30"^^xsd:date ;
+    dcterms:modified "2026-10-14"^^xsd:date ;
     gov:status "Provisional"@en ;
     skos:hasTopConcept
         gov:ActorAndUserType,
@@ -76,7 +76,7 @@ gov:OrganisationAndBoardScope
     skos:topConceptOf gov:governanceTaxonomy ;
     skos:prefLabel "Organisation and board scope"@en ;
     skos:definition "The organisation, establishment or governing body to which governance data relates."@en ;
-    skos:narrower est:Establishment, gov:School, est:Academy, est:AcademyTrust, gov:TrustBoard, gov:Board, gov:BoardOfDirectors, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:InterimExecutiveBoard, est:Federation, est:LocalAuthority, gov:CompaniesHouseLegalEntity ;
+    skos:narrower est:Establishment, gov:School, est:Academy, est:LegalEntity, gov:TrustBoard, gov:Board, gov:BoardOfDirectors, gov:GoverningBoard, gov:GoverningBody, gov:LocalGoverningBody, gov:InterimExecutiveBoard, est:Federation, est:LocalAuthority, gov:CompaniesHouseLegalEntity ;
     gov:status "Provisional"@en .
 
 gov:GovernanceParticipantType
@@ -223,9 +223,10 @@ est:Academy
     skos:broader gov:OrganisationAndBoardScope ;
     gov:status "Provisional"@en .
 
-est:AcademyTrust
+est:LegalEntity
     a skos:Concept ; skos:inScheme gov:governanceTaxonomy ;
-    skos:prefLabel "Academy trust"@en ;
+    skos:prefLabel "Legal entity"@en ;
+    skos:altLabel "Academy trust"@en ;
     skos:broader gov:OrganisationAndBoardScope ;
     gov:status "Provisional"@en .
 

@@ -1,10 +1,10 @@
-﻿# Local authority governor
+# Local authority governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/LocalAuthorityGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/LocalAuthorityGovernor/> |
 | Compact identifier | `gov:LocalAuthorityGovernor` |
 | Preferred label | Local authority governor |
 | Alternative labels |  |

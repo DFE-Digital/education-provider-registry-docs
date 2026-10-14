@@ -1,10 +1,10 @@
-﻿# Change history
+# Change history
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/ChangeHistory/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/ChangeHistory/> |
 | Compact identifier | `gov:ChangeHistory` |
 | Preferred label | Change history |
 | Alternative labels |  |

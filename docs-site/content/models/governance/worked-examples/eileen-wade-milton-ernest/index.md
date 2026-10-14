@@ -123,7 +123,7 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Federation, member schools and a single shared Governing Body
 
-Both schools are maintained (a Foundation school and a Voluntary controlled school), and the federation's Governing Body is genuinely constituted under statute - unlike Manor High and St Paul's Academy, whose Local Governing Bodies derive only from an Academy Trust's own scheme of delegation. `govo:hasGovernanceBody` is used three times here, from the Federation and from each school, all pointing at the same Governing Body instance - one body with scope over both establishments, exactly as `govo:hasGovernanceBody`'s own definition allows ("Links a governed organisation - `est:Establishment`, `est:AcademyTrust` **or `est:Federation`** - to the governance body or bodies responsible for it").
+Both schools are maintained (a Foundation school and a Voluntary controlled school), and the federation's Governing Body is genuinely constituted under statute - unlike Manor High and St Paul's Academy, whose Local Governing Bodies derive only from an Academy Trust's own scheme of delegation. `govo:hasGovernanceBody` is used three times here, from the Federation and from each school, all pointing at the same Governing Body instance - one body with scope over both establishments, exactly as `govo:hasGovernanceBody`'s own definition allows ("Links a governed organisation - `est:Establishment`, `est:LegalEntity` (for example an academy trust) **or `est:Federation`** - to the governance body or bodies responsible for it").
 
 ```
 inst:eileen-wade

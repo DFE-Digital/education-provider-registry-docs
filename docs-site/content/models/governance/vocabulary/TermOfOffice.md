@@ -1,10 +1,10 @@
-﻿# Term of office
+# Term of office
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/TermOfOffice/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/TermOfOffice/> |
 | Compact identifier | `gov:TermOfOffice` |
 | Preferred label | Term of office |
 | Alternative labels |  |

@@ -8,7 +8,7 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 **GIAS 1.0:** No common superclass for organisation-like things. `Establishment`, `EstablishmentGroup`, `LocalAuthority` and related concepts exist independently with no shared type.
 
-**EPR target:** `est:Organisation` is introduced as a common superclass. `est:Establishment`, `est:EstablishmentGroup` and `est:LocalAuthority` are all subclasses of it. `est:Person` covers natural persons with a role in the education system; governance-specific persons are modelled separately by the governance model's `gov:GovernancePerson`.
+**EPR target:** `est:Organisation` is introduced as a common superclass. `est:Establishment`, `est:EstablishmentGroup`, `est:LocalAuthority` and, since ontology v2.0, `est:LegalEntity` are all subclasses of it. `est:Person` covers natural persons with a role in the education system; governance-specific persons are modelled separately by the governance model's `gov:GovernancePerson`.
 
 **Reason:** Enterprise Data Model alignment requires a common organisation concept. The absence of a shared superclass makes it impossible to write a query or constraint that applies to all organisation-like things without enumerating every type.
 
@@ -18,7 +18,7 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 **GIAS 1.0:** `School sponsor` is GIAS group type 05. Sponsor body records are stored in the groups table, linked to establishments via the group-link mechanism. The front end presents it as `Academy sponsor`.
 
-**EPR target:** `est:SchoolSponsor` is removed as an OWL class. The SKOS taxonomy entry is retained and marked legacy. Since ontology v1.19, each sponsor link is a dated `est:Sponsorship` naming its sponsor through `esto:hasSponsor`, and `esto:sponsoredBy` (domain `est:Establishment`, range `est:Organisation` or `est:Person`) is a shortcut to the current sponsor.
+**EPR target:** `est:SchoolSponsor` is removed as an OWL class and as a taxonomy group type; the vocabulary keeps it as a legacy GIAS term. Since ontology v2.0, a sponsor is a legal entity or person holding the `est:AcademySponsor` recognised role, and each sponsored academy has a dated `est:EstablishmentResponsibility` of type `est:SponsorResponsibility`. `esto:sponsoredBy` (domain `est:Establishment`, range `est:LegalEntity` or `est:Person`) names the present-day sponsor.
 
 **Reason:** GIAS stored sponsor bodies in the groups table as a legacy implementation choice. The business semantics are sponsor semantics throughout — the field is labelled "Academy sponsor", the flag says "Linked to a sponsor", and the permission is sponsor-specific. A sponsor is an organisation that establishments link to, not a type of group that establishments belong to.
 
@@ -28,7 +28,7 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 **GIAS 1.0:** `est:AcademySponsor` was an OWL class. The property `esto:hasAcademySponsor` linked a trust to its sponsor.
 
-**EPR target:** Both removed. The sponsoring body is typed as `est:Organisation`, or `est:Person` for an individual sponsor. It is linked through a dated `est:Sponsorship` on `est:Establishment`, with `esto:sponsoredBy` as the current-sponsor shortcut (ontology v1.19).
+**EPR target:** Both removed as a class and property. Since ontology v2.0 `est:AcademySponsor` is a recognised role type: the sponsoring body is an `est:LegalEntity`, or an `est:Person` for an individual sponsor, holding that role. It is linked to each academy through a sponsor responsibility, with `esto:sponsoredBy` naming the present-day sponsor.
 
 **Reason:** A sponsor is something an organisation *does*, not something an organisation *is*. A university, charity, business or trust can sponsor an academy without being a distinct kind of organisation. The old property was also on `est:AcademyTrust` rather than on the establishment, which did not match GIAS link semantics (the link is from establishment to sponsor).
 
@@ -38,7 +38,7 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 **GIAS 1.0:** `est:Proprietor` was an OWL class representing the person or body that owns or operates an independent school.
 
-**EPR target:** Removed. The proprietor relationship is expressed via `esto:hasProprietor` (domain `est:Establishment`, range: union of `est:Organisation` and `est:Person`).
+**EPR target:** Removed. Since ontology v2.0 a proprietor is a legal entity or person holding an `est:ProprietorResponsibility` for the school, and `esto:hasProprietor` (domain `est:Establishment`, range: union of `est:LegalEntity` and `est:Person`) names the present-day proprietors. A school can have more than one. Proprietor is a responsibility, not a role: being proprietor means being responsible for running the school, not owning its business or premises.
 
 **Reason:** A proprietor can be either a natural person (an individual operating as a sole trader) or an organisation (a company or charity). A single class could not be placed cleanly in either hierarchy. A direct property with a union range correctly covers both cases.
 
@@ -61,3 +61,19 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 **EPR target:** 5 primary academy types plus an `est:AcademyRoute` classification (Converter or SponsorLed) expressed via `esto:hasAcademyRoute`.
 
 **Reason:** The route by which an academy was established is a property of how it came to exist, not of what it fundamentally is. The 8-type leaf structure duplicated type definitions and required further leaf types for any new route variant. Separating type from route makes the model extensible and reduces duplication.
+
+---
+
+## 7. Trusts are legal entities with roles, not establishment groups
+
+**GIAS 1.0:** Academy trusts, foundation trusts ("Trust", type 02), umbrella trusts and school sponsors are all group records, linked to establishments through group links. A single-academy trust that becomes a multi-academy trust is closed as one group record and opened as another, and a trust that also sponsors its academies has a second, sponsor group record.
+
+**EPR target (ontology v2.0):**
+
+- The company, charity or other body is an `est:LegalEntity`, with its own identifiers, charity status, incorporation date and registered office.
+- What it is, for a period, is an `est:RecognisedRole`: academy trust, foundation trust, umbrella trust or academy sponsor.
+- An academy trust's single-academy, multi-academy or secure single-academy status is a dated `est:AcademyTrustClassification`.
+- What it does for each establishment, for a period, is an `est:EstablishmentResponsibility`.
+- `est:EstablishmentGroup` covers only federations and children's centre groups and collaborations, which are not legal entities.
+
+**Reason:** The physical model slice, built and tested against real GIAS data, showed that one company can be an academy trust, an academy sponsor and a proprietor at once; that trusts exist with no schools; that a single-academy trust converting to a multi-academy trust is the same organisation; and that a school keeps its identity when its trust changes. Treating trusts as groups split one organisation into several records and made conversions look like new organisations.

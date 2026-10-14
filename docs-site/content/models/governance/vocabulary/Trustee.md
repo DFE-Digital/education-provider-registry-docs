@@ -1,10 +1,10 @@
-﻿# Trustee
+# Trustee
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Trustee/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Trustee/> |
 | Compact identifier | `gov:Trustee` |
 | Preferred label | Trustee |
 | Alternative labels |  |

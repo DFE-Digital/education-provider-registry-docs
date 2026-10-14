@@ -1,10 +1,10 @@
-﻿# Staff governor
+# Staff governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/StaffGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/StaffGovernor/> |
 | Compact identifier | `gov:StaffGovernor` |
 | Preferred label | Staff governor |
 | Alternative labels |  |

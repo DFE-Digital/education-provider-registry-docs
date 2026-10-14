@@ -1,10 +1,10 @@
-﻿# Declaration
+# Declaration
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Declaration/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Declaration/> |
 | Compact identifier | `gov:Declaration` |
 | Preferred label | Declaration |
 | Alternative labels |  |

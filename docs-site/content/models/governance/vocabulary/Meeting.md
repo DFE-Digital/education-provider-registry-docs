@@ -1,10 +1,10 @@
-﻿# Meeting
+# Meeting
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Meeting/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Meeting/> |
 | Compact identifier | `gov:Meeting` |
 | Preferred label | Meeting |
 | Alternative labels |  |

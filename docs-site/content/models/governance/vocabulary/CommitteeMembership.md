@@ -1,10 +1,10 @@
-﻿# Committee membership
+# Committee membership
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/CommitteeMembership/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/CommitteeMembership/> |
 | Compact identifier | `gov:CommitteeMembership` |
 | Preferred label | Committee membership |
 | Alternative labels |  |

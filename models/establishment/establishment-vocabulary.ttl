@@ -59,6 +59,7 @@ est:establishmentDetailsVocabulary
         est:AccreditationAndQualityAssurance,
         est:ExternalReference,
         est:EstablishmentGroupMembership,
+        est:LegalEntitiesRolesAndResponsibilities,
         est:AdministrativeGeography .
 
 #################################################################
@@ -279,11 +280,8 @@ est:Organisation
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Organisation"@en ;
-    skos:definition "A structured group of people working together to achieve shared goals or a specific purpose. In EPR, Organisation is the common superclass for education establishments, establishment groups, local authorities and other bodies with a role in the provision or oversight of education."@en ;
-    skos:narrower
-        est:Establishment,
-        est:EstablishmentGroup,
-        est:LocalAuthority ;
+    skos:definition "A structured group of people working together to achieve shared goals or a specific purpose. In EPR, Organisation is the common superclass for education establishments, establishment groups, local authorities, legal entities and other bodies with a role in the provision or oversight of education."@en ;
+    skos:narrower est:Establishment, est:EstablishmentGroup, est:LocalAuthority, est:LegalEntity ;
     est:status "Provisional"@en .
 
 est:Person
@@ -291,7 +289,7 @@ est:Person
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Person"@en ;
-    skos:definition "A natural person with a role in the education system. In EPR this includes individuals who are proprietors of independent schools, and (v1.17) the named headteacher, principal or children's centre manager leading an establishment; governance roles are modelled by the dedicated governance model (gov:GovernancePerson, which is broader than est:Person) - see models/governance/governance-ontology.ttl."@en ;
+    skos:definition "A natural person with a role in the education system. In EPR this includes individuals who sponsor academies or are proprietors of independent schools, and the named headteacher, principal or children's centre manager leading an establishment. Governance roles are modelled by the governance model (gov:GovernancePerson) - see models/governance/governance-ontology.ttl."@en ;
     skos:narrower est:HeadteacherOrPrincipal, est:CentreManager ;
     est:status "Provisional"@en .
 
@@ -346,14 +344,9 @@ est:EstablishmentAccountability
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment accountability"@en ;
-    skos:definition "The organisations accountable for an establishment's governance, funding and operation: the maintaining local authority (for maintained schools), the academy trust and any sponsor (for academies and free schools), or the proprietor (for independent schools and PRUs)."@en ;
-    skos:narrower
-        est:AcademySponsor,
-        est:AcademyTrust,
-        est:LocalAuthority,
-        est:MaintainingAuthority,
-        est:Proprietor,
-        est:Sponsorship ;
+    skos:definition "The local authority that maintains a maintained school and is accountable for it. Who runs, supports, sponsors or is proprietor of an establishment is described under legal entities, roles and responsibilities."@en ;
+    skos:scopeNote "v2.0: academy trust, sponsor and proprietor moved to est:LegalEntitiesRolesAndResponsibilities."@en ;
+    skos:narrower est:LocalAuthority, est:MaintainingAuthority ;
     est:status "Provisional"@en .
 
 est:EstablishmentLifecycle
@@ -535,39 +528,20 @@ est:EstablishmentGroupMembership
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment group membership"@en ;
-    skos:definition "The organisations and governance structures that group establishments together, and the membership relationships between establishments and those groups. Covers academy trusts, federations and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility."@en ;
-    skos:narrower
-        est:EstablishmentGroup,
-        est:GroupMembership,
-        est:GroupRelationship,
-        est:GroupRelationshipType,
-        est:GroupId,
-        est:GroupUkprn,
-        est:GroupUniqueIdentifier,
-        est:GroupMembershipDate,
-        est:GroupMembershipRoleType,
-        est:GroupStatus,
-        est:GroupOpenDate,
-        est:GroupIncorporatedOnDate,
-        est:GroupClosedDate ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#establishmentgroupmembership> .
+    skos:definition "Groups of establishments that are not legal entities - federations and children's centre groups and collaborations - and establishments' dated memberships of them, including lead centre designations. Trusts are not groups: see legal entities, roles and responsibilities."@en ;
+    skos:narrower est:EstablishmentGroup, est:GroupMembership, est:GroupMembershipDate, est:GroupMembershipEndDate, est:GroupMembershipRoleType, est:LeadCentreDesignation, est:GroupStatus, est:GroupOpenDate, est:GroupClosedDate ;
+    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#establishmentgroupmembership> ;
+    est:status "Provisional"@en .
 
 est:EstablishmentGroup
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment group"@en ;
-    skos:definition "An organisation or governance structure to which one or more establishments belong. Includes academy trusts, federations and children's centre groups."@en ;
-    skos:scopeNote "Distinct from the accountability relationship, which records which body is legally responsible for the establishment. Academy trusts are both establishment groups and accountability bodies simultaneously."@en ;
-    skos:narrower
-        est:MultiAcademyTrust,
-        est:SecureSingleAcademyTrust,
-        est:Federation,
-        est:ChildrensCentreGroup,
-        est:ChildrensCentreCollaboration,
-        est:GenericTrust ;
-    skos:related est:EstablishmentAccountability, est:Organisation ;
+    skos:definition "A group of establishments that is not itself a legal entity: a federation of maintained schools, or a children's centre group or collaboration."@en ;
+    skos:scopeNote "v2.0: academy trusts and other trusts are no longer establishment groups. They are legal entities holding recognised roles, and the establishments they run, support or sponsor are linked by establishment responsibilities, not group membership."@en ;
     skos:broader est:EstablishmentGroupMembership ;
+    skos:narrower est:Federation, est:ChildrensCentreGroup, est:ChildrensCentreCollaboration ;
+    skos:related est:Organisation, est:LegalEntity ;
     est:status "Provisional"@en .
 
 est:MultiAcademyTrust
@@ -575,31 +549,30 @@ est:MultiAcademyTrust
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Multi-academy trust"@en ;
     skos:altLabel "MAT"@en ;
-    skos:definition "A single legal academy-trust entity incorporated under the Companies Act 2006 that operates two or more academies, free schools, UTCs or studio schools. It has a master funding agreement with the Secretary of State and a supplemental funding agreement for each individual academy. Governed by a board of trustees. Source: GOV.UK academy trust governance guide."@en ;
-    skos:scopeNote "An academy trust operating two or more academies. Distinct from a single-academy trust, which operates exactly one academy. A SAT can convert to a MAT by adding an academy."@en ;
-    skos:broader est:AcademyTrust ;
+    skos:definition "An academy trust that runs, or is set up to run, two or more academies, free schools, UTCs or studio schools. It has a master funding agreement with the Secretary of State and a supplemental funding agreement for each academy. Source: GOV.UK academy trust governance guide."@en ;
+    skos:broader est:AcademyTrustType ;
     skos:related est:SingleAcademyTrust ;
-    est:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#multi-academy-trust> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
+    est:status "Provisional"@en .
 
 est:SecureSingleAcademyTrust
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Secure single-academy trust"@en ;
-    skos:definition "A single-academy trust operating a secure 16-to-19 academy providing education within secure residential accommodation for young people aged 16 to 19 subject to a custodial sentence or secure order."@en ;
-    skos:broader est:SingleAcademyTrust ;
-    est:status "Provisional"@en ;
+    skos:definition "A single-academy trust that runs a secure 16 to 19 academy, providing education in secure accommodation for young people aged 16 to 19 serving a custodial sentence or subject to a secure order."@en ;
+    skos:broader est:AcademyTrustType ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#secure-single-academy-trust> ;
     rdfs:isDefinedBy <https://assets.publishing.service.gov.uk/media/5bd820c1ed915d78aaef7e93/secure-schools-how-to-apply-guide.pdf>, <https://www.gov.uk/government/publications/secure-schools-governance-handbook> ;
-    est:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> .
+    est:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/1B> ;
+    est:status "Provisional"@en .
 
 est:Federation
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Federation"@en ;
     skos:definition "A formal statutory arrangement in which two or more maintained schools are governed by a single federated governing body. Each member school retains its own URN, establishment number, admissions arrangements and Ofsted inspection identity. Some governance and funding arrangements may be shared or pooled under federation rules. Applicable only to maintained schools, including maintained nursery schools; academy grouping uses the trust model. Source: School Governance (Federations) Regulations 2012."@en ;
-    skos:scopeNote "Federations apply only to maintained schools. An academy cannot join a federation - academies are grouped through the trust model instead. This distinction is confirmed as a business rule."@en ;
+    skos:scopeNote "Federations apply only to maintained schools. An academy cannot join a federation - academies are run by academy trusts instead. A federation is not a legal entity, has no local authority owner, and can include schools in more than one local authority."@en ;
     skos:broader est:EstablishmentGroup ;
     est:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#federation> ;
@@ -611,11 +584,12 @@ est:SchoolSponsor
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "School sponsor"@en ;
     skos:definition "A body approved by the Secretary of State to sponsor one or more sponsor-led academies or free schools. The sponsor supports governance, leadership and educational improvement of the sponsored academies. Source: Academies Act 2010."@en ;
-    skos:scopeNote "Legacy GIAS group type 05. In the target EPR model each of its group links becomes an est:Sponsorship naming the sponsor (an est:Organisation or est:Person), and the current sponsor is also given by esto:sponsoredBy. Sponsor is a role an organisation plays, not a type of establishment group."@en ;
-    est:status "Legacy"@en ;
+    skos:scopeNote "Legacy GIAS group type 05. In the target EPR model the sponsor holds the recognised role est:AcademySponsor, and each sponsored academy has an est:SponsorResponsibility. Sponsor is a role, not a type of establishment group."@en ;
+    skos:related est:AcademySponsor, est:SponsorResponsibility ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#school-sponsor> ;
     rdfs:isDefinedBy <https://www.gov.uk/government/publications/multi-academy-trusts-establishing-and-developing-your-trust> ;
-    est:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/5A> .
+    est:legislation <https://www.legislation.gov.uk/ukpga/2010/32/section/5A> ;
+    est:status "Legacy"@en .
 
 est:ChildrensCentreGroup
     a skos:Concept ;
@@ -638,73 +612,24 @@ est:ChildrensCentreCollaboration
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#childrens-centres-collaboration> ;
     rdfs:isDefinedBy <https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/379470/Children_27s_20centre_20inspection_20handbook.pdf> .
 
-est:GenericTrust
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Trust"@en ;
-    skos:definition "A generic trust group type (EstablishmentGroupType code 02), distinct from an academy trust. Rarely used in current GIAS data; retained for completeness."@en ;
-    skos:broader est:EstablishmentGroup ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#trust-generic-code-02> .
-
 est:GroupMembership
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Group membership"@en ;
-    skos:definition "A dated record of an establishment's membership of an establishment group, trust, federation, or children's centre group or collaboration. Sponsorship is not a membership: it is recorded as est:Sponsorship. An establishment may have membership in more than one group simultaneously."@en ;
-    skos:scopeNote "Maps to GroupLink in the current GIAS schema. Contains the establishment (via URN), the group (via group ID), and an effective date."@en ;
-    skos:narrower est:GroupMembershipDate ;
+    skos:definition "A dated record of an establishment's membership of an establishment group: a federation, or a children's centre group or collaboration. An establishment may belong to more than one group at once. Joining a group is a separate event from the group forming and the establishment opening."@en ;
+    skos:scopeNote "Being run, supported or sponsored by a trust is not a membership: it is an est:EstablishmentResponsibility (v2.0)."@en ;
     skos:broader est:EstablishmentGroupMembership ;
+    skos:narrower est:GroupMembershipDate, est:GroupMembershipEndDate, est:LeadCentreDesignation ;
     est:status "Provisional"@en .
-
-est:GroupRelationship
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Group relationship"@en ;
-    skos:definition "A recorded relationship between two establishment groups, for example where a single-academy trust is the predecessor to a newly formed multi-academy trust. Used to preserve conversion history."@en ;
-    skos:scopeNote "Maps to GroupRelationsLink in the current GIAS schema. Currently used primarily to record SAT-to-MAT conversion history."@en ;
-    skos:broader est:EstablishmentGroupMembership ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#grouprelationship-grouprelationshiptype> .
-
-est:GroupRelationshipType
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Group relationship type"@en ;
-    skos:definition "The classification of a group-to-group relationship, distinguishing the role of each group in the relationship."@en ;
-    skos:narrower
-        est:SuccessorMultiAcademyTrust,
-        est:PredecessorSingleAcademyTrust ;
-    skos:broader est:EstablishmentGroupMembership ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#grouprelationship-grouprelationshiptype> .
-
-est:SuccessorMultiAcademyTrust
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Successor MAT"@en ;
-    skos:definition "A group relationship type value indicating that the group is the multi-academy trust formed when a single-academy trust expanded or merged."@en ;
-    skos:broader est:GroupRelationshipType ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#successor-mat-predecessor-sat> .
-
-est:PredecessorSingleAcademyTrust
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Predecessor SAT"@en ;
-    skos:definition "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en ;
-    skos:broader est:GroupRelationshipType ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#successor-mat-predecessor-sat> .
 
 est:GroupMembershipRoleType
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Group membership role type"@en ;
     skos:definition "The capacity in which an establishment holds a membership of an establishment group. Its only value is an ordinary member."@en ;
-    skos:scopeNote "Maps to the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model. That entity's other values, Sponsor and Sponsored Academy, are not group roles in this model: since v1.19, sponsorship is recorded as est:Sponsorship. The concepts est:SponsoredAcademy and est:Sponsor are retired."@en ;
-    skos:narrower est:Member ;
+    skos:scopeNote "Maps to the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model. Being the lead centre of a children's centre group is an est:LeadCentreDesignation, because it is dated separately from membership. Sponsorship is an est:SponsorResponsibility."@en ;
     skos:broader est:EstablishmentGroupMembership ;
+    skos:narrower est:Member ;
     est:status "Provisional"@en .
 
 est:Member
@@ -714,56 +639,6 @@ est:Member
     skos:definition "The establishment is an ordinary member of the group. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Member'. The implied default when no group membership role is recorded."@en ;
     skos:broader est:GroupMembershipRoleType ;
     est:status "Provisional"@en .
-
-est:SponsoredAcademy
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Sponsored Academy"@en ;
-    skos:definition "The establishment is a member of the group as a sponsored academy under an Academies Act 2010 sponsor arrangement. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsored Academy'."@en ;
-    skos:broader est:GroupMembershipRoleType ;
-    skos:related est:Sponsorship ;
-    est:status "Retired"@en ;
-    skos:scopeNote "Added in v1.18 and retired in v1.19, when it was removed from establishment-ontology.ttl. It recorded sponsorship as a second group membership, which duplicated esto:sponsoredBy, never named the sponsor, and could not represent a sponsor other than the academy's own trust. Sponsorship is now recorded as est:Sponsorship. Kept here, in the vocabulary only, as a historical record of the retired URI."@en .
-
-est:Sponsor
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Sponsor"@en ;
-    skos:definition "The member holds the sponsor role within the group - it is the approved sponsoring organisation. Maps to ORGANISATION_GROUP_ROLE_TYPE value 'Sponsor'."@en ;
-    skos:broader est:GroupMembershipRoleType ;
-    skos:related est:Sponsorship ;
-    est:status "Retired"@en ;
-    skos:scopeNote "Added in v1.18 and retired in v1.19, when it was removed from establishment-ontology.ttl. It could never be asserted correctly, because a group membership's subject is always an establishment. A sponsor is now named by esto:hasSponsor on an est:Sponsorship. Kept here, in the vocabulary only, as a historical record of the retired URI."@en .
-
-est:GroupId
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Group identifier"@en ;
-    skos:definition "The business-facing GIAS group identifier assigned to an establishment group. Distinct from the internal surrogate key used in the GIAS database."@en ;
-    skos:scopeNote "Group ID is conditionally populated by group type. School sponsors use an SP-prefixed identifier (e.g. SP01153). Multi-academy trusts and single-academy trusts use a TR-prefixed identifier (e.g. TR00261). Group ID is absent for secure single-academy trusts, federations, trust (code 02), children's centre groups and children's centre collaborations."@en ;
-    skos:broader est:EstablishmentGroupMembership ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#group-id-tr-sp-prefix> .
-
-est:GroupUkprn
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Group UKPRN"@en ;
-    skos:definition "A UK Provider Reference Number assigned to the group organisation by the UKRLP register. Sourced from UKRLP by matching on Companies House number."@en ;
-    skos:broader est:EstablishmentGroupMembership ;
-    est:status "Provisional"@en .
-
-est:GroupUniqueIdentifier
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Group unique identifier (UID)"@en ;
-    skos:altLabel "UID"@en ;
-    skos:definition "The internal GIAS numeric group identifier, analogous to URN for establishments. Primary identifier for a group within GIAS. Displayed on group detail pages."@en ;
-    skos:scopeNote "Distinct from GroupId, which is the business-facing identifier carrying a TR or SP prefix. The UID is the GIAS surrogate key for the group record."@en ;
-    skos:broader est:EstablishmentGroupMembership ;
-    skos:related est:GroupId ;
-    est:status "Provisional"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#group-uid> .
 
 est:GroupMembershipDate
     a skos:Concept ;
@@ -788,21 +663,8 @@ est:GroupOpenDate
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Group open date"@en ;
-    skos:definition "The date on which the group was established. Displayed on group detail pages for federation, school sponsor, children's centre group and collaboration group types."@en ;
-    skos:scopeNote "Not used for trust group types (MAT, SAT, SSAT), which use GroupIncorporatedOnDate instead. The two concepts must not be collapsed."@en ;
+    skos:definition "The date on which an establishment group was formed. Not the date any member joined, and not the date any member opened."@en ;
     skos:broader est:EstablishmentGroupMembership ;
-    skos:related est:GroupIncorporatedOnDate ;
-    est:status "Provisional"@en .
-
-est:GroupIncorporatedOnDate
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Incorporated on date"@en ;
-    skos:altLabel "Group incorporated on date"@en ;
-    skos:definition "The Companies Act incorporation date for trust group types (MAT, SAT, SSAT). Displayed on group detail pages as 'Incorporated on (open date)'."@en ;
-    skos:scopeNote "Distinct from GroupOpenDate, which is used for non-trust group types. Trust types are incorporated under the Companies Act 2006 and receive a formal incorporation date, which differs semantically from the operational open date of non-trust groups."@en ;
-    skos:broader est:EstablishmentGroupMembership ;
-    skos:related est:GroupOpenDate ;
     est:status "Provisional"@en .
 
 est:GroupClosedDate
@@ -2008,67 +1870,35 @@ est:AcademyTrust
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy trust"@en ;
     skos:altLabel "Trust"@en ;
-    skos:definition "A charitable company limited by guarantee that enters into a funding agreement with the Secretary of State under the Academies Act 2010 to operate one or more academies or free schools. The trust is accountable for educational standards, financial management and employment of staff at its academies."@en ;
-    skos:scopeNote "Trust flag is an extract or implementation term, not the business concept."@en ;
-    skos:broader est:EstablishmentAccountability ;
-    skos:related est:AcademyConverter, est:EstablishmentGroup ;
-    skos:narrower
-        est:SingleAcademyTrust,
-        est:MultiAcademyTrust,
-        est:SecureSingleAcademyTrust ;
-    est:status "Preferred"@en ;
-    dcterms:source "Java/database: EstablishmentGroup and GroupLink"@en .
+    skos:definition "The role of a charitable company that runs one or more academies or free schools under funding agreements with the Secretary of State under the Academies Act 2010. The trust is accountable for educational standards, financial management and employment of staff at its academies."@en ;
+    skos:scopeNote "v2.0: a recognised role type held by a legal entity, not a kind of establishment group. Whether a trust is a single-academy, multi-academy or secure single-academy trust is a dated est:AcademyTrustClassification, so a conversion does not create a new organisation."@en ;
+    skos:broader est:RecognisedRoleType ;
+    skos:related est:LegalEntity, est:AcademyTrustClassification, est:AcademyTrustResponsibility, est:AcademyConverter ;
+    dcterms:source "Java/database: EstablishmentGroup and GroupLink"@en ;
+    est:status "Preferred"@en .
 
 est:SingleAcademyTrust
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Single-academy trust"@en ;
     skos:altLabel "Single academy trust"@en, "SAT"@en ;
-    skos:definition "An academy trust constituted under the Academies Act 2010 that holds a funding agreement for exactly one academy. Distinguished from a multi-academy trust (MAT), which holds funding agreements for two or more academies."@en ;
-    skos:broader est:AcademyTrust ;
-    est:status "Preferred"@en ;
+    skos:definition "An academy trust that runs one academy. It can become a multi-academy trust by taking on a second academy, which changes its classification but not its identity."@en ;
+    skos:broader est:AcademyTrustType ;
+    skos:related est:MultiAcademyTrust ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#single-academy-trust> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> .
+    rdfs:isDefinedBy <https://www.gov.uk/government/publications/academy-trust-governance-guide> ;
+    est:status "Preferred"@en .
 
 est:AcademySponsor
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Academy sponsor"@en ;
-    skos:definition "A body - typically a school, university, charity or business - approved by the Secretary of State under the Academies Act 2010 to sponsor one or more academies. A sponsor provides strategic leadership and improvement support, particularly for sponsored academies that have converted from underperforming maintained schools."@en ;
-    skos:scopeNote "Shown on the Details tab for sponsor-led academies and several academy and free school types. In the target EPR model a sponsor is recorded as a dated est:Sponsorship, and the current sponsor through the shortcut esto:sponsoredBy. The sponsor may be an organisation or a person. The est:AcademySponsor OWL class has been removed; the concept is retained here as a vocabulary entry for the GIAS UI field."@en ;
-    skos:broader est:EstablishmentAccountability ;
-    skos:related est:AcademyTrust, est:Organisation, est:Sponsorship ;
-    est:status "Provisional"@en ;
-    dcterms:source "Database field: SchoolSponsors"@en .
-
-est:Sponsorship
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Sponsorship"@en ;
-    skos:definition "A dated record that a person or organisation sponsors an academy or free school under the Academies Act 2010. The sponsor may be the academy's own trust, another body such as a diocese, college or company, or a named individual."@en ;
-    skos:scopeNote "Replaces the GIAS 'School sponsor' group record (group type 05, SP-prefixed) and its group links: each link becomes a sponsorship, and its joined date becomes the sponsorship start date. The current sponsor is also available through the shortcut esto:sponsoredBy. Only academies and free schools can have one. Added v1.19."@en ;
-    skos:broader est:EstablishmentAccountability ;
-    skos:narrower est:SponsorshipStartDate, est:SponsorshipEndDate ;
-    skos:related est:AcademySponsor ;
-    est:status "Provisional"@en ;
-    dcterms:source "Database: GroupLink rows to EstablishmentGroup type 05 (School sponsor)"@en .
-
-est:SponsorshipStartDate
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Sponsorship start date"@en ;
-    skos:definition "The date a sponsorship began."@en ;
-    skos:scopeNote "Maps to GroupLink.effectiveDate on the GIAS 'School sponsor' group link. Added v1.19."@en ;
-    skos:broader est:Sponsorship ;
-    est:status "Provisional"@en .
-
-est:SponsorshipEndDate
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Sponsorship end date"@en ;
-    skos:definition "The first date on which a sponsorship no longer applied. Absent while the sponsorship is current."@en ;
-    skos:scopeNote "GIAS holds no equivalent: its group links have an archive flag but no end date. Added v1.19."@en ;
-    skos:broader est:Sponsorship ;
+    skos:altLabel "School sponsor"@en ;
+    skos:definition "The role of a body - typically a school, university, charity or business - or a person recognised by the Department for Education as an academy sponsor under the Academies Act 2010. A sponsor provides strategic leadership and improvement support, particularly for sponsored academies that have converted from underperforming maintained schools."@en ;
+    skos:scopeNote "v2.0: a recognised role type held by a legal entity or person. Holding the role does not by itself mean sponsoring a particular academy: that is an est:SponsorResponsibility, and the present-day sponsor is also given by esto:sponsoredBy."@en ;
+    skos:broader est:RecognisedRoleType ;
+    skos:related est:SponsorResponsibility, est:LegalEntity, est:Person, est:AcademyTrust ;
+    dcterms:source "Database field: SchoolSponsors"@en ;
     est:status "Provisional"@en .
 
 est:Proprietor
@@ -2076,12 +1906,12 @@ est:Proprietor
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Proprietor"@en ;
     skos:altLabel "Proprietor's name"@en ;
-    skos:definition "The person or body responsible for the conduct of an independent school under the Education Act 2002, s.94. The proprietor is required to be registered with the Secretary of State under s.98 and is the legal entity to whom registration requirements and inspection duties apply."@en ;
-    skos:scopeNote "In the target EPR model the proprietor relationship is expressed via esto:hasProprietor on est:Establishment, with range est:Organisation (for a company or charity) or est:Person (for an individual). The est:Proprietor OWL class has been removed; the concept is retained here as a vocabulary entry for the GIAS UI field."@en ;
-    skos:broader est:EstablishmentAccountability ;
-    skos:related est:OtherIndependentSchool, est:Organisation, est:Person ;
-    est:status "Preferred"@en ;
-    dcterms:source "Database: IndependentSchools, EstablishmentProprietors; fields: PropsLastName and related Props* columns"@en .
+    skos:definition "The person or body responsible for the conduct of an independent school under the Education Act 2002, s.94. The proprietor is required to be registered with the Secretary of State under s.98 and is the legal entity to whom registration requirements and inspection duties apply. Being proprietor does not mean owning the school's business or premises."@en ;
+    skos:scopeNote "In the target EPR model a proprietor is a legal entity or person holding an est:ProprietorResponsibility for the school, and the present-day proprietors are also given by esto:hasProprietor. A school can have more than one proprietor. Proprietor is a responsibility, not a recognised role."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:ProprietorResponsibility, est:LegalEntity, est:Person, est:OtherIndependentSchool ;
+    dcterms:source "Database: IndependentSchools, EstablishmentProprietors; fields: PropsLastName and related Props* columns"@en ;
+    est:status "Preferred"@en .
 
 #################################################################
 # Lifecycle
@@ -2421,17 +2251,6 @@ est:Postcode
     est:status "Provisional"@en ;
     dcterms:source "Database: Establishment.Postcode; EstablishmentGroup.GroupPostcode"@en ;
     dcterms:modified "2026-08-06"^^xsd:date .
-
-est:MainAddress
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Main address"@en ;
-    skos:definition "The primary postal address of the establishment as recorded in GIAS, comprising street, locality, address line 3, town, county and postcode."@en ;
-    skos:broader est:EstablishmentLocationAndContact ;
-    skos:exactMatch est:Address ;
-    est:status "Retired"@en ;
-    skos:scopeNote "Superseded in v1.5 by est:Address and est:Site, but retained (wrongly) as the live provider-field-coverage.ttl mapping for GIAS's Details-tab Address field until v1.14, when est:Address was given its own component structure (AddressLine1-3, Town, County, Postcode) and provider-field-coverage.ttl was repointed at it directly. Fully retired in v1.14 - the concept and its owl:Class/owl:ObjectProperty punning (esto:hasMainAddress) have been removed from establishment-ontology.ttl. Kept here, in the vocabulary only, as a historical record of the retired URI (skos:exactMatch est:Address preserved for anyone resolving old references)."@en ;
-    dcterms:source "Extract components: Street, Locality, Address 3, Town, County and Postcode"@en .
 
 est:Country
     a skos:Concept ;
@@ -3400,14 +3219,15 @@ est:CompaniesHouseNumber
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Companies House number"@en ;
     skos:altLabel "CHNumber"@en ;
-    skos:definition "The registration number assigned by Companies House, the UK registrar of companies under the Companies Act 2006, for the legal entity operating the online provider."@en ;
-    skos:scopeNote "Currently recorded in GIAS for online providers (via AccreditationRecord) and for academy trusts and other group organisations (via group identity). The same concept applies in both contexts."@en ;
+    skos:definition "The registration number Companies House, the UK registrar of companies under the Companies Act 2006, gives a company."@en ;
+    skos:scopeNote "Recorded for legal entities that are companies, such as academy trusts, and for online providers through their accreditation record."@en ;
     skos:broader est:AccreditationAndQualityAssurance ;
-    est:status "Provisional"@en ;
+    skos:related est:LegalEntity ;
     dcterms:source "Database field: CHNumber"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#companies-house-number> ;
     rdfs:isDefinedBy <https://find-and-update.company-information.service.gov.uk> ;
-    est:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/1066> .
+    est:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/1066> ;
+    est:status "Provisional"@en .
 
 est:EstablishmentAccredited
     a skos:Concept ;
@@ -3661,4 +3481,268 @@ est:PupilReferralUnitOperationalRecord
     skos:prefLabel "Pupil referral unit operational record"@en ;
     skos:definition "A grouping of the operational fields specific to pupil referral units established under s.19 of the Education Act 1996, covering: provision for teenage mothers and places, childcare facilities, SEN facilities, EBD pupils, total number of places, full-time provision, and whether pupils are educated by other providers."@en ;
     skos:broader est:AlternativeProvisionCharacteristics ;
+    est:status "Provisional"@en .
+
+est:LegalEntitiesRolesAndResponsibilities
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:topConceptOf est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Legal entities, roles and responsibilities"@en ;
+    skos:definition "The bodies and people that run, support, sponsor or act as proprietor of establishments: legal entities, the recognised roles they hold, academy trust classifications, and their dated responsibilities for particular establishments."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:narrower est:LegalEntity, est:LegalForm, est:CharityStatus, est:IncorporationDate, est:DissolutionDate, est:RecognisedRole, est:RecognisedRoleType, est:AcademyTrustClassification, est:AcademyTrustType, est:EstablishmentResponsibility, est:ResponsibilityType, est:PeriodStartDate, est:PeriodEndDate, est:Proprietor ;
+    est:status "Provisional"@en .
+
+
+est:LegalEntity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Legal entity"@en ;
+    skos:definition "A body that can hold recognised roles and be responsible for establishments, whether or not it is incorporated: for example a charitable company, a company, a charitable incorporated organisation, a partnership, a sole trader, an unincorporated trust or a public body."@en ;
+    skos:scopeNote "One legal entity can hold several roles and responsibilities at once: the same charitable company can be an academy trust, an academy sponsor and the proprietor of an independent school. Its identifiers, such as its UKPRN, are separate from those of the establishments it is responsible for. Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:Organisation, est:RecognisedRole, est:EstablishmentResponsibility ;
+    est:status "Provisional"@en .
+
+
+est:LegalForm
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Legal form"@en ;
+    skos:definition "The legal form of a legal entity, such as a charitable company limited by guarantee, a company limited by guarantee, a charitable incorporated organisation, a traditional partnership or a public body."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    est:status "Provisional"@en .
+
+
+est:CharityStatus
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Charity status"@en ;
+    skos:definition "How a legal entity is a charity under charity law: registered with the Charity Commission, exempt from registration, or excepted from registration. A legal entity that is not a charity has no charity status."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:narrower est:RegisteredCharity, est:ExemptCharity, est:ExceptedCharity ;
+    est:status "Provisional"@en .
+
+
+est:RegisteredCharity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Registered charity"@en ;
+    skos:definition "A charity registered with the Charity Commission for England and Wales."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:CharityStatus ;
+    est:status "Provisional"@en .
+
+
+est:ExemptCharity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Exempt charity"@en ;
+    skos:definition "A charity exempt from registration with the Charity Commission, and regulated by another principal regulator. Academy trusts are exempt charities."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:CharityStatus ;
+    est:status "Provisional"@en .
+
+
+est:ExceptedCharity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Excepted charity"@en ;
+    skos:definition "A charity excepted from registration with the Charity Commission, while remaining subject to its regulation."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:CharityStatus ;
+    est:status "Provisional"@en .
+
+
+est:IncorporationDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Incorporation date"@en ;
+    skos:definition "The date a legal entity was incorporated or otherwise came into existence."@en ;
+    skos:scopeNote "Replaces est:GroupIncorporatedOnDate. Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    est:status "Provisional"@en .
+
+
+est:DissolutionDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Dissolution date"@en ;
+    skos:definition "The date a legal entity was dissolved or otherwise ceased to exist."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    est:status "Provisional"@en .
+
+
+est:RecognisedRole
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Recognised role"@en ;
+    skos:definition "A role that a legal entity or person holds in its own right, for a period, in relation to establishments: academy trust, foundation trust, umbrella trust or academy sponsor."@en ;
+    skos:scopeNote "A role says what the holder is, and does not depend on being responsible for any particular establishment: a multi-academy trust can exist before its first academy joins, and a body can be recognised as a sponsor without sponsoring any academy. A person can hold only the academy sponsor role. Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:EstablishmentResponsibility ;
+    est:status "Provisional"@en .
+
+
+est:RecognisedRoleType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Recognised role type"@en ;
+    skos:definition "The kind of recognised role."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:narrower est:AcademyTrust, est:FoundationTrust, est:UmbrellaTrust, est:AcademySponsor ;
+    est:status "Provisional"@en .
+
+
+est:FoundationTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Foundation trust"@en ;
+    skos:definition "The role of a charitable trust that supports one or more foundation or foundation special schools as their foundation, holding land and appointing governors."@en ;
+    skos:scopeNote "Replaces est:GenericTrust, which described the same GIAS group type (code 02) as a rarely used generic trust. Added v2.0."@en ;
+    skos:broader est:RecognisedRoleType ;
+    skos:related est:FoundationTrustResponsibility, est:FoundationSchool ;
+    est:status "Provisional"@en .
+
+
+est:UmbrellaTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Umbrella trust"@en ;
+    skos:definition "The role of a charitable trust set up to act as a shared foundation for a group of foundation or voluntary schools."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:RecognisedRoleType ;
+    est:status "Provisional"@en .
+
+
+est:AcademyTrustClassification
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy trust classification"@en ;
+    skos:definition "A period during which a legal entity acting as an academy trust was a single-academy trust, a multi-academy trust or a secure single-academy trust."@en ;
+    skos:scopeNote "A trust that changes from a single-academy trust to a multi-academy trust is the same legal entity with a new classification, not a new organisation. Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:AcademyTrust ;
+    est:status "Provisional"@en .
+
+
+est:AcademyTrustType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy trust type"@en ;
+    skos:definition "The kind of academy trust."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:narrower est:SingleAcademyTrust, est:MultiAcademyTrust, est:SecureSingleAcademyTrust ;
+    est:status "Provisional"@en .
+
+
+est:EstablishmentResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment responsibility"@en ;
+    skos:definition "A period during which a legal entity or person was responsible for an establishment in a particular way: running it as its academy trust, supporting it as its foundation trust, sponsoring it, or acting as its proprietor."@en ;
+    skos:scopeNote "When an establishment changes operator it keeps its identity: the change is a new responsibility, held by a different legal entity. A person can only sponsor an establishment or be its proprietor. Replaces est:Sponsorship. Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:RecognisedRole, est:LegalEntity ;
+    est:status "Provisional"@en .
+
+
+est:ResponsibilityType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Responsibility type"@en ;
+    skos:definition "The kind of establishment responsibility."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:narrower est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility, est:ProprietorResponsibility ;
+    est:status "Provisional"@en .
+
+
+est:AcademyTrustResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Run by academy trust"@en ;
+    skos:definition "The establishment, an academy or free school, is run by the legal entity as its academy trust."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:ResponsibilityType ;
+    skos:related est:AcademyTrust ;
+    est:status "Provisional"@en .
+
+
+est:FoundationTrustResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Supported by foundation trust"@en ;
+    skos:definition "The establishment, a foundation or foundation special school, is supported by the legal entity as its foundation trust."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:ResponsibilityType ;
+    skos:related est:FoundationTrust ;
+    est:status "Provisional"@en .
+
+
+est:SponsorResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sponsored by"@en ;
+    skos:definition "The establishment, an academy or free school, is sponsored by the legal entity or person."@en ;
+    skos:scopeNote "The sponsor may be the academy's own trust, another body such as a diocese, or a named individual. Replaces est:Sponsorship. Added v2.0."@en ;
+    skos:broader est:ResponsibilityType ;
+    skos:related est:AcademySponsor ;
+    est:status "Provisional"@en .
+
+
+est:ProprietorResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Proprietor"@en ;
+    skos:definition "The legal entity or person is a proprietor of the establishment: responsible for running it, as for an independent school, a non-maintained special school or a city technology college."@en ;
+    skos:scopeNote "Being proprietor does not mean owning the school's business or premises. A school can have more than one proprietor. Added v2.0."@en ;
+    skos:broader est:ResponsibilityType ;
+    skos:related est:Proprietor ;
+    est:status "Provisional"@en .
+
+
+est:PeriodStartDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Period start date"@en ;
+    skos:definition "The date on which a role, classification, responsibility or lead centre designation began."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    est:status "Provisional"@en .
+
+
+est:PeriodEndDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Period end date"@en ;
+    skos:definition "The date on which a role, classification, responsibility or lead centre designation ended. Absent while it continues."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    est:status "Provisional"@en .
+
+
+est:LeadCentreDesignation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Lead centre designation"@en ;
+    skos:definition "A period during which a children's centre was the lead centre of its children's centre group."@en ;
+    skos:scopeNote "Which centre leads can change while membership continues, so the designation is dated separately from the membership. Neither the group's formation nor the centre's joining date says when it started. Added v2.0."@en ;
+    skos:broader est:GroupMembership ;
+    skos:related est:ChildrensCentreGroup ;
+    est:status "Provisional"@en .
+
+
+est:GroupMembershipEndDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Group membership end date"@en ;
+    skos:definition "The date on which an establishment left an establishment group."@en ;
+    skos:scopeNote "Added v2.0."@en ;
+    skos:broader est:GroupMembership ;
     est:status "Provisional"@en .

@@ -1,10 +1,10 @@
-﻿# Confirmation
+# Confirmation
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Confirmation/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Confirmation/> |
 | Compact identifier | `gov:Confirmation` |
 | Preferred label | Confirmation |
 | Alternative labels |  |

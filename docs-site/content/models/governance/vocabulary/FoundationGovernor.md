@@ -1,10 +1,10 @@
-﻿# Foundation governor
+# Foundation governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/FoundationGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/FoundationGovernor/> |
 | Compact identifier | `gov:FoundationGovernor` |
 | Preferred label | Foundation governor |
 | Alternative labels |  |

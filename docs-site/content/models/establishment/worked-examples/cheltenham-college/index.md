@@ -51,7 +51,7 @@ flowchart LR
     E -->|"SEN"| SEN["155 pupils with SEN needs, no statement/EHC plan<br/>0 with a statement/EHC plan"]
 ```
 
-No local authority or academy trust accountability - Cheltenham College is proprietor-governed, the first worked example to use `esto:hasProprietor` rather than `esto:accountableToLocalAuthority`/`esto:accountableToAcademyTrust`. No free school meal measure, education phase or resourced-provision facility - all absent in the real extract for this establishment type (confirmed against 1,603 open records of the same type when `est:OtherIndependentSchoolShape` was built). Church of England religious character with no diocese - a real combination this session's other Church of England examples (St Luke's, Long Ditton, Green School Trust) hadn't shown, since all three of those also had a diocese.
+No local authority or academy trust accountability - Cheltenham College is proprietor-governed, the first worked example to use `esto:hasProprietor` rather than `esto:accountableToLocalAuthority` or `esto:runByAcademyTrust`. No free school meal measure, education phase or resourced-provision facility - all absent in the real extract for this establishment type (confirmed against 1,603 open records of the same type when `est:OtherIndependentSchoolShape` was built). Church of England religious character with no diocese - a real combination this session's other Church of England examples (St Luke's, Long Ditton, Green School Trust) hadn't shown, since all three of those also had a diocese.
 
 ---
 
@@ -72,7 +72,7 @@ No local authority or academy trust accountability - Cheltenham College is propr
 
 ### Example 1 — Identity and proprietor
 
-`ginst:cheltenham-council` is declared identically to the governance worked example - the same Council, not redeclared. `esto:hasProprietor` is the first real use of this property in an establishment worked example - its own comment already documented it as "present for independent schools," but no prior example exercised it.
+`ginst:cheltenham-council` is the same Council as in the governance worked example. Since ontology v2.0 it is typed `est:LegalEntity`: the body responsible for running the College. `esto:hasProprietor` names the present-day proprietor, and an `est:EstablishmentResponsibility` of type `est:ProprietorResponsibility` records the same fact as a responsibility. Being proprietor means being responsible for running the school, not owning its business or premises.
 
 ```
 inst:cheltenham-college
@@ -93,6 +93,12 @@ inst:cheltenham-college
 
     esto:hasProprietor ginst:cheltenham-council ;
 
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:ProprietorResponsibility ;
+        esto:hasResponsibleParty ginst:cheltenham-council
+    ] ;
+
     esto:hasEstablishmentLifecycle [
         a est:EstablishmentLifecycle ;
         esto:classifiedByEstablishmentStatus est:OpenStatus ;
@@ -101,9 +107,13 @@ inst:cheltenham-college
             rdf:value "1841-07-29"^^xsd:date
         ]
     ] .
+
+ginst:cheltenham-council
+    a est:LegalEntity ;
+    rdfs:label "The Council of Cheltenham College"@en .
 ```
 
-No `esto:hasAccountabilityRelationship` - Cheltenham College has neither an LA nor an academy trust accountability relationship, consistent with `est:OtherIndependentSchoolShape` requiring both absent for this type.
+No `esto:hasAccountabilityRelationship` and no `esto:runByAcademyTrust` - Cheltenham College is neither maintained by a local authority nor run by an academy trust, consistent with `est:OtherIndependentSchoolShape` requiring both absent for this type. The proprietor responsibility carries no dates, because the source doesn't give them.
 
 ### Example 2 — Classification, faith context and admissions
 
@@ -240,7 +250,7 @@ No `esto:hasFreeSchoolMealMeasure` - blank for all 1,603 open other independent 
 |---|---|---|---|
 | Other independent school | URN 115795, UKPRN 10015396 | `est:OtherIndependentSchool` | Direct |
 | Proprietor | The Council of Cheltenham College | `esto:hasProprietor` | Direct - first real use |
-| No LA or academy trust accountability | Neither relationship exists in the real extract | Absence of `esto:hasAccountabilityRelationship` | Direct |
+| No LA maintenance or academy trust | Neither relationship exists in the real extract | Absence of `esto:hasAccountabilityRelationship` and `esto:runByAcademyTrust` | Direct |
 | Faith context (real value, no diocese) | Church of England character and ethos, diocese "Not applicable" | `est:ChurchOfEnglandCharacter` + literal `esto:classifiedByReligiousEthos`; absence of `esto:associatedWithDiocese` | Direct |
 | Selective admissions, boarding, sixth form | Selective; boarding school; has sixth form | `est:SelectiveAdmissions`, `est:BoardingSchool`, `est:HasSixthForm` | Direct |
 | Job title | "Headmaster" | `esto:hasJobTitle` / `est:JobTitle` | Direct - fifth real value this session |

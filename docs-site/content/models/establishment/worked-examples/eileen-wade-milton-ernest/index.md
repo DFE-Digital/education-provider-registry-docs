@@ -71,17 +71,12 @@ Both schools joined the federation on its own open date (13 January 2011). Eilee
 
 ### Example 1 — Federation and member identity
 
-`est:Federation` is a subclass of `est:EstablishmentGroup`, so member schools use the same `esto:hasMembership`/`esto:memberOf` pattern as academy trust membership (Medlock, Manor High) - a federation is structurally just another kind of group.
+`est:Federation` is a subclass of `est:EstablishmentGroup`, so member schools use `esto:hasMembership`/`esto:memberOf`. A federation is a group of schools, not a legal entity. Academy trusts are modelled differently: they are legal entities that run academies through `est:EstablishmentResponsibility` (Medlock, Manor High). The GIAS group UID (1809) is source evidence and isn't modelled: GIAS group numbers belong to the logical and physical models.
 
 ```
 inst:eileen-wade-milton-ernest-federation
     a est:Federation ;
-    rdfs:label "Federation of Eileen Wade and Milton Ernest CoE Primary Schools"@en ;
-
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "1809"^^xsd:positiveInteger
-    ] .
+    rdfs:label "Federation of Eileen Wade and Milton Ernest CoE Primary Schools"@en .
 
 inst:eileen-wade
     a est:FoundationSchool ;

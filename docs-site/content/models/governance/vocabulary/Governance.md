@@ -1,10 +1,10 @@
-﻿# Governance
+# Governance
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Governance/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Governance/> |
 | Compact identifier | `gov:Governance` |
 | Preferred label | Governance |
 | Alternative labels |  |

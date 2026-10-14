@@ -1,10 +1,10 @@
-﻿# Appointing body
+# Appointing body
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/AppointingBody/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/AppointingBody/> |
 | Compact identifier | `gov:AppointingBody` |
 | Preferred label | Appointing body |
 | Alternative labels |  |

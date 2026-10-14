@@ -1,10 +1,10 @@
-﻿# Local governing body
+# Local governing body
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/LocalGoverningBody/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/LocalGoverningBody/> |
 | Compact identifier | `gov:LocalGoverningBody` |
 | Preferred label | Local governing body |
 | Alternative labels |  |

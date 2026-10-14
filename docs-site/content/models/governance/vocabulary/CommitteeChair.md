@@ -1,10 +1,10 @@
-﻿# Committee chair
+# Committee chair
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/CommitteeChair/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/CommitteeChair/> |
 | Compact identifier | `gov:CommitteeChair` |
 | Preferred label | Committee chair |
 | Alternative labels |  |

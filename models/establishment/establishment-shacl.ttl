@@ -32,10 +32,11 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-09-24"^^xsd:date ;
+    dcterms:modified "2026-10-14"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.10" ;
+    owl:versionInfo "1.0" ;
+    rdfs:comment "v1.0: aligned with establishment-ontology.ttl v2.0. Per-type shapes check esto:runByAcademyTrust and esto:hasProprietor instead of the deleted accountability links. Sponsorship shapes rewritten around est:EstablishmentResponsibility. New shapes for legal entities, recognised roles, academy trust classifications, responsibilities, dated periods, lead centre designations and group local authorities, including the rules that a person can hold only the academy sponsor role and can only sponsor an establishment or be its proprietor."@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
     est:status "Provisional"@en .
@@ -220,17 +221,17 @@ est:LaMaintainedSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (forbidden)"@en ;
-        sh:message "LA maintained schools must not have an academy trust accountability relationship."@en ;
+        sh:message "LA maintained schools must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (forbidden)"@en ;
-        sh:message "LA maintained schools must not have a proprietor accountability relationship."@en ;
+        sh:message "LA maintained schools must not have a proprietor."@en ;
     ] ;
 
     sh:property [
@@ -441,10 +442,10 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "LA nursery schools must not have an academy trust accountability relationship."@en ;
+        sh:message "LA nursery schools must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -528,10 +529,10 @@ est:NonMaintainedSpecialSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Non-maintained special schools must not have an academy trust accountability relationship."@en ;
+        sh:message "Non-maintained special schools must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -602,10 +603,10 @@ est:CityTechnologyCollegeShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "City technology colleges must not have an academy trust accountability relationship."@en ;
+        sh:message "City technology colleges must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -698,10 +699,10 @@ est:OtherIndependentSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Other independent schools must not have an academy trust accountability relationship."@en ;
+        sh:message "Other independent schools must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -794,10 +795,10 @@ est:OtherIndependentSpecialSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Other independent special schools must not have an academy trust accountability relationship."@en ;
+        sh:message "Other independent special schools must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -876,9 +877,9 @@ est:MainstreamAcademyGroupShape
     sh:targetClass est:MainstreamAcademy ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:name "Academy trust"@en ;
-        sh:message "Mainstream academies must have an academy trust accountability relationship."@en ;
+        sh:message "Mainstream academies must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -889,10 +890,10 @@ est:MainstreamAcademyGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (not applicable)"@en ;
-        sh:message "Mainstream academies must not have a proprietor accountability relationship."@en ;
+        sh:message "Mainstream academies must not have a proprietor."@en ;
     ] ;
 
     sh:property [
@@ -971,10 +972,10 @@ est:AcademySpecialShape
     sh:targetClass est:AcademySpecial ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Academy special schools must have an academy trust accountability relationship."@en ;
+        sh:message "Academy special schools must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1056,10 +1057,10 @@ est:AcademyAlternativeProvisionShape
     sh:targetClass est:AcademyAlternativeProvision ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Academy alternative provision establishments must have an academy trust accountability relationship."@en ;
+        sh:message "Academy alternative provision establishments must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1138,10 +1139,10 @@ est:Academy1619Shape
     sh:targetClass est:Academy1619 ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Academy 16-19 establishments must have an academy trust accountability relationship."@en ;
+        sh:message "Academy 16-19 establishments must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1220,10 +1221,10 @@ est:AcademySecure16To19Shape
     sh:targetClass est:AcademySecure16To19 ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Academy secure 16 to 19 establishments must have an academy trust accountability relationship."@en ;
+        sh:message "Academy secure 16 to 19 establishments must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1323,10 +1324,10 @@ est:MainstreamFreeSchoolGroupShape
     sh:targetClass est:MainstreamFreeSchool ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Mainstream free schools must have an academy trust accountability relationship."@en ;
+        sh:message "Mainstream free schools must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1337,10 +1338,10 @@ est:MainstreamFreeSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (not applicable)"@en ;
-        sh:message "Mainstream free schools must not have a proprietor accountability relationship."@en ;
+        sh:message "Mainstream free schools must not have a proprietor."@en ;
     ] ;
 
     sh:property [
@@ -1403,10 +1404,10 @@ est:FreeSchoolAlternativeProvisionShape
     sh:targetClass est:FreeSchoolAlternativeProvision ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Free school alternative provision establishments must have an academy trust accountability relationship."@en ;
+        sh:message "Free school alternative provision establishments must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1476,10 +1477,10 @@ est:FreeSchool16To19Shape
     sh:targetClass est:FreeSchool16To19 ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:minCount 1 ;
         sh:name "Academy trust"@en ;
-        sh:message "Free school 16 to 19 establishments must have an academy trust accountability relationship."@en ;
+        sh:message "Free school 16 to 19 establishments must have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -1561,17 +1562,17 @@ est:CollegeGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Colleges do not have academy trust accountability relationships."@en ;
+        sh:message "Colleges do not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (not applicable)"@en ;
-        sh:message "Colleges do not have proprietor accountability relationships."@en ;
+        sh:message "Colleges do not have proprietors."@en ;
     ] ;
 
     sh:property [
@@ -1668,17 +1669,17 @@ est:HigherEducationInstitutionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "HEIs do not have academy trust accountability relationships."@en ;
+        sh:message "HEIs do not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (not applicable)"@en ;
-        sh:message "HEIs do not have proprietor accountability relationships."@en ;
+        sh:message "HEIs do not have proprietors."@en ;
     ] ;
 
     sh:property [
@@ -1785,17 +1786,17 @@ est:ChildrensCentreGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Children's centres must not have an academy trust accountability relationship."@en ;
+        sh:message "Children's centres must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (not applicable)"@en ;
-        sh:message "Children's centres must not have a proprietor accountability relationship."@en ;
+        sh:message "Children's centres must not have a proprietor."@en ;
     ] ;
 
     sh:property [
@@ -1914,10 +1915,10 @@ est:OnlineProviderShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Online providers do not have academy trust accountability relationships."@en ;
+        sh:message "Online providers do not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -2029,17 +2030,17 @@ est:WelshEstablishmentShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "Welsh establishments must not have an academy trust accountability relationship."@en ;
+        sh:message "Welsh establishments must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:maxCount 0 ;
         sh:name "Proprietor (not applicable)"@en ;
-        sh:message "Welsh establishments must not have a proprietor accountability relationship."@en ;
+        sh:message "Welsh establishments must not have a proprietor."@en ;
     ] ;
 
     sh:property [
@@ -2216,9 +2217,9 @@ est:BritishSchoolsOverseasShape
     sh:targetClass est:BritishSchoolsOverseas ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ;
+        sh:path esto:hasProprietor ;
         sh:name "Proprietor"@en ;
-        sh:message "British schools overseas must have a proprietor accountability relationship."@en ;
+        sh:message "British schools overseas must have a proprietor."@en ;
     ] ;
 
     sh:property [
@@ -2229,10 +2230,10 @@ est:BritishSchoolsOverseasShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ;
+        sh:path esto:runByAcademyTrust ;
         sh:maxCount 0 ;
         sh:name "Academy trust (not applicable)"@en ;
-        sh:message "British schools overseas must not have an academy trust accountability relationship."@en ;
+        sh:message "British schools overseas must not have an academy trust that runs them."@en ;
     ] ;
 
     sh:property [
@@ -2323,8 +2324,8 @@ est:SecureUnitsShape
     sh:targetClass est:SecureUnits ;
 
     sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Secure units have no LA accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Secure units have no academy trust accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Secure units have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Secure units have no academy trust that runs them."@en ] ;
+    sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Secure units have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for secure units."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for secure units."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for secure units."@en ] ;
@@ -2365,8 +2366,8 @@ est:OffshoreSchoolsShape
     sh:targetClass est:OffshoreSchools ;
 
     sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Offshore schools have no LA accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Offshore schools have no academy trust accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Offshore schools have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Offshore schools have no academy trust that runs them."@en ] ;
+    sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Offshore schools have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for offshore schools."@en ] ;
@@ -2413,8 +2414,8 @@ est:ServiceChildrensEducationShape
     sh:targetClass est:ServiceChildrensEducation ;
 
     sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "SCE establishments have no LA accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "SCE establishments have no academy trust accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "SCE establishments have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "SCE establishments have no academy trust that runs them."@en ] ;
+    sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "SCE establishments have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for SCE establishments."@en ] ;
@@ -2461,8 +2462,8 @@ est:MiscellaneousEstablishmentShape
     sh:targetClass est:MiscellaneousEstablishment ;
 
     sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Miscellaneous establishments have no LA accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Miscellaneous establishments have no academy trust accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Miscellaneous establishments have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Miscellaneous establishments have no academy trust that runs them."@en ] ;
+    sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Miscellaneous establishments have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for miscellaneous establishments."@en ] ;
@@ -2503,8 +2504,8 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
     sh:targetClass est:InstitutionFundedByOtherGovernmentDepartment ;
 
     sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Other-department institutions have no LA accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToAcademyTrust ) ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Other-department institutions have no academy trust accountability relationship."@en ] ;
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToProprietor ) ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Other-department institutions have no proprietor accountability relationship."@en ] ;
+    sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Other-department institutions have no academy trust that runs them."@en ] ;
+    sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Other-department institutions have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for other-department institutions."@en ] ;
@@ -2536,21 +2537,18 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
     ] .
 
 #################################################################
-# Group membership shape (v0.9)
+# Group membership, lead centre and group shapes (v0.9, v1.0)
 #
-# The first shape to target est:GroupMembership. Constrains the
-# reified membership link itself, independent of establishment
-# type. Deliberately does NOT cap the number of GroupMembership
-# instances between one establishment and one group - an
-# establishment can hold more than one membership of the same
-# group with different joined dates. Since v0.10, sponsorship is
-# not a membership: it is validated by est:SponsorshipShape.
+# Since v1.0 only federations and children's centre groups and
+# collaborations are establishment groups. Trusts are legal
+# entities holding recognised roles, and running, supporting or
+# sponsoring an establishment is an est:EstablishmentResponsibility.
 #################################################################
 
 est:GroupMembershipShape
     a sh:NodeShape ;
     rdfs:label "Group membership shape"@en ;
-    rdfs:comment "Structural rules for a reified est:GroupMembership. Each membership links to exactly one establishment group, may carry at most one joined date, and may carry at most one group membership role, which must be est:Member. Added v0.9 alongside establishment-ontology.ttl v1.18 (esto:hasGroupMembershipRole). v0.10: est:SponsoredAcademy and est:Sponsor removed from the allowed roles, following their removal from the ontology in v1.19."@en ;
+    rdfs:comment "Structural rules for a reified est:GroupMembership: exactly one establishment group, at most one joined date and one leaving date, at most one membership role (est:Member), and any number of lead centre designations. Added v0.9; v1.0 adds the leaving date and lead centre designations."@en ;
     sh:targetClass est:GroupMembership ;
 
     sh:property [
@@ -2570,49 +2568,326 @@ est:GroupMembershipShape
     ] ;
 
     sh:property [
+        sh:path esto:hasGroupMembershipEndDate ;
+        sh:maxCount 1 ;
+        sh:class est:GroupMembershipEndDate ;
+        sh:name "Group membership end date"@en ;
+        sh:message "A group membership may record at most one leaving date, typed est:GroupMembershipEndDate."@en ;
+    ] ;
+
+    sh:property [
         sh:path esto:hasGroupMembershipRole ;
         sh:maxCount 1 ;
         sh:in ( est:Member ) ;
         sh:name "Group membership role"@en ;
-        sh:message "Group membership role must be est:Member. Record sponsorship with est:Sponsorship, not as a group membership."@en ;
+        sh:message "Group membership role must be est:Member. Sponsorship is an establishment responsibility, and lead centre is a lead centre designation."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasLeadCentreDesignation ;
+        sh:class est:LeadCentreDesignation ;
+        sh:name "Lead centre designation"@en ;
+        sh:message "esto:hasLeadCentreDesignation must point to an est:LeadCentreDesignation."@en ;
+    ] .
+
+est:LeadCentreMembershipShape
+    a sh:NodeShape ;
+    rdfs:label "Lead centre membership shape"@en ;
+    rdfs:comment "Only a membership of a children's centre group can carry a lead centre designation. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:hasLeadCentreDesignation ;
+    sh:property [
+        sh:path esto:memberOf ;
+        sh:class est:ChildrensCentreGroup ;
+        sh:name "Children's centre group"@en ;
+        sh:message "Only a membership of a children's centre group can carry a lead centre designation."@en ;
+    ] .
+
+est:LeadCentreDesignationShape
+    a sh:NodeShape ;
+    rdfs:label "Lead centre designation shape"@en ;
+    rdfs:comment "A lead centre designation is a dated period. Added v1.0."@en ;
+    sh:targetClass est:LeadCentreDesignation ;
+    sh:node est:PeriodShape .
+
+est:GroupLocalAuthorityShape
+    a sh:NodeShape ;
+    rdfs:label "Group local authority shape"@en ;
+    rdfs:comment "Only children's centre groups and collaborations have a coordinating local authority. Federations have no local authority owner, and can include schools in more than one local authority. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:hasLocalAuthorityForGroup ;
+    sh:or (
+        [ sh:class est:ChildrensCentreGroup ]
+        [ sh:class est:ChildrensCentreCollaboration ]
+    ) ;
+    sh:message "Only a children's centre group or collaboration has a local authority. Federations have no local authority owner."@en .
+
+
+#################################################################
+# Period shape (v1.0)
+#
+# Shared by recognised roles, academy trust classifications,
+# establishment responsibilities and lead centre designations.
+# That an end date is not before its start date cannot be
+# expressed in SHACL Core; it is enforced in migration and
+# application logic.
+#################################################################
+
+est:PeriodShape
+    a sh:NodeShape ;
+    rdfs:label "Period shape"@en ;
+    rdfs:comment "At most one start date and one end date, each an xsd:date. Used through sh:node; it has no target of its own. Added v1.0."@en ;
+
+    sh:property [
+        sh:path esto:hasStartDate ;
+        sh:maxCount 1 ;
+        sh:class est:PeriodStartDate ;
+        sh:name "Start date"@en ;
+        sh:message "A period may record at most one start date, typed est:PeriodStartDate."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasStartDate rdf:value ) ;
+        sh:datatype xsd:date ;
+        sh:name "Start date value"@en ;
+        sh:message "A start date must be an xsd:date."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasEndDate ;
+        sh:maxCount 1 ;
+        sh:class est:PeriodEndDate ;
+        sh:name "End date"@en ;
+        sh:message "A period may record at most one end date, typed est:PeriodEndDate."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasEndDate rdf:value ) ;
+        sh:datatype xsd:date ;
+        sh:name "End date value"@en ;
+        sh:message "An end date must be an xsd:date."@en ;
     ] .
 
 
 #################################################################
-# Sponsorship shapes (v0.10)
-#
-# Added alongside establishment-ontology.ttl v1.19, which made
-# est:Sponsorship the one mechanism for sponsorship and kept
-# esto:sponsoredBy as a current-value shortcut. A sponsor may be
-# an academy trust, another organisation (such as a diocese) or a
-# person, but never an establishment, a federation, or a
-# children's centre group or collaboration. Academy trusts are
-# est:EstablishmentGroup subclasses, so only the arrangement group
-# types are excluded, not est:EstablishmentGroup as a whole.
+# Legal entity and recognised role shapes (v1.0)
 #################################################################
 
-est:SponsorPartyShape
+est:LegalEntityShape
     a sh:NodeShape ;
-    rdfs:label "Sponsor party shape"@en ;
-    rdfs:comment "What a sponsor can be: a person or an organisation, but never an establishment, a federation, or a children's centre group or collaboration. Used through sh:node by est:EstablishmentSponsorshipShape and est:SponsorshipShape; it has no target of its own. Added v0.10."@en ;
+    rdfs:label "Legal entity shape"@en ;
+    rdfs:comment "Structural rules for a legal entity: at most one legal form, charity status, incorporation date, dissolution date, Companies House number, UKPRN, registered address and contact address. Added v1.0."@en ;
+    sh:targetClass est:LegalEntity ;
+
+    sh:property [ sh:path esto:hasLegalForm ; sh:maxCount 1 ; sh:class est:LegalForm ; sh:name "Legal form"@en ; sh:message "A legal entity has at most one legal form."@en ] ;
+    sh:property [ sh:path esto:hasCharityStatus ; sh:maxCount 1 ; sh:in ( est:RegisteredCharity est:ExemptCharity est:ExceptedCharity ) ; sh:name "Charity status"@en ; sh:message "Charity status must be registered, exempt or excepted. A legal entity that is not a charity has no charity status."@en ] ;
+    sh:property [ sh:path esto:hasIncorporationDate ; sh:maxCount 1 ; sh:class est:IncorporationDate ; sh:name "Incorporation date"@en ; sh:message "A legal entity has at most one incorporation date."@en ] ;
+    sh:property [ sh:path ( esto:hasIncorporationDate rdf:value ) ; sh:datatype xsd:date ; sh:name "Incorporation date value"@en ; sh:message "An incorporation date must be an xsd:date."@en ] ;
+    sh:property [ sh:path esto:hasDissolutionDate ; sh:maxCount 1 ; sh:class est:DissolutionDate ; sh:name "Dissolution date"@en ; sh:message "A legal entity has at most one dissolution date."@en ] ;
+    sh:property [ sh:path ( esto:hasDissolutionDate rdf:value ) ; sh:datatype xsd:date ; sh:name "Dissolution date value"@en ; sh:message "A dissolution date must be an xsd:date."@en ] ;
+    sh:property [ sh:path esto:hasCompaniesHouseRegistration ; sh:maxCount 1 ; sh:class est:CompaniesHouseNumber ; sh:name "Companies House number"@en ; sh:message "A legal entity has at most one Companies House number."@en ] ;
+    sh:property [ sh:path esto:hasLegalEntityUkprn ; sh:maxCount 1 ; sh:class est:UkProviderReferenceNumber ; sh:name "UKPRN"@en ; sh:message "A legal entity has at most one UKPRN of its own."@en ] ;
+    sh:property [ sh:path esto:hasRegisteredAddress ; sh:maxCount 1 ; sh:class est:Address ; sh:name "Registered address"@en ; sh:message "A legal entity has at most one registered office address."@en ] ;
+    sh:property [ sh:path esto:hasContactAddress ; sh:maxCount 1 ; sh:class est:Address ; sh:name "Contact address"@en ; sh:message "A legal entity has at most one contact address."@en ] ;
+    sh:property [ sh:path esto:holdsRole ; sh:class est:RecognisedRole ; sh:name "Recognised role"@en ; sh:message "esto:holdsRole must point to an est:RecognisedRole."@en ] ;
+    sh:property [ sh:path esto:hasAcademyTrustClassification ; sh:class est:AcademyTrustClassification ; sh:name "Academy trust classification"@en ; sh:message "esto:hasAcademyTrustClassification must point to an est:AcademyTrustClassification."@en ] .
+
+est:RegisteredAddressHolderShape
+    a sh:NodeShape ;
+    rdfs:label "Registered address holder shape"@en ;
+    rdfs:comment "Only a legal entity has a registered office. Establishments and establishment groups do not. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:hasRegisteredAddress ;
+    sh:class est:LegalEntity ;
+    sh:message "Only a legal entity has a registered office address."@en .
+
+est:RoleHolderShape
+    a sh:NodeShape ;
+    rdfs:label "Role holder shape"@en ;
+    rdfs:comment "A recognised role is held by a legal entity or a person. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:holdsRole ;
     sh:or (
-        [ sh:class est:Organisation ]
+        [ sh:class est:LegalEntity ]
         [ sh:class est:Person ]
     ) ;
-    sh:not [
-        sh:or (
-            [ sh:class est:Establishment ]
-            [ sh:class est:Federation ]
-            [ sh:class est:ChildrensCentreGroup ]
-            [ sh:class est:ChildrensCentreCollaboration ]
-        )
+    sh:message "Only a legal entity or a person can hold a recognised role."@en .
+
+est:PersonRoleShape
+    a sh:NodeShape ;
+    rdfs:label "Person role shape"@en ;
+    rdfs:comment "A person can hold only the academy sponsor role. Academy trust, foundation trust and umbrella trust are held only by legal entities. Added v1.0."@en ;
+    sh:targetClass est:Person ;
+    sh:property [
+        sh:path ( esto:holdsRole esto:hasRoleType ) ;
+        sh:in ( est:AcademySponsor ) ;
+        sh:name "Role held by a person"@en ;
+        sh:message "A person can hold only the academy sponsor role."@en ;
+    ] .
+
+est:RecognisedRoleShape
+    a sh:NodeShape ;
+    rdfs:label "Recognised role shape"@en ;
+    rdfs:comment "A recognised role has exactly one role type and is a dated period. Added v1.0."@en ;
+    sh:targetClass est:RecognisedRole ;
+    sh:node est:PeriodShape ;
+    sh:property [
+        sh:path esto:hasRoleType ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:AcademyTrust est:FoundationTrust est:UmbrellaTrust est:AcademySponsor ) ;
+        sh:name "Role type"@en ;
+        sh:message "A recognised role must have exactly one role type: academy trust, foundation trust, umbrella trust or academy sponsor."@en ;
+    ] .
+
+est:AcademyTrustClassificationShape
+    a sh:NodeShape ;
+    rdfs:label "Academy trust classification shape"@en ;
+    rdfs:comment "An academy trust classification has exactly one academy trust type and is a dated period. Added v1.0."@en ;
+    sh:targetClass est:AcademyTrustClassification ;
+    sh:node est:PeriodShape ;
+    sh:property [
+        sh:path esto:hasAcademyTrustType ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:SingleAcademyTrust est:MultiAcademyTrust est:SecureSingleAcademyTrust ) ;
+        sh:name "Academy trust type"@en ;
+        sh:message "An academy trust classification must have exactly one type: single-academy, multi-academy or secure single-academy trust."@en ;
+    ] .
+
+est:ClassifiedAcademyTrustShape
+    a sh:NodeShape ;
+    rdfs:label "Classified academy trust shape"@en ;
+    rdfs:comment "Only a legal entity holding the academy trust role can have an academy trust classification. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:hasAcademyTrustClassification ;
+    sh:class est:LegalEntity ;
+    sh:property [
+        sh:path esto:holdsRole ;
+        sh:qualifiedValueShape [ sh:path esto:hasRoleType ; sh:hasValue est:AcademyTrust ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:name "Academy trust role"@en ;
+        sh:message "Only a legal entity holding the academy trust role can have an academy trust classification."@en ;
+    ] .
+
+
+#################################################################
+# Establishment responsibility shapes (v1.0)
+#################################################################
+
+est:ResponsiblePartyShape
+    a sh:NodeShape ;
+    rdfs:label "Responsible party shape"@en ;
+    rdfs:comment "What can be responsible for an establishment, sponsor it or be its proprietor: a legal entity or a person, never an establishment or an establishment group. Used through sh:node; it has no target of its own. Added v1.0, replacing est:SponsorPartyShape."@en ;
+    sh:or (
+        [ sh:class est:LegalEntity ]
+        [ sh:class est:Person ]
+    ) .
+
+est:EstablishmentResponsibilityShape
+    a sh:NodeShape ;
+    rdfs:label "Establishment responsibility shape"@en ;
+    rdfs:comment "An establishment responsibility has exactly one responsible party and one responsibility type, and is a dated period. A person can only sponsor an establishment or be its proprietor. Added v1.0."@en ;
+    sh:targetClass est:EstablishmentResponsibility ;
+    sh:node est:PeriodShape ;
+
+    sh:property [
+        sh:path esto:hasResponsibleParty ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:node est:ResponsiblePartyShape ;
+        sh:name "Responsible party"@en ;
+        sh:message "A responsibility must have exactly one responsible party, which must be a legal entity or a person."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasResponsibilityType ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:AcademyTrustResponsibility est:FoundationTrustResponsibility est:SponsorResponsibility est:ProprietorResponsibility ) ;
+        sh:name "Responsibility type"@en ;
+        sh:message "A responsibility must have exactly one type: run by academy trust, supported by foundation trust, sponsored by, or proprietor."@en ;
+    ] ;
+
+    sh:or (
+        [ sh:path esto:hasResponsibleParty ; sh:class est:LegalEntity ]
+        [ sh:path esto:hasResponsibilityType ; sh:in ( est:SponsorResponsibility est:ProprietorResponsibility ) ]
+    ) ;
+    sh:message "A person can only sponsor an establishment or be its proprietor."@en .
+
+est:EstablishmentResponsibilitiesShape
+    a sh:NodeShape ;
+    rdfs:label "Establishment responsibilities shape"@en ;
+    rdfs:comment "Which establishments can have which responsibilities. Only academies and free schools can be run by an academy trust or sponsored. Only foundation and foundation special schools can be supported by a foundation trust. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:hasResponsibility ;
+    sh:class est:Establishment ;
+
+    sh:property [
+        sh:path esto:hasResponsibility ;
+        sh:class est:EstablishmentResponsibility ;
+        sh:name "Responsibility"@en ;
+        sh:message "esto:hasResponsibility must point to an est:EstablishmentResponsibility."@en ;
+    ] ;
+
+    sh:or (
+        [ sh:class est:Academy ]
+        [ sh:class est:FreeSchoolEstablishment ]
+        [ sh:property [
+            sh:path esto:hasResponsibility ;
+            sh:qualifiedValueShape [ sh:path esto:hasResponsibilityType ; sh:in ( est:AcademyTrustResponsibility est:SponsorResponsibility ) ] ;
+            sh:qualifiedMaxCount 0 ;
+        ] ]
+    ) ;
+
+    sh:or (
+        [ sh:class est:FoundationSchool ]
+        [ sh:class est:FoundationSpecialSchool ]
+        [ sh:property [
+            sh:path esto:hasResponsibility ;
+            sh:qualifiedValueShape [ sh:path esto:hasResponsibilityType ; sh:hasValue est:FoundationTrustResponsibility ] ;
+            sh:qualifiedMaxCount 0 ;
+        ] ]
+    ) ;
+    sh:message "Only academies and free schools can be run by an academy trust or sponsored, and only foundation and foundation special schools can be supported by a foundation trust."@en .
+
+est:RunByAcademyTrustShape
+    a sh:NodeShape ;
+    rdfs:label "Run by academy trust shape"@en ;
+    rdfs:comment "esto:runByAcademyTrust names at most one legal entity, which should hold the academy trust role. The role check is a warning, because data can record the trust before its role. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:runByAcademyTrust ;
+    sh:property [
+        sh:path esto:runByAcademyTrust ;
+        sh:maxCount 1 ;
+        sh:class est:LegalEntity ;
+        sh:name "Run by academy trust"@en ;
+        sh:message "An establishment is run by at most one academy trust at a time, and it must be a legal entity."@en ;
+    ] ;
+    sh:property [
+        sh:path esto:runByAcademyTrust ;
+        sh:severity sh:Warning ;
+        sh:node [
+            sh:property [
+                sh:path esto:holdsRole ;
+                sh:qualifiedValueShape [ sh:path esto:hasRoleType ; sh:hasValue est:AcademyTrust ] ;
+                sh:qualifiedMinCount 1 ;
+            ]
+        ] ;
+        sh:name "Academy trust role"@en ;
+        sh:message "The legal entity that runs an academy should hold the academy trust role."@en ;
+    ] .
+
+est:ProprietorShape
+    a sh:NodeShape ;
+    rdfs:label "Proprietor shape"@en ;
+    rdfs:comment "A proprietor is a legal entity or a person. A school can have more than one. Added v1.0."@en ;
+    sh:targetSubjectsOf esto:hasProprietor ;
+    sh:property [
+        sh:path esto:hasProprietor ;
+        sh:node est:ResponsiblePartyShape ;
+        sh:name "Proprietor"@en ;
+        sh:message "A proprietor must be a legal entity or a person."@en ;
     ] .
 
 est:EstablishmentSponsorshipShape
     a sh:NodeShape ;
     rdfs:label "Establishment sponsorship shape"@en ;
-    rdfs:comment "Rules for an establishment that has a sponsor. Only academies and free schools, including university technical colleges and studio schools, can have one: all 9,206 GIAS sponsor links are to these types. esto:sponsoredBy is at most one current-value sponsor and must be a valid sponsor party. Added v0.10."@en ;
-    sh:targetSubjectsOf esto:sponsoredBy, esto:hasSponsorship ;
+    rdfs:comment "Rules for an establishment with a present-day sponsor. Only academies and free schools, including university technical colleges and studio schools, can have one: all 9,206 GIAS sponsor links are to these types. esto:sponsoredBy is at most one sponsor, which must be a legal entity or a person. Added v0.10; v1.0 rewritten around est:EstablishmentResponsibility."@en ;
+    sh:targetSubjectsOf esto:sponsoredBy ;
     sh:or (
         [ sh:class est:Academy ]
         [ sh:class est:FreeSchoolEstablishment ]
@@ -2622,72 +2897,22 @@ est:EstablishmentSponsorshipShape
     sh:property [
         sh:path esto:sponsoredBy ;
         sh:maxCount 1 ;
-        sh:node est:SponsorPartyShape ;
+        sh:node est:ResponsiblePartyShape ;
         sh:name "Sponsored by"@en ;
-        sh:message "An establishment has at most one current sponsor, which must be a person or an organisation - not an establishment, a federation, or a children's centre group or collaboration."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSponsorship ;
-        sh:class est:Sponsorship ;
-        sh:name "Sponsorship"@en ;
-        sh:message "esto:hasSponsorship must point to an est:Sponsorship."@en ;
-    ] .
-
-est:SponsorshipShape
-    a sh:NodeShape ;
-    rdfs:label "Sponsorship shape"@en ;
-    rdfs:comment "Structural rules for a reified est:Sponsorship: exactly one sponsor, which must be a valid sponsor party, and at most one start date and one end date, each an xsd:date. That an end date is not before its start date cannot be expressed in SHACL Core; it is enforced in migration and application logic. Added v0.10."@en ;
-    sh:targetClass est:Sponsorship ;
-
-    sh:property [
-        sh:path esto:hasSponsor ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:node est:SponsorPartyShape ;
-        sh:name "Sponsor"@en ;
-        sh:message "A sponsorship must have exactly one sponsor, which must be a person or an organisation - not an establishment, a federation, or a children's centre group or collaboration."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSponsorshipStartDate ;
-        sh:maxCount 1 ;
-        sh:class est:SponsorshipStartDate ;
-        sh:name "Sponsorship start date"@en ;
-        sh:message "A sponsorship may record at most one start date, typed est:SponsorshipStartDate."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSponsorshipStartDate rdf:value ) ;
-        sh:datatype xsd:date ;
-        sh:name "Sponsorship start date value"@en ;
-        sh:message "A sponsorship start date must be an xsd:date."@en ;
-    ] ;
-
-    sh:property [
-        sh:path esto:hasSponsorshipEndDate ;
-        sh:maxCount 1 ;
-        sh:class est:SponsorshipEndDate ;
-        sh:name "Sponsorship end date"@en ;
-        sh:message "A sponsorship may record at most one end date, typed est:SponsorshipEndDate."@en ;
-    ] ;
-
-    sh:property [
-        sh:path ( esto:hasSponsorshipEndDate rdf:value ) ;
-        sh:datatype xsd:date ;
-        sh:name "Sponsorship end date value"@en ;
-        sh:message "A sponsorship end date must be an xsd:date."@en ;
+        sh:message "An establishment has at most one present-day sponsor, which must be a legal entity or a person."@en ;
     ] .
 
 est:SponsorLedAcademySponsorShape
     a sh:NodeShape ;
     rdfs:label "Sponsor-led academy sponsor shape"@en ;
-    rdfs:comment "Warning, not violation: an academy on the sponsor-led route would normally record its sponsor. GIAS holds sponsor-led academies with no sponsor link, for example Co-op Academy Rathbone (URN 151857), which may be data-quality gaps. Added v0.10."@en ;
+    rdfs:comment "Warning, not violation: an academy on the sponsor-led route would normally record its sponsor. GIAS holds sponsor-led academies with no sponsor link, for example Co-op Academy Rathbone (URN 151857), which may be data-quality gaps. Added v0.10; v1.0 accepts a sponsor responsibility in place of est:Sponsorship."@en ;
     sh:targetSubjectsOf esto:hasAcademyRoute ;
     sh:severity sh:Warning ;
     sh:or (
         [ sh:not [ sh:path esto:hasAcademyRoute ; sh:hasValue est:SponsorLedRoute ] ]
         [ sh:path esto:sponsoredBy ; sh:minCount 1 ]
-        [ sh:path esto:hasSponsorship ; sh:minCount 1 ]
+        [ sh:path esto:hasResponsibility ;
+          sh:qualifiedValueShape [ sh:path esto:hasResponsibilityType ; sh:hasValue est:SponsorResponsibility ] ;
+          sh:qualifiedMinCount 1 ]
     ) ;
-    sh:message "A sponsor-led academy should record its sponsor, through esto:hasSponsorship or esto:sponsoredBy."@en .
+    sh:message "A sponsor-led academy should record its sponsor, through a sponsor responsibility or esto:sponsoredBy."@en .
