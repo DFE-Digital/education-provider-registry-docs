@@ -295,8 +295,8 @@ inst:oasis-coulsdon
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedBySixthFormProvision est:NoSixthForm ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "11 to 16"@en ;
@@ -393,7 +393,7 @@ inst:oasis-coulsdon
     ] .
 ```
 
-No `esto:hasFaithContext`, `esto:classifiedByNurseryProvision`, `esto:classifiedBySpecialClassProvision`, `esto:classifiedBySection41Approval` or `esto:hasSpecialPupilMeasure` triple is asserted — each is "Not applicable" / blank in the real extract, and per the RDF-idiomatic principle the absence is left unstated rather than filled with a placeholder.
+No `esto:hasFaithContext`, `esto:hasNurseryProvision`, `esto:hasSpecialClassProvision`, `esto:classifiedBySection41Approval` or `esto:hasSpecialPupilMeasure` triple is asserted — each is "Not applicable" / blank in the real extract, and per the RDF-idiomatic principle the absence is left unstated rather than filled with a placeholder.
 
 ---
 

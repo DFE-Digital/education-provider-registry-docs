@@ -240,8 +240,8 @@ inst:st-lukes
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "3 to 11"@en ;
@@ -278,8 +278,8 @@ inst:moreland
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "0 to 11"@en ;

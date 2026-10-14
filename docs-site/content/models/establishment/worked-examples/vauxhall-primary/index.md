@@ -165,8 +165,8 @@ inst:vauxhall-primary
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "3 to 11"@en ;
@@ -206,7 +206,7 @@ No `esto:hasFaithContext` for Vauxhall - GIAS records "Does not apply" for relig
 
 ### Example 3 — Wyvil: real "None" religious character, and two simultaneous SEN needs
 
-Wyvil's religious character is recorded as "None" - a real, asserted value (`est:NoReligiousCharacter`), not the absence used for Vauxhall above. Wyvil also carries two SEN need types on the same resourced provision at once (SLCN and Autistic Spectrum Disorder) - the real evidence behind this session's fix to `esto:classifiedByTypeOfSenProvision`'s cardinality, previously wrongly documented as 0..1.
+GIAS records Wyvil's religious character as "None". Like Vauxhall above, it has no religious character designation, so the model records none (ontology v2.1). Wyvil also carries two SEN need types on the same resourced provision at once (SLCN and Autistic Spectrum Disorder) - the real evidence behind this session's fix to `esto:classifiedByTypeOfSenProvision`'s cardinality, previously wrongly documented as 0..1.
 
 ```
 inst:wyvil-primary
@@ -237,11 +237,6 @@ inst:wyvil-primary
         ]
     ] ;
 
-    esto:hasFaithContext [
-        a est:FaithContext ;
-        esto:classifiedByReligiousCharacter est:NoReligiousCharacter
-    ] ;
-
     esto:hasEstablishmentClassification [
         a est:EstablishmentClassification ;
         esto:hasEstablishmentType est:FoundationSchool ;
@@ -250,7 +245,7 @@ inst:wyvil-primary
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "3 to 11"@en ;
@@ -341,7 +336,7 @@ inst:lilian-baylis
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
@@ -412,7 +407,7 @@ Ashmole, Herbert Morrison (headteacher job title "Head of School") and Henry Faw
 | Establishment types | Foundation (Vauxhall, Wyvil), Community (four others) | `est:FoundationSchool`, `est:CommunitySchool` | Direct |
 | Mixed phase | Five primary, one secondary (Lilian Baylis) | `est:PrimaryPhase`, `est:SecondaryPhase` | Direct |
 | Job title variants | "Acting Headteacher" (Vauxhall) | `esto:hasJobTitle` / `est:JobTitle` | Direct |
-| Faith context (real value) | Wyvil: religious character "None" | `est:NoReligiousCharacter` | Direct |
+| Faith context | Wyvil: religious character "None" (no designation) | No `esto:hasFaithContext` triple | Direct |
 | Faith context (absent) | Vauxhall: does not apply | Absence of `esto:hasFaithContext` | Direct |
 | Multiple SEN needs on one facility | Wyvil: SLCN and Autistic Spectrum Disorder, 103 places | `esto:classifiedByTypeOfSenProvision` (now 0..*), `est:ResourcedProvisionFacility` | Direct - cardinality fixed this session |
 | Admissions policy (real value) | Lilian Baylis: Non-selective | `est:NonSelectiveAdmissions` | Direct |

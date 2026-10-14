@@ -52,7 +52,7 @@ flowchart LR
     E -->|"SEN"| SEN["ASD - Autistic Spectrum Disorder<br/>resourced provision, 20 places / 20 on roll"]
 ```
 
-No group membership - George Green's has no trust, sponsor or federation link. The first standalone (non-federation-member) `est:VoluntaryControlledSchool` in these worked examples - the type's one prior real use (Milton Ernest) was a federation member. A real, asserted "None" religious character (`est:NoReligiousCharacter`), the same value seen at Wyvil - not the "Does not apply" absence seen at most other maintained schools. Roll (1261) exceeds published capacity (1239) - a fourth real over-capacity school this session, and the first at secondary phase.
+No group membership - George Green's has no trust, sponsor or federation link. The first standalone (non-federation-member) `est:VoluntaryControlledSchool` in these worked examples - the type's one prior real use (Milton Ernest) was a federation member. GIAS records its religious character as "None", the same value seen at Wyvil. Since ontology v2.1 the model records no religious character at all: a religious character is a legal designation that only some schools are given, so a school without one simply has no religious character triple. Roll (1261) exceeds published capacity (1239) - a fourth real over-capacity school this session, and the first at secondary phase.
 
 ---
 
@@ -137,11 +137,6 @@ inst:george-greens
                 esto:hasPostcode [ a est:Postcode ; rdf:value "E14 3DW" ]
             ]
         ]
-    ] ;
-
-    esto:hasFaithContext [
-        a est:FaithContext ;
-        esto:classifiedByReligiousCharacter est:NoReligiousCharacter
     ] .
 ```
 
@@ -153,9 +148,9 @@ inst:george-greens
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:NoNurseryClasses ;
-        esto:classifiedBySixthFormProvision est:HasSixthForm ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value false ] ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "11 to 19"@en ;
@@ -223,8 +218,8 @@ inst:george-greens
 | Establishment | George Green's School, URN 100974, UKPRN 10002663 | `est:VoluntaryControlledSchool` | Direct |
 | Local authority accountability | Maintained by Tower Hamlets (LA code 211) | `esto:accountableToLocalAuthority` + `est:LocalAuthority` | Direct |
 | Establishment type | Voluntary controlled school (GIAS type code 03) | `est:VoluntaryControlledSchool` | Direct |
-| Secondary phase with sixth form | Ages 11-19, has a sixth form | `est:SecondaryPhase`, `est:HasSixthForm` | Direct |
-| Faith context (real "None" value) | Religious character: None | `est:NoReligiousCharacter` | Direct |
+| Secondary phase with sixth form | Ages 11-19, has a sixth form | `est:SecondaryPhase`, `esto:hasSixthFormProvision` true | Direct |
+| Faith context | Religious character: None (no designation) | No `esto:hasFaithContext` triple | Direct - a school without a designation has no religious character to record |
 | Admissions policy | Non-selective | `est:NonSelectiveAdmissions` | Direct |
 | Headteacher | JR | `est:HeadteacherOrPrincipal` | Direct |
 | SEN need type and resourced provision | ASD, 20 places/20 on roll | `est:AutisticSpectrumDisorder`, `est:ResourcedProvisionFacility` | Direct |
