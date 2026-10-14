@@ -8,6 +8,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix org:     <http://www.w3.org/ns/org#> .
 
 # Governance Ontology
 #
@@ -54,7 +55,7 @@ govo:governanceConceptualModel
     dcterms:modified "2026-10-14"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.12" ;
+    owl:versionInfo "0.13" ;
     gov:status "Provisional"@en ;
     vann:preferredNamespacePrefix "govo" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/governance/ontology/"^^xsd:anyURI ;
@@ -72,7 +73,8 @@ govo:governanceConceptualModel
     rdfs:comment "v0.9: new LegalCapacity individual gov:CharityTrustee, found missing while modelling the Cheltenham College worked example (an independent school whose Council is its own historic charitable governing body, not a company limited by guarantee). gov:CompanyDirector's own comment already stated 'Academy Trustee = Charity Trustee + Company Director', but no individual existed for the Charity Trustee half on its own - every previous worked example only needed it alongside CompanyDirector, since every Trustee so far has been an academy trust's. Cheltenham's Council members hold charity trustee status with no company-director capacity at all. LegalCapacity's closed enumeration is now 3 individuals. Retrofitted onto every existing Trustee/Director appointment in the Medlock, OAK Multi Academy Trust/Brookside Primary and Green School Trust worked examples, alongside their existing CompanyDirector capacity, for consistency with this rule."@en ;
     rdfs:comment "v0.10: new GovernanceRoleType individual gov:PartnershipGovernor and new AppointingBody individual gov:NominatedByPartner (SI 2012/1034 reg 10 and Sch.3), found missing while modelling the Aldgate School worked example (a voluntary aided school whose published board includes a governor described only as 'other-body nomination'). gov:Governor's own vocabulary citation had named 'partnership' as one of the six governor categories regs 6-11 define since v0.1, but no individual was ever implemented for it - the only one of the six missing. GovernorType's classification is now eight sub-types; GovernanceRoleType's enumeration is now 27; AppointingBody's is now 9."@en ;
     rdfs:comment "v0.11: reconciled against est:Governance* (establishment-ontology.ttl) as the first step of retiring that model's parallel governance treatment (see establishment-governance-overlap-removal-plan.md). Added gov:GovernanceIdentifier + govo:hasGovernanceIdentifier (structural parity with est:GovernanceIdentifier - the GID has no gov:-side equivalent until now), govo:sharedWith (structural parity with est:sharedWith - deliberately not re-adding est:'s 'Shared X' GovernanceRoleType individuals, since role type plus this property already carries the same information), and two new AppointingBody individuals for statutory mechanisms est: named but gov: didn't (gov:ParentAppointedByGoverningBodyDueToNoElection, gov:OriginalSignatoryMembers - AppointingBody's enumeration is now 11). Every other est:GovernanceRoleType/est:GovernanceAppointingBody value was confirmed to already be covered by an existing gov: concept, either directly or via gov:'s more general/structural treatment (governor sub-types via GovernanceRoleType's own values rather than AppointingBody-derived distinctions; GovernanceProfessional context variants via which organisation/body the appointment attaches to, rather than separate role-type values; Chair variants via the existing RoleAssignment layering pattern). est:InterimExecutiveBoard (modelled by establishment as an AppointingBody value) was not ported - it names a governance body, not an appointing mechanism, and gov:InterimExecutiveBoard already models it correctly as a GovernanceBody subclass."@en ;
-    rdfs:comment "v0.12: aligned with establishment-ontology.ttl v2.0, where est:AcademyTrust changed from a class to a recognised role type and academy trusts became legal entities holding that role. The governed organisation an academy trust board governs is now est:LegalEntity: govo:hasGovernanceBody and govo:hasGovernanceAppointment take est:LegalEntity in their domain unions in place of est:AcademyTrust, and the est:AcademyTrust type stub is replaced by an est:LegalEntity stub."@en .
+    rdfs:comment "v0.12: aligned with establishment-ontology.ttl v2.0, where est:AcademyTrust changed from a class to a recognised role type and academy trusts became legal entities holding that role. The governed organisation an academy trust board governs is now est:LegalEntity: govo:hasGovernanceBody and govo:hasGovernanceAppointment take est:LegalEntity in their domain unions in place of est:AcademyTrust, and the est:AcademyTrust type stub is replaced by an est:LegalEntity stub."@en ;
+    rdfs:comment "v0.13: mapped to the W3C Organization Ontology (ORG) with SKOS mapping annotations on the governance terms: governance bodies, committees, appointments (as ORG memberships), role types, terms of office, the appointee and the committee and delegation links. ORG is not imported and no OWL axioms are asserted against it, so the mappings add no inferences."@en .
 
 
 #################################################################
@@ -141,6 +143,7 @@ gov:GovernancePersonIdentifier
 
 gov:GovernanceBody
     a owl:Class ;
+    skos:broadMatch org:Organization ;
     rdfs:label "Governance body"@en ;
     rdfs:comment "A board or board-like body that exercises governance functions over one or more establishments, trusts or federations. Abstract superclass; see GoverningBody, TrustBoard, LocalGoverningBody, InterimExecutiveBoard and Committee for the specific body types a GovernanceAppointment or Membership may be held at."@en .
 
@@ -170,12 +173,14 @@ gov:InterimExecutiveBoard
 
 gov:Committee
     a owl:Class ;
+    skos:closeMatch org:OrganizationalUnit ;
     rdfs:subClassOf gov:GovernanceBody ;
     rdfs:label "Committee"@en ;
     rdfs:comment "A sub-body of a governing body or trust board with delegated responsibility for a specific area (e.g. finance, pay, standards). Members are drawn from, or co-opted alongside, the parent body's membership."@en .
 
 govo:isDelegatedBy
     a owl:ObjectProperty ;
+    skos:broadMatch org:linkedTo ;
     rdfs:label "is delegated by"@en ;
     rdfs:domain gov:GovernanceBody ;
     rdfs:range gov:GovernanceBody ;
@@ -183,6 +188,7 @@ govo:isDelegatedBy
 
 govo:isCommitteeOf
     a owl:ObjectProperty ;
+    skos:closeMatch org:unitOf ;
     rdfs:subPropertyOf govo:isDelegatedBy ;
     rdfs:label "is committee of"@en ;
     rdfs:domain gov:Committee ;
@@ -281,6 +287,7 @@ gov:Appointment
 
 gov:GovernanceAppointment
     a owl:Class ;
+    skos:closeMatch org:Membership ;
     rdfs:subClassOf gov:Appointment ;
     rdfs:label "Governance appointment"@en ;
     rdfs:comment "A record of one named person holding one governance role at one governance body during a defined period. Carries the role type, the appointing body, the appointment basis (statutory governance / operational employment / professional support - see AppointmentBasis) and an optional term of office. A single unified appointment class is used deliberately rather than splitting statutory and operational appointments into separate classes: AppointmentBasis is modelled as an orthogonal classification on the appointment, consistent with how governance-taxonomy.ttl classifies the same distinction (Finding 6, Option B)."@en ;
@@ -295,6 +302,7 @@ govo:hasGovernanceAppointment
 
 govo:appointmentOf
     a owl:ObjectProperty ;
+    skos:closeMatch org:member ;
     rdfs:label "appointment of"@en ;
     rdfs:domain gov:GovernanceAppointment ;
     rdfs:range gov:GovernanceParticipant ;
@@ -302,6 +310,7 @@ govo:appointmentOf
 
 govo:hasRoleType
     a owl:ObjectProperty ;
+    skos:exactMatch org:role ;
     rdfs:label "has role type"@en ;
     rdfs:domain gov:GovernanceAppointment ;
     rdfs:range gov:GovernanceRoleType ;
@@ -323,6 +332,7 @@ govo:hasAppointmentBasis
 
 govo:hasTermOfOffice
     a owl:ObjectProperty ;
+    skos:closeMatch org:memberDuring ;
     rdfs:label "has term of office"@en ;
     rdfs:domain gov:GovernanceAppointment ;
     rdfs:range gov:TermOfOffice ;
@@ -375,6 +385,7 @@ govo:sharedWith
 
 gov:TermOfOffice
     a owl:Class ;
+    skos:relatedMatch org:memberDuring ;
     rdfs:label "Term of office"@en ;
     rdfs:comment "The period during which a person holds a governance appointment. Modelled here with direct start/end date properties rather than the dedicated date-wrapper classes used in establishment-ontology.ttl (GovernanceAppointmentDate, GovernanceTermEndDate) - a deliberate simplification for this v0.1; can be aligned with that convention during reconciliation if consistency across the two ontologies becomes a priority."@en .
 
@@ -504,6 +515,7 @@ gov:GovernorType
 
 gov:GovernanceRoleType
     a owl:Class ;
+    skos:closeMatch org:Role ;
     rdfs:label "Governance role type"@en ;
     rdfs:comment "The classification of the governance role held by an appointment. Closed enumeration of 27 named individuals, covering governor sub-types, associate membership, board/trust membership, statutory office holders and the operational/professional roles that also appear in GIAS governance data (Accounting Officer, Chief Financial Officer, Company Secretary). Distinguish from LegalCapacity (CompanyDirector, Director), which are automatic capacities rather than independently-appointed roles."@en .
 
