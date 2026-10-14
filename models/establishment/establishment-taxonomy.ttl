@@ -32,10 +32,7 @@ est:establishmentDetailsTaxonomy
         est:EstablishmentStatus,
         est:AdmissionsPolicy,
         est:GenderOfEntry,
-        est:BoardingProvision,
-        est:NurseryProvision,
-        est:SixthFormProvision,
-        est:SpecialClassProvision,
+        est:BoardingType,
         est:ReligiousCharacter,
         est:ReligiousEthos,
         est:EstablishmentGroupType,
@@ -58,10 +55,7 @@ est:establishmentDetailsTaxonomyFacets
         est:EstablishmentStatus,
         est:AdmissionsPolicy,
         est:GenderOfEntry,
-        est:BoardingProvision,
-        est:NurseryProvision,
-        est:SixthFormProvision,
-        est:SpecialClassProvision,
+        est:BoardingType,
         est:ReligiousCharacter,
         est:ReligiousEthos,
         est:EstablishmentGroupType,
@@ -168,49 +162,13 @@ est:GenderOfEntry
         est:MixedGenderEntry ;
     est:status "Provisional"@en .
 
-est:BoardingProvision
+est:BoardingType
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:topConceptOf est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Boarding provision"@en ;
-    skos:definition "The classification describing whether boarding places are offered."@en ;
-    skos:narrower
-        est:BoardingSchool,
-        est:HasBoarders,
-        est:NoBoarders ;
-    est:status "Provisional"@en .
-
-est:NurseryProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:topConceptOf est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Nursery provision"@en ;
-    skos:definition "The classification describing whether the establishment offers nursery classes."@en ;
-    skos:narrower
-        est:HasNurseryClasses,
-        est:NoNurseryClasses ;
-    est:status "Provisional"@en .
-
-est:SixthFormProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:topConceptOf est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Sixth-form provision"@en ;
-    skos:definition "The classification describing whether the establishment has a sixth form."@en ;
-    skos:narrower
-        est:HasSixthForm,
-        est:NoSixthForm ;
-    est:status "Provisional"@en .
-
-est:SpecialClassProvision
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:topConceptOf est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Special-class provision"@en ;
-    skos:definition "The classification describing whether the establishment has special classes."@en ;
-    skos:narrower
-        est:HasSpecialClasses,
-        est:NoSpecialClasses ;
+    skos:prefLabel "Boarding type"@en ;
+    skos:definition "For an establishment that has boarders, whether it is a boarding school or a school with some boarders. Whether an establishment has boarders at all is a true-or-false fact, not a classification (v2.1)."@en ;
+    skos:narrower est:BoardingSchool, est:HasBoarders ;
     est:status "Provisional"@en .
 
 est:ReligiousCharacter
@@ -223,7 +181,6 @@ est:ReligiousCharacter
         est:ChurchOfEnglandCharacter,
         est:JewishCharacter,
         est:MuslimCharacter,
-        est:NoReligiousCharacter,
         est:OtherReligiousCharacter,
         est:RomanCatholicCharacter ;
     est:status "Provisional"@en .
@@ -237,7 +194,6 @@ est:ReligiousEthos
     skos:scopeNote "Its distinction from religious character requires business validation."@en ;
     skos:narrower
         est:ChristianEthos,
-        est:NoReligiousEthos,
         est:OtherReligiousEthos ;
     est:status "Provisional"@en .
 
@@ -880,93 +836,36 @@ est:GirlsOnlyGenderEntry
 # Boarding-provision taxons
 #################################################################
 
-est:NoBoarders
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "No boarders"@en ;
-    skos:broader est:BoardingProvision ;
-    est:status "Provisional"@en .
-
 est:HasBoarders
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Has boarders"@en ;
     skos:scopeNote "Real-world (limited). A school with some boarding places but not a full boarding school. The concept is real but GOV.UK does not separate 'has boarders' from boarding schools as a distinct classification."@en ;
-    skos:broader est:BoardingProvision ;
+    skos:broader est:BoardingType ;
     est:status "Provisional"@en .
 
 est:BoardingSchool
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Boarding school"@en ;
-    skos:broader est:BoardingProvision ;
+    skos:broader est:BoardingType ;
     est:status "Provisional"@en .
 
 #################################################################
 # Nursery-provision taxons
 #################################################################
 
-est:HasNurseryClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Nursery classes"@en ;
-    skos:broader est:NurseryProvision ;
-    est:status "Provisional"@en .
-
-est:NoNurseryClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "No nursery classes"@en ;
-    skos:broader est:NurseryProvision ;
-    est:status "Provisional"@en .
-
 #################################################################
 # Sixth-form-provision taxons
 #################################################################
-
-est:HasSixthForm
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Sixth form"@en ;
-    skos:broader est:SixthFormProvision ;
-    est:status "Provisional"@en .
-
-est:NoSixthForm
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "No sixth form"@en ;
-    skos:broader est:SixthFormProvision ;
-    est:status "Provisional"@en .
 
 #################################################################
 # Special-class-provision taxons
 #################################################################
 
-est:NoSpecialClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "No special classes"@en ;
-    skos:broader est:SpecialClassProvision ;
-    est:status "Provisional"@en .
-
-est:HasSpecialClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Has special classes"@en ;
-    skos:broader est:SpecialClassProvision ;
-    est:status "Provisional"@en .
-
 #################################################################
 # Religious-character taxons
 #################################################################
-
-est:NoReligiousCharacter
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "No religious character"@en ;
-    skos:altLabel "None"@en ;
-    skos:broader est:ReligiousCharacter ;
-    est:status "Provisional"@en .
 
 est:ChurchOfEnglandCharacter
     a skos:Concept ;
@@ -1008,14 +907,6 @@ est:OtherReligiousCharacter
 #################################################################
 # Religious-ethos taxons
 #################################################################
-
-est:NoReligiousEthos
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "No religious ethos"@en ;
-    skos:altLabel "None"@en ;
-    skos:broader est:ReligiousEthos ;
-    est:status "Provisional"@en .
 
 est:ChristianEthos
     a skos:Concept ;

@@ -295,9 +295,9 @@ inst:manor-high
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedBySixthFormProvision est:NoSixthForm ;
-        esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value false ] ;
+        esto:hasSpecialClassProvision [ a est:SpecialClassProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "11 to 16"@en ;
@@ -363,7 +363,7 @@ inst:manor-high
 | Headteacher | SG | `est:HeadteacherOrPrincipal` | Direct |
 | Capacity and pupil numbers | 1050 capacity, 926 on roll (528 boys, 398 girls), 104 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct |
 | Admissions and provision | Mixed, no boarders, no sixth form, no special classes | `est:EducationAdmissionsAndProvision` | Direct |
-| Admissions policy, nursery provision | Not applicable | Absence of `esto:classifiedByAdmissionsPolicy`/`esto:classifiedByNurseryProvision` | Direct |
+| Admissions policy, nursery provision | Not applicable | Absence of `esto:classifiedByAdmissionsPolicy`/`esto:hasNurseryProvision` | Direct |
 | Faith context | Does not apply (religious character, ethos and diocese) | Absence of `esto:hasFaithContext` | Direct |
 | SEN and resourced provision | Not applicable - no values recorded | Absence of `esto:hasSenAndResourcedProvision` | Direct |
 | Section 41 approval | Not applicable for all open mainstream academies | Absence of `esto:classifiedBySection41Approval` (shape corrected to `maxCount 0` for this type) | Direct |

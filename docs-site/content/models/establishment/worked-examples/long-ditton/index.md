@@ -256,8 +256,8 @@ inst:long-ditton-infant
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "3 to 7"@en ;
@@ -294,8 +294,8 @@ inst:long-ditton-st-marys
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:NoNurseryClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "7 to 11"@en ;

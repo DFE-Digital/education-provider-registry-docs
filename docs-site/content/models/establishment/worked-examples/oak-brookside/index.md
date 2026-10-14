@@ -191,9 +191,9 @@ inst:brookside-primary
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:NoNurseryClasses ;
-        esto:classifiedBySpecialClassProvision est:HasSpecialClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value false ] ;
+        esto:hasSpecialClassProvision [ a est:SpecialClassProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "4 to 11"@en ;
@@ -269,7 +269,7 @@ inst:brookside-primary
 | Run by academy trust | Run by OAK Multi Academy Trust since 1 April 2018 | `est:EstablishmentResponsibility` (`est:AcademyTrustResponsibility`) + `esto:runByAcademyTrust` | Direct |
 | Headteacher | GB | `est:HeadteacherOrPrincipal` | Direct |
 | Capacity and pupil numbers | 440 capacity, 440 on roll (249 boys, 191 girls), 61 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct - roll exactly matches capacity |
-| Special classes | Has special classes | `est:HasSpecialClasses` | Direct |
+| Special classes | Has special classes | `esto:hasSpecialClassProvision` true | Direct |
 | SEN need type | Moderate Learning Difficulty (SEN1) | `est:ModerateLearningDifficulty` | Direct - first real use |
 | Combined resourced provision and SEN unit | 20 places/20 on roll each, one GIAS field with a combined value | `est:ResourcedProvisionAndSenUnitFacility` | Direct - new individual added this session |
 | Faith context, admissions policy, Section 41 approval | Not applicable | Absence of the respective properties | Direct |

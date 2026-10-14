@@ -150,9 +150,9 @@ inst:millfield
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
-        esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
+        esto:hasSpecialClassProvision [ a est:SpecialClassProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "3 to 9"@en ;
@@ -214,7 +214,7 @@ No `esto:hasSenAndResourcedProvision` - all 13 SEN fields and both resourced-pro
 | Headteacher | LKW | `est:HeadteacherOrPrincipal` | Direct |
 | First-school age range | Ages 3 to 9, within `est:PrimaryPhase` | `est:StatutoryAgeRange` | Direct - narrower than every other primary example so far |
 | Capacity and pupil numbers | 352 capacity, 318 on roll (178 boys, 140 girls), 28 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct |
-| Nursery provision | Has nursery classes | `est:HasNurseryClasses` | Direct |
+| Nursery provision | Has nursery classes | `esto:hasNurseryProvision` true | Direct |
 | SEN and resourced provision | Not applicable | Absence of `esto:hasSenAndResourcedProvision` | Direct |
 | Faith context, admissions policy, Section 41 approval | Not applicable | Absence of the respective properties | Direct |
 | Record currency | Last changed 2026-04-20 | `est:RecordCurrencyAndStewardship` + `esto:recordsDateLastChanged` | Direct |

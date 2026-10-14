@@ -133,7 +133,7 @@ inst:milton-ernest
 
 Both schools are accountable to the same local authority, independent of their shared federation membership - accountability and group membership are separate relationships, as established at Manor High and Frank Barnes. `LV` is asserted once and referenced by both establishments, matching the governance worked example's treatment of the same shared headteacher.
 
-Eileen Wade's religious character is `est:NoReligiousCharacter` - a real, populated value meaning "not a faith school" (see "What this example found"). Milton Ernest's is `est:ChurchOfEnglandCharacter`, with a real diocese.
+GIAS records Eileen Wade's religious character as "None": it is not a faith school, so it has no religious character designation and no religious character triple (see "What this example found"). Milton Ernest's is `est:ChurchOfEnglandCharacter`, with a real diocese.
 
 ```
 inst:la-822
@@ -168,11 +168,6 @@ inst:eileen-wade
                 esto:hasPostcode [ a est:Postcode ; rdf:value "PE28 0ND" ]
             ]
         ]
-    ] ;
-
-    esto:hasFaithContext [
-        a est:FaithContext ;
-        esto:classifiedByReligiousCharacter est:NoReligiousCharacter
     ] ;
 
     esto:hasEstablishmentLifecycle [
@@ -253,7 +248,7 @@ inst:eileen-wade
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "4 to 11"@en ;
@@ -290,7 +285,7 @@ inst:milton-ernest
 
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "4 to 11"@en ;
@@ -324,7 +319,7 @@ inst:milton-ernest
 ## What this example found
 
 - **First federation example, and first with two different member types.** `est:Federation` reuses the same `est:EstablishmentGroup`/`GroupMembership` machinery as academy trusts - no separate federation-specific membership pattern was needed. The two members are different leaf types (`est:FoundationSchool`, `est:VoluntaryControlledSchool`), confirming group membership doesn't constrain member establishment type.
-- **First real use of `est:NoReligiousCharacter` in a worked example.** Eileen Wade's GIAS value is "None" - a real, populated classification meaning this establishment has been assessed and has no religious character, asserted just like any other value in this facet. Where the classification concept doesn't apply to an establishment's type at all, the vocabulary now omits the triple rather than asserting a "not applicable" value.
+- **A school without a religious character records none.** Eileen Wade's GIAS value is "None". Earlier versions asserted a named "no religious character" value; since ontology v2.1 the model leaves the religious character out. A religious character is a legal designation that only some schools are given, so its absence is the normal case, not a value to record.
 - **A shared headteacher across two establishments, modelled the same way the governance side handles a shared ex-officio governor** - one `est:HeadteacherOrPrincipal` value asserted independently on each establishment's own location-and-contact record, since GIAS itself records the headteacher per establishment even when the underlying person is the same.
 - **Not exercised by this example:** the closed legacy Trust relationship (GIAS UID 1094) referenced in Eileen Wade's extract - out of scope as historical, not current, data.
 
@@ -339,7 +334,7 @@ inst:milton-ernest
 | Local authority accountability | Both schools maintained by Bedford (LA 822) | `esto:accountableToLocalAuthority` | Direct |
 | Establishment types | Foundation school (Eileen Wade), Voluntary controlled school (Milton Ernest) | `est:FoundationSchool`, `est:VoluntaryControlledSchool` | Direct |
 | Shared headteacher | LV, headteacher at both schools | `est:HeadteacherOrPrincipal`, asserted independently per establishment | Direct |
-| Religious character (real value) | Eileen Wade: None; Milton Ernest: Church of England | `est:NoReligiousCharacter`, `est:ChurchOfEnglandCharacter` | Direct |
+| Religious character | Eileen Wade: None (no designation); Milton Ernest: Church of England | No religious character for Eileen Wade, `est:ChurchOfEnglandCharacter` for Milton Ernest | Direct |
 | Diocese | Milton Ernest: Diocese of St Albans | `est:Diocese` (open-ended, literal value) | Direct |
 | Capacity and pupil numbers | 70/70 (Eileen Wade), 84/63 (Milton Ernest) | `est:CapacityAndPupilMeasures` | Direct |
 | Legacy trust relationship | Eileen Wade referenced in a closed Trust group (UID 1094) | Not modelled - historical, not current | Not evidenced |

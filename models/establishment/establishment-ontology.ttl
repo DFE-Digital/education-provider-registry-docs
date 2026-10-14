@@ -38,7 +38,7 @@ esto:establishmentDetailsConceptualModel
     dcterms:modified "2026-10-14"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "2.0" ;
+    owl:versionInfo "2.1" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -73,6 +73,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.18: group membership role type added, closing gap 2.G1 in the alignment review of organisation groups against the enterprise data model. New class est:GroupMembershipRoleType (closed enumeration, modelled like est:GroupRelationshipType); 3 owl:NamedIndividual values est:Member, est:SponsoredAcademy and est:Sponsor, matching the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity in full. est:Sponsor describes an organisation's membership of the group and is not yet assertable via esto:hasMembership (domain est:Establishment - gap 2.G2 remains open); it is included for parity and for the future organisation-as-member case. New object property esto:hasGroupMembershipRole (domain est:GroupMembership, range est:GroupMembershipRoleType, 0..1). This lets a single est:EstablishmentGroup carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second 'School sponsor' (SP-prefixed) group record for an organisation that already exists as the members' trust (TR-prefixed). esto:sponsoredBy retained unchanged - it names the DfE-approved sponsor organisation, which need not be an est:EstablishmentGroup (for example a diocese), a distinct fact from the in-group role. establishment-shacl.ttl gains est:GroupMembershipShape (the first shape to target est:GroupMembership); establishment-vocabulary.ttl and establishment-taxonomy.ttl gain the SKOS mirror of the new class and its values."@en ;
     rdfs:comment "v1.19: sponsorship tightened, following the sponsorship review in docs/transformation/data/modelling/groups/establishment-groups-logical-model-recommendation.md. (1) New class est:Sponsorship: a dated record that a person or organisation sponsors an academy or free school, with new classes est:SponsorshipStartDate and est:SponsorshipEndDate (rdf:value xsd:date) and new object properties esto:hasSponsorship (domain est:Establishment, range est:Sponsorship, 0..*), esto:hasSponsor (domain est:Sponsorship, range est:Organisation or est:Person, exactly 1), esto:hasSponsorshipStartDate and esto:hasSponsorshipEndDate (0..1 each). This is now the one mechanism for sponsorship, whether the sponsor is the academy's own trust (82% of GIAS sponsor links) or another body such as a diocese (18%), and it keeps the joined dates and sponsor history that esto:sponsoredBy cannot. (2) esto:sponsoredBy retained as a current-value shortcut for the sponsor of the current sponsorship. Its range is widened from est:Organisation to est:Organisation or est:Person, matching esto:hasProprietor, because about ten GIAS sponsors are named individuals. (3) est:SponsoredAcademy and est:Sponsor removed from this ontology outright, keeping the ontology free of deprecated terms (the v1.14 est:MainAddress precedent); they survive only as status-Retired concepts in establishment-vocabulary.ttl, for historical resolution of the URIs. est:SponsoredAcademy (v1.18) recorded sponsorship as a second group membership: it duplicated esto:sponsoredBy with no rule linking the two, never named the sponsor, could not represent a sponsor other than the academy's trust, and partly reversed v1.7's decision that sponsor is a role, not a group type. est:Sponsor could never be asserted correctly, because a membership's subject is always an establishment. est:GroupMembershipRoleType keeps est:Member as its only current value, and gap 2.G2 is closed as no longer needed. establishment-shacl.ttl v0.10 enforces the new rules, establishment-vocabulary.ttl and establishment-taxonomy.ttl carry the SKOS changes, and the Medlock and Oasis worked examples move to the new pattern. Also restored the tail of the 'Named individuals' section header, which an earlier edit had left stranded after the role-type values."@en ;
     rdfs:comment "v2.0: legal entities, roles and responsibilities, following lessons from the physical model slice, built and tested against real GIAS data. (1) New class est:LegalEntity (subclass of est:Organisation) for any body that can hold roles and be responsible for schools, incorporated or not, with est:LegalForm, est:CharityStatus (est:RegisteredCharity, est:ExemptCharity, est:ExceptedCharity), est:IncorporationDate and est:DissolutionDate. Companies House number and UKPRN move to the legal entity (esto:hasCompaniesHouseRegistration, esto:hasLegalEntityUkprn). (2) New class est:RecognisedRole, a dated role held by a legal entity or person, typed by est:RecognisedRoleType: est:AcademyTrust, est:FoundationTrust, est:UmbrellaTrust and est:AcademySponsor. New class est:AcademyTrustClassification, a dated classification of a legal entity as est:SingleAcademyTrust, est:MultiAcademyTrust or est:SecureSingleAcademyTrust (est:AcademyTrustType). est:AcademyTrust, est:SingleAcademyTrust, est:MultiAcademyTrust and est:SecureSingleAcademyTrust keep their IRIs but change from classes to named individuals, so a SAT-to-MAT conversion is a change of classification on one legal entity, not a new organisation. (3) New class est:EstablishmentResponsibility, a dated responsibility of a legal entity or person for an establishment, typed by est:ResponsibilityType: est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility and est:ProprietorResponsibility. A change of operator is a new responsibility for the same establishment. New shortcut esto:runByAcademyTrust; esto:sponsoredBy and esto:hasProprietor redefined as the present-day sponsor and proprietors, and esto:hasProprietor widened to 0..*. (4) est:EstablishmentGroup narrowed to federations and children's centre groups and collaborations, which are not legal entities. New class est:LeadCentreDesignation (dated, from est:GroupMembership) and est:GroupMembershipEndDate. (5) esto:hasRegisteredAddress moved to est:LegalEntity; esto:hasContactAddress widened to legal entities and groups. (6) New annotation property esto:changesOverTime marks facts that change during the life of what they describe. Shared period dates est:PeriodStartDate and est:PeriodEndDate, with esto:hasStartDate and esto:hasEndDate. Deleted outright: est:GenericTrust (it described the foundation trust, GIAS type 02), est:Sponsorship, est:SponsorshipStartDate, est:SponsorshipEndDate, est:GroupRelationship, est:GroupRelationshipType, est:SuccessorMultiAcademyTrust, est:PredecessorSingleAcademyTrust, est:GroupUkprn, est:GroupIncorporatedOnDate, est:GroupId, est:GroupUniqueIdentifier, and properties esto:accountableToAcademyTrust, esto:accountableToProprietor, esto:hasSponsorship, esto:hasSponsor, esto:hasSponsorshipStartDate, esto:hasSponsorshipEndDate, esto:isSingleAcademyTrust, esto:hasGroupUkprn, esto:hasGroupCompaniesHouseNumber, esto:hasGroupRelationship, esto:relatesTo, esto:classifiedByGroupRelationshipType, esto:identifiedByGroupId, esto:hasGroupUniqueIdentifier and esto:hasGroupIncorporatedOnDate. GIAS group numbers are a GIAS and migration concern, held in the logical and physical models."@en ;
+    rdfs:comment "v2.1: yes/no provision facts no longer modelled as named negative values. Nursery classes, sixth form, special classes and boarders are each recorded as a true-or-false value, following the existing value-class pattern (est:TeenageMothersProvision): new properties esto:hasNurseryProvision, esto:hasSixthFormProvision, esto:hasSpecialClassProvision and esto:hasBoardingProvision link est:EducationAdmissionsAndProvision to est:NurseryProvision, est:SixthFormProvision, est:SpecialClassProvision and est:BoardingProvision, whose instances carry rdf:value xsd:boolean. Where a school has boarders, the new class est:BoardingType (via esto:classifiedByBoardingType) says whether it is a boarding school (est:BoardingSchool) or a school with some boarders (est:HasBoarders). Deleted outright: est:NoBoarders, est:HasNurseryClasses, est:NoNurseryClasses, est:HasSixthForm, est:NoSixthForm, est:HasSpecialClasses, est:NoSpecialClasses, and properties esto:classifiedByBoardingProvision, esto:classifiedByNurseryProvision, esto:classifiedBySixthFormProvision and esto:classifiedBySpecialClassProvision."@en ;
     est:status "Provisional"@en .
 
 
@@ -295,22 +296,27 @@ est:AdmissionsPolicy
 est:BoardingProvision
     a owl:Class ;
     rdfs:label "Boarding provision"@en ;
-    rdfs:comment "The classification describing whether boarding places are offered."@en .
+    rdfs:comment "Whether the establishment accommodates any pupils as boarders. Instances carry true or false as rdf:value with an xsd:boolean datatype. v2.1: changed from a classification with named yes and no values to a true-or-false value."@en .
+
+est:BoardingType
+    a owl:Class ;
+    rdfs:label "Boarding type"@en ;
+    rdfs:comment "For an establishment that has boarders, whether it is a boarding school or a school that accommodates some boarders. Only recorded when boarding provision is true. Added v2.1."@en .
 
 est:NurseryProvision
     a owl:Class ;
     rdfs:label "Nursery provision"@en ;
-    rdfs:comment "The classification describing whether the establishment offers nursery classes."@en .
+    rdfs:comment "Whether the establishment has one or more nursery classes for children below compulsory school age. Instances carry true or false as rdf:value with an xsd:boolean datatype. v2.1: changed from a classification with named yes and no values to a true-or-false value."@en .
 
 est:SixthFormProvision
     a owl:Class ;
     rdfs:label "Sixth-form provision"@en ;
-    rdfs:comment "The classification describing whether the establishment has a sixth form."@en .
+    rdfs:comment "Whether the establishment has a sixth form. Instances carry true or false as rdf:value with an xsd:boolean datatype. v2.1: changed from a classification with named yes and no values to a true-or-false value."@en .
 
 est:SpecialClassProvision
     a owl:Class ;
     rdfs:label "Special-class provision"@en ;
-    rdfs:comment "The classification describing whether the establishment has special classes."@en .
+    rdfs:comment "Whether the establishment has special classes for pupils with special educational needs within an otherwise mainstream setting. Instances carry true or false as rdf:value with an xsd:boolean datatype. v2.1: changed from a classification with named yes and no values to a true-or-false value."@en .
 
 
 #################################################################
@@ -696,33 +702,40 @@ esto:classifiedByAdmissionsPolicy
     rdfs:range est:AdmissionsPolicy ;
     rdfs:comment "Cardinality: 0..1."@en .
 
-esto:classifiedByBoardingProvision
+esto:hasBoardingProvision
     a owl:ObjectProperty ;
-    rdfs:label "classified by boarding provision"@en ;
+    rdfs:label "has boarding provision"@en ;
     rdfs:domain est:EducationAdmissionsAndProvision ;
     rdfs:range est:BoardingProvision ;
-    rdfs:comment "Cardinality: 0..1."@en .
+    rdfs:comment "Cardinality: 0..1. The value is true or false. Added v2.1."@en .
 
-esto:classifiedByNurseryProvision
+esto:classifiedByBoardingType
     a owl:ObjectProperty ;
-    rdfs:label "classified by nursery provision"@en ;
+    rdfs:label "classified by boarding type"@en ;
+    rdfs:domain est:EducationAdmissionsAndProvision ;
+    rdfs:range est:BoardingType ;
+    rdfs:comment "Cardinality: 0..1. Only when the establishment has boarders. Added v2.1."@en .
+
+esto:hasNurseryProvision
+    a owl:ObjectProperty ;
+    rdfs:label "has nursery provision"@en ;
     rdfs:domain est:EducationAdmissionsAndProvision ;
     rdfs:range est:NurseryProvision ;
-    rdfs:comment "Cardinality: 0..1."@en .
+    rdfs:comment "Cardinality: 0..1. The value is true or false. Added v2.1."@en .
 
-esto:classifiedBySixthFormProvision
+esto:hasSixthFormProvision
     a owl:ObjectProperty ;
-    rdfs:label "classified by sixth-form provision"@en ;
+    rdfs:label "has sixth-form provision"@en ;
     rdfs:domain est:EducationAdmissionsAndProvision ;
     rdfs:range est:SixthFormProvision ;
-    rdfs:comment "Cardinality: 0..1."@en .
+    rdfs:comment "Cardinality: 0..1. The value is true or false. Added v2.1."@en .
 
-esto:classifiedBySpecialClassProvision
+esto:hasSpecialClassProvision
     a owl:ObjectProperty ;
-    rdfs:label "classified by special-class provision"@en ;
+    rdfs:label "has special-class provision"@en ;
     rdfs:domain est:EducationAdmissionsAndProvision ;
     rdfs:range est:SpecialClassProvision ;
-    rdfs:comment "Cardinality: 0..1."@en .
+    rdfs:comment "Cardinality: 0..1. The value is true or false. Added v2.1."@en .
 
 
 #################################################################
@@ -2456,54 +2469,16 @@ est:MixedGenderEntry
     rdfs:label "Mixed"@en ;
     rdfs:comment "A gender-of-entry value indicating that the establishment admits both boys and girls without restriction on grounds of sex."@en .
 
-# Boarding provision (3 values)
+# Boarding type (2 values, v2.1)
 est:BoardingSchool
-    a owl:NamedIndividual, est:BoardingProvision ;
+    a owl:NamedIndividual, est:BoardingType ;
     rdfs:label "Boarding school"@en ;
-    rdfs:comment "A boarding-provision value indicating that the establishment is classified as operating principally as a boarding school, where pupils reside during term time. This is a GIAS operational classification; both BoardingSchool and HasBoarders trigger the same statutory obligations under Children Act 1989 s.87."@en .
+    rdfs:comment "A boarding type value: the establishment operates principally as a boarding school, where pupils reside during term time. Both boarding types trigger the same statutory obligations under Children Act 1989 s.87. v2.1: moved from est:BoardingProvision to est:BoardingType."@en .
 
 est:HasBoarders
-    a owl:NamedIndividual, est:BoardingProvision ;
+    a owl:NamedIndividual, est:BoardingType ;
     rdfs:label "Has boarders"@en ;
-    rdfs:comment "A boarding-provision value indicating that the establishment accommodates some pupils as boarders, but is not primarily classified as a boarding school."@en .
-
-est:NoBoarders
-    a owl:NamedIndividual, est:BoardingProvision ;
-    rdfs:label "No boarders"@en ;
-    rdfs:comment "A boarding-provision value indicating that the establishment does not accommodate any pupils as boarders."@en .
-
-# Nursery provision (2 values)
-est:HasNurseryClasses
-    a owl:NamedIndividual, est:NurseryProvision ;
-    rdfs:label "Nursery classes"@en ;
-    rdfs:comment "A nursery-provision value indicating that the establishment operates one or more nursery classes for children below compulsory school age."@en .
-
-est:NoNurseryClasses
-    a owl:NamedIndividual, est:NurseryProvision ;
-    rdfs:label "No nursery classes"@en ;
-    rdfs:comment "A nursery-provision value indicating that the establishment does not operate any nursery classes."@en .
-
-# Sixth-form provision (2 values)
-est:HasSixthForm
-    a owl:NamedIndividual, est:SixthFormProvision ;
-    rdfs:label "Sixth form"@en ;
-    rdfs:comment "A sixth-form-provision value indicating that the establishment provides post-16 education as a sixth form, catering to pupils typically in Years 12 and 13."@en .
-
-est:NoSixthForm
-    a owl:NamedIndividual, est:SixthFormProvision ;
-    rdfs:label "No sixth form"@en ;
-    rdfs:comment "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en .
-
-# Special-class provision (2 values)
-est:HasSpecialClasses
-    a owl:NamedIndividual, est:SpecialClassProvision ;
-    rdfs:label "Has special classes"@en ;
-    rdfs:comment "A special-class-provision value indicating that the establishment provides one or more specially resourced classes or units for pupils with special educational needs."@en .
-
-est:NoSpecialClasses
-    a owl:NamedIndividual, est:SpecialClassProvision ;
-    rdfs:label "No special classes"@en ;
-    rdfs:comment "A special-class-provision value indicating that the establishment does not provide any specially resourced classes or units for pupils with special educational needs."@en .
+    rdfs:comment "A boarding type value: the establishment accommodates some pupils as boarders, but is not principally a boarding school. v2.1: moved from est:BoardingProvision to est:BoardingType."@en .
 
 # Type of SEN provision (12 values) - the GIAS SEN1-SEN13 need-type codes,
 # a closed statutory list grounded in the four broad areas of need defined

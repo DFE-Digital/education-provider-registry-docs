@@ -206,9 +206,9 @@ inst:frank-barnes
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
-        esto:classifiedBySpecialClassProvision est:HasSpecialClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
+        esto:hasSpecialClassProvision [ a est:SpecialClassProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "2 to 11"@en ;
@@ -275,7 +275,7 @@ No `esto:classifiedByTypeOfResourcedProvision` - Frank Barnes has a SEN need typ
 | Location and site | 4 Wollstonecraft Street, Kings Cross, N1C 4BT | `est:Site` + `est:Address` | Direct |
 | Headteacher | DS | `est:HeadteacherOrPrincipal` | Direct |
 | Capacity and pupil numbers | 35 capacity, 35 on roll (16 boys, 19 girls), 14 FSM-eligible | `est:CapacityAndPupilMeasures` | Direct |
-| Special classes, nursery provision | Has special classes, has nursery classes | `est:HasSpecialClasses`, `est:HasNurseryClasses` | Direct |
+| Special classes, nursery provision | Has special classes, has nursery classes | `esto:hasSpecialClassProvision` true, `esto:hasNurseryProvision` true | Direct |
 | SEN provision | Hearing impairment (SEN1) | `est:HearingImpairment` | Direct |
 | Resourced provision facility | Not applicable | Absence of `esto:classifiedByTypeOfResourcedProvision` | Direct |
 | Faith context, admissions policy, Section 41 approval | Not applicable | Absence of the respective properties | Direct |

@@ -150,9 +150,9 @@ inst:gilded-hollins
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:NoNurseryClasses ;
-        esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value false ] ;
+        esto:hasSpecialClassProvision [ a est:SpecialClassProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "4 to 11"@en ;

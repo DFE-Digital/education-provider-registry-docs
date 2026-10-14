@@ -317,8 +317,8 @@ inst:green-school-girls
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:GirlsOnlyGenderEntry ;
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedBySixthFormProvision est:HasSixthForm ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "11 to 18"@en ;
@@ -347,7 +347,7 @@ inst:green-school-boys
     esto:hasEducationAdmissionsAndProvision [
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:BoysOnlyGenderEntry ;
-        esto:classifiedBySixthFormProvision est:HasSixthForm ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "11 to 18"@en ;
@@ -373,7 +373,7 @@ inst:green-school-boys
     ] .
 ```
 
-No `esto:classifiedByAdmissionsPolicy` and no `esto:classifiedByBoardingProvision` for Boys - the real extract records an admissions-policy code (9) and a boarders code (9) with no corresponding name value at all, a genuine data-quality gap in the source rather than a real "not applicable" or other classifiable value, so nothing is asserted rather than guessed.
+No `esto:classifiedByAdmissionsPolicy` and no `esto:hasBoardingProvision` for Boys - the real extract records an admissions-policy code (9) and a boarders code (9) with no corresponding name value at all, a genuine data-quality gap in the source rather than a real "not applicable" or other classifiable value, so nothing is asserted rather than guessed.
 
 ---
 

@@ -323,10 +323,10 @@ inst:medlock
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
         esto:classifiedByAdmissionsPolicy est:NonSelectiveAdmissions ;
-        esto:classifiedByBoardingProvision est:NoBoarders ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
-        esto:classifiedBySixthFormProvision est:NoSixthForm ;
-        esto:classifiedBySpecialClassProvision est:NoSpecialClasses ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value false ] ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value false ] ;
+        esto:hasSpecialClassProvision [ a est:SpecialClassProvision ; rdf:value false ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "2 to 11"@en ;

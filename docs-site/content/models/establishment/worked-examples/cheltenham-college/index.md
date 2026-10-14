@@ -143,9 +143,10 @@ inst:cheltenham-college
         a est:EducationAdmissionsAndProvision ;
         esto:classifiedByGenderOfEntry est:MixedGenderEntry ;
         esto:classifiedByAdmissionsPolicy est:SelectiveAdmissions ;
-        esto:classifiedByBoardingProvision est:BoardingSchool ;
-        esto:classifiedByNurseryProvision est:HasNurseryClasses ;
-        esto:classifiedBySixthFormProvision est:HasSixthForm ;
+        esto:hasBoardingProvision [ a est:BoardingProvision ; rdf:value true ] ;
+        esto:classifiedByBoardingType est:BoardingSchool ;
+        esto:hasNurseryProvision [ a est:NurseryProvision ; rdf:value true ] ;
+        esto:hasSixthFormProvision [ a est:SixthFormProvision ; rdf:value true ] ;
         esto:hasStatutoryAgeRange [
             a est:StatutoryAgeRange ;
             rdfs:label "2 to 19"@en ;
@@ -252,7 +253,7 @@ No `esto:hasFreeSchoolMealMeasure` - blank for all 1,603 open other independent 
 | Proprietor | The Council of Cheltenham College | `esto:hasProprietor` | Direct - first real use |
 | No LA maintenance or academy trust | Neither relationship exists in the real extract | Absence of `esto:hasAccountabilityRelationship` and `esto:runByAcademyTrust` | Direct |
 | Faith context (real value, no diocese) | Church of England character and ethos, diocese "Not applicable" | `est:ChurchOfEnglandCharacter` + literal `esto:classifiedByReligiousEthos`; absence of `esto:associatedWithDiocese` | Direct |
-| Selective admissions, boarding, sixth form | Selective; boarding school; has sixth form | `est:SelectiveAdmissions`, `est:BoardingSchool`, `est:HasSixthForm` | Direct |
+| Selective admissions, boarding, sixth form | Selective; boarding school; has sixth form | `est:SelectiveAdmissions`, `est:BoardingSchool`, `esto:hasSixthFormProvision` true | Direct |
 | Job title | "Headmaster" | `esto:hasJobTitle` / `est:JobTitle` | Direct - fifth real value this session |
 | SEN pupil measure without need type or facility | 155 with SEN needs, 0 with statement/EHC plan | `esto:hasSpecialPupilMeasure` | Direct - first real use |
 | Section 41 approval | Not approved | `esto:classifiedBySection41Approval` (literal value) | Direct |

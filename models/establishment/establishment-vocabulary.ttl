@@ -102,7 +102,6 @@ est:classificationAndAccountability
         est:AcademyTrust,
         est:SingleAcademyTrust,
         est:AcademySponsor,
-        est:Sponsorship,
         est:Proprietor .
 
 est:lifecycle
@@ -260,16 +259,9 @@ est:groupMembershipConcepts
         est:SchoolSponsor,
         est:ChildrensCentreGroup,
         est:ChildrensCentreCollaboration,
-        est:GenericTrust,
         est:GroupMembership,
-        est:GroupRelationship,
-        est:GroupRelationshipType,
         est:GroupMembershipRoleType,
-        est:Member,
-        est:GroupId,
-        est:GroupUkprn,
-        est:SuccessorMultiAcademyTrust,
-        est:PredecessorSingleAcademyTrust .
+        est:Member .
 
 #################################################################
 # Top concepts — Organisation and Person
@@ -409,6 +401,7 @@ est:EducationAdmissionsAndProvision
     skos:narrower
         est:AdmissionsPolicy,
         est:BoardingProvision,
+        est:BoardingType,
         est:GenderOfEntry,
         est:NurseryProvision,
         est:Section41Approval,
@@ -1401,9 +1394,9 @@ est:BoardingSchool
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Boarding school"@en ;
-    skos:definition "A boarding-provision value indicating that the establishment is registered and operates principally as a boarding school, where pupils reside during term time."@en ;
+    skos:definition "A boarding type value indicating that the establishment is registered and operates principally as a boarding school, where pupils reside during term time."@en ;
     skos:scopeNote "Boarding schools must meet the National Minimum Standards for Boarding Schools and are subject to the Education (Independent School Standards) Regulations 2014. Distinct from HasBoarders: a boarding school's primary identity is as a boarding provision, not merely a day school that also accommodates some boarders."@en ;
-    skos:broader est:BoardingProvision ;
+    skos:broader est:BoardingType ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#boarding-school> ;
@@ -1414,24 +1407,13 @@ est:HasBoarders
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Has boarders"@en ;
-    skos:definition "A boarding-provision value indicating that the establishment accommodates some pupils as boarders, but is not primarily classified as a boarding school."@en ;
+    skos:definition "A boarding type value indicating that the establishment accommodates some pupils as boarders, but is not primarily classified as a boarding school."@en ;
     skos:scopeNote "Applies to schools that provide day education as their primary function but also offer boarding for some pupils. Boarding provision in such schools remains subject to the National Minimum Standards for Boarding Schools and the Education (Independent School Standards) Regulations 2014."@en ;
-    skos:broader est:BoardingProvision ;
+    skos:broader est:BoardingType ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#has-boarders> ;
     dcterms:references <https://www.gov.uk/government/publications/boarding-schools-national-minimum-standards> .
-
-est:NoBoarders
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "No boarders"@en ;
-    skos:definition "A boarding-provision value indicating that the establishment does not accommodate any pupils as boarders."@en ;
-    skos:scopeNote "Applies to schools for which the boarding provision field is applicable (i.e. maintained or independent schools), but where no boarding is offered."@en ;
-    skos:broader est:BoardingProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#no-boarders> .
 
 est:BoysOnlyGenderEntry
     a skos:Concept ;
@@ -1472,74 +1454,6 @@ est:MixedGenderEntry
     dcterms:references <https://www.gov.uk/government/publications/school-admissions-code--2> ;
     est:legislation <https://www.legislation.gov.uk/ukpga/2010/15/schedule/11> .
 
-est:HasNurseryClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Has nursery classes"@en ;
-    skos:definition "A nursery-provision value indicating that the establishment operates one or more nursery classes for children below compulsory school age."@en ;
-    skos:scopeNote "Nursery classes within a school are distinct from a separately registered nursery school. The presence of nursery classes does not change the school's phase classification. Provision of nursery education is addressed by local authorities under the Education Act 2002 s.50."@en ;
-    skos:broader est:NurseryProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#nursery-classes> ;
-    rdfs:isDefinedBy <https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2> .
-
-est:NoNurseryClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "No nursery classes"@en ;
-    skos:definition "A nursery-provision value indicating that the establishment does not operate any nursery classes."@en ;
-    skos:scopeNote "Applies where the nursery provision field is applicable to the establishment type (e.g. a primary school) but the school has no nursery classes."@en ;
-    skos:broader est:NurseryProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#no-nursery-classes> .
-
-est:HasSixthForm
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Has a sixth form"@en ;
-    skos:definition "A sixth-form-provision value indicating that the establishment provides post-16 education as a sixth form, catering to pupils typically in Years 12 and 13."@en ;
-    skos:scopeNote "Sixth-form provision is a separately recorded field in GIAS. The presence of a sixth form does not change the school's phase classification. Local authorities have duties to secure sufficient 16-19 provision under the Education Act 2002."@en ;
-    skos:broader est:SixthFormProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#sixth-form> ;
-    rdfs:isDefinedBy <https://www.gov.uk/guidance/16-to-19-funding-how-it-works>, <https://www.gov.uk/government/publications/education-inspection-framework/education-inspection-framework-for-use-from-november-2025> .
-
-est:NoSixthForm
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Does not have a sixth form"@en ;
-    skos:definition "A sixth-form-provision value indicating that the establishment does not provide a sixth form."@en ;
-    skos:scopeNote "Applies where the sixth-form provision field is applicable to the establishment type (e.g. a secondary school) but no post-16 provision is offered."@en ;
-    skos:broader est:SixthFormProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Inferred from captured public glossary"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#no-sixth-form> .
-
-est:HasSpecialClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Has special classes"@en ;
-    skos:definition "A special-class-provision value indicating that the establishment provides one or more specially resourced classes or units for pupils with special educational needs."@en ;
-    skos:scopeNote "Special classes or resourced provision within a mainstream school are distinct from a special school. Such provision is relevant under the Special Educational Needs and Disability Act 2001 and Education Act 1996 Part IV, and may be the basis for a pupil's Education, Health and Care Plan placement."@en ;
-    skos:broader est:SpecialClassProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#has-special-classes-no-special-classes> .
-
-est:NoSpecialClasses
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "No special classes"@en ;
-    skos:definition "A special-class-provision value indicating that the establishment does not provide any specially resourced classes or units for pupils with special educational needs."@en ;
-    skos:scopeNote "Applies where the special-class provision field is applicable to the establishment type but no such provision is offered."@en ;
-    skos:broader est:SpecialClassProvision ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en ;
-    rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#has-special-classes-no-special-classes> .
-
 est:ChurchOfEnglandCharacter
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1566,17 +1480,6 @@ est:MuslimCharacter
     skos:prefLabel "Muslim"@en ;
     skos:definition "A religious-character value indicating that the school has been designated by the Secretary of State as having Muslim religious character."@en ;
     skos:scopeNote "Religious character designation is conferred under s.69(3) of the School Standards and Framework Act 1998. Most Muslim-ethos schools are independent or free schools; relatively few hold a formal statutory designation."@en ;
-    skos:broader est:ReligiousCharacter ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
-
-est:NoReligiousCharacter
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "No religious character"@en ;
-    skos:altLabel "None"@en ;
-    skos:definition "A religious-character value indicating that the school has no religious character designation; it is a non-faith school."@en ;
-    skos:scopeNote "Applies to maintained and independent schools for which a religious character designation under the School Standards and Framework Act 1998 is applicable but has not been conferred."@en ;
     skos:broader est:ReligiousCharacter ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Invented review definition"@en .
@@ -1608,17 +1511,6 @@ est:ChristianEthos
     skos:prefLabel "Christian"@en ;
     skos:definition "A religious-ethos value indicating that the school self-declares a broadly Christian ethos, without specifying a particular denomination."@en ;
     skos:scopeNote "Religious ethos is a self-declaration by the school or its trust and is not a statutory designation. This value is intentionally broader than Church of England or Roman Catholic character, covering schools that describe a broadly Christian culture. Governed loosely by SSFA 1998 guidance but not a statutory requirement."@en ;
-    skos:broader est:ReligiousEthos ;
-    est:status "Preferred"@en ;
-    dcterms:source "Definition provenance: Invented review definition"@en .
-
-est:NoReligiousEthos
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "No religious ethos"@en ;
-    skos:altLabel "None"@en ;
-    skos:definition "A religious-ethos value indicating that the school does not self-declare any religious ethos."@en ;
-    skos:scopeNote "Religious ethos is a self-declaration and is not a statutory designation. Applies where the ethos field is applicable to the establishment type but the school has declared no religious ethos."@en ;
     skos:broader est:ReligiousEthos ;
     est:status "Preferred"@en ;
     dcterms:source "Definition provenance: Invented review definition"@en .
@@ -2552,50 +2444,53 @@ est:BoardingProvision
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Boarding provision"@en ;
     skos:altLabel "Boarders"@en ;
-    skos:definition "The classification indicating whether the establishment offers boarding: no boarders, has boarders, or is a boarding school."@en ;
+    skos:definition "Whether the establishment accommodates any pupils as boarders. Where it does, the boarding type says whether it is a boarding school or a school with some boarders."@en ;
+    skos:scopeNote "Recorded as true or false. A school that is known not to have this provision is recorded as false; leaving it out means it is not recorded. v2.1: replaced the named yes and no values."@en ;
     skos:broader est:EducationAdmissionsAndProvision ;
-    skos:narrower
-        est:BoardingSchool,
-        est:HasBoarders,
-        est:NoBoarders ;
-    est:status "Preferred"@en ;
-    dcterms:source "C#: ProvisionBoardingId; database: Establishment.boarding_code"@en .
+    skos:related est:BoardingType ;
+    dcterms:source "C#: ProvisionBoardingId; database: Establishment.boarding_code"@en ;
+    est:status "Preferred"@en .
+
+est:BoardingType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Boarding type"@en ;
+    skos:definition "For an establishment that has boarders, whether it is a boarding school or a school that accommodates some boarders."@en ;
+    skos:scopeNote "Only recorded when boarding provision is true. Added v2.1."@en ;
+    skos:broader est:EducationAdmissionsAndProvision ;
+    skos:narrower est:BoardingSchool, est:HasBoarders ;
+    skos:related est:BoardingProvision ;
+    est:status "Provisional"@en .
 
 est:NurseryProvision
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Nursery provision"@en ;
-    skos:definition "The classification indicating whether the establishment has nursery classes, does not have them, or where the field is not applicable."@en ;
+    skos:definition "Whether the establishment has one or more nursery classes for children below compulsory school age. Nursery classes within a school are distinct from a separately registered nursery school."@en ;
+    skos:scopeNote "Recorded as true or false. A school that is known not to have this provision is recorded as false; leaving it out means it is not recorded. v2.1: replaced the named yes and no values."@en ;
     skos:broader est:EducationAdmissionsAndProvision ;
-    skos:narrower
-        est:HasNurseryClasses,
-        est:NoNurseryClasses ;
-    est:status "Preferred"@en ;
-    dcterms:source "C#: ProvisionNurseryId; database: Establishment.nurseryProvision_code"@en .
+    dcterms:source "C#: ProvisionNurseryId; database: Establishment.nurseryProvision_code"@en ;
+    est:status "Preferred"@en .
 
 est:SixthFormProvision
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Sixth-form provision"@en ;
     skos:altLabel "Official sixth form"@en, "Sixth Form"@en, "OfficialSixthForm"@en ;
-    skos:definition "The classification indicating whether the establishment has an official sixth form (post-16 provision), does not have one, or where the field is not applicable."@en ;
+    skos:definition "Whether the establishment has an official sixth form (post-16 provision)."@en ;
+    skos:scopeNote "Recorded as true or false. A school that is known not to have this provision is recorded as false; leaving it out means it is not recorded. v2.1: replaced the named yes and no values."@en ;
     skos:broader est:EducationAdmissionsAndProvision ;
-    skos:narrower
-        est:HasSixthForm,
-        est:NoSixthForm ;
-    est:status "Preferred"@en ;
-    dcterms:source "C#: ProvisionOfficialSixthFormId; Java: SpecialIndicators.officialSixthForm; database: Establishment.officialSixthForm_code"@en .
+    dcterms:source "C#: ProvisionOfficialSixthFormId; Java: SpecialIndicators.officialSixthForm; database: Establishment.officialSixthForm_code"@en ;
+    est:status "Preferred"@en .
 
 est:SpecialClassProvision
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Special-class provision"@en ;
     skos:altLabel "Special classes"@en ;
-    skos:definition "The classification indicating whether the establishment contains special classes for pupils with SEN within an otherwise mainstream setting, does not have them, or where the field is not applicable."@en ;
+    skos:definition "Whether the establishment has special classes for pupils with SEN within an otherwise mainstream setting."@en ;
+    skos:scopeNote "Recorded as true or false. A school that is known not to have this provision is recorded as false; leaving it out means it is not recorded. v2.1: replaced the named yes and no values."@en ;
     skos:broader est:EducationAdmissionsAndProvision ;
-    skos:narrower
-        est:HasSpecialClasses,
-        est:NoSpecialClasses ;
     est:status "Preferred"@en .
 
 est:Section41Approval
@@ -2705,7 +2600,6 @@ est:ReligiousCharacter
         est:ChurchOfEnglandCharacter,
         est:JewishCharacter,
         est:MuslimCharacter,
-        est:NoReligiousCharacter,
         est:OtherReligiousCharacter,
         est:RomanCatholicCharacter ;
     est:status "Preferred"@en ;
@@ -2722,7 +2616,6 @@ est:ReligiousEthos
     skos:related est:ReligiousCharacter ;
     skos:narrower
         est:ChristianEthos,
-        est:NoReligiousEthos,
         est:OtherReligiousEthos ;
     est:status "Provisional"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#religious-ethos> ;
@@ -3603,7 +3496,7 @@ est:FoundationTrust
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Foundation trust"@en ;
     skos:definition "The role of a charitable trust that supports one or more foundation or foundation special schools as their foundation, holding land and appointing governors."@en ;
-    skos:scopeNote "Replaces est:GenericTrust, which described the same GIAS group type (code 02) as a rarely used generic trust. Added v2.0."@en ;
+    skos:scopeNote "Replaces which described the same GIAS group type (code 02) as a rarely used generic trust. Added v2.0."@en ;
     skos:broader est:RecognisedRoleType ;
     skos:related est:FoundationTrustResponsibility, est:FoundationSchool ;
     est:status "Provisional"@en .

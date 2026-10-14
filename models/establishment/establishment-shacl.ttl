@@ -35,7 +35,8 @@
     dcterms:modified "2026-10-14"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.0" ;
+    owl:versionInfo "1.1" ;
+    rdfs:comment "v1.1: aligned with establishment-ontology.ttl v2.1. Per-type rules for boarding, nursery, sixth-form and special-class provision now check the true-or-false provision values (esto:hasBoardingProvision, esto:hasNurseryProvision, esto:hasSixthFormProvision, esto:hasSpecialClassProvision). New shapes check that each value is an xsd:boolean, and that a boarding type is only recorded for a school that has boarders."@en ;
     rdfs:comment "v1.0: aligned with establishment-ontology.ttl v2.0. Per-type shapes check esto:runByAcademyTrust and esto:hasProprietor instead of the deleted accountability links. Sponsorship shapes rewritten around est:EstablishmentResponsibility. New shapes for legal entities, recognised roles, academy trust classifications, responsibilities, dated periods, lead centre designations and group local authorities, including the rules that a person can hold only the academy sponsor role and can only sponsor an establishment or be its proprietor."@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/taxonomy/> ;
@@ -242,10 +243,10 @@ est:LaMaintainedSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "LA maintained schools must have a boarding-provision classification."@en ;
+        sh:message "LA maintained schools must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -325,7 +326,7 @@ est:LaMainstreamSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:name "Sixth-form provision"@en ;
         sh:message "LA special schools must have a sixth-form provision classification."@en ;
     ] .
@@ -341,21 +342,21 @@ est:PupilReferralUnitShape
     sh:targetClass est:PupilReferralUnit ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ;
         sh:maxCount 0 ;
         sh:name "Nursery provision (not applicable)"@en ;
         sh:message "Nursery provision is not applicable for pupil referral units."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for pupil referral units."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:maxCount 0 ;
         sh:name "Boarding provision (not applicable)"@en ;
         sh:message "Boarding provision is not applicable for pupil referral units."@en ;
@@ -498,7 +499,7 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for LA nursery schools."@en ;
@@ -625,10 +626,10 @@ est:CityTechnologyCollegeShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "City technology colleges must have a boarding-provision classification."@en ;
+        sh:message "City technology colleges must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -721,10 +722,10 @@ est:OtherIndependentSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Other independent schools must have a boarding-provision classification."@en ;
+        sh:message "Other independent schools must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -817,10 +818,10 @@ est:OtherIndependentSpecialSchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Other independent special schools must have a boarding-provision classification."@en ;
+        sh:message "Other independent special schools must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -911,10 +912,10 @@ est:MainstreamAcademyGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Mainstream academies must have a boarding-provision classification."@en ;
+        sh:message "Mainstream academies must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -979,7 +980,7 @@ est:AcademySpecialShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for academy special schools."@en ;
@@ -1014,10 +1015,10 @@ est:AcademySpecialShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Academy special schools must have a boarding-provision classification."@en ;
+        sh:message "Academy special schools must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -1064,7 +1065,7 @@ est:AcademyAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for academy alternative provision establishments."@en ;
@@ -1099,10 +1100,10 @@ est:AcademyAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Academy alternative provision establishments must have a boarding-provision classification."@en ;
+        sh:message "Academy alternative provision establishments must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -1146,7 +1147,7 @@ est:Academy1619Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision classification is not applicable for academy 16-19 establishments - these establishments are themselves 16-19 provision."@en ;
@@ -1181,10 +1182,10 @@ est:Academy1619Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Academy 16-19 establishments must have a boarding-provision classification."@en ;
+        sh:message "Academy 16-19 establishments must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -1235,21 +1236,21 @@ est:AcademySecure16To19Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ;
         sh:maxCount 0 ;
         sh:name "Nursery provision (not applicable)"@en ;
         sh:message "Nursery provision is not applicable for academy secure 16 to 19."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for academy secure 16 to 19."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:maxCount 0 ;
         sh:name "Boarding provision (not applicable in public view)"@en ;
         sh:message "Boarding provision is not shown in the restricted public Details view for academy secure 16 to 19."@en ;
@@ -1411,7 +1412,7 @@ est:FreeSchoolAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for free school alternative provision establishments."@en ;
@@ -1446,10 +1447,10 @@ est:FreeSchoolAlternativeProvisionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Free school alternative provision establishments must have a boarding-provision classification."@en ;
+        sh:message "Free school alternative provision establishments must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -1484,7 +1485,7 @@ est:FreeSchool16To19Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision classification is not applicable for free school 16 to 19 establishments - these establishments are themselves 16-19 provision."@en ;
@@ -1519,10 +1520,10 @@ est:FreeSchool16To19Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:minCount 1 ;
         sh:name "Boarding provision"@en ;
-        sh:message "Free school 16 to 19 establishments must have a boarding-provision classification."@en ;
+        sh:message "Free school 16 to 19 establishments must have a boarding provision value."@en ;
     ] ;
 
     sh:property [
@@ -1583,14 +1584,14 @@ est:CollegeGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ;
         sh:maxCount 0 ;
         sh:name "Nursery provision (not applicable)"@en ;
         sh:message "Nursery provision is not applicable for colleges."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision classification is not applicable for colleges - these establishments are sixth form or further education."@en ;
@@ -1690,21 +1691,21 @@ est:HigherEducationInstitutionShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:maxCount 0 ;
         sh:name "Boarding provision (not applicable)"@en ;
         sh:message "Boarding provision is not applicable for HEIs."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ;
         sh:maxCount 0 ;
         sh:name "Nursery provision (not applicable)"@en ;
         sh:message "Nursery provision is not applicable for HEIs."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for HEIs."@en ;
@@ -1814,14 +1815,14 @@ est:ChildrensCentreGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:maxCount 0 ;
         sh:name "Boarding provision (not applicable)"@en ;
         sh:message "Boarding provision is not applicable for children's centres."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for children's centres."@en ;
@@ -1922,14 +1923,14 @@ est:OnlineProviderShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ;
         sh:maxCount 0 ;
         sh:name "Boarding provision (not applicable)"@en ;
         sh:message "Boarding provision is not applicable for online providers."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ;
         sh:maxCount 0 ;
         sh:name "Nursery provision (not applicable)"@en ;
         sh:message "Nursery provision is not applicable for online providers."@en ;
@@ -2130,14 +2131,14 @@ est:SpecialPost16Shape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ;
         sh:maxCount 0 ;
         sh:name "Nursery provision (not applicable)"@en ;
         sh:message "Nursery provision is not applicable for special post-16 institutions."@en ;
     ] ;
 
     sh:property [
-        sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ;
+        sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ;
         sh:maxCount 0 ;
         sh:name "Sixth-form provision (not applicable)"@en ;
         sh:message "Sixth-form provision is not applicable for special post-16 institutions."@en ;
@@ -2327,9 +2328,9 @@ est:SecureUnitsShape
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Secure units have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Secure units have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for secure units."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for secure units."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for secure units."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for secure units."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for secure units."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for secure units."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for secure units."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for secure units."@en ] ;
@@ -2369,9 +2370,9 @@ est:OffshoreSchoolsShape
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Offshore schools have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Offshore schools have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for offshore schools."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for offshore schools."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for offshore schools."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for offshore schools."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for offshore schools."@en ] ;
     sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for offshore schools."@en ] ;
@@ -2417,9 +2418,9 @@ est:ServiceChildrensEducationShape
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "SCE establishments have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "SCE establishments have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for SCE establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for SCE establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for SCE establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for SCE establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for SCE establishments."@en ] ;
     sh:property [ sh:path ( esto:hasEstablishmentClassification esto:classifiedBySection41Approval ) ; sh:maxCount 0 ; sh:name "Section 41 approved (not applicable)"@en ; sh:message "Section 41 approval is not applicable for SCE establishments."@en ] ;
@@ -2465,9 +2466,9 @@ est:MiscellaneousEstablishmentShape
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Miscellaneous establishments have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Miscellaneous establishments have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for miscellaneous establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for miscellaneous establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for miscellaneous establishments."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for miscellaneous establishments."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for miscellaneous establishments."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for miscellaneous establishments."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for miscellaneous establishments."@en ] ;
@@ -2507,9 +2508,9 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Other-department institutions have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Other-department institutions have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for other-department institutions."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for other-department institutions."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for other-department institutions."@en ] ;
-    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedBySixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasBoardingProvision ) ; sh:maxCount 0 ; sh:name "Boarding provision (not applicable)"@en ; sh:message "Boarding provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasNurseryProvision ) ; sh:maxCount 0 ; sh:name "Nursery provision (not applicable)"@en ; sh:message "Nursery provision is not applicable for other-department institutions."@en ] ;
+    sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasSixthFormProvision ) ; sh:maxCount 0 ; sh:name "Sixth-form provision (not applicable)"@en ; sh:message "Sixth-form provision is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:hasStatutoryAgeRange ) ; sh:maxCount 0 ; sh:name "Age range (not applicable)"@en ; sh:message "Age range is not shown in the GIAS Details tab for other-department institutions."@en ] ;
     sh:property [ sh:path esto:hasFaithContext ; sh:maxCount 0 ; sh:name "Faith context (not applicable)"@en ; sh:message "Faith context is not applicable for other-department institutions."@en ] ;
     sh:property [ sh:path esto:hasSenAndResourcedProvision ; sh:maxCount 0 ; sh:name "SEN and resourced provision (not applicable)"@en ; sh:message "SEN and resourced provision is not applicable for other-department institutions."@en ] ;
@@ -2916,3 +2917,53 @@ est:SponsorLedAcademySponsorShape
           sh:qualifiedMinCount 1 ]
     ) ;
     sh:message "A sponsor-led academy should record its sponsor, through a sponsor responsibility or esto:sponsoredBy."@en .
+
+
+#################################################################
+# Provision value shapes (v1.1)
+#
+# Boarding, nursery, sixth-form and special-class provision are
+# true-or-false values since establishment-ontology.ttl v2.1.
+#################################################################
+
+est:BooleanValueShape
+    a sh:NodeShape ;
+    rdfs:label "Boolean value shape"@en ;
+    rdfs:comment "A value-class instance carrying exactly one xsd:boolean rdf:value. Used through sh:node; it has no target of its own. Added v1.1."@en ;
+    sh:property [
+        sh:path rdf:value ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:boolean ;
+        sh:name "True or false"@en ;
+        sh:message "A provision value must carry exactly one rdf:value of true or false."@en ;
+    ] .
+
+est:ProvisionValuesShape
+    a sh:NodeShape ;
+    rdfs:label "Provision values shape"@en ;
+    rdfs:comment "Each provision fact is recorded at most once, as a true-or-false value of the right class. Added v1.1."@en ;
+    sh:targetClass est:EducationAdmissionsAndProvision ;
+    sh:property [ sh:path esto:hasBoardingProvision ; sh:maxCount 1 ; sh:class est:BoardingProvision ; sh:node est:BooleanValueShape ; sh:name "Boarding provision"@en ; sh:message "Boarding provision is recorded at most once, as a true-or-false est:BoardingProvision value."@en ] ;
+    sh:property [ sh:path esto:hasNurseryProvision ; sh:maxCount 1 ; sh:class est:NurseryProvision ; sh:node est:BooleanValueShape ; sh:name "Nursery provision"@en ; sh:message "Nursery provision is recorded at most once, as a true-or-false est:NurseryProvision value."@en ] ;
+    sh:property [ sh:path esto:hasSixthFormProvision ; sh:maxCount 1 ; sh:class est:SixthFormProvision ; sh:node est:BooleanValueShape ; sh:name "Sixth-form provision"@en ; sh:message "Sixth-form provision is recorded at most once, as a true-or-false est:SixthFormProvision value."@en ] ;
+    sh:property [ sh:path esto:hasSpecialClassProvision ; sh:maxCount 1 ; sh:class est:SpecialClassProvision ; sh:node est:BooleanValueShape ; sh:name "Special-class provision"@en ; sh:message "Special-class provision is recorded at most once, as a true-or-false est:SpecialClassProvision value."@en ] .
+
+est:BoardingTypeShape
+    a sh:NodeShape ;
+    rdfs:label "Boarding type shape"@en ;
+    rdfs:comment "A boarding type is recorded at most once, and only for a school that has boarders. Added v1.1."@en ;
+    sh:targetSubjectsOf esto:classifiedByBoardingType ;
+    sh:property [
+        sh:path esto:classifiedByBoardingType ;
+        sh:maxCount 1 ;
+        sh:in ( est:BoardingSchool est:HasBoarders ) ;
+        sh:name "Boarding type"@en ;
+        sh:message "Boarding type must be boarding school or has boarders, recorded at most once."@en ;
+    ] ;
+    sh:property [
+        sh:path ( esto:hasBoardingProvision rdf:value ) ;
+        sh:hasValue true ;
+        sh:name "Has boarders"@en ;
+        sh:message "A boarding type is only recorded for a school whose boarding provision is true."@en ;
+    ] .
