@@ -1,4 +1,4 @@
-﻿# Governance tab field coverage
+# Governance tab field coverage
 
 This page is generated from `models/provider-field-coverage.ttl` - do not edit directly.
 

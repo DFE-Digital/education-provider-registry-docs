@@ -1,10 +1,10 @@
-﻿# Training
+# Training
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Training/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Training/> |
 | Compact identifier | `gov:Training` |
 | Preferred label | Training |
 | Alternative labels |  |

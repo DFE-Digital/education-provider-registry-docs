@@ -1,10 +1,10 @@
-﻿# Board
+# Board
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Board/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Board/> |
 | Compact identifier | `gov:Board` |
 | Preferred label | Board |
 | Alternative labels |  |

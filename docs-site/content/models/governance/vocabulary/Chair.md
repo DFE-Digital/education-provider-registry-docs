@@ -1,10 +1,10 @@
-﻿# Chair
+# Chair
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Chair/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Chair/> |
 | Compact identifier | `gov:Chair` |
 | Preferred label | Chair |
 | Alternative labels |  |

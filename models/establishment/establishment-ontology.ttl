@@ -35,10 +35,10 @@ esto:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-09-24"^^xsd:date ;
+    dcterms:modified "2026-10-14"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.19" ;
+    owl:versionInfo "2.0" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -60,19 +60,31 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v1.6: OfstedInspectionRecord class and hasOfstedInspectionRecord object property removed. EPR does not hold Ofsted inspection data. All SHACL property shapes referencing hasOfstedInspectionRecord removed. est:InspectorateReport rdfs:comment updated to remove the now-stale reference to OfstedInspectionRecord."@en ;
     rdfs:comment "v1.5: Site and address model separated. New classes: est:Site (physical location where education is delivered, carries site name via rdfs:label, UPRN, OS grid reference, and a postal address), est:Address (postal or correspondence address, independent of any physical site). New object properties: esto:hasMainSite (EstablishmentLocationAndContact → Site, 0..1), esto:hasAdditionalSite (EstablishmentLocationAndContact → Site, 0..*; SHACL-scoped to 3 permitted establishment types), esto:hasAddress (Site → Address, 0..1), esto:hasRegisteredAddress (no domain restriction — used on both EstablishmentLocationAndContact and EstablishmentGroup, range Address, 0..1), esto:hasContactAddress (EstablishmentGroup → Address, 0..1). Deprecated: est:MainAddress, esto:hasMainAddress. Domain updated: esto:hasUprn domain changed from MainAddress to Site; esto:hasCountry domain changed from MainAddress to Address; esto:hasOsGridReference domain extended to union of AdministrativeGeography and Site."@en ;
     rdfs:comment "v1.7: Organisation and Person superclasses added. New classes: est:Organisation (superclass of Establishment, EstablishmentGroup, LocalAuthority), est:Person (superclass of GovernancePerson). Removed classes: est:AcademySponsor, est:Proprietor, est:SchoolSponsor (SchoolSponsor was a GIAS legacy group type — sponsor is a role, not a group type). Removed property: esto:hasAcademySponsor. Added properties: esto:hasProprietor (domain Establishment, range Organisation|Person), esto:sponsoredBy (domain Establishment, range Organisation). Updated: esto:accountableToProprietor range changed from est:Proprietor to union of est:Organisation and est:Person. est:EstablishmentGroup rdfs:comment updated to remove reference to school sponsors as a group type."@en ;
-    rdfs:comment "v1.8: the v1.2 governance model (8 classes, 10 object properties, 40 named individuals - GovernanceAppointment, GovernanceIdentifier, GovernanceRoleType, GovernanceAppointmentDate, GovernanceTermEndDate, GovernanceAppointingBody, GovernancePerson, GovernancePersonIdentifier and their supporting properties/individuals) removed entirely, now superseded by models/governance/governance-ontology.ttl v0.11. Reconciliation record: docs/transformation/data/modelling/claude/establishment-governance-overlap-removal-plan.md. est:GroupGovernanceAppointmentSubjectShape SHACL shape (establishment-shacl.ttl) also removed as part of this change, since it targeted the now-removed esto:hasGroupGovernanceAppointment. Nothing else in this file referenced the removed classes/properties."@en ;
+    rdfs:comment "v1.8: the v1.2 governance model (8 classes, 10 object properties, 40 named individuals - GovernanceAppointment, GovernanceIdentifier, GovernanceRoleType, GovernanceAppointmentDate, GovernanceTermEndDate, GovernanceAppointingBody, GovernancePerson, GovernancePersonIdentifier and their supporting properties/individuals) removed entirely, now superseded by models/governance/governance-ontology.ttl v0.11. est:GroupGovernanceAppointmentSubjectShape SHACL shape (establishment-shacl.ttl) also removed as part of this change, since it targeted the now-removed esto:hasGroupGovernanceAppointment. Nothing else in this file referenced the removed classes/properties."@en ;
     rdfs:comment "v1.9: est:TypeOfSenProvision given 12 owl:NamedIndividual values (SpeechLanguageAndCommunicationNeeds, AutisticSpectrumDisorder, SocialEmotionalAndMentalHealth, ModerateLearningDifficulty, SevereLearningDifficulty, ProfoundAndMultipleLearningDifficulty, SpecificLearningDifficulty, PhysicalDisability, HearingImpairment, VisualImpairment, MultiSensoryImpairment, OtherDifficultyOrDisability) - previously an open-ended class with no enumerated values, despite GIAS's SEN1-SEN13 fields drawing from a closed, statutory list grounded in the four broad areas of need in the SEND Code of Practice 0 to 25 (2015). Matches the real GIAS extract's 12 observed codes exactly. No 'not applicable' individual added - an establishment with no SEN provision simply has no esto:classifiedByTypeOfSenProvision triple. Also fixed: est:TypeOfResourcedProvision's rdfs:comment incorrectly described it as the SEN need type (that's est:TypeOfSenProvision's job) - it is actually which kind of specialist SEN facility exists (resourced provision unit and/or SEN unit); given 2 owl:NamedIndividual values (ResourcedProvisionFacility, and the pre-existing est:SenUnit concept reused via punning) matching its real, much smaller GIAS value set."@en ;
     rdfs:comment "v1.10: est:JobTitle added as a new owl:Class (free-text GIAS HeadPreferredJobTitle - 387 distinct values in the live extract, not a closed enumeration, so no owl:NamedIndividual values). New object property esto:hasJobTitle (domain est:HeadteacherOrPrincipal, range est:JobTitle, 0..1). Added because 'Executive Headteacher' - a real DfE-recognised title for a headteacher leading every school in a federation, per GOV.UK federations governance guidance - was previously only recorded ad hoc as an rdfs:comment on an instance, not as a modelled property."@en ;
     rdfs:comment "v1.11: esto:classifiedByTypeOfSenProvision cardinality corrected from 0..1 to 0..*. GIAS records up to 13 SEN need types per establishment (SEN1-SEN13); the real extract shows 1,619 open establishments with more than one type recorded, so the 0..1 comment was factually wrong, not just conservative. No SHACL shape previously constrained this property, so no shape change was needed - only the ontology's own cardinality documentation."@en ;
     rdfs:comment "v1.12: est:TypeOfResourcedProvision given a third owl:NamedIndividual value, est:ResourcedProvisionAndSenUnitFacility, matching GIAS's real closed-list value 'Resourced provision and SEN unit' (229 open establishments in the live extract) - previously only the two single-facility values (ResourcedProvisionFacility, SenUnit) existed, so this combined case had no individual to assert. classifiedByTypeOfResourcedProvision's cardinality (0..1) is correct as-is: GIAS records this as one field with one of four values (including blank), not two independent flags, so the fix was a missing enumeration value, not a cardinality bug like v1.11's classifiedByTypeOfSenProvision."@en ;
     rdfs:comment "v1.13: four compound measures given queryable sub-figure properties, closing a gap found while building a logical model of the GIAS Establishment Details page (docs/transformation/data/modelling/logical-model/establishment-details-logical-model.md). Each compound measure's own rdfs:comment already named its sub-figures, and establishment-vocabulary.ttl already carried them as separate SKOS concepts, but no esto: property existed to attach a sub-figure value to an instance independently of the others - callers had to parse free text out of an rdfs:label/rdfs:comment (e.g. '12 places, 12 on roll'). New classes: est:CensusDate, est:PercentagePupilsEligibleForFreeSchoolMeals, est:ResourcedProvisionCapacity, est:ResourcedProvisionPupilCount, est:SenUnitCapacity, est:SenUnitPupilCount. New object properties: esto:hasCensusDate (domain est:CapacityAndPupilMeasures, range est:CensusDate, 0..1 - one shared census date for the whole block, not asserted per measure), esto:hasPercentageEligibleForFreeSchoolMeals (domain est:PupilsEligibleForFreeSchoolMeals, range est:PercentagePupilsEligibleForFreeSchoolMeals, 0..1), esto:hasResourcedProvisionCapacity and esto:hasResourcedProvisionPupilCount (domain est:ResourcedProvisionMeasure, 0..1 each), esto:hasSenUnitCapacity and esto:hasSenUnitPupilCount (domain est:SenUnitMeasure, 0..1 each). The existing compound properties (hasPupilCount, hasFreeSchoolMealMeasure, hasResourcedProvisionMeasure, hasSenUnitMeasure) and their rdfs:comment wording are unchanged - the new properties are additive siblings on the same blank-node instance, not a replacement, so existing worked-example Turtle (e.g. Medlock's free-text resourced-provision label) remains valid; a future worked-example pass can migrate to the structured properties where the underlying GIAS extract has the sub-figures separately. No SHACL shape previously targeted any of the four compound-measure classes by name, so no SHACL change was needed."@en ;
-    rdfs:comment "v1.14: address modelling analysis and fixes (docs/transformation/data/modelling/claude/address-modelling-analysis-and-recommendations.md). (1) est:Address decomposed into structured component properties matching GIAS's own already-decomposed source fields (Street, Locality, Address3, Town, County, Postcode) - previously held only as one concatenated rdfs:label string. New classes: est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode. New object properties, all domain est:Address, 0..1 each: esto:hasAddressLine1, esto:hasAddressLine2, esto:hasAddressLine3, esto:hasTown, esto:hasCounty, esto:hasPostcode. rdfs:label on est:Address is retained as a derived, human-readable form, not replaced - existing worked-example Turtle with only a concatenated label remains valid. Applies uniformly wherever est:Address is used (establishment site address via hasMainSite/hasAddress, group registered/contact address), since all three are documented as coming from the same shape of source fields. (2) est:MainAddress and esto:hasMainAddress removed entirely from this ontology file (previously 'superseded' in prose only via v1.5's comment, with no owl:deprecated annotation - still a plain owl:Class/owl:ObjectProperty a reasoner or codegen tool would treat as current). Retained as a status-Retired skos:Concept in establishment-vocabulary.ttl only, for historical resolution of the old URI (skos:exactMatch est:Address preserved there) - this ontology file carries no trace of it now. (3) est:MainAddress's own migration-guidance comment was factually wrong before removal - it told readers to use esto:hasRegisteredAddress, which is EstablishmentGroup-scoped and never applies to an establishment; the correct path was always esto:hasMainSite -> esto:hasAddress. Moot now the class is gone, but noted here since the same wrong guidance could otherwise have been copied elsewhere. (4) esto:hasEstablishmentLocationAndContact, esto:hasMainSite and esto:hasAddress cardinality comments corrected from '0..1' to reflect what est:EstablishmentUniversalShape (establishment-shacl.ttl) actually enforces: minCount 1 on the full ( hasEstablishmentLocationAndContact hasMainSite hasAddress ) property path, universally, for every establishment type. The OWL-level per-property cardinality (0..1 on each hop) is unchanged and correct in isolation - only the prose describing what's actually required end-to-end was wrong. (5) esto:hasMainSite's comment no longer lists est:Address's own GIAS source fields (Street, Locality, Address3, Town, Postcode) as if they were hasMainSite's; those belong to esto:hasAddress's mapping."@en ;
+    rdfs:comment "v1.14: address modelling analysis and fixes. (1) est:Address decomposed into structured component properties matching GIAS's own already-decomposed source fields (Street, Locality, Address3, Town, County, Postcode) - previously held only as one concatenated rdfs:label string. New classes: est:AddressLine1, est:AddressLine2, est:AddressLine3, est:Town, est:County, est:Postcode. New object properties, all domain est:Address, 0..1 each: esto:hasAddressLine1, esto:hasAddressLine2, esto:hasAddressLine3, esto:hasTown, esto:hasCounty, esto:hasPostcode. rdfs:label on est:Address is retained as a derived, human-readable form, not replaced - existing worked-example Turtle with only a concatenated label remains valid. Applies uniformly wherever est:Address is used (establishment site address via hasMainSite/hasAddress, group registered/contact address), since all three are documented as coming from the same shape of source fields. (2) est:MainAddress and esto:hasMainAddress removed entirely from this ontology file (previously 'superseded' in prose only via v1.5's comment, with no owl:deprecated annotation - still a plain owl:Class/owl:ObjectProperty a reasoner or codegen tool would treat as current). Retained as a status-Retired skos:Concept in establishment-vocabulary.ttl only, for historical resolution of the old URI (skos:exactMatch est:Address preserved there) - this ontology file carries no trace of it now. (3) est:MainAddress's own migration-guidance comment was factually wrong before removal - it told readers to use esto:hasRegisteredAddress, which is EstablishmentGroup-scoped and never applies to an establishment; the correct path was always esto:hasMainSite -> esto:hasAddress. Moot now the class is gone, but noted here since the same wrong guidance could otherwise have been copied elsewhere. (4) esto:hasEstablishmentLocationAndContact, esto:hasMainSite and esto:hasAddress cardinality comments corrected from '0..1' to reflect what est:EstablishmentUniversalShape (establishment-shacl.ttl) actually enforces: minCount 1 on the full ( hasEstablishmentLocationAndContact hasMainSite hasAddress ) property path, universally, for every establishment type. The OWL-level per-property cardinality (0..1 on each hop) is unchanged and correct in isolation - only the prose describing what's actually required end-to-end was wrong. (5) esto:hasMainSite's comment no longer lists est:Address's own GIAS source fields (Street, Locality, Address3, Town, Postcode) as if they were hasMainSite's; those belong to esto:hasAddress's mapping."@en ;
     rdfs:comment "v1.15: est:StatutoryAgeRange given queryable low/high sub-properties, the same compound-value pattern already fixed for capacity/pupil measures (v1.13) and address (v1.14) - previously held only as a combined rdfs:label ('2 to 11'@en) with the actual GIAS StatutoryLowAge/StatutoryHighAge values repeated as free text in an rdfs:comment on some but not all worked-example instances. New classes: est:StatutoryLowAge, est:StatutoryHighAge. New object properties, both domain est:StatutoryAgeRange, range the respective new class, 0..1 each: esto:hasStatutoryLowAge, esto:hasStatutoryHighAge. Unlike the v1.14 address components (which use rdfs:label for their text values), these follow est:SchoolCapacity's numeric rdf:value pattern (xsd:nonNegativeInteger) - ages are numeric, not free text, so the numeric-measure convention is the correct one to match here. rdfs:label on est:StatutoryAgeRange itself is retained as a derived, human-readable form."@en ;
     rdfs:comment "v1.16: est:EstablishmentLeadership given a real owl:Class and esto:hasEstablishmentLeadership object property (domain est:Establishment, range est:EstablishmentLeadership, 0..1), correcting a divergence between the ontology and its own SKOS vocabulary that had existed since est:EstablishmentLeadership was first added to establishment-vocabulary.ttl as a top-level concept (skos:topConceptOf est:establishmentDetailsVocabulary, a peer of est:EstablishmentLocationAndContact/est:EducationAdmissionsAndProvision/etc.) - the vocabulary always intended leadership to be its own grouping, but the ontology never implemented that grouping and instead attached esto:hasHeadteacherOrPrincipal and esto:hasCentreManager directly to est:EstablishmentLocationAndContact, whose own definition is 'the group of fields describing how to contact and locate the establishment physically' - a headteacher's name is neither. Domain of esto:hasHeadteacherOrPrincipal and esto:hasCentreManager corrected to est:EstablishmentLeadership; esto:hasJobTitle's domain (est:HeadteacherOrPrincipal) is unchanged, since a job title is correctly a property of the specific headteacher instance, not a sibling grouping field. est:HeadteacherOrPrincipal and est:JobTitle class declarations moved from the 'contact and location' section of this file into a new 'establishment leadership' section, matching the vocabulary's grouping; est:CentreManager's declaration (in the children's-centre operational-record section, alongside est:ProviderType) was left in place, since moving it would separate it from its other children's-centre-specific siblings for no benefit - only its property's domain needed correcting. establishment-shacl.ttl's three property-path shapes referencing esto:hasHeadteacherOrPrincipal/hasCentreManager (the universal shape's max-1 rule, and the children's-centre group's minCount-1-Manager/maxCount-0-Headteacher rules) updated to path through esto:hasEstablishmentLeadership instead of esto:hasEstablishmentLocationAndContact, matching the new domain. Also reconciled a duplicate vocabulary concept found while implementing this: establishment-vocabulary.ttl carried both est:JobTitle (added at ontology v1.10, actually implemented with an owl:Class and esto:hasJobTitle, status Provisional) and est:PreferredJobTitle (pre-existing, vocabulary-only, never given an ontology counterpart, status Preferred, skos:broader est:EstablishmentLeadership) for what is the same real GIAS field (HeadPreferredJobTitle) - est:PreferredJobTitle deleted outright from the vocabulary (not deprecated - nothing referenced it outside its own declaration and two membership lists), est:JobTitle retained as the one surviving, actually-implemented concept."@en ;
     rdfs:comment "v1.17: est:HeadteacherOrPrincipal and est:CentreManager both given rdfs:subClassOf est:Person, matching the pattern gov:GovernancePerson already uses (rdfs:subClassOf est:Person, governance-ontology.ttl) - a headteacher or centre manager's name was previously carried only as an rdfs:label on an otherwise untyped-as-a-person instance, formally no different from any other labelled blank node in this ontology. Purely additive - existing worked-example Turtle needs no change, since RDFS subsumption means every existing `a est:HeadteacherOrPrincipal` instance is now also inferred `a est:Person` without any triple being edited. establishment-vocabulary.ttl's est:Person concept updated to list both as skos:narrower and to mention them in its definition, which previously only named independent-school proprietors as an example of the class's use."@en ;
-    rdfs:comment "v1.18: group membership role type added, closing gap 2.G1 in docs/transformation/data/enterprise/claude/organisation-groups-alignment-establishment-model-vs-edm.md (plan: group-membership-role-type-plan.md). New class est:GroupMembershipRoleType (closed enumeration, modelled like est:GroupRelationshipType); 3 owl:NamedIndividual values est:Member, est:SponsoredAcademy and est:Sponsor, matching the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity in full. est:Sponsor describes an organisation's membership of the group and is not yet assertable via esto:hasMembership (domain est:Establishment - gap 2.G2 remains open); it is included for parity and for the future organisation-as-member case. New object property esto:hasGroupMembershipRole (domain est:GroupMembership, range est:GroupMembershipRoleType, 0..1). This lets a single est:EstablishmentGroup carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second 'School sponsor' (SP-prefixed) group record for an organisation that already exists as the members' trust (TR-prefixed). esto:sponsoredBy retained unchanged - it names the DfE-approved sponsor organisation, which need not be an est:EstablishmentGroup (for example a diocese), a distinct fact from the in-group role. establishment-shacl.ttl gains est:GroupMembershipShape (the first shape to target est:GroupMembership); establishment-vocabulary.ttl and establishment-taxonomy.ttl gain the SKOS mirror of the new class and its values."@en ;
+    rdfs:comment "v1.18: group membership role type added, closing gap 2.G1 in the alignment review of organisation groups against the enterprise data model. New class est:GroupMembershipRoleType (closed enumeration, modelled like est:GroupRelationshipType); 3 owl:NamedIndividual values est:Member, est:SponsoredAcademy and est:Sponsor, matching the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity in full. est:Sponsor describes an organisation's membership of the group and is not yet assertable via esto:hasMembership (domain est:Establishment - gap 2.G2 remains open); it is included for parity and for the future organisation-as-member case. New object property esto:hasGroupMembershipRole (domain est:GroupMembership, range est:GroupMembershipRoleType, 0..1). This lets a single est:EstablishmentGroup carry both the ordinary-membership and the sponsored-academy relationship that GIAS can only express by minting a second 'School sponsor' (SP-prefixed) group record for an organisation that already exists as the members' trust (TR-prefixed). esto:sponsoredBy retained unchanged - it names the DfE-approved sponsor organisation, which need not be an est:EstablishmentGroup (for example a diocese), a distinct fact from the in-group role. establishment-shacl.ttl gains est:GroupMembershipShape (the first shape to target est:GroupMembership); establishment-vocabulary.ttl and establishment-taxonomy.ttl gain the SKOS mirror of the new class and its values."@en ;
     rdfs:comment "v1.19: sponsorship tightened, following the sponsorship review in docs/transformation/data/modelling/groups/establishment-groups-logical-model-recommendation.md. (1) New class est:Sponsorship: a dated record that a person or organisation sponsors an academy or free school, with new classes est:SponsorshipStartDate and est:SponsorshipEndDate (rdf:value xsd:date) and new object properties esto:hasSponsorship (domain est:Establishment, range est:Sponsorship, 0..*), esto:hasSponsor (domain est:Sponsorship, range est:Organisation or est:Person, exactly 1), esto:hasSponsorshipStartDate and esto:hasSponsorshipEndDate (0..1 each). This is now the one mechanism for sponsorship, whether the sponsor is the academy's own trust (82% of GIAS sponsor links) or another body such as a diocese (18%), and it keeps the joined dates and sponsor history that esto:sponsoredBy cannot. (2) esto:sponsoredBy retained as a current-value shortcut for the sponsor of the current sponsorship. Its range is widened from est:Organisation to est:Organisation or est:Person, matching esto:hasProprietor, because about ten GIAS sponsors are named individuals. (3) est:SponsoredAcademy and est:Sponsor removed from this ontology outright, keeping the ontology free of deprecated terms (the v1.14 est:MainAddress precedent); they survive only as status-Retired concepts in establishment-vocabulary.ttl, for historical resolution of the URIs. est:SponsoredAcademy (v1.18) recorded sponsorship as a second group membership: it duplicated esto:sponsoredBy with no rule linking the two, never named the sponsor, could not represent a sponsor other than the academy's trust, and partly reversed v1.7's decision that sponsor is a role, not a group type. est:Sponsor could never be asserted correctly, because a membership's subject is always an establishment. est:GroupMembershipRoleType keeps est:Member as its only current value, and gap 2.G2 is closed as no longer needed. establishment-shacl.ttl v0.10 enforces the new rules, establishment-vocabulary.ttl and establishment-taxonomy.ttl carry the SKOS changes, and the Medlock and Oasis worked examples move to the new pattern. Also restored the tail of the 'Named individuals' section header, which an earlier edit had left stranded after the role-type values."@en ;
+    rdfs:comment "v2.0: legal entities, roles and responsibilities, following lessons from the physical model slice, built and tested against real GIAS data. (1) New class est:LegalEntity (subclass of est:Organisation) for any body that can hold roles and be responsible for schools, incorporated or not, with est:LegalForm, est:CharityStatus (est:RegisteredCharity, est:ExemptCharity, est:ExceptedCharity), est:IncorporationDate and est:DissolutionDate. Companies House number and UKPRN move to the legal entity (esto:hasCompaniesHouseRegistration, esto:hasLegalEntityUkprn). (2) New class est:RecognisedRole, a dated role held by a legal entity or person, typed by est:RecognisedRoleType: est:AcademyTrust, est:FoundationTrust, est:UmbrellaTrust and est:AcademySponsor. New class est:AcademyTrustClassification, a dated classification of a legal entity as est:SingleAcademyTrust, est:MultiAcademyTrust or est:SecureSingleAcademyTrust (est:AcademyTrustType). est:AcademyTrust, est:SingleAcademyTrust, est:MultiAcademyTrust and est:SecureSingleAcademyTrust keep their IRIs but change from classes to named individuals, so a SAT-to-MAT conversion is a change of classification on one legal entity, not a new organisation. (3) New class est:EstablishmentResponsibility, a dated responsibility of a legal entity or person for an establishment, typed by est:ResponsibilityType: est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility and est:ProprietorResponsibility. A change of operator is a new responsibility for the same establishment. New shortcut esto:runByAcademyTrust; esto:sponsoredBy and esto:hasProprietor redefined as the present-day sponsor and proprietors, and esto:hasProprietor widened to 0..*. (4) est:EstablishmentGroup narrowed to federations and children's centre groups and collaborations, which are not legal entities. New class est:LeadCentreDesignation (dated, from est:GroupMembership) and est:GroupMembershipEndDate. (5) esto:hasRegisteredAddress moved to est:LegalEntity; esto:hasContactAddress widened to legal entities and groups. (6) New annotation property esto:changesOverTime marks facts that change during the life of what they describe. Shared period dates est:PeriodStartDate and est:PeriodEndDate, with esto:hasStartDate and esto:hasEndDate. Deleted outright: est:GenericTrust (it described the foundation trust, GIAS type 02), est:Sponsorship, est:SponsorshipStartDate, est:SponsorshipEndDate, est:GroupRelationship, est:GroupRelationshipType, est:SuccessorMultiAcademyTrust, est:PredecessorSingleAcademyTrust, est:GroupUkprn, est:GroupIncorporatedOnDate, est:GroupId, est:GroupUniqueIdentifier, and properties esto:accountableToAcademyTrust, esto:accountableToProprietor, esto:hasSponsorship, esto:hasSponsor, esto:hasSponsorshipStartDate, esto:hasSponsorshipEndDate, esto:isSingleAcademyTrust, esto:hasGroupUkprn, esto:hasGroupCompaniesHouseNumber, esto:hasGroupRelationship, esto:relatesTo, esto:classifiedByGroupRelationshipType, esto:identifiedByGroupId, esto:hasGroupUniqueIdentifier and esto:hasGroupIncorporatedOnDate. GIAS group numbers are a GIAS and migration concern, held in the logical and physical models."@en ;
     est:status "Provisional"@en .
+
+
+#################################################################
+# Annotation properties (v2.0)
+#################################################################
+
+esto:changesOverTime
+    a owl:AnnotationProperty ;
+    rdfs:label "changes over time"@en ;
+    rdfs:range xsd:boolean ;
+    rdfs:comment "True when the real-world facts a class describes can change during the life of the thing they describe, such as a school's name or status, or the trust that runs it. It says nothing about how history is recorded, which is a logical-model decision. Added v2.0."@en .
 
 
 #################################################################
@@ -82,7 +94,7 @@ esto:establishmentDetailsConceptualModel
 est:Organisation
     a owl:Class ;
     rdfs:label "Organisation"@en ;
-    rdfs:comment "A structured group of people working together to achieve shared goals or a specific purpose. In EPR this includes education establishments, establishment groups, local authorities, and other bodies with a role in the provision or oversight of education."@en .
+    rdfs:comment "A structured group of people working together to achieve shared goals or a specific purpose. In EPR this includes education establishments, establishment groups, local authorities, legal entities and other bodies with a role in the provision or oversight of education."@en .
 
 est:Person
     a owl:Class ;
@@ -97,6 +109,7 @@ est:Establishment
 
 est:EstablishmentDetails
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Establishment details"@en ;
     rdfs:comment "The set of publicly viewable detail fields for an establishment record."@en .
 
@@ -157,6 +170,7 @@ est:IdentifierRole
 
 est:EstablishmentLifecycle
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Establishment lifecycle"@en ;
     rdfs:comment "The lifecycle record of an establishment, grouping its status and significant dates."@en .
 
@@ -207,6 +221,7 @@ est:DateLastChangedOrConfirmed
 
 est:EstablishmentClassification
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Establishment classification"@en ;
     rdfs:comment "The classification record grouping the establishment type, type group and education phase for an establishment."@en .
 
@@ -232,23 +247,9 @@ est:EducationPhase
 
 est:EstablishmentAccountability
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Accountability relationship"@en ;
-    rdfs:comment "A relationship between an establishment and the organisation accountable for it. An establishment may have zero or more accountability relationships of different kinds."@en .
-
-est:Sponsorship
-    a owl:Class ;
-    rdfs:label "Sponsorship"@en ;
-    rdfs:comment "A dated record that a person or organisation sponsors an academy or free school under the Academies Act 2010. The sponsor may be the academy's own trust, another body such as a diocese, college or company, or a named individual. Replaces the GIAS 'School sponsor' (SP-prefixed) group-link row, whether that record duplicates the academy's trust or names a different body. Distinct from group membership (est:GroupMembership) and from accountability (est:EstablishmentAccountability). Added v1.19."@en .
-
-est:SponsorshipStartDate
-    a owl:Class ;
-    rdfs:label "Sponsorship start date"@en ;
-    rdfs:comment "The date a sponsorship began. Instances carry the date as rdf:value with an xsd:date datatype. Maps to GroupLink.effectiveDate on the GIAS 'School sponsor' group link. Added v1.19."@en .
-
-est:SponsorshipEndDate
-    a owl:Class ;
-    rdfs:label "Sponsorship end date"@en ;
-    rdfs:comment "The first date on which a sponsorship no longer applied. Instances carry the date as rdf:value with an xsd:date datatype. GIAS holds no equivalent. Added v1.19."@en .
+    rdfs:comment "A relationship between an establishment and the local authority that maintains it. v2.0: the academy trust and proprietor links were removed. Who runs, supports, sponsors or is proprietor of an establishment is recorded as an est:EstablishmentResponsibility."@en .
 
 est:LocalAuthority
     a owl:Class ;
@@ -256,24 +257,13 @@ est:LocalAuthority
     rdfs:label "Local authority"@en ;
     rdfs:comment "A local government body that serves two distinct roles for an establishment: (1) the geographic local authority in whose area the establishment is located — this scopes the establishment number within the DfE number and applies to all establishment types including academies and independent schools; (2) the body maintaining or otherwise accountable for LA-maintained schools. For academies and independent schools only the geographic reference role applies; they are not maintained by the local authority."@en .
 
-est:AcademyTrust
-    a owl:Class ;
-    rdfs:subClassOf est:EstablishmentGroup ;
-    rdfs:label "Academy trust"@en ;
-    rdfs:comment "A charitable company limited by guarantee that enters into a funding agreement with the Secretary of State under the Academies Act 2010 to operate one or more academies or free schools. The trust is accountable for educational standards, financial management and employment of staff at its academies. An academy trust is simultaneously an accountability body (holding the funding agreement) and an establishment group (the organisational structure containing its academies)."@en .
-
-est:SingleAcademyTrust
-    a owl:Class ;
-    rdfs:label "Single academy trust"@en ;
-    rdfs:comment "An academy trust constituted under the Academies Act 2010 that holds a funding agreement for exactly one academy. Distinguished from a multi-academy trust, which holds funding agreements for two or more academies. A SAT can expand into a MAT by taking on a second academy."@en ;
-    rdfs:subClassOf est:AcademyTrust .
-
 #################################################################
 # Classes - education, admissions and provision
 #################################################################
 
 est:EducationAdmissionsAndProvision
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Education, admissions and provision"@en ;
     rdfs:comment "The group of classification fields describing how an establishment admits pupils and what provision it offers."@en .
 
@@ -329,6 +319,7 @@ est:SpecialClassProvision
 
 est:CapacityAndPupilMeasures
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Capacity and pupil measures"@en ;
     rdfs:comment "The group of numeric measures describing an establishment's capacity and pupil population."@en .
 
@@ -364,6 +355,7 @@ est:PercentagePupilsEligibleForFreeSchoolMeals
 
 est:FaithContext
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Faith context"@en ;
     rdfs:comment "The group of faith-related classification fields for an establishment."@en .
 
@@ -389,6 +381,7 @@ est:Diocese
 
 est:SenAndResourcedProvision
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "SEN and resourced provision"@en ;
     rdfs:comment "The group of fields describing special educational needs provision and resourced-provision arrangements."@en .
 
@@ -642,68 +635,19 @@ esto:accountableToLocalAuthority
     rdfs:range est:LocalAuthority ;
     rdfs:comment "Cardinality: 0..1. Present for LA-maintained schools."@en .
 
-esto:accountableToAcademyTrust
-    a owl:ObjectProperty ;
-    rdfs:label "accountable to academy trust"@en ;
-    rdfs:domain est:EstablishmentAccountability ;
-    rdfs:range est:AcademyTrust ;
-    rdfs:comment "Cardinality: 0..1. Present for academies and free schools."@en .
-
-esto:accountableToProprietor
-    a owl:ObjectProperty ;
-    rdfs:label "accountable to proprietor"@en ;
-    rdfs:domain est:EstablishmentAccountability ;
-    rdfs:range [ a owl:Class ; owl:unionOf ( est:Organisation est:Person ) ] ;
-    rdfs:comment "Cardinality: 0..1. Present for independent schools."@en .
-
 esto:hasProprietor
     a owl:ObjectProperty ;
     rdfs:label "has proprietor"@en ;
     rdfs:domain est:Establishment ;
-    rdfs:range [ a owl:Class ; owl:unionOf ( est:Organisation est:Person ) ] ;
-    rdfs:comment "The person or organisation that owns or operates this independent school. Cardinality: 0..1."@en .
+    rdfs:range [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
+    rdfs:comment "A person or legal entity that is proprietor of this school now: responsible for running it, as for an independent school, a non-maintained special school or a city technology college. Being proprietor does not mean owning the school's business or premises. Where responsibilities are recorded, each proprietor matches a present-day est:ProprietorResponsibility. Cardinality: 0..*, because a school can have more than one proprietor (widened from 0..1 in v2.0)."@en .
 
 esto:sponsoredBy
     a owl:ObjectProperty ;
     rdfs:label "sponsored by"@en ;
     rdfs:domain est:Establishment ;
-    rdfs:range [ a owl:Class ; owl:unionOf ( est:Organisation est:Person ) ] ;
-    rdfs:comment "Current-value shortcut for the sponsor of this academy or free school: the party named by esto:hasSponsor on the establishment's current est:Sponsorship (the one with no end date). Where both are recorded they must agree. The sponsor is the person or organisation approved by the Secretary of State under the Academies Act 2010; it may be the academy's own trust, another body such as a diocese, or a named individual. It is never an establishment, a federation, or a children's centre group or collaboration (enforced in establishment-shacl.ttl). Cardinality: 0..1, and only for academy and free school types. Range widened from est:Organisation to est:Organisation or est:Person in v1.19."@en .
-
-esto:hasSponsorship
-    a owl:ObjectProperty ;
-    rdfs:label "has sponsorship"@en ;
-    rdfs:domain est:Establishment ;
-    rdfs:range est:Sponsorship ;
-    rdfs:comment "Cardinality: 0..*. A dated sponsorship of this academy or free school. At most one should be current (no end date); earlier sponsorships are kept as history. Only for academy and free school types. Added v1.19."@en .
-
-esto:hasSponsor
-    a owl:ObjectProperty ;
-    rdfs:label "has sponsor"@en ;
-    rdfs:domain est:Sponsorship ;
-    rdfs:range [ a owl:Class ; owl:unionOf ( est:Organisation est:Person ) ] ;
-    rdfs:comment "Cardinality: exactly 1. The person or organisation that sponsors the establishment in this sponsorship. Never an establishment, a federation, or a children's centre group or collaboration (enforced in establishment-shacl.ttl). Added v1.19."@en .
-
-esto:hasSponsorshipStartDate
-    a owl:ObjectProperty ;
-    rdfs:label "has sponsorship start date"@en ;
-    rdfs:domain est:Sponsorship ;
-    rdfs:range est:SponsorshipStartDate ;
-    rdfs:comment "Cardinality: 0..1. The date the sponsorship began. Maps to the joined date of the GIAS 'School sponsor' group link (GroupLink.effectiveDate). Added v1.19."@en .
-
-esto:hasSponsorshipEndDate
-    a owl:ObjectProperty ;
-    rdfs:label "has sponsorship end date"@en ;
-    rdfs:domain est:Sponsorship ;
-    rdfs:range est:SponsorshipEndDate ;
-    rdfs:comment "Cardinality: 0..1. The first date on which the sponsorship no longer applied. Absent while the sponsorship is current. GIAS holds no equivalent. Added v1.19."@en .
-
-esto:isSingleAcademyTrust
-    a owl:ObjectProperty ;
-    rdfs:label "is single academy trust"@en ;
-    rdfs:domain est:AcademyTrust ;
-    rdfs:range est:SingleAcademyTrust ;
-    rdfs:comment "Cardinality: 0..1. An academy trust may be a single academy trust."@en .
+    rdfs:range [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
+    rdfs:comment "The person or legal entity that sponsors this academy or free school now. Where responsibilities are recorded, it matches the present-day est:SponsorResponsibility. The sponsor may be the academy's own trust, another body such as a diocese, or a named individual. Never an establishment or an establishment group (enforced in establishment-shacl.ttl). Cardinality: 0..1, and only for academy and free school types. v2.0: range narrowed to est:LegalEntity or est:Person, and no longer defined by reference to est:Sponsorship, which was deleted."@en .
 
 
 #################################################################
@@ -961,6 +905,7 @@ esto:referencesExternalService
 
 est:EstablishmentLocationAndContact
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Contact and location"@en ;
     rdfs:comment "The group of fields describing how to contact and locate the establishment physically."@en .
 
@@ -995,6 +940,7 @@ est:Country
 
 est:EstablishmentLeadership
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Establishment leadership"@en ;
     rdfs:comment "The name, title and preferred job title of the person holding principal leadership responsibility for an establishment, such as the headteacher, principal or children's centre manager. Added v1.16."@en .
 
@@ -1023,6 +969,7 @@ est:JobTitle
 
 est:Site
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Site"@en ;
     rdfs:comment "A physical location at which an establishment operates. The site name is carried as rdfs:label. A site carries a UPRN (identifying the physical property), OS grid coordinates, and a postal address (via esto:hasAddress). Distinct from est:Address — a site is where education is delivered; an address locates an entity for administrative and correspondence purposes. Added v1.5."@en .
 
@@ -1073,6 +1020,7 @@ est:Postcode
 
 est:AdministrativeGeography
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Administrative geography"@en ;
     rdfs:comment "The administrative and statistical area classifications assigned to an establishment based on its postcode location. These are derived from the postcode via the GeoData lookup table or an equivalent postcode-to-area service. Covers ONS government office region, urban/rural classification, administrative ward, parliamentary constituency, lower-layer super output area and middle-layer super output area."@en .
 
@@ -1268,16 +1216,15 @@ esto:hasPostcode
 esto:hasRegisteredAddress
     a owl:ObjectProperty ;
     rdfs:label "has registered address"@en ;
-    rdfs:domain est:EstablishmentGroup ;
+    rdfs:domain est:LegalEntity ;
     rdfs:range est:Address ;
-    rdfs:comment "Cardinality: 0..1. The registered postal address of a group or trust as a legal entity. Mapped from GIAS EstablishmentGroup.GroupStreet, GroupLocality, GroupAddress3, GroupTown, GroupPostcode. Establishments do not carry a registered address directly — their postal address is accessed via esto:hasMainSite → esto:hasAddress. Added v1.5."@en .
+    rdfs:comment "Cardinality: 0..1. The registered office of a legal entity, as held by its registration authority, such as Companies House or the Charity Commission. The address belongs to the legal entity, so it does not move when an academy trust changes classification. Establishments and establishment groups do not have a registered office. v2.0: domain moved from est:EstablishmentGroup to est:LegalEntity."@en .
 
 esto:hasContactAddress
     a owl:ObjectProperty ;
     rdfs:label "has contact address"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:Address ;
-    rdfs:comment "Cardinality: 0..1. The contact or correspondence address of a group or trust, where this differs from the registered address. Mapped from GIAS EstablishmentGroup.GroupContactStreet, GroupContactLocality, GroupContactAddress3, GroupContactTown, GroupContactPostcode, GroupContactUPRN. Added v1.5."@en .
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:LegalEntity est:EstablishmentGroup ) ] ;
+    rdfs:comment "Cardinality: 0..1. The address used to contact a legal entity or an establishment group. It need not be a registered office or a teaching site. v2.0: domain widened from est:EstablishmentGroup to legal entities and establishment groups."@en .
 
 esto:hasWebsite
     a owl:ObjectProperty ;
@@ -1566,7 +1513,7 @@ est:QualityAssuranceBodyReport
 est:CompaniesHouseNumber
     a owl:Class ;
     rdfs:label "Companies House number"@en ;
-    rdfs:comment "A Companies House registration number. Currently scoped to online providers via AccreditationRecord (esto:hasCompaniesHouseNumber) and to establishment groups (esto:hasGroupCompaniesHouseNumber). The same class is reused across both contexts."@en .
+    rdfs:comment "The registration number Companies House gives a company. Used for legal entities (esto:hasCompaniesHouseRegistration) and for online providers through their accreditation record (esto:hasCompaniesHouseNumber)."@en .
 
 est:AccreditationStatus
     a owl:Class ;
@@ -1739,6 +1686,137 @@ esto:hasCentreManager
 
 
 #################################################################
+# Object properties - legal entities, roles and responsibilities (v2.0)
+#################################################################
+
+esto:hasLegalForm
+    a owl:ObjectProperty ;
+    rdfs:label "has legal form"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:LegalForm ;
+    rdfs:comment "Cardinality: 0..1. Added v2.0."@en .
+
+esto:hasCharityStatus
+    a owl:ObjectProperty ;
+    rdfs:label "has charity status"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:CharityStatus ;
+    rdfs:comment "Cardinality: 0..1. Absent for a legal entity that is not a charity. Added v2.0."@en .
+
+esto:hasIncorporationDate
+    a owl:ObjectProperty ;
+    rdfs:label "has incorporation date"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:IncorporationDate ;
+    rdfs:comment "Cardinality: 0..1. Added v2.0."@en .
+
+esto:hasDissolutionDate
+    a owl:ObjectProperty ;
+    rdfs:label "has dissolution date"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:DissolutionDate ;
+    rdfs:comment "Cardinality: 0..1. Added v2.0."@en .
+
+esto:hasCompaniesHouseRegistration
+    a owl:ObjectProperty ;
+    rdfs:label "has Companies House registration"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:CompaniesHouseNumber ;
+    rdfs:comment "Cardinality: 0..1. The Companies House number of a legal entity that is a company. Replaces esto:hasGroupCompaniesHouseNumber. Added v2.0."@en .
+
+esto:hasLegalEntityUkprn
+    a owl:ObjectProperty ;
+    rdfs:label "has legal entity UKPRN"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:UkProviderReferenceNumber ;
+    rdfs:comment "Cardinality: 0..1. The UK Provider Reference Number of the legal entity itself. A different fact from the UKPRN of any establishment it is responsible for. Replaces esto:hasGroupUkprn. Added v2.0."@en .
+
+esto:holdsRole
+    a owl:ObjectProperty ;
+    rdfs:label "holds role"@en ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
+    rdfs:range est:RecognisedRole ;
+    rdfs:comment "Cardinality: 0..*. A recognised role held by a legal entity or person. A person can hold only the academy sponsor role (enforced in establishment-shacl.ttl). Added v2.0."@en .
+
+esto:hasRoleType
+    a owl:ObjectProperty ;
+    rdfs:label "has role type"@en ;
+    rdfs:domain est:RecognisedRole ;
+    rdfs:range est:RecognisedRoleType ;
+    rdfs:comment "Cardinality: exactly 1. Added v2.0."@en .
+
+esto:hasAcademyTrustClassification
+    a owl:ObjectProperty ;
+    rdfs:label "has academy trust classification"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:AcademyTrustClassification ;
+    rdfs:comment "Cardinality: 0..*. A period during which this legal entity, acting as an academy trust, was a single-academy, multi-academy or secure single-academy trust. Added v2.0."@en .
+
+esto:hasAcademyTrustType
+    a owl:ObjectProperty ;
+    rdfs:label "has academy trust type"@en ;
+    rdfs:domain est:AcademyTrustClassification ;
+    rdfs:range est:AcademyTrustType ;
+    rdfs:comment "Cardinality: exactly 1. Added v2.0."@en .
+
+esto:hasResponsibility
+    a owl:ObjectProperty ;
+    rdfs:label "has responsibility"@en ;
+    rdfs:domain est:Establishment ;
+    rdfs:range est:EstablishmentResponsibility ;
+    rdfs:comment "Cardinality: 0..*. A dated responsibility that a legal entity or person holds for this establishment. Earlier responsibilities are kept as history. Added v2.0."@en .
+
+esto:hasResponsibleParty
+    a owl:ObjectProperty ;
+    rdfs:label "has responsible party"@en ;
+    rdfs:domain est:EstablishmentResponsibility ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
+    rdfs:comment "Cardinality: exactly 1. The legal entity or person holding this responsibility. A person can only sponsor an establishment or be its proprietor (enforced in establishment-shacl.ttl). Added v2.0."@en .
+
+esto:hasResponsibilityType
+    a owl:ObjectProperty ;
+    rdfs:label "has responsibility type"@en ;
+    rdfs:domain est:EstablishmentResponsibility ;
+    rdfs:range est:ResponsibilityType ;
+    rdfs:comment "Cardinality: exactly 1. Added v2.0."@en .
+
+esto:hasStartDate
+    a owl:ObjectProperty ;
+    rdfs:label "has start date"@en ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:RecognisedRole est:AcademyTrustClassification est:EstablishmentResponsibility est:LeadCentreDesignation ) ] ;
+    rdfs:range est:PeriodStartDate ;
+    rdfs:comment "Cardinality: 0..1. When a role, classification, responsibility or lead centre designation began. Added v2.0."@en .
+
+esto:hasEndDate
+    a owl:ObjectProperty ;
+    rdfs:label "has end date"@en ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:RecognisedRole est:AcademyTrustClassification est:EstablishmentResponsibility est:LeadCentreDesignation ) ] ;
+    rdfs:range est:PeriodEndDate ;
+    rdfs:comment "Cardinality: 0..1. When a role, classification, responsibility or lead centre designation ended. Absent while it continues. Added v2.0."@en .
+
+esto:runByAcademyTrust
+    a owl:ObjectProperty ;
+    rdfs:label "run by academy trust"@en ;
+    rdfs:domain est:Establishment ;
+    rdfs:range est:LegalEntity ;
+    rdfs:comment "The academy trust that runs this academy or free school now. Where responsibilities are recorded, it matches the present-day est:AcademyTrustResponsibility. Cardinality: 0..1. Replaces esto:accountableToAcademyTrust. Added v2.0."@en .
+
+esto:hasLeadCentreDesignation
+    a owl:ObjectProperty ;
+    rdfs:label "has lead centre designation"@en ;
+    rdfs:domain est:GroupMembership ;
+    rdfs:range est:LeadCentreDesignation ;
+    rdfs:comment "Cardinality: 0..*. A period during which the member children's centre was the lead centre of its group. Only for children's centre group memberships (enforced in establishment-shacl.ttl). Added v2.0."@en .
+
+esto:hasGroupMembershipEndDate
+    a owl:ObjectProperty ;
+    rdfs:label "has group membership end date"@en ;
+    rdfs:domain est:GroupMembership ;
+    rdfs:range est:GroupMembershipEndDate ;
+    rdfs:comment "Cardinality: 0..1. The date the establishment left this group. Absent while it remains a member. Added v2.0."@en .
+
+
+#################################################################
 # Object properties - establishment groups (v1.1)
 #################################################################
 
@@ -1756,55 +1834,6 @@ esto:memberOf
     rdfs:range est:EstablishmentGroup ;
     rdfs:comment "Cardinality: exactly 1. Each membership record links to one establishment group."@en .
 
-esto:identifiedByGroupId
-    a owl:ObjectProperty ;
-    rdfs:label "identified by group identifier"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:GroupId ;
-    rdfs:comment "Cardinality: 0..1. The business-facing GIAS group identifier for the group."@en .
-
-esto:hasGroupUkprn
-    a owl:ObjectProperty ;
-    rdfs:label "has group UKPRN"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:GroupUkprn ;
-    rdfs:comment "Cardinality: 0..1. UKPRN assigned to the group organisation by UKRLP."@en .
-
-esto:hasGroupCompaniesHouseNumber
-    a owl:ObjectProperty ;
-    rdfs:label "has group Companies House number"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:CompaniesHouseNumber ;
-    rdfs:comment "Cardinality: 0..1. Companies House registration for the group legal entity."@en .
-
-esto:hasGroupRelationship
-    a owl:ObjectProperty ;
-    rdfs:label "has group relationship"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:GroupRelationship ;
-    rdfs:comment "Cardinality: 0..*. A group may have one or more recorded relationships to other groups."@en .
-
-esto:relatesTo
-    a owl:ObjectProperty ;
-    rdfs:label "relates to"@en ;
-    rdfs:domain est:GroupRelationship ;
-    rdfs:range est:EstablishmentGroup ;
-    rdfs:comment "Cardinality: exactly 1. The other group in this group relationship."@en .
-
-esto:classifiedByGroupRelationshipType
-    a owl:ObjectProperty ;
-    rdfs:label "classified by group relationship type"@en ;
-    rdfs:domain est:GroupRelationship ;
-    rdfs:range est:GroupRelationshipType ;
-    rdfs:comment "Cardinality: exactly 1."@en .
-
-esto:hasGroupUniqueIdentifier
-    a owl:ObjectProperty ;
-    rdfs:label "has group unique identifier"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:GroupUniqueIdentifier ;
-    rdfs:comment "Cardinality: exactly 1. Every group has exactly one GIAS internal group UID."@en .
-
 esto:hasGroupMembershipDate
     a owl:ObjectProperty ;
     rdfs:label "has group membership date"@en ;
@@ -1817,7 +1846,7 @@ esto:hasGroupMembershipRole
     rdfs:label "has group membership role"@en ;
     rdfs:domain est:GroupMembership ;
     rdfs:range est:GroupMembershipRoleType ;
-    rdfs:comment "Cardinality: 0..1. The capacity in which this membership is held. Absent means an ordinary membership (est:Member is the implied default). est:Member is its only value: est:SponsoredAcademy and est:Sponsor were removed in v1.19, when sponsorship moved to est:Sponsorship and esto:hasSponsorship. Added v1.18."@en .
+    rdfs:comment "Cardinality: 0..1. The capacity in which this membership is held. Absent means an ordinary membership (est:Member is the implied default). est:Member is its only value. Added v1.18."@en .
 
 esto:hasGroupStatus
     a owl:ObjectProperty ;
@@ -1831,14 +1860,7 @@ esto:hasGroupOpenDate
     rdfs:label "has group open date"@en ;
     rdfs:domain est:EstablishmentGroup ;
     rdfs:range est:GroupOpenDate ;
-    rdfs:comment "Cardinality: 0..1. Used for non-trust group types. SHACL constraint: mutually exclusive with hasGroupIncorporatedOnDate."@en .
-
-esto:hasGroupIncorporatedOnDate
-    a owl:ObjectProperty ;
-    rdfs:label "has group incorporated on date"@en ;
-    rdfs:domain est:EstablishmentGroup ;
-    rdfs:range est:GroupIncorporatedOnDate ;
-    rdfs:comment "Cardinality: 0..1. Used for trust group types (MAT, SAT, SSAT). SHACL constraint: mutually exclusive with hasGroupOpenDate."@en .
+    rdfs:comment "Cardinality: 0..1."@en .
 
 esto:hasGroupClosedDate
     a owl:ObjectProperty ;
@@ -1852,7 +1874,7 @@ esto:hasLocalAuthorityForGroup
     rdfs:label "has local authority for group"@en ;
     rdfs:domain est:EstablishmentGroup ;
     rdfs:range est:LocalAuthority ;
-    rdfs:comment "Cardinality: 0..1. SHACL constraint scopes this to ChildrensCentreGroup and ChildrensCentreCollaboration only; not populated for any other group type."@en .
+    rdfs:comment "Cardinality: 0..1. The local authority that coordinates a children's centre group or collaboration. Not used for federations, which have no local authority owner (enforced in establishment-shacl.ttl)."@en .
 
 
 #################################################################
@@ -2169,26 +2191,101 @@ est:OnlineProvider
 
 
 #################################################################
+# Classes - legal entities, roles and responsibilities (v2.0)
+#################################################################
+
+est:LegalEntity
+    a owl:Class ;
+    rdfs:subClassOf est:Organisation ;
+    esto:changesOverTime true ;
+    rdfs:label "Legal entity"@en ;
+    rdfs:comment "A body that can hold recognised roles and be responsible for establishments, whether or not it is incorporated: for example a charitable company, a company, a charitable incorporated organisation, a partnership, a sole trader, an unincorporated trust or a public body. One legal entity can hold several roles and responsibilities at once: the same charitable company can be an academy trust, an academy sponsor and the proprietor of an independent school. A legal entity's identifiers, such as its UKPRN, are separate from those of the establishments it is responsible for. Added v2.0."@en .
+
+est:LegalForm
+    a owl:Class ;
+    rdfs:label "Legal form"@en ;
+    rdfs:comment "The legal form of a legal entity, such as a charitable company limited by guarantee, a company limited by guarantee, a charitable incorporated organisation, a traditional partnership or a public body. Added v2.0."@en .
+
+est:CharityStatus
+    a owl:Class ;
+    rdfs:label "Charity status"@en ;
+    rdfs:comment "How a legal entity is a charity under charity law: registered with the Charity Commission, exempt from registration, or excepted from registration. A legal entity that is not a charity has no charity status. Added v2.0."@en .
+
+est:IncorporationDate
+    a owl:Class ;
+    rdfs:label "Incorporation date"@en ;
+    rdfs:comment "The date a legal entity was incorporated or otherwise came into existence. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0, replacing est:GroupIncorporatedOnDate."@en .
+
+est:DissolutionDate
+    a owl:Class ;
+    rdfs:label "Dissolution date"@en ;
+    rdfs:comment "The date a legal entity was dissolved or otherwise ceased to exist. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
+
+est:RecognisedRole
+    a owl:Class ;
+    esto:changesOverTime true ;
+    rdfs:label "Recognised role"@en ;
+    rdfs:comment "A role that a legal entity or person holds in its own right, for a period, in relation to establishments: academy trust, foundation trust, umbrella trust or academy sponsor. A role says what the holder is. It does not depend on being responsible for any particular establishment: a multi-academy trust can exist before its first academy joins, and a body can be recognised as a sponsor without sponsoring any academy. What the holder does for a particular establishment is an est:EstablishmentResponsibility. Added v2.0."@en .
+
+est:RecognisedRoleType
+    a owl:Class ;
+    rdfs:label "Recognised role type"@en ;
+    rdfs:comment "The kind of recognised role: academy trust, foundation trust, umbrella trust or academy sponsor. Added v2.0."@en .
+
+est:AcademyTrustClassification
+    a owl:Class ;
+    esto:changesOverTime true ;
+    rdfs:label "Academy trust classification"@en ;
+    rdfs:comment "A period during which a legal entity acting as an academy trust was a single-academy trust, a multi-academy trust or a secure single-academy trust. A trust that changes from a single-academy trust to a multi-academy trust is the same legal entity with a new classification, not a new organisation. Added v2.0."@en .
+
+est:AcademyTrustType
+    a owl:Class ;
+    rdfs:label "Academy trust type"@en ;
+    rdfs:comment "The kind of academy trust: single-academy trust, multi-academy trust or secure single-academy trust. Added v2.0."@en .
+
+est:EstablishmentResponsibility
+    a owl:Class ;
+    esto:changesOverTime true ;
+    rdfs:label "Establishment responsibility"@en ;
+    rdfs:comment "A period during which a legal entity or person was responsible for an establishment in a particular way: running it as its academy trust, supporting it as its foundation trust, sponsoring it, or acting as its proprietor. When an establishment changes operator it keeps its identity: the change is a new responsibility, held by a different legal entity. Replaces est:Sponsorship, and the academy trust and proprietor links of est:EstablishmentAccountability. Added v2.0."@en .
+
+est:ResponsibilityType
+    a owl:Class ;
+    rdfs:label "Responsibility type"@en ;
+    rdfs:comment "The kind of establishment responsibility: run by academy trust, supported by foundation trust, sponsored by, or proprietor. Added v2.0."@en .
+
+est:PeriodStartDate
+    a owl:Class ;
+    rdfs:label "Period start date"@en ;
+    rdfs:comment "The date on which a role, classification, responsibility or lead centre designation began. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
+
+est:PeriodEndDate
+    a owl:Class ;
+    rdfs:label "Period end date"@en ;
+    rdfs:comment "The date on which a role, classification, responsibility or lead centre designation ended. Absent while it continues. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
+
+est:LeadCentreDesignation
+    a owl:Class ;
+    esto:changesOverTime true ;
+    rdfs:label "Lead centre designation"@en ;
+    rdfs:comment "A period during which a children's centre was the lead centre of its children's centre group. Which centre leads can change while membership continues, so the designation is dated separately from the membership, and neither the group's formation nor the centre's joining date says when it started. Added v2.0."@en .
+
+est:GroupMembershipEndDate
+    a owl:Class ;
+    rdfs:label "Group membership end date"@en ;
+    rdfs:comment "The date on which an establishment left an establishment group. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
+
+
+#################################################################
 # Classes - establishment groups (v1.1)
 #################################################################
 
 est:EstablishmentGroup
     a owl:Class ;
     rdfs:subClassOf est:Organisation ;
+    esto:changesOverTime true ;
     rdfs:label "Establishment group"@en ;
-    rdfs:comment "An organisation or governance structure to which one or more establishments belong. Covers academy trusts, federations and children's centre groups. Distinct from the accountability relationship, which records legal/governance responsibility. Academy trusts are both establishment groups and accountability bodies — see est:AcademyTrust."@en .
-
-est:MultiAcademyTrust
-    a owl:Class ;
-    rdfs:subClassOf est:AcademyTrust ;
-    rdfs:label "Multi-academy trust"@en ;
-    rdfs:comment "A single legal academy-trust entity operating two or more academies, free schools, UTCs or studio schools. It has a master funding agreement with the Secretary of State and a supplemental funding agreement for each individual academy. Incorporated under the Companies Act 2006. Governed by a board of trustees. Source: GOV.UK academy trust governance guide."@en .
-
-est:SecureSingleAcademyTrust
-    a owl:Class ;
-    rdfs:subClassOf est:SingleAcademyTrust ;
-    rdfs:label "Secure single-academy trust"@en ;
-    rdfs:comment "A single-academy trust operating a secure 16-to-19 academy providing education within secure residential accommodation for young people aged 16 to 19 subject to a custodial sentence or secure order."@en .
+    rdfs:comment "A group of establishments that is not itself a legal entity: a federation of maintained schools, or a children's centre group or collaboration. A federation has no local authority owner and can include schools in different local authorities. v2.0: academy trusts and other trusts are no longer establishment groups. They are legal entities holding recognised roles (est:LegalEntity, est:RecognisedRole), and the establishments they run, support or sponsor are linked by est:EstablishmentResponsibility, not group membership."@en .
 
 est:Federation
     a owl:Class ;
@@ -2208,46 +2305,16 @@ est:ChildrensCentreCollaboration
     rdfs:label "Children's centres collaboration"@en ;
     rdfs:comment "A cross-group collaboration arrangement between children's centres."@en .
 
-est:GenericTrust
-    a owl:Class ;
-    rdfs:subClassOf est:EstablishmentGroup ;
-    rdfs:label "Trust"@en ;
-    rdfs:comment "A generic trust group type (EstablishmentGroupType code 02). Distinct from AcademyTrust. Rarely used in current data; retained for completeness."@en .
-
 est:GroupMembership
     a owl:Class ;
+    esto:changesOverTime true ;
     rdfs:label "Group membership"@en ;
-    rdfs:comment "A dated record of an establishment's membership of an establishment group, trust, federation, or children's centre group or collaboration. Maps to GroupLink in the current GIAS schema. An establishment may have membership in more than one group simultaneously. Sponsorship is not a membership: since v1.19 it is recorded with est:Sponsorship."@en .
-
-est:GroupRelationship
-    a owl:Class ;
-    rdfs:label "Group relationship"@en ;
-    rdfs:comment "A recorded relationship between two establishment groups, for example where a single-academy trust is the predecessor to a newly formed multi-academy trust. Maps to GroupRelationsLink."@en .
-
-est:GroupRelationshipType
-    a owl:Class ;
-    rdfs:label "Group relationship type"@en ;
-    rdfs:comment "The classification of a group-to-group relationship, for example predecessor SAT or successor MAT."@en .
+    rdfs:comment "A dated record of an establishment's membership of an establishment group: a federation, or a children's centre group or collaboration. An establishment may belong to more than one group at once. Joining a group is a separate event from the group forming and the establishment opening. Being run, supported or sponsored by a trust is not a membership: it is an est:EstablishmentResponsibility (v2.0)."@en .
 
 est:GroupMembershipRoleType
     a owl:Class ;
     rdfs:label "Group membership role type"@en ;
-    rdfs:comment "The capacity in which an establishment holds a membership of an establishment group. est:Member is its only value. est:SponsoredAcademy and est:Sponsor, added in v1.18 to match the ORGANISATION_GROUP_ROLE_TYPE reference entity in the enterprise data model, were removed in v1.19: sponsorship is recorded with est:Sponsorship, not as group membership. The class is kept for the enterprise-model mapping and for future membership roles. Added v1.18."@en .
-
-est:GroupId
-    a owl:Class ;
-    rdfs:label "Group identifier"@en ;
-    rdfs:comment "The business-facing GIAS group identifier, distinct from the internal surrogate key."@en .
-
-est:GroupUkprn
-    a owl:Class ;
-    rdfs:label "Group UKPRN"@en ;
-    rdfs:comment "A UKRLP provider reference number assigned to the group organisation. Sourced from UKRLP by matching on Companies House number."@en .
-
-est:GroupUniqueIdentifier
-    a owl:Class ;
-    rdfs:label "Group unique identifier (UID)"@en ;
-    rdfs:comment "The internal GIAS numeric group identifier, analogous to URN for establishments. Primary identifier for a group within GIAS. Distinct from GroupId, which is the business-facing identifier carrying a TR or SP prefix."@en .
+    rdfs:comment "The capacity in which an establishment holds a membership of an establishment group. est:Member is its only value. Being the lead centre of a children's centre group is recorded as an est:LeadCentreDesignation, because it is dated separately from membership (v2.0). Added v1.18."@en .
 
 est:GroupMembershipDate
     a owl:Class ;
@@ -2262,12 +2329,7 @@ est:GroupStatus
 est:GroupOpenDate
     a owl:Class ;
     rdfs:label "Group open date"@en ;
-    rdfs:comment "The date on which the group was established. Used for federation, school sponsor, children's centre group and collaboration group types. Not used for trust types (MAT, SAT, SSAT), which use GroupIncorporatedOnDate instead."@en .
-
-est:GroupIncorporatedOnDate
-    a owl:Class ;
-    rdfs:label "Group incorporated on date"@en ;
-    rdfs:comment "The Companies Act incorporation date for trust group types (MAT, SAT, SSAT). Distinct from GroupOpenDate, used for non-trust group types. The two must not be collapsed."@en .
+    rdfs:comment "The date on which an establishment group was formed. Not the date any member joined, and not the date any member opened."@en .
 
 est:GroupClosedDate
     a owl:Class ;
@@ -2303,17 +2365,6 @@ est:PreviousIdentifierRole
     a owl:NamedIndividual, est:IdentifierRole ;
     rdfs:label "Previous"@en ;
     rdfs:comment "The scoped establishment number is a previous identity, retained for search continuity and lifecycle traceability."@en .
-
-# Group relationship type (2 values, v1.1)
-est:SuccessorMultiAcademyTrust
-    a owl:NamedIndividual, est:GroupRelationshipType ;
-    rdfs:label "Successor MAT"@en ;
-    rdfs:comment "A group relationship type value indicating that the group is the multi-academy trust formed when a single-academy trust expanded or merged."@en .
-
-est:PredecessorSingleAcademyTrust
-    a owl:NamedIndividual, est:GroupRelationshipType ;
-    rdfs:label "Predecessor SAT"@en ;
-    rdfs:comment "A group relationship type value indicating that the group is the single-academy trust that preceded the formation of a multi-academy trust."@en .
 
 # Group membership role type (1 value; est:SponsoredAcademy and est:Sponsor removed v1.19)
 est:Member
@@ -2721,3 +2772,77 @@ est:SponsorLedRoute
     a owl:NamedIndividual, est:AcademyRoute ;
     rdfs:label "Sponsor led"@en ;
     rdfs:comment "An academy established through the sponsor-led route under the Academies Act 2010."@en .
+
+# Recognised role type (4 values, v2.0)
+est:AcademyTrust
+    a owl:NamedIndividual, est:RecognisedRoleType ;
+    rdfs:label "Academy trust"@en ;
+    rdfs:comment "The role of a charitable company that runs one or more academies or free schools under funding agreements with the Secretary of State under the Academies Act 2010. v2.0: changed from a subclass of est:EstablishmentGroup to a recognised role type, so that a trust's classification changes and its other roles are recorded against one legal entity."@en .
+
+est:FoundationTrust
+    a owl:NamedIndividual, est:RecognisedRoleType ;
+    rdfs:label "Foundation trust"@en ;
+    rdfs:comment "The role of a charitable trust that supports one or more foundation or foundation special schools as their foundation, holding land and appointing governors. Added v2.0, replacing est:GenericTrust, which described the same GIAS group type (code 02) as a rarely used generic trust."@en .
+
+est:UmbrellaTrust
+    a owl:NamedIndividual, est:RecognisedRoleType ;
+    rdfs:label "Umbrella trust"@en ;
+    rdfs:comment "The role of a charitable trust set up to act as a shared foundation for a group of foundation or voluntary schools. Added v2.0."@en .
+
+est:AcademySponsor
+    a owl:NamedIndividual, est:RecognisedRoleType ;
+    rdfs:label "Academy sponsor"@en ;
+    rdfs:comment "The role of a person or body recognised by the Department for Education as an academy sponsor. Holding the role does not by itself mean sponsoring a particular academy: that is an est:SponsorResponsibility. Also known as school sponsor. Added v2.0 as a role type; the concept already existed in the vocabulary."@en .
+
+# Academy trust type (3 values, v2.0)
+est:SingleAcademyTrust
+    a owl:NamedIndividual, est:AcademyTrustType ;
+    rdfs:label "Single-academy trust"@en ;
+    rdfs:comment "An academy trust that runs one academy. It can become a multi-academy trust by taking on a second academy, which changes its classification but not its identity. v2.0: changed from a class to an academy trust type value."@en .
+
+est:MultiAcademyTrust
+    a owl:NamedIndividual, est:AcademyTrustType ;
+    rdfs:label "Multi-academy trust"@en ;
+    rdfs:comment "An academy trust that runs, or is set up to run, two or more academies or free schools under a master funding agreement, with a supplemental funding agreement for each academy. Source: GOV.UK academy trust governance guide. v2.0: changed from a class to an academy trust type value."@en .
+
+est:SecureSingleAcademyTrust
+    a owl:NamedIndividual, est:AcademyTrustType ;
+    rdfs:label "Secure single-academy trust"@en ;
+    rdfs:comment "A single-academy trust that runs a secure 16 to 19 academy, providing education in secure accommodation for young people aged 16 to 19 serving a custodial sentence or subject to a secure order. v2.0: changed from a class to an academy trust type value."@en .
+
+# Responsibility type (4 values, v2.0)
+est:AcademyTrustResponsibility
+    a owl:NamedIndividual, est:ResponsibilityType ;
+    rdfs:label "Run by academy trust"@en ;
+    rdfs:comment "The establishment, an academy or free school, is run by the legal entity as its academy trust. Added v2.0."@en .
+
+est:FoundationTrustResponsibility
+    a owl:NamedIndividual, est:ResponsibilityType ;
+    rdfs:label "Supported by foundation trust"@en ;
+    rdfs:comment "The establishment, a foundation or foundation special school, is supported by the legal entity as its foundation trust. Added v2.0."@en .
+
+est:SponsorResponsibility
+    a owl:NamedIndividual, est:ResponsibilityType ;
+    rdfs:label "Sponsored by"@en ;
+    rdfs:comment "The establishment, an academy or free school, is sponsored by the legal entity or person. The sponsor may be the academy's own trust, another body such as a diocese, or a named individual. Replaces est:Sponsorship. Added v2.0."@en .
+
+est:ProprietorResponsibility
+    a owl:NamedIndividual, est:ResponsibilityType ;
+    rdfs:label "Proprietor"@en ;
+    rdfs:comment "The legal entity or person is a proprietor of the establishment: responsible for running it, as for an independent school, a non-maintained special school or a city technology college. Being proprietor does not mean owning the school's business or premises. A school can have more than one proprietor. Added v2.0."@en .
+
+# Charity status (3 values, v2.0)
+est:RegisteredCharity
+    a owl:NamedIndividual, est:CharityStatus ;
+    rdfs:label "Registered charity"@en ;
+    rdfs:comment "A charity registered with the Charity Commission for England and Wales. Added v2.0."@en .
+
+est:ExemptCharity
+    a owl:NamedIndividual, est:CharityStatus ;
+    rdfs:label "Exempt charity"@en ;
+    rdfs:comment "A charity exempt from registration with the Charity Commission, and regulated by another principal regulator. Academy trusts are exempt charities. Added v2.0."@en .
+
+est:ExceptedCharity
+    a owl:NamedIndividual, est:CharityStatus ;
+    rdfs:label "Excepted charity"@en ;
+    rdfs:comment "A charity excepted from registration with the Charity Commission, while remaining subject to its regulation. Added v2.0."@en .

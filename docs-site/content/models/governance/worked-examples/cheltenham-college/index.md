@@ -120,7 +120,7 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Establishment, Council as proprietor and governing body, and The Prep
 
-`est:OtherIndependentSchool` is the specific leaf type GIAS itself records. The Council is modelled as a **single instance** carrying two types at once: `est:Organisation` (so it can fill `esto:hasProprietor`'s range, the property already documented as "present for independent schools") and `gov:Board` ("generic term for a governance body, used where source data does not distinguish governing body, trust board or local governing body" - exactly this case, since Cheltenham's Council is neither of the more specific body types). This is different from every academy trust example on this site, where the legal entity (`est:AcademyTrust`) and its board (`gov:TrustBoard`) are always two distinct instances - here, the College's own evidence says the Council genuinely is both at once, so the model doesn't invent a split the source itself doesn't make.
+`est:OtherIndependentSchool` is the specific leaf type GIAS itself records. The Council is modelled as a **single instance** carrying two types at once: `est:LegalEntity` (so it can be the school's proprietor through `esto:hasProprietor`, whose range since establishment ontology v2.0 is a legal entity or a person) and `gov:Board` ("generic term for a governance body, used where source data does not distinguish governing body, trust board or local governing body" - exactly this case, since Cheltenham's Council is neither of the more specific body types). This is different from every academy trust example on this site, where the legal entity (an `est:LegalEntity` holding the academy trust role) and its board (`gov:TrustBoard`) are always two distinct instances - here, the College's own evidence says the Council genuinely is both at once, so the model doesn't invent a split the source itself doesn't make.
 
 The Council also governs a second, related school ("The Prep"), evidenced only by name with no URN published in this source - `est:Establishment`, the generic stub, rather than a more specific leaf type.
 
@@ -142,9 +142,9 @@ ginst:cheltenham-prep
     rdfs:comment "Named only as related school context in this source, with no URN published - not further typed."@en .
 
 ginst:cheltenham-council
-    a est:Organisation, gov:Board ;
+    a est:LegalEntity, gov:Board ;
     rdfs:label "The Council of Cheltenham College"@en ;
-    rdfs:comment "One real-world body, modelled as one instance carrying both the proprietor/organisation type and the governance-body type, since the College's own evidence does not distinguish them as Medlock's Academy Trust and Trust Board are distinguished."@en .
+    rdfs:comment "One real-world body, modelled as one instance carrying both the legal-entity type (as the school's proprietor) and the governance-body type, since the College's own evidence does not distinguish them as Medlock's academy trust and Trust Board are distinguished. Typed est:LegalEntity since establishment ontology v2.0."@en .
 
 inst:cheltenham-college
     esto:hasProprietor ginst:cheltenham-council ;

@@ -1,10 +1,10 @@
-﻿# Historical record
+# Historical record
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/HistoricalRecord/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/HistoricalRecord/> |
 | Compact identifier | `gov:HistoricalRecord` |
 | Preferred label | Historical record |
 | Alternative labels |  |

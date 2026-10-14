@@ -1,10 +1,10 @@
-﻿# Governance professional
+# Governance professional
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/GovernanceProfessional/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/GovernanceProfessional/> |
 | Compact identifier | `gov:GovernanceProfessional` |
 | Preferred label | Governance professional |
 | Alternative labels |  |

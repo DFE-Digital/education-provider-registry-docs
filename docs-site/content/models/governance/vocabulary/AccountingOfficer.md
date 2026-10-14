@@ -1,10 +1,10 @@
-﻿# Accounting officer
+# Accounting officer
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/AccountingOfficer/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/AccountingOfficer/> |
 | Compact identifier | `gov:AccountingOfficer` |
 | Preferred label | Accounting officer |
 | Alternative labels |  |

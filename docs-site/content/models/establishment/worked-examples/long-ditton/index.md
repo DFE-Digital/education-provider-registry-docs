@@ -47,13 +47,13 @@ flowchart LR
     LA -->|"maintains"| LDSM
     F -->|"has member"| LDI
     F -->|"has member"| LDSM
-    ELT -->|"has member"| LDI
+    ELT -->|"supports, as foundation trust"| LDI
 
     LDI -->|"led by"| HT["SM<br/>Headteacher, both schools"]
     LDSM -->|"led by"| HT
 ```
 
-Long Ditton Infant belongs to **two** current groups simultaneously: the federation, and a separate GIAS "Trust" group type (code 02 - not a multi-academy trust) linked to The Ember Learning Trust. St Mary's belongs only to the federation.
+Long Ditton Infant has **two** current links in GIAS: the federation, and a separate GIAS "Trust" group (type 02 - not a multi-academy trust) for The Ember Learning Trust. In the real world these are different things: the federation is a group of schools, and The Ember Learning Trust is the school's foundation trust. St Mary's belongs only to the federation.
 
 ---
 
@@ -71,27 +71,22 @@ Long Ditton Infant belongs to **two** current groups simultaneously: the federat
 @prefix inst:  <https://dfe-digital.github.io/education-provider-registry-docs/establishment/> .
 ```
 
-### Example 1 — Federation, generic trust and member identity
+### Example 1 — Federation, foundation trust and member identity
 
-`est:GenericTrust` represents GIAS group type 02 ("Trust") - a distinct class from `est:MultiAcademyTrust`, used for legacy charitable/foundation trusts that hold land or appoint governors without being an academy trust. Long Ditton Infant has two independent `est:GroupMembership` records, one per group.
+GIAS group type 02 ("Trust") is the foundation trust: a charitable trust that holds land and appoints governors for a foundation school, without being an academy trust. Since ontology v2.0 The Ember Learning Trust is a legal entity holding the `est:FoundationTrust` role, and Long Ditton Infant has an `est:EstablishmentResponsibility` of type `est:FoundationTrustResponsibility`. Its federation is a separate `est:GroupMembership`. GIAS group UIDs are source evidence, not modelled here.
 
 ```
 inst:long-ditton-federation
     a est:Federation ;
-    rdfs:label "The Long Ditton Federation"@en ;
-
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "17766"^^xsd:positiveInteger
-    ] .
+    rdfs:label "The Long Ditton Federation"@en .
 
 inst:ember-learning-trust
-    a est:GenericTrust ;
+    a est:LegalEntity ;
     rdfs:label "The Ember Learning Trust"@en ;
 
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "16551"^^xsd:positiveInteger
+    esto:holdsRole [
+        a est:RecognisedRole ;
+        esto:hasRoleType est:FoundationTrust
     ] .
 
 inst:long-ditton-infant
@@ -115,9 +110,10 @@ inst:long-ditton-infant
         esto:memberOf inst:long-ditton-federation
     ] ;
 
-    esto:hasMembership [
-        a est:GroupMembership ;
-        esto:memberOf inst:ember-learning-trust
+    esto:hasResponsibility [
+        a est:EstablishmentResponsibility ;
+        esto:hasResponsibilityType est:FoundationTrustResponsibility ;
+        esto:hasResponsibleParty inst:ember-learning-trust
     ] .
 
 inst:long-ditton-st-marys
@@ -332,7 +328,7 @@ inst:long-ditton-st-marys
 
 ## What this example found
 
-- **First real use of `est:GenericTrust`.** Its own ontology comment describes it as "rarely used in current data; retained for completeness" - Long Ditton Infant's live GIAS record is exactly that rare case: a foundation school with a current, open "Trust" group (GIAS type 02) distinct from both its federation and any academy trust. Confirms an establishment can hold independent memberships in more than one group simultaneously, and that `est:GenericTrust` isn't dead weight in the ontology.
+- **A foundation trust, not a generic trust.** Earlier versions modelled GIAS type 02 as `est:GenericTrust`, a "rarely used" generic trust. It is the foundation trust, with 254 open records in GIAS. Since ontology v2.0 The Ember Learning Trust is a legal entity holding the `est:FoundationTrust` role, and it supports Long Ditton Infant through a foundation trust responsibility. That keeps it separate from the federation, which is a group of schools.
 - **A federation spanning two different phases within primary, not just two different governance/faith profiles.** Infant (ages 3-7) and Junior (ages 7-11) split the same age range Eileen Wade/Milton Ernest's federation didn't - both member schools there were whole-primary (4-11).
 - **Not exercised by this example:** academy trust and sponsor relationships; SEN and resourced provision (both "Not applicable" for both schools); Section 41 approval.
 
@@ -343,8 +339,9 @@ inst:long-ditton-st-marys
 | Real-world concept | Evidence | Ontology mapping | Fit |
 |---|---|---|---|
 | Federation | GIAS UID 17766, two member schools | `est:Federation` | Direct |
-| Non-academy trust group | Long Ditton Infant, Group UID 16551, "The Ember Learning Trust" | `est:GenericTrust` | Direct - first real use |
-| Multiple simultaneous group memberships | Long Ditton Infant belongs to both the federation and the trust | Two independent `est:GroupMembership` records | Direct |
+| Foundation trust | "The Ember Learning Trust" (GIAS Group UID 16551, type 02) | `est:LegalEntity` holding the `est:FoundationTrust` role | Direct |
+| Supported by foundation trust | Long Ditton Infant is supported by The Ember Learning Trust | `est:EstablishmentResponsibility` (`est:FoundationTrustResponsibility`) | Direct |
+| Federation membership | Both schools belong to The Long Ditton Federation | `est:GroupMembership` | Direct |
 | Local authority accountability | Both schools maintained by Surrey (LA 936) | `esto:accountableToLocalAuthority` | Direct |
 | Establishment types | Foundation school (Infant), Voluntary aided school (St Mary's) | `est:FoundationSchool`, `est:VoluntaryAidedSchool` | Direct |
 | Shared headteacher | SM, headteacher at both schools | `est:HeadteacherOrPrincipal`, asserted independently per establishment | Direct |

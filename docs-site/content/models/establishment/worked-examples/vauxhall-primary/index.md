@@ -86,12 +86,7 @@ Three of the six members are modelled in full below (Vauxhall, Wyvil, Lilian Bay
 ```
 inst:wyvern-federation
     a est:Federation ;
-    rdfs:label "Wyvern Federation"@en ;
-
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "1951"^^xsd:positiveInteger
-    ] .
+    rdfs:label "Wyvern Federation"@en .
 
 inst:vauxhall-primary
     a est:FoundationSchool ;

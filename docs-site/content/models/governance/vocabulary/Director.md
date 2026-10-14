@@ -1,10 +1,10 @@
-﻿# Director
+# Director
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Director/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Director/> |
 | Compact identifier | `gov:Director` |
 | Preferred label | Director |
 | Alternative labels |  |
@@ -18,7 +18,7 @@
 
 ## Definition
 
-A person holding a director office in a company or trust.
+A person holding a director office in a company or trust. In some academy trusts, such as church academies, this is the label used instead of Trustee for those on the board; it is the same underlying capacity, not a separate appointment - see Trustee, Academy trustee.
 
 ## Scope Notes
 

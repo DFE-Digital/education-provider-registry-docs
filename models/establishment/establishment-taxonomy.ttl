@@ -24,7 +24,7 @@ est:establishmentDetailsTaxonomy
     dcterms:title "Education Provider Registry Taxonomy"@en ;
     dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the establishment record Details tab in the public view."@en ;
     dcterms:created "2026-06-16"^^xsd:date ;
-    dcterms:modified "2026-09-24"^^xsd:date ;
+    dcterms:modified "2026-10-14"^^xsd:date ;
     est:status "Provisional"@en ;
     skos:hasTopConcept
         est:EstablishmentType,
@@ -39,8 +39,11 @@ est:establishmentDetailsTaxonomy
         est:ReligiousCharacter,
         est:ReligiousEthos,
         est:EstablishmentGroupType,
-        est:GroupRelationshipType,
-        est:GroupMembershipRoleType .
+        est:GroupMembershipRoleType,
+        est:RecognisedRoleType,
+        est:AcademyTrustType,
+        est:ResponsibilityType,
+        est:CharityStatus .
 
 #################################################################
 # Facet collection
@@ -62,8 +65,11 @@ est:establishmentDetailsTaxonomyFacets
         est:ReligiousCharacter,
         est:ReligiousEthos,
         est:EstablishmentGroupType,
-        est:GroupRelationshipType,
-        est:GroupMembershipRoleType .
+        est:GroupMembershipRoleType,
+        est:RecognisedRoleType,
+        est:AcademyTrustType,
+        est:ResponsibilityType,
+        est:CharityStatus .
 
 #################################################################
 # Type-group collection
@@ -1036,17 +1042,9 @@ est:EstablishmentGroupType
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:topConceptOf est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Establishment group type"@en ;
-    skos:definition "The classification of an establishment group by its type, corresponding to EstablishmentGroupType codes in GIAS."@en ;
-    skos:scopeNote "Active group types only (codes 01, 02, 05, 06, 08, 09, 10, 11). Three archived group types are intentionally excluded. Code 03 (Collegiate) and code 04 (Partnership) have no rows in current GIAS data and no public service representation. Code 07 (Umbrella trust) has approximately 20 legacy rows in current data but does not render a public group details page on the GIAS service; it is retained in the data for historical continuity only."@en ;
-    skos:narrower
-        est:Federation,
-        est:GenericTrust,
-        est:SchoolSponsor,
-        est:MultiAcademyTrust,
-        est:ChildrensCentreGroup,
-        est:ChildrensCentreCollaboration,
-        est:SingleAcademyTrust,
-        est:SecureSingleAcademyTrust ;
+    skos:definition "The kind of establishment group: a group of establishments that is not itself a legal entity."@en ;
+    skos:scopeNote "v2.0: only federations (GIAS code 01), children's centre groups (08) and children's centre collaborations (09). Trusts and sponsors are legal entities holding recognised roles, classified under recognised role type and academy trust type."@en ;
+    skos:narrower est:Federation, est:ChildrensCentreGroup, est:ChildrensCentreCollaboration ;
     est:status "Provisional"@en .
 
 est:Federation
@@ -1057,29 +1055,12 @@ est:Federation
     dcterms:source "Group type code 01"@en ;
     est:status "Provisional"@en .
 
-est:GenericTrust
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Trust"@en ;
-    skos:scopeNote "GIAS construct. Legacy group type code 02, rarely used and retained for completeness. Not separately defined on GOV.UK."@en ;
-    skos:broader est:EstablishmentGroupType ;
-    dcterms:source "Group type code 02"@en ;
-    est:status "Provisional"@en .
-
-est:SchoolSponsor
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "School sponsor"@en ;
-    dcterms:source "Group type code 05"@en ;
-    est:status "Legacy"@en ;
-    skos:scopeNote "GIAS group type 05. In the target EPR model, the sponsoring body is modelled as an est:Organisation linked via esto:sponsoredBy on est:Establishment. Sponsor is a role an organisation plays, not a type of establishment group."@en .
-
 est:MultiAcademyTrust
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Multi-academy trust"@en ;
     skos:altLabel "MAT"@en ;
-    skos:broader est:EstablishmentGroupType ;
+    skos:broader est:AcademyTrustType ;
     dcterms:source "Group type code 06"@en ;
     est:status "Provisional"@en .
 
@@ -1106,7 +1087,7 @@ est:SingleAcademyTrust
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Single-academy trust"@en ;
     skos:altLabel "SAT"@en ;
-    skos:broader est:EstablishmentGroupType ;
+    skos:broader est:AcademyTrustType ;
     dcterms:source "Group type code 10"@en ;
     est:status "Provisional"@en .
 
@@ -1114,39 +1095,14 @@ est:SecureSingleAcademyTrust
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Secure single-academy trust"@en ;
-    skos:scopeNote "GIAS construct. A sub-type for a SAT operating an Academy secure 16 to 19. Not separately named or defined on GOV.UK."@en ;
-    skos:broader est:EstablishmentGroupType ;
+    skos:scopeNote "A single-academy trust that runs a secure 16 to 19 academy."@en ;
+    skos:broader est:AcademyTrustType ;
     dcterms:source "Group type code 11"@en ;
     est:status "Provisional"@en .
 
 #################################################################
 # Group-relationship-type facet (v1.1)
 #################################################################
-
-est:GroupRelationshipType
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:topConceptOf est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Group relationship type"@en ;
-    skos:definition "The classification of a group-to-group relationship, distinguishing the role of each group in the relationship."@en ;
-    skos:narrower
-        est:SuccessorMultiAcademyTrust,
-        est:PredecessorSingleAcademyTrust ;
-    est:status "Provisional"@en .
-
-est:SuccessorMultiAcademyTrust
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Successor MAT"@en ;
-    skos:broader est:GroupRelationshipType ;
-    est:status "Provisional"@en .
-
-est:PredecessorSingleAcademyTrust
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsTaxonomy ;
-    skos:prefLabel "Predecessor SAT"@en ;
-    skos:broader est:GroupRelationshipType ;
-    est:status "Provisional"@en .
 
 #################################################################
 # Group-membership-role-type facet (v1.18)
@@ -1157,7 +1113,7 @@ est:GroupMembershipRoleType
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:topConceptOf est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Group membership role type"@en ;
-    skos:definition "The capacity in which an establishment holds a membership of an establishment group - its only value is an ordinary member. Maps to the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity, whose Sponsor and Sponsored Academy values are recorded as est:Sponsorship instead (v1.19)."@en ;
+    skos:definition "The capacity in which an establishment holds a membership of an establishment group - its only value is an ordinary member. Maps to the enterprise data model's ORGANISATION_GROUP_ROLE_TYPE reference entity. Lead centre is a dated designation and sponsorship is a responsibility, so neither is a membership role."@en ;
     skos:narrower est:Member ;
     est:status "Provisional"@en .
 
@@ -1166,4 +1122,122 @@ est:Member
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Member"@en ;
     skos:broader est:GroupMembershipRoleType ;
+    est:status "Provisional"@en .
+
+est:RecognisedRoleType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Recognised role type"@en ;
+    skos:definition "The kind of role a legal entity or person holds in its own right, for a period, in relation to establishments."@en ;
+    skos:narrower est:AcademyTrust, est:FoundationTrust, est:UmbrellaTrust, est:AcademySponsor ;
+    est:status "Provisional"@en .
+
+est:AcademyTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy trust"@en ;
+    skos:broader est:RecognisedRoleType ;
+    dcterms:source "Group type codes 06, 10 and 11"@en ;
+    est:status "Provisional"@en .
+
+est:FoundationTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Foundation trust"@en ;
+    skos:broader est:RecognisedRoleType ;
+    dcterms:source "Group type code 02"@en ;
+    est:status "Provisional"@en .
+
+est:UmbrellaTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Umbrella trust"@en ;
+    skos:broader est:RecognisedRoleType ;
+    dcterms:source "Group type code 07"@en ;
+    est:status "Provisional"@en .
+
+est:AcademySponsor
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy sponsor"@en ;
+    skos:altLabel "School sponsor"@en ;
+    skos:broader est:RecognisedRoleType ;
+    dcterms:source "Group type code 05"@en ;
+    est:status "Provisional"@en .
+
+est:AcademyTrustType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy trust type"@en ;
+    skos:definition "The kind of academy trust a legal entity is, for a period. A change from single-academy trust to multi-academy trust is a change of classification, not a new organisation."@en ;
+    skos:narrower est:SingleAcademyTrust, est:MultiAcademyTrust, est:SecureSingleAcademyTrust ;
+    est:status "Provisional"@en .
+
+est:ResponsibilityType
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Responsibility type"@en ;
+    skos:definition "The way a legal entity or person is responsible for an establishment, for a period."@en ;
+    skos:narrower est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility, est:ProprietorResponsibility ;
+    est:status "Provisional"@en .
+
+est:AcademyTrustResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Run by academy trust"@en ;
+    skos:broader est:ResponsibilityType ;
+    est:status "Provisional"@en .
+
+est:FoundationTrustResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Supported by foundation trust"@en ;
+    skos:broader est:ResponsibilityType ;
+    est:status "Provisional"@en .
+
+est:SponsorResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Sponsored by"@en ;
+    skos:broader est:ResponsibilityType ;
+    est:status "Provisional"@en .
+
+est:ProprietorResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Proprietor"@en ;
+    skos:broader est:ResponsibilityType ;
+    est:status "Provisional"@en .
+
+est:CharityStatus
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Charity status"@en ;
+    skos:definition "How a legal entity is a charity under charity law. A legal entity that is not a charity has no charity status."@en ;
+    skos:narrower est:RegisteredCharity, est:ExemptCharity, est:ExceptedCharity ;
+    est:status "Provisional"@en .
+
+est:RegisteredCharity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Registered charity"@en ;
+    skos:broader est:CharityStatus ;
+    est:status "Provisional"@en .
+
+est:ExemptCharity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Exempt charity"@en ;
+    skos:broader est:CharityStatus ;
+    est:status "Provisional"@en .
+
+est:ExceptedCharity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Excepted charity"@en ;
+    skos:broader est:CharityStatus ;
     est:status "Provisional"@en .

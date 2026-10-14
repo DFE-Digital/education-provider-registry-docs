@@ -1,10 +1,10 @@
-﻿# Historical member
+# Historical member
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/HistoricalMember/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/HistoricalMember/> |
 | Compact identifier | `gov:HistoricalMember` |
 | Preferred label | Historical member |
 | Alternative labels |  |

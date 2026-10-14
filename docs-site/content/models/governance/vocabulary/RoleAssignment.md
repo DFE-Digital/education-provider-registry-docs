@@ -1,10 +1,10 @@
-﻿# Role assignment
+# Role assignment
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/RoleAssignment/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/RoleAssignment/> |
 | Compact identifier | `gov:RoleAssignment` |
 | Preferred label | Role assignment |
 | Alternative labels |  |

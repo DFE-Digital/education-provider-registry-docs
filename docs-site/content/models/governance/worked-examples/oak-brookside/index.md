@@ -92,7 +92,7 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:oak-mat<br/>(est:AcademyTrust)"]
+    AT["inst:oak-mat<br/>(est:LegalEntity)"]
     BP["inst:brookside-primary<br/>(est:MainstreamAcademy)"]
     TB["ginst:oak-trust-board<br/>(gov:TrustBoard)"]
     BLGB["ginst:brookside-lgb<br/>(gov:LocalGoverningBody)"]
@@ -140,7 +140,8 @@ All examples in this section use the following prefixes.
 
 ```
 inst:oak-mat
-    a est:AcademyTrust ;
+    a est:LegalEntity ;
+    esto:holdsRole [ a est:RecognisedRole ; esto:hasRoleType est:AcademyTrust ] ;
     rdfs:label "OAK Multi Academy Trust"@en .
 
 ginst:oak-trust-board
@@ -428,7 +429,7 @@ ginst:roleassignment-sb-curriculum
 
 | Real-world concept | OAK/Brookside evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:AcademyTrust` (same instance as the Manor High worked example) | Direct |
+| Academy Trust | OAK Multi Academy Trust, GIAS UID 16991 | `est:LegalEntity` holding the `est:AcademyTrust` role (same instance as the Manor High worked example) | Direct |
 | Trust Board | OAK's Board of Trustees | `gov:TrustBoard` (same instance as Manor High) | Direct |
 | Academy | Brookside Primary School, URN 145619 | `est:MainstreamAcademy` | Direct - academy route not published in this source, so `esto:hasAcademyRoute` is not asserted |
 | Local Governing Body | Brookside's LGB, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` + `govo:hasGovernanceBody` | Direct |

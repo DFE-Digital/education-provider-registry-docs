@@ -1,10 +1,10 @@
-﻿# Governor type
+# Governor type
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/GovernorType/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/GovernorType/> |
 | Compact identifier | `gov:GovernorType` |
 | Preferred label | Governor type |
 | Alternative labels |  |

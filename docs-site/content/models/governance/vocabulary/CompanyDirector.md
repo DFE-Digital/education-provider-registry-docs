@@ -1,10 +1,10 @@
-﻿# Company director
+# Company director
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/CompanyDirector/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/CompanyDirector/> |
 | Compact identifier | `gov:CompanyDirector` |
 | Preferred label | Company director |
 | Alternative labels |  |
@@ -18,7 +18,7 @@
 
 ## Definition
 
-A person appointed to direct and manage a company under company law.
+A person appointed to direct and manage a company under company law. For an academy trust, this is a legal capacity that a Trustee holds automatically alongside their charity trustee capacity, not a separate appointment - see Trustee, Academy trustee.
 
 ## Scope Notes
 

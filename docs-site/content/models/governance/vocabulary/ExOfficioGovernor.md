@@ -1,10 +1,10 @@
-﻿# Ex-officio governor
+# Ex-officio governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/ExOfficioGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/ExOfficioGovernor/> |
 | Compact identifier | `gov:ExOfficioGovernor` |
 | Preferred label | Ex-officio governor |
 | Alternative labels |  |

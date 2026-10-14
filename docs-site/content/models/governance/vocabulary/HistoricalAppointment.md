@@ -1,10 +1,10 @@
-﻿# Historical appointment
+# Historical appointment
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/HistoricalAppointment/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/HistoricalAppointment/> |
 | Compact identifier | `gov:HistoricalAppointment` |
 | Preferred label | Historical appointment |
 | Alternative labels |  |

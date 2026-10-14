@@ -1,10 +1,10 @@
-﻿# Principal
+# Principal
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Principal/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Principal/> |
 | Compact identifier | `gov:Principal` |
 | Preferred label | Principal |
 | Alternative labels |  |

@@ -1,10 +1,10 @@
-﻿# Local governor
+# Local governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/LocalGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/LocalGovernor/> |
 | Compact identifier | `gov:LocalGovernor` |
 | Preferred label | Local governor |
 | Alternative labels |  |

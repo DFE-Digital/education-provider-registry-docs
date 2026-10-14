@@ -1,10 +1,10 @@
-﻿# Companies House legal entity
+# Companies House legal entity
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/CompaniesHouseLegalEntity/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/CompaniesHouseLegalEntity/> |
 | Compact identifier | `gov:CompaniesHouseLegalEntity` |
 | Preferred label | Companies House legal entity |
 | Alternative labels |  |

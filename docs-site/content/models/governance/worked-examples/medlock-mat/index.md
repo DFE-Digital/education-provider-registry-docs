@@ -89,7 +89,7 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:coop-academies-trust<br/>(est:AcademyTrust)<br/>The Co-operative Academies Trust"]
+    AT["inst:coop-academies-trust<br/>(est:LegalEntity)<br/>The Co-operative Academies Trust"]
     MED["inst:medlock<br/>(est:Academy)<br/>Co-op Academy Medlock"]
     TB["ginst:coop-trust-board<br/>(gov:TrustBoard)"]
     ACC["ginst:medlock-acc<br/>(gov:Committee)<br/>Academy Community Council"]
@@ -132,19 +132,15 @@ All examples in this section use the following prefixes.
 
 ### Example 1 — Legal entity, academy and trust board identity
 
-The Academy Trust is one legal entity carrying two registry identifiers (GIAS UID and Companies House number) - not two organisations. `est:AcademyTrust` and `est:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); `esto:hasGroupUniqueIdentifier` and `esto:hasGroupCompaniesHouseNumber` are reused, unmodified, from `establishment-ontology.ttl`.
+The academy trust is one legal entity, identified by its Companies House number - not two organisations. `est:LegalEntity` and `est:Academy` are reused directly from the main EPR ontology (they are type stubs in `governance-ontology.ttl` - see the [ontology graph viewer](../../ontology/webvowl/)); the academy trust role, `esto:holdsRole` and `esto:hasCompaniesHouseRegistration` come from `establishment-ontology.ttl` v2.0. Its GIAS group UID (2777) is source evidence, not modelled here.
 
 ```
 inst:coop-academies-trust
-    a est:AcademyTrust ;
+    a est:LegalEntity ;
+    esto:holdsRole [ a est:RecognisedRole ; esto:hasRoleType est:AcademyTrust ] ;
     rdfs:label "The Co-operative Academies Trust"@en ;
 
-    esto:hasGroupUniqueIdentifier [
-        a est:GroupUniqueIdentifier ;
-        rdf:value "2777"
-    ] ;
-
-    esto:hasGroupCompaniesHouseNumber [
+    esto:hasCompaniesHouseRegistration [
         a est:CompaniesHouseNumber ;
         rdf:value "07747126"
     ] .
@@ -391,11 +387,11 @@ inst:coop-academies-trust
 
 | Real-world concept | Medlock evidence | Ontology mapping | Fit |
 |---|---|---|---|
-| Academy Trust (legal entity) | The Co-operative Academies Trust, UID 2777, Companies House 07747126 | `est:AcademyTrust` | Direct - reused type stub, not redefined |
+| Academy Trust (legal entity) | The Co-operative Academies Trust, UID 2777, Companies House 07747126 | `est:LegalEntity` holding the `est:AcademyTrust` role | Direct - reused type stub, not redefined |
 | Academy | Co-op Academy Medlock, URN 150612 | `est:Academy` | Direct - reused type stub |
 | Trust Board | The board accountable for the Trust | `gov:TrustBoard` | Direct |
 | Academy Community Council | Committee of the Trust Board, governance scope over Medlock | `gov:Committee` + `govo:isCommitteeOf` + `govo:hasGovernanceBody` | Direct |
-| Academy Trust Membership | 6 Members, including a corporate member | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AcademyTrustMember`) attached directly to `est:AcademyTrust` | Direct |
+| Academy Trust Membership | 6 Members, including a corporate member | `gov:GovernanceAppointment` (`govo:hasRoleType gov:AcademyTrustMember`) attached directly to the trust's `est:LegalEntity` | Direct |
 | Trustee Appointment | 9 Trustees, 1 Chair of Trustees | `govo:hasRoleType gov:Trustee`, `govo:hasAppointingBody gov:AppointedByAcademyMembers` | Direct |
 | Legal Capacity (Director) | Trustees are also company directors and charity trustees | `govo:hasLegalCapacity` (`gov:CompanyDirector`, `gov:CharityTrustee`) | Direct |
 | Role Assignment (Chair / Vice-Chair / Committee Chair) | Chair of Trustees, Vice-Chair of Trust Board, Chair of ACC | `gov:RoleAssignment` + `govo:layeredOn` + `govo:assignsRole` (`gov:Chair`, `gov:ViceChair` at Trust Board level; `gov:CommitteeChair` for the ACC, a committee) | Direct |

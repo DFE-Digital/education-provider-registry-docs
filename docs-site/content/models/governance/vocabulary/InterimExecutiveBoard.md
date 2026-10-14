@@ -1,10 +1,10 @@
-﻿# Interim Executive Board
+# Interim Executive Board
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/InterimExecutiveBoard/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/InterimExecutiveBoard/> |
 | Compact identifier | `gov:InterimExecutiveBoard` |
 | Preferred label | Interim Executive Board |
 | Alternative labels |  |

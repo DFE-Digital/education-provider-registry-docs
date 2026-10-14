@@ -1,10 +1,10 @@
-﻿# Co-opted governor
+# Co-opted governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/CoOptedGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/CoOptedGovernor/> |
 | Compact identifier | `gov:CoOptedGovernor` |
 | Preferred label | Co-opted governor |
 | Alternative labels |  |

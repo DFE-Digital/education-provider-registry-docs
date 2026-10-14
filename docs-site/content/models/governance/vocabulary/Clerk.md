@@ -1,10 +1,10 @@
-﻿# Clerk
+# Clerk
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Clerk/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Clerk/> |
 | Compact identifier | `gov:Clerk` |
 | Preferred label | Clerk |
 | Alternative labels |  |

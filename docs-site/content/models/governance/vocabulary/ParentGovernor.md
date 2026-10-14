@@ -1,10 +1,10 @@
-﻿# Parent governor
+# Parent governor
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/ParentGovernor/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/ParentGovernor/> |
 | Compact identifier | `gov:ParentGovernor` |
 | Preferred label | Parent governor |
 | Alternative labels |  |

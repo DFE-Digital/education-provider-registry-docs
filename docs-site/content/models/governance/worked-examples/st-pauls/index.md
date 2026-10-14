@@ -78,7 +78,7 @@ The same people, bodies and appointments from Section 1, expressed in Turtle usi
 
 ```mermaid
 flowchart LR
-    AT["inst:st-benedict-cat<br/>(est:AcademyTrust)<br/>St Benedict Catholic Academy Trust"]
+    AT["inst:st-benedict-cat<br/>(est:LegalEntity)<br/>St Benedict Catholic Academy Trust"]
     A["inst:st-pauls-academy<br/>(est:MainstreamAcademy)<br/>St Paul's Academy"]
     TB["ginst:st-benedict-trust-board<br/>(gov:TrustBoard)"]
     LGB["ginst:st-pauls-lgb<br/>(gov:LocalGoverningBody)"]
@@ -136,7 +136,8 @@ inst:st-pauls-academy
     ] .
 
 inst:st-benedict-cat
-    a est:AcademyTrust ;
+    a est:LegalEntity ;
+    esto:holdsRole [ a est:RecognisedRole ; esto:hasRoleType est:AcademyTrust ] ;
     rdfs:label "St Benedict Catholic Academy Trust"@en .
 
 ginst:st-benedict-trust-board
@@ -310,7 +311,7 @@ inst:st-benedict-cat
 | Real-world concept | St Paul's evidence | Ontology mapping | Fit |
 |---|---|---|---|
 | Academy (sponsor led) | St Paul's Academy, URN 105135 | `est:MainstreamAcademy` + `esto:hasAcademyRoute est:SponsorLedRoute` | Direct - reused leaf type and route property from the main EPR ontology |
-| Academy Trust | St Benedict Catholic Academy Trust, GIAS group 17729 | `est:AcademyTrust` | Direct |
+| Academy Trust | St Benedict Catholic Academy Trust, GIAS group 17729 | `est:LegalEntity` holding the `est:AcademyTrust` role | Direct |
 | Trust Board | Not detailed in this investigation, but a body St Paul's Local Governing Body is delegated by | `gov:TrustBoard` + `govo:hasGovernanceBody` | Direct as a body; the Trust's own Members/Trustees are out of scope of this investigation |
 | Local Governing Body | St Paul's local governing body, delegated by the Trust Board | `gov:LocalGoverningBody` + `govo:isDelegatedBy` (delegation) + `govo:hasGovernanceBody` (scope over the academy) | Direct |
 | Governor categories | Foundation, Parent, Headteacher (ex officio) | `govo:hasRoleType` (`gov:FoundationGovernor`, `gov:ParentGovernor`, `gov:ExOfficioGovernor`) | Candidate - St Paul's Local Governing Body is not constituted under SI 2012/1034, unlike a maintained school's governing body |

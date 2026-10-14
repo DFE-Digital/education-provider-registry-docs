@@ -1,10 +1,10 @@
-﻿# Membership
+# Membership
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Membership/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Membership/> |
 | Compact identifier | `gov:Membership` |
 | Preferred label | Membership |
 | Alternative labels |  |

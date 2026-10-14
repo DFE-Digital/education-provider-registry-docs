@@ -1,10 +1,10 @@
-﻿# Trust member
+# Trust member
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/TrustMember/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/TrustMember/> |
 | Compact identifier | `gov:TrustMember` |
 | Preferred label | Trust member |
 | Alternative labels |  |

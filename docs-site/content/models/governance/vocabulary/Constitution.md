@@ -1,10 +1,10 @@
-﻿# Constitution
+# Constitution
 
 [Back to vocabulary index](../)
 
 | Property | Value |
 | --- | --- |
-| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/vocabulary/Constitution/> |
+| Canonical URI | <https://dfe-digital.github.io/education-provider-registry-docs/models/governance/vocabulary/Constitution/> |
 | Compact identifier | `gov:Constitution` |
 | Preferred label | Constitution |
 | Alternative labels |  |
