@@ -53,6 +53,7 @@ WITH source_establishment AS (
         e.NumberOfPupils,
         e.freeSchoolMeals,
         e.percentageOfPupilsReceivingFsm,
+        independent_school.CensusDate AS census_date,
         e.typeOfReservedProvision_code,
         e.resourcedProvisionCapacity,
         e.resourcedProvisionOnRoll,
@@ -69,6 +70,10 @@ WITH source_establishment AS (
         e.Postcode,
         e.UPRN
     FROM dbo.Establishment AS e
+    -- BAU stores the census date here for academies and maintained schools too.
+    -- Keep establishments with no corresponding row or no recorded date.
+    LEFT JOIN dbo.IndependentSchools AS independent_school
+      ON independent_school.URN = e.URN
     LEFT JOIN dbo.EstablishmentType AS et
       ON et.code = e.type_code
     LEFT JOIN dbo.EducationPhase AS ep
@@ -257,7 +262,7 @@ SELECT
     TRY_CONVERT(integer, NULLIF(REPLACE(LTRIM(RTRIM(s.freeSchoolMeals)), ',', ''), '')) AS free_school_meal_measure,
     TRY_CONVERT(decimal(5, 2), NULLIF(REPLACE(LTRIM(RTRIM(s.percentageOfPupilsReceivingFsm)), ',', ''), ''))
         AS source_free_school_meal_percentage,
-    CAST(NULL AS date) AS census_date,
+    CONVERT(varchar(10), s.census_date, 23) AS census_date,
     s.typeOfReservedProvision_code AS source_specialist_provision_type_code,
     CASE
         WHEN s.typeOfReservedProvision_code = '0' THEN 'Not applicable'

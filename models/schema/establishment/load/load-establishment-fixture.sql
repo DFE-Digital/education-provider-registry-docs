@@ -38,6 +38,7 @@ CREATE TEMP TABLE source_establishment_fixture (
     school_capacity integer,
     pupil_count integer,
     free_school_meal_measure integer,
+    census_date date,
     resourced_provision_capacity integer,
     resourced_provision_pupil_count integer,
     sen_unit_capacity integer,
@@ -332,7 +333,7 @@ INSERT INTO establishment.capacity_and_pupil_measures (
     establishment_id, school_capacity, pupil_count, free_school_meal_measure, census_date
 )
 SELECT e.establishment_id, s.school_capacity, s.pupil_count,
-       s.free_school_meal_measure, NULL::date
+       s.free_school_meal_measure, s.census_date
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 WHERE s.school_capacity IS NOT NULL OR s.pupil_count IS NOT NULL OR s.free_school_meal_measure IS NOT NULL
