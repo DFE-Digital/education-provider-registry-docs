@@ -4,5 +4,5 @@ SELECT NULLIF(LTRIM(RTRIM(gor.code)), '') AS code,
        gor.name
 FROM dbo.GovernmentOfficeRegion AS gor
 WHERE NULLIF(LTRIM(RTRIM(gor.code)), '') IS NOT NULL
-  AND LTRIM(RTRIM(gor.code)) <> '0'
+  AND LTRIM(RTRIM(gor.code)) NOT IN ('0','N','Z')
 ORDER BY LTRIM(RTRIM(gor.code));

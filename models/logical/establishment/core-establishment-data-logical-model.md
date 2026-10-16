@@ -8,10 +8,21 @@ This is the first logical-model slice for the Establishment Registry. It defines
 
 ## Logical Model
 
+Optional references use null for Unknown, Not applicable and missing source
+values. These are not rows in the business reference lists. Null alone does
+not distinguish the reasons for absence; use the source or migration evidence
+when that distinction is needed. Meaningful values such as None, No boarders,
+No nursery classes and Not approved remain recorded values.
+
 ```mermaid
 erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
+    ESTABLISHMENT }o--o| FURTHER_EDUCATION_TYPE : "has further-education type"
+    ESTABLISHMENT }o--o| SECTION_41_APPROVAL_STATUS : "has Section 41 status"
+    ESTABLISHMENT }o--o| RELIGIOUS_CHARACTER : "has religious character"
+    ESTABLISHMENT }o--o| RELIGIOUS_ETHOS : "has religious ethos"
+    ESTABLISHMENT }o--o| DIOCESE : "has diocese"
     ESTABLISHMENT ||--o| EDUCATION_ADMISSIONS_AND_PROVISION : "has"
     ESTABLISHMENT ||--o| CAPACITY_AND_PUPIL_MEASURES : "has"
     ESTABLISHMENT ||--o| SPECIALIST_PROVISION : "has"
@@ -34,6 +45,41 @@ erDiagram
         numeric urn UK
         integer establishment_number
         numeric ukprn
+        string name
+        integer further_education_type_id FK
+        integer section_41_approval_status_id FK
+        integer religious_character_id FK
+        integer religious_ethos_id FK
+        integer diocese_id FK
+    }
+
+    FURTHER_EDUCATION_TYPE {
+        integer further_education_type_id PK
+        string code UK
+        string name
+    }
+
+    SECTION_41_APPROVAL_STATUS {
+        integer section_41_approval_status_id PK
+        string code UK
+        string name
+    }
+
+    RELIGIOUS_CHARACTER {
+        integer religious_character_id PK
+        string code UK
+        string name
+    }
+
+    RELIGIOUS_ETHOS {
+        integer religious_ethos_id PK
+        string code UK
+        string name
+    }
+
+    DIOCESE {
+        integer diocese_id PK
+        string code UK
         string name
     }
 

@@ -40,7 +40,12 @@ $script:EstablishmentFixtureColumns = @(
     'nursery_provision_id', 'sixth_form_provision_id',
     'specialist_provision_type_id',
     'main_site_name', 'address_line_1', 'address_line_2', 'address_line_3',
-    'address_town', 'address_county', 'address_postcode', 'site_uprn'
+    'address_town', 'address_county', 'address_postcode', 'site_uprn',
+    'source_further_education_type_code', 'further_education_type_id',
+    'source_section_41_approval_status_code', 'section_41_approval_status_id',
+    'source_religious_character_code', 'religious_character_id',
+    'source_religious_ethos_code', 'religious_ethos_id',
+    'source_diocese_code', 'diocese_id', 'source_education_phase'
 )
 
 function Import-GeographicReferenceData {

@@ -3,4 +3,5 @@ IF OBJECT_ID(N'dbo.MSOA', N'U') IS NULL
 
 SELECT code, name
 FROM dbo.MSOA
+WHERE LOWER(LTRIM(RTRIM(name))) NOT IN ('unknown','does not apply','not known') AND LOWER(LTRIM(RTRIM(name))) NOT LIKE 'not applicable%'
 ORDER BY code;

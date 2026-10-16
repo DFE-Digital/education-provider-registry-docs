@@ -10490,7 +10490,6 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 	('ed4e5c78-1102-47f9-b58a-0545886636c5', '95Z 49', 'Cavehill'),
 	('12eb5ff3-f152-4057-adc2-da53ba6c44df', '95Z 50', 'Castleview'),
 	('65a910dc-52bb-495a-8464-4d3b981a38fb', '95Z 51', 'Bellevue'),
-	('8cd95836-2c42-4229-8f44-21002aa358f6', '999999', 'Unknown'),
 	('78e9d880-7050-4fbb-a11d-c7502eba2590', '99ZZ00', 'Channel Is/IoM (pseudo)'),
 	('581c2675-bdad-43f8-9930-3cc33f54a7c5', 'E05000001', 'Aldersgate'),
 	('957fcdf8-b7a7-4590-a908-279f9165afcb', 'E05000002', 'Aldgate'),
@@ -29001,8 +29000,7 @@ INSERT INTO establishment.administrative_ward (id, code, name) VALUES
 
 INSERT INTO establishment.admissions_policy (admissions_policy_id, name) VALUES
 	(2, 'Selective'),
-	(1, 'Non-selective'),
-	(3, 'Not applicable (admissions policy)');
+	(1, 'Non-selective');
 
 
 --
@@ -29464,7 +29462,6 @@ INSERT INTO establishment.district_administrative (id, code, name, archived) VAL
 	('0b4f1452-eaa3-456a-b5c8-2354511548bc', '95X', 'Ards', true),
 	('6872f36b-26cc-4224-99e7-43a523f289a8', '95Y', 'Castlereagh', true),
 	('1e7e2be0-bb62-4670-991a-69d11bd32aee', '95Z', 'Belfast', true),
-	('b16c89c1-7ecc-410d-a522-72b09309e262', '9999', 'Unknown', false),
 	('1190a170-ba5f-4c28-93ae-bab1d710a632', '99ZZ', 'Channel Is/IoM (pseudo)', true),
 	('8e174513-7cd0-4b2e-bf81-039dae4d2b21', 'E06000001', 'Hartlepool', false),
 	('4d022347-60a7-4b8f-9abe-ddd245070796', 'E06000002', 'Middlesbrough', false),
@@ -29897,7 +29894,6 @@ INSERT INTO establishment.education_phase (education_phase_id, name) VALUES
 	(4, 'Middle deemed secondary'),
 	(6, 'All-through'),
 	(7, '16 to 19'),
-	(8, 'Not applicable (education phase)'),
 	(2, 'Primary'),
 	(5, 'Secondary');
 
@@ -29964,8 +29960,7 @@ INSERT INTO establishment.establishment_type (establishment_type_id, name) VALUE
 INSERT INTO establishment.gender_of_entry_type (gender_of_entry_type_id, name) VALUES
 	(1, 'Mixed'),
 	(2, 'Boys'),
-	(3, 'Girls'),
-	(4, 'Not applicable (gender of entry)');
+	(3, 'Girls');
 
 
 --
@@ -29982,9 +29977,7 @@ INSERT INTO establishment.government_office_region (government_office_region_id,
 	('1375841f-e6ba-4cda-9fac-753ff9df93a2', 'H', 'London'),
 	('f85647db-e5d1-41a6-befb-bfbf6420f5c4', 'J', 'South East'),
 	('21478f61-4270-49ad-8c24-d9058ea036ab', 'K', 'South West'),
-	('c73ecd90-4dde-422f-a8da-e234af0a07dd', 'N', 'Not Applicable (Archived)'),
-	('28c0b88a-9329-4c96-9ac8-cb44cf6926e1', 'W', 'Wales (pseudo)'),
-	('c8b33e9c-23a0-4591-84dd-e764fac11d13', 'Z', 'Not Applicable');
+	('28c0b88a-9329-4c96-9ac8-cb44cf6926e1', 'W', 'Wales (pseudo)');
 
 
 --
@@ -31530,7 +31523,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('dcf7a916-0488-4175-9c37-ee140cb0f779', '95ZZ15W1', 'Victoria Bridge'),
 	('c688097a-aeb1-4f93-b29f-50bee2a5a008', '95ZZ16S1', 'West 1'),
 	('952ce567-64e7-4932-b5e0-b32027a468b5', '95ZZ16S2', 'West 2'),
-	('ae93e781-d07c-4616-8fa8-e464a998beda', '999999999', 'Unknown'),
 	('313bf9a3-2733-408f-89d0-47f55278294c', 'E01000001', 'City of London 001A'),
 	('5399eff9-e66d-485c-85ef-8b2822379832', 'E01000002', 'City of London 001B'),
 	('5ac75e97-c71c-4959-81e1-b90561cfac33', 'E01000003', 'City of London 001C'),
@@ -68019,7 +68011,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('abb207e5-9fee-4600-88b3-153fde7e022d', 'N21000848', 'Ards_Peninsula_K'),
 	('3faf8c2e-cbc2-4b81-bbbf-aa322546dadf', 'N21000849', 'Ards_Peninsula_L'),
 	('68d2e9d3-1c97-40a7-ad8c-cf1f82cf5c33', 'N21000850', 'Ards_Peninsula_N'),
-	('2585da3d-55f7-4d75-a42d-e3d6429748b8', 'N99999999', 'Unknown'),
 	('f9b804b4-a001-4827-a86f-cd95c7249a57', 'S01006506', 'Culter - 01'),
 	('a6a4dc27-deff-4d66-94cb-28605671d1a7', 'S01006507', 'Culter - 02'),
 	('253e7755-c4ad-402b-a2b1-4cdf5ae65b03', 'S01006508', 'Culter - 03'),
@@ -82403,7 +82394,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 	('19c163a3-2689-4413-80f0-127c0d88dcca', 'S01020871', 'Broxburn Greendykes Road'),
 	('0ed5118f-2927-4060-a151-eb6e3c9da010', 'S01020872', 'Broxburn Aitken Orr Drive'),
 	('b4ec9ea0-65ad-4505-a4c2-706cfe838efc', 'S01020873', 'Broxburn East Mains and Burnside'),
-	('0c0c1906-5b55-4530-b2ca-4607b4dcd658', 'S99999999', 'Unknown'),
 	('1ffb4ee7-3625-471d-8615-74211cca8031', 'W01000001', 'Isle of Anglesey 007A'),
 	('bc6c275a-7aaf-4e67-91a6-91bc57e06df0', 'W01000002', 'Isle of Anglesey 007B'),
 	('a932d08b-3682-4c41-bbe7-a4fe27205773', 'W01000003', 'Isle of Anglesey 001A'),
@@ -84452,7 +84442,6 @@ INSERT INTO establishment.lsoa (id, code, name) VALUES
 INSERT INTO establishment.msoa (id, code, name) VALUES
 	('a7e2a5b3-945e-43b6-b516-95ba3449de62', 'S02002559', 'Dyce'),
 	('ce10313e-9c19-4bb2-97f2-afbf9d4254ce', 'S02002667', 'Bute'),
-	('a008d96a-c9a2-43bf-9152-87c0f01a3cf7', '999999999', 'Unknown'),
 	('f5981112-77f8-4ba3-bd5d-5088b8da9cbe', 'E02000001', 'City of London 001'),
 	('24007b7d-1f82-40b3-b318-4a24b146f796', 'E02000002', 'Barking and Dagenham 001'),
 	('668cf53f-6f7a-42b4-bb08-c812f8cb36c6', 'E02000003', 'Barking and Dagenham 002'),
@@ -94187,7 +94176,6 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 	('d6dab071-9071-45b5-9e30-7ca1ee96d6c7', 'S02003846', 'Uphall, Dechmont and Ecclesmachan'),
 	('135e1b0d-ad76-41f1-a43a-8094b583ed7a', 'S02003847', 'Broxburn South'),
 	('6255c26b-29aa-451e-95b0-92510e459258', 'S02003848', 'Broxburn East'),
-	('780d43d7-d3a8-4fe2-8c84-ece4a44d5cea', 'S99999999', 'Unknown'),
 	('41ced987-82ac-4baa-b495-63a4101c78ce', 'W02000001', 'Isle of Anglesey 001'),
 	('8cb46bcf-ad31-428d-be83-2ea98a4c0715', 'W02000002', 'Isle of Anglesey 002'),
 	('618edf31-c62a-40bf-a488-2f0125491f11', 'W02000003', 'Isle of Anglesey 003'),
@@ -94626,8 +94614,7 @@ INSERT INTO establishment.msoa (id, code, name) VALUES
 
 INSERT INTO establishment.nursery_provision (nursery_provision_id, name) VALUES
 	(1, 'Nursery classes'),
-	(2, 'No nursery classes'),
-	(3, 'Not applicable (nursery provision)');
+	(2, 'No nursery classes');
 
 
 --
@@ -95284,7 +95271,6 @@ INSERT INTO establishment.parliamentary_constituency (id, code, name) VALUES
 	('b073d80e-260c-4e1a-995a-3b59ba42a44e', '858', 'West Aberdeenshire and Kincardine'),
 	('d32a0f52-3a4a-478b-8fc2-e78779026df5', '859', 'West Dunbartonshire'),
 	('132d87e0-9b64-4d85-ad36-2dfa6691ea90', '900', 'Isle of Man (pseudo)'),
-	('8898ca6d-a899-43fc-94ad-e44f9ce59f39', '999', 'Unknown'),
 	('7e8548c9-dd99-4a9b-a9b6-62104bac5cf2', 'A01', 'Aldershot'),
 	('e240c76c-03e9-48ec-aee3-3a15aa2c8a73', 'A02', 'Aldridge-Brownhills'),
 	('78d2dd0e-6543-4faa-a255-3792ef3003f2', 'A03', 'Altrincham and Sale West'),
@@ -97204,8 +97190,7 @@ INSERT INTO establishment.reason_establishment_opened (reason_establishment_open
 
 INSERT INTO establishment.sixth_form_provision (sixth_form_provision_id, name) VALUES
 	(1, 'Sixth form'),
-	(2, 'No sixth form'),
-	(3, 'Not applicable (sixth-form provision)');
+	(2, 'No sixth form');
 
 
 --
@@ -97232,7 +97217,6 @@ INSERT INTO establishment.urban_rural (id, code, name) VALUES
 	('4b68cc4d-af67-4316-a39a-7e9400f83362', '7', '(Scotland) Remote Rural'),
 	('2dc953a0-bfc6-4a0e-b7f2-62d6496e0282', '8', '(Scotland) Very Remote Rural'),
 	('018dc4f6-bec1-4e81-884d-fdb51f047e0f', '9', 'postcode in Scotland/NI/Channel Is/IoM (pseudo)'),
-	('fae224cb-3902-4df1-94e4-ddc1bdec0293', '99', 'Unknown'),
 	('fba31373-6bf1-4ad2-9d63-a2c783849aad', 'A1', '(England/Wales) Urban major conurbation'),
 	('49fb69d9-c604-424e-8a90-899e55383aaa', 'B1', '(England/Wales) Urban minor conurbation'),
 	('8dc005f4-f7ba-4adf-9d0e-6bf2cd7addfa', 'C1', '(England/Wales) Urban city and town'),
@@ -97254,6 +97238,46 @@ INSERT INTO establishment.urban_rural (id, code, name) VALUES
 
 
 --
+-- E15 reference data. FE source codes and labels come from the BAU archived
+-- dictionary setup; Section 41 labels come from Section41Approved.java.
+-- Unknown and Not applicable source codes map to NULL, not reference rows.
+INSERT INTO establishment.further_education_type (further_education_type_id, code, name) VALUES
+    (1, '01', 'Agricultural and Horticultural College'),
+    (2, '02', 'Art, Design and Performing Arts College'),
+    (3, '03', 'General Further Education College'),
+    (4, '04', 'General Further Education College (Special)'),
+    (5, '05', 'Sixth Form College (General)'),
+    (6, '06', 'Sixth Form College (Voluntary Aided)'),
+    (7, '07', 'Sixth Form College (Voluntary Controlled)'),
+    (8, '08', 'Specialist Designated College'),
+    (9, '09', 'Tertiary College');
+
+INSERT INTO establishment.section_41_approval_status (section_41_approval_status_id, code, name) VALUES
+    (1, '1', 'Approved'),
+    (2, '2', 'Not approved');
+
+-- E16: scoped source codes observed in the selected local BAU records.
+-- Labels are grounded in the BAU dictionary setup and ReligiousEthos copy.
+-- Sources: gias-dd-backend/sql_archive/1.0.0/Setup/dictionaries/
+-- ReligiousCharacter.sql and Diocese.sql, 7.2.0/Update religious fields.sql,
+-- and domain/dictionary/ReligiousCharacter.java for the current 00 label.
+-- Diocese integer IDs are local keys; the original CE/RC code is retained.
+-- Missing source values are not replaced with any of these classifications.
+INSERT INTO establishment.religious_character (religious_character_id, code, name) VALUES
+    (2, '02', 'Church of England'),
+    (3, '03', 'Roman Catholic'),
+    (6, '06', 'None');
+
+INSERT INTO establishment.religious_ethos (religious_ethos_id, code, name) VALUES
+    (6, '06', 'None'),
+    (15, '15', 'Christian');
+
+INSERT INTO establishment.diocese (diocese_id, code, name) VALUES
+    (1014, 'CE14', 'Diocese of Ely'),
+    (1023, 'CE23', 'Diocese of London'),
+    (1032, 'CE32', 'Diocese of St Albans'),
+    (2019, 'RC19', 'Archdiocese of Southwark');
+
 -- PostgreSQL database dump complete
 --
 

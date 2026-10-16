@@ -19,12 +19,26 @@ was loaded.
 SELECT
     e.*,
     et.name AS establishment_type,
-    ep.name AS education_phase
+    ep.name AS education_phase,
+    fet.code AS further_education_type_code,
+    fet.name AS further_education_type,
+    s41.code AS section_41_approval_status_code,
+    s41.name AS section_41_approval_status,
+    rc.code AS religious_character_code, rc.name AS religious_character,
+    re.code AS religious_ethos_code, re.name AS religious_ethos,
+    d.code AS diocese_code, d.name AS diocese
 FROM establishment e
 LEFT JOIN establishment_type et
     ON et.establishment_type_id = e.establishment_type_id
 LEFT JOIN education_phase ep
     ON ep.education_phase_id = e.education_phase_id
+LEFT JOIN further_education_type fet
+    ON fet.further_education_type_id = e.further_education_type_id
+LEFT JOIN section_41_approval_status s41
+    ON s41.section_41_approval_status_id = e.section_41_approval_status_id
+LEFT JOIN religious_character rc USING (religious_character_id)
+LEFT JOIN religious_ethos re USING (religious_ethos_id)
+LEFT JOIN diocese d USING (diocese_id)
 WHERE e.urn = <URN>;
 ```
 

@@ -10,6 +10,7 @@ function Test-EstablishmentCoreValidation {
 
     Write-Step 'Test: core establishment validation'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-establishment-fixture.sql') -FailureMessage 'Core establishment validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-null-reference-policy.sql') -FailureMessage 'Null reference policy failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-group-address-constraints.sql') -FailureMessage 'Group-address constraints failed'
 }
 

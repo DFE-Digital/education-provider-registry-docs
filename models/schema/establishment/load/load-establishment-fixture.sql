@@ -58,7 +58,18 @@ CREATE TEMP TABLE source_establishment_fixture (
     address_town text,
     address_county text,
     address_postcode text,
-    address_uprn text
+    address_uprn text,
+    source_further_education_type_code text,
+    further_education_type_id integer,
+    source_section_41_approval_status_code text,
+    section_41_approval_status_id integer,
+    source_religious_character_code text,
+    religious_character_id integer,
+    source_religious_ethos_code text,
+    religious_ethos_id integer,
+    source_diocese_code text,
+    diocese_id integer,
+    source_education_phase text
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
@@ -138,16 +149,41 @@ BEGIN
 
     SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
     FROM source_establishment_fixture
-    WHERE education_phase_id IS NULL;
+    WHERE education_phase_id IS NULL AND source_education_phase IS NOT NULL
+      AND source_education_phase NOT IN ('Unknown','Not applicable','Not applicable (education phase)');
     IF unmapped IS NOT NULL THEN
         RAISE EXCEPTION 'Education phase could not be mapped for URN %. Add the BAU phase to the mapping in transforms/establishment-from-bau.sql.', unmapped;
+    END IF;
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
+    FROM source_establishment_fixture
+    WHERE source_further_education_type_code IS NOT NULL AND source_further_education_type_code NOT IN ('00','99') AND further_education_type_id IS NULL;
+    IF unmapped IS NOT NULL THEN
+        RAISE EXCEPTION 'Further-education type could not be mapped for URN %.', unmapped;
+    END IF;
+
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
+    FROM source_establishment_fixture
+    WHERE source_section_41_approval_status_code IS NOT NULL AND source_section_41_approval_status_code <> '3' AND section_41_approval_status_id IS NULL;
+    IF unmapped IS NOT NULL THEN
+        RAISE EXCEPTION 'Section 41 approval status could not be mapped for URN %.', unmapped;
+    END IF;
+
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
+    FROM source_establishment_fixture
+    WHERE (source_religious_character_code IS NOT NULL AND source_religious_character_code NOT IN ('00','99') AND religious_character_id IS NULL)
+       OR (source_religious_ethos_code IS NOT NULL AND source_religious_ethos_code NOT IN ('00','99') AND religious_ethos_id IS NULL)
+       OR (source_diocese_code IS NOT NULL AND source_diocese_code NOT IN ('0000','9999') AND diocese_id IS NULL);
+    IF unmapped IS NOT NULL THEN
+        RAISE EXCEPTION 'Faith or diocese classification could not be mapped for URN %. Review the source code and seeded reference list.', unmapped;
     END IF;
 END;
 $$;
 
 INSERT INTO establishment.establishment (
     urn, establishment_number, ukprn, name,
-    establishment_type_id, education_phase_id
+    establishment_type_id, education_phase_id,
+    further_education_type_id, section_41_approval_status_id,
+    religious_character_id, religious_ethos_id, diocese_id
 )
 SELECT
     s.urn,
@@ -155,14 +191,24 @@ SELECT
     s.ukprn,
     s.name,
     s.establishment_type_id,
-    s.education_phase_id
+    s.education_phase_id,
+    s.further_education_type_id,
+    s.section_41_approval_status_id,
+    s.religious_character_id,
+    s.religious_ethos_id,
+    s.diocese_id
 FROM source_establishment_fixture AS s
 ON CONFLICT (urn) DO UPDATE SET
     establishment_number = EXCLUDED.establishment_number,
     ukprn = EXCLUDED.ukprn,
     name = EXCLUDED.name,
     establishment_type_id = EXCLUDED.establishment_type_id,
-    education_phase_id = EXCLUDED.education_phase_id;
+    education_phase_id = EXCLUDED.education_phase_id,
+    further_education_type_id = EXCLUDED.further_education_type_id,
+    section_41_approval_status_id = EXCLUDED.section_41_approval_status_id,
+    religious_character_id = EXCLUDED.religious_character_id,
+    religious_ethos_id = EXCLUDED.religious_ethos_id,
+    diocese_id = EXCLUDED.diocese_id;
 
 -- Geography is an optional owned substructure. A missing, blank or zero
 -- source local-authority code means that no local-authority relationship is

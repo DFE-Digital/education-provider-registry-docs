@@ -10,7 +10,7 @@ BEGIN
  JOIN establishment.establishment_geography geo USING(establishment_id)
  JOIN establishment.local_authority la USING(local_authority_id)
  WHERE e.urn=148341 AND e.name='Outwood Alternative Provision Eston' AND e.ukprn=10092329
-   AND e.establishment_number=6003 AND e.establishment_type_id=17 AND e.education_phase_id=8
+   AND e.establishment_number=6003 AND e.establishment_type_id=17 AND e.education_phase_id IS NULL
    AND s.name='Open' AND l.open_date=DATE '2021-02-18' AND l.close_date IS NULL AND la.code=807;
  SELECT e.establishment_id INTO STRICT academy FROM establishment.establishment e
  JOIN establishment.establishment_lifecycle l USING(establishment_id)
