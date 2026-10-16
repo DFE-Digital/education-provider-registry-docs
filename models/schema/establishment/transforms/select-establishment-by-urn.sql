@@ -75,12 +75,32 @@ SELECT
     rp.capacity AS resourced_provision_capacity,
     rp.pupil_count AS resourced_provision_pupil_count,
     sup.capacity AS sen_unit_capacity,
-    sup.pupil_count AS sen_unit_pupil_count
+    sup.pupil_count AS sen_unit_pupil_count,
+    e.further_education_type_id,
+    fet.name AS further_education_type,
+    e.section_41_approval_status_id,
+    s41.name AS section_41_approval_status,
+    e.religious_character_id,
+    rc.name AS religious_character,
+    e.religious_ethos_id,
+    re.name AS religious_ethos,
+    e.diocese_id,
+    d.name AS diocese
 FROM params AS p
 JOIN establishment.establishment AS e
   ON e.urn = p.urn
 JOIN establishment.establishment_type AS et
   ON et.establishment_type_id = e.establishment_type_id
+LEFT JOIN establishment.further_education_type AS fet
+  ON fet.further_education_type_id = e.further_education_type_id
+LEFT JOIN establishment.section_41_approval_status AS s41
+  ON s41.section_41_approval_status_id = e.section_41_approval_status_id
+LEFT JOIN establishment.religious_character AS rc
+  ON rc.religious_character_id = e.religious_character_id
+LEFT JOIN establishment.religious_ethos AS re
+  ON re.religious_ethos_id = e.religious_ethos_id
+LEFT JOIN establishment.diocese AS d
+  ON d.diocese_id = e.diocese_id
 LEFT JOIN establishment.establishment_geography AS eg
   ON eg.establishment_id = e.establishment_id
 LEFT JOIN establishment.local_authority AS la

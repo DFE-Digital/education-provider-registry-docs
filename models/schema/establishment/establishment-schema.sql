@@ -14,17 +14,47 @@ CREATE TABLE establishment.establishment_type (
 
 CREATE TABLE establishment.education_phase (
     education_phase_id integer PRIMARY KEY,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
+);
+
+CREATE TABLE establishment.further_education_type (
+    further_education_type_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
+);
+
+CREATE TABLE establishment.section_41_approval_status (
+    section_41_approval_status_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.gender_of_entry_type (
     gender_of_entry_type_id integer PRIMARY KEY,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
+);
+
+CREATE TABLE establishment.religious_character (
+    religious_character_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
+);
+
+CREATE TABLE establishment.religious_ethos (
+    religious_ethos_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
+);
+
+CREATE TABLE establishment.diocese (
+    diocese_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.admissions_policy (
     admissions_policy_id integer PRIMARY KEY,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.boarding_provision (
@@ -34,12 +64,12 @@ CREATE TABLE establishment.boarding_provision (
 
 CREATE TABLE establishment.nursery_provision (
     nursery_provision_id integer PRIMARY KEY,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.sixth_form_provision (
     sixth_form_provision_id integer PRIMARY KEY,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.specialist_provision_type (
@@ -94,7 +124,7 @@ CREATE TABLE establishment.government_office_region (
     -- BAU dbo.GovernmentOfficeRegion.code is an nvarchar code set (A, B, ...,
     -- W and Z), not a numeric identifier. Preserve it as text at the target.
     code text NOT NULL UNIQUE,
-    name text NOT NULL UNIQUE
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$') UNIQUE
 );
 
 CREATE TABLE establishment.local_authority_government_office_region (
@@ -107,38 +137,38 @@ CREATE TABLE establishment.local_authority_government_office_region (
 CREATE TABLE establishment.district_administrative (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
-    name text NOT NULL,
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$'),
     archived boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE establishment.administrative_ward (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.parliamentary_constituency (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.lsoa (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.msoa (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.urban_rural (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
-    name text NOT NULL
+    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.establishment (
@@ -148,7 +178,12 @@ CREATE TABLE establishment.establishment (
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
     establishment_type_id integer NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
-    education_phase_id integer REFERENCES establishment.education_phase (education_phase_id)
+    education_phase_id integer REFERENCES establishment.education_phase (education_phase_id),
+    further_education_type_id integer REFERENCES establishment.further_education_type (further_education_type_id),
+    section_41_approval_status_id integer REFERENCES establishment.section_41_approval_status (section_41_approval_status_id),
+    religious_character_id integer REFERENCES establishment.religious_character (religious_character_id),
+    religious_ethos_id integer REFERENCES establishment.religious_ethos (religious_ethos_id),
+    diocese_id integer REFERENCES establishment.diocese (diocese_id)
 );
 
 CREATE TABLE establishment.establishment_geography (

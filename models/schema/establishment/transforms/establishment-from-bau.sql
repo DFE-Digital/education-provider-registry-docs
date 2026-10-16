@@ -42,6 +42,11 @@ WITH source_establishment AS (
         e.type_code,
         et.name AS type_name,
         e.educationPhase_code,
+        NULLIF(LTRIM(RTRIM(e.furtherEducationType_code)), '') AS furtherEducationType_code,
+        NULLIF(LTRIM(RTRIM(e.section41Approved_code)), '') AS section41Approved_code,
+        NULLIF(LTRIM(RTRIM(e.religiousCharacter_code)), '') AS religiousCharacter_code,
+        NULLIF(LTRIM(RTRIM(e.religiousEthos_code)), '') AS religiousEthos_code,
+        NULLIF(LTRIM(RTRIM(e.diocese_code)), '') AS diocese_code,
         ep.name AS education_phase_name,
         e.gender_code,
         g.name AS gender_name,
@@ -92,13 +97,13 @@ SELECT
     s.URN AS urn,
     s.UKPRN AS ukprn,
     s.LA_code AS local_authority_code,
-    s.GOR_code AS government_office_region_code,
-    s.districtAdministrative_code AS district_administrative_code,
-    s.administrativeWard_code AS administrative_ward_code,
-    s.parliamentaryConstituency_code AS parliamentary_constituency_code,
-    s.lsoa_code AS lsoa_code,
-    s.msoa_code AS msoa_code,
-    s.UrbanRural_code AS urban_rural_code,
+    CASE WHEN s.GOR_code IN ('N','Z') THEN NULL ELSE s.GOR_code END AS government_office_region_code,
+    CASE WHEN s.districtAdministrative_code IN ('9999') THEN NULL ELSE s.districtAdministrative_code END AS district_administrative_code,
+    CASE WHEN s.administrativeWard_code IN ('999999') THEN NULL ELSE s.administrativeWard_code END AS administrative_ward_code,
+    CASE WHEN s.parliamentaryConstituency_code IN ('999') THEN NULL ELSE s.parliamentaryConstituency_code END AS parliamentary_constituency_code,
+    CASE WHEN s.lsoa_code IN ('999999999','N99999999','S99999999') THEN NULL ELSE s.lsoa_code END AS lsoa_code,
+    CASE WHEN s.msoa_code IN ('999999999','S99999999') THEN NULL ELSE s.msoa_code END AS msoa_code,
+    CASE WHEN s.UrbanRural_code IN ('99') THEN NULL ELSE s.UrbanRural_code END AS urban_rural_code,
     s.EstablishmentNumber AS establishment_number,
     CASE
         WHEN s.LA_code IS NULL OR s.EstablishmentNumber IS NULL THEN NULL
@@ -153,12 +158,12 @@ SELECT
         WHEN 'Secondary' THEN 5
         WHEN 'All-through' THEN 6
         WHEN '16 to 19' THEN 7
-        WHEN 'Not applicable' THEN 8
-        WHEN 'Not applicable (education phase)' THEN 8
+        WHEN 'Not applicable' THEN NULL
+        WHEN 'Not applicable (education phase)' THEN NULL
         ELSE NULL
     END AS education_phase_id,
     CASE
-        WHEN s.education_phase_name = 'Not applicable' THEN 'Not applicable (education phase)'
+        WHEN s.education_phase_name IN ('Not applicable','Not applicable (education phase)','Unknown') THEN NULL
         ELSE s.education_phase_name
     END AS education_phase,
     s.gender_code AS source_gender_code,
@@ -167,12 +172,12 @@ SELECT
         WHEN 'Mixed' THEN 1
         WHEN 'Boys' THEN 2
         WHEN 'Girls' THEN 3
-        WHEN 'Not applicable' THEN 4
-        WHEN 'Not applicable (gender of entry)' THEN 4
+        WHEN 'Not applicable' THEN NULL
+        WHEN 'Not applicable (gender of entry)' THEN NULL
         ELSE NULL
     END AS gender_of_entry_type_id,
     CASE
-        WHEN s.gender_name = 'Not applicable' THEN 'Not applicable (gender of entry)'
+        WHEN s.gender_name IN ('Not applicable','Not applicable (gender of entry)','Unknown') THEN NULL
         ELSE s.gender_name
     END AS gender_of_entry,
     s.admissionsPolicy_code AS source_admissions_policy_code,
@@ -186,13 +191,13 @@ SELECT
     CASE
         WHEN s.admissionsPolicy_code IN ('1', '4') THEN 1
         WHEN s.admissionsPolicy_code = '2' THEN 2
-        WHEN s.admissionsPolicy_code IN ('0', '9') THEN 3
+        WHEN s.admissionsPolicy_code IN ('0', '9') THEN NULL
         ELSE NULL
     END AS admissions_policy_id,
     CASE
         WHEN s.admissionsPolicy_code IN ('1', '4') THEN 'Non-selective'
         WHEN s.admissionsPolicy_code = '2' THEN 'Selective'
-        WHEN s.admissionsPolicy_code IN ('0', '9') THEN 'Not applicable (admissions policy)'
+        WHEN s.admissionsPolicy_code IN ('0', '9') THEN NULL
         ELSE NULL
     END AS admissions_policy,
     s.boarders_code AS source_boarding_provision_code,
@@ -228,13 +233,13 @@ SELECT
     CASE
         WHEN s.nurseryProvision_code = '1' THEN 1
         WHEN s.nurseryProvision_code = '2' THEN 2
-        WHEN s.nurseryProvision_code = '0' THEN 3
+        WHEN s.nurseryProvision_code = '0' THEN NULL
         ELSE NULL
     END AS nursery_provision_id,
     CASE
         WHEN s.nurseryProvision_code = '1' THEN 'Nursery classes'
         WHEN s.nurseryProvision_code = '2' THEN 'No nursery classes'
-        WHEN s.nurseryProvision_code = '0' THEN 'Not applicable (nursery provision)'
+        WHEN s.nurseryProvision_code = '0' THEN NULL
         ELSE NULL
     END AS nursery_provision,
     s.officialSixthForm_code AS source_sixth_form_provision_code,
@@ -248,13 +253,13 @@ SELECT
     CASE
         WHEN s.officialSixthForm_code = '1' THEN 1
         WHEN s.officialSixthForm_code = '2' THEN 2
-        WHEN s.officialSixthForm_code = '0' THEN 3
+        WHEN s.officialSixthForm_code = '0' THEN NULL
         ELSE NULL
     END AS sixth_form_provision_id,
     CASE
         WHEN s.officialSixthForm_code = '1' THEN 'Sixth form'
         WHEN s.officialSixthForm_code = '2' THEN 'No sixth form'
-        WHEN s.officialSixthForm_code = '0' THEN 'Not applicable (sixth-form provision)'
+        WHEN s.officialSixthForm_code = '0' THEN NULL
         ELSE NULL
     END AS sixth_form_provision,
     s.SchoolCapacity AS school_capacity,
@@ -297,7 +302,30 @@ SELECT
     s.Town AS address_town,
     s.County_code AS address_county,
     s.Postcode AS address_postcode,
-    s.UPRN AS site_uprn
+    s.UPRN AS site_uprn,
+    s.furtherEducationType_code AS source_further_education_type_code,
+    CASE WHEN s.furtherEducationType_code IN ('01','02','03','04','05','06','07','08','09')
+         THEN CONVERT(integer, s.furtherEducationType_code)
+         ELSE NULL END AS further_education_type_id,
+    s.section41Approved_code AS source_section_41_approval_status_code,
+    CASE WHEN s.section41Approved_code IN ('1','2')
+         THEN CONVERT(integer, s.section41Approved_code)
+         ELSE NULL END AS section_41_approval_status_id,
+    s.religiousCharacter_code AS source_religious_character_code,
+    CASE WHEN s.religiousCharacter_code IN ('02','03','06')
+         THEN CONVERT(integer, s.religiousCharacter_code)
+         ELSE NULL END AS religious_character_id,
+    s.religiousEthos_code AS source_religious_ethos_code,
+    CASE WHEN s.religiousEthos_code IN ('06','15')
+         THEN CONVERT(integer, s.religiousEthos_code)
+         ELSE NULL END AS religious_ethos_id,
+    s.diocese_code AS source_diocese_code,
+    CASE s.diocese_code
+         WHEN 'CE14' THEN 1014
+         WHEN 'CE23' THEN 1023
+         WHEN 'CE32' THEN 1032
+         WHEN 'RC19' THEN 2019
+         ELSE NULL END AS diocese_id
 FROM source_establishment AS s;
 
 /*

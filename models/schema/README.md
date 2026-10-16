@@ -60,6 +60,44 @@ membership. Blank organisation-group, legal-entity and person-source address blo
 
 ## Establishment rebuild paths
 
+### Optional reference values
+
+Unknown, Not applicable and missing source values map to null references.
+They are excluded from the business reference lists, whose name constraints
+reject these placeholders. This applies to education phase, gender, admissions,
+nursery and sixth-form provision, FE type, Section 41 approval, faith, diocese
+and geography. Boarding and specialist provision already map absence codes to
+null. None, No boarders, No nursery classes and Not approved remain real values.
+Source codes are interpreted per field; 99 is not a universal null code.
+
+The transform keeps diagnostic source columns where provided. A recognised
+absence code may have a null target ID; an unsupported nonblank code still
+fails validation. Null alone does not preserve why a value is absent; consult
+the original source or migration evidence for that distinction.
+
+### Additional establishment classifications (E15)
+
+Both fields exist and the migration supports substantive FE types and Section
+41 statuses. The fixture now has **0** FE-type values: its previous 40 values
+were all Unknown or Not applicable. E15 therefore needs a genuine migrated
+FE-type sample to meet the agreed completion criterion. Section 41 has **4**
+values: 2 Approved and 2 Not approved. The controlled T10 school retains nulls.
+
+Use [validate-additional-classifications.sql](migration/validate-scripts/validate-additional-classifications.sql)
+for target counts and values.
+
+### Faith and diocese (E16)
+
+The model, transform, CSV contract, loader and checked-in fixtures carry all
+three fields. After applying the null rule, religious character has **15**
+values, religious ethos **11**, and diocese **6**. E16 remains complete under
+the agreed criterion. The controlled T10 school retains nulls.
+
+Use [validate-faith-and-diocese.sql](migration/validate-scripts/validate-faith-and-diocese.sql)
+for target counts and labels, and
+[validate-null-reference-policy.sql](migration/validate-scripts/validate-null-reference-policy.sql)
+to check that no placeholder reference rows or links remain.
+
 ### Dated group-member lead designation
 
 The physical model stores each spell as lead in `establishment.organisation_group_member_lead_period`, separately from membership joined and left dates. A member returning as lead has a new period. Start dates are inclusive and end dates exclusive. PostgreSQL enforces one current lead per group, non-overlap of fully known periods, and known membership boundaries. Current lead designation is derived from lead periods using `is_current = true`; membership has no stored lead flag. No current row means no current lead recorded, not confirmed non-lead. Explicit source STANDARD/LEAD assertions remain in migration evidence.

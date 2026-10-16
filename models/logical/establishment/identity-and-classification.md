@@ -8,6 +8,11 @@ This document defines the establishment identity, lifecycle and controlled class
 erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
+    ESTABLISHMENT }o--o| FURTHER_EDUCATION_TYPE : "has further-education type"
+    ESTABLISHMENT }o--o| SECTION_41_APPROVAL_STATUS : "has Section 41 status"
+    ESTABLISHMENT }o--o| RELIGIOUS_CHARACTER : "has religious character"
+    ESTABLISHMENT }o--o| RELIGIOUS_ETHOS : "has religious ethos"
+    ESTABLISHMENT }o--o| DIOCESE : "has diocese"
     ESTABLISHMENT ||--o| ESTABLISHMENT_LIFECYCLE : "has lifecycle"
     ESTABLISHMENT ||--o| ESTABLISHMENT_GEOGRAPHY : "has geography"
     ESTABLISHMENT_GEOGRAPHY }o--o| GOVERNMENT_OFFICE_REGION : "uses region"
@@ -23,6 +28,41 @@ erDiagram
         string name
         integer establishment_type_id FK
         integer education_phase_id FK
+        integer further_education_type_id FK
+        integer section_41_approval_status_id FK
+        integer religious_character_id FK
+        integer religious_ethos_id FK
+        integer diocese_id FK
+    }
+
+    FURTHER_EDUCATION_TYPE {
+        integer further_education_type_id PK
+        string code UK
+        string name
+    }
+
+    SECTION_41_APPROVAL_STATUS {
+        integer section_41_approval_status_id PK
+        string code UK
+        string name
+    }
+
+    RELIGIOUS_CHARACTER {
+        integer religious_character_id PK
+        string code UK
+        string name
+    }
+
+    RELIGIOUS_ETHOS {
+        integer religious_ethos_id PK
+        string code UK
+        string name
+    }
+
+    DIOCESE {
+        integer diocese_id PK
+        string code UK
+        string name
     }
 
     ESTABLISHMENT_GEOGRAPHY {
@@ -102,6 +142,8 @@ what is its identity, name and headline classification?
 | `establishment_number` | Conditional | Local-authority-scoped establishment number, between 1 and 9999 where present. |
 | `ukprn` | Conditional | Current UK Provider Reference Number supplied by UKRLP where applicable. |
 | `name` | Yes | Current published establishment name; historic and alternative names are deferred. |
+| `further_education_type_id` | Conditional | Optional reference to a further-education sub-classification, distinct from the headline establishment type. |
+| `section_41_approval_status_id` | Conditional | Optional reference to the recorded Section 41 approval classification. |
 
 ### Identifier rules
 
@@ -273,3 +315,47 @@ Which education phase does this establishment provide?
 | --- | --- | --- |
 | `education_phase_id` | Yes | Seeded integer reference-data identifier. |
 | `name` | Yes | Human-readable phase label. |
+
+## Further-education type and Section 41 approval
+
+These are two independent, optional classifications directly referenced by an
+establishment. Neither replaces its establishment type or education phase.
+
+`further_education_type` supplies a seeded integer identifier, a unique source
+`code` and a readable `name`. BAU `Establishment.furtherEducationType_code` maps
+to this classification. Code `00` (Not applicable), `99` (Unknown) and missing
+source values all map to a null reference.
+
+`section_41_approval_status` has the same reference-data structure. BAU
+`Establishment.section41Approved_code` maps to Approved (`1`), Not approved (`2`)
+or Not applicable (`3`). Approved and Not approved are retained; Not applicable
+and missing source values map to null.
+
+The reference lists are grounded in the BAU
+`sql_archive/1.0.0/Setup/dictionaries/FurtherEducationType.sql` and current
+`Section41Approved.java` definitions. The transform explicitly maps recognised
+codes to seeded IDs or to null for recognised absence codes. The loader rejects
+other nonblank source codes with no mapping.
+Foreign keys reject IDs absent from the seeded reference lists.
+
+These fields hold current classifications for E15. No additional history or
+unnamed additional classifications are introduced by this slice.
+
+## Faith and diocese (E16)
+
+Establishment has three optional references: `religious_character_id`,
+`religious_ethos_id` and `diocese_id`. Each reference table holds an integer
+identifier, the original source code and a readable name.
+
+Religious character describes the establishment's designated religious
+character. Religious ethos is recorded separately; migration does not infer
+one from the other. Diocese records the named diocese, where applicable.
+For example, a Church of England establishment may reference the Diocese of
+Ely. Another establishment may explicitly record None for religious character
+and have a null diocese reference.
+
+The migration reads BAU `religiousCharacter_code`, `religiousEthos_code` and
+`diocese_code`. Unknown, Not applicable and missing source values map to null.
+None remains a meaningful religious-character or ethos value. The seeded lists cover
+codes observed in the selected migration fixtures, rather than the full BAU
+catalogue. An unrecognised nonblank code stops the load for review.

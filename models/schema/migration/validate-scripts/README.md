@@ -24,3 +24,19 @@ field, whether all four have at least one value, and the measures and census dat
 for each establishment with a measure block. Census dates come from BAU
 `dbo.IndependentSchools.CensusDate`, including for academies and maintained
 schools. Missing source dates remain null.
+
+[validate-additional-classifications.sql](validate-additional-classifications.sql)
+is the read-only E15 report. It counts further-education-type and Section 41
+values, then lists the retained codes and readable labels by URN. Not applicable
+and Unknown source values map to null, as do missing source values. The
+reviewed T10 controlled school core retains its intentionally limited scope.
+
+[validate-faith-and-diocese.sql](validate-faith-and-diocese.sql) is the read-only
+E16 report. It counts religious character, religious ethos and diocese values,
+then lists their retained codes and labels by URN. None is a real value;
+Not applicable, Unknown and missing source data map to null.
+
+[validate-null-reference-policy.sql](validate-null-reference-policy.sql) checks
+classification and geography reference tables and their incoming foreign keys.
+It fails if Unknown or Not applicable rows or links remain and runs with the
+core validation suite.
