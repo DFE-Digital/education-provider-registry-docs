@@ -32,7 +32,7 @@ $script:EstablishmentFixtureColumns = @(
     'source_reason_establishment_opened_code', 'reason_establishment_opened',
     'source_reason_establishment_closed_code', 'reason_establishment_closed',
     'last_changed_date', 'establishment_type_id', 'education_phase_id',
-    'school_capacity', 'pupil_count', 'free_school_meal_measure',
+    'school_capacity', 'pupil_count', 'free_school_meal_measure', 'census_date',
     'resourced_provision_capacity', 'resourced_provision_pupil_count',
     'sen_unit_capacity', 'sen_unit_pupil_count',
     'lower_statutory_age', 'upper_statutory_age',
