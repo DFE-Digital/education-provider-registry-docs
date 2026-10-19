@@ -1,4 +1,4 @@
-# ADR 0002: Separate User Experiences By Cohort
+# ADR 0002: BAU Coexistence Approach
 
 ## Status
 
