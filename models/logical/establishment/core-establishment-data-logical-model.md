@@ -46,6 +46,7 @@ erDiagram
         integer establishment_number
         numeric ukprn
         string name
+        string ofsted_link
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
         integer religious_character_id FK
@@ -173,6 +174,7 @@ erDiagram
         integer boarding_provision_id FK
         integer nursery_provision_id FK
         integer sixth_form_provision_id FK
+        boolean has_special_classes
     }
 
     CAPACITY_AND_PUPIL_MEASURES {

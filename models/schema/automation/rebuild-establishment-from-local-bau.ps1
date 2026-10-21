@@ -154,6 +154,10 @@ try {
                 Write-Host "Migrating group addresses for full catalogue case $($case.case)"
                 & (Join-Path $PSScriptRoot $case.addressRunner) -BauSource $source -PostgresTarget $target
             }
+            if ($case.supplementaryRunner) {
+                Write-Host "Migrating supplementary source for full catalogue case $($case.case)"
+                & (Join-Path $PSScriptRoot $case.supplementaryRunner) -PostgresTarget $target
+            }
         }
         if (-not $SkipTests) { Test-AllEstablishmentCases -Target $target }
     }
@@ -184,7 +188,7 @@ try {
         Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
     }
     else {
-        Write-Host 'BAU-source rebuild completed: all 22 active cases across 41 establishments.' -ForegroundColor Green
+        Write-Host 'BAU-source rebuild completed: all 23 active cases across 42 establishments.' -ForegroundColor Green
     }
     if ($SkipTests) { Write-Warning 'Data loaded, but establishment tests were not run.' }
 }

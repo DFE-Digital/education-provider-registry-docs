@@ -27,6 +27,9 @@ function Test-ReviewedFixtureIntegrity {
             if($catalogueCase.addressFixture) {
                 $reviewedFixtures += [pscustomobject]@{case=$catalogueCase.case;fixture=$catalogueCase.addressFixture;loader='load-reviewed-group-addresses.sql'}
             }
+            if($catalogueCase.supplementaryFixture) {
+                $reviewedFixtures += [pscustomobject]@{case=$catalogueCase.case;fixture=$catalogueCase.supplementaryFixture;loader=$catalogueCase.supplementaryLoader}
+            }
         }
         foreach($case in $reviewedFixtures) {
             $json=Get-Content (Get-SchemaPath ("seed/"+$case.fixture)) -Raw -Encoding UTF8
@@ -51,6 +54,10 @@ function Test-ReviewedFixtureIntegrity {
                 'load-reviewed-historical-membership.sql' {
                     $header='group_uid|group_name|group_open_date|group_close_date|establishment_urn|joined_date|left_date|source_link_id|source_archived'
                     $expected='*Historical membership decision changed; manual review required*'
+                }
+                'load-registered-office-fixture.sql' {
+                    $header=''
+                    $expected='*Registered-office fixture changed; review required*'
                 }
                 default { throw 'Unknown reviewed loader integrity contract.' }
             }

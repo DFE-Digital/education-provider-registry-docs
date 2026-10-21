@@ -178,6 +178,7 @@ CREATE TABLE establishment.establishment (
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
     establishment_type_id integer NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
+    ofsted_link text,
     education_phase_id integer REFERENCES establishment.education_phase (education_phase_id),
     further_education_type_id integer REFERENCES establishment.further_education_type (further_education_type_id),
     section_41_approval_status_id integer REFERENCES establishment.section_41_approval_status (section_41_approval_status_id),
@@ -293,7 +294,8 @@ CREATE TABLE establishment.education_admissions_and_provision (
     admissions_policy_id integer REFERENCES establishment.admissions_policy (admissions_policy_id),
     boarding_provision_id integer REFERENCES establishment.boarding_provision (boarding_provision_id),
     nursery_provision_id integer REFERENCES establishment.nursery_provision (nursery_provision_id),
-    sixth_form_provision_id integer REFERENCES establishment.sixth_form_provision (sixth_form_provision_id)
+    sixth_form_provision_id integer REFERENCES establishment.sixth_form_provision (sixth_form_provision_id),
+    has_special_classes boolean
 );
 
 CREATE TABLE establishment.statutory_age_range (

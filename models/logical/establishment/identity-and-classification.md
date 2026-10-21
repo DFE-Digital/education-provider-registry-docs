@@ -26,6 +26,7 @@ erDiagram
         integer establishment_number
         numeric ukprn
         string name
+        string ofsted_link
         integer establishment_type_id FK
         integer education_phase_id FK
         integer further_education_type_id FK
@@ -142,6 +143,7 @@ what is its identity, name and headline classification?
 | `establishment_number` | Conditional | Local-authority-scoped establishment number, between 1 and 9999 where present. |
 | `ukprn` | Conditional | Current UK Provider Reference Number supplied by UKRLP where applicable. |
 | `name` | Yes | Current published establishment name; historic and alternative names are deferred. |
+| `ofsted_link` | No | Optional text URL for navigating to Ofsted information using the establishment URN. |
 | `further_education_type_id` | Conditional | Optional reference to a further-education sub-classification, distinct from the headline establishment type. |
 | `section_41_approval_status_id` | Conditional | Optional reference to the recorded Section 41 approval classification. |
 
@@ -359,3 +361,15 @@ The migration reads BAU `religiousCharacter_code`, `religiousEthos_code` and
 None remains a meaningful religious-character or ethos value. The seeded lists cover
 codes observed in the selected migration fixtures, rather than the full BAU
 catalogue. An unrecognised nonblank code stops the load for review.
+
+## Ofsted link (E17)
+
+E17 covers one optional text field on Establishment: `ofsted_link`.
+The migration derives an Ofsted URN search link from the source URN, for example
+`https://reports.ofsted.gov.uk/search?q=136102`. This follows BAU's pattern of
+constructing an external link from a base address and URN. The search URL avoids
+requiring a provider-category code or an Ofsted lookup table in the registry.
+
+The link is navigation to an external service; it does not establish that a
+report is available. Missing or blank links load as null. The controlled T10
+school projection retains null under its existing limited source scope.
