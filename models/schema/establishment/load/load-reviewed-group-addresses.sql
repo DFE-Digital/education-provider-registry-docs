@@ -28,8 +28,13 @@ BEGIN
             SELECT 1 FROM jsonb_array_elements(config->'sourceGroups') g
             JOIN jsonb_array_elements(config->'blockMappings') m ON (m->>'groupUid')::integer=(g->>'uid')::integer
             WHERE f.source_group_id=(g->>'uid')::integer AND f.source_type_code=g->>'typeCode'
-              AND f.source_address_block=m->>'block')
-            OR f.county IS NOT NULL OR f.source_county_code IS DISTINCT FROM config->>'sourceCountyCode'
+              AND f.source_address_block=m->>'block'
+              AND f.source_county_code IS NOT DISTINCT FROM
+                  coalesce(m->>'sourceCountyCode',config->>'sourceCountyCode')
+              AND NULLIF(btrim(f.county),'') IS NOT DISTINCT FROM
+                  CASE WHEN m ? 'sourceCountyName' THEN m->>'sourceCountyName'
+                       ELSE config->>'sourceCountyName' END)
+            OR (f.source_county_code IN ('000','099') AND NULLIF(btrim(f.county),'') IS NOT NULL)
             OR f.source_country_code IS DISTINCT FROM config->>'sourceCountryCode') THEN
         RAISE EXCEPTION '% address source scope/reference codes changed; review required',case_label;
     END IF;

@@ -6,7 +6,7 @@ This document defines education admissions, provision, age range and current cap
 
 `education_admissions_and_provision` groups facts about how the establishment
 operates as an education provider, including entry, admissions, boarding,
-nursery and sixth-form provision.
+nursery, sixth-form and special-class provision.
 
 Business-friendly pattern:
 
@@ -15,7 +15,7 @@ How does this establishment admit and provide education to its pupils?
 ```
 
 - It is an optional, at-most-one owned substructure for an establishment.
-- Its values are direct references to controlled classifications.
+- It holds controlled classification references and a nullable special-classes boolean.
 - The statutory age range is a child concept reached through this boundary.
 
 | Column | Required | Meaning and rule |
@@ -27,6 +27,7 @@ How does this establishment admit and provide education to its pupils?
 | `boarding_provision_id` | Conditional | Controlled boarding-provision value where applicable. |
 | `nursery_provision_id` | Conditional | Controlled nursery-provision value where applicable. |
 | `sixth_form_provision_id` | Conditional | Controlled sixth-form-provision value where applicable. |
+| `has_special_classes` | Conditional | True when special classes are recorded; false when explicitly absent; null for missing or not-applicable source data. |
 
 ### Modelling placement and relationships
 
@@ -39,6 +40,7 @@ In this slice it carries:
 - `boarding_provision_id`, a direct reference to controlled `BoardingProvision` reference data.
 - `nursery_provision_id`, a direct reference to controlled `NurseryProvision` reference data.
 - `sixth_form_provision_id`, a direct reference to controlled `SixthFormProvision` reference data.
+- `has_special_classes`, a nullable boolean populated from BAU `specialClasses_code`.
 - `StatutoryAgeRange`, which records the lower and upper statutory ages.
 
 This means gender of entry, admissions policy, boarding provision, nursery provision and sixth-form provision are associated with an establishment through the provision substructure:

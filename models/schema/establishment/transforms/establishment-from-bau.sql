@@ -59,7 +59,8 @@ WITH source_establishment AS (
         e.freeSchoolMeals,
         e.percentageOfPupilsReceivingFsm,
         independent_school.CensusDate AS census_date,
-        e.typeOfReservedProvision_code,
+        NULLIF(LTRIM(RTRIM(e.typeOfReservedProvision_code)), '') AS typeOfReservedProvision_code,
+        NULLIF(LTRIM(RTRIM(e.specialClasses_code)), '') AS specialClasses_code,
         e.resourcedProvisionCapacity,
         e.resourcedProvisionOnRoll,
         e.senUnitCapacity,
@@ -325,7 +326,13 @@ SELECT
          WHEN 'CE23' THEN 1023
          WHEN 'CE32' THEN 1032
          WHEN 'RC19' THEN 2019
-         ELSE NULL END AS diocese_id
+         ELSE NULL END AS diocese_id,
+    -- A derived navigation link, not a copied inspection record or a claim
+    -- that Ofsted has published a report for this URN.
+    CONCAT('https://reports.ofsted.gov.uk/search?q=', CONVERT(varchar(6), s.URN)) AS ofsted_link,
+    s.specialClasses_code AS source_special_classes_code,
+    CASE s.specialClasses_code WHEN '1' THEN 'true' WHEN '2' THEN 'false'
+         ELSE NULL END AS has_special_classes
 FROM source_establishment AS s;
 
 /*

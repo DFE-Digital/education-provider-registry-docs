@@ -45,7 +45,8 @@ $script:EstablishmentFixtureColumns = @(
     'source_section_41_approval_status_code', 'section_41_approval_status_id',
     'source_religious_character_code', 'religious_character_id',
     'source_religious_ethos_code', 'religious_ethos_id',
-    'source_diocese_code', 'diocese_id', 'source_education_phase'
+    'source_diocese_code', 'diocese_id', 'source_education_phase', 'ofsted_link',
+    'source_specialist_provision_type_code', 'source_special_classes_code', 'has_special_classes'
 )
 
 function Import-GeographicReferenceData {

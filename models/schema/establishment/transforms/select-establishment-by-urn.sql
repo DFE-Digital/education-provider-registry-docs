@@ -85,7 +85,9 @@ SELECT
     e.religious_ethos_id,
     re.name AS religious_ethos,
     e.diocese_id,
-    d.name AS diocese
+    d.name AS diocese,
+    e.ofsted_link,
+    eap.has_special_classes
 FROM params AS p
 JOIN establishment.establishment AS e
   ON e.urn = p.urn

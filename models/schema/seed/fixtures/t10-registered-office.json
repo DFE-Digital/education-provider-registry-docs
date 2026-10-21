@@ -1,0 +1,21 @@
+{
+  "fixture": "T10",
+  "reviewStatus": "accepted",
+  "mode": "registered-office-observation",
+  "reviewEvidence": "Companies House explicitly labels this as the registered office of company 06995649. That current company number resolves to the existing Outwood legal entity. This is a separate Companies House source assertion, not a reclassification or correction of the BAU administrative address. Address-use dates are unknown.",
+  "sourceSystem": "Companies House",
+  "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/06995649",
+  "observedOn": "2026-10-19",
+  "companyNumber": "06995649",
+  "legalEntityName": "OUTWOOD GRANGE ACADEMIES TRUST",
+  "sourceField": "registered_office_address",
+  "sourceAddressText": "Potovens Lane, Outwood, Wakefield, West Yorkshire, WF1 2PF",
+  "address": {
+    "address_line_1": "Potovens Lane",
+    "address_line_2": "Outwood",
+    "address_line_3": null,
+    "town": "Wakefield",
+    "county": "West Yorkshire",
+    "postcode": "WF1 2PF"
+  }
+}

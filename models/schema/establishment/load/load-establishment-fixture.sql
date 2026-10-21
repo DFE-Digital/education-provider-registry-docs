@@ -69,7 +69,11 @@ CREATE TEMP TABLE source_establishment_fixture (
     religious_ethos_id integer,
     source_diocese_code text,
     diocese_id integer,
-    source_education_phase text
+    source_education_phase text,
+    ofsted_link text,
+    source_specialist_provision_type_code text,
+    source_special_classes_code text,
+    has_special_classes boolean
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
@@ -176,6 +180,17 @@ BEGIN
     IF unmapped IS NOT NULL THEN
         RAISE EXCEPTION 'Faith or diocese classification could not be mapped for URN %. Review the source code and seeded reference list.', unmapped;
     END IF;
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
+    FROM source_establishment_fixture
+    WHERE (source_specialist_provision_type_code IS NOT NULL
+           AND source_specialist_provision_type_code NOT IN ('0','9')
+           AND specialist_provision_type_id IS NULL)
+       OR (source_special_classes_code IS NOT NULL
+           AND source_special_classes_code NOT IN ('0','9')
+           AND has_special_classes IS NULL);
+    IF unmapped IS NOT NULL THEN
+        RAISE EXCEPTION 'Specialist provision or special classes could not be mapped for URN %.', unmapped;
+    END IF;
 END;
 $$;
 
@@ -183,7 +198,7 @@ INSERT INTO establishment.establishment (
     urn, establishment_number, ukprn, name,
     establishment_type_id, education_phase_id,
     further_education_type_id, section_41_approval_status_id,
-    religious_character_id, religious_ethos_id, diocese_id
+    religious_character_id, religious_ethos_id, diocese_id, ofsted_link
 )
 SELECT
     s.urn,
@@ -196,7 +211,8 @@ SELECT
     s.section_41_approval_status_id,
     s.religious_character_id,
     s.religious_ethos_id,
-    s.diocese_id
+    s.diocese_id,
+    NULLIF(BTRIM(s.ofsted_link), '')
 FROM source_establishment_fixture AS s
 ON CONFLICT (urn) DO UPDATE SET
     establishment_number = EXCLUDED.establishment_number,
@@ -208,7 +224,8 @@ ON CONFLICT (urn) DO UPDATE SET
     section_41_approval_status_id = EXCLUDED.section_41_approval_status_id,
     religious_character_id = EXCLUDED.religious_character_id,
     religious_ethos_id = EXCLUDED.religious_ethos_id,
-    diocese_id = EXCLUDED.diocese_id;
+    diocese_id = EXCLUDED.diocese_id,
+    ofsted_link = EXCLUDED.ofsted_link;
 
 -- Geography is an optional owned substructure. A missing, blank or zero
 -- source local-authority code means that no local-authority relationship is
@@ -391,14 +408,15 @@ ON CONFLICT (establishment_id) DO UPDATE SET
 
 INSERT INTO establishment.education_admissions_and_provision (
     establishment_id, gender_of_entry_type_id, admissions_policy_id,
-    boarding_provision_id, nursery_provision_id, sixth_form_provision_id
+    boarding_provision_id, nursery_provision_id, sixth_form_provision_id, has_special_classes
 )
 SELECT e.establishment_id,
        s.gender_of_entry_type_id,
        s.admissions_policy_id,
        s.boarding_provision_id,
        s.nursery_provision_id,
-       s.sixth_form_provision_id
+       s.sixth_form_provision_id,
+       s.has_special_classes
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 ON CONFLICT (establishment_id) DO UPDATE SET
@@ -406,7 +424,8 @@ ON CONFLICT (establishment_id) DO UPDATE SET
     admissions_policy_id = EXCLUDED.admissions_policy_id,
     boarding_provision_id = EXCLUDED.boarding_provision_id,
     nursery_provision_id = EXCLUDED.nursery_provision_id,
-    sixth_form_provision_id = EXCLUDED.sixth_form_provision_id;
+    sixth_form_provision_id = EXCLUDED.sixth_form_provision_id,
+    has_special_classes = EXCLUDED.has_special_classes;
 
 INSERT INTO establishment.statutory_age_range (
     education_admissions_and_provision_id, lower_statutory_age, upper_statutory_age
@@ -423,6 +442,32 @@ ON CONFLICT (education_admissions_and_provision_id) DO UPDATE SET
     upper_statutory_age = EXCLUDED.upper_statutory_age;
 
 -- Specialist provision type: 1 resourced provision, 2 SEN unit, 3 both.
+-- Clear the previous classification and remove obsolete measure blocks on
+-- replay. The existing parent ID remains stable when provision changes.
+UPDATE establishment.specialist_provision sp
+SET specialist_provision_type_id=s.specialist_provision_type_id
+FROM source_establishment_fixture s
+JOIN establishment.establishment e ON e.urn=s.urn
+WHERE sp.establishment_id=e.establishment_id;
+
+DELETE FROM establishment.resourced_provision r
+USING establishment.specialist_provision sp, establishment.establishment e,
+      source_establishment_fixture s
+WHERE r.specialist_provision_id=sp.specialist_provision_id
+  AND sp.establishment_id=e.establishment_id AND e.urn=s.urn
+  AND (s.specialist_provision_type_id IS NULL
+       OR s.specialist_provision_type_id NOT IN (1,3)
+       OR (s.resourced_provision_capacity IS NULL AND s.resourced_provision_pupil_count IS NULL));
+
+DELETE FROM establishment.sen_unit_provision u
+USING establishment.specialist_provision sp, establishment.establishment e,
+      source_establishment_fixture s
+WHERE u.specialist_provision_id=sp.specialist_provision_id
+  AND sp.establishment_id=e.establishment_id AND e.urn=s.urn
+  AND (s.specialist_provision_type_id IS NULL
+       OR s.specialist_provision_type_id NOT IN (2,3)
+       OR (s.sen_unit_capacity IS NULL AND s.sen_unit_pupil_count IS NULL));
+
 INSERT INTO establishment.specialist_provision (establishment_id, specialist_provision_type_id)
 SELECT e.establishment_id, s.specialist_provision_type_id
 FROM source_establishment_fixture AS s
@@ -436,6 +481,7 @@ FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 JOIN establishment.specialist_provision AS sp ON sp.establishment_id = e.establishment_id
 WHERE s.specialist_provision_type_id IN (1, 3)
+  AND (s.resourced_provision_capacity IS NOT NULL OR s.resourced_provision_pupil_count IS NOT NULL)
 ON CONFLICT (specialist_provision_id) DO UPDATE SET
     capacity = EXCLUDED.capacity, pupil_count = EXCLUDED.pupil_count;
 
@@ -445,6 +491,7 @@ FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
 JOIN establishment.specialist_provision AS sp ON sp.establishment_id = e.establishment_id
 WHERE s.specialist_provision_type_id IN (2, 3)
+  AND (s.sen_unit_capacity IS NOT NULL OR s.sen_unit_pupil_count IS NOT NULL)
 ON CONFLICT (specialist_provision_id) DO UPDATE SET
     capacity = EXCLUDED.capacity, pupil_count = EXCLUDED.pupil_count;
 

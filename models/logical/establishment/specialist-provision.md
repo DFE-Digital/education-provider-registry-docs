@@ -159,3 +159,31 @@ Establishment
        - PupilCount
 ```
 
+
+## E09 business fields and source mapping
+
+E09 covers six business fields. The first five already existed in both models;
+special classes completes the outstanding provision field:
+
+1. Specialist provision type: BAU `typeOfReservedProvision_code`, mapped to
+   resourced provision (1), SEN unit (2) or both (3).
+2. Resourced provision capacity: `resourcedProvisionCapacity`.
+3. Resourced provision pupil count: `resourcedProvisionOnRoll`.
+4. SEN-unit capacity: `senUnitCapacity`.
+5. SEN-unit pupil count: `senUnitOnRoll`.
+6. Special classes: `specialClasses_code`, recorded as nullable
+   `education_admissions_and_provision.has_special_classes`.
+
+Special classes is an education-provision fact, separate from the specialist
+facility type. BAU code 1 becomes true, 2 becomes false, and 0 (Not applicable),
+9 (Unknown) or missing becomes null. False is a populated business value.
+This follows the conceptual model's boolean special-class provision.
+
+For example, the local BAU record for Netley Primary School & Centre for Autism
+(100018) records both kinds of facility. Each has capacity 24 and pupil count
+24; special classes is true. This school is the focused E09 migration sample.
+
+The loader preserves known zero counts, leaves missing measures null and only
+creates a measure child when at least one measure is recorded for that kind of
+facility. Replaying a changed provision type clears obsolete current measure
+blocks. The existing specialist parent identifier remains stable.

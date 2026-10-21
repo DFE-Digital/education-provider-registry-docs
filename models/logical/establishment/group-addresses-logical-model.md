@@ -187,6 +187,19 @@ The contact association is the subject's default correspondence address. Role-sp
 
 Resolve the source group to a legal entity or organisation group before attaching its address. Map Street to address line 1, Locality to line 2, Address3 to line 3, Town to town and Postcode to postcode, resolving any county code through reference data rather than copying a code into a county label. Apply the same component mapping to the separate `GroupContact*` block. Do not use the member school's address, the lead-centre designation or source observation dates to invent a group contact or registered office.
 
+The source transform now resolves county names directly from BAU `dbo.County`.
+Code `099` (Not recorded; called Unknown in the Java dictionary), `000`
+(Not applicable), missing codes and placeholder labels produce null.
+A substantive code missing from the lookup stops the extract for review.
+The current selected fixtures all carry `099`, so their null counties are
+faithful source values rather than a missing mapping.
+
+Reviewed address fixtures may supply `sourceCountyCode` and `sourceCountyName`
+on an individual `blockMappings` entry. This permits different primary/contact
+counties without changing owner or purpose decisions. The loader checks the
+resolved name against that reviewed expectation. Existing fixtures retain their
+fixture-wide code and null-name defaults.
+
 `GroupPostUPRN`, `GroupContactUPRN`, site names and country codes remain source evidence until their location/country representation is agreed. UPRN is not added to postal-address text or inferred from it; the existing model places property identity on `site`. Receiving a group address alone does not establish a teaching site, occupation or premises ownership. Person addresses and telephone/email contacts remain outside this extension. A current source snapshot does not establish earlier address-use periods.
 
 ## Worked examples
@@ -241,6 +254,20 @@ A sponsor record and academy-trust record may resolve to the same company while 
 13. Reobserving or reimporting an unchanged address for the same owner and purpose reuses its existing association period. A new snapshot alone is not a new period or an address-change event.
 
 ## Physical implementation follow-through
+
+T10 now also has a source-evidenced registered-office association for Outwood
+Grange Academies Trust. Companies House company 06995649 explicitly publishes
+Potovens Lane, Outwood, Wakefield, West Yorkshire, WF1 2PF as its registered
+office. The 19 October 2026 observation resolves by the existing company-number
+identifier and has separate provenance. Its business dates remain unknown.
+The BAU administrative address retains its original values, including its
+source-obfuscated third line and null county. This is an additional address
+purpose, not a correction or inferred move.
+
+The [source observation](../../schema/seed/fixtures/t10-registered-office.json)
+and [registered-office validation](../../schema/migration/validate-scripts/validate-t10-registered-office.sql)
+are checked in. The source URL, raw published address, observation date,
+normalised components and company number are retained in migration evidence.
 
 T2 also exercises this model: identical primary addresses from its SAT and MAT source records resolve to one Hive Education Trust association, with separate evidence for each observation and unknown business dates. A classification change does not itself create another address period. Its blank sponsor and contact blocks remain evidence only.
 

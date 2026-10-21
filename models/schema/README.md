@@ -44,6 +44,22 @@ is inferred. Both default rebuilds include this slice.
 
 ## What is here
 
+T10 additionally loads a Companies House registered-office observation for
+Outwood, company 06995649. Run `automation/migrate-t10-registered-office.ps1`
+after the existing T10 parties and administrative addresses are loaded. The
+default BAU rebuild runs it as T10's supplementary migration; SQL replay
+restores the saved address and provenance. The address-use dates stay null.
+See [the source observation](seed/fixtures/t10-registered-office.json) and
+[validation SQL](migration/validate-scripts/validate-t10-registered-office.sql).
+
+Source-based group-address imports require BAU `dbo.County`. The transform
+joins county codes to names, retaining raw codes as migration evidence.
+Unknown/Not recorded (`099`), Not applicable (`000`) and missing counties
+remain null. Missing substantive lookup codes stop migration for review.
+All currently selected BAU group-address blocks carry `099`, so adding the lookup
+does not invent county names for them. The checked-in SQL rebuild uses its
+saved data and needs no SQL Server lookup.
+
 Reviewed assumptions, source scope and expected values for T1-T8, T10-T15R and T17
 are kept in [fixtures](seed/fixtures/README.md), separately from reusable loading
 SQL. Five case-specific loaders have been replaced by three shared loaders for
@@ -79,8 +95,9 @@ the original source or migration evidence for that distinction.
 
 Both fields exist and the migration supports substantive FE types and Section
 41 statuses. The fixture now has **0** FE-type values: its previous 40 values
-were all Unknown or Not applicable. E15 therefore needs a genuine migrated
-FE-type sample to meet the agreed completion criterion. Section 41 has **4**
+were all Unknown or Not applicable. E15 is complete for the model-building
+scope clarified on 19 October 2026; a genuine FE-type sample is separate
+migration-coverage work (MIG-014). Section 41 has **4**
 values: 2 Approved and 2 Not approved. The controlled T10 school retains nulls.
 
 Use [validate-additional-classifications.sql](migration/validate-scripts/validate-additional-classifications.sql)
@@ -228,7 +245,7 @@ Entry point: [rebuild-establishment-from-checked-in-sql.ps1](automation/rebuild-
 
 Both paths rebuild disposable local schemas. They are modelling and repeatable test workflows, not the incremental daily production ETL.
 
-Both default paths restore all 22 active group test scenarios across 41 distinct
+Both default paths restore all 23 active test scenarios across 42 distinct
 establishments, including approved controlled fixtures and migration evidence.
 `seed/all-test-cases.json` defines the complete catalogue. The BAU rebuild runs
 the base selection and additional case runners before exporting the full SQL
@@ -360,3 +377,35 @@ Use the T reference and URN in the filename, for example:
 For example, T16 is recorded in `establishment/cases/t16-urn-135905-manchester-creative-and-media-academy.md`.
 
 If one T covers more than one establishment, document each URN in its own section or companion case file and keep the shared T reference explicit.
+
+### Ofsted link (E17)
+
+Establishment has one optional `ofsted_link` text field. The BAU transform builds
+`https://reports.ofsted.gov.uk/search?q=<URN>` from the source URN; the CSV
+contract and loader carry the link through to the target. This is a derived
+navigation link, rather than a stored source URL or confirmation that a report
+exists. Ofsted's [URN search](https://reports.ofsted.gov.uk/search?q=136102)
+was checked for the example establishment on 16 October 2026.
+
+The selected fixture has 41 links; the limited T10 school projection retains
+null. Missing and blank input links load as null. Run
+[validate-ofsted-link.sql](migration/validate-scripts/validate-ofsted-link.sql)
+for counts, a comparison to the migration rule and a listing by URN.
+
+### Specialist provision (E09)
+
+E09 covers specialist provision type, the capacity and pupil count for each of
+resourced provision and SEN units, and the special-classes boolean. The five
+existing specialist fields now have a real source sample: Netley Primary School
+& Centre for Autism (100018), with both provision types and 24 places/24 pupils
+for each. The new has_special_classes field sits on education admissions and
+provision: source 1 means true, 2 means false, and 0/9/missing mean null.
+It has 21 populated values; false counts as populated.
+
+Netley is in the base selection and the E09 coverage case. The default catalogue
+now has 23 active cases across 42 establishments. The saved seed and source
+rebuild paths both include its specialist records. Replayed changes remove
+obsolete current measure blocks, known zeros are retained, and absent measures
+do not become invented zero counts. Run
+[validate-specialist-provision.sql](migration/validate-scripts/validate-specialist-provision.sql)
+for target counts and the individual source-derived values.

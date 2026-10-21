@@ -22,6 +22,13 @@ the GRACE SCHOOLS trust only and retains the Diocese blocks as blank evidence;
 T15R maps the closed SAT's populated primary block without inferring an address
 end date. Business address dates remain unknown.
 No contact or registered-office purpose is inferred from another block.
+
+The supplementary [T10 registered-office observation](t10-registered-office.json)
+comes directly from Companies House company 06995649, observed on 19 October
+2026. Its explicitly published purpose and company number attach the address
+to the existing Outwood legal entity. It supplements the BAU administrative
+observation and records unknown address-use dates. It is loaded by
+`migrate-t10-registered-office.ps1` and replayed by the default BAU rebuild.
 The shared address path resolves legal-entity and organisation-group owners. It
 can retain blank person-source blocks as evidence, but the business model has no
 person-address association. A populated person block requires a separate model
