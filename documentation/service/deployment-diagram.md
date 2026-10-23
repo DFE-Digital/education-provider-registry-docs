@@ -75,5 +75,17 @@ C4Deployment
 
 The server instances use the names `[subscription-identifier][env-identifier]-pg-epr-read` and `[subscription-identifier][env-identifier]-pg-epr-transactional`. Their full naming and proposed subnet layout are in the data platform design. Deployment nodes show hosting; the applications and databases inside them are container instances. Both database servers are in the environment subscription; Front Door is shown at the global edge rather than inside the VNet.
 
+## Environment information
+
+We use the public [education-provider-registry-data environment configuration](https://github.com/DFE-Digital/education-provider-registry-data/tree/main/global_config) as the source for the subscription names, cluster selections and resource prefixes below. Kubernetes namespaces come from the corresponding [application Terraform environment configuration](https://github.com/DFE-Digital/education-provider-registry-data/tree/main/terraform/application/config).
+
+| Environment | Azure subscription | AKS cluster selection | Kubernetes namespace | Resource prefix | Environment configuration |
+| --- | --- | --- | --- | --- | --- |
+| Dev | `s189-teacher-services-cloud-test` | `test` | `gias-development` | `s189t01` | [development.sh](https://github.com/DFE-Digital/education-provider-registry-data/blob/main/global_config/development.sh) |
+| Test | `s189-teacher-services-cloud-test` | `test` | `gias-test` | `s189t01` | [test.sh](https://github.com/DFE-Digital/education-provider-registry-data/blob/main/global_config/test.sh) |
+| Pre-prod | `s189-teacher-services-cloud-production` | `production` | `gias-production` | `s189p01` | [preproduction.sh](https://github.com/DFE-Digital/education-provider-registry-data/blob/main/global_config/preproduction.sh) |
+| Prod | `s189-teacher-services-cloud-production` | `production` | `gias-production` | `s189p01` | [production.sh](https://github.com/DFE-Digital/education-provider-registry-data/blob/main/global_config/production.sh) |
+
+
 
 
