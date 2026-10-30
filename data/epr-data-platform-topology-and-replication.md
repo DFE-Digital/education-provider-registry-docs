@@ -143,7 +143,7 @@ flowchart LR
     L["PostgreSQL logical replication<br/>Two publications and subscriptions"]
 
     subgraph READ["Read Projection DB server instance"]
-        R[("read_projection database<br/>Schemas: establishment and governance")]
+        R[("read_projection database<br/>Schemas: establishment<br>and governance")]
     end
 
     APPS["Web frontend and read APIs<br/>Application-owned read models"]
