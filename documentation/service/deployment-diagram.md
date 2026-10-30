@@ -4,9 +4,17 @@ This is the target deployment of the public Find and Share service for one envir
 
 API hosting on our AKS is an agreed design decision. The detailed connection from FaUAPI to AKS remains to be agreed. We show FaUAPI as an external dependency and do not assign it to subscription S189: its hosting subscription is unconfirmed. The logical grouping of public entry services below does not imply that Front Door and FaUAPI share infrastructure or a subscription.
 
-## Read database terminology
+## Deployment views
 
-The target **Read Projection DB** runs on an independent Azure Database for PostgreSQL Flexible Server and receives permitted data through **logical replication**. It is not an Azure physical read replica. The target topology has two database server instances per environment: one transactional server hosting `establishment` and `governance`, and one read server hosting `read_projection`. This split and the replication are not established by the current website Terraform.
+| View | Purpose |
+| --- | --- |
+| **Target overview — this document** | Proposed public entry routes, AKS hosting, subscription boundaries and logical read projection. |
+| [Target AKS application detail](development-aks-deployment.md) | Environment-neutral website/API layout and configuration pattern, with separate tables of configured names for dev, test, pre-prod and prod. |
+| [Development infrastructure inventory](../../../docs/transformation/low-level/public-access/infra/development-infrastructure.md) | Exact resource names, naming rules, pinned source references and outstanding inventory evidence. |
+
+Transport security requirements and verification are recorded in [PA-03](../../../docs/transformation/low-level/public-access/owasp/pa-03-transport-security-controls.md). We do not use a service mesh; ingress-to-pod TLS arrangements remain to be confirmed.
+
+
 
 ## Deployment diagram
 
@@ -22,21 +30,23 @@ C4Deployment
         System_Ext(fauapi, "FaUAPI proxy", "Public API entry route;<br/>hosting subscription unconfirmed")
     }
 
-    Deployment_Node(vnet, "S189 environment VNet", "Azure virtual network") {
-        Deployment_Node(aks, "Shared AKS cluster", "Azure Kubernetes Service (AKS)") {
-            Deployment_Node(appNamespace, "Application namespace", "Kubernetes namespace", "Selected by environment configuration") {
-                Container(web, "Website / Web Frontend", "ASP.NET Core container", "Website Deployment and Service;<br/>port 8080; target: published reads")
-                Container(publicApi, "Read API Public", "API service container")
+    Boundary(subscription, "EPR environment subscription", "S189 test or production; see environment table") {
+        Deployment_Node(vnet, "S189 environment VNet", "Azure virtual network") {
+            Deployment_Node(aks, "Shared AKS cluster", "Azure Kubernetes Service (AKS)") {
+                Deployment_Node(appNamespace, "Application namespace", "Kubernetes namespace", "Selected by environment configuration") {
+                    Container(web, "Website / Web Frontend", "ASP.NET Core container", "Website Deployment and Service;<br/>port 8080; target: published reads")
+                    Container(publicApi, "Read API Public", "API service container")
+                }
             }
-        }
 
-        Deployment_Node(readServer, "Read database server - target", "Azure Database for PostgreSQL Flexible Server", "Outside AKS; proposed read subnet and network controls") {
-            ContainerDb(readProjection, "Read Projection DB", "PostgreSQL: read_projection", "Schemas: establishment<br/>and governance;<br/>published data only")
-        }
+            Deployment_Node(readServer, "Read database server - target", "Azure Database for PostgreSQL Flexible Server", "Outside AKS; proposed read subnet and network controls") {
+                ContainerDb(readProjection, "Read Projection DB", "PostgreSQL: read_projection", "Schemas: establishment<br/>and governance;<br/>published data only")
+            }
 
-        Deployment_Node(transactionalServer, "Transactional database server - target", "Azure Database for PostgreSQL Flexible Server", "Outside AKS; proposed transactional isolation") {
-            ContainerDb(establishmentDb, "Establishment DB", "PostgreSQL: establishment", "Permitted establishment<br/>and group data")
-            ContainerDb(governanceDb, "Governance DB", "PostgreSQL: governance", "Publishes governance data<br/>with PII excluded")
+            Deployment_Node(transactionalServer, "Transactional database server - target", "Azure Database for PostgreSQL Flexible Server", "Outside AKS; proposed transactional isolation") {
+                ContainerDb(establishmentDb, "Establishment DB", "PostgreSQL: establishment", "Permitted establishment<br/>and group data")
+                ContainerDb(governanceDb, "Governance DB", "PostgreSQL: governance", "Publishes governance data<br/>with PII excluded")
+            }
         }
     }
 
