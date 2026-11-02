@@ -45,7 +45,6 @@ est:establishmentDetailsVocabulary
         est:Establishment,
         est:EstablishmentIdentity,
         est:EstablishmentClassification,
-        est:EstablishmentAccountability,
         est:EstablishmentLifecycle,
         est:RecordCurrencyAndStewardship,
         est:EstablishmentLocationAndContact,
@@ -87,6 +86,7 @@ est:identityAndIdentifiers
         est:EstablishmentNumber,
         est:DfeNumber,
         est:Laestab,
+        est:LocalAuthorityNumber,
         est:UkProviderReferenceNumber,
         est:FeHeIdentifier .
 
@@ -98,7 +98,8 @@ est:classificationAndAccountability
         est:FurtherEducationType,
         est:ProviderType,
         est:LocalAuthority,
-        est:MaintainingAuthority,
+        est:LocalAuthorityArea,
+        est:MaintenanceResponsibility,
         est:AcademyTrust,
         est:SingleAcademyTrust,
         est:AcademySponsor,
@@ -273,7 +274,7 @@ est:Organisation
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Organisation"@en ;
     skos:definition "A structured group of people working together to achieve shared goals or a specific purpose. In EPR, Organisation is the common superclass for education establishments, establishment groups, local authorities, legal entities and other bodies with a role in the provision or oversight of education."@en ;
-    skos:narrower est:Establishment, est:EstablishmentGroup, est:LocalAuthority, est:LegalEntity ;
+    skos:narrower est:Establishment, est:EstablishmentGroup, est:LegalEntity ;
     est:status "Provisional"@en .
 
 est:Person
@@ -281,7 +282,8 @@ est:Person
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:topConceptOf est:establishmentDetailsVocabulary ;
     skos:prefLabel "Person"@en ;
-    skos:definition "A natural person with a role in the education system. In EPR this includes individuals who sponsor academies or are proprietors of independent schools, and the named headteacher, principal or children's centre manager leading an establishment. Governance roles are modelled by the governance model (gov:GovernancePerson) - see models/governance/governance-ontology.ttl."@en ;
+    skos:definition "A natural person with a role in the education system. In EPR this includes individuals who sponsor academies, individuals who trade as sole traders or are partners in a partnership that runs a school, and the named headteacher, principal or children's centre manager leading an establishment. Governance roles are modelled by the governance model (gov:GovernancePerson) - see models/governance/governance-ontology.ttl."@en ;
+    skos:scopeNote "An individual who is proprietor of a school is not the proprietor directly. The proprietor is a sole-trader legal entity linked to the person. v2.3."@en ;
     skos:narrower est:HeadteacherOrPrincipal, est:CentreManager ;
     est:status "Provisional"@en .
 
@@ -313,6 +315,7 @@ est:EstablishmentIdentity
         est:EstablishmentNumber,
         est:FeHeIdentifier,
         est:Laestab,
+        est:LocalAuthorityNumber,
         est:UkProviderReferenceNumber,
         est:UniqueReferenceNumber ;
     est:status "Provisional"@en .
@@ -329,16 +332,6 @@ est:EstablishmentClassification
         est:EstablishmentTypeGroup,
         est:FurtherEducationType,
         est:ProviderType ;
-    est:status "Provisional"@en .
-
-est:EstablishmentAccountability
-    a skos:Concept ;
-    skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:topConceptOf est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Establishment accountability"@en ;
-    skos:definition "The local authority that maintains a maintained school and is accountable for it. Who runs, supports, sponsors or is proprietor of an establishment is described under legal entities, roles and responsibilities."@en ;
-    skos:scopeNote "v2.0: academy trust, sponsor and proprietor moved to est:LegalEntitiesRolesAndResponsibilities."@en ;
-    skos:narrower est:LocalAuthority, est:MaintainingAuthority ;
     est:status "Provisional"@en .
 
 est:EstablishmentLifecycle
@@ -726,7 +719,7 @@ est:CommunitySchool
     skos:definition "A maintained school established under Part II of the School Standards and Framework Act 1998 in which the local authority employs all staff, owns the land and buildings, and acts as the admissions authority."@en ;
     skos:scopeNote "The most common LA-maintained school type. Governing bodies set the ethos but the local authority retains greater control than in foundation or voluntary schools."@en ;
     skos:broader est:EstablishmentTypeGroupLaMaintainedSchools ;
-    skos:related est:LocalAuthority, est:MaintainingAuthority ;
+    skos:related est:LocalAuthority, est:MaintenanceResponsibility ;
     est:status "Preferred"@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/references/#community-school> ;
     rdfs:isDefinedBy <https://www.gov.uk/types-of-school/community-schools> ;
@@ -1560,7 +1553,7 @@ est:EstablishmentNumber
     skos:prefLabel "Establishment number"@en ;
     skos:definition "A one-to-four digit number assigned by the local authority to an establishment within its area. It is not globally unique - it is only meaningful together with the three-digit LA number. When combined with the LA number it forms the DfE number (written as \"123/4567\") and the LAESTAB (written without the slash as \"1234567\"), where the establishment number is zero-padded to four digits for display."@en ;
     skos:broader est:EstablishmentIdentity ;
-    skos:related est:DfeNumber, est:LocalAuthority ;
+    skos:related est:DfeNumber, est:LocalAuthorityArea ;
     est:status "Preferred"@en ;
     dcterms:source "C#: EstablishmentNumber; Java: establishmentNumber; database: Establishment.EstablishmentNumber"@en .
 
@@ -1572,7 +1565,7 @@ est:DfeNumber
     skos:definition "A composite identifier formed by concatenating the three-digit LA number and the establishment number (zero-padded to four digits), conventionally written with a slash separator (e.g. \"123/4567\"). Used in DfE correspondence, grant letters and official returns to identify a school within its local authority."@en ;
     skos:scopeNote "The DfE number is derived from its two component fields rather than stored as a single physical column in the Establishment table."@en ;
     skos:broader est:EstablishmentIdentity ;
-    skos:related est:EstablishmentNumber, est:LocalAuthority, est:Laestab ;
+    skos:related est:EstablishmentNumber, est:LocalAuthorityNumber, est:Laestab ;
     est:status "Preferred"@en .
 
 est:Laestab
@@ -1616,10 +1609,10 @@ est:LocalAuthorityScopedEstablishmentNumber
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Local-authority-scoped establishment number"@en ;
-    skos:definition "The pairing of a local authority code with an establishment number that together form a meaningful local identifier. Neither component is globally unique in isolation."@en ;
+    skos:definition "The pairing of a local authority area, identified by its LA number, with an establishment number that together form a meaningful local identifier. Neither component is globally unique in isolation."@en ;
     skos:scopeNote "A single establishment identity may carry both a current and a previous scoped establishment number, distinguished by an identifier role. This models academy conversion, rebanding and other scenarios where an establishment acquires a new LA context or number."@en ;
     skos:broader est:EstablishmentIdentity ;
-    skos:related est:EstablishmentNumber, est:LocalAuthority, est:DfeNumber ;
+    skos:related est:EstablishmentNumber, est:LocalAuthorityArea, est:DfeNumber ;
     est:status "Provisional"@en .
 
 est:IdentifierRole
@@ -1733,28 +1726,51 @@ est:ProviderType
     est:status "Provisional"@en .
 
 #################################################################
-# Accountability
+# Local authorities and their areas (v2.3)
 #################################################################
 
 est:LocalAuthority
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Local authority"@en ;
-    skos:definition "A county council, metropolitan district council, London borough council or unitary authority in England with education functions under the Education Act 1996. In GIAS, the local authority field records the LA in whose area the establishment is located and provides the three-digit LA number used in the DfE number and LAESTAB."@en ;
-    skos:scopeNote "An establishment's local authority is not always its maintaining authority. Academies and independent schools have a local authority for geographic reference purposes but are not maintained by it. See MaintainingAuthority for the specific maintaining role."@en ;
-    skos:broader est:EstablishmentAccountability ;
-    skos:related est:MaintainingAuthority, est:CommunitySchool ;
-    est:status "Preferred"@en ;
-    dcterms:source "C#: LocalAuthorityId; Java: officialGeoInfo.localAuthority; database: Establishment.LA_code -> LocalAuthority.code"@en .
+    skos:altLabel "Council"@en ;
+    skos:definition "A council with education functions: a county council, metropolitan district council, unitary council, London borough council, the Common Council of the City of London or the Council of the Isles of Scilly (Education Act 1996, s.579), or a Welsh county or county borough council."@en ;
+    skos:scopeNote "A local authority is the body, not its area. Its area is a local authority area, identified by a DfE LA number, and which local authority covered which area, and when, is a local authority area period. A local authority is a legal entity with legal form public body. It maintains maintained schools through a maintenance responsibility. Academies and independent schools in its area are not maintained by it. v2.3: now the council only, a narrower concept of legal entity, and no longer also the area."@en ;
+    skos:broader est:LegalEntity ;
+    skos:related est:LocalAuthorityArea, est:MaintenanceResponsibility, est:PublicBody ;
+    est:status "Preferred"@en .
 
-est:MaintainingAuthority
+est:LocalAuthorityArea
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Maintaining authority"@en ;
-    skos:definition "A local authority acting in its specific statutory role as the body responsible for maintaining a maintained school under the School Standards and Framework Act 1998 (SSFA 1998), s.21. The maintaining authority funds the school, employs staff in community schools, and is accountable for standards."@en ;
-    skos:scopeNote "Distinct from the LocalAuthority concept: a local authority may be recorded against any establishment for geographic or administrative purposes, but MaintainingAuthority applies only where the LA bears statutory responsibility for the school under SSFA 1998. Academies, independent schools and FE colleges do not have a maintaining authority."@en ;
-    skos:broader est:EstablishmentAccountability ;
-    skos:related est:LocalAuthority, est:CommunitySchool ;
+    skos:prefLabel "Local authority area"@en ;
+    skos:altLabel "LA"@en ;
+    skos:definition "The area DfE identifies by a three-digit LA number, such as 886 for Kent. It says where an establishment is and scopes its establishment number."@en ;
+    skos:scopeNote "Every establishment in the area has it, including academies and independent schools, which the local authority does not maintain. The number follows the area, not the council: when Medway became a unitary in 1998, Kent's area shrank and its number changed from 922 to 886, while Kent County Council stayed the same body. When Buckinghamshire Council replaced the county council in 2020, the area and its number 825 stayed the same. Added v2.3."@en ;
+    skos:broader est:AdministrativeGeography ;
+    skos:related est:LocalAuthority, est:LocalAuthorityNumber, est:LocalAuthorityAreaPeriod, est:LocalAuthorityScopedEstablishmentNumber ;
+    est:status "Provisional"@en ;
+    dcterms:source "C#: LocalAuthorityId; Java: officialGeoInfo.localAuthority; database: Establishment.LA_code -> LocalAuthority.code"@en .
+
+est:LocalAuthorityNumber
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local authority number"@en ;
+    skos:altLabel "LA number"@en, "LA code"@en ;
+    skos:definition "The three-digit number DfE gives a local authority area, such as 886. It forms the first part of an establishment's DfE number and LAESTAB."@en ;
+    skos:scopeNote "Added v2.3."@en ;
+    skos:broader est:EstablishmentIdentity ;
+    skos:related est:LocalAuthorityArea, est:DfeNumber, est:Laestab ;
+    est:status "Provisional"@en .
+
+est:LocalAuthorityAreaPeriod
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Local authority area period"@en ;
+    skos:definition "A period during which a local authority was the local authority for an area."@en ;
+    skos:scopeNote "Kent County Council covered area 922 until 1998 and then area 886. Buckinghamshire County Council and then Buckinghamshire Council covered area 825. One area can have different local authorities over time, and one local authority can cover several areas over time. A reorganisation ends one period and starts another on vesting day. Added v2.3."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:LocalAuthority, est:LocalAuthorityArea ;
     est:status "Provisional"@en .
 
 est:AcademyTrust
@@ -1799,7 +1815,7 @@ est:Proprietor
     skos:prefLabel "Proprietor"@en ;
     skos:altLabel "Proprietor's name"@en ;
     skos:definition "The person or body responsible for the conduct of an independent school under the Education Act 2002, s.94. The proprietor is required to be registered with the Secretary of State under s.98 and is the legal entity to whom registration requirements and inspection duties apply. Being proprietor does not mean owning the school's business or premises."@en ;
-    skos:scopeNote "In the target EPR model a proprietor is a legal entity or person holding an est:ProprietorResponsibility for the school, and the present-day proprietors are also given by esto:hasProprietor. A school can have more than one proprietor. Proprietor is a responsibility, not a recognised role."@en ;
+    skos:scopeNote "In the target EPR model a proprietor is a legal entity holding an est:ProprietorResponsibility for the school, and the present-day proprietors are also given by esto:hasProprietor. An individual proprietor is a sole-trader legal entity linked to the person, and a partnership is a traditional-partnership legal entity. A school can have more than one proprietor. Proprietor is a responsibility, not a recognised role. v2.3: a person is no longer a proprietor directly."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
     skos:related est:ProprietorResponsibility, est:LegalEntity, est:Person, est:OtherIndependentSchool ;
     dcterms:source "Database: IndependentSchools, EstablishmentProprietors; fields: PropsLastName and related Props* columns"@en ;
@@ -2203,6 +2219,7 @@ est:AdministrativeGeography
         est:LowerLayerSuperOutputArea,
         est:MiddleLayerSuperOutputArea,
         est:DistrictAdministrative,
+        est:LocalAuthorityArea,
         est:GssLocalAuthorityCode,
         est:OsGridReference ;
     est:status "Provisional"@en ;
@@ -3383,7 +3400,7 @@ est:LegalEntitiesRolesAndResponsibilities
     skos:prefLabel "Legal entities, roles and responsibilities"@en ;
     skos:definition "The bodies and people that run, support, sponsor or act as proprietor of establishments: legal entities, the recognised roles they hold, academy trust classifications, and their dated responsibilities for particular establishments."@en ;
     skos:scopeNote "Added v2.0."@en ;
-    skos:narrower est:LegalEntity, est:LegalForm, est:CharityStatus, est:IncorporationDate, est:DissolutionDate, est:RecognisedRole, est:RecognisedRoleType, est:AcademyTrustClassification, est:AcademyTrustType, est:EstablishmentResponsibility, est:ResponsibilityType, est:PeriodStartDate, est:PeriodEndDate, est:Proprietor ;
+    skos:narrower est:LegalEntity, est:LegalForm, est:CharityStatus, est:IncorporationDate, est:DissolutionDate, est:RecognisedRole, est:RecognisedRoleType, est:AcademyTrustClassification, est:AcademyTrustType, est:EstablishmentResponsibility, est:ResponsibilityType, est:PeriodStartDate, est:PeriodEndDate, est:Proprietor, est:PartnershipMembership, est:LocalAuthorityAreaPeriod ;
     est:status "Provisional"@en .
 
 
@@ -3392,8 +3409,9 @@ est:LegalEntity
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Legal entity"@en ;
     skos:definition "A body that can hold recognised roles and be responsible for establishments, whether or not it is incorporated: for example a charitable company, a company, a charitable incorporated organisation, a partnership, a sole trader, an unincorporated trust or a public body."@en ;
-    skos:scopeNote "One legal entity can hold several roles and responsibilities at once: the same charitable company can be an academy trust, an academy sponsor and the proprietor of an independent school. Its identifiers, such as its UKPRN, are separate from those of the establishments it is responsible for. Added v2.0."@en ;
+    skos:scopeNote "One legal entity can hold several roles and responsibilities at once: the same charitable company can be an academy trust, an academy sponsor and the proprietor of an independent school. Its identifiers, such as its UKPRN, are separate from those of the establishments it is responsible for. Not every legal entity is a legal person. A sole trader is the business of one individual, linked to that person. A traditional partnership and an unincorporated trust are bodies of persons; a partnership's partners are recorded as partnership memberships. A local authority is a legal entity. Added v2.0; v2.3: sole traders, partners and local authorities."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:narrower est:LocalAuthority ;
     skos:related est:Organisation, est:RecognisedRole, est:EstablishmentResponsibility ;
     est:status "Provisional"@en .
 
@@ -3403,8 +3421,156 @@ est:LegalForm
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Legal form"@en ;
     skos:definition "The legal form of a legal entity, such as a charitable company limited by guarantee, a company limited by guarantee, a charitable incorporated organisation, a traditional partnership or a public body."@en ;
-    skos:scopeNote "Added v2.0."@en ;
+    skos:scopeNote "Added v2.0; v2.3: given 12 values."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:narrower est:CharitableCompanyLimitedByGuarantee, est:CompanyLimitedByGuarantee, est:PrivateLimitedCompany, est:PublicLimitedCompany, est:LimitedLiabilityPartnership, est:CharitableIncorporatedOrganisation, est:BodyIncorporatedByRoyalCharter, est:UnincorporatedCharitableTrust, est:PublicBody, est:OverseasEntity, est:SoleTrader, est:TraditionalPartnership ;
+    est:status "Provisional"@en .
+
+
+est:CharitableCompanyLimitedByGuarantee
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Charitable company limited by guarantee"@en ;
+    skos:definition "A company limited by guarantee whose purposes are exclusively charitable. It is registered at Companies House and, unless it is an exempt or excepted charity, with the Charity Commission."@en ;
+    skos:scopeNote "Academy trusts are charitable companies limited by guarantee. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+
+est:CompanyLimitedByGuarantee
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Company limited by guarantee"@en ;
+    skos:definition "A company without share capital whose members guarantee to contribute a fixed amount if it is wound up, and which is not a charity."@en ;
+    skos:scopeNote "Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/3> .
+
+
+est:PrivateLimitedCompany
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Private limited company"@en ;
+    skos:altLabel "Ltd"@en ;
+    skos:definition "A company limited by shares that is not a public company."@en ;
+    skos:scopeNote "Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/4> .
+
+
+est:PublicLimitedCompany
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Public limited company"@en ;
+    skos:altLabel "PLC"@en ;
+    skos:definition "A company limited by shares registered as a public company, which can offer its shares to the public."@en ;
+    skos:scopeNote "Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/2006/46/section/4> .
+
+
+est:LimitedLiabilityPartnership
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Limited liability partnership"@en ;
+    skos:altLabel "LLP"@en ;
+    skos:definition "A body corporate formed under the Limited Liability Partnerships Act 2000 and registered at Companies House, with a number starting OC."@en ;
+    skos:scopeNote "Unlike a traditional partnership it is a legal person: it holds its own rights and responsibilities, including any proprietor responsibility. Its members are not recorded as partners. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    skos:related est:TraditionalPartnership ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/2000/12> .
+
+
+est:CharitableIncorporatedOrganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Charitable incorporated organisation"@en ;
+    skos:altLabel "CIO"@en ;
+    skos:definition "An incorporated form of charity registered with the Charity Commission and not at Companies House. It exists only once registered."@en ;
+    skos:scopeNote "Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/2011/25/part/11> .
+
+
+est:BodyIncorporatedByRoyalCharter
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Body incorporated by Royal Charter"@en ;
+    skos:definition "A body given legal personality by Royal Charter."@en ;
+    skos:scopeNote "Some older school foundations are chartered bodies, and the foundation regulations allow a foundation to be one. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+
+est:UnincorporatedCharitableTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Unincorporated charitable trust"@en ;
+    skos:definition "A charity set up by a trust deed or will, with no legal personality of its own. Its trustees hold its property and act for it."@en ;
+    skos:scopeNote "The trust is recorded as one legal entity holding its responsibilities. Its trustees are not yet recorded; the governance model may need them later. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+
+est:PublicBody
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Public body"@en ;
+    skos:definition "A body set up by or under an Act to carry out public functions, such as a local authority."@en ;
+    skos:scopeNote "Every local authority has this legal form. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    skos:related est:LocalAuthority ;
+    est:status "Provisional"@en .
+
+
+est:OverseasEntity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Overseas entity"@en ;
+    skos:definition "A body formed under the law of a country outside the United Kingdom."@en ;
+    skos:scopeNote "Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+
+est:SoleTrader
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Sole trader"@en ;
+    skos:definition "The business of one individual who trades on their own account. A sole trader is not a legal person separate from the individual."@en ;
+    skos:scopeNote "Every individual proprietor of a school is recorded as a sole-trader legal entity linked to the person, so that its trading name, address and contact details have a home. One per individual, even where the individual trades under more than one name. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    skos:related est:Person, est:Proprietor ;
+    est:status "Provisional"@en ;
+    rdfs:isDefinedBy <https://www.gov.uk/become-sole-trader> .
+
+
+est:TraditionalPartnership
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Traditional partnership"@en ;
+    skos:altLabel "Partnership"@en ;
+    skos:definition "Two or more persons carrying on a business in common with a view of profit. In England and Wales it is not a legal person: its partners hold its rights and duties together."@en ;
+    skos:scopeNote "Its partners are recorded as partnership memberships. Added v2.3."@en ;
+    skos:broader est:LegalForm ;
+    skos:related est:PartnershipMembership, est:LimitedLiabilityPartnership ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/Vict/53-54/39/section/1> .
+
+
+est:PartnershipMembership
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Partnership membership"@en ;
+    skos:definition "A period during which a person or legal entity was a partner in a traditional partnership."@en ;
+    skos:scopeNote "A company can be a partner. A partnership cannot be its own partner. Partners are often not known, so a partnership with fewer than two is reported as a data-quality warning, not rejected. If DfE records a change of partners as a change of proprietor, the old partnership's proprietor responsibility ends and a new partnership's starts. Added v2.3."@en ;
+    skos:broader est:LegalEntitiesRolesAndResponsibilities ;
+    skos:related est:TraditionalPartnership, est:Person ;
     est:status "Provisional"@en .
 
 
@@ -3538,8 +3704,8 @@ est:EstablishmentResponsibility
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Establishment responsibility"@en ;
-    skos:definition "A period during which a legal entity or person was responsible for an establishment in a particular way: running it as its academy trust, supporting it as its foundation trust, sponsoring it, or acting as its proprietor."@en ;
-    skos:scopeNote "When an establishment changes operator it keeps its identity: the change is a new responsibility, held by a different legal entity. A person can only sponsor an establishment or be its proprietor. Replaces est:Sponsorship. Added v2.0."@en ;
+    skos:definition "A period during which a legal entity or person was responsible for an establishment in a particular way: running it as its academy trust, supporting it as its foundation trust, sponsoring it, acting as its proprietor, or maintaining it as its local authority."@en ;
+    skos:scopeNote "When an establishment changes operator it keeps its identity: the change is a new responsibility, held by a different legal entity. A person can only sponsor an establishment. Replaces est:Sponsorship. Added v2.0; v2.3: maintenance by a local authority, and a person can no longer be a proprietor directly."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
     skos:related est:RecognisedRole, est:LegalEntity ;
     est:status "Provisional"@en .
@@ -3550,9 +3716,9 @@ est:ResponsibilityType
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Responsibility type"@en ;
     skos:definition "The kind of establishment responsibility."@en ;
-    skos:scopeNote "Added v2.0."@en ;
+    skos:scopeNote "Added v2.0; v2.3: maintained by local authority."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
-    skos:narrower est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility, est:ProprietorResponsibility ;
+    skos:narrower est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility, est:ProprietorResponsibility, est:MaintenanceResponsibility ;
     est:status "Provisional"@en .
 
 
@@ -3593,18 +3759,31 @@ est:ProprietorResponsibility
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Proprietor"@en ;
-    skos:definition "The legal entity or person is a proprietor of the establishment: responsible for running it, as for an independent school, a non-maintained special school or a city technology college."@en ;
-    skos:scopeNote "Being proprietor does not mean owning the school's business or premises. A school can have more than one proprietor. Added v2.0."@en ;
+    skos:definition "The legal entity is a proprietor of the establishment: responsible for running it, as for an independent school, a non-maintained special school or a city technology college."@en ;
+    skos:scopeNote "Being proprietor does not mean owning the school's business or premises. A school can have more than one proprietor. An individual proprietor is a sole-trader legal entity linked to the person, and a partnership is a traditional-partnership legal entity. Added v2.0; v2.3: held by a legal entity only."@en ;
     skos:broader est:ResponsibilityType ;
     skos:related est:Proprietor ;
     est:status "Provisional"@en .
+
+
+est:MaintenanceResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Maintained by local authority"@en ;
+    skos:altLabel "Maintaining authority"@en ;
+    skos:definition "The establishment, an LA-maintained school, is maintained by the local authority: the local authority funds it and is responsible for it under the School Standards and Framework Act 1998."@en ;
+    skos:scopeNote "Held only by a local authority. Only community, voluntary aided, voluntary controlled, foundation, community special and foundation special schools, pupil referral units and LA nursery schools can have one. A maintained school has one maintaining local authority at a time. Academies, independent schools and FE colleges have none, even though they are in a local authority area. A reorganisation ends the responsibility with the old local authority and starts one with the new local authority on vesting day. Replaces est:EstablishmentAccountability and est:MaintainingAuthority. Added v2.3."@en ;
+    skos:broader est:ResponsibilityType ;
+    skos:related est:LocalAuthority, est:CommunitySchool ;
+    est:status "Provisional"@en ;
+    est:legislation <https://www.legislation.gov.uk/ukpga/1998/31/section/22> .
 
 
 est:PeriodStartDate
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Period start date"@en ;
-    skos:definition "The date on which a role, classification, responsibility or lead centre designation began."@en ;
+    skos:definition "The date on which a role, classification, responsibility, lead centre designation, local authority area period or partnership membership began."@en ;
     skos:scopeNote "Added v2.0."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
     est:status "Provisional"@en .
@@ -3614,7 +3793,7 @@ est:PeriodEndDate
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Period end date"@en ;
-    skos:definition "The date on which a role, classification, responsibility or lead centre designation ended. Absent while it continues."@en ;
+    skos:definition "The date on which a role, classification, responsibility, lead centre designation, local authority area period or partnership membership ended. Absent while it continues."@en ;
     skos:scopeNote "Added v2.0."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
     est:status "Provisional"@en .

@@ -24,7 +24,7 @@ est:establishmentDetailsTaxonomy
     dcterms:title "Education Provider Registry Taxonomy"@en ;
     dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the establishment record Details tab in the public view."@en ;
     dcterms:created "2026-06-16"^^xsd:date ;
-    dcterms:modified "2026-10-14"^^xsd:date ;
+    dcterms:modified "2026-11-02"^^xsd:date ;
     est:status "Provisional"@en ;
     skos:hasTopConcept
         est:EstablishmentType,
@@ -40,7 +40,8 @@ est:establishmentDetailsTaxonomy
         est:RecognisedRoleType,
         est:AcademyTrustType,
         est:ResponsibilityType,
-        est:CharityStatus .
+        est:CharityStatus,
+        est:LegalForm .
 
 #################################################################
 # Facet collection
@@ -63,7 +64,8 @@ est:establishmentDetailsTaxonomyFacets
         est:RecognisedRoleType,
         est:AcademyTrustType,
         est:ResponsibilityType,
-        est:CharityStatus .
+        est:CharityStatus,
+        est:LegalForm .
 
 #################################################################
 # Type-group collection
@@ -1072,7 +1074,7 @@ est:ResponsibilityType
     skos:topConceptOf est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Responsibility type"@en ;
     skos:definition "The way a legal entity or person is responsible for an establishment, for a period."@en ;
-    skos:narrower est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility, est:ProprietorResponsibility ;
+    skos:narrower est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility, est:ProprietorResponsibility, est:MaintenanceResponsibility ;
     est:status "Provisional"@en .
 
 est:AcademyTrustResponsibility
@@ -1100,6 +1102,13 @@ est:ProprietorResponsibility
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Proprietor"@en ;
+    skos:broader est:ResponsibilityType ;
+    est:status "Provisional"@en .
+
+est:MaintenanceResponsibility
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Maintained by local authority"@en ;
     skos:broader est:ResponsibilityType ;
     est:status "Provisional"@en .
 
@@ -1131,4 +1140,97 @@ est:ExceptedCharity
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Excepted charity"@en ;
     skos:broader est:CharityStatus ;
+    est:status "Provisional"@en .
+
+est:LegalForm
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Legal form"@en ;
+    skos:definition "The legal form of a legal entity. Not every legal form is a legal person: a sole trader, a traditional partnership and an unincorporated charitable trust are not."@en ;
+    skos:narrower est:CharitableCompanyLimitedByGuarantee, est:CompanyLimitedByGuarantee, est:PrivateLimitedCompany, est:PublicLimitedCompany, est:LimitedLiabilityPartnership, est:CharitableIncorporatedOrganisation, est:BodyIncorporatedByRoyalCharter, est:UnincorporatedCharitableTrust, est:PublicBody, est:OverseasEntity, est:SoleTrader, est:TraditionalPartnership ;
+    est:status "Provisional"@en .
+
+est:CharitableCompanyLimitedByGuarantee
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Charitable company limited by guarantee"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:CompanyLimitedByGuarantee
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Company limited by guarantee"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:PrivateLimitedCompany
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Private limited company"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:PublicLimitedCompany
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Public limited company"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:LimitedLiabilityPartnership
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Limited liability partnership"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:CharitableIncorporatedOrganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Charitable incorporated organisation"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:BodyIncorporatedByRoyalCharter
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Body incorporated by Royal Charter"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:UnincorporatedCharitableTrust
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Unincorporated charitable trust"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:PublicBody
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Public body"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:OverseasEntity
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Overseas entity"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:SoleTrader
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Sole trader"@en ;
+    skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+est:TraditionalPartnership
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Traditional partnership"@en ;
+    skos:broader est:LegalForm ;
     est:status "Provisional"@en .
