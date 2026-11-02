@@ -32,10 +32,11 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-10-14"^^xsd:date ;
+    dcterms:modified "2026-11-02"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.1" ;
+    owl:versionInfo "1.2" ;
+    rdfs:comment "v1.2: aligned with establishment-ontology.ttl v2.3. The 19 per-type rules on the deleted accountability path now check esto:maintainedByLocalAuthority. LA-maintained schools require one; children's centres and Welsh establishments, previously required to have a local authority, now must not have one, because a children's centre is not a maintained school and GIAS cannot tell a Welsh maintained school from an independent one. A maintenance responsibility is held only by a local authority, and only LA-maintained types can have one. A proprietor must now be a legal entity, and a person can only sponsor an establishment. New shapes for local authorities, local authority areas and their periods, sole traders and partnership memberships."@en ;
     rdfs:comment "v1.1: aligned with establishment-ontology.ttl v2.1. Per-type rules for boarding, nursery, sixth-form and special-class provision now check the true-or-false provision values (esto:hasBoardingProvision, esto:hasNurseryProvision, esto:hasSixthFormProvision, esto:hasSpecialClassProvision). New shapes check that each value is an xsd:boolean, and that a boarding type is only recorded for a school that has boarders."@en ;
     rdfs:comment "v1.0: aligned with establishment-ontology.ttl v2.0. Per-type shapes check esto:runByAcademyTrust and esto:hasProprietor instead of the deleted accountability links. Sponsorship shapes rewritten around est:EstablishmentResponsibility. New shapes for legal entities, recognised roles, academy trust classifications, responsibilities, dated periods, lead centre designations and group local authorities, including the rules that a person can hold only the academy sponsor role and can only sponsor an establishment or be its proprietor."@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
@@ -215,10 +216,10 @@ est:LaMaintainedSchoolGroupShape
     sh:targetClass est:LaMaintainedSchool ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:minCount 1 ;
-        sh:name "Local authority"@en ;
-        sh:message "LA maintained schools must have at least one local authority accountability relationship."@en ;
+        sh:name "Maintaining local authority"@en ;
+        sh:message "LA maintained schools must have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -425,7 +426,7 @@ est:PupilReferralUnitShape
 est:MaintainedNurserySchoolShape
     a sh:NodeShape ;
     rdfs:label "Local authority nursery school shape"@en ;
-    rdfs:comment "Rules for LA nursery schools, checked against the real GIAS extract (open, type code 02, n=374). Education phase, age range, pupil count and free school meal measure are required; school capacity is never populated (maxCount 0, not required as previously miscoded); LA accountability is required and academy trust accountability is not applicable; religious character, religious ethos, diocese, sixth-form provision and Section 41 approval are all 100% 'Not applicable'/'Does not apply' and so not applicable. Admissions policy, nursery provision, special classes, boarding provision and resourced provision all show genuine real per-instance variability and are deliberately left unconstrained."@en ;
+    rdfs:comment "Rules for LA nursery schools, checked against the real GIAS extract (open, type code 02, n=374). Education phase, age range, pupil count and free school meal measure are required; school capacity is never populated (maxCount 0, not required as previously miscoded); a maintaining local authority is required and an academy trust is not applicable; religious character, religious ethos, diocese, sixth-form provision and Section 41 approval are all 100% 'Not applicable'/'Does not apply' and so not applicable. Admissions policy, nursery provision, special classes, boarding provision and resourced provision all show genuine real per-instance variability and are deliberately left unconstrained."@en ;
     sh:targetClass est:MaintainedNurserySchool ;
 
     sh:property [
@@ -436,10 +437,10 @@ est:MaintainedNurserySchoolShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:minCount 1 ;
-        sh:name "Local authority"@en ;
-        sh:message "LA nursery schools must have a local authority accountability relationship."@en ;
+        sh:name "Maintaining local authority"@en ;
+        sh:message "LA nursery schools must have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -523,10 +524,10 @@ est:NonMaintainedSpecialSchoolShape
     sh:targetClass est:NonMaintainedSpecialSchool ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Non-maintained special schools are not LA maintained and must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Non-maintained special schools must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -597,10 +598,10 @@ est:CityTechnologyCollegeShape
     sh:targetClass est:CityTechnologyCollege ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "City technology colleges must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "City technology colleges must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -693,10 +694,10 @@ est:OtherIndependentSchoolShape
     sh:targetClass est:OtherIndependentSchool ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Other independent schools must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Other independent schools must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -789,10 +790,10 @@ est:OtherIndependentSpecialSchoolShape
     sh:targetClass est:OtherIndependentSpecialSchool ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Other independent special schools must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Other independent special schools must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -884,10 +885,10 @@ est:MainstreamAcademyGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Mainstream academies must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Mainstream academies must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -1332,10 +1333,10 @@ est:MainstreamFreeSchoolGroupShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Mainstream free schools must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Mainstream free schools must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -1556,10 +1557,10 @@ est:CollegeGroupShape
     sh:targetClass est:College ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Colleges do not have LA accountability relationships."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Colleges do not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -1663,10 +1664,10 @@ est:HigherEducationInstitutionShape
     sh:targetClass est:HigherEducationInstitution ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "HEIs do not have LA accountability relationships."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "HEIs do not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -1776,14 +1777,14 @@ est:HigherEducationInstitutionShape
 est:ChildrensCentreGroupShape
     a sh:NodeShape ;
     rdfs:label "Children's centre shape"@en ;
-    rdfs:comment "Rules for children's centres. LA accountability is required; most school provision fields are not applicable. Education phase is present in the GIAS record and is retained."@en ;
+    rdfs:comment "Rules for children's centres. A children's centre is not a maintained school, so it has no maintaining local authority (v1.2; previously required); most school provision fields are not applicable. Education phase is present in the GIAS record and is retained."@en ;
     sh:targetClass est:ChildrensCentre ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
-        sh:minCount 1 ;
-        sh:name "Local authority"@en ;
-        sh:message "Children's centres must have a local authority accountability relationship."@en ;
+        sh:path esto:maintainedByLocalAuthority ;
+        sh:maxCount 0 ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Children's centres are not maintained schools and must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -1905,14 +1906,14 @@ est:ChildrensCentreGroupShape
 est:OnlineProviderShape
     a sh:NodeShape ;
     rdfs:label "Online provider shape"@en ;
-    rdfs:comment "Rules for online providers. LA and academy trust accountability relationships are not applicable. Boarding and nursery provision are not applicable. Education phase, gender of entry, admissions policy, official sixth form, faith context and proprietor's name are all present in the GIAS record. Note: open date represents accreditation date and closed date represents accreditation date ended in the public Details view."@en ;
+    rdfs:comment "Rules for online providers. A maintaining local authority and an academy trust are not applicable. Boarding and nursery provision are not applicable. Education phase, gender of entry, admissions policy, official sixth form, faith context and proprietor's name are all present in the GIAS record. Note: open date represents accreditation date and closed date represents accreditation date ended in the public Details view."@en ;
     sh:targetClass est:OnlineProvider ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "Online providers do not have LA accountability relationships."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Online providers do not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -2020,14 +2021,14 @@ est:OnlineProviderShape
 est:WelshEstablishmentShape
     a sh:NodeShape ;
     rdfs:label "Welsh establishment shape"@en ;
-    rdfs:comment "Rules for Welsh establishments. LA accountability and education phase are required. Gender of entry, admissions policy and boarding provision are not present in the GIAS record for Welsh establishments and are not modelled as required here."@en ;
+    rdfs:comment "Rules for Welsh establishments. Education phase is required. No maintaining local authority is recorded, because GIAS cannot tell a Welsh maintained school from an independent one (v1.2; previously required). Gender of entry, admissions policy and boarding provision are not present in the GIAS record for Welsh establishments and are not modelled as required here."@en ;
     sh:targetClass est:WelshEstablishment ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
-        sh:minCount 1 ;
-        sh:name "Local authority"@en ;
-        sh:message "Welsh establishments must have a local authority accountability relationship."@en ;
+        sh:path esto:maintainedByLocalAuthority ;
+        sh:maxCount 0 ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "Welsh establishments have no maintaining local authority recorded, because GIAS cannot tell a Welsh maintained school from an independent one."@en ;
     ] ;
 
     sh:property [
@@ -2224,10 +2225,10 @@ est:BritishSchoolsOverseasShape
     ] ;
 
     sh:property [
-        sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ;
+        sh:path esto:maintainedByLocalAuthority ;
         sh:maxCount 0 ;
-        sh:name "Local authority - accountability relationship (not applicable)"@en ;
-        sh:message "British schools overseas must not have an LA accountability relationship."@en ;
+        sh:name "Maintaining local authority (not applicable)"@en ;
+        sh:message "British schools overseas must not have a local authority that maintains them."@en ;
     ] ;
 
     sh:property [
@@ -2324,7 +2325,7 @@ est:SecureUnitsShape
     rdfs:comment "Rules for secure units. Education phase and gender are shown in GIAS. No accountability relationships, provision, faith, SEN, inspection or age range apply."@en ;
     sh:targetClass est:SecureUnits ;
 
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Secure units have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path esto:maintainedByLocalAuthority ; sh:maxCount 0 ; sh:name "Maintaining local authority (not applicable)"@en ; sh:message "Secure units have no local authority that maintains them."@en ] ;
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Secure units have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Secure units have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for secure units."@en ] ;
@@ -2366,7 +2367,7 @@ est:OffshoreSchoolsShape
     rdfs:comment "Rules for offshore schools. Education phase, gender and age range are shown in GIAS. No accountability relationships, provision, faith, SEN or inspection apply."@en ;
     sh:targetClass est:OffshoreSchools ;
 
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Offshore schools have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path esto:maintainedByLocalAuthority ; sh:maxCount 0 ; sh:name "Maintaining local authority (not applicable)"@en ; sh:message "Offshore schools have no local authority that maintains them."@en ] ;
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Offshore schools have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Offshore schools have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for offshore schools."@en ] ;
@@ -2414,7 +2415,7 @@ est:ServiceChildrensEducationShape
     rdfs:comment "Rules for SCE establishments. Education phase, gender, age range and Ofsted are shown in GIAS. No accountability relationships, provision, faith or SEN apply."@en ;
     sh:targetClass est:ServiceChildrensEducation ;
 
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "SCE establishments have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path esto:maintainedByLocalAuthority ; sh:maxCount 0 ; sh:name "Maintaining local authority (not applicable)"@en ; sh:message "SCE establishments have no local authority that maintains them."@en ] ;
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "SCE establishments have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "SCE establishments have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for SCE establishments."@en ] ;
@@ -2462,7 +2463,7 @@ est:MiscellaneousEstablishmentShape
     rdfs:comment "Rules for miscellaneous establishments. Education phase and gender are shown in GIAS. No accountability relationships, provision, faith, SEN, inspection or age range apply."@en ;
     sh:targetClass est:MiscellaneousEstablishment ;
 
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Miscellaneous establishments have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path esto:maintainedByLocalAuthority ; sh:maxCount 0 ; sh:name "Maintaining local authority (not applicable)"@en ; sh:message "Miscellaneous establishments have no local authority that maintains them."@en ] ;
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Miscellaneous establishments have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Miscellaneous establishments have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for miscellaneous establishments."@en ] ;
@@ -2504,7 +2505,7 @@ est:InstitutionFundedByOtherGovernmentDepartmentShape
     rdfs:comment "Rules for institutions funded by other government departments. Education phase and gender are shown in GIAS. No accountability relationships, provision, faith, SEN, inspection or age range apply."@en ;
     sh:targetClass est:InstitutionFundedByOtherGovernmentDepartment ;
 
-    sh:property [ sh:path ( esto:hasAccountabilityRelationship esto:accountableToLocalAuthority ) ; sh:maxCount 0 ; sh:name "Local authority - accountability relationship (not applicable)"@en ; sh:message "Other-department institutions have no LA accountability relationship."@en ] ;
+    sh:property [ sh:path esto:maintainedByLocalAuthority ; sh:maxCount 0 ; sh:name "Maintaining local authority (not applicable)"@en ; sh:message "Other-department institutions have no local authority that maintains them."@en ] ;
     sh:property [ sh:path esto:runByAcademyTrust ; sh:maxCount 0 ; sh:name "Academy trust (not applicable)"@en ; sh:message "Other-department institutions have no academy trust that runs them."@en ] ;
     sh:property [ sh:path esto:hasProprietor ; sh:maxCount 0 ; sh:name "Proprietor (not applicable)"@en ; sh:message "Other-department institutions have no proprietor."@en ] ;
     sh:property [ sh:path ( esto:hasEducationAdmissionsAndProvision esto:classifiedByAdmissionsPolicy ) ; sh:maxCount 0 ; sh:name "Admissions policy (not applicable)"@en ; sh:message "Admissions policy is not applicable for other-department institutions."@en ] ;
@@ -2626,7 +2627,8 @@ est:GroupLocalAuthorityShape
 # Period shape (v1.0)
 #
 # Shared by recognised roles, academy trust classifications,
-# establishment responsibilities and lead centre designations.
+# establishment responsibilities, lead centre designations, local
+# authority area periods and partnership memberships (v1.2).
 # That an end date is not before its start date cannot be
 # expressed in SHACL Core; it is enforced in migration and
 # application logic.
@@ -2783,7 +2785,7 @@ est:ResponsiblePartyShape
 est:EstablishmentResponsibilityShape
     a sh:NodeShape ;
     rdfs:label "Establishment responsibility shape"@en ;
-    rdfs:comment "An establishment responsibility has exactly one responsible party and one responsibility type, and is a dated period. A person can only sponsor an establishment or be its proprietor. Added v1.0."@en ;
+    rdfs:comment "An establishment responsibility has exactly one responsible party and one responsibility type, and is a dated period. A person can only sponsor an establishment. Added v1.0; v1.2: maintained by local authority added, and a person can no longer be a proprietor directly."@en ;
     sh:targetClass est:EstablishmentResponsibility ;
     sh:node est:PeriodShape ;
 
@@ -2800,21 +2802,32 @@ est:EstablishmentResponsibilityShape
         sh:path esto:hasResponsibilityType ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:in ( est:AcademyTrustResponsibility est:FoundationTrustResponsibility est:SponsorResponsibility est:ProprietorResponsibility ) ;
+        sh:in ( est:AcademyTrustResponsibility est:FoundationTrustResponsibility est:SponsorResponsibility est:ProprietorResponsibility est:MaintenanceResponsibility ) ;
         sh:name "Responsibility type"@en ;
-        sh:message "A responsibility must have exactly one type: run by academy trust, supported by foundation trust, sponsored by, or proprietor."@en ;
+        sh:message "A responsibility must have exactly one type: run by academy trust, supported by foundation trust, sponsored by, proprietor, or maintained by local authority."@en ;
     ] ;
 
     sh:or (
         [ sh:path esto:hasResponsibleParty ; sh:class est:LegalEntity ]
-        [ sh:path esto:hasResponsibilityType ; sh:in ( est:SponsorResponsibility est:ProprietorResponsibility ) ]
+        [ sh:path esto:hasResponsibilityType ; sh:in ( est:SponsorResponsibility ) ]
     ) ;
-    sh:message "A person can only sponsor an establishment or be its proprietor."@en .
+    sh:message "A person can only sponsor an establishment. An individual proprietor is a sole-trader legal entity."@en .
+
+est:MaintenanceHolderShape
+    a sh:NodeShape ;
+    rdfs:label "Maintenance holder shape"@en ;
+    rdfs:comment "A maintenance responsibility is held only by a local authority. Added v1.2."@en ;
+    sh:targetClass est:EstablishmentResponsibility ;
+    sh:or (
+        [ sh:path esto:hasResponsibilityType ; sh:not [ sh:in ( est:MaintenanceResponsibility ) ] ]
+        [ sh:path esto:hasResponsibleParty ; sh:class est:LocalAuthority ]
+    ) ;
+    sh:message "Only a local authority can maintain an establishment."@en .
 
 est:EstablishmentResponsibilitiesShape
     a sh:NodeShape ;
     rdfs:label "Establishment responsibilities shape"@en ;
-    rdfs:comment "Which establishments can have which responsibilities. Only academies and free schools can be run by an academy trust or sponsored. Only foundation and foundation special schools can be supported by a foundation trust. Added v1.0."@en ;
+    rdfs:comment "Which establishments can have which responsibilities. Only academies and free schools can be run by an academy trust or sponsored. Only foundation and foundation special schools can be supported by a foundation trust. Only LA-maintained schools can be maintained by a local authority. Added v1.0; v1.2: maintenance."@en ;
     sh:targetSubjectsOf esto:hasResponsibility ;
     sh:class est:Establishment ;
 
@@ -2844,7 +2857,16 @@ est:EstablishmentResponsibilitiesShape
             sh:qualifiedMaxCount 0 ;
         ] ]
     ) ;
-    sh:message "Only academies and free schools can be run by an academy trust or sponsored, and only foundation and foundation special schools can be supported by a foundation trust."@en .
+
+    sh:or (
+        [ sh:class est:LaMaintainedSchool ]
+        [ sh:property [
+            sh:path esto:hasResponsibility ;
+            sh:qualifiedValueShape [ sh:path esto:hasResponsibilityType ; sh:hasValue est:MaintenanceResponsibility ] ;
+            sh:qualifiedMaxCount 0 ;
+        ] ]
+    ) ;
+    sh:message "Only academies and free schools can be run by an academy trust or sponsored, only foundation and foundation special schools can be supported by a foundation trust, and only LA-maintained schools can be maintained by a local authority."@en .
 
 est:RunByAcademyTrustShape
     a sh:NodeShape ;
@@ -2875,13 +2897,145 @@ est:RunByAcademyTrustShape
 est:ProprietorShape
     a sh:NodeShape ;
     rdfs:label "Proprietor shape"@en ;
-    rdfs:comment "A proprietor is a legal entity or a person. A school can have more than one. Added v1.0."@en ;
+    rdfs:comment "A proprietor is a legal entity. An individual proprietor is a sole-trader legal entity linked to the person. A school can have more than one. Added v1.0; v1.2: a person can no longer be a proprietor directly."@en ;
     sh:targetSubjectsOf esto:hasProprietor ;
     sh:property [
         sh:path esto:hasProprietor ;
-        sh:node est:ResponsiblePartyShape ;
+        sh:class est:LegalEntity ;
         sh:name "Proprietor"@en ;
-        sh:message "A proprietor must be a legal entity or a person."@en ;
+        sh:message "A proprietor must be a legal entity. An individual proprietor is a sole-trader legal entity."@en ;
+    ] .
+
+est:MaintainedByLocalAuthorityShape
+    a sh:NodeShape ;
+    rdfs:label "Maintained by local authority shape"@en ;
+    rdfs:comment "esto:maintainedByLocalAuthority names at most one local authority. A maintained school is maintained by one local authority at a time. Added v1.2."@en ;
+    sh:targetSubjectsOf esto:maintainedByLocalAuthority ;
+    sh:property [
+        sh:path esto:maintainedByLocalAuthority ;
+        sh:maxCount 1 ;
+        sh:class est:LocalAuthority ;
+        sh:name "Maintained by local authority"@en ;
+        sh:message "An establishment is maintained by at most one local authority at a time, and it must be a local authority."@en ;
+    ] .
+
+
+#################################################################
+# Local authority and local authority area shapes (v1.2)
+#################################################################
+
+est:LocalAuthorityShape
+    a sh:NodeShape ;
+    rdfs:label "Local authority shape"@en ;
+    rdfs:comment "A local authority is a council, with legal form public body where its legal form is recorded. Added v1.2."@en ;
+    sh:targetClass est:LocalAuthority ;
+    sh:property [
+        sh:path esto:hasLegalForm ;
+        sh:in ( est:PublicBody ) ;
+        sh:name "Legal form"@en ;
+        sh:message "A local authority's legal form is public body."@en ;
+    ] .
+
+est:LocalAuthorityAreaShape
+    a sh:NodeShape ;
+    rdfs:label "Local authority area shape"@en ;
+    rdfs:comment "A local authority area has exactly one LA number and at least one period naming the local authority responsible for it. Added v1.2."@en ;
+    sh:targetClass est:LocalAuthorityArea ;
+    sh:property [
+        sh:path esto:hasLocalAuthorityNumber ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:LocalAuthorityNumber ;
+        sh:name "LA number"@en ;
+        sh:message "A local authority area must have exactly one LA number."@en ;
+    ] ;
+    sh:property [
+        sh:path ( esto:hasLocalAuthorityNumber rdf:value ) ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[0-9]{3}$" ;
+        sh:name "LA number value"@en ;
+        sh:message "An LA number is three digits, held as a string."@en ;
+    ] ;
+    sh:property [
+        sh:path esto:hasLocalAuthorityAreaPeriod ;
+        sh:minCount 1 ;
+        sh:class est:LocalAuthorityAreaPeriod ;
+        sh:name "Local authority area period"@en ;
+        sh:message "A local authority area must have at least one period naming the local authority responsible for it."@en ;
+    ] .
+
+est:LocalAuthorityAreaPeriodShape
+    a sh:NodeShape ;
+    rdfs:label "Local authority area period shape"@en ;
+    rdfs:comment "A local authority area period names exactly one local authority and is a dated period. That periods for one area do not overlap cannot be expressed in SHACL Core; it is enforced in the database. Added v1.2."@en ;
+    sh:targetClass est:LocalAuthorityAreaPeriod ;
+    sh:node est:PeriodShape ;
+    sh:property [
+        sh:path esto:hasLocalAuthority ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:LocalAuthority ;
+        sh:name "Local authority"@en ;
+        sh:message "A local authority area period must name exactly one local authority."@en ;
+    ] .
+
+
+#################################################################
+# Sole trader and partnership shapes (v1.2)
+#################################################################
+
+est:SoleTraderShape
+    a sh:NodeShape ;
+    rdfs:label "Sole trader shape"@en ;
+    rdfs:comment "Only a sole-trader legal entity has a trader, and it has at most one. The trader is optional, because the person may not yet be known. Added v1.2."@en ;
+    sh:targetSubjectsOf esto:hasTrader ;
+    sh:class est:LegalEntity ;
+    sh:property [
+        sh:path esto:hasLegalForm ;
+        sh:hasValue est:SoleTrader ;
+        sh:name "Legal form"@en ;
+        sh:message "Only a sole-trader legal entity has a trader."@en ;
+    ] ;
+    sh:property [
+        sh:path esto:hasTrader ;
+        sh:maxCount 1 ;
+        sh:class est:Person ;
+        sh:name "Trader"@en ;
+        sh:message "A sole-trader legal entity has at most one trader, who must be a person."@en ;
+    ] .
+
+est:PartnershipShape
+    a sh:NodeShape ;
+    rdfs:label "Partnership shape"@en ;
+    rdfs:comment "Only a traditional-partnership legal entity has partnership memberships. LLPs are bodies corporate whose members are not recorded as partners. Added v1.2."@en ;
+    sh:targetSubjectsOf esto:hasPartnershipMembership ;
+    sh:class est:LegalEntity ;
+    sh:property [
+        sh:path esto:hasLegalForm ;
+        sh:hasValue est:TraditionalPartnership ;
+        sh:name "Legal form"@en ;
+        sh:message "Only a traditional partnership has partners."@en ;
+    ] ;
+    sh:property [
+        sh:path esto:hasPartnershipMembership ;
+        sh:class est:PartnershipMembership ;
+        sh:name "Partnership membership"@en ;
+        sh:message "esto:hasPartnershipMembership must point to an est:PartnershipMembership."@en ;
+    ] .
+
+est:PartnershipMembershipShape
+    a sh:NodeShape ;
+    rdfs:label "Partnership membership shape"@en ;
+    rdfs:comment "A partnership membership names exactly one partner, a legal entity or a person, and is a dated period. That a partnership is not its own partner cannot be expressed in SHACL Core; it is enforced in the database. Added v1.2."@en ;
+    sh:targetClass est:PartnershipMembership ;
+    sh:node est:PeriodShape ;
+    sh:property [
+        sh:path esto:hasPartner ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:node est:ResponsiblePartyShape ;
+        sh:name "Partner"@en ;
+        sh:message "A partnership membership must name exactly one partner, which must be a legal entity or a person."@en ;
     ] .
 
 est:EstablishmentSponsorshipShape

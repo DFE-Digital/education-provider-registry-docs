@@ -36,10 +36,10 @@ esto:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-10-14"^^xsd:date ;
+    dcterms:modified "2026-11-02"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "2.2" ;
+    owl:versionInfo "2.3" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -76,6 +76,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v2.0: legal entities, roles and responsibilities, following lessons from the physical model slice, built and tested against real GIAS data. (1) New class est:LegalEntity (subclass of est:Organisation) for any body that can hold roles and be responsible for schools, incorporated or not, with est:LegalForm, est:CharityStatus (est:RegisteredCharity, est:ExemptCharity, est:ExceptedCharity), est:IncorporationDate and est:DissolutionDate. Companies House number and UKPRN move to the legal entity (esto:hasCompaniesHouseRegistration, esto:hasLegalEntityUkprn). (2) New class est:RecognisedRole, a dated role held by a legal entity or person, typed by est:RecognisedRoleType: est:AcademyTrust, est:FoundationTrust, est:UmbrellaTrust and est:AcademySponsor. New class est:AcademyTrustClassification, a dated classification of a legal entity as est:SingleAcademyTrust, est:MultiAcademyTrust or est:SecureSingleAcademyTrust (est:AcademyTrustType). est:AcademyTrust, est:SingleAcademyTrust, est:MultiAcademyTrust and est:SecureSingleAcademyTrust keep their IRIs but change from classes to named individuals, so a SAT-to-MAT conversion is a change of classification on one legal entity, not a new organisation. (3) New class est:EstablishmentResponsibility, a dated responsibility of a legal entity or person for an establishment, typed by est:ResponsibilityType: est:AcademyTrustResponsibility, est:FoundationTrustResponsibility, est:SponsorResponsibility and est:ProprietorResponsibility. A change of operator is a new responsibility for the same establishment. New shortcut esto:runByAcademyTrust; esto:sponsoredBy and esto:hasProprietor redefined as the present-day sponsor and proprietors, and esto:hasProprietor widened to 0..*. (4) est:EstablishmentGroup narrowed to federations and children's centre groups and collaborations, which are not legal entities. New class est:LeadCentreDesignation (dated, from est:GroupMembership) and est:GroupMembershipEndDate. (5) esto:hasRegisteredAddress moved to est:LegalEntity; esto:hasContactAddress widened to legal entities and groups. (6) New annotation property esto:changesOverTime marks facts that change during the life of what they describe. Shared period dates est:PeriodStartDate and est:PeriodEndDate, with esto:hasStartDate and esto:hasEndDate. Deleted outright: est:GenericTrust (it described the foundation trust, GIAS type 02), est:Sponsorship, est:SponsorshipStartDate, est:SponsorshipEndDate, est:GroupRelationship, est:GroupRelationshipType, est:SuccessorMultiAcademyTrust, est:PredecessorSingleAcademyTrust, est:GroupUkprn, est:GroupIncorporatedOnDate, est:GroupId, est:GroupUniqueIdentifier, and properties esto:accountableToAcademyTrust, esto:accountableToProprietor, esto:hasSponsorship, esto:hasSponsor, esto:hasSponsorshipStartDate, esto:hasSponsorshipEndDate, esto:isSingleAcademyTrust, esto:hasGroupUkprn, esto:hasGroupCompaniesHouseNumber, esto:hasGroupRelationship, esto:relatesTo, esto:classifiedByGroupRelationshipType, esto:identifiedByGroupId, esto:hasGroupUniqueIdentifier and esto:hasGroupIncorporatedOnDate. GIAS group numbers are a GIAS and migration concern, held in the logical and physical models."@en ;
     rdfs:comment "v2.1: yes/no provision facts no longer modelled as named negative values. Nursery classes, sixth form, special classes and boarders are each recorded as a true-or-false value, following the existing value-class pattern (est:TeenageMothersProvision): new properties esto:hasNurseryProvision, esto:hasSixthFormProvision, esto:hasSpecialClassProvision and esto:hasBoardingProvision link est:EducationAdmissionsAndProvision to est:NurseryProvision, est:SixthFormProvision, est:SpecialClassProvision and est:BoardingProvision, whose instances carry rdf:value xsd:boolean. Where a school has boarders, the new class est:BoardingType (via esto:classifiedByBoardingType) says whether it is a boarding school (est:BoardingSchool) or a school with some boarders (est:HasBoarders). Deleted outright: est:NoBoarders, est:HasNurseryClasses, est:NoNurseryClasses, est:HasSixthForm, est:NoSixthForm, est:HasSpecialClasses, est:NoSpecialClasses, and properties esto:classifiedByBoardingProvision, esto:classifiedByNurseryProvision, esto:classifiedBySixthFormProvision and esto:classifiedBySpecialClassProvision."@en ;
     rdfs:comment "v2.2: mapped to the W3C Organization Ontology (ORG, http://www.w3.org/ns/org#) with SKOS mapping annotations on the EPR terms themselves (skos:exactMatch, skos:closeMatch, skos:broadMatch, skos:relatedMatch). ORG is not imported and no OWL axioms are asserted against it, so the mappings add no inferences. Mapped: est:Organisation, est:LegalEntity, est:Establishment, est:EstablishmentGroup, est:GroupMembership, est:GroupMembershipRoleType, est:LeadCentreDesignation, est:Site, est:HeadteacherOrPrincipal, and properties for membership, membership role and dates, sites and site address, registered address, identifiers, legal form and the present-day responsibility links. Deliberately not mapped, because ORG has no equivalent: est:RecognisedRole, est:AcademyTrustClassification and est:EstablishmentResponsibility (ORG has no standing roles held in their own right, no dated classifications and no dated relationships between organisations)."@en ;
+    rdfs:comment "v2.3: local authorities, sole traders, partnerships and maintenance, following the review of the proposed legal-entity extensions (docs/transformation/data/modelling/legal-entity/proposed-legal-entity-extensions-review.md). (1) est:LocalAuthority is the council: the body with education functions under the Education Act 1996, s.579. It is now a subclass of est:LegalEntity, not directly of est:Organisation. New class est:LocalAuthorityArea (subclass of est:AdministrativeGeography) is the area DfE identifies by a three-digit LA number (new class est:LocalAuthorityNumber, via esto:hasLocalAuthorityNumber). New class est:LocalAuthorityAreaPeriod, via esto:hasLocalAuthorityAreaPeriod and esto:hasLocalAuthority, records which local authority was responsible for an area and when: Kent County Council covered area 922 and then area 886. esto:hasLocalAuthorityContext, which scopes an establishment number, now points at the area, because independent schools and academies have an LAESTAB in an area that does not maintain them. New esto:classifiedByLocalAuthorityArea gives an establishment's geographic area. (2) Maintenance is a responsibility: new named individual est:MaintenanceResponsibility, held by a local authority, and new shortcut esto:maintainedByLocalAuthority for the present-day maintaining local authority. (3) Every individual proprietor is a sole-trader legal entity: esto:hasProprietor narrowed to est:LegalEntity, and a person can now only sponsor an establishment. New esto:hasTrader links a sole-trader legal entity to its person. (4) New class est:PartnershipMembership, via esto:hasPartnershipMembership and esto:hasPartner, records a dated partner, person or legal entity, in a traditional partnership. (5) est:LegalForm given 12 named individual values. Deleted outright: est:EstablishmentAccountability, esto:hasAccountabilityRelationship and esto:accountableToLocalAuthority, replaced by the maintenance responsibility."@en ;
     est:status "Provisional"@en .
 
 
@@ -247,20 +248,31 @@ est:EducationPhase
 
 
 #################################################################
-# Classes - accountability
+# Classes - local authorities and their areas (v2.3)
 #################################################################
-
-est:EstablishmentAccountability
-    a owl:Class ;
-    esto:changesOverTime true ;
-    rdfs:label "Accountability relationship"@en ;
-    rdfs:comment "A relationship between an establishment and the local authority that maintains it. v2.0: the academy trust and proprietor links were removed. Who runs, supports, sponsors or is proprietor of an establishment is recorded as an est:EstablishmentResponsibility."@en .
 
 est:LocalAuthority
     a owl:Class ;
-    rdfs:subClassOf est:Organisation ;
+    rdfs:subClassOf est:LegalEntity ;
     rdfs:label "Local authority"@en ;
-    rdfs:comment "A local government body that serves two distinct roles for an establishment: (1) the geographic local authority in whose area the establishment is located — this scopes the establishment number within the DfE number and applies to all establishment types including academies and independent schools; (2) the body maintaining or otherwise accountable for LA-maintained schools. For academies and independent schools only the geographic reference role applies; they are not maintained by the local authority."@en .
+    rdfs:comment "A council with education functions: a county council, metropolitan district council, unitary council, London borough council, the Common Council of the City of London or the Council of the Isles of Scilly (Education Act 1996, s.579), or a Welsh county or county borough council. A local authority is the body, not its area: its area is an est:LocalAuthorityArea, and which local authority covered which area, and when, is an est:LocalAuthorityAreaPeriod. Its legal form is est:PublicBody. It maintains maintained schools through an est:EstablishmentResponsibility of type est:MaintenanceResponsibility. Academies and independent schools in its area are not maintained by it. v2.3: now a subclass of est:LegalEntity, and no longer also the area."@en .
+
+est:LocalAuthorityArea
+    a owl:Class ;
+    rdfs:subClassOf est:AdministrativeGeography ;
+    rdfs:label "Local authority area"@en ;
+    rdfs:comment "The area DfE identifies by a three-digit LA number, such as 886 for Kent. It says where an establishment is and scopes its establishment number (the 886 in DfE number 886/1234). It applies to every establishment in the area, including academies and independent schools, which the local authority does not maintain. The number follows the area, not the council: when Medway became a unitary in 1998, Kent's area shrank and its number changed from 922 to 886, while Kent County Council stayed the same body. When Buckinghamshire Council replaced the county council in 2020, the area and its number 825 stayed the same. Added v2.3."@en .
+
+est:LocalAuthorityNumber
+    a owl:Class ;
+    rdfs:label "Local authority number"@en ;
+    rdfs:comment "The three-digit number DfE gives a local authority area, such as 886. It forms the first part of an establishment's DfE number and LAESTAB. Instances carry the number as rdf:value with an xsd:string datatype, so that leading zeros are kept. Added v2.3."@en .
+
+est:LocalAuthorityAreaPeriod
+    a owl:Class ;
+    esto:changesOverTime true ;
+    rdfs:label "Local authority area period"@en ;
+    rdfs:comment "A period during which a local authority was the local authority for an area. Kent County Council covered area 922 until 1998 and then area 886. Buckinghamshire County Council and then Buckinghamshire Council covered area 825. One area can have different local authorities over time, and one local authority can cover several areas over time. A reorganisation ends one period and starts another on vesting day. Added v2.3."@en .
 
 #################################################################
 # Classes - education, admissions and provision
@@ -525,8 +537,8 @@ esto:hasLocalAuthorityContext
     a owl:ObjectProperty ;
     rdfs:label "has local authority context"@en ;
     rdfs:domain est:LocalAuthorityScopedEstablishmentNumber ;
-    rdfs:range est:LocalAuthority ;
-    rdfs:comment "Cardinality: exactly 1. Every scoped establishment number must carry exactly one local authority context."@en .
+    rdfs:range est:LocalAuthorityArea ;
+    rdfs:comment "Cardinality: exactly 1. Every scoped establishment number must carry exactly one local authority area, whose LA number forms the first part of the DfE number. v2.3: range changed from est:LocalAuthority to est:LocalAuthorityArea, because the number belongs to the area, not to the council, and academies and independent schools have one in an area that does not maintain them."@en .
 
 esto:hasEstablishmentNumberValue
     a owl:ObjectProperty ;
@@ -631,27 +643,21 @@ esto:hasEducationPhase
     rdfs:range est:EducationPhase ;
     rdfs:comment "Cardinality: 0..1. Not all establishment types have an education phase."@en .
 
-esto:hasAccountabilityRelationship
+esto:maintainedByLocalAuthority
     a owl:ObjectProperty ;
-    rdfs:label "has accountability relationship"@en ;
+    skos:broadMatch org:linkedTo ;
+    rdfs:label "maintained by local authority"@en ;
     rdfs:domain est:Establishment ;
-    rdfs:range est:EstablishmentAccountability ;
-    rdfs:comment "Cardinality: 0..*. An establishment may have zero or more accountability relationships depending on its type."@en .
-
-esto:accountableToLocalAuthority
-    a owl:ObjectProperty ;
-    rdfs:label "accountable to local authority"@en ;
-    rdfs:domain est:EstablishmentAccountability ;
     rdfs:range est:LocalAuthority ;
-    rdfs:comment "Cardinality: 0..1. Present for LA-maintained schools."@en .
+    rdfs:comment "The local authority that maintains this school now. Where responsibilities are recorded, it matches the present-day est:MaintenanceResponsibility. Only LA-maintained schools have one; academies and independent schools do not, even though they are in a local authority area. Cardinality: 0..1, because a maintained school is maintained by one local authority. Replaces esto:hasAccountabilityRelationship and esto:accountableToLocalAuthority. Added v2.3."@en .
 
 esto:hasProprietor
     a owl:ObjectProperty ;
     skos:broadMatch org:linkedTo ;
     rdfs:label "has proprietor"@en ;
     rdfs:domain est:Establishment ;
-    rdfs:range [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
-    rdfs:comment "A person or legal entity that is proprietor of this school now: responsible for running it, as for an independent school, a non-maintained special school or a city technology college. Being proprietor does not mean owning the school's business or premises. Where responsibilities are recorded, each proprietor matches a present-day est:ProprietorResponsibility. Cardinality: 0..*, because a school can have more than one proprietor (widened from 0..1 in v2.0)."@en .
+    rdfs:range est:LegalEntity ;
+    rdfs:comment "A legal entity that is proprietor of this school now: responsible for running it, as for an independent school, a non-maintained special school or a city technology college. Being proprietor does not mean owning the school's business or premises. An individual proprietor is a sole-trader legal entity, linked to the person by esto:hasTrader. Where responsibilities are recorded, each proprietor matches a present-day est:ProprietorResponsibility. Cardinality: 0..*, because a school can have more than one proprietor (widened from 0..1 in v2.0). v2.3: range narrowed from est:LegalEntity or est:Person to est:LegalEntity."@en .
 
 esto:sponsoredBy
     a owl:ObjectProperty ;
@@ -1043,7 +1049,7 @@ est:AdministrativeGeography
     a owl:Class ;
     esto:changesOverTime true ;
     rdfs:label "Administrative geography"@en ;
-    rdfs:comment "The administrative and statistical area classifications assigned to an establishment based on its postcode location. These are derived from the postcode via the GeoData lookup table or an equivalent postcode-to-area service. Covers ONS government office region, urban/rural classification, administrative ward, parliamentary constituency, lower-layer super output area and middle-layer super output area."@en .
+    rdfs:comment "The administrative and statistical area classifications assigned to an establishment based on its postcode location. These are derived from the postcode via the GeoData lookup table or an equivalent postcode-to-area service. Covers ONS government office region, urban/rural classification, administrative ward, parliamentary constituency, lower-layer super output area and middle-layer super output area, and the DfE local authority area (est:LocalAuthorityArea, added v2.3)."@en .
 
 est:GovernmentOfficeRegion
     a owl:Class ;
@@ -1799,7 +1805,7 @@ esto:hasResponsibleParty
     rdfs:label "has responsible party"@en ;
     rdfs:domain est:EstablishmentResponsibility ;
     rdfs:range [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
-    rdfs:comment "Cardinality: exactly 1. The legal entity or person holding this responsibility. A person can only sponsor an establishment or be its proprietor (enforced in establishment-shacl.ttl). Added v2.0."@en .
+    rdfs:comment "Cardinality: exactly 1. The legal entity or person holding this responsibility. A person can only sponsor an establishment; an individual proprietor is a sole-trader legal entity. A maintenance responsibility is held by an est:LocalAuthority. Both rules are enforced in establishment-shacl.ttl. Added v2.0; v2.3: a person can no longer be a proprietor directly."@en .
 
 esto:hasResponsibilityType
     a owl:ObjectProperty ;
@@ -1811,16 +1817,16 @@ esto:hasResponsibilityType
 esto:hasStartDate
     a owl:ObjectProperty ;
     rdfs:label "has start date"@en ;
-    rdfs:domain [ a owl:Class ; owl:unionOf ( est:RecognisedRole est:AcademyTrustClassification est:EstablishmentResponsibility est:LeadCentreDesignation ) ] ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:RecognisedRole est:AcademyTrustClassification est:EstablishmentResponsibility est:LeadCentreDesignation est:LocalAuthorityAreaPeriod est:PartnershipMembership ) ] ;
     rdfs:range est:PeriodStartDate ;
-    rdfs:comment "Cardinality: 0..1. When a role, classification, responsibility or lead centre designation began. Added v2.0."@en .
+    rdfs:comment "Cardinality: 0..1. When a role, classification, responsibility, lead centre designation, local authority area period or partnership membership began. Absent where it is not known. Added v2.0; v2.3: domain widened to local authority area periods and partnership memberships."@en .
 
 esto:hasEndDate
     a owl:ObjectProperty ;
     rdfs:label "has end date"@en ;
-    rdfs:domain [ a owl:Class ; owl:unionOf ( est:RecognisedRole est:AcademyTrustClassification est:EstablishmentResponsibility est:LeadCentreDesignation ) ] ;
+    rdfs:domain [ a owl:Class ; owl:unionOf ( est:RecognisedRole est:AcademyTrustClassification est:EstablishmentResponsibility est:LeadCentreDesignation est:LocalAuthorityAreaPeriod est:PartnershipMembership ) ] ;
     rdfs:range est:PeriodEndDate ;
-    rdfs:comment "Cardinality: 0..1. When a role, classification, responsibility or lead centre designation ended. Absent while it continues. Added v2.0."@en .
+    rdfs:comment "Cardinality: 0..1. When a role, classification, responsibility, lead centre designation, local authority area period or partnership membership ended. Absent while it continues. Added v2.0; v2.3: domain widened to local authority area periods and partnership memberships."@en .
 
 esto:runByAcademyTrust
     a owl:ObjectProperty ;
@@ -1829,6 +1835,60 @@ esto:runByAcademyTrust
     rdfs:domain est:Establishment ;
     rdfs:range est:LegalEntity ;
     rdfs:comment "The academy trust that runs this academy or free school now. Where responsibilities are recorded, it matches the present-day est:AcademyTrustResponsibility. Cardinality: 0..1. Replaces esto:accountableToAcademyTrust. Added v2.0."@en .
+
+esto:hasTrader
+    a owl:ObjectProperty ;
+    rdfs:label "has trader"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:Person ;
+    rdfs:comment "The individual who trades as this sole-trader legal entity. A sole trader is not a legal person separate from the individual: the legal entity represents the individual's business, with its trading name, address and contact details, and holds the individual's proprietor responsibilities. One sole-trader legal entity per individual, even where the individual trades under more than one name. Only for legal entities with legal form est:SoleTrader (enforced in establishment-shacl.ttl). Cardinality: 0..1. Absent where the person is not yet known. Added v2.3."@en .
+
+esto:hasPartnershipMembership
+    a owl:ObjectProperty ;
+    rdfs:label "has partnership membership"@en ;
+    rdfs:domain est:LegalEntity ;
+    rdfs:range est:PartnershipMembership ;
+    rdfs:comment "Cardinality: 0..*. A period during which a person or legal entity was a partner in this traditional partnership. Only for legal entities with legal form est:TraditionalPartnership (enforced in establishment-shacl.ttl). Partners are often not known, so a partnership with fewer than two is reported as a data-quality warning, not rejected. Added v2.3."@en .
+
+esto:hasPartner
+    a owl:ObjectProperty ;
+    rdfs:label "has partner"@en ;
+    rdfs:domain est:PartnershipMembership ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( est:LegalEntity est:Person ) ] ;
+    rdfs:comment "Cardinality: exactly 1. The person or legal entity who is the partner. A company can be a partner. A partnership cannot be its own partner. Added v2.3."@en .
+
+
+#################################################################
+# Object properties - local authorities and their areas (v2.3)
+#################################################################
+
+esto:classifiedByLocalAuthorityArea
+    a owl:ObjectProperty ;
+    rdfs:label "classified by local authority area"@en ;
+    rdfs:domain est:AdministrativeGeography ;
+    rdfs:range est:LocalAuthorityArea ;
+    rdfs:comment "Cardinality: 0..1. The local authority area the establishment is in now. Every establishment type has one, including academies and independent schools, which the local authority does not maintain. Added v2.3."@en .
+
+esto:hasLocalAuthorityNumber
+    a owl:ObjectProperty ;
+    rdfs:label "has local authority number"@en ;
+    rdfs:domain est:LocalAuthorityArea ;
+    rdfs:range est:LocalAuthorityNumber ;
+    rdfs:comment "Cardinality: exactly 1. The three-digit DfE number of the area. Added v2.3."@en .
+
+esto:hasLocalAuthorityAreaPeriod
+    a owl:ObjectProperty ;
+    rdfs:label "has local authority area period"@en ;
+    rdfs:domain est:LocalAuthorityArea ;
+    rdfs:range est:LocalAuthorityAreaPeriod ;
+    rdfs:comment "Cardinality: 1..*. A period during which a local authority was the local authority for this area. Every area has at least one. Periods for one area do not overlap. Added v2.3."@en .
+
+esto:hasLocalAuthority
+    a owl:ObjectProperty ;
+    rdfs:label "has local authority"@en ;
+    rdfs:domain est:LocalAuthorityAreaPeriod ;
+    rdfs:range est:LocalAuthority ;
+    rdfs:comment "Cardinality: exactly 1. The local authority responsible for the area during this period. Added v2.3."@en .
 
 esto:hasLeadCentreDesignation
     a owl:ObjectProperty ;
@@ -2235,12 +2295,19 @@ est:LegalEntity
     rdfs:subClassOf est:Organisation ;
     esto:changesOverTime true ;
     rdfs:label "Legal entity"@en ;
-    rdfs:comment "A body that can hold recognised roles and be responsible for establishments, whether or not it is incorporated: for example a charitable company, a company, a charitable incorporated organisation, a partnership, a sole trader, an unincorporated trust or a public body. One legal entity can hold several roles and responsibilities at once: the same charitable company can be an academy trust, an academy sponsor and the proprietor of an independent school. A legal entity's identifiers, such as its UKPRN, are separate from those of the establishments it is responsible for. Added v2.0."@en .
+    rdfs:comment "A body that can hold recognised roles and be responsible for establishments, whether or not it is incorporated: for example a charitable company, a company, a charitable incorporated organisation, a partnership, a sole trader, an unincorporated trust or a public body. One legal entity can hold several roles and responsibilities at once: the same charitable company can be an academy trust, an academy sponsor and the proprietor of an independent school. A legal entity's identifiers, such as its UKPRN, are separate from those of the establishments it is responsible for. Not every legal entity is a legal person. A sole trader is the business of one individual, linked to that person by esto:hasTrader. A traditional partnership and an unincorporated trust are bodies of persons; a partnership's partners are recorded as est:PartnershipMembership. A local authority is a legal entity (est:LocalAuthority). Added v2.0; v2.3: sole traders, partners and local authorities."@en .
 
 est:LegalForm
     a owl:Class ;
     rdfs:label "Legal form"@en ;
-    rdfs:comment "The legal form of a legal entity, such as a charitable company limited by guarantee, a company limited by guarantee, a charitable incorporated organisation, a traditional partnership or a public body. Added v2.0."@en .
+    rdfs:comment "The legal form of a legal entity, such as a charitable company limited by guarantee, a company limited by guarantee, a charitable incorporated organisation, a traditional partnership or a public body. Added v2.0; v2.3: given 12 named individual values."@en .
+
+est:PartnershipMembership
+    a owl:Class ;
+    skos:closeMatch org:Membership ;
+    esto:changesOverTime true ;
+    rdfs:label "Partnership membership"@en ;
+    rdfs:comment "A period during which a person or legal entity was a partner in a traditional partnership. A traditional partnership in England and Wales is not a legal person: its partners hold its rights and duties together. A change of partners is a new membership. Whether it also means a new partnership follows the regulator: if DfE records it as a change of proprietor, the old partnership's proprietor responsibility ends and a new partnership's starts. Added v2.3."@en .
 
 est:CharityStatus
     a owl:Class ;
@@ -2283,22 +2350,22 @@ est:EstablishmentResponsibility
     a owl:Class ;
     esto:changesOverTime true ;
     rdfs:label "Establishment responsibility"@en ;
-    rdfs:comment "A period during which a legal entity or person was responsible for an establishment in a particular way: running it as its academy trust, supporting it as its foundation trust, sponsoring it, or acting as its proprietor. When an establishment changes operator it keeps its identity: the change is a new responsibility, held by a different legal entity. Replaces est:Sponsorship, and the academy trust and proprietor links of est:EstablishmentAccountability. Added v2.0."@en .
+    rdfs:comment "A period during which a legal entity or person was responsible for an establishment in a particular way: running it as its academy trust, supporting it as its foundation trust, sponsoring it, acting as its proprietor, or maintaining it as its local authority. When an establishment changes operator it keeps its identity: the change is a new responsibility, held by a different legal entity. An academy conversion creates a new establishment, so the maintained school's maintenance responsibility ends when it closes. Replaces est:Sponsorship. Added v2.0; v2.3: maintenance by a local authority, replacing est:EstablishmentAccountability, which was deleted."@en .
 
 est:ResponsibilityType
     a owl:Class ;
     rdfs:label "Responsibility type"@en ;
-    rdfs:comment "The kind of establishment responsibility: run by academy trust, supported by foundation trust, sponsored by, or proprietor. Added v2.0."@en .
+    rdfs:comment "The kind of establishment responsibility: run by academy trust, supported by foundation trust, sponsored by, proprietor, or maintained by local authority. Added v2.0; v2.3: maintained by local authority."@en .
 
 est:PeriodStartDate
     a owl:Class ;
     rdfs:label "Period start date"@en ;
-    rdfs:comment "The date on which a role, classification, responsibility or lead centre designation began. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
+    rdfs:comment "The date on which a role, classification, responsibility, lead centre designation, local authority area period or partnership membership began. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
 
 est:PeriodEndDate
     a owl:Class ;
     rdfs:label "Period end date"@en ;
-    rdfs:comment "The date on which a role, classification, responsibility or lead centre designation ended. Absent while it continues. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
+    rdfs:comment "The date on which a role, classification, responsibility, lead centre designation, local authority area period or partnership membership ended. Absent while it continues. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.0."@en .
 
 est:LeadCentreDesignation
     a owl:Class ;
@@ -2812,7 +2879,7 @@ est:SecureSingleAcademyTrust
     rdfs:label "Secure single-academy trust"@en ;
     rdfs:comment "A single-academy trust that runs a secure 16 to 19 academy, providing education in secure accommodation for young people aged 16 to 19 serving a custodial sentence or subject to a secure order. v2.0: changed from a class to an academy trust type value."@en .
 
-# Responsibility type (4 values, v2.0)
+# Responsibility type (5 values, v2.0; v2.3 added maintenance)
 est:AcademyTrustResponsibility
     a owl:NamedIndividual, est:ResponsibilityType ;
     rdfs:label "Run by academy trust"@en ;
@@ -2831,7 +2898,73 @@ est:SponsorResponsibility
 est:ProprietorResponsibility
     a owl:NamedIndividual, est:ResponsibilityType ;
     rdfs:label "Proprietor"@en ;
-    rdfs:comment "The legal entity or person is a proprietor of the establishment: responsible for running it, as for an independent school, a non-maintained special school or a city technology college. Being proprietor does not mean owning the school's business or premises. A school can have more than one proprietor. Added v2.0."@en .
+    rdfs:comment "The legal entity is a proprietor of the establishment: responsible for running it, as for an independent school, a non-maintained special school or a city technology college. Being proprietor does not mean owning the school's business or premises. A school can have more than one proprietor. An individual proprietor is a sole-trader legal entity linked to the person, and a partnership is a traditional-partnership legal entity. Added v2.0; v2.3: held by a legal entity only."@en .
+
+est:MaintenanceResponsibility
+    a owl:NamedIndividual, est:ResponsibilityType ;
+    rdfs:label "Maintained by local authority"@en ;
+    rdfs:comment "The establishment, an LA-maintained school, is maintained by the local authority: the local authority funds it and is responsible for it under the School Standards and Framework Act 1998, s.22. Held only by an est:LocalAuthority. Only the types under est:LaMaintainedSchool can have one: community, voluntary aided, voluntary controlled, foundation, community special and foundation special schools, pupil referral units and LA nursery schools. A maintained school has one maintaining local authority at a time. Academies and independent schools have none, even though they are in a local authority area. A reorganisation ends the responsibility with the old local authority and starts one with the new local authority on vesting day. Replaces est:EstablishmentAccountability. Added v2.3."@en .
+
+# Legal form (12 values, v2.3)
+est:CharitableCompanyLimitedByGuarantee
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Charitable company limited by guarantee"@en ;
+    rdfs:comment "A company limited by guarantee whose purposes are exclusively charitable. It is registered at Companies House and, unless it is an exempt or excepted charity, with the Charity Commission. Academy trusts are charitable companies limited by guarantee. Added v2.3."@en .
+
+est:CompanyLimitedByGuarantee
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Company limited by guarantee"@en ;
+    rdfs:comment "A company without share capital whose members guarantee to contribute a fixed amount if it is wound up (Companies Act 2006, s.3), and which is not a charity. Added v2.3."@en .
+
+est:PrivateLimitedCompany
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Private limited company"@en ;
+    rdfs:comment "A company limited by shares that is not a public company (Companies Act 2006, s.4). Added v2.3."@en .
+
+est:PublicLimitedCompany
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Public limited company"@en ;
+    rdfs:comment "A company limited by shares registered as a public company, which can offer its shares to the public (Companies Act 2006, s.4). Added v2.3."@en .
+
+est:LimitedLiabilityPartnership
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Limited liability partnership"@en ;
+    rdfs:comment "A body corporate formed under the Limited Liability Partnerships Act 2000 and registered at Companies House, with a number starting OC. Unlike a traditional partnership it is a legal person: it holds its own rights and responsibilities, including any proprietor responsibility. Its members are not recorded as partners. Added v2.3."@en .
+
+est:CharitableIncorporatedOrganisation
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Charitable incorporated organisation"@en ;
+    rdfs:comment "An incorporated form of charity created under Part 11 of the Charities Act 2011. It is registered with the Charity Commission and not at Companies House, and exists only once registered. Added v2.3."@en .
+
+est:BodyIncorporatedByRoyalCharter
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Body incorporated by Royal Charter"@en ;
+    rdfs:comment "A body given legal personality by Royal Charter, such as some older school foundations. The foundation regulations allow a foundation to be one. Added v2.3."@en .
+
+est:UnincorporatedCharitableTrust
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Unincorporated charitable trust"@en ;
+    rdfs:comment "A charity set up by a trust deed or will, with no legal personality of its own. Its trustees hold its property and act for it. The trust is recorded as one legal entity holding its responsibilities; its trustees are not yet recorded. Added v2.3."@en .
+
+est:PublicBody
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Public body"@en ;
+    rdfs:comment "A body set up by or under an Act to carry out public functions, such as a local authority. Every est:LocalAuthority has this legal form. Added v2.3."@en .
+
+est:OverseasEntity
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Overseas entity"@en ;
+    rdfs:comment "A body formed under the law of a country outside the United Kingdom. Added v2.3."@en .
+
+est:SoleTrader
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Sole trader"@en ;
+    rdfs:comment "The business of one individual who trades on their own account. A sole trader is not a legal person separate from the individual. Every individual proprietor of a school is recorded as a sole-trader legal entity, linked to the person by esto:hasTrader, so that its trading name, address and contact details have a home. Added v2.3."@en .
+
+est:TraditionalPartnership
+    a owl:NamedIndividual, est:LegalForm ;
+    rdfs:label "Traditional partnership"@en ;
+    rdfs:comment "Two or more persons carrying on a business in common with a view of profit (Partnership Act 1890, s.1). In England and Wales it is not a legal person: its partners hold its rights and duties together. Its partners are recorded as est:PartnershipMembership. Added v2.3."@en .
 
 # Charity status (3 values, v2.0)
 est:RegisteredCharity

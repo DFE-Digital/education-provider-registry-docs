@@ -39,10 +39,11 @@
     dcterms:title "Education Provider Registry Data Quality SHACL Shapes"@en ;
     dcterms:description "Value-level SHACL constraints for EPR establishment records: datatypes, numeric ranges and cardinality rules for identity, lifecycle and measure fields."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-06-19"^^xsd:date ;
+    dcterms:modified "2026-11-02"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.1" ;
+    owl:versionInfo "0.2" ;
+    rdfs:comment "v0.2: aligned with establishment-ontology.ttl v2.3. Two warnings added: a traditional partnership with fewer than two recorded partners, and a maintaining local authority that is not the current local authority for the establishment's area. The second is a SHACL-SPARQL constraint, because SHACL Core cannot compare two paths."@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
     est:status "Provisional"@en .
@@ -348,3 +349,44 @@ est:StatutoryAgeRangeShape
 #################################################################
 
 
+
+
+#################################################################
+# Legal entities and local authorities (v0.2)
+#################################################################
+
+est:PartnerCountShape
+    a sh:NodeShape ;
+    rdfs:label "Partner count shape"@en ;
+    rdfs:comment "Warning, not violation: a traditional partnership has at least two partners, but GIAS records only a name such as 'Mr & Mrs Readhead (Partnership)', so partners are usually not known. We do not create person records to fill the gap. Added v0.2."@en ;
+    sh:targetClass est:LegalEntity ;
+    sh:severity sh:Warning ;
+    sh:or (
+        [ sh:not [ sh:path esto:hasLegalForm ; sh:hasValue est:TraditionalPartnership ] ]
+        [ sh:path esto:hasPartnershipMembership ;
+          sh:qualifiedValueShape [ sh:not [ sh:path esto:hasEndDate ; sh:minCount 1 ] ] ;
+          sh:qualifiedMinCount 2 ]
+    ) ;
+    sh:message "A traditional partnership should record at least two current partners."@en .
+
+est:MaintainingAuthorityMatchesAreaShape
+    a sh:NodeShape ;
+    rdfs:label "Maintaining authority matches area shape"@en ;
+    rdfs:comment "Warning, not violation: a maintained school's maintaining local authority should be the current local authority for the area the school is in. Migration derives one from the other, so a mismatch can only come from a later edit. Added v0.2."@en ;
+    sh:targetSubjectsOf esto:maintainedByLocalAuthority ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "The maintaining local authority {?la} is not the current local authority for the establishment's area {?area}."@en ;
+        sh:select """
+            SELECT $this ?la ?area WHERE {
+                $this <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/maintainedByLocalAuthority> ?la .
+                $this <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/hasAdministrativeGeography>/<https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/classifiedByLocalAuthorityArea> ?area .
+                FILTER NOT EXISTS {
+                    ?area <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/hasLocalAuthorityAreaPeriod> ?period .
+                    ?period <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/hasLocalAuthority> ?la .
+                    FILTER NOT EXISTS { ?period <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/hasEndDate> ?end }
+                }
+            }
+        """ ;
+    ] .
