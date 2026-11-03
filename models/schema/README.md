@@ -44,6 +44,36 @@ is inferred. Both default rebuilds include this slice.
 
 ## What is here
 
+The DfE LA-code reference is now `establishment.local_authority_area`, with
+`local_authority_area_id` on geography and organisation-group associations.
+It represents the area used in LAESTAB, separately from the council legal entity
+and maintenance responsibilities. Council contacts temporarily remain on
+`local_authority_area_contact`. Existing public query aliases such as
+`local_authority_code` and `dfe_number` are preserved.
+
+Run [the Stage 1 LA-area validation SQL](migration/validate-scripts/validate-local-authority-area-stage-1.sql)
+against the migrated target to check the renamed structure, foreign keys,
+42-establishment fixture and 206 LA areas, and inspect the actual relationships.
+It is read-only and runs in psql or a PostgreSQL SQL editor. Counts are declared
+at the top for a different target selection. The full-catalogue test runner also
+runs this check after all cases have loaded.
+
+Stage 2a adds `local_authority_area_council_period` and council `legal_entity` records of type Public body. The [evidence-checked mapping](seed/local-authority-area-councils.json) contains 188 councils and 207 periods for all 206 areas, including 175 current area periods. Null effective and formation dates are not invented. The mapping is loaded after BAU geography or checked-in fixture replay, and reimport checks identities and periods before doing nothing for existing matches.
+
+The executable [council seed](seed/seed-local-authority-area-councils.sql) is generated from that JSON and the [loader template](establishment/load/load-local-authority-area-councils.sql). After reviewing a mapping change, run `automation/update-local-authority-council-seed.ps1`. Build preflight checks that the generated SQL exactly matches both sources before resetting the target. Fixture exports include the new relationship table; replay verifies the mapping after loading the ordinary seed.
+
+Run [the read-only Stage 2 validation](migration/validate-scripts/validate-local-authority-councils-stage-2.sql) to see council periods, school geography and the outstanding review list. Its full-population gate is enabled and requires all 206 areas to have council mappings. Unknown historical boundaries remain null. The [rollback-only guard checks](migration/validate-scripts/validate-local-authority-council-constraints.sql) exercise the structural rules. Both are included in the full-catalogue runner.
+
+Stage 3 adds responsibility type 5, `Maintained by local authority`, with `end_date_basis` and `first_observed_date`. [Maintenance derivation](migration/maintenance-derivation.sql) uses the eight eligible maintained-school types, English jurisdiction, observed LA code, school operating dates and effective council periods. Closed-school history is retained; Welsh maintenance is not automatically derived. Unknown dates remain null. The source observation date is captured by the SQL Server read and identifies observation of the local BAU copy, not the publication date of its restored contents. It is not assigned by the target load.
+
+The BAU rebuild imports maintenance after all catalogue cases. Checked-in replay uses the captured [source observations](seed/fixtures/maintenance-source-observations.csv). Migration-only observations and derivation identities preserve source records, inputs, stable responsibility IDs and earliest observations. Changes to an accepted boundary are staged for a reviewed correction. Stage 5 supplies the reviewed reorganisation operations and source precedence described below.
+
+Run [the read-only maintenance validation](migration/validate-scripts/validate-maintenance-responsibilities.sql) in your target. It reports current and historical periods and staged warnings, and fails unresolved eligible populations. The [rollback-only regressions](migration/validate-scripts/validate-maintenance-derivation-regressions.sql) cover effective dates, history, observations, repeat imports, Welsh exclusions and invalid holders and periods. Both run in the complete catalogue suite. Group validators distinguish maintenance from trust responsibilities; approval snapshots remain unchanged.
+
+Stage 4 adds optional `legal_entity_sole_trader` and dated `legal_entity_partner` links, with legal-form guards and endpoint uniqueness. The [reviewed proprietor contract](migration/reviewed-proprietor-contract.md) supports sole-trader identity, selected names, responsibilities, reviewed address purposes and verified identifiers through both proprietor loaders. Missing registration evidence, unknown address purposes and deferred contacts remain visible in migration review/evidence tables. Trader and partner people are not automatically populated. Run [Stage 4 target validation](migration/validate-scripts/validate-proprietor-extensions-stage-4.sql).
+
+Stage 5 adds the [reviewed council-event operation](migration/reviewed-council-events.md), including its payload contract and PowerShell entry point. Retained-code succession and reviewed splits preserve historical periods and transfer eligible maintenance atomically. The ledger prevents duplicate transitions, stages chronology conflicts and protects event-governed geography and maintenance during ordinary source replay. A nonempty ledger prevents destructive rebuild. Run [Stage 5 target validation](migration/validate-scripts/validate-council-reorganisations-stage-5.sql). Both stages' rollback regressions run in the full catalogue suite. The current fixture contains no live council event; source gaps are retained explicitly for review.
+
 T10 additionally loads a Companies House registered-office observation for
 Outwood, company 06995649. Run `automation/migrate-t10-registered-office.ps1`
 after the existing T10 parties and administrative addresses are loaded. The
@@ -125,11 +155,13 @@ The single [Establishment creation file](establishment/establishment-schema.sql)
 
 Regression checks in [validate-group-member-lead-periods.sql](migration/validate-scripts/validate-group-member-lead-periods.sql) cover handovers, return as lead, independent membership dates, unknown boundaries and rejection of conflicts. Synthetic histories are rolled back.
 
-The Establishment schema retains two consistency triggers. These reject invalid
+The lead-period slice retains two consistency triggers. These reject invalid
 writes; none maintains a duplicate lead summary:
 
 - `check_group_member_lead_period`: Restricts lead periods to children's-centre groups and checks known membership boundaries and current eligibility.
 - `check_membership_lead_boundaries`: Rejects membership date changes that invalidate lead periods or end membership while a current lead assertion remains.
+
+The council slice additionally has three guards: `check_local_authority_council_holder` restricts area holders to public bodies and locks their identity rows; `check_council_legal_form` prevents invalidating a referenced council's legal form; and deferred `check_council_retains_area_link` protects the last council-area link when maintenance exists, while permitting atomic replacement.
 
 Identifier rewrite/delete policy, parent group-type changes and permissions are
 deferred. No additional trigger or permission role is introduced to enforce them

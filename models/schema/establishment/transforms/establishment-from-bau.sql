@@ -332,7 +332,8 @@ SELECT
     CONCAT('https://reports.ofsted.gov.uk/search?q=', CONVERT(varchar(6), s.URN)) AS ofsted_link,
     s.specialClasses_code AS source_special_classes_code,
     CASE s.specialClasses_code WHEN '1' THEN 'true' WHEN '2' THEN 'false'
-         ELSE NULL END AS has_special_classes
+         ELSE NULL END AS has_special_classes,
+    CAST(SYSUTCDATETIME() AS date) AS source_observed_date
 FROM source_establishment AS s;
 
 /*

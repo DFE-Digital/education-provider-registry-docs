@@ -47,7 +47,7 @@ The two Sutton schools joined when the federation formed. Regina Coeli's later j
 | Target table | Expected representation |
 | --- | --- |
 | `establishment`, lifecycle and geography | Three separate schools with their own UKPRNs, unknown opening/closure dates, and authorities 306, 319 and 319. |
-| `organisation_group` | One Federation, formed 2006-01-01, closure unknown and `local_authority_id` null. |
+| `organisation_group` | One Federation, formed 2006-01-01, closure unknown and `local_authority_area_id` null. |
 | `organisation_group_member` | Three members with their respective link effective dates as `joined_date`; `left_date` null and no lead periods. |
 | `group_identifier` | One current GIAS Group UID 1761 attached to the organisation group. No Group ID is invented. |
 | Migration evidence | Separate accepted source-link evidence for 2517, 1811 and 1812, retaining active flags, HARD link type, joining-date basis and complete imported scope. |
@@ -69,7 +69,7 @@ flowchart LR
 ```sql
 SELECT e.urn, e.name, la.code AS school_authority_code,
        la.name AS school_authority, g.name AS federation,
-       g.local_authority_id AS federation_authority,
+       g.local_authority_area_id AS federation_authority,
        m.joined_date, m.left_date
 FROM establishment.organisation_group g
 JOIN establishment.group_identifier i USING (organisation_group_id)
@@ -78,7 +78,7 @@ JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer
 JOIN establishment.organisation_group_member m USING (organisation_group_id)
 JOIN establishment.establishment e USING (establishment_id)
 JOIN establishment.establishment_geography geo USING (establishment_id)
-JOIN establishment.local_authority la ON la.local_authority_id=geo.local_authority_id
+JOIN establishment.local_authority_area la ON la.local_authority_area_id=geo.local_authority_area_id
 WHERE t.name='Group UID' AND issuer.name='GIAS' AND i.value='1761'
 ORDER BY e.urn;
 ```

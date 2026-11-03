@@ -12,7 +12,7 @@ BEGIN
     JOIN establishment.establishment_type t USING (establishment_type_id)
     JOIN establishment.establishment_lifecycle l USING (establishment_id)
     JOIN establishment.establishment_geography geo USING (establishment_id)
-    JOIN establishment.local_authority la USING (local_authority_id)
+    JOIN establishment.local_authority_area la USING (local_authority_area_id)
     WHERE e.urn=135905 AND e.name='Manchester Creative and Media Academy' AND e.ukprn IS NULL
       AND e.establishment_number=6910 AND t.name='Mainstream academy'
       AND l.open_date=DATE '2009-09-01' AND l.close_date=DATE '2016-02-29' AND la.code=352;

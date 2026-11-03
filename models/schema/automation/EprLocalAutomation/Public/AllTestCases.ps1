@@ -54,6 +54,19 @@ function Test-AllEstablishmentCases {
     $cases = @(Get-AllTestCases)
     $urns = @($cases | ForEach-Object { $_.urns } | Sort-Object -Unique)
     Invoke-EstablishmentTests -Target $Target -Selection (Get-FixtureSelection) -ExpectedUrn $urns
+    Write-Step 'Test: stage 3 maintenance responsibilities and derivation'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-maintenance-responsibilities.sql') -FailureMessage 'Stage 3 maintenance validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-maintenance-derivation-regressions.sql') -FailureMessage 'Stage 3 maintenance regression failed'
+    Write-Step 'Test: stage 4 sole-trader and partnership legal-entity extensions'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-proprietor-extensions-stage-4.sql') -FailureMessage 'Stage 4 target validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-legal-entity-extensions-stage-4.sql') -FailureMessage 'Stage 4 legal-entity validation failed'
+    Write-Step 'Test: stage 5 reviewed council events and source replay'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-council-reorganisations-stage-5.sql') -FailureMessage 'Stage 5 target validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-council-reorganisation-regressions.sql') -FailureMessage 'Stage 5 event regression failed'
+    Write-Step 'Test: stage 1 local-authority-area target shape'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-local-authority-area-stage-1.sql') -FailureMessage 'Local-authority-area stage 1 validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-local-authority-councils-stage-2.sql') -FailureMessage 'Stage 2 council mapping validation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-local-authority-council-constraints.sql') -FailureMessage 'Council integrity guard validation failed'
     foreach ($case in $cases) {
         if ($case.validator) {
             Write-Step "Validating full catalogue case $($case.case)"

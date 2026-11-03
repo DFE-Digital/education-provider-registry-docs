@@ -41,7 +41,7 @@ BEGIN
 
     IF (SELECT count(*) FROM establishment.establishment_responsibility WHERE legal_entity_id=entity_id)<>1
        OR (SELECT count(*) FROM establishment.establishment_responsibility r
-           JOIN establishment.establishment e USING (establishment_id) WHERE e.urn=132141)<>1
+           JOIN establishment.establishment e USING (establishment_id) WHERE e.urn=132141 AND r.responsibility_type_id<>5)<>1
        OR EXISTS (SELECT 1 FROM establishment.organisation_group_member m
                   JOIN establishment.establishment e USING (establishment_id) WHERE e.urn=132141)
        OR EXISTS (SELECT 1 FROM establishment.group_identifier i

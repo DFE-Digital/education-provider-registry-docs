@@ -48,6 +48,10 @@ Export-ModuleMember -Function @(
 
     # Loading from the local BAU copy
     'Import-GeographicReferenceData'
+    'Import-LocalAuthorityCouncilFixture'
+    'Import-MaintenanceFromBau'
+    'Import-MaintenanceObservationFixture'
+    'Import-ProprietorReviewQueue'
     'Import-EstablishmentFromBau'
     'Import-ControlledProprietorFromBau'
     'Import-EstablishmentPartyRoleFromBau'

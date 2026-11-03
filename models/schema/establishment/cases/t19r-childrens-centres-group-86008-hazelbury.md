@@ -73,7 +73,7 @@ FROM establishment.organisation_group g
 JOIN establishment.group_identifier i USING (organisation_group_id)
 JOIN establishment.group_identifier_type t USING (group_identifier_type_id)
 JOIN establishment.group_identifier_issuer issuer USING (group_identifier_issuer_id)
-JOIN establishment.local_authority la ON la.local_authority_id=g.local_authority_id
+JOIN establishment.local_authority_area la ON la.local_authority_area_id=g.local_authority_area_id
 JOIN establishment.organisation_group_member m USING (organisation_group_id)
 JOIN establishment.establishment e USING (establishment_id)
 JOIN establishment.establishment_lifecycle life USING (establishment_id)

@@ -41,7 +41,7 @@ BEGIN
     WHERE r.establishment_id=school AND r.legal_entity_id=party
       AND t.name='Supported by foundation trust' AND r.start_date=DATE '2010-09-01'
       AND r.end_date IS NULL AND r.is_current AND r.person_id IS NULL AND r.academy_trust_type_id IS NULL;
-    IF (SELECT count(*) FROM establishment.establishment_responsibility WHERE establishment_id=school)<>1
+    IF (SELECT count(*) FROM establishment.establishment_responsibility WHERE establishment_id=school AND responsibility_type_id<>5)<>1
        OR (SELECT count(*) FROM establishment.establishment_responsibility WHERE legal_entity_id=party)<>1
        OR EXISTS (SELECT 1 FROM establishment.organisation_group_member WHERE establishment_id=school)
        OR EXISTS (
