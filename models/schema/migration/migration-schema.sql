@@ -61,6 +61,8 @@ CREATE TABLE migration.establishment_responsibility_evidence (
     notes text
 );
 
+\ir maintenance-derivation.sql
+
 CREATE TABLE migration.academy_trust_classification_evidence (
     evidence_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     academy_trust_classification_id uuid NOT NULL
@@ -108,3 +110,5 @@ CREATE INDEX ix_identity_resolution_source
     ON migration.identity_resolution (source_record_id);
 
 \ir group-address-evidence-schema.sql
+\ir proprietor-extensions.sql
+\ir council-reorganisation.sql

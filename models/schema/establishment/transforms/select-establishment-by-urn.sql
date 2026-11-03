@@ -105,8 +105,8 @@ LEFT JOIN establishment.diocese AS d
   ON d.diocese_id = e.diocese_id
 LEFT JOIN establishment.establishment_geography AS eg
   ON eg.establishment_id = e.establishment_id
-LEFT JOIN establishment.local_authority AS la
-  ON la.local_authority_id = eg.local_authority_id
+LEFT JOIN establishment.local_authority_area AS la
+  ON la.local_authority_area_id = eg.local_authority_area_id
 LEFT JOIN establishment.gss_local_authority_code AS gss
   ON gss.id = la.gss_local_authority_code_id
 LEFT JOIN establishment.government_office_region AS gor

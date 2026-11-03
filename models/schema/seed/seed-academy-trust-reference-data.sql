@@ -50,7 +50,8 @@ INSERT INTO establishment.establishment_responsibility_type (responsibility_type
     (1, 'Run by academy trust'),
     (2, 'Supported by foundation trust'),
     (3, 'Sponsored by'),
-    (4, 'Proprietor')
+    (4, 'Proprietor'),
+    (5, 'Maintained by local authority')
 ON CONFLICT (responsibility_type_id) DO UPDATE
 SET name = EXCLUDED.name;
 

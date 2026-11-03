@@ -7,6 +7,12 @@ function Assert-EstablishmentBuildInputs {
     $paths = @(
         (Get-SchemaPath 'establishment/establishment-schema.sql'),
         (Get-SchemaPath 'migration/migration-schema.sql'),
+        (Get-SchemaPath 'migration/maintenance-derivation.sql'),
+        (Get-SchemaPath 'migration/proprietor-extensions.sql'),
+        (Get-SchemaPath 'migration/council-reorganisation.sql'),
+        (Get-SchemaPath 'seed/seed-stage-4-proprietor-review.sql'),
+        (Get-SchemaPath 'establishment/load/load-maintenance-responsibility-fixture.sql'),
+        (Get-SchemaPath 'establishment/transforms/maintenance-responsibility-from-bau.sql'),
         (Get-SchemaPath 'migration/group-address-evidence-schema.sql')
     )
     if ($IncludeReferenceSeed) {
@@ -21,8 +27,10 @@ function Assert-EstablishmentBuildInputs {
             $paths += if ([System.IO.Path]::IsPathRooted($file)) { $file } else { Get-SchemaPath "seed/$file" }
         }
         $paths += Get-SchemaPath 'seed/seed-migration-evidence.sql'
+        $paths += Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv'
     }
     Assert-FileExists -Path $paths
+    Assert-LocalAuthorityCouncilSeed
 }
 
 function Reset-EstablishmentSchema {
@@ -34,6 +42,7 @@ function Reset-EstablishmentSchema {
     param([Parameter(Mandatory)]$Target)
 
     Assert-EstablishmentBuildInputs
+    Assert-CouncilEventResetAllowed -Target $Target
     Write-Step 'Recreating the establishment schema'
     Invoke-Psql -Target $Target -Command 'DROP SCHEMA IF EXISTS establishment CASCADE;' -FailureMessage 'Establishment schema reset failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/establishment-schema.sql') -FailureMessage 'Establishment schema creation failed'

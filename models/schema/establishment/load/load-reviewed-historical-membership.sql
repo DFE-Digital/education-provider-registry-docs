@@ -60,7 +60,7 @@ BEGIN
            JOIN establishment.group_identifier_issuer issuer USING(group_identifier_issuer_id)
            WHERE g.organisation_group_id=group_id AND t.name='Group UID' AND issuer.name='GIAS'
              AND i.value=row_source.group_uid AND NOT i.is_current AND gt.name=config->>'groupType'
-             AND g.local_authority_id IS NULL
+             AND g.local_authority_area_id IS NULL
              AND ROW(g.name,g.open_date,g.close_date) IS NOT DISTINCT FROM ROW(row_source.group_name,row_source.group_open_date,row_source.group_close_date)) THEN
         RAISE EXCEPTION 'Historical group UID has conflicting identity/lifecycle; review required';
     END IF;

@@ -7,18 +7,18 @@ CREATE TEMP TABLE source_local_authority_gor_mapping_fixture (
 
 \copy source_local_authority_gor_mapping_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
-INSERT INTO establishment.local_authority_government_office_region (
-    local_authority_id,
+INSERT INTO establishment.local_authority_area_government_office_region (
+    local_authority_area_id,
     government_office_region_id
 )
-SELECT la.local_authority_id,
+SELECT la.local_authority_area_id,
        gor.government_office_region_id
 FROM source_local_authority_gor_mapping_fixture AS s
-JOIN establishment.local_authority AS la
+JOIN establishment.local_authority_area AS la
   ON la.code = NULLIF(BTRIM(s.local_authority_code), '')::integer
 JOIN establishment.government_office_region AS gor
   ON gor.code = NULLIF(BTRIM(s.region_code), '')
-ON CONFLICT (local_authority_id) DO UPDATE SET
+ON CONFLICT (local_authority_area_id) DO UPDATE SET
     government_office_region_id = EXCLUDED.government_office_region_id;
 
 COMMIT;

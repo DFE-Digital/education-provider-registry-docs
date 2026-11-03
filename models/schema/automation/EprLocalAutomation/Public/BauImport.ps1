@@ -5,7 +5,7 @@
 # Geographic reference datasets, loaded in this order. Each dataset has a
 # transform in establishment/transforms and a load in establishment/load.
 $script:GeographicDatasets = @(
-    [pscustomobject]@{ Name = 'local-authority';             Transform = 'local-authorities-from-bau.sql';             Load = 'load-local-authority-fixture.sql' }
+    [pscustomobject]@{ Name = 'local-authority';             Transform = 'local-authority-areas-from-bau.sql';             Load = 'load-local-authority-area-fixture.sql' }
     [pscustomobject]@{ Name = 'government-office-region';    Transform = 'government-office-regions-from-bau.sql';     Load = 'load-government-office-region-fixture.sql' }
     [pscustomobject]@{ Name = 'district-administrative';     Transform = 'district-administratives-from-bau.sql';      Load = 'load-district-administrative-fixture.sql' }
     [pscustomobject]@{ Name = 'administrative-ward';         Transform = 'administrative-wards-from-bau.sql';          Load = 'load-administrative-ward-fixture.sql' }
@@ -14,8 +14,8 @@ $script:GeographicDatasets = @(
     [pscustomobject]@{ Name = 'msoa';                        Transform = 'msoas-from-bau.sql';                         Load = 'load-msoa-fixture.sql' }
     [pscustomobject]@{ Name = 'urban-rural';                 Transform = 'urban-rurals-from-bau.sql';                  Load = 'load-urban-rural-fixture.sql' }
     [pscustomobject]@{ Name = 'gss-local-authority-code';    Transform = 'gss-local-authority-codes-from-bau.sql';     Load = 'load-gss-local-authority-code-fixture.sql' }
-    [pscustomobject]@{ Name = 'local-authority-gss-mapping'; Transform = 'local-authority-gss-mappings-from-bau.sql';  Load = 'load-local-authority-gss-mapping-fixture.sql' }
-    [pscustomobject]@{ Name = 'local-authority-gor-mapping'; Transform = 'local-authority-gor-mappings-from-bau.sql';  Load = 'load-local-authority-gor-mapping-fixture.sql' }
+    [pscustomobject]@{ Name = 'local-authority-gss-mapping'; Transform = 'local-authority-area-gss-mappings-from-bau.sql';  Load = 'load-local-authority-area-gss-mapping-fixture.sql' }
+    [pscustomobject]@{ Name = 'local-authority-gor-mapping'; Transform = 'local-authority-area-gor-mappings-from-bau.sql';  Load = 'load-local-authority-area-gor-mapping-fixture.sql' }
 )
 
 # The establishment transform returns more columns than the load uses. These
@@ -46,7 +46,7 @@ $script:EstablishmentFixtureColumns = @(
     'source_religious_character_code', 'religious_character_id',
     'source_religious_ethos_code', 'religious_ethos_id',
     'source_diocese_code', 'diocese_id', 'source_education_phase', 'ofsted_link',
-    'source_specialist_provision_type_code', 'source_special_classes_code', 'has_special_classes'
+    'source_specialist_provision_type_code', 'source_special_classes_code', 'has_special_classes', 'source_observed_date'
 )
 
 function Import-GeographicReferenceData {
@@ -72,6 +72,7 @@ function Import-GeographicReferenceData {
             -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "geographic dataset $($dataset.Name)"
         Write-Host "    $rows rows loaded."
     }
+    Import-LocalAuthorityCouncilFixture -Target $Target
 }
 
 function Import-EstablishmentFromBau {
@@ -121,8 +122,14 @@ function Import-ControlledProprietorFromBau {
     if ($Fixture.fixture -eq 'T13') { $expectedType = 'Other independent school' }
     foreach ($school in $Fixture.schools) {
         $rows = @($extractRows | Where-Object { [int]$_.URN -eq [int]$school.urn })
+        $expectedStatus = 'Open'
+        if ($Fixture.mode -eq 'reviewed-legal-entity') {
+            $expectedType = $school.sourceEstablishmentType
+            $expectedStatus = $school.sourceStatus
+            if (-not $expectedType -or -not $expectedStatus) { throw 'Typed proprietor decisions require explicit source type and status assertions.' }
+        }
         if ($rows.Count -ne 1 -or $rows[0].EstablishmentName -cne $school.name -or
-            $rows[0].PropsName -cne $school.propsName -or $rows[0].'EstablishmentStatus (name)' -ne 'Open' -or
+            $rows[0].PropsName -cne $school.propsName -or $rows[0].'EstablishmentStatus (name)' -ne $expectedStatus -or
             $rows[0].'TypeOfEstablishment (name)' -ne $expectedType) {
             throw "Controlled proprietor extract assertion changed for URN $($school.urn); review required."
         }
@@ -143,7 +150,7 @@ function Import-ControlledProprietorFromBau {
     Invoke-FixtureLoad -Target $Target `
         -LoadSqlFile (Get-SchemaPath 'establishment/load/load-controlled-proprietor-fixture.sql') `
         -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -MigrationRunId $MigrationRunId `
-        -TemplateValues @{ CONTROLLED_PROPRIETOR_JSON = ($Fixture | ConvertTo-Json -Depth 6 -Compress) } `
+        -TemplateValues @{ CONTROLLED_PROPRIETOR_JSON = ($Fixture | ConvertTo-Json -Depth 20 -Compress) } `
         -Description "controlled proprietor $($Fixture.fixture)"
 }
 

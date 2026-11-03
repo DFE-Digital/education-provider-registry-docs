@@ -140,6 +140,7 @@ try {
             -WorkingDirectory $workspace -MigrationRunId $migrationRunId
     }
 
+    if ($isCustomSelection) { Import-MaintenanceFromBau -Source $source -Target $target -WorkingDirectory $workspace }
     Show-EstablishmentSummary -Target $target -Urn $selection.Urns
     if (-not $SkipTests) {
         Invoke-EstablishmentTests -Target $target -Selection $selection
@@ -159,6 +160,8 @@ try {
                 & (Join-Path $PSScriptRoot $case.supplementaryRunner) -PostgresTarget $target
             }
         }
+        Import-ProprietorReviewQueue -Target $target
+        Import-MaintenanceFromBau -Source $source -Target $target -WorkingDirectory $workspace
         if (-not $SkipTests) { Test-AllEstablishmentCases -Target $target }
     }
     $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'completed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"

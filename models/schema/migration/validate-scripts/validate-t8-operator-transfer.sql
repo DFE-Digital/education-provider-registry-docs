@@ -10,7 +10,7 @@ BEGIN
     JOIN establishment.establishment_lifecycle l USING(establishment_id)
     JOIN establishment.establishment_type t USING(establishment_type_id)
     JOIN establishment.establishment_geography geo USING(establishment_id)
-    JOIN establishment.local_authority la USING(local_authority_id)
+    JOIN establishment.local_authority_area la USING(local_authority_area_id)
     WHERE e.urn=136494 AND e.name='Teign School' AND e.ukprn=10033036 AND e.establishment_number=5402
       AND t.name='Mainstream academy' AND la.code=878 AND l.open_date=DATE '2011-03-01' AND l.close_date IS NULL;
     IF (SELECT count(*) FROM establishment.establishment_responsibility WHERE establishment_id=school)<>2

@@ -4,7 +4,7 @@ BEGIN
  IF NOT EXISTS (SELECT 1 FROM establishment.establishment e
  JOIN establishment.establishment_lifecycle life USING(establishment_id)
  JOIN establishment.establishment_geography geo USING(establishment_id)
- JOIN establishment.local_authority la USING(local_authority_id)
+ JOIN establishment.local_authority_area la USING(local_authority_area_id)
  WHERE e.urn=124870 AND e.name='Summerhill School' AND e.ukprn=10017679
  AND e.establishment_number=6016 AND e.establishment_type_id=17 AND la.code=935
  AND life.open_date=DATE '1921-03-13' AND life.close_date IS NULL)

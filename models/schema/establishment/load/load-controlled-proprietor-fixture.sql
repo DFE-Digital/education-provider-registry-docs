@@ -10,6 +10,20 @@ CREATE TEMP TABLE proprietor_local_context (
 );
 \copy proprietor_local_context FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
+SELECT coalesce(decision->>'mode'='reviewed-legal-entity',false) AS typed_proprietor FROM controlled_proprietor \gset
+\if :typed_proprietor
+DO $$
+DECLARE d jsonb;
+BEGIN
+    SELECT decision INTO STRICT d FROM controlled_proprietor;
+    IF d->'expectedLocalContext' IS DISTINCT FROM
+       (SELECT jsonb_agg(to_jsonb(c) ORDER BY urn) FROM proprietor_local_context c) THEN
+        RAISE EXCEPTION 'Reviewed proprietor local context changed';
+    END IF;
+    PERFORM migration.apply_reviewed_proprietor(d,NULLIF(current_setting('epr.migration_run_id',true),'')::uuid);
+END $$;
+\else
+
 DO $$
 DECLARE d jsonb; party_id uuid; run_id uuid; is_t13 boolean; is_t21 boolean;
 BEGIN
@@ -186,4 +200,5 @@ DO $$ BEGIN
         RAISE EXCEPTION 'Controlled proprietor did not retain all current undated responsibilities';
     END IF;
 END $$;
+\endif
 COMMIT;

@@ -27,6 +27,7 @@ function Get-PsqlArgumentList {
         [string]$File,
         [string]$Command,
         [hashtable]$Variables,
+        [switch]$SingleTransaction,
         [ValidateSet('Console', 'Csv', 'Scalar')][string]$Output = 'Console'
     )
 
@@ -40,6 +41,7 @@ function Get-PsqlArgumentList {
         '-v', 'ON_ERROR_STOP=1'
     )
     if ($Output -eq 'Csv') { $arguments += @('-q', '-P', 'format=csv') }
+    if ($SingleTransaction) { $arguments += '--single-transaction' }
     if ($Output -eq 'Scalar') { $arguments += @('-A', '-t', '-q') }
     if ($Variables) {
         foreach ($name in ($Variables.Keys | Sort-Object)) {
@@ -79,6 +81,7 @@ function Invoke-Psql {
         [string]$File,
         [string]$Command,
         [hashtable]$Variables,
+        [switch]$SingleTransaction,
         [ValidateSet('Console', 'Csv', 'Scalar')][string]$Output = 'Console',
         [Parameter(Mandatory)][string]$FailureMessage
     )
@@ -87,7 +90,7 @@ function Invoke-Psql {
     if ($File) { Assert-FileExists -Path $File }
 
     $psql = Get-PostgresClientPath -Tool 'psql'
-    $arguments = Get-PsqlArgumentList -Target $Target -File $File -Command $Command -Variables $Variables -Output $Output
+    $arguments = Get-PsqlArgumentList -Target $Target -File $File -Command $Command -Variables $Variables -Output $Output -SingleTransaction:$SingleTransaction
 
     $result = Invoke-WithPostgresPassword -Target $Target -ScriptBlock {
         if ($Output -eq 'Console') {
