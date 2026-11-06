@@ -23,9 +23,9 @@ SET row_security = off;
 -- Data for Name: academy_route; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
-INSERT INTO establishment.academy_route (academy_route_id, name, canonical_identifier) VALUES
-	(1, 'Converter', 'est:ConverterRoute'),
-	(2, 'Sponsor led', 'est:SponsorLedRoute');
+INSERT INTO establishment.academy_route (academy_route_id, name) VALUES
+	(1, 'Converter'),
+	(2, 'Sponsor led');
 
 
 --

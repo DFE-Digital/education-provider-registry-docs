@@ -15,11 +15,10 @@ CREATE TABLE establishment.establishment_type_category (
 CREATE TABLE establishment.academy_route (
     academy_route_id integer PRIMARY KEY,
     name text NOT NULL UNIQUE,
-    canonical_identifier text NOT NULL UNIQUE,
     CONSTRAINT academy_route_values CHECK (
-        (academy_route_id, name, canonical_identifier) IN (
-            (1, 'Converter', 'est:ConverterRoute'),
-            (2, 'Sponsor led', 'est:SponsorLedRoute')
+        (academy_route_id, name) IN (
+            (1, 'Converter'),
+            (2, 'Sponsor led')
         )
     )
 );

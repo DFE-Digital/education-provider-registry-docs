@@ -50,7 +50,7 @@ resolves that code to the seeded type UUID; SQL Server does not allocate target
 type keys. Categories use the eleven BAU `EstablishmentTypeGroup` names and
 memberships, with only a UUID and unique name in the target. BAU group codes,
 archived flags and canonical identifiers are not category columns. Academy
-routes retain their existing integer keys and canonical identifiers.
+routes contain only their existing integer keys and unique names.
 
 Run [the type/category validation](migration/validate-scripts/validate-establishment-types-and-routes.sql)
 to check the reference structure and academy routes. It is included in the

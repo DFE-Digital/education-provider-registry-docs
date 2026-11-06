@@ -18,6 +18,10 @@ BEGIN
         AND table_name='establishment' AND column_name='establishment_type_id' AND data_type='uuid') THEN
         RAISE EXCEPTION 'Type keys must be UUIDs; categories contain only UUID and name';
     END IF;
+    IF (SELECT count(*) FROM information_schema.columns WHERE table_schema='establishment'
+        AND table_name='academy_route') <> 2 THEN
+        RAISE EXCEPTION 'Academy route contains only its ID and name';
+    END IF;
     FOR expected IN SELECT * FROM (VALUES
         ('Colleges'),('Academies'),('Free Schools'),('Children''s Centres'),('Online provider'),
         ('Universities'),('Independent schools'),('Local authority maintained schools'),
@@ -28,21 +32,21 @@ BEGIN
         END IF;
     END LOOP;
     FOR expected IN SELECT * FROM (VALUES
-        ('34','Academy converter','est:ConverterRoute'),
-        ('28','Academy sponsor led','est:SponsorLedRoute'),
-        ('44','Academy special converter','est:ConverterRoute'),
-        ('33','Academy special sponsor led','est:SponsorLedRoute'),
-        ('42','Academy alternative provision converter','est:ConverterRoute'),
-        ('43','Academy alternative provision sponsor led','est:SponsorLedRoute'),
-        ('45','Academy 16-19 converter','est:ConverterRoute'),
-        ('46','Academy 16 to 19 sponsor led','est:SponsorLedRoute'),
+        ('34','Academy converter','Converter'),
+        ('28','Academy sponsor led','Sponsor led'),
+        ('44','Academy special converter','Converter'),
+        ('33','Academy special sponsor led','Sponsor led'),
+        ('42','Academy alternative provision converter','Converter'),
+        ('43','Academy alternative provision sponsor led','Sponsor led'),
+        ('45','Academy 16-19 converter','Converter'),
+        ('46','Academy 16 to 19 sponsor led','Sponsor led'),
         ('57','Academy secure 16 to 19',NULL)
     ) v(code,name,route) LOOP
         IF NOT EXISTS (SELECT 1 FROM establishment.establishment_type t
             JOIN establishment.establishment_type_category c USING(establishment_type_category_id)
             LEFT JOIN establishment.academy_route r USING(academy_route_id)
             WHERE t.code=expected.code AND t.name=expected.name AND c.name='Academies'
-              AND r.canonical_identifier IS NOT DISTINCT FROM expected.route) THEN
+              AND r.name IS NOT DISTINCT FROM expected.route) THEN
             RAISE EXCEPTION 'Incorrect academy category or route for code %',expected.code;
         END IF;
     END LOOP;

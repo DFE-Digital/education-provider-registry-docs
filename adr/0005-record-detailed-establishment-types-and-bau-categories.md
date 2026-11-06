@@ -16,7 +16,7 @@ The conceptual model has five academy types and a separate academy route. Catego
 - Each type has a required unique published DfE `code`, stored as text, and a name. Migration resolves the UUID by code, independently of the source label.
 - Each type references one required `establishment_type_category`, using a UUID. Categories follow the eleven BAU `EstablishmentTypeGroup` names and memberships.
 - A category contains only its UUID and required unique name. BAU group codes are used during migration; category code, archived status and canonical identifier are not target attributes.
-- The detailed type supplies an academy route where applicable. Route retains its existing integer key and canonical identifier. Category and route are not stored separately on the establishment.
+- The detailed type supplies an academy route where applicable. Route contains only its existing integer key and unique name. Category and route are not stored separately on the establishment.
 - The conceptual model remains unchanged. Detailed type code determines the conceptual academy type; the broad category Academies does not replace that projection.
 
 All nine detailed academy types belong to Academies. Their eight converter and sponsor-led variants have the specified route; Academy secure 16 to 19 has no route. Special free schools, UTCs and studio schools remain in Free Schools, following BAU.
