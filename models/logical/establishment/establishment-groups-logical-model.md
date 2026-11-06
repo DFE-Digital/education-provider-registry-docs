@@ -4,7 +4,7 @@ This document defines the logical model for legal entities, responsibilities and
 
 ## Establishment groups ERD
 
-The groups branch is shown separately so that the main establishment ERD remains readable. The model is split into two diagrams: one for parties, roles and responsibilities, and one for organisation groups and group identifiers. A legal entity can hold dated establishment-party roles and can have dated responsibilities for establishments. A person can hold a school-sponsor role and permitted responsibilities. A federation or children's-centre grouping is instead a named group of establishments; it is not a legal entity in this model.
+The groups branch is shown separately so that the main establishment ERD remains readable. The diagrams show parties, roles and responsibilities; trader and partner links; and organisation groups and group identifiers. A legal entity can hold dated establishment-party roles and can have dated responsibilities for establishments. A person can hold a school-sponsor role and permitted responsibilities. A federation or children's-centre grouping is instead a named group of establishments; it is not a legal entity in this model.
 
 Group and legal-entity address associations are defined separately in the [Group addresses logical model](group-addresses-logical-model.md).
 
@@ -103,6 +103,8 @@ erDiagram
         integer academy_trust_type_id FK
         date start_date
         date end_date
+        string end_date_basis
+        date first_observed_date
         boolean is_current
     }
     ESTABLISHMENT_RESPONSIBILITY_TYPE {
@@ -308,6 +310,8 @@ This diagram shows the establishment only as the subject of a responsibility. It
 
 The `legal_entity_type` vocabulary is: charitable company limited by guarantee; company limited by guarantee; private limited company; public limited company; limited liability partnership; charitable incorporated organisation; body incorporated by Royal Charter; unincorporated charitable trust; public body; overseas entity; sole trader; and traditional partnership.
 
+Councils are legal entities of type Public body (9). Their effective links to DfE LA-code areas are defined by `local_authority_area_council_period` in the [geography model](geography.md). The same council can cover several area codes; changing the council for one area does not create a new area. A referenced council's type cannot be changed to a different or unknown form.
+
 For example, MARCH 2016 LIMITED is represented once as a legal entity, regardless of the roles it has held or the establishments for which it has been responsible.
 
 #### Legal entity type
@@ -383,7 +387,7 @@ The type gives meaning to the stored value. For example, `06888873` is meaningfu
 | `start_date` | No | First date on which the role applies; null means unknown. |
 | `end_date` | No | First date on which the role no longer applies. |
 
-The school-sponsor role means that DfE recognised the party as a school sponsor. It does not, by itself, assert formal approval, sponsorship of a particular establishment or governance rights over an academy trust. Sponsorship of a particular establishment is recorded separately as an `establishment_responsibility`. Formal approval and trust-level governance rights are outside this model unless a reliable source is identified.
+The school-sponsor role means that DfE recognises the party as a school sponsor. It does not, by itself, assert formal approval, sponsorship of a particular establishment or governance rights over an academy trust. Sponsorship of a particular establishment is recorded separately as an `establishment_responsibility`. Formal approval and trust-level governance rights are outside this model.
 
 For example, MARCH 2016 LIMITED held an academy-trust role. That role describes its recognised function in the education system; the separate responsibility record says that it ran Manchester Creative and Media Academy.
 
@@ -450,15 +454,15 @@ This reference data supports changes over time without changing the identity of 
 
 #### Establishment responsibility
 
-`establishment_responsibility` records that a legal entity or person runs, sponsors or supports an establishment, or is its proprietor, for a period.
+`establishment_responsibility` records that a party runs, sponsors, supports or maintains an establishment, or is its proprietor, for a period.
 
-There is one row per party, establishment, responsibility type and period. Exactly one of `legal_entity_id` and `person_id` is set. A person can be the party only for `sponsored_by` and `proprietor`.
+There is one row per party, establishment, responsibility type and period. Exactly one of `legal_entity_id` and `person_id` is set. A person can hold only a sponsor responsibility. A proprietor is a legal entity; a reviewed individual proprietor uses a sole-trader representation with an optional known-person link.
 
 For a `run_by_academy_trust` responsibility, `academy_trust_type_id` records whether the source relationship is SAT, MAT or secure SAT. It is null for every other responsibility type. This is an establishment-specific fact: it says how the legal entity was recorded while responsible for that establishment. It does not replace the separately dated legal-entity status in `academy_trust_classification`.
 
 A change in the recorded trust type creates a separate responsibility period even when the legal entity and its academy-trust role remain the same. The SAT and MAT responsibility periods and the SAT and MAT classification periods are four independently dated records. A classification transition does not, by itself, establish the end date of an establishment responsibility. An archived responsibility can have an unknown end date and `is_current = false`; null does not mean that it continues indefinitely.
 
-`is_current` records whether the source currently identifies the relationship as current. It is populated from the source link's current or archived state, not calculated from the responsibility dates. This allows application queries to select the current relationship without interpreting incomplete historical dates.
+For trust and sponsor links, `is_current` follows the source link's current or archived state. For automatically derived maintenance, it requires an open eligible English school and a council period current at the source observation date. It is not a generic calculation from nullable dates.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -470,22 +474,31 @@ A change in the recorded trust type creates a separate responsibility period eve
 | `academy_trust_type_id` | Conditional | SAT, MAT or secure SAT for `run_by_academy_trust`; null for every other responsibility type. |
 | `start_date` | No | First date on which the responsibility applies; null means unknown. |
 | `end_date` | No | First date on which it no longer applies. |
-| `is_current` | Yes | Whether the source currently identifies this relationship as current. This is not derived from dates. |
+| `end_date_basis` | No | `evidenced` or `inferred`, where supported. It is null when the end is unknown. A basis is recorded only when supported by evidence. |
+| `first_observed_date` | No | Earliest source observation supporting the assertion. It can be later than a reconstructed historical end. It is not the business start or load date. |
+| `is_current` | Yes | Whether this relationship is current under its source or derivation rule. |
 
 | Responsibility type | Meaning |
 | --- | --- |
 | `run_by_academy_trust` | The academy trust runs the academy or free school and is accountable for it. |
 | `sponsored_by` | The legal entity or person recorded as the establishment's sponsor. |
 | `supported_by_foundation_trust` | The foundation trust that supports a foundation school. |
-| `proprietor` | The legal entity or person responsible for managing an independent school, non-maintained special school or city technology college. This does not model ownership of premises or a proprietor company. |
+| `proprietor` | The legal entity responsible for managing an independent school, non-maintained special school or city technology college. This does not model ownership of premises or a proprietor company. |
+| `maintained_by_local_authority` | The council maintaining an eligible English school. It does not imply that the council holds every employer, admissions or premises responsibility. |
 
-`maintained_by_local_authority` belongs to the accountability slice.
+Maintenance has responsibility type 5. Its holder must be a Public body council with at least one area period. At most one maintenance period per school is current; fully dated maintenance periods cannot overlap. A council holding maintenance must retain at least one council-area link, including when a link is replaced within a transaction.
+
+Automatic derivation covers Community school, Community special school, Foundation special school, Voluntary aided school, Voluntary controlled school, Foundation school, Pupil referral unit and Maintained nursery school. It uses the observed LA code only. We do not infer earlier school membership of another area from that current code. Welsh-coded schools receive no automatic maintenance, including those with English maintained-school types.
+
+The start is the later supported school opening and council-area effective start. Unknown boundaries remain null; formation is a boundary check, never a substitute effective date. The end is the earlier supported closure and council-area end. A closure-derived end is inferred; an effective transfer end is evidenced. Tied sources are both retained. Closed schools keep supported historical maintenance, including after a later type change.
+
+Reviewed council reorganisations record the effective successor periods and establishment-to-area allocations. They preserve earlier responsibilities and their observation evidence. Accepted event periods govern geography and maintenance when ordinary source observations are replayed. Contradictory boundaries and conflicting newer observations require explicit review.
 
 For example, the `run_by_academy_trust` responsibility links MARCH 2016 LIMITED to Manchester Creative and Media Academy for the period in which that company operated the academy. The row also records SAT or MAT where the source group type supplies it, and whether that relationship is current.
 
 #### Establishment responsibility type
 
-`establishment_responsibility_type` defines the kinds of responsibility that a party can have for a specific establishment. The controlled values in this slice are `run_by_academy_trust`, `sponsored_by`, `supported_by_foundation_trust` and `proprietor`.
+`establishment_responsibility_type` defines the kinds of responsibility that a party can have for a specific establishment. The controlled values are `run_by_academy_trust`, `sponsored_by`, `supported_by_foundation_trust`, `proprietor` and `maintained_by_local_authority`.
 
 The type makes the relationship explicit. The same legal entity can have different responsibilities for different establishments, or even several distinct responsibilities across its wider portfolio. For example, Outwood Grange Academies Trust can run academies, sponsor establishments and act as the proprietor of an independent school.
 
@@ -498,7 +511,37 @@ The type makes the relationship explicit. The same legal entity can have differe
 
 `person` represents an individual who can hold a permitted role or responsibility. The full person record belongs to the people model; this diagram includes only its identifier so that relationships can refer to it without duplicating personal data.
 
-A person can hold a school-sponsor role and can be recorded as a sponsor or proprietor where the business evidence supports it. A person cannot hold an academy-trust, foundation-trust or umbrella-trust role in this model.
+A person can hold a school-sponsor role and a sponsor responsibility. A person cannot hold an academy-trust, foundation-trust or umbrella-trust role, or hold a proprietor responsibility directly.
+
+### Sole traders and partnership members
+
+The model has two optional relationships for traders and partners. `legal_entity_sole_trader` links a Sole trader (type 11) to one known person; its `person_id` is unique, so the same individual cannot acquire another trading identity through this link. No subtype row exists when the person is unknown. `legal_entity_partner` records dated membership of a Traditional partnership (type 12), targeting exactly one person or eligible incorporated body. Current memberships are unique per partnership and endpoint, including unknown dates. Fully known periods for the same endpoint cannot overlap. Person and body endpoints remain different even if their UUID values coincide.
+
+```mermaid
+erDiagram
+    LEGAL_ENTITY ||--o| LEGAL_ENTITY_SOLE_TRADER : "known trader"
+    PERSON ||--o| LEGAL_ENTITY_SOLE_TRADER : "individual"
+    LEGAL_ENTITY ||--o{ LEGAL_ENTITY_PARTNER : "traditional partnership"
+    LEGAL_ENTITY o|--o{ LEGAL_ENTITY_PARTNER : "eligible body partner"
+    PERSON o|--o{ LEGAL_ENTITY_PARTNER : "person partner"
+    LEGAL_ENTITY_SOLE_TRADER {
+        uuid legal_entity_id PK,FK
+        uuid person_id FK,UK
+    }
+    LEGAL_ENTITY_PARTNER {
+        uuid legal_entity_partner_id PK
+        uuid partnership_legal_entity_id FK
+        uuid partner_legal_entity_id FK
+        uuid partner_person_id FK
+        date start_date
+        date end_date
+        boolean is_current
+    }
+```
+
+Eligible partner bodies have legal forms 1 to 7. Sole-trader representations, ordinary partnerships, unincorporated trusts, public bodies, overseas forms and unknown forms are not eligible body endpoints. An LLP (type 5) can be a partner body but cannot be the parent whose members are described. An unincorporated charitable trust (type 8) is a legal entity; trustee relationships are outside this model. Legal-form guards protect all these relationships, including changes to null. Fewer than two distinct current partners is a warning rather than a constraint.
+
+Individual proprietors are represented by sole-trader legal entities, using the evidenced trading name or otherwise the personal name. Reviewed classification, identity and name selection are separate assertions. The proprietor holds responsibilities and reviewed addresses without requiring an anonymous person record. Trader and partner person links refer only to known individuals. A change of partners creates a new proprietor identity only when the regulatory change is treated as a change of proprietor.
 
 ### Organisation groups and group identifiers
 
@@ -511,7 +554,7 @@ erDiagram
     GROUP_IDENTIFIER }o--|| GROUP_IDENTIFIER_TYPE : "has type"
     GROUP_IDENTIFIER }o--|| GROUP_IDENTIFIER_ISSUER : "issued by"
     ORGANISATION_GROUP }o--|| ORGANISATION_GROUP_TYPE : "has type"
-    ORGANISATION_GROUP }o--o| LOCAL_AUTHORITY : "coordinated by"
+    ORGANISATION_GROUP }o--o| LOCAL_AUTHORITY_AREA : "records LA-code area"
     ORGANISATION_GROUP ||--o{ ORGANISATION_GROUP_MEMBER : "has"
     ESTABLISHMENT ||--o{ ORGANISATION_GROUP_MEMBER : "is"
     ORGANISATION_GROUP_MEMBER ||--o{ ORGANISATION_GROUP_MEMBER_LEAD_PERIOD : "has lead periods"
@@ -523,7 +566,7 @@ erDiagram
         uuid organisation_group_id PK
         string name
         integer organisation_group_type_id FK
-        uuid local_authority_id FK
+        uuid local_authority_area_id FK
         date open_date
         date close_date
     }
@@ -567,8 +610,8 @@ erDiagram
         numeric urn UK
         string name
     }
-    LOCAL_AUTHORITY {
-        uuid local_authority_id PK
+    LOCAL_AUTHORITY_AREA {
+        uuid local_authority_area_id PK
         integer code UK
         string name
     }
@@ -594,7 +637,7 @@ For example, Outwood Grange Academies Trust has separate academy-trust and schoo
 | `organisation_group_id` | Yes | Generated opaque target identifier. |
 | `name` | Yes | Current name. |
 | `organisation_group_type_id` | Yes | Federation, children's-centre group or children's-centre collaboration. |
-| `local_authority_id` | Conditional | Required for children's-centre types and absent for federations. |
+| `local_authority_area_id` | Conditional | Required for children's-centre types and absent for federations. |
 | `open_date` | No | First date on which the group existed, where known. |
 | `close_date` | No | First date on which the group no longer existed, where known. |
 
@@ -615,7 +658,7 @@ The type determines which business rules apply. For example, a federation must h
 
 `organisation_group_member` records that an establishment belongs to an organisation group for a period.
 
-Only establishments can be group members in this slice.
+Only establishments can be group members.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -629,7 +672,7 @@ For example, two maintained schools in a federation each have their own establis
 
 #### Organisation group member lead period
 
-`organisation_group_member_lead_period` records one continuous spell during which a member is designated as its group's lead. It belongs to the membership, not directly to the establishment, and does not create a legal entity or establishment responsibility. In this slice, lead designation applies only to children's-centre groups.
+`organisation_group_member_lead_period` records one continuous spell during which a member is designated as its group's lead. It belongs to the membership, not directly to the establishment, and does not create a legal entity or establishment responsibility. Lead designation applies only to children's-centre groups.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -649,7 +692,7 @@ Source observation dates remain separate migration evidence linked through the m
 
 - **Owner:** exactly one of `establishment_party_role_id` and `organisation_group_id` is set. A group identifier never belongs to a legal entity or person directly: Outwood Grange Academies Trust is one legal entity whose academy-trust role holds UID `4119` and Group ID `TR01585`, and whose school-sponsor role holds UID `4118` and Group ID `SP00396`.
 - **Types:** group UID and Group ID.
-- **One scheme, two issuers:** there is one group UID scheme. Values migrated from GIAS have issuer GIAS; values allocated after cutover have issuer Establishment Registry.
+- **One scheme, two issuers:** there is one group UID scheme. Values issued by GIAS have issuer GIAS; values issued by Establishment Registry have issuer Establishment Registry.
 - **Several values per owner:** a SAT-to-MAT consolidation gives one academy-trust role two UIDs, for example `2224` (the SAT record) and `17488` (the MAT record), and one Group ID, `TR00125`, stored once. The current value is the one the owner is known by now; the others are kept so that old references still resolve.
 - **Uniqueness:** a group UID is unique across all owners and both issuers. A Group ID is unique across owners.
 - **Values** are stored as text, as issued. A Group ID keeps its prefix, such as `TR`, `SP` or `UT`.
@@ -669,7 +712,7 @@ Source observation dates remain separate migration evidence linked through the m
 
 `group_identifier_type` defines which GIAS or Establishment Registry group-identifier scheme a value belongs to. The current types are Group UID and Group ID.
 
-A Group UID is the numeric identifier historically used for a GIAS group record. A Group ID is the prefixed business identifier, such as `TR01385` for an academy-trust role or `SP00396` for a school-sponsor role. The type prevents values from different schemes being treated as interchangeable.
+A Group UID is the numeric identifier for a GIAS group record. A Group ID is the prefixed business identifier, such as `TR01385` for an academy-trust role or `SP00396` for a school-sponsor role. The type prevents values from different schemes being treated as interchangeable.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -678,9 +721,9 @@ A Group UID is the numeric identifier historically used for a GIAS group record.
 
 #### Group identifier issuer
 
-`group_identifier_issuer` records which service allocated a group identifier. The current issuers are GIAS for migrated values and Establishment Registry for values allocated after cutover.
+`group_identifier_issuer` records which service allocated a group identifier. The issuers are GIAS and Establishment Registry.
 
-Separating issuer from identifier type allows the same Group UID scheme to continue across migration. For example, the T16 academy-trust role retains Group UID `3839` and Group ID `TR01385`, both with GIAS as their issuer.
+Identifier type and issuer are separate facts. For example, an academy-trust role can hold Group UID `3839` and Group ID `TR01385`, both with GIAS as their issuer.
 
 | Attribute | Required | Rule |
 | --- | --- | --- |
@@ -693,22 +736,23 @@ Separating issuer from identifier type allows the same Group UID scheme to conti
 
 The establishment keeps its own identity throughout changes in group membership. Joining or leaving a federation changes the membership record, not the establishment's URN or identity.
 
-#### Local authority
+#### Local authority area
 
-`local_authority` is the recognised local government organisation that coordinates a children's-centre group or collaboration. Its full definition belongs to the establishment and accountability model; this diagram references it without duplicating that data.
+`local_authority_area` is the DfE LA-code area recorded for a children's-centre group or collaboration. It is not the council legal entity. `local_authority_area_council_period` identifies the council through a dated period where that mapping has been resolved.
 
-For example, a children's-centre collaboration can be linked to the local authority responsible for coordinating it. Federations do not use this relationship, because the model does not treat a local authority as the owner of a federation.
+For example, a children's-centre collaboration retains its recorded LA-code area. Its current council can be looked up through the area's current period. A missing period is an unresolved mapping, not permission to infer a council from a name. Federations do not use this area association, because the model does not assign a single LA owner to a federation.
 
 
 ## Model scope
 
 ### Included concepts
 
-- Legal entities that run, sponsor or support establishments, or are their proprietors.
+- Legal entities that run, sponsor, support or maintain establishments, or are their proprietors.
 - Legal entity type, charity status and external identifiers.
+- Known trader links and dated membership of traditional partnerships.
 - Dated academy-trust, foundation-trust, umbrella-trust and school-sponsor roles.
 - Dated single-academy trust, multi-academy trust and secure single-academy trust classifications.
-- Responsibilities held by academy trusts, sponsors, foundation trusts and proprietors.
+- Responsibilities held by academy trusts, sponsors, foundation trusts, proprietors and maintaining councils.
 - Federations, children's-centre groups and children's-centre collaborations, with their establishment members.
 - Group UIDs and Group IDs for roles and organisation groups.
 
@@ -717,15 +761,16 @@ For example, a children's-centre collaboration can be linked to the local author
 - Group and legal-entity address associations, which are defined in the separate address model.
 - Other contacts, head-of-group details and proprietor contact details.
 - Name history.
-- Local-authority maintenance, which belongs to the accountability slice.
-- Succession between legal entities beyond a change from SAT to MAT.
+- The employer, admissions authority and premises responsibilities beyond maintenance.
+- General legal-entity succession relationships.
+- Person identity attributes and trustee relationships.
 - Umbrella-trust relationships and user-permission scopes.
 - Group-ID issuance rules for new academy trusts.
 - Role assignability and role-retirement dates.
 
 ### Source representation
 
-GIAS group UIDs and Group IDs are target data. They are business identifiers: GIAS group pages, search, extracts and links use them, and they stay in use after migration. They are held in [`group_identifier`](#group-identifier) against the role or organisation group they identify.
+GIAS group UIDs and Group IDs are target data. They are business identifiers used by group pages, search, extracts and links. They are held in [`group_identifier`](#group-identifier) against the role or organisation group they identify.
 
 Source names, source type codes, source links and identity-resolution evidence are migration lineage and are outside the target model.
 
@@ -757,18 +802,18 @@ An on-date view has three states:
 3. A role's start date cannot be after its end date. A null start date means unknown, not "since the beginning".
 4. Academy-trust classifications exist only for legal entities acting as academy trusts. Every such legal entity has at least one classification. One legal entity may have successive classifications, but its classification periods cannot overlap. At most one classification is current.
 5. A classification's start date cannot be after its end date. A source conflict is reported; it does not invent a date to make records agree.
-6. Every establishment responsibility has exactly one party. A person may be the party only for `sponsored_by` and `proprietor`.
+6. Every establishment responsibility has exactly one party. A person may be the party only for `sponsored_by`.
 7. Responsibility start dates cannot be after end dates. A null start date means unknown, not "since the beginning".
 8. For `run_by_academy_trust`, the party is a legal entity holding an academy-trust role and `academy_trust_type_id` is required. The value records SAT, MAT or secure SAT for that establishment relationship. Where independently evidenced classification dates overlap the responsibility period, the values must agree. An establishment has at most one current run-by relationship. An open academy or free school must have one.
 9. For every responsibility other than `run_by_academy_trust`, `academy_trust_type_id` is null.
-10. `is_current` on a responsibility is supplied by the current or archived state of the source relationship. It is not inferred from `start_date` or `end_date`. Only one current `run_by_academy_trust` responsibility can exist for an establishment. Current academy responsibilities held by one legal entity must agree on their trust type; that value identifies one current SAT, MAT or secure-SAT classification for the legal entity. A conflict is reported for resolution.
+10. `is_current` on a trust or sponsor responsibility follows the source relationship. Maintenance uses the separately documented derivation rule. Only one current `run_by_academy_trust` responsibility can exist for an establishment. Current academy responsibilities held by one legal entity must agree on their trust type; that value identifies one current SAT, MAT or secure-SAT classification for the legal entity. A conflict is reported for resolution.
 11. For `sponsored_by`, an establishment has at most one current responsibility, and only academy and free-school establishment types may have one. A sponsor holds a school-sponsor role covering the responsibility; a conflict or missing role is reported as a warning.
 12. For `supported_by_foundation_trust`, the party is a legal entity holding a foundation-trust role. An establishment has at most one current responsibility, and only foundation and foundation-special establishment types may have one. A responsibility outside the role period is reported as a warning. The legal-form and charity-status check is also a warning where the necessary evidence is unavailable.
 13. An establishment may have more than one current proprietor. Only independent school types, non-maintained special schools and city technology colleges may have a proprietor. Open other independent schools and other independent special schools must have at least one.
 14. An establishment is in at most one organisation group of each type on a date. Federation members are maintained schools; children's-centre group and collaboration members are children's centres.
 15. An open federation has at least two members.
 16. A children's-centre group has at most one current lead period, across all its members. Its fully known lead periods cannot overlap. Each lead period belongs to one membership and lies within that membership's known boundaries. Repeated designations use separate periods. Current designation is derived from a membership's lead period with `is_current = true`; no duplicate flag is stored on membership. Absence of such a row means no current lead is recorded, not confirmed non-lead status. Unknown lead boundaries do not establish historical coverage and require review, not invented dates.
-17. `local_authority_id` is required for children's-centre group types and absent for federations. Every member of a children's-centre group or collaboration is in the group's local authority; a member in another local authority is reported as a warning, because local-government reorganisation can move a centre.
+17. `local_authority_area_id` is required for children's-centre group types and absent for federations. Every member of a children's-centre group or collaboration is in the group's local authority; a member in another local authority is reported as a warning, because local-government reorganisation can move a centre.
 18. No stored collection restates a responsibility: an academy trust's academies are not organisation-group memberships.
 19. A relationship falls within the lifetime of its party or group where those dates are known. A conflict is reported; it does not invent a date to satisfy the rule.
 20. A possible overlap involving an unknown start date is reported as a warning. Known-date overlaps block loading.
@@ -782,7 +827,7 @@ An on-date view has three states:
 All dated relationships use a half-open period. The start date is the first day that the relationship applies; the end or left date is the first day it no longer applies. Successive periods can therefore meet on the same day without a gap or overlap.
 
 - A placeholder source date becomes null, not a factual business date.
-- Source-derived date basis, first-observed dates and inference rules are retained in the separate `migration` schema. They are migration evidence for administrators, not attributes of new live-service records.
+- Responsibilities record `end_date_basis` and `first_observed_date` where supported. Source observations, derivation inputs and inference rules are retained separately as migration evidence.
 - An end or left date is `evidenced` when a source records it, and `inferred` when it is derived from the closure of an establishment, party or group. An inferred end is an upper bound: the relationship may have ended earlier.
 - Audit timestamps record when a target row was entered separately from these business dates.
 
@@ -797,16 +842,17 @@ Source tables and fields correspond to target concepts as follows; they do not d
 | Sponsor records and links | `legal_entity` or `person`, `establishment_party_role`, then `establishment_responsibility` | Resolve the sponsor party and create a school-sponsor role for each continuous role period. Create `sponsored_by` responsibilities only for evidenced establishment links. The role does not assert formal approval or governance rights. |
 | Foundation-trust records and links | `legal_entity`, `establishment_party_role`, then `establishment_responsibility` | Create a foundation-trust role for each continuous role period and `supported_by_foundation_trust` responsibilities for evidenced links. |
 | Umbrella-trust records | `legal_entity`, `establishment_party_role` | Create a legal entity and an umbrella-trust role. No establishment responsibility follows without relationship evidence. |
-| Proprietor names and proprietor records | `legal_entity` or `person`, then `establishment_responsibility` | Create `proprietor` periods after resolving a body or person. |
+| Proprietor names and proprietor records | `legal_entity`, then `establishment_responsibility` | Reviewed Individual Proprietor becomes a sole trader; reviewed partnerships and LLPs retain their own legal forms. Names or contacts alone do not establish classification. Explicit source keys, accepted identities, observed names and reviewed address purposes are retained in migration evidence. |
+| Observed English maintained-school type, LA code, school dates and council periods | `establishment_responsibility` type 5 | Derive maintenance only for supported intersections. Preserve source observations, inferred boundaries and stable derivation identities in migration evidence. Welsh-coded schools are excluded. |
 | Federation and children's-centre records | `organisation_group` | Create the appropriate group type and lifecycle. |
 | Federation and children's-centre links | `organisation_group_member`, `organisation_group_member_lead_period` | Create dated memberships. An explicit children's-centre lead code also creates a current lead period with unknown business boundaries unless separately evidenced; retain observation dates in migration evidence. |
-| Group UIDs and Group IDs | `group_identifier` | Keep each value exactly as issued, with issuer GIAS, against the role or organisation group that the source record resolves to. SAT and MAT records of one company put both UIDs on one role, with the MAT's current; a shared Group ID is stored once. Non-standard Group IDs are corrected in GIAS before the production migration. |
+| Group UIDs and Group IDs | `group_identifier` | Keep each value exactly as issued, with its issuer, against the role or organisation group that the source record resolves to. SAT and MAT records of one company put both UIDs on one role, with the MAT's current; a shared Group ID is stored once. Values are verified against their issuing source. |
 | Source group relationships | Migration lineage only | May support identity resolution but do not create a target group-to-group relationship. |
 
 ## Physical-model boundary
 
-The target physical schema for this slice will contain the target tables represented in the ERDs: `legal_entity`, `legal_entity_type`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `organisation_group_member_lead_period`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
+The physical schema contains the target tables represented in the ERDs: `legal_entity`, `legal_entity_type`, `legal_entity_sole_trader`, `legal_entity_partner`, `charity_status`, `organisation_identifier_type`, `organisation_identifier`, `establishment_party_role_type`, `establishment_party_role`, `academy_trust_type`, `academy_trust_classification`, `establishment_responsibility_type`, `establishment_responsibility`, `organisation_group_type`, `organisation_group`, `organisation_group_member`, `organisation_group_member_lead_period`, `group_identifier_type`, `group_identifier_issuer` and `group_identifier`. Physical types, sequences and allocation mechanisms are specified by the physical schema.
 
 The physical lead-period table also stores `organisation_group_id` so PostgreSQL can enforce group-wide non-overlap and one-current-lead constraints. A composite foreign key ensures that this value matches the owning membership. Two triggers check lead-period and membership boundaries. Ordinary-writer permissions prevent group-type changes and organisation-identifier rewriting or deletion. Exceptional protected-data corrections require an authorised function with a reason and transactional before/after audit; it rejects group-type changes that would invalidate existing lead periods. Current lead status is queried from the period table. Explicit source STANDARD/LEAD assertions remain in migration evidence; absence of a current lead row does not prove a source assertion of non-lead. Current status must be changed explicitly; passing a business date does not automatically update it. Fully known ranges use inclusive starts and exclusive ends; incomplete ranges are retained for review, not treated as unbounded dates.
 
-It references the existing establishment, local-authority and person tables by their opaque identifiers. Migration lineage is deliberately outside this schema.
+The group structures reference establishment, local-authority-area and person records by their opaque identifiers. Council-area periods are defined in the geography model. Migration lineage is outside the target domain schema.

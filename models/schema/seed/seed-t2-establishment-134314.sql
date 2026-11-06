@@ -53,11 +53,11 @@ VALUES
      '13431400-0000-4000-8000-000000000015', true);
 
 INSERT INTO establishment.establishment_geography
-    (establishment_geography_id, establishment_id, local_authority_id)
+    (establishment_geography_id, establishment_id, local_authority_area_id)
 SELECT '13431400-0000-4000-8000-000000000016',
        '13431400-0000-4000-8000-000000000010',
-       la.local_authority_id
-FROM establishment.local_authority AS la
+       la.local_authority_area_id
+FROM establishment.local_authority_area AS la
 WHERE la.code = 206;
 
 INSERT INTO establishment.establishment_lifecycle

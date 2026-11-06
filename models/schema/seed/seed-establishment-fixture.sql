@@ -318,7 +318,7 @@ INSERT INTO establishment.establishment_contact (establishment_contact_id, estab
 -- Data for Name: establishment_geography; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
-INSERT INTO establishment.establishment_geography (establishment_geography_id, establishment_id, local_authority_id, government_office_region_id, district_administrative_id, administrative_ward_id, parliamentary_constituency_id, lsoa_id, msoa_id, urban_rural_id) VALUES
+INSERT INTO establishment.establishment_geography (establishment_geography_id, establishment_id, local_authority_area_id, government_office_region_id, district_administrative_id, administrative_ward_id, parliamentary_constituency_id, lsoa_id, msoa_id, urban_rural_id) VALUES
 	('3117f1e4-fb04-4d70-a4ee-7f20d408130e', 'a8538208-f08a-48a8-bd74-10aecdde50bf', '3332ea83-bcbe-48d1-970d-a3650d9bcf10', '7ca695f4-dfcd-4f78-bdaf-17861eafbf97', '6ef1f577-d0bc-4698-951c-f202f9eaada6', 'e73f0fc2-114a-4772-a84e-5363b02ba34b', '714fb4a2-4d2e-4875-9853-1d7d6696559e', 'cec78739-d3a7-4831-9934-8dec5c5bdcd1', '5ed6445f-c41a-4778-9a5c-55ba74a2155b', '8826f875-fade-4b0b-a4b1-f8536505ecd1'),
 	('fdee4f8c-2440-4216-9b89-a82cdc5c4682', '4e1f7553-2c83-4e4a-9d4e-8a65a913ae37', '3574e75c-8870-449a-82e7-1b083e2efc42', '1375841f-e6ba-4cda-9fac-753ff9df93a2', '9a5cfcfa-3605-4253-8e1c-fc081510a4ea', '9a2f2163-03c6-45b8-84e0-b34cc7a3450c', '6c7acd08-ad7f-406e-85e4-0bade3e57de6', '05aa5060-26b4-4edf-ad40-5e4640903d5a', '0d87ce8f-019d-4403-9527-975bbabd10e1', '8826f875-fade-4b0b-a4b1-f8536505ecd1'),
 	('70e44d6c-028b-4e57-800a-a6cd8e7ba35c', '3f96fa85-9b22-43fd-9cd2-c83cb5df5206', '77b9cfe6-842e-41c8-9be4-410cac32719a', 'f5cdf1f1-5f75-4420-b597-862614e13549', '05471fcf-d815-4c82-a7f6-6a9ff75cdaa2', 'cf41c2bc-c0cc-4394-992e-1db6d9f032dd', '8d116d07-483e-41bc-83ea-00c89c3f3a6d', 'c4402a6f-a614-4961-a889-554ef686642a', '011465c5-0d85-498d-8b85-14ea8833c9d5', '8826f875-fade-4b0b-a4b1-f8536505ecd1'),
@@ -592,7 +592,7 @@ INSERT INTO establishment.establishment_to_site (establishment_id, site_id, is_m
 -- Data for Name: organisation_group; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
-INSERT INTO establishment.organisation_group (organisation_group_id, name, organisation_group_type_id, local_authority_id, open_date, close_date) VALUES
+INSERT INTO establishment.organisation_group (organisation_group_id, name, organisation_group_type_id, local_authority_area_id, open_date, close_date) VALUES
 	('1aba6352-cab0-4909-99f7-9ea6e5a26a33', 'Federation of Eileen Wade and Milton Ernest VC lower schools', 1, NULL, '2011-01-13', NULL),
 	('a07af86f-2bb3-427b-af1b-1107aceb06fb', 'Southend Children''s Centres', 2, 'dc9f9e86-8d80-46b7-87bc-e998cafca819', '2016-10-01', NULL),
 	('ca91feeb-a81b-4f94-bc3f-27fe7bd61b26', 'The Federation of Beaufort School and Langley School', 1, NULL, '2012-04-01', '2020-07-01'),

@@ -1,4 +1,4 @@
--- Complete WIP Establishment schema: tables, keys, indexes, constraints and two triggers.
+-- Complete WIP Establishment schema: tables, keys, indexes, constraints and lead/council guards.
 -- Run in an existing PostgreSQL database with permission to install the extensions.
 -- Creation only: an existing establishment schema causes failure, not data deletion.
 -- No seeds, migration-evidence schema, permissions policy or external SQL includes.
@@ -82,27 +82,30 @@ CREATE TABLE establishment.local_authority_jurisdiction (
     name text NOT NULL UNIQUE
 );
 
-CREATE TABLE establishment.local_authority (
-    local_authority_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+CREATE TABLE establishment.local_authority_area (
+    local_authority_area_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code integer NOT NULL UNIQUE,
     name text NOT NULL,
     local_authority_jurisdiction_id integer NOT NULL
         REFERENCES establishment.local_authority_jurisdiction (local_authority_jurisdiction_id)
 );
 
+COMMENT ON TABLE establishment.local_authority_area IS
+    'The DfE LA-code area used by establishment geography and LAESTAB. This is not the council legal entity and does not imply maintenance.';
+
 CREATE TABLE establishment.gss_local_authority_code (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE
 );
 
-ALTER TABLE establishment.local_authority
+ALTER TABLE establishment.local_authority_area
     ADD COLUMN gss_local_authority_code_id uuid
         REFERENCES establishment.gss_local_authority_code (id);
 
-CREATE TABLE establishment.local_authority_contact (
-    local_authority_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    local_authority_id uuid NOT NULL
-        REFERENCES establishment.local_authority (local_authority_id),
+CREATE TABLE establishment.local_authority_area_contact (
+    local_authority_area_contact_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    local_authority_area_id uuid NOT NULL
+        REFERENCES establishment.local_authority_area (local_authority_area_id),
     contact_email text,
     contact_first_name text,
     contact_last_name text,
@@ -119,6 +122,9 @@ CREATE TABLE establishment.local_authority_contact (
     )
 );
 
+COMMENT ON TABLE establishment.local_authority_area_contact IS
+    'Council contacts temporarily associated with their DfE LA-code area. Move to the council when the legal-entity contact slice is implemented.';
+
 CREATE TABLE establishment.government_office_region (
     government_office_region_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     -- BAU dbo.GovernmentOfficeRegion.code is an nvarchar code set (A, B, ...,
@@ -127,9 +133,9 @@ CREATE TABLE establishment.government_office_region (
     name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$') UNIQUE
 );
 
-CREATE TABLE establishment.local_authority_government_office_region (
-    local_authority_id uuid PRIMARY KEY
-        REFERENCES establishment.local_authority (local_authority_id),
+CREATE TABLE establishment.local_authority_area_government_office_region (
+    local_authority_area_id uuid PRIMARY KEY
+        REFERENCES establishment.local_authority_area (local_authority_area_id),
     government_office_region_id uuid NOT NULL
         REFERENCES establishment.government_office_region (government_office_region_id)
 );
@@ -191,8 +197,8 @@ CREATE TABLE establishment.establishment_geography (
     establishment_geography_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     establishment_id uuid NOT NULL UNIQUE
         REFERENCES establishment.establishment (establishment_id),
-    local_authority_id uuid
-        REFERENCES establishment.local_authority (local_authority_id),
+    local_authority_area_id uuid
+        REFERENCES establishment.local_authority_area (local_authority_area_id),
     government_office_region_id uuid
         REFERENCES establishment.government_office_region (government_office_region_id),
     district_administrative_id uuid
@@ -473,7 +479,10 @@ CREATE TABLE establishment.establishment_responsibility (
     end_date date,
     is_current boolean NOT NULL DEFAULT false,
     CHECK ((legal_entity_id IS NOT NULL) <> (person_id IS NOT NULL)),
-    CHECK (person_id IS NULL OR responsibility_type_id IN (3, 4)),
+    end_date_basis text CHECK (end_date_basis IN ('evidenced', 'inferred')),
+    first_observed_date date,
+    CHECK (end_date IS NOT NULL OR end_date_basis IS NULL),
+    CHECK (person_id IS NULL OR responsibility_type_id = 3),
     CHECK ((responsibility_type_id = 1) = (academy_trust_type_id IS NOT NULL)),
     CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
@@ -510,12 +519,15 @@ CREATE TABLE establishment.organisation_group (
     name text NOT NULL CHECK (btrim(name) <> ''),
     organisation_group_type_id integer NOT NULL
         REFERENCES establishment.organisation_group_type (organisation_group_type_id),
-    local_authority_id uuid
-        REFERENCES establishment.local_authority (local_authority_id),
+    local_authority_area_id uuid
+        REFERENCES establishment.local_authority_area (local_authority_area_id),
     open_date date,
     close_date date,
     CHECK (close_date IS NULL OR open_date IS NULL OR close_date >= open_date)
 );
+
+COMMENT ON COLUMN establishment.organisation_group.local_authority_area_id IS
+    'The DfE LA-code area recorded by GIAS for a children''s-centre group. Council identity is resolved through local_authority_area_council_period periods where the mapping is known.';
 
 CREATE TABLE establishment.organisation_group_member (
     organisation_group_member_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -686,5 +698,266 @@ CREATE UNIQUE INDEX legal_entity_address_one_current
     ON establishment.legal_entity_address(legal_entity_id,address_purpose_id) WHERE is_current;
 CREATE UNIQUE INDEX organisation_group_address_one_current
     ON establishment.organisation_group_address(organisation_group_id,address_purpose_id) WHERE is_current;
+
+-- A DfE LA-code area and its council are distinct identities. The same council
+-- can cover several areas; one area can have successive councils over time.
+CREATE TABLE establishment.local_authority_area_council_period (
+    local_authority_area_council_period_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    local_authority_area_id uuid NOT NULL
+        REFERENCES establishment.local_authority_area (local_authority_area_id),
+    legal_entity_id uuid NOT NULL
+        REFERENCES establishment.legal_entity (legal_entity_id),
+    start_date date,
+    end_date date,
+    is_current boolean NOT NULL DEFAULT false,
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date),
+    CONSTRAINT local_authority_area_council_period_known_periods_excl
+        EXCLUDE USING gist (local_authority_area_id WITH =,
+                            daterange(start_date, end_date, '[)') WITH &&)
+        WHERE (start_date IS NOT NULL AND end_date IS NOT NULL)
+);
+
+CREATE UNIQUE INDEX local_authority_area_council_period_one_current
+    ON establishment.local_authority_area_council_period (local_authority_area_id)
+    WHERE is_current;
+CREATE INDEX local_authority_area_council_period_holder
+    ON establishment.local_authority_area_council_period (legal_entity_id);
+
+COMMENT ON TABLE establishment.local_authority_area_council_period IS
+    'Effective council responsibility for a DfE LA-code area. Formation and source observation dates are separate facts. Incomplete council backfill is reported by validation.';
+
+CREATE FUNCTION establishment.check_local_authority_council_holder()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE
+    holder_ids uuid[];
+    holder_type integer;
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        holder_ids := ARRAY[NEW.legal_entity_id];
+    ELSIF TG_OP = 'UPDATE' THEN
+        holder_ids := ARRAY[OLD.legal_entity_id, NEW.legal_entity_id];
+    ELSE
+        holder_ids := ARRAY[OLD.legal_entity_id];
+    END IF;
+    PERFORM 1 FROM establishment.legal_entity
+    WHERE legal_entity_id = ANY(holder_ids) ORDER BY legal_entity_id FOR UPDATE;
+    -- Version the already locked parent rows, without changing business values.
+    -- A concurrent legal-form update at repeatable-read isolation must then
+    -- serialize or fail, rather than validating against a stale child snapshot.
+    UPDATE establishment.legal_entity AS c
+    SET legal_entity_type_id = c.legal_entity_type_id
+    WHERE c.legal_entity_id = ANY(holder_ids);
+    IF TG_OP = 'DELETE' THEN RETURN OLD; END IF;
+    SELECT legal_entity_type_id INTO holder_type FROM establishment.legal_entity
+    WHERE legal_entity_id = NEW.legal_entity_id;
+    IF holder_type IS DISTINCT FROM 9 THEN
+        RAISE EXCEPTION 'A council-area holder must be a Public body (legal type 9)'
+            USING ERRCODE = '23514';
+    END IF;
+    RETURN NEW;
+END $$;
+
+CREATE TRIGGER check_local_authority_council_holder
+BEFORE INSERT OR UPDATE OR DELETE ON establishment.local_authority_area_council_period
+FOR EACH ROW EXECUTE FUNCTION establishment.check_local_authority_council_holder();
+
+CREATE FUNCTION establishment.check_council_legal_form()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    IF NEW.legal_entity_type_id IS NOT DISTINCT FROM OLD.legal_entity_type_id THEN
+        RETURN NEW;
+    END IF;
+    IF NEW.legal_entity_type_id IS DISTINCT FROM 9 AND (
+        EXISTS (SELECT 1 FROM establishment.local_authority_area_council_period
+                WHERE legal_entity_id = OLD.legal_entity_id)
+        OR EXISTS (SELECT 1 FROM establishment.establishment_responsibility
+                   WHERE legal_entity_id = OLD.legal_entity_id AND responsibility_type_id = 5)
+    ) THEN
+        RAISE EXCEPTION 'A referenced council must retain Public body legal type 9'
+            USING ERRCODE = '23514';
+    END IF;
+    IF NEW.legal_entity_type_id IS DISTINCT FROM 11
+       AND EXISTS (SELECT 1 FROM establishment.legal_entity_sole_trader
+                   WHERE legal_entity_id=OLD.legal_entity_id) THEN
+        RAISE EXCEPTION 'A sole-trader subtype must retain legal type 11' USING ERRCODE='23514';
+    END IF;
+    IF NEW.legal_entity_type_id IS DISTINCT FROM 12
+       AND EXISTS (SELECT 1 FROM establishment.legal_entity_partner
+                   WHERE partnership_legal_entity_id=OLD.legal_entity_id) THEN
+        RAISE EXCEPTION 'A partnership with partner links must retain legal type 12' USING ERRCODE='23514';
+    END IF;
+    IF (NEW.legal_entity_type_id IS NULL OR NEW.legal_entity_type_id NOT IN (1,2,3,4,5,6,7))
+       AND EXISTS (SELECT 1 FROM establishment.legal_entity_partner
+                   WHERE partner_legal_entity_id=OLD.legal_entity_id) THEN
+        RAISE EXCEPTION 'A partner body must retain an eligible incorporated legal type' USING ERRCODE='23514';
+    END IF;
+    RETURN NEW;
+END $$;
+
+CREATE TRIGGER check_council_legal_form
+BEFORE UPDATE OF legal_entity_type_id ON establishment.legal_entity
+FOR EACH ROW EXECUTE FUNCTION establishment.check_council_legal_form();
+
+CREATE FUNCTION establishment.check_council_retains_area_link()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    -- Check the final transaction state so an atomic replacement is allowed.
+    PERFORM 1 FROM establishment.legal_entity
+    WHERE legal_entity_id = OLD.legal_entity_id FOR UPDATE;
+    IF EXISTS (SELECT 1 FROM establishment.establishment_responsibility
+               WHERE legal_entity_id = OLD.legal_entity_id AND responsibility_type_id = 5)
+       AND NOT EXISTS (SELECT 1 FROM establishment.local_authority_area_council_period
+                       WHERE legal_entity_id = OLD.legal_entity_id) THEN
+        RAISE EXCEPTION 'A council holding maintenance must retain an area link'
+            USING ERRCODE = '23514';
+    END IF;
+    RETURN NULL;
+END $$;
+
+CREATE CONSTRAINT TRIGGER check_council_retains_area_link
+AFTER DELETE OR UPDATE ON establishment.local_authority_area_council_period
+DEFERRABLE INITIALLY DEFERRED
+FOR EACH ROW EXECUTE FUNCTION establishment.check_council_retains_area_link();
+
+CREATE UNIQUE INDEX establishment_responsibility_current_maintenance_unique
+    ON establishment.establishment_responsibility (establishment_id)
+    WHERE is_current AND responsibility_type_id = 5;
+
+ALTER TABLE establishment.establishment_responsibility
+    ADD CONSTRAINT establishment_responsibility_maintenance_known_periods_excl
+    EXCLUDE USING gist (establishment_id WITH =, daterange(start_date,end_date,'[)') WITH &&)
+    WHERE (responsibility_type_id=5 AND start_date IS NOT NULL AND end_date IS NOT NULL);
+
+CREATE FUNCTION establishment.check_maintenance_council_holder()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE holder_ids uuid[];
+BEGIN
+    IF TG_OP='INSERT' AND NEW.responsibility_type_id<>5 THEN RETURN NEW; END IF;
+    IF TG_OP='DELETE' AND OLD.responsibility_type_id<>5 THEN RETURN OLD; END IF;
+    IF TG_OP='UPDATE' AND OLD.responsibility_type_id<>5 AND NEW.responsibility_type_id<>5 THEN RETURN NEW; END IF;
+    IF TG_OP='DELETE' THEN holder_ids:=ARRAY[OLD.legal_entity_id];
+    ELSIF TG_OP='UPDATE' THEN holder_ids:=ARRAY[OLD.legal_entity_id,NEW.legal_entity_id];
+    ELSE holder_ids:=ARRAY[NEW.legal_entity_id]; END IF;
+    PERFORM 1 FROM establishment.legal_entity WHERE legal_entity_id=ANY(holder_ids)
+    ORDER BY legal_entity_id FOR UPDATE;
+    -- Version the parents, as the council-period guard does, to protect
+    -- repeatable-read writers against stale dependent-table snapshots.
+    UPDATE establishment.legal_entity SET legal_entity_type_id=legal_entity_type_id
+    WHERE legal_entity_id=ANY(holder_ids);
+    IF TG_OP='DELETE' THEN RETURN OLD; END IF;
+    IF NEW.responsibility_type_id=5 AND (
+        NOT EXISTS (SELECT 1 FROM establishment.legal_entity
+                    WHERE legal_entity_id=NEW.legal_entity_id AND legal_entity_type_id=9)) THEN
+        RAISE EXCEPTION 'Maintenance holder must be a Public body council with an area link'
+            USING ERRCODE='23514';
+    END IF;
+    RETURN NEW;
+END $$;
+
+CREATE TRIGGER check_maintenance_council_holder
+BEFORE INSERT OR UPDATE OR DELETE ON establishment.establishment_responsibility
+FOR EACH ROW EXECUTE FUNCTION establishment.check_maintenance_council_holder();
+
+CREATE FUNCTION establishment.check_maintenance_area_link()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM establishment.establishment_responsibility r
+               WHERE r.establishment_responsibility_id=NEW.establishment_responsibility_id
+                 AND r.responsibility_type_id=5 AND NOT EXISTS (
+                     SELECT 1 FROM establishment.local_authority_area_council_period p
+                     WHERE p.legal_entity_id=r.legal_entity_id)) THEN
+        RAISE EXCEPTION 'Maintenance council must retain an area link' USING ERRCODE='23514';
+    END IF;
+    RETURN NULL;
+END $$;
+
+CREATE CONSTRAINT TRIGGER check_maintenance_area_link
+AFTER INSERT OR UPDATE ON establishment.establishment_responsibility
+DEFERRABLE INITIALLY DEFERRED
+FOR EACH ROW EXECUTE FUNCTION establishment.check_maintenance_area_link();
+
+CREATE TABLE establishment.legal_entity_sole_trader (
+    legal_entity_id uuid PRIMARY KEY REFERENCES establishment.legal_entity(legal_entity_id),
+    person_id uuid NOT NULL UNIQUE REFERENCES establishment.person(person_id)
+);
+
+CREATE FUNCTION establishment.check_sole_trader_type()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE holder_ids uuid[];
+BEGIN
+    IF TG_OP='INSERT' THEN holder_ids:=ARRAY[NEW.legal_entity_id];
+    ELSIF TG_OP='UPDATE' THEN holder_ids:=ARRAY[OLD.legal_entity_id,NEW.legal_entity_id];
+    ELSE holder_ids:=ARRAY[OLD.legal_entity_id]; END IF;
+    PERFORM 1 FROM establishment.legal_entity WHERE legal_entity_id=ANY(holder_ids)
+    ORDER BY legal_entity_id FOR UPDATE;
+    UPDATE establishment.legal_entity c SET legal_entity_type_id=c.legal_entity_type_id
+    WHERE c.legal_entity_id=ANY(holder_ids);
+    IF TG_OP='DELETE' THEN RETURN OLD; END IF;
+    IF NOT EXISTS (SELECT 1 FROM establishment.legal_entity
+                   WHERE legal_entity_id=NEW.legal_entity_id AND legal_entity_type_id=11) THEN
+        RAISE EXCEPTION 'A sole-trader subtype requires legal type 11' USING ERRCODE='23514';
+    END IF;
+    RETURN NEW;
+END $$;
+CREATE TRIGGER check_sole_trader_type
+BEFORE INSERT OR UPDATE OR DELETE ON establishment.legal_entity_sole_trader
+FOR EACH ROW EXECUTE FUNCTION establishment.check_sole_trader_type();
+
+CREATE TABLE establishment.legal_entity_partner (
+    legal_entity_partner_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    partnership_legal_entity_id uuid NOT NULL REFERENCES establishment.legal_entity(legal_entity_id),
+    partner_legal_entity_id uuid REFERENCES establishment.legal_entity(legal_entity_id),
+    partner_person_id uuid REFERENCES establishment.person(person_id),
+    start_date date,
+    end_date date,
+    is_current boolean NOT NULL DEFAULT false,
+    CHECK ((partner_legal_entity_id IS NOT NULL) <> (partner_person_id IS NOT NULL)),
+    CHECK (partner_legal_entity_id IS NULL OR partner_legal_entity_id <> partnership_legal_entity_id),
+    CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
+);
+CREATE UNIQUE INDEX legal_entity_partner_current_person_unique
+    ON establishment.legal_entity_partner(partnership_legal_entity_id,partner_person_id)
+    WHERE is_current AND partner_person_id IS NOT NULL;
+CREATE UNIQUE INDEX legal_entity_partner_current_body_unique
+    ON establishment.legal_entity_partner(partnership_legal_entity_id,partner_legal_entity_id)
+    WHERE is_current AND partner_legal_entity_id IS NOT NULL;
+ALTER TABLE establishment.legal_entity_partner
+    ADD CONSTRAINT legal_entity_partner_known_periods_excl
+    EXCLUDE USING gist (partnership_legal_entity_id WITH =,
+                        (partner_person_id IS NOT NULL) WITH =,
+                        (COALESCE(partner_legal_entity_id,partner_person_id)) WITH =,
+                        daterange(start_date,end_date,'[)') WITH &&)
+    WHERE (start_date IS NOT NULL AND end_date IS NOT NULL);
+
+CREATE FUNCTION establishment.check_partner_relationship()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE parent_type integer; partner_type integer; holder_ids uuid[];
+BEGIN
+    IF TG_OP='INSERT' THEN holder_ids:=ARRAY[NEW.partnership_legal_entity_id,NEW.partner_legal_entity_id];
+    ELSIF TG_OP='UPDATE' THEN holder_ids:=ARRAY[OLD.partnership_legal_entity_id,OLD.partner_legal_entity_id,
+                                              NEW.partnership_legal_entity_id,NEW.partner_legal_entity_id];
+    ELSE holder_ids:=ARRAY[OLD.partnership_legal_entity_id,OLD.partner_legal_entity_id]; END IF;
+    PERFORM 1 FROM establishment.legal_entity WHERE legal_entity_id=ANY(holder_ids)
+    ORDER BY legal_entity_id FOR UPDATE;
+    UPDATE establishment.legal_entity c SET legal_entity_type_id=c.legal_entity_type_id
+    WHERE c.legal_entity_id=ANY(holder_ids);
+    IF TG_OP='DELETE' THEN RETURN OLD; END IF;
+    SELECT legal_entity_type_id INTO parent_type FROM establishment.legal_entity
+    WHERE legal_entity_id=NEW.partnership_legal_entity_id FOR UPDATE;
+    IF parent_type IS DISTINCT FROM 12 THEN
+        RAISE EXCEPTION 'Partner links require a Traditional partnership parent' USING ERRCODE='23514';
+    END IF;
+    IF NEW.partner_legal_entity_id IS NOT NULL THEN
+        SELECT legal_entity_type_id INTO partner_type FROM establishment.legal_entity
+        WHERE legal_entity_id=NEW.partner_legal_entity_id FOR UPDATE;
+        IF partner_type IS NULL OR partner_type NOT IN (1,2,3,4,5,6,7) THEN
+            RAISE EXCEPTION 'Partner body must have an eligible incorporated legal type' USING ERRCODE='23514';
+        END IF;
+    END IF;
+    RETURN NEW;
+END $$;
+CREATE TRIGGER check_partner_relationship
+BEFORE INSERT OR UPDATE OR DELETE ON establishment.legal_entity_partner
+FOR EACH ROW EXECUTE FUNCTION establishment.check_partner_relationship();
 
 COMMIT;

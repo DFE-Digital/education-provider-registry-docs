@@ -12,7 +12,7 @@ BEGIN
     JOIN establishment.establishment_type t USING (establishment_type_id)
     JOIN establishment.establishment_lifecycle l USING (establishment_id)
     JOIN establishment.establishment_geography geo USING (establishment_id)
-    JOIN establishment.local_authority la USING (local_authority_id)
+    JOIN establishment.local_authority_area la USING (local_authority_area_id)
     WHERE e.urn=136933 AND e.name='Black Country UTC' AND e.ukprn IS NULL
       AND e.establishment_number=4000 AND t.name='University technical college'
       AND l.open_date=DATE '2011-09-01' AND l.close_date=DATE '2015-08-31' AND la.code=335;

@@ -73,10 +73,15 @@ CREATE TEMP TABLE source_establishment_fixture (
     ofsted_link text,
     source_specialist_provision_type_code text,
     source_special_classes_code text,
-    has_special_classes boolean
+    has_special_classes boolean,
+    source_observed_date date
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+
+SELECT pg_advisory_xact_lock(hashtextextended('council-maintenance-transition',0));
+DELETE FROM source_establishment_fixture s
+WHERE NOT migration.allow_establishment_replay(s.urn,s.source_observed_date,to_jsonb(s));
 
 -- Geography reference data must be loaded before establishment geography. Do
 -- not silently turn a supplied BAU GOR code into a missing target relation.
@@ -236,19 +241,19 @@ JOIN establishment.establishment AS e ON e.urn = s.urn
 WHERE eg.establishment_id = e.establishment_id;
 
 INSERT INTO establishment.establishment_geography (
-    establishment_id, local_authority_id, government_office_region_id,
+    establishment_id, local_authority_area_id, government_office_region_id,
     district_administrative_id, administrative_ward_id,
     parliamentary_constituency_id, lsoa_id, msoa_id, urban_rural_id
 )
 SELECT e.establishment_id,
-       la.local_authority_id,
+       la.local_authority_area_id,
        gor.government_office_region_id,
        d.id,
        w.id,
        pc.id, l.id, m.id, ur.id
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
-LEFT JOIN establishment.local_authority AS la
+LEFT JOIN establishment.local_authority_area AS la
   ON la.code = NULLIF(BTRIM(s.local_authority_code), '')::integer
 LEFT JOIN establishment.government_office_region AS gor
   ON gor.code = NULLIF(BTRIM(s.government_office_region_code), '')
@@ -278,7 +283,7 @@ WHERE (NULLIF(BTRIM(s.local_authority_code), '') IS NOT NULL
    OR (NULLIF(BTRIM(s.msoa_code), '') IS NOT NULL AND BTRIM(s.msoa_code) <> '0')
    OR (NULLIF(BTRIM(s.urban_rural_code), '') IS NOT NULL AND BTRIM(s.urban_rural_code) <> '0')
 ON CONFLICT (establishment_id) DO UPDATE SET
-    local_authority_id = EXCLUDED.local_authority_id,
+    local_authority_area_id = EXCLUDED.local_authority_area_id,
     government_office_region_id = EXCLUDED.government_office_region_id,
     district_administrative_id = EXCLUDED.district_administrative_id,
     administrative_ward_id = EXCLUDED.administrative_ward_id,

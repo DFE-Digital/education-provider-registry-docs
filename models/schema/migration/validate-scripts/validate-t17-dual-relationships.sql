@@ -12,7 +12,7 @@ BEGIN
  JOIN establishment.organisation_group g USING(organisation_group_id)
  JOIN establishment.organisation_group_type gt USING(organisation_group_type_id)
  WHERE t.name='Group UID' AND i.value='1537' AND issuer.name='GIAS' AND NOT i.is_current
-  AND i.establishment_party_role_id IS NULL AND gt.name='Federation' AND g.local_authority_id IS NULL
+  AND i.establishment_party_role_id IS NULL AND gt.name='Federation' AND g.local_authority_area_id IS NULL
   AND g.name='The Federation of Beaufort School and Langley School'
   AND g.open_date=DATE '2012-04-01' AND g.close_date=DATE '2020-07-01';
  SELECT organisation_group_member_id INTO STRICT member FROM establishment.organisation_group_member
@@ -42,7 +42,7 @@ BEGIN
  IF (SELECT count(*) FROM establishment.organisation_group_member WHERE establishment_id=school)<>1
   OR (SELECT count(*) FROM establishment.organisation_group_member WHERE organisation_group_id=federation)<>1
   OR (SELECT count(*) FROM establishment.group_identifier WHERE organisation_group_id=federation)<>1
-  OR (SELECT count(*) FROM establishment.establishment_responsibility WHERE establishment_id=school)<>1
+  OR (SELECT count(*) FROM establishment.establishment_responsibility WHERE establishment_id=school AND responsibility_type_id<>5)<>1
   OR (SELECT count(*) FROM establishment.establishment_responsibility WHERE legal_entity_id=party)<>1
  THEN RAISE EXCEPTION 'T17 imported unselected relationships or restated membership as responsibility'; END IF;
  IF NOT EXISTS(
