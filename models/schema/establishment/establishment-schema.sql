@@ -7,10 +7,50 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 CREATE SCHEMA establishment;
 
-CREATE TABLE establishment.establishment_type (
-    establishment_type_id integer PRIMARY KEY,
-    name text NOT NULL
+CREATE TABLE establishment.establishment_type_category (
+    establishment_type_category_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL UNIQUE
 );
+
+CREATE TABLE establishment.academy_route (
+    academy_route_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    canonical_identifier text NOT NULL UNIQUE,
+    CONSTRAINT academy_route_values CHECK (
+        (academy_route_id, name, canonical_identifier) IN (
+            (1, 'Converter', 'est:ConverterRoute'),
+            (2, 'Sponsor led', 'est:SponsorLedRoute')
+        )
+    )
+);
+
+CREATE TABLE establishment.establishment_type (
+    establishment_type_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    code text NOT NULL UNIQUE,
+    name text NOT NULL,
+    establishment_type_category_id uuid NOT NULL
+        REFERENCES establishment.establishment_type_category (establishment_type_category_id),
+    academy_route_id integer REFERENCES establishment.academy_route (academy_route_id),
+    -- All nine academy types use BAU's Academies category. Its seeded UUID
+    -- is independent of BAU group codes and internal source row IDs.
+    CONSTRAINT establishment_type_academy_mapping CHECK (
+        CASE code
+            WHEN '34' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '28' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '44' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '33' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '42' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '43' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '45' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '46' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '57' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NULL
+            ELSE establishment_type_category_id <> 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NULL
+        END
+    )
+);
+
+COMMENT ON TABLE establishment.establishment_type IS
+    'Detailed administrative establishment types with published DfE codes. Category and academy route are obtained through this reference data, not stored on each establishment.';
 
 CREATE TABLE establishment.education_phase (
     education_phase_id integer PRIMARY KEY,
@@ -183,7 +223,7 @@ CREATE TABLE establishment.establishment (
     ukprn numeric CHECK (ukprn BETWEEN 10000000 AND 99999999),
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
-    establishment_type_id integer NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
+    establishment_type_id uuid NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
     ofsted_link text,
     education_phase_id integer REFERENCES establishment.education_phase (education_phase_id),
     further_education_type_id integer REFERENCES establishment.further_education_type (further_education_type_id),

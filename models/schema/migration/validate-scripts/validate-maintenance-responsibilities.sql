@@ -8,7 +8,7 @@ BEGIN
         JOIN establishment.establishment_geography g USING(establishment_id)
         JOIN establishment.local_authority_area a USING(local_authority_area_id)
         JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
-        WHERE j.name='English' AND e.establishment_type_id IN (1,2,3,9,10,11,12,13)
+        WHERE j.name='English' AND e.establishment_type_id IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('01','02','03','05','07','12','14','15'))
           AND l.establishment_status_id IN (1,3)
           AND ((SELECT count(*) FROM establishment.establishment_responsibility r
                 WHERE r.establishment_id=e.establishment_id AND responsibility_type_id=5 AND is_current)<>1
@@ -23,7 +23,7 @@ BEGIN
         JOIN establishment.local_authority_area a USING(local_authority_area_id)
         JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
         WHERE r.responsibility_type_id=5 AND r.is_current AND
-          (l.establishment_status_id NOT IN (1,3) OR e.establishment_type_id NOT IN (1,2,3,9,10,11,12,13)
+          (l.establishment_status_id NOT IN (1,3) OR e.establishment_type_id NOT IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('01','02','03','05','07','12','14','15'))
            OR j.name<>'English' OR r.end_date IS NOT NULL)
     ) THEN RAISE EXCEPTION 'Stage 3: current maintenance on a closed, ineligible or Welsh school'; END IF;
     IF EXISTS (
@@ -71,7 +71,7 @@ BEGIN
               JOIN establishment.local_authority_area a USING(local_authority_area_id)
               JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
               WHERE o.processing_status='review' AND j.name='English'
-                AND (e.establishment_type_id IN (1,2,3,9,10,11,12,13)
+                AND (e.establishment_type_id IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('01','02','03','05','07','12','14','15'))
                      OR o.source_type_name IN ('Community school','Community special school','Foundation special school',
                        'Voluntary aided school','Voluntary controlled school','Foundation school','Pupil referral unit','Maintained nursery school')))
     THEN RAISE EXCEPTION 'Stage 3: eligible maintenance source assertions remain staged for review'; END IF;

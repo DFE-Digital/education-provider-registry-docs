@@ -12,7 +12,7 @@ BEGIN
     JOIN establishment.establishment_type t USING (establishment_type_id)
     JOIN establishment.establishment_lifecycle l USING (establishment_id)
     WHERE e.urn=139844 AND e.name='Bury CofE Primary School' AND e.ukprn=10042228
-      AND t.name='Mainstream academy' AND l.open_date=DATE '2013-07-01' AND l.close_date IS NULL;
+      AND t.code='34' AND l.open_date=DATE '2013-07-01' AND l.close_date IS NULL;
 
     SELECT r.legal_entity_id,r.establishment_party_role_id INTO STRICT sponsor,sponsor_role
     FROM establishment.group_identifier i

@@ -51,7 +51,7 @@ $$;
 DO $$
 DECLARE
     test_urn integer;
-    fixture_type integer;
+    fixture_type uuid;
 BEGIN
     SELECT establishment_type_id INTO STRICT fixture_type
     FROM establishment.establishment LIMIT 1;

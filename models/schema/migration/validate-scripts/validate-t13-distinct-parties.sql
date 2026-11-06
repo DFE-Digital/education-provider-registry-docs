@@ -62,7 +62,7 @@ BEGIN
     JOIN establishment.establishment_type t USING (establishment_type_id)
     JOIN establishment.establishment_lifecycle l USING (establishment_id)
     WHERE e.urn=137166 AND e.name='The King''s School Grantham' AND e.ukprn=10034779
-      AND t.name='Mainstream academy' AND l.open_date=DATE '2011-08-01' AND l.close_date IS NULL;
+      AND t.code='34' AND l.open_date=DATE '2011-08-01' AND l.close_date IS NULL;
     IF (SELECT count(*) FROM establishment.establishment_responsibility WHERE establishment_id=school)<>1
        OR NOT EXISTS (SELECT 1 FROM establishment.establishment_responsibility r
           JOIN establishment.establishment_responsibility_type t USING (responsibility_type_id)

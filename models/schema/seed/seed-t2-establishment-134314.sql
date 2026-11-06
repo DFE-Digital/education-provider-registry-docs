@@ -11,7 +11,7 @@ INSERT INTO establishment.establishment
     (establishment_id, urn, ukprn, establishment_number, name, establishment_type_id, education_phase_id)
 VALUES
     ('13431400-0000-4000-8000-000000000010', 134314, 10024207, 6905,
-     'St Mary Magdalene Academy', 4, 7);
+     'St Mary Magdalene Academy', (SELECT establishment_type_id FROM establishment.establishment_type WHERE code='28'), 7);
 
 INSERT INTO establishment.capacity_and_pupil_measures
     (capacity_and_pupil_measures_id, establishment_id, school_capacity, pupil_count,

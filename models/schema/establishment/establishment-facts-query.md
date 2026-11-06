@@ -24,7 +24,10 @@ For a combined view of all six E09 fields, use
 ```sql
 SELECT
     e.*,
+    et.code AS establishment_type_code,
     et.name AS establishment_type,
+    category.name AS establishment_type_category,
+    route.name AS academy_route,
     ep.name AS education_phase,
     fet.code AS further_education_type_code,
     fet.name AS further_education_type,
@@ -36,6 +39,10 @@ SELECT
 FROM establishment e
 LEFT JOIN establishment_type et
     ON et.establishment_type_id = e.establishment_type_id
+LEFT JOIN establishment_type_category category
+    ON category.establishment_type_category_id = et.establishment_type_category_id
+LEFT JOIN academy_route route
+    ON route.academy_route_id = et.academy_route_id
 LEFT JOIN education_phase ep
     ON ep.education_phase_id = e.education_phase_id
 LEFT JOIN further_education_type fet

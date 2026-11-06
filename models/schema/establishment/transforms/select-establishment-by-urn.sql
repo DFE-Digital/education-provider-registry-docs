@@ -42,7 +42,12 @@ SELECT
     rec.name AS reason_establishment_closed,
     elc.last_changed_date,
     e.establishment_type_id,
+    et.code AS establishment_type_code,
     et.name AS establishment_type,
+    et.establishment_type_category_id,
+    category.name AS establishment_type_category,
+    et.academy_route_id,
+    route.name AS academy_route,
     e.education_phase_id,
     ep.name AS education_phase,
     ets.is_main_site,
@@ -93,6 +98,10 @@ JOIN establishment.establishment AS e
   ON e.urn = p.urn
 JOIN establishment.establishment_type AS et
   ON et.establishment_type_id = e.establishment_type_id
+JOIN establishment.establishment_type_category AS category
+  ON category.establishment_type_category_id = et.establishment_type_category_id
+LEFT JOIN establishment.academy_route AS route
+  ON route.academy_route_id = et.academy_route_id
 LEFT JOIN establishment.further_education_type AS fet
   ON fet.further_education_type_id = e.further_education_type_id
 LEFT JOIN establishment.section_41_approval_status AS s41

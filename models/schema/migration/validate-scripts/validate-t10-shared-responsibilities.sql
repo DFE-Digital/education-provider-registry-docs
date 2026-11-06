@@ -10,7 +10,7 @@ BEGIN
  JOIN establishment.establishment_geography geo USING(establishment_id)
  JOIN establishment.local_authority_area la USING(local_authority_area_id)
  WHERE e.urn=148341 AND e.name='Outwood Alternative Provision Eston' AND e.ukprn=10092329
-   AND e.establishment_number=6003 AND e.establishment_type_id=17 AND e.education_phase_id IS NULL
+   AND e.establishment_number=6003 AND e.establishment_type_id=(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='11') AND e.education_phase_id IS NULL
    AND s.name='Open' AND l.open_date=DATE '2021-02-18' AND l.close_date IS NULL AND la.code=807;
  SELECT e.establishment_id INTO STRICT academy FROM establishment.establishment e
  JOIN establishment.establishment_lifecycle l USING(establishment_id)
@@ -18,7 +18,7 @@ BEGIN
  JOIN establishment.establishment_geography geo USING(establishment_id)
  JOIN establishment.local_authority_area la USING(local_authority_area_id)
  WHERE e.urn=135961 AND e.name='Outwood Grange Academy' AND e.ukprn=10028145 AND e.establishment_number=6905
-   AND e.establishment_type_id=4 AND s.name='Open' AND l.open_date=DATE '2009-09-01' AND l.close_date IS NULL AND la.code=384;
+   AND e.establishment_type_id=(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='28') AND s.name='Open' AND l.open_date=DATE '2009-09-01' AND l.close_date IS NULL AND la.code=384;
  IF (SELECT count(*) FROM establishment.establishment_party_role WHERE legal_entity_id=party)<>2
    OR (SELECT count(*) FROM establishment.organisation_identifier WHERE legal_entity_id=party)<>2
    OR NOT EXISTS(SELECT 1 FROM establishment.organisation_identifier i JOIN establishment.organisation_identifier_type t USING(organisation_identifier_type_id)

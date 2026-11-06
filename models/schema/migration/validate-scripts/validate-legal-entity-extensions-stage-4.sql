@@ -121,7 +121,7 @@ BEGIN
         IF SQLERRM NOT LIKE 'Accepted proprietor decision changed%' THEN RAISE; END IF;
     END;
     INSERT INTO establishment.establishment(urn,name,establishment_type_id)
-    VALUES(999980,'TEST ONLY closed LLP school',17) RETURNING establishment_id INTO closed_school;
+    VALUES(999980,'TEST ONLY closed LLP school',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='11')) RETURNING establishment_id INTO closed_school;
     INSERT INTO establishment.establishment_lifecycle(establishment_id,establishment_status_id,close_date)
     VALUES(closed_school,2,'2020-01-01');
     d:=jsonb_build_object('decisionId','TEST ONLY LLP','reviewStatus','accepted','proprietorKind','Body',

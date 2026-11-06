@@ -1,43 +1,43 @@
 urn|area_code|source_type_name|source_status_code|open_date|close_date|observed_date
-20048|308|Children's centre|1|2008-03-31|NULL|2026-11-02
-20338|882|Children's centre|1|2008-02-07|NULL|2026-11-02
-20549|882|Children's centre|1|2006-03-14|NULL|2026-11-02
-20575|308|Children's centre|1|2007-09-16|NULL|2026-11-02
-20614|882|Children's centre|1|2008-03-03|NULL|2026-11-02
-21240|308|Children's centre|1|2006-09-27|NULL|2026-11-02
-21363|882|Children's centre|1|2009-12-14|NULL|2026-11-02
-21423|308|Children's centre|1|2006-09-27|NULL|2026-11-02
-21425|308|Children's centre|1|2009-09-30|NULL|2026-11-02
-21547|308|Children's centre|1|2008-01-23|NULL|2026-11-02
-22422|882|Children's centre|1|2009-12-14|NULL|2026-11-02
-22423|308|Children's centre|1|2008-01-23|NULL|2026-11-02
-22459|882|Children's centre|1|2008-01-16|NULL|2026-11-02
-22975|882|Children's centre|1|2008-01-16|NULL|2026-11-02
-23004|882|Children's centre|1|2008-02-07|NULL|2026-11-02
-23122|882|Children's centre|1|2006-09-28|NULL|2026-11-02
-100018|202|Community school|1|NULL|NULL|2026-11-02
-101800|306|Voluntary aided school|1|NULL|NULL|2026-11-02
-102996|319|Voluntary aided school|1|NULL|NULL|2026-11-02
-102997|319|Voluntary aided school|1|NULL|NULL|2026-11-02
-103630|330|Foundation special school|2|NULL|2020-06-16|2026-11-02
-109393|801|Foundation special school|1|NULL|NULL|2026-11-02
-109443|822|Foundation school|1|NULL|NULL|2026-11-02
-109613|822|Voluntary controlled school|1|NULL|NULL|2026-11-02
-112461|943|Other independent special school|1|1990-03-28|NULL|2026-11-02
-115780|916|Other independent school|1|1930-01-01|NULL|2026-11-02
-119009|886|Other independent special school|1|1988-12-12|NULL|2026-11-02
-124870|935|Other independent school|1|1921-03-13|NULL|2026-11-02
-132141|392|Foundation school|1|2001-09-01|NULL|2026-11-02
-134311|308|Academy sponsor led|1|2007-09-01|NULL|2026-11-02
-134314|206|Academy sponsor led|1|2007-09-01|NULL|2026-11-02
-135905|352|Academy sponsor led|2|2009-09-01|2016-02-29|2026-11-02
-135936|888|Academy sponsor led|1|2009-09-01|NULL|2026-11-02
-135961|384|Academy sponsor led|1|2009-09-01|NULL|2026-11-02
-136102|861|Academy sponsor led|1|2010-09-01|NULL|2026-11-02
-136494|878|Academy converter|1|2011-03-01|NULL|2026-11-02
-136933|335|University technical college|2|2011-09-01|2015-08-31|2026-11-02
-137166|925|Academy converter|1|2011-08-01|NULL|2026-11-02
-137603|371|Academy converter|1|2011-11-01|NULL|2026-11-02
-139844|873|Academy converter|1|2013-07-01|NULL|2026-11-02
-142869|928|Free schools|1|2016-09-01|NULL|2026-11-02
-148341|865|Other independent school|8|2018-11-10|2018-11-10|2026-11-02
+20048|308|Children's centre|1|2008-03-31|NULL|2026-11-06
+20338|882|Children's centre|1|2008-02-07|NULL|2026-11-06
+20549|882|Children's centre|1|2006-03-14|NULL|2026-11-06
+20575|308|Children's centre|1|2007-09-16|NULL|2026-11-06
+20614|882|Children's centre|1|2008-03-03|NULL|2026-11-06
+21240|308|Children's centre|1|2006-09-27|NULL|2026-11-06
+21363|882|Children's centre|1|2009-12-14|NULL|2026-11-06
+21423|308|Children's centre|1|2006-09-27|NULL|2026-11-06
+21425|308|Children's centre|1|2009-09-30|NULL|2026-11-06
+21547|308|Children's centre|1|2008-01-23|NULL|2026-11-06
+22422|882|Children's centre|1|2009-12-14|NULL|2026-11-06
+22423|308|Children's centre|1|2008-01-23|NULL|2026-11-06
+22459|882|Children's centre|1|2008-01-16|NULL|2026-11-06
+22975|882|Children's centre|1|2008-01-16|NULL|2026-11-06
+23004|882|Children's centre|1|2008-02-07|NULL|2026-11-06
+23122|882|Children's centre|1|2006-09-28|NULL|2026-11-06
+100018|202|Community school|1|NULL|NULL|2026-11-06
+101800|306|Voluntary aided school|1|NULL|NULL|2026-11-06
+102996|319|Voluntary aided school|1|NULL|NULL|2026-11-06
+102997|319|Voluntary aided school|1|NULL|NULL|2026-11-06
+103630|330|Foundation special school|2|NULL|2020-06-16|2026-11-06
+109393|801|Foundation special school|1|NULL|NULL|2026-11-06
+109443|822|Foundation school|1|NULL|NULL|2026-11-06
+109613|822|Voluntary controlled school|1|NULL|NULL|2026-11-06
+112461|943|Other independent special school|1|1990-03-28|NULL|2026-11-06
+115780|916|Other independent school|1|1930-01-01|NULL|2026-11-06
+119009|886|Other independent special school|1|1988-12-12|NULL|2026-11-06
+124870|935|Other independent school|1|1921-03-13|NULL|2026-11-06
+132141|392|Foundation school|1|2001-09-01|NULL|2026-11-06
+134311|308|Academy sponsor led|1|2007-09-01|NULL|2026-11-06
+134314|206|Academy sponsor led|1|2007-09-01|NULL|2026-11-06
+135905|352|Academy sponsor led|2|2009-09-01|2016-02-29|2026-11-06
+135936|888|Academy sponsor led|1|2009-09-01|NULL|2026-11-06
+135961|384|Academy sponsor led|1|2009-09-01|NULL|2026-11-06
+136102|861|Academy sponsor led|1|2010-09-01|NULL|2026-11-06
+136494|878|Academy converter|1|2011-03-01|NULL|2026-11-06
+136933|335|University technical college|2|2011-09-01|2015-08-31|2026-11-06
+137166|925|Academy converter|1|2011-08-01|NULL|2026-11-06
+137603|371|Academy converter|1|2011-11-01|NULL|2026-11-06
+139844|873|Academy converter|1|2013-07-01|NULL|2026-11-06
+142869|928|Free schools|1|2016-09-01|NULL|2026-11-06
+148341|865|Other independent school|8|2018-11-10|2018-11-10|2026-11-06

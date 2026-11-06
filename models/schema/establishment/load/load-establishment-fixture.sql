@@ -4,9 +4,9 @@
 -- The source extract is pipe-delimited CSV and has a header row.
 --
 -- Reference values arrive as target IDs, already mapped from BAU codes by
--- transforms/establishment-from-bau.sql. That transform is the only place the
--- mapping is defined; this load uses the IDs as given and relies on
--- seed/seed-reference-data.sql for the reference rows.
+-- transforms/establishment-from-bau.sql, except establishment type: its UUID
+-- is resolved here from the published source code and seeded reference data.
+-- Category and academy route are obtained through that type.
 
 BEGIN;
 
@@ -33,7 +33,7 @@ CREATE TEMP TABLE source_establishment_fixture (
     reason_closed_code text,
     reason_closed_name text,
     last_changed_date date,
-    establishment_type_id integer,
+    source_establishment_type_code text,
     education_phase_id integer,
     school_capacity integer,
     pupil_count integer,
@@ -78,6 +78,29 @@ CREATE TEMP TABLE source_establishment_fixture (
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+
+ALTER TABLE source_establishment_fixture ADD COLUMN establishment_type_id uuid;
+UPDATE source_establishment_fixture s
+SET establishment_type_id = t.establishment_type_id
+FROM establishment.establishment_type t
+WHERE t.code = NULLIF(BTRIM(s.source_establishment_type_code), '');
+
+-- Resolve the type before replay filtering so an unsupported code cannot be
+-- silently discarded as an older source observation.
+DO $$
+DECLARE
+    invalid_types text;
+BEGIN
+    SELECT string_agg(format('%s (code %s)', s.urn,
+               coalesce(NULLIF(BTRIM(s.source_establishment_type_code), ''), 'missing')), ', ' ORDER BY s.urn)
+    INTO invalid_types
+    FROM source_establishment_fixture s
+    WHERE s.establishment_type_id IS NULL;
+    IF invalid_types IS NOT NULL THEN
+        RAISE EXCEPTION 'Establishment type code is missing or unsupported for %. Review the source code and seeded type mapping.', invalid_types;
+    END IF;
+END;
+$$;
 
 SELECT pg_advisory_xact_lock(hashtextextended('council-maintenance-transition',0));
 DELETE FROM source_establishment_fixture s
@@ -144,18 +167,11 @@ END;
 $$;
 
 -- Fail on any value the transform could not map, rather than loading a
--- default. The transform returns NULL for an unrecognised type or phase.
+-- default. Establishment type code/ID consistency was checked above.
 DO $$
 DECLARE
     unmapped text;
 BEGIN
-    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
-    FROM source_establishment_fixture
-    WHERE establishment_type_id IS NULL;
-    IF unmapped IS NOT NULL THEN
-        RAISE EXCEPTION 'Establishment type could not be mapped for URN %. Add the BAU type to the mapping in transforms/establishment-from-bau.sql.', unmapped;
-    END IF;
-
     SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
     FROM source_establishment_fixture
     WHERE education_phase_id IS NULL AND source_education_phase IS NOT NULL

@@ -1,12 +1,12 @@
 -- Behavioural regressions. Synthetic schools and changes always roll back.
 BEGIN;
-CREATE FUNCTION pg_temp.maintenance_observation(test_urn integer,test_area integer,test_type integer,
+CREATE FUNCTION pg_temp.maintenance_observation(test_urn integer,test_area integer,test_type_code integer,
     test_status integer,opened date,closed date,observed date)
 RETURNS uuid LANGUAGE plpgsql AS $$
 DECLARE school uuid;run_id uuid;snapshot_id uuid;record_id uuid;type_name text;
 BEGIN
     INSERT INTO establishment.establishment(urn,name,establishment_type_id)
-    VALUES(test_urn,'TEST ONLY maintenance',test_type)
+    VALUES(test_urn,'TEST ONLY maintenance',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code=lpad(test_type_code::text,2,'0')))
     ON CONFLICT(urn) DO UPDATE SET establishment_type_id=EXCLUDED.establishment_type_id
     RETURNING establishment_id INTO school;
     INSERT INTO establishment.establishment_lifecycle(establishment_id,establishment_status_id,open_date,close_date)
@@ -15,7 +15,7 @@ BEGIN
     INSERT INTO establishment.establishment_geography(establishment_id,local_authority_area_id)
     SELECT school,local_authority_area_id FROM establishment.local_authority_area WHERE code=test_area
     ON CONFLICT(establishment_id) DO UPDATE SET local_authority_area_id=EXCLUDED.local_authority_area_id;
-    SELECT name INTO type_name FROM establishment.establishment_type WHERE establishment_type_id=test_type;
+    SELECT name INTO type_name FROM establishment.establishment_type WHERE code=lpad(test_type_code::text,2,'0');
     INSERT INTO migration.migration_run(run_type,source_system,status) VALUES('TEST ONLY','TEST ONLY','completed')
     RETURNING migration_run_id INTO run_id;
     INSERT INTO migration.source_snapshot(migration_run_id,source_system,snapshot_date)
@@ -30,14 +30,14 @@ BEGIN
 END $$;
 
 DO $$
-DECLARE snapshot_id uuid;school uuid;responsibility uuid;council uuid;company uuid;unlinked uuid;person uuid;type_id integer;
+DECLARE snapshot_id uuid;school uuid;responsibility uuid;council uuid;company uuid;unlinked uuid;person uuid;type_code integer;
 BEGIN
-    FOR type_id IN SELECT unnest(ARRAY[1,2,3,9,10,11,12,13]) LOOP
-        PERFORM pg_temp.maintenance_observation(999100+type_id,202,type_id,1,NULL,NULL,'2026-11-02');
+    FOR type_code IN SELECT unnest(ARRAY[1,2,3,5,7,12,14,15]) LOOP
+        PERFORM pg_temp.maintenance_observation(999100+type_code,202,type_code,1,NULL,NULL,'2026-11-02');
         IF (SELECT count(*) FROM establishment.establishment_responsibility r
             JOIN establishment.establishment e USING(establishment_id)
-            WHERE e.urn=999100+type_id AND r.is_current AND r.responsibility_type_id=5)<>1 THEN
-            RAISE EXCEPTION 'Maintained-school type % was omitted',type_id;
+            WHERE e.urn=999100+type_code AND r.is_current AND r.responsibility_type_id=5)<>1 THEN
+            RAISE EXCEPTION 'Maintained-school type % was omitted',type_code;
         END IF;
     END LOOP;
     PERFORM pg_temp.maintenance_observation(999011,202,1,3,NULL,'2027-01-01','2026-11-02');
@@ -79,7 +79,7 @@ BEGIN
     PERFORM pg_temp.maintenance_observation(999005,825,1,2,'1990-01-01','2022-01-01','2026-11-02');
     IF (SELECT count(*) FROM establishment.establishment_responsibility r JOIN establishment.establishment e USING(establishment_id)
         WHERE e.urn=999005 AND NOT r.is_current)<>2 THEN RAISE EXCEPTION 'Retained-code council history was not reconstructed'; END IF;
-    PERFORM pg_temp.maintenance_observation(999005,825,4,2,'1990-01-01','2022-01-01','2026-11-03');
+    PERFORM pg_temp.maintenance_observation(999005,825,28,2,'1990-01-01','2022-01-01','2026-11-03');
     IF (SELECT count(*) FROM establishment.establishment_responsibility r JOIN establishment.establishment e USING(establishment_id)
         WHERE e.urn=999005 AND NOT r.is_current)<>2 THEN RAISE EXCEPTION 'Current academy classification erased supported maintenance history'; END IF;
     PERFORM pg_temp.maintenance_observation(999006,940,1,2,'1990-01-01','2020-01-01','2026-11-02');

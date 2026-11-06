@@ -21,6 +21,8 @@ No nursery classes and Not approved remain recorded values.
 ```mermaid
 erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
+    ESTABLISHMENT_TYPE }o--|| ESTABLISHMENT_TYPE_CATEGORY : "belongs to"
+    ESTABLISHMENT_TYPE }o--o| ACADEMY_ROUTE : "has route"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
     ESTABLISHMENT }o--o| FURTHER_EDUCATION_TYPE : "has further-education type"
     ESTABLISHMENT }o--o| SECTION_41_APPROVAL_STATUS : "has Section 41 status"
@@ -51,6 +53,7 @@ erDiagram
         numeric ukprn
         string name
         string ofsted_link
+        uuid establishment_type_id FK
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
         integer religious_character_id FK
@@ -102,8 +105,22 @@ erDiagram
     }
 
     ESTABLISHMENT_TYPE {
-        integer establishment_type_id PK
+        uuid establishment_type_id PK
+        string code UK
         string name
+        uuid establishment_type_category_id FK
+        integer academy_route_id FK
+    }
+
+    ESTABLISHMENT_TYPE_CATEGORY {
+        uuid establishment_type_category_id PK
+        string name UK
+    }
+
+    ACADEMY_ROUTE {
+        integer academy_route_id PK
+        string name UK
+        string canonical_identifier UK
     }
 
     EDUCATION_PHASE {
@@ -204,6 +221,10 @@ erDiagram
 ```
 
 ## Model detail
+
+Each establishment records one detailed administrative type, with its published DfE code. Category and academy route are obtained through that type; they are not stored on the establishment. The nine detailed academy types share the Academies category and use two routes where applicable. The eight converter and sponsor-led types require their specified route; Academy secure 16 to 19 and all non-academy types have no route. All types use the eleven BAU type-group categories, including Free Schools, Special schools and Local authority maintained schools.
+
+Type and category keys are UUIDs. Category contains only its UUID and unique name; route retains its canonical identifier. Conceptual academy types are projected from detailed type codes, independently of BAU category. The complete field definitions, nine academy mappings and applicability rules are in [Identity and classification](identity-and-classification.md#establishment-type). The physical schema and migrations use the same structure.
 
 The detailed entity definitions are split into focused documents:
 

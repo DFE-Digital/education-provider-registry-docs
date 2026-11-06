@@ -15,8 +15,8 @@ BEGIN
         local_authority_area_id,legal_entity_id,start_date,is_current)
     VALUES(old_period,area,old_council,'2010-01-01',true),(old_welsh_period,welsh_area,old_council,'2010-01-01',true);
     INSERT INTO establishment.establishment(urn,name,establishment_type_id)
-    VALUES(999901,'TEST ONLY maintained',1),(999902,'TEST ONLY academy',4),(999903,'TEST ONLY closed',1),
-          (999904,'TEST ONLY independent',17),(999905,'TEST ONLY Welsh maintained type',1);
+    VALUES(999901,'TEST ONLY maintained',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='01')),(999902,'TEST ONLY academy',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='28')),(999903,'TEST ONLY closed',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='01')),
+          (999904,'TEST ONLY independent',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='11')),(999905,'TEST ONLY Welsh maintained type',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='01'));
     INSERT INTO establishment.establishment_geography(establishment_id,local_authority_area_id)
     SELECT establishment_id,CASE WHEN urn=999905 THEN welsh_area ELSE area END
     FROM establishment.establishment WHERE urn BETWEEN 999901 AND 999905;
@@ -98,7 +98,7 @@ BEGIN
            WHERE e.urn=999901 AND r.responsibility_type_id=5)<>3 THEN
         RAISE EXCEPTION 'Split geography or maintenance history is incorrect';
     END IF;
-    raw:=jsonb_build_object('local_authority_code',999,'establishment_type_id',1,'status_code',1,'open_date','2010-01-01','close_date',NULL);
+    raw:=jsonb_build_object('local_authority_code',999,'establishment_type_id',(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='01'),'status_code',1,'open_date','2010-01-01','close_date',NULL);
     IF migration.allow_establishment_replay(999901,'2020-01-01',raw)
        OR migration.allow_establishment_replay(999901,'2024-04-01',raw)
        OR migration.allow_establishment_replay(999901,'2026-06-16',raw) THEN RAISE EXCEPTION 'Source replay could undo event geography'; END IF;
