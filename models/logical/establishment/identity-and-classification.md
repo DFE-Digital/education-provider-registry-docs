@@ -126,7 +126,6 @@ erDiagram
     ACADEMY_ROUTE {
         integer academy_route_id PK
         string name UK
-        string canonical_identifier UK
     }
 
     EDUCATION_PHASE {
@@ -336,19 +335,18 @@ Every detailed type has one required category. Migration resolves `Establishment
 | --- | --- | --- |
 | `academy_route_id` | Yes | Seeded integer reference-data identifier. |
 | `name` | Yes | Unique human-readable route label. |
-| `canonical_identifier` | Yes | Unique canonical identifier of the route concept. |
 
-| Route | Canonical identifier |
-| --- | --- |
-| Converter | `est:ConverterRoute` |
-| Sponsor led | `est:SponsorLedRoute` |
+| Route |
+| --- |
+| Converter |
+| Sponsor led |
 
 ### Detailed academy type mapping
 
 These are the nine academy types recorded by establishments. The eight converter and sponsor-led types must have the category and route shown. All nine types belong to Academies; Academy secure 16 to 19 has a null route. Null is absence of an applicable route, not a reference row named None.
 
 | DfE code | Detailed type | Conceptual type | Route |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | 34 | Academy converter | Mainstream academy | Converter |
 | 28 | Academy sponsor led | Mainstream academy | Sponsor led |
 | 44 | Academy special converter | Academy special school | Converter |
