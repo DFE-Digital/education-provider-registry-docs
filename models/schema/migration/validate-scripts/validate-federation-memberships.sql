@@ -25,7 +25,7 @@ BEGIN
     END IF;
     IF (SELECT count(*) FROM establishment.group_identifier WHERE organisation_group_id=federation_id) <> 1
        OR EXISTS (SELECT 1 FROM establishment.establishment_responsibility r
-                  JOIN establishment.establishment e USING (establishment_id) WHERE e.urn IN (109443,109613)) THEN
+                  JOIN establishment.establishment e USING (establishment_id) WHERE e.urn IN (109443,109613) AND r.responsibility_type_id<>5) THEN
         RAISE EXCEPTION 'T4 must not invent Group ID or load trust responsibilities';
     END IF;
     IF (SELECT count(*) FROM migration.organisation_group_member_evidence evidence

@@ -39,6 +39,7 @@ automation/
             Workspace.ps1         New-RunWorkspace, Remove-RunWorkspace
             Database.ps1          schemas and reference seeds
             BauImport.ps1         loading from the local BAU copy
+            Maintenance.ps1       maintenance observations, derivation and fixture replay
             CheckedInFixture.ps1  loading and exporting the checked-in SQL
             Tests.ps1             validation, approval and scope tests
             AllTestCases.ps1      complete catalogue manifest and validation

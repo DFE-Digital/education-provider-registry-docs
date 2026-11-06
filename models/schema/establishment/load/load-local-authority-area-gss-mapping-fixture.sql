@@ -7,7 +7,7 @@ CREATE TEMP TABLE source_local_authority_gss_mapping_fixture (
 
 \copy source_local_authority_gss_mapping_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
-UPDATE establishment.local_authority AS la
+UPDATE establishment.local_authority_area AS la
 SET gss_local_authority_code_id = gss.id
 FROM source_local_authority_gss_mapping_fixture AS s
 JOIN establishment.gss_local_authority_code AS gss

@@ -11,7 +11,7 @@ BEGIN
     JOIN establishment.establishment_lifecycle l USING (establishment_id)
     JOIN establishment.establishment_type t USING (establishment_type_id)
     JOIN establishment.establishment_geography geo USING (establishment_id)
-    JOIN establishment.local_authority la USING (local_authority_id)
+    JOIN establishment.local_authority_area la USING (local_authority_area_id)
     WHERE e.urn=142869 AND e.name='Wootton Park School' AND e.ukprn=10056995
       AND e.establishment_number=4020 AND t.name='Free schools' AND la.code=928
       AND l.open_date=DATE '2016-09-01' AND l.close_date IS NULL;

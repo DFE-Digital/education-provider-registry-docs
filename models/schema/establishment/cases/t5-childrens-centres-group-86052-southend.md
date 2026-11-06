@@ -68,7 +68,7 @@ The graph shows the lead and two standard members for readability. Six further s
 | Target table | Expected records for T5 |
 | --- | --- |
 | `establishment` | Nine separate children's-centre records, retaining their five-digit URNs and independently recorded establishment open dates. |
-| `organisation_group` | One children's-centre group named Southend Children's Centres, `open_date = 2016-10-01`, unknown `close_date`, and `local_authority_id` pointing to Southend-on-Sea. |
+| `organisation_group` | One children's-centre group named Southend Children's Centres, `open_date = 2016-10-01`, unknown `close_date`, and `local_authority_area_id` pointing to Southend-on-Sea. |
 | `organisation_group_member` | Nine memberships, each with `joined_date = 2016-10-01` and unknown `left_date`. Cambridge Road has `Current lead recorded`; the other eight have false. |
 | `organisation_group_member_lead_period` | One current lead assertion belonging to Cambridge Road's membership. Its `start_date` and `end_date` are unknown: neither the membership effective date nor a source observation date establishes when lead designation started. |
 | `group_identifier` | One GIAS Group UID value `86052`, attached to the organisation group. No Group ID is invented. |

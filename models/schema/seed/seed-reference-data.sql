@@ -30187,10 +30187,10 @@ INSERT INTO establishment.local_authority_jurisdiction (local_authority_jurisdic
 
 
 --
--- Data for Name: local_authority; Type: TABLE DATA; Schema: establishment; Owner: -
+-- Data for Name: local_authority_area; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
-INSERT INTO establishment.local_authority (local_authority_id, code, name, local_authority_jurisdiction_id, gss_local_authority_code_id) VALUES
+INSERT INTO establishment.local_authority_area (local_authority_area_id, code, name, local_authority_jurisdiction_id, gss_local_authority_code_id) VALUES
 	('9ff7ac3e-71c5-4eb7-b74c-4a83a229261e', 304, 'Brent', 1, '8db2e3a7-3bdf-4795-9ed5-bdf0ad16bd7f'),
 	('5fc312d8-9428-4ee3-a9ed-9b204c8be91c', 305, 'Bromley', 1, '2763992b-c7bd-42d8-b183-6140a8fe8f63'),
 	('b852b15b-c92e-4f4c-a014-5a99cdf7025b', 306, 'Croydon', 1, '45b31c93-5821-4408-8329-19ccd1865519'),
@@ -30400,10 +30400,10 @@ INSERT INTO establishment.local_authority (local_authority_id, code, name, local
 
 
 --
--- Data for Name: local_authority_contact; Type: TABLE DATA; Schema: establishment; Owner: -
+-- Data for Name: local_authority_area_contact; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
-INSERT INTO establishment.local_authority_contact (local_authority_contact_id, local_authority_id, contact_email, contact_first_name, contact_last_name, contact_title, contact_phone, contact_role, is_current) VALUES
+INSERT INTO establishment.local_authority_area_contact (local_authority_area_contact_id, local_authority_area_id, contact_email, contact_first_name, contact_last_name, contact_title, contact_phone, contact_role, is_current) VALUES
 	('0c816830-418c-49ee-8652-4fb391346854', '10279260-69e5-4534-9feb-30c48c6d9b06', 'FAKE.local-authority-contact-01@example.invalid', 'FAKE Contact 01', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-01', 'FAKE Local Authority Contact 01', true),
 	('24d52b3e-c446-486b-96e9-5ccf77490746', '0956c9af-2de2-4dea-94ed-b5c432eae45f', 'FAKE.local-authority-contact-02@example.invalid', 'FAKE Contact 02', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-02', 'FAKE Local Authority Contact 02', true),
 	('1fa878ba-e344-42ec-990e-8b3f2f57df7a', '41ee14e6-dabb-4874-af14-2c93e5adebfa', 'FAKE.local-authority-contact-03@example.invalid', 'FAKE Contact 03', 'FAKE Local Authority', 'FAKE Contact Title', 'FAKE-0000-03', 'FAKE Local Authority Contact 03', true),
@@ -30417,10 +30417,10 @@ INSERT INTO establishment.local_authority_contact (local_authority_contact_id, l
 
 
 --
--- Data for Name: local_authority_government_office_region; Type: TABLE DATA; Schema: establishment; Owner: -
+-- Data for Name: local_authority_area_government_office_region; Type: TABLE DATA; Schema: establishment; Owner: -
 --
 
-INSERT INTO establishment.local_authority_government_office_region (local_authority_id, government_office_region_id) VALUES
+INSERT INTO establishment.local_authority_area_government_office_region (local_authority_area_id, government_office_region_id) VALUES
 	('10279260-69e5-4534-9feb-30c48c6d9b06', '1375841f-e6ba-4cda-9fac-753ff9df93a2'),
 	('0956c9af-2de2-4dea-94ed-b5c432eae45f', '1375841f-e6ba-4cda-9fac-753ff9df93a2'),
 	('41ee14e6-dabb-4874-af14-2c93e5adebfa', '1375841f-e6ba-4cda-9fac-753ff9df93a2'),

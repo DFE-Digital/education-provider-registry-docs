@@ -23,9 +23,9 @@ BEGIN
         SELECT e.establishment_id INTO STRICT centre_id
         FROM establishment.establishment e JOIN establishment.establishment_type t USING (establishment_type_id)
         WHERE t.name='Children''s centre' ORDER BY e.urn LIMIT 1;
-        INSERT INTO establishment.organisation_group (organisation_group_id,name,organisation_group_type_id,local_authority_id)
-        SELECT group_id,'Lead-period regression group',t.organisation_group_type_id,la.local_authority_id
-        FROM establishment.organisation_group_type t CROSS JOIN establishment.local_authority la
+        INSERT INTO establishment.organisation_group (organisation_group_id,name,organisation_group_type_id,local_authority_area_id)
+        SELECT group_id,'Lead-period regression group',t.organisation_group_type_id,la.local_authority_area_id
+        FROM establishment.organisation_group_type t CROSS JOIN establishment.local_authority_area la
         WHERE t.name='Children''s-centre group' ORDER BY la.code LIMIT 1;
         INSERT INTO establishment.organisation_group (organisation_group_id,name,organisation_group_type_id)
         SELECT federation_id,'Lead-period regression federation',organisation_group_type_id

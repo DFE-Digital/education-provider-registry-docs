@@ -44,7 +44,7 @@ BEGIN
         OR fixture.local_authority_code IS NOT NULL
     ) THEN RAISE EXCEPTION 'Federation requires at least two members, no group authority and no lead flag'; END IF;
     IF fixture.group_type='Children''s-centre group' THEN
-        SELECT local_authority_id INTO authority_id FROM establishment.local_authority WHERE code=fixture.local_authority_code;
+        SELECT local_authority_area_id INTO authority_id FROM establishment.local_authority_area WHERE code=fixture.local_authority_code;
         IF authority_id IS NULL OR EXISTS (
             SELECT 1 FROM group_membership_fixture WHERE source_link_type IS NULL
               OR source_link_type NOT IN ('LEAD','STANDARD')
@@ -63,14 +63,14 @@ BEGIN
         WHERE t.name='Group UID' AND i.value=fixture.group_uid
     ) THEN RAISE EXCEPTION 'Group UID already belongs to a party role'; END IF;
     IF group_id IS NULL THEN
-        INSERT INTO establishment.organisation_group (name, organisation_group_type_id, local_authority_id, open_date, close_date)
+        INSERT INTO establishment.organisation_group (name, organisation_group_type_id, local_authority_area_id, open_date, close_date)
         SELECT fixture.group_name, organisation_group_type_id, authority_id, fixture.group_open_date, fixture.group_close_date
         FROM establishment.organisation_group_type WHERE name=fixture.group_type
         RETURNING organisation_group_id INTO group_id;
     END IF;
     IF NOT EXISTS (SELECT 1 FROM establishment.organisation_group g JOIN establishment.organisation_group_type t USING (organisation_group_type_id)
                    WHERE g.organisation_group_id=group_id AND t.name=fixture.group_type
-                     AND g.local_authority_id IS NOT DISTINCT FROM authority_id) THEN
+                     AND g.local_authority_area_id IS NOT DISTINCT FROM authority_id) THEN
         RAISE EXCEPTION 'Existing group UID has a conflicting group type or authority';
     END IF;
     IF run_id IS NULL THEN

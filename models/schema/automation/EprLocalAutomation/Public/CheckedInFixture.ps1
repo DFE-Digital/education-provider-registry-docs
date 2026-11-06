@@ -10,10 +10,10 @@ $script:ReferenceSeedTables = @(
     'gender_of_entry_type', 'admissions_policy', 'boarding_provision',
     'nursery_provision', 'sixth_form_provision', 'specialist_provision_type',
     'establishment_status', 'reason_establishment_opened',
-    'reason_establishment_closed', 'local_authority', 'government_office_region',
+    'reason_establishment_closed', 'local_authority_area', 'government_office_region',
     'gss_local_authority_code', 'district_administrative', 'administrative_ward',
     'parliamentary_constituency', 'lsoa', 'msoa', 'urban_rural',
-    'local_authority_contact', 'local_authority_government_office_region', 'address_purpose'
+    'local_authority_area_contact', 'local_authority_area_government_office_region', 'address_purpose'
 )
 $script:EstablishmentSeedTables = @(
     'establishment', 'establishment_geography', 'establishment_contact',
@@ -21,17 +21,20 @@ $script:EstablishmentSeedTables = @(
     'capacity_and_pupil_measures', 'education_admissions_and_provision',
     'statutory_age_range', 'specialist_provision', 'resourced_provision',
     'sen_unit_provision', 'legal_entity', 'person', 'organisation_identifier',
+    'legal_entity_sole_trader', 'legal_entity_partner',
     'establishment_party_role', 'academy_trust_classification',
     'establishment_responsibility', 'organisation_group',
     'organisation_group_member', 'organisation_group_member_lead_period', 'group_identifier',
-    'legal_entity_address', 'organisation_group_address'
+    'legal_entity_address', 'organisation_group_address', 'local_authority_area_council_period'
 )
 $script:MigrationSeedTables = @(
     'migration_run', 'source_snapshot', 'source_record',
     'establishment_party_role_evidence', 'establishment_responsibility_evidence',
     'academy_trust_classification_evidence', 'organisation_group_member_evidence',
     'identity_resolution', 'group_address_evidence', 'organisation_group_address_evidence',
-    'person_address_evidence'
+    'person_address_evidence', 'maintenance_source_observation', 'maintenance_derivation',
+    'proprietor_review','proprietor_fact_evidence',
+    'council_reorganisation','council_reorganisation_lineage','council_replay_observation'
 )
 
 # File names in seed/.
@@ -56,11 +59,20 @@ function Import-CheckedInEstablishmentFixture {
         $path = $file
         if (-not [System.IO.Path]::IsPathRooted($file)) { $path = Get-SchemaPath "seed/$file" }
         Write-Step "Loading checked-in establishment fixture: $([System.IO.Path]::GetFileName($path))"
-        Invoke-Psql -Target $Target -File $path -FailureMessage "Seed failed: $path"
+        # Council links and maintenance rows in an export may be ordered
+        # independently by pg_dump. Check their final state at commit.
+        Invoke-Psql -Target $Target -File $path -SingleTransaction -FailureMessage "Seed failed: $path"
     }
 
     Write-Step 'Loading checked-in migration evidence'
     Invoke-Psql -Target $Target -File (Get-SchemaPath "seed/$script:MigrationSeedFile") -FailureMessage 'Migration evidence seed failed'
+    Import-LocalAuthorityCouncilFixture -Target $Target
+    Import-ProprietorReviewQueue -Target $Target
+    $maintenanceWorkspace = New-RunWorkspace
+    try {
+        Import-MaintenanceObservationFixture -Target $Target -CsvPath (Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv') `
+            -SourceDatabase 'gias_bau_test_local' -WorkingDirectory $maintenanceWorkspace
+    } finally { Remove-RunWorkspace -Path $maintenanceWorkspace }
 }
 
 function Export-EstablishmentFixture {

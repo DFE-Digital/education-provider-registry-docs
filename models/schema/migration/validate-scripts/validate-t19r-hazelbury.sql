@@ -8,7 +8,7 @@ BEGIN
  AND i.is_current AND i.establishment_party_role_id IS NULL;
  IF NOT EXISTS (SELECT 1 FROM establishment.organisation_group g
  JOIN establishment.organisation_group_type gt USING(organisation_group_type_id)
- JOIN establishment.local_authority la USING(local_authority_id)
+ JOIN establishment.local_authority_area la USING(local_authority_area_id)
  WHERE g.organisation_group_id=group_id AND g.name='Hazelbury' AND gt.name='Children''s-centre group'
  AND la.code=308 AND g.open_date=DATE '2015-09-01' AND g.close_date IS NULL)
  THEN RAISE EXCEPTION 'T19R group identity, authority or formation date incorrect'; END IF;
@@ -16,7 +16,7 @@ BEGIN
  OR (SELECT count(*) FROM establishment.organisation_group_member m
  JOIN establishment.establishment e USING(establishment_id)
  JOIN establishment.establishment_geography geo USING(establishment_id)
- JOIN establishment.local_authority la USING(local_authority_id)
+ JOIN establishment.local_authority_area la USING(local_authority_area_id)
  JOIN establishment.establishment_lifecycle life USING(establishment_id)
  JOIN establishment.establishment_type et USING(establishment_type_id)
  JOIN (VALUES

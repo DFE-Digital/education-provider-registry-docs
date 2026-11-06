@@ -13,8 +13,16 @@ DECLARE
  snapshot_id uuid; record_id uuid; context_snapshot uuid; context_record uuid; case_label text;
 BEGIN
  SELECT raw_json::jsonb INTO d FROM reviewed_fixture
- WHERE encode(digest(raw_json,'sha256'),'hex')=expected_sha256;
+ WHERE encode(public.digest(raw_json,'sha256'),'hex')=expected_sha256;
  case_label:=COALESCE(d->>'fixture','Reviewed proprietor');
+ IF d->>'mode'='reviewed-legal-entity' THEN
+    IF d->'expectedLocalContext' IS DISTINCT FROM
+       (SELECT jsonb_agg(to_jsonb(c) ORDER BY urn) FROM proprietor_local_context c) THEN
+        RAISE EXCEPTION 'Reviewed proprietor local context changed';
+    END IF;
+    PERFORM migration.apply_reviewed_proprietor(d,NULLIF(current_setting('epr.migration_run_id',true),'')::uuid);
+    RETURN;
+ END IF;
  IF d IS NULL OR d->>'reviewStatus' IS DISTINCT FROM 'accepted'
     OR d->>'mode' IS DISTINCT FROM 'shared-existing-proprietor'
     OR NULLIF(btrim(d->>'reviewEvidence'),'') IS NULL THEN
@@ -40,7 +48,7 @@ BEGIN
  JOIN establishment.establishment_lifecycle l USING(establishment_id)
  JOIN establishment.establishment_status s USING(establishment_status_id)
  JOIN establishment.establishment_geography geo USING(establishment_id)
- JOIN establishment.local_authority la USING(local_authority_id)
+ JOIN establishment.local_authority_area la USING(local_authority_area_id)
  WHERE e.urn=(d->'school'->>'urn')::integer
    AND ROW(e.name,e.ukprn,e.establishment_number,e.establishment_type_id,e.education_phase_id,
            l.open_date,l.close_date,s.name,la.code::text)

@@ -12,7 +12,7 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1 FROM establishment.organisation_group g
         JOIN establishment.organisation_group_type t USING (organisation_group_type_id)
-        JOIN establishment.local_authority la USING (local_authority_id)
+        JOIN establishment.local_authority_area la USING (local_authority_area_id)
         WHERE g.organisation_group_id=group_id AND t.name='Children''s-centre group'
           AND g.name='Southend Children''s Centres' AND la.code=882
           AND g.open_date=DATE '2016-10-01' AND g.close_date IS NULL

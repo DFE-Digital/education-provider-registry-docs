@@ -4,6 +4,10 @@
 
 This is the first logical-model slice for the Establishment Registry. It defines the minimum data needed to identify and describe an establishment for the anonymous Find and Share journeys.
 
+The geographical LA reference is `local_authority_area`, the DfE LA-code area
+used in LAESTAB. Councils and maintenance responsibilities are separate concepts;
+this reference does not identify a school's operator or maintainer.
+
 
 
 ## Logical Model
@@ -87,7 +91,7 @@ erDiagram
     ESTABLISHMENT_GEOGRAPHY {
         uuid establishment_geography_id PK
         uuid establishment_id FK, UK
-        uuid local_authority_id FK
+        uuid local_authority_area_id FK
         uuid government_office_region_id FK
     }
 
