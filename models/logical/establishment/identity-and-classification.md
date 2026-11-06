@@ -9,6 +9,8 @@ This document defines the establishment identity, lifecycle and controlled class
 ```mermaid
 erDiagram
     ESTABLISHMENT }o--|| ESTABLISHMENT_TYPE : "has type"
+    ESTABLISHMENT_TYPE }o--|| ESTABLISHMENT_TYPE_CATEGORY : "belongs to"
+    ESTABLISHMENT_TYPE }o--o| ACADEMY_ROUTE : "has route"
     ESTABLISHMENT }o--o| EDUCATION_PHASE : "has phase"
     ESTABLISHMENT }o--o| FURTHER_EDUCATION_TYPE : "has further-education type"
     ESTABLISHMENT }o--o| SECTION_41_APPROVAL_STATUS : "has Section 41 status"
@@ -29,7 +31,7 @@ erDiagram
         numeric ukprn
         string name
         string ofsted_link
-        integer establishment_type_id FK
+        uuid establishment_type_id FK
         integer education_phase_id FK
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
@@ -109,8 +111,22 @@ erDiagram
     }
 
     ESTABLISHMENT_TYPE {
-        integer establishment_type_id PK
+        uuid establishment_type_id PK
+        string code UK
         string name
+        uuid establishment_type_category_id FK
+        integer academy_route_id FK
+    }
+
+    ESTABLISHMENT_TYPE_CATEGORY {
+        uuid establishment_type_category_id PK
+        string name UK
+    }
+
+    ACADEMY_ROUTE {
+        integer academy_route_id PK
+        string name UK
+        string canonical_identifier UK
     }
 
     EDUCATION_PHASE {
@@ -143,6 +159,7 @@ what is its identity, name and headline classification?
 | `ukprn` | Conditional | Current UK Provider Reference Number supplied by UKRLP where applicable. |
 | `name` | Yes | Current published establishment name; historic and alternative names are deferred. |
 | `ofsted_link` | No | Optional text URL for navigating to Ofsted information using the establishment URN. |
+| `establishment_type_id` | Yes | Reference to the detailed administrative establishment type. Category and academy route are obtained through that type. |
 | `further_education_type_id` | Conditional | Optional reference to a further-education sub-classification, distinct from the headline establishment type. |
 | `section_41_approval_status_id` | Conditional | Optional reference to the recorded Section 41 approval classification. |
 
@@ -262,22 +279,87 @@ These four values are the complete list for this model slice. The BAU `status_co
 
 ## Establishment type
 
-`establishment_type` is controlled reference data describing what kind of establishment this is.
+`establishment_type` is controlled reference data describing the detailed administrative kind of establishment, retaining the published DfE type code and label. For academies this distinguishes converter and sponsor-led types.
 
 Business-friendly pattern:
 
 ```text
-Which recognised establishment type describes this establishment?
+Which detailed establishment type does the administrative team record?
 ```
 
 - It is reference data, not free text on `establishment`.
 - The establishment has one current type in this slice.
-- Integer identifiers are seeded and stable; labels may change independently.
+- Each type belongs to exactly one category and has an academy route only where applicable.
+- Category and route are obtained through the type; neither is stored on `establishment`.
+- The published DfE code identifies the type independently of its label and internal key. Internal IDs may be reassigned when rebuilding this WIP model.
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `establishment_type_id` | Yes | Seeded integer reference-data identifier. |
-| `name` | Yes | Human-readable establishment-type label. |
+| `establishment_type_id` | Yes | Seeded UUID reference-data identifier, independent of the published code. |
+| `code` | Yes | Unique published DfE establishment type code, stored as text. This is business reference data, not migration lineage. |
+| `name` | Yes | Human-readable detailed establishment-type label. |
+| `establishment_type_category_id` | Yes | Required UUID reference to the BAU-aligned type category. |
+| `academy_route_id` | Conditional | Reference to the route specified in the academy mapping below; null for every other type. |
+
+### Establishment type category
+
+`establishment_type_category` contains the eleven category names from BAU `EstablishmentTypeGroup`. These groupings follow existing business policy, including special academies under Academies and special free schools, UTCs and studio schools under Free Schools.
+
+| Column | Required | Meaning and rule |
+| --- | --- | --- |
+| `establishment_type_category_id` | Yes | Seeded UUID reference-data identifier. |
+| `name` | Yes | Unique human-readable category label, retaining the BAU group name. |
+
+The category has only these two columns. BAU's group code is used to interpret source relationships during migration. Neither that code nor BAU's numeric row ID is stored as a category attribute. There is no `canonical_identifier` or `archived` column.
+
+| Category |
+| --- |
+| Colleges |
+| Academies |
+| Free Schools |
+| Children's Centres |
+| Online provider |
+| Universities |
+| Independent schools |
+| Local authority maintained schools |
+| Special schools |
+| Welsh schools |
+| Other types |
+
+Every detailed type has one required category. Migration resolves `Establishment.type_code` to the target type UUID and verifies the reference mapping against BAU `EstablishmentType.group_code`. The target category UUID is reached through the type.
+
+### Academy route
+
+`academy_route` is a closed reference list describing how an academy was established. The detailed type determines the route. It does not identify the current sponsor or academy trust; those are recorded through establishment responsibilities. Opening reasons remain separate lifecycle facts.
+
+| Column | Required | Meaning and rule |
+| --- | --- | --- |
+| `academy_route_id` | Yes | Seeded integer reference-data identifier. |
+| `name` | Yes | Unique human-readable route label. |
+| `canonical_identifier` | Yes | Unique canonical identifier of the route concept. |
+
+| Route | Canonical identifier |
+| --- | --- |
+| Converter | `est:ConverterRoute` |
+| Sponsor led | `est:SponsorLedRoute` |
+
+### Detailed academy type mapping
+
+These are the nine academy types recorded by establishments. The eight converter and sponsor-led types must have the category and route shown. All nine types belong to Academies; Academy secure 16 to 19 has a null route. Null is absence of an applicable route, not a reference row named None.
+
+| DfE code | Detailed type | Conceptual type | Route |
+| --- | --- | --- | --- |
+| 34 | Academy converter | Mainstream academy | Converter |
+| 28 | Academy sponsor led | Mainstream academy | Sponsor led |
+| 44 | Academy special converter | Academy special school | Converter |
+| 33 | Academy special sponsor led | Academy special school | Sponsor led |
+| 42 | Academy alternative provision converter | Academy alternative provision | Converter |
+| 43 | Academy alternative provision sponsor led | Academy alternative provision | Sponsor led |
+| 45 | Academy 16-19 converter | Academy 16 to 19 | Converter |
+| 46 | Academy 16 to 19 sponsor led | Academy 16 to 19 | Sponsor led |
+| 57 | Academy secure 16 to 19 | Academy secure 16 to 19 | Null |
+
+The model implements [Option 3](../../../../docs/transformation/data/modelling/establishment-types/academy-establishment-types-and-route-options.md), amended by the [agreed changes](../../../../docs/transformation/data/modelling/establishment-types/establishment-type-requested-changes.md). The table's conceptual type is a projection determined by the detailed type code, not a category attribute. The ontology, vocabulary and SHACL retain their five conceptual academy types and separate route concept. Each detailed type supplies the route for `esto:hasAcademyRoute` where applicable.
 
 ## Education phase
 

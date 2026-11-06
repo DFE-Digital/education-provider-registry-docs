@@ -101,7 +101,7 @@ BEGIN
             RAISE EXCEPTION 'Closed school cannot acquire a current reviewed proprietor';
         END IF;
         IF (fact->>'isCurrent')::boolean AND NOT EXISTS(SELECT 1 FROM establishment.establishment
-             WHERE establishment_id=school_id AND establishment_type_id IN (14,15,16,17)) THEN
+             WHERE establishment_id=school_id AND establishment_type_id IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('06','08','10','11'))) THEN
             RAISE EXCEPTION 'Current proprietor requires an eligible school type';
         END IF;
         IF EXISTS(SELECT 1 FROM establishment.establishment_responsibility r WHERE establishment_responsibility_id=fact_id

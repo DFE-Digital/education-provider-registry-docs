@@ -44,6 +44,19 @@ is inferred. Both default rebuilds include this slice.
 
 ## What is here
 
+Establishment types and categories use UUID primary and foreign keys. The 41
+detailed types retain their published DfE `code` as unique text. The loader
+resolves that code to the seeded type UUID; SQL Server does not allocate target
+type keys. Categories use the eleven BAU `EstablishmentTypeGroup` names and
+memberships, with only a UUID and unique name in the target. BAU group codes,
+archived flags and canonical identifiers are not category columns. Academy
+routes retain their existing integer keys and canonical identifiers.
+
+Run [the type/category validation](migration/validate-scripts/validate-establishment-types-and-routes.sql)
+to check the reference structure and academy routes. It is included in the
+complete catalogue suite. The conceptual academy type is determined from the
+detailed type code; it is independent of the broad BAU category Academies.
+
 The DfE LA-code reference is now `establishment.local_authority_area`, with
 `local_authority_area_id` on geography and organisation-group associations.
 It represents the area used in LAESTAB, separately from the council legal entity

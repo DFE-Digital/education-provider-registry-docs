@@ -4,7 +4,8 @@
 # Tables exported to each checked-in file. The order is the pg_dump selection;
 # pg_dump itself writes rows in dependency order.
 $script:ReferenceSeedTables = @(
-    'local_authority_jurisdiction', 'establishment_type', 'education_phase',
+    'local_authority_jurisdiction', 'establishment_type_category', 'academy_route',
+    'establishment_type', 'education_phase',
     'further_education_type', 'section_41_approval_status',
     'religious_character', 'religious_ethos', 'diocese',
     'gender_of_entry_type', 'admissions_policy', 'boarding_provision',

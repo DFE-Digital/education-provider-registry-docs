@@ -192,8 +192,8 @@ BEGIN
         SELECT event_key,'council_period',p.local_authority_area_council_period_id,'created',NULL,to_jsonb(p)
         FROM establishment.local_authority_area_council_period p WHERE p.local_authority_area_council_period_id=successor.period_id;
     END LOOP;
-    FOR mapped IN SELECT m.*,e.establishment_type_id,l.establishment_status_id,l.open_date,l.close_date,j.name AS jurisdiction
-                  FROM reorg_school_map m JOIN establishment.establishment e USING(establishment_id)
+    FOR mapped IN SELECT m.*,e.establishment_type_id,t.code AS type_code,l.establishment_status_id,l.open_date,l.close_date,j.name AS jurisdiction
+                  FROM reorg_school_map m JOIN establishment.establishment e USING(establishment_id) JOIN establishment.establishment_type t USING(establishment_type_id)
                   JOIN establishment.establishment_lifecycle l USING(establishment_id)
                   JOIN establishment.local_authority_area a ON a.local_authority_area_id=m.area_id
                   JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
@@ -204,7 +204,7 @@ BEGIN
         INSERT INTO migration.council_reorganisation_lineage
         SELECT event_key,'establishment_geography',g.establishment_id,'changed',row_before,to_jsonb(g)
         FROM establishment.establishment_geography g WHERE g.establishment_id=mapped.establishment_id;
-        eligibility:=mapped.jurisdiction='English' AND mapped.establishment_type_id IN(1,2,3,9,10,11,12,13)
+        eligibility:=mapped.jurisdiction='English' AND mapped.type_code IN ('01','02','03','05','07','12','14','15')
                      AND mapped.establishment_status_id IN(1,3) AND (mapped.open_date IS NULL OR mapped.open_date<=effective_on)
                      AND (mapped.close_date IS NULL OR mapped.close_date>effective_on);
         IF NOT eligibility THEN CONTINUE; END IF;
@@ -252,11 +252,11 @@ BEGIN
     WHERE l.entity_id=observed.establishment_id AND l.entity_kind='establishment_geography' AND ev.status='applied'
     ORDER BY ev.effective_date DESC LIMIT 1;
     IF NOT FOUND THEN RETURN false; END IF;
-    SELECT e.establishment_type_id,t.name INTO STRICT school FROM establishment.establishment e
+    SELECT e.establishment_type_id,t.name,t.code AS type_code INTO STRICT school FROM establishment.establishment e
     JOIN establishment.establishment_type t USING(establishment_type_id) WHERE e.establishment_id=observed.establishment_id;
     normalized:=to_jsonb(observed)||jsonb_build_object('local_authority_code',observed.area_code,
         'status_code',observed.source_status_code,'establishment_type_id',
-        CASE WHEN observed.source_type_name=school.name OR (school.establishment_type_id NOT IN(1,2,3,9,10,11,12,13)
+        CASE WHEN observed.source_type_name=school.name OR (school.type_code NOT IN ('01','02','03','05','07','12','14','15')
              AND observed.source_type_name NOT IN('Community school','Community special school','Foundation special school',
                  'Voluntary aided school','Voluntary controlled school','Foundation school','Pupil referral unit','Maintained nursery school'))
         THEN school.establishment_type_id ELSE (SELECT establishment_type_id FROM establishment.establishment_type WHERE name=observed.source_type_name) END);
@@ -299,7 +299,7 @@ BEGIN
     JOIN establishment.establishment_geography g USING(establishment_id)
     JOIN establishment.local_authority_area a USING(local_authority_area_id) WHERE e.urn=source_urn;
     IF source_date>governing.effective_date AND
-       ROW((source_payload->>'local_authority_code')::integer,(source_payload->>'establishment_type_id')::integer,
+       ROW((source_payload->>'local_authority_code')::integer,(source_payload->>'establishment_type_id')::uuid,
            (source_payload->>'status_code')::integer,(source_payload->>'open_date')::date,(source_payload->>'close_date')::date)
        IS NOT DISTINCT FROM ROW(school.code,school.establishment_type_id,school.establishment_status_id,school.open_date,school.close_date) THEN
         RETURN true;

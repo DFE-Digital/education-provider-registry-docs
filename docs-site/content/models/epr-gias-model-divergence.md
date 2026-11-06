@@ -54,13 +54,17 @@ Where the EPR target ontology deliberately diverges from the legacy GIAS 1.0 dat
 
 ---
 
-## 5. Academy type hierarchy flattened — 8 leaf types replaced by 5 types + route property
+## 5. Academy types: detailed recording and conceptual type/route projection
 
-**GIAS 1.0:** 8 distinct academy establishment types, including separate types for converter and sponsor-led variants (e.g. type 28 Academy sponsor led, type 34 Academy special school sponsor led).
+**GIAS:** Nine detailed academy establishment types, including converter and sponsor-led variants and Academy secure 16 to 19. For example, code 28 is Academy sponsor led and code 34 is Academy converter.
 
-**EPR target:** 5 primary academy types plus an `est:AcademyRoute` classification (Converter or SponsorLed) expressed via `esto:hasAcademyRoute`.
+**Conceptual model:** Five academy types plus an `est:AcademyRoute` classification (Converter or Sponsor led), expressed via `esto:hasAcademyRoute` where applicable.
 
-**Reason:** The route by which an academy was established is a property of how it came to exist, not of what it fundamentally is. The 8-type leaf structure duplicated type definitions and required further leaf types for any new route variant. Separating type from route makes the model extensible and reduces duplication.
+**Logical and physical models:** Retain the nine detailed academy types and their published DfE codes. Type and category keys are UUIDs. Each detailed type supplies its academy route; secure 16-to-19 academies have no route. The detailed code determines the conceptual academy type, so converter and sponsor-led academies remain distinguishable after migration.
+
+Categories follow BAU's eleven `EstablishmentTypeGroup` values. All academy types belong to Academies, and free-school types, UTCs and studio schools belong to Free Schools. Category records contain only a UUID and unique name. BAU group codes are migration inputs; category codes, archived flags and canonical identifiers are not stored in the target.
+
+**Reason:** Administrative users and downstream consumers require detailed types and published codes. The conceptual model continues to distinguish academy provision from formation route. BAU categorisation is retained as existing business policy; changing that policy is separate from designing the data structure. See [ADR 0005](../../../adr/0005-record-detailed-establishment-types-and-bau-categories.md).
 
 ---
 

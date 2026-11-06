@@ -51,6 +51,7 @@ function Get-AllTestCases {
 
 function Test-AllEstablishmentCases {
     param([Parameter(Mandatory)]$Target)
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-establishment-types-and-routes.sql') -FailureMessage 'Establishment type/category validation failed'
     $cases = @(Get-AllTestCases)
     $urns = @($cases | ForEach-Object { $_.urns } | Sort-Object -Unique)
     Invoke-EstablishmentTests -Target $Target -Selection (Get-FixtureSelection) -ExpectedUrn $urns

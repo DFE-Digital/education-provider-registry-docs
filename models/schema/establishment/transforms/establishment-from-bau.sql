@@ -39,7 +39,7 @@ WITH source_establishment AS (
         e.reasonEstablishmentClosed_code,
         rec.name AS reason_establishment_closed_name,
         e.lastChangedDate,
-        e.type_code,
+        NULLIF(LTRIM(RTRIM(e.type_code)), '') AS type_code,
         et.name AS type_name,
         e.educationPhase_code,
         NULLIF(LTRIM(RTRIM(e.furtherEducationType_code)), '') AS furtherEducationType_code,
@@ -124,31 +124,8 @@ SELECT
     CONVERT(varchar(10), s.lastChangedDate, 23) AS last_changed_date,
     s.type_code AS source_establishment_type_code,
     s.type_name AS source_establishment_type,
-    CASE
-        WHEN s.type_name = 'Community school' THEN 1
-        WHEN s.type_name = 'Foundation special school' THEN 3
-        WHEN s.type_name IN ('Academy sponsor led', 'Academy converter') THEN 4
-        WHEN s.type_name IN ('Academy special sponsor led', 'Academy special converter') THEN 5
-        WHEN s.type_name IN ('Academy alternative provision sponsor led', 'Academy alternative provision converter') THEN 6
-        WHEN s.type_name IN ('Academy 16-19 sponsor led', 'Academy 16 to 19 converter') THEN 7
-        WHEN s.type_name = 'Academy secure 16 to 19' THEN 8
-        WHEN s.type_name = 'Voluntary aided school' THEN 9
-        WHEN s.type_name = 'Voluntary controlled school' THEN 10
-        WHEN s.type_name = 'Foundation school' THEN 11
-        WHEN s.type_name = 'Other independent special school' THEN 15
-        WHEN s.type_name = 'Other independent school' THEN 17
-        WHEN s.type_name = 'University technical college' THEN 21
-        WHEN s.type_name = 'Free schools' THEN 30
-        WHEN s.type_name = 'Children''s centre' THEN 35
-        ELSE NULL
-    END AS establishment_type_id,
-    CASE
-        WHEN s.type_name IN ('Academy sponsor led', 'Academy converter') THEN 'Mainstream academy'
-        WHEN s.type_name IN ('Academy special sponsor led', 'Academy special converter') THEN 'Academy special school'
-        WHEN s.type_name IN ('Academy alternative provision sponsor led', 'Academy alternative provision converter') THEN 'Academy alternative provision'
-        WHEN s.type_name IN ('Academy 16-19 sponsor led', 'Academy 16 to 19 converter') THEN 'Academy 16 to 19'
-        ELSE s.type_name
-    END AS establishment_type,
+    -- Target type UUIDs are resolved by code in the PostgreSQL loader.
+    s.type_name AS establishment_type,
     s.educationPhase_code AS source_education_phase_code,
     s.education_phase_name AS source_education_phase,
     CASE s.education_phase_name

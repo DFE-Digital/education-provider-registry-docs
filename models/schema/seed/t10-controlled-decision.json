@@ -10,7 +10,7 @@
     "urn": 148341,
     "name": "Outwood Alternative Provision Eston",
     "establishmentNumber": 6003,
-    "establishmentTypeId": 17,
+    "establishmentTypeCode": "11",
     "educationPhaseId": null,
     "statusCode": "1",
     "openDate": "2021-02-18",

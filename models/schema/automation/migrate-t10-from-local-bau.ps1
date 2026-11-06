@@ -44,7 +44,8 @@ try {
   $null=Export-BauQueryToCsv -Source $source -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-from-bau.sql') -Variables @{URN=$fixture.associatedEstablishmentUrn} -Columns $script:EstablishmentFixtureColumns -CsvPath $academyCsv -RowCount ExactlyOne -Description 'T10 academy preflight'
   # Minimal reviewed extract projection. No conflicting BAU geography, contact,
   # address or other unreviewed local school fields leak into the approved core.
-  $controlled=@{urn=$fixture.school.urn;ukprn=$fixture.school.ukprn;local_authority_code=$fixture.school.localAuthorityCode;establishment_number=$fixture.school.establishmentNumber;name=$fixture.school.name;source_establishment_status_code=$fixture.school.statusCode;open_date=$fixture.school.openDate;close_date=$fixture.school.closeDate;establishment_type_id=$fixture.school.establishmentTypeId;education_phase_id=$fixture.school.educationPhaseId}
+  $controlledTypeCode=($fixture.extractAssertions | Where-Object URN -eq $fixture.school.urn).'TypeOfEstablishment (code)'
+  $controlled=@{urn=$fixture.school.urn;ukprn=$fixture.school.ukprn;local_authority_code=$fixture.school.localAuthorityCode;establishment_number=$fixture.school.establishmentNumber;name=$fixture.school.name;source_establishment_status_code=$fixture.school.statusCode;open_date=$fixture.school.openDate;close_date=$fixture.school.closeDate;source_establishment_type_code=$controlledTypeCode;education_phase_id=$fixture.school.educationPhaseId}
   $values=foreach($column in $script:EstablishmentFixtureColumns){if($controlled.ContainsKey($column)){ConvertTo-FixtureValue $controlled[$column]}else{'NULL'}}
   $mergedCsv=Join-Path $workspace 't10-schools.csv'
   $lines=[System.Collections.Generic.List[string]]::new()

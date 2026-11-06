@@ -23,9 +23,9 @@ BEGIN
         RAISE EXCEPTION 'T9 must not invent proprietor identifiers, roles or trust classifications';
     END IF;
     IF NOT EXISTS (SELECT 1 FROM establishment.establishment WHERE urn=112461
-        AND name='Underley Garden School' AND ukprn=10015990 AND establishment_type_id=15)
+        AND name='Underley Garden School' AND ukprn=10015990 AND establishment_type_id=(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='10'))
        OR NOT EXISTS (SELECT 1 FROM establishment.establishment WHERE urn=119009
-        AND name='Heath Farm School' AND ukprn=10015772 AND establishment_type_id=15) THEN
+        AND name='Heath Farm School' AND ukprn=10015772 AND establishment_type_id=(SELECT establishment_type_id FROM establishment.establishment_type WHERE code='10')) THEN
         RAISE EXCEPTION 'T9 school identities and UKPRNs must remain separate from Acorn';
     END IF;
     IF (SELECT count(*) FROM migration.identity_resolution ir

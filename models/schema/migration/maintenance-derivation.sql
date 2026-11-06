@@ -48,7 +48,7 @@ BEGIN
         BEGIN
             IF migration.retain_reviewed_maintenance(o.source_record_id,observed_on) THEN CONTINUE; END IF;
             PERFORM 1 FROM establishment.establishment WHERE establishment_id=o.establishment_id FOR UPDATE;
-            SELECT e.establishment_type_id,l.establishment_status_id,l.open_date,l.close_date,
+            SELECT e.establishment_type_id,t.code AS type_code,l.establishment_status_id,l.open_date,l.close_date,
                    a.local_authority_area_id,a.code,j.name AS jurisdiction,t.name AS type_name
             INTO STRICT school FROM establishment.establishment e
             JOIN establishment.establishment_lifecycle l USING(establishment_id)
@@ -57,7 +57,7 @@ BEGIN
             JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
             JOIN establishment.establishment_type t USING(establishment_type_id)
             WHERE e.establishment_id=o.establishment_id;
-            eligible:=school.establishment_type_id IN (1,2,3,9,10,11,12,13);
+            eligible:=school.type_code IN ('01','02','03','05','07','12','14','15');
             IF school.code IS DISTINCT FROM o.area_code
                OR school.establishment_status_id IS DISTINCT FROM o.source_status_code
                OR school.open_date IS DISTINCT FROM o.open_date

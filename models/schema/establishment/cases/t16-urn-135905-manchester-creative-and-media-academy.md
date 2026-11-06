@@ -9,7 +9,7 @@ T16 tests that Manchester Creative and Media Academy's historical operating resp
 | URN | 135905 |
 | Establishment name | Manchester Creative and Media Academy |
 | Establishment number | 6910 |
-| Source establishment type | Academy sponsor led (28), mapped to target Mainstream academy |
+| Source establishment type | Academy sponsor led (28), retained as the detailed target type; category Academies, route Sponsor led, conceptual type Mainstream academy |
 | Education phase | Secondary (4 in BAU) |
 | Local authority code | 352 |
 | Source establishment status | Closed (2) |

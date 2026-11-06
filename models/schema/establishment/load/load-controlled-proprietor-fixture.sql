@@ -66,7 +66,7 @@ BEGIN
         LEFT JOIN establishment.establishment e USING (urn)
         WHERE l.urn IS NULL OR l.establishment_name IS DISTINCT FROM s.name
           OR l.establishment_type_code IS DISTINCT FROM CASE WHEN is_t13 OR is_t21 THEN '11' ELSE '10' END OR l.status_code IS DISTINCT FROM '1'
-          OR e.establishment_type_id IS DISTINCT FROM CASE WHEN is_t13 OR is_t21 THEN 17 ELSE 15 END OR e.name IS DISTINCT FROM s.name
+          OR e.establishment_type_id IS DISTINCT FROM (SELECT establishment_type_id FROM establishment.establishment_type WHERE code=CASE WHEN is_t13 OR is_t21 THEN '11' ELSE '10' END) OR e.name IS DISTINCT FROM s.name
           OR NULLIF(btrim(s."propsName"),'') IS NULL
     ) THEN RAISE EXCEPTION 'Controlled proprietor endpoints differ from the accepted selection'; END IF;
     IF EXISTS (SELECT 1 FROM establishment.legal_entity
