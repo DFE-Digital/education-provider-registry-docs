@@ -1,0 +1,2660 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Published Establishment API",
+    "version": "1.0.0",
+    "description": "Anonymous read-only establishment retrieval. Lifecycle: beta. HTTPS origin is environment-specific. Query parameters and numeric throttling limits are not specified. Success responses use application/json; errors use application/problem+json, as stated on each response."
+  },
+  "basePath": "/v1",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json",
+    "application/problem+json"
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "Establishments"
+    }
+  ],
+  "paths": {
+    "/establishments/{URN}": {
+      "get": {
+        "tags": [
+          "Establishments"
+        ],
+        "operationId": "getEstablishment",
+        "summary": "Get a published establishment by URN",
+        "description": "GET /v1/establishments/{URN}. Fixed path is lowercase with no trailing slash. Validate the matched path URN before lookup. No request body; a non-empty body returns 400 unexpected-request-body. Unsupported methods return 405 with Allow: GET. No authentication. Accept is optional; negotiate application/json using standard media-range and quality-value rules; return 406 if unavailable. Negotiate gzip or identity using Accept-Encoding quality values; return 406 if neither is acceptable. Query-parameter behaviour is not specified. Resolve publication eligibility before evaluating If-None-Match, including weak comparison and wildcard handling. ETags use SHA-256 over exact deterministic representation bytes after UTF-8 JSON serialisation and content coding; encode the 32 digest bytes as unpadded Base64url and enclose in double quotes. Gzip and identity have different tags. Exclude transfer framing. Include all joined public facts; header-only and refresh-only changes do not alter the tag when body bytes are unchanged. A 304 has no body, Content-Type or Content-Encoding. Last-Modified is not emitted.",
+        "parameters": [
+          {
+            "name": "URN",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,5}$",
+            "description": "ASCII decimal string, 1 to 999999; no leading zeroes, whitespace, signs or separators."
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Standard content-coding negotiation, supporting gzip and identity with quality values."
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Standard conditional request: entity-tag list or wildcard. Use weak comparison after request validation and publication checks."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Published establishment, including closed records. Content-Type: application/json; UTF-8. One unwrapped object.",
+            "schema": {
+              "$ref": "#/definitions/Establishment"
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "ETag": {
+                "type": "string",
+                "description": "Required. Quoted SHA-256 of exact representation bytes after UTF-8 serialisation and content coding; Base64url without padding, no weak prefix.",
+                "pattern": "^\"[A-Za-z0-9_-]{43}\"$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "public, no-cache"
+                ]
+              },
+              "Vary": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "Accept, Accept-Encoding"
+                ]
+              },
+              "Content-Encoding": {
+                "type": "string",
+                "description": "Gzip responses only; omit for uncompressed responses.",
+                "enum": [
+                  "gzip"
+                ]
+              }
+            },
+            "examples": {
+              "application/json": {
+                "urn": "137603",
+                "providerName": "Ridgewood School",
+                "dfeNumber": "371/4033",
+                "ukprn": "10035482",
+                "providerType": {
+                  "code": "34",
+                  "name": "Academy converter"
+                },
+                "providerTypeGroup": {
+                  "name": "Academies"
+                },
+                "educationPhase": {
+                  "code": "4",
+                  "name": "Secondary"
+                },
+                "providerStatus": {
+                  "code": "1",
+                  "name": "Open"
+                },
+                "openDate": "2011-11-01",
+                "reasonProviderOpened": {
+                  "code": "10",
+                  "name": "Academy Converter"
+                },
+                "dateLastChangedOrConfirmed": "2026-05-14",
+                "establishmentLocationAndContact": {
+                  "website": "http://www.ridgewoodschool.co.uk",
+                  "phoneNumber": "01302783939",
+                  "sites": [
+                    {
+                      "siteId": "4615ea27-a8fc-4405-b35c-5e1c14923de4",
+                      "isMainSite": true,
+                      "uniquePropertyReferenceNumber": "10006581609",
+                      "address": {
+                        "addressLine1": "Barnsley Road",
+                        "addressLine2": "Scawsby",
+                        "townOrCity": "Doncaster",
+                        "county": "South Yorkshire",
+                        "postcode": "DN5 7UB"
+                      },
+                      "osGridReference": {
+                        "easting": 454286,
+                        "northing": 404965
+                      }
+                    }
+                  ]
+                },
+                "administrativeGeography": {
+                  "localAuthorityArea": {
+                    "code": "371",
+                    "name": "Doncaster"
+                  },
+                  "governmentOfficeRegion": {
+                    "code": "D",
+                    "name": "Yorkshire and the Humber"
+                  },
+                  "districtAdministrative": {
+                    "code": "E08000017",
+                    "name": "Doncaster"
+                  },
+                  "administrativeWard": {
+                    "code": "E05010741",
+                    "name": "Roman Ridge"
+                  },
+                  "parliamentaryConstituency": {
+                    "code": "E14001200",
+                    "name": "Doncaster North"
+                  },
+                  "urbanRuralClassification": {
+                    "code": "UN1",
+                    "name": "Urban: Nearer to a major town or city"
+                  },
+                  "lowerSuperOutputArea": {
+                    "code": "E01007588",
+                    "name": "Doncaster 016C"
+                  },
+                  "middleSuperOutputArea": {
+                    "code": "E02001554",
+                    "name": "Doncaster 016"
+                  },
+                  "governmentStatisticalServiceLocalAuthorityCode": "E08000017"
+                },
+                "establishmentLeadership": {
+                  "headteacherOrPrincipal": {
+                    "headTitle": "Mr",
+                    "headFirstName": "Andrew",
+                    "headLastName": "Peirson",
+                    "jobTitle": "Headteacher"
+                  }
+                },
+                "educationAdmissionsAndProvision": {
+                  "statutoryAgeRange": {
+                    "statutoryLowAge": 11,
+                    "statutoryHighAge": 19
+                  },
+                  "genderOfEntry": {
+                    "code": "3",
+                    "name": "Mixed"
+                  },
+                  "admissionsPolicy": {
+                    "code": "4",
+                    "name": "Non-selective"
+                  },
+                  "boardingProvision": {
+                    "code": "1",
+                    "name": "No boarders"
+                  },
+                  "sixthFormProvision": {
+                    "code": "1",
+                    "name": "Has a sixth form"
+                  },
+                  "specialClassProvision": true
+                },
+                "capacityAndPupilMeasures": {
+                  "providerCapacity": 1512,
+                  "numberOfPupilsStudents": 1453,
+                  "censusDate": "2025-01-16",
+                  "pupilsEligibleForFreeSchoolMeals": 249,
+                  "percentagePupilsEligibleForFreeSchoolMeals": 21,
+                  "numberOfMales": 674,
+                  "numberOfFemales": 779
+                },
+                "academyTrust": {
+                  "name": "LEGER EDUCATION TRUST",
+                  "groupUid": "17144",
+                  "groupId": "TR00381",
+                  "companiesHouseNumber": "07736364",
+                  "academyTrustType": {
+                    "name": "Multi-academy trust"
+                  },
+                  "startDate": "2023-07-01"
+                },
+                "sponsor": {
+                  "name": "Leger Education Trust",
+                  "groupUid": "17252",
+                  "groupId": "SP01981",
+                  "startDate": "2023-07-01"
+                },
+                "history": {
+                  "predecessors": [
+                    {
+                      "urn": "106789",
+                      "providerName": "Ridgewood School",
+                      "dateLinked": "2011-11-01",
+                      "url": "/v1/establishments/106789"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Published representation matches If-None-Match. No response body, Content-Type or Content-Encoding.",
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "ETag": {
+                "type": "string",
+                "description": "Required. Quoted SHA-256 of exact representation bytes after UTF-8 serialisation and content coding; Base64url without padding, no weak prefix.",
+                "pattern": "^\"[A-Za-z0-9_-]{43}\"$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "public, no-cache"
+                ]
+              },
+              "Vary": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "Accept, Accept-Encoding"
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Content-Type: application/problem+json; UTF-8. Invalid matched URN or non-empty request body. Validation errors include errors. Error code: invalid-urn, unexpected-request-body.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ValidationProblem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "invalid-urn",
+                        "unexpected-request-body"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Bad Request",
+                "status": 400,
+                "detail": "URN must contain 1 to 6 digits, start with a non-zero digit and be between 1 and 999999.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "invalid-urn",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "errors": [
+                  {
+                    "location": "path",
+                    "name": "URN",
+                    "reason": "Expected a decimal URN without leading zeroes."
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Content-Type: application/problem+json; UTF-8. No published record for a valid URN. Unknown and unpublished records are indistinguishable. Unmatched paths, including a trailing slash, also return 404. Error code: establishment-not-found.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "establishment-not-found"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Not Found",
+                "status": 404,
+                "detail": "No published record for a valid URN.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "establishment-not-found",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "405": {
+            "description": "Content-Type: application/problem+json; UTF-8. Unsupported method. Allow: GET is required. Error code: method-not-allowed.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        405
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "method-not-allowed"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              },
+              "Allow": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "GET"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Method Not Allowed",
+                "status": 405,
+                "detail": "Unsupported method.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "method-not-allowed",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "406": {
+            "description": "Content-Type: application/problem+json; UTF-8. No acceptable success media type or available content coding. Return application/problem+json for this error. Error code: not-acceptable.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        406
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "not-acceptable"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Not Acceptable",
+                "status": 406,
+                "detail": "No acceptable success media type or available content coding.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "not-acceptable",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "429": {
+            "description": "Content-Type: application/problem+json; UTF-8. Anonymous traffic throttled. Retry-After is required; no numeric threshold is specified. Error code: rate-limit-exceeded.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        429
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "rate-limit-exceeded"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              },
+              "Retry-After": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Required. Retry delay in seconds."
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Too Many Requests",
+                "status": 429,
+                "detail": "Anonymous traffic throttled.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "rate-limit-exceeded",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "500": {
+            "description": "Content-Type: application/problem+json; UTF-8. Unexpected failure. Exclude SQL, stack traces and unpublished data. Error code: internal-error.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        500
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "internal-error"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Internal Server Error",
+                "status": 500,
+                "detail": "Unexpected failure.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "internal-error",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "503": {
+            "description": "Content-Type: application/problem+json; UTF-8. Public projection unavailable or required publication facts missing. Include Retry-After only when known. If no public projection has ever loaded, omit Data-Last-Refreshed-At. Error code: publication-unavailable, publication-incomplete.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        503
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "publication-unavailable",
+                        "publication-incomplete"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              },
+              "Retry-After": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Include only when retry time is known. Delay in seconds."
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Service Unavailable",
+                "status": 503,
+                "detail": "Public projection unavailable or required publication facts missing.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "publication-unavailable",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ValidationProblem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Problem"
+        },
+        {
+          "type": "object",
+          "required": [
+            "errors"
+          ]
+        }
+      ],
+      "description": "Validation failure; errors is required."
+    },
+    "CodedValue": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "code",
+        "name"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published code; preserve spelling and leading zeroes. Internal database identifiers are excluded."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published name matching the code."
+        }
+      }
+    },
+    "NamedValue": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published classification name."
+        }
+      }
+    },
+    "LocalAuthorityValue": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "code",
+        "name"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published DfE local authority code.",
+          "pattern": "^[0-9]{3}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published local authority lookup label."
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "addressLine1": {
+          "type": "string",
+          "minLength": 1
+        },
+        "addressLine2": {
+          "type": "string",
+          "minLength": 1
+        },
+        "addressLine3": {
+          "type": "string",
+          "minLength": 1
+        },
+        "townOrCity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "county": {
+          "type": "string",
+          "minLength": 1
+        },
+        "postcode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "country": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "OsGridReference": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "British National Grid, EPSG:27700. Publish only for the site to which the coordinates apply.",
+      "required": [
+        "easting",
+        "northing"
+      ],
+      "properties": {
+        "easting": {
+          "type": "integer"
+        },
+        "northing": {
+          "type": "integer"
+        }
+      }
+    },
+    "Site": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "siteId",
+        "isMainSite"
+      ],
+      "properties": {
+        "siteId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable published site identifier.",
+          "format": "uuid",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
+        "isMainSite": {
+          "type": "boolean",
+          "description": "At most one site per establishment has this value set to true."
+        },
+        "siteName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniquePropertyReferenceNumber": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published UPRN.",
+          "pattern": "^[0-9]+$"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "osGridReference": {
+          "$ref": "#/definitions/OsGridReference"
+        }
+      }
+    },
+    "LocationAndContact": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "website": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published website string; a scheme is not required."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published telephone number; preserve meaningful formatting."
+        },
+        "sites": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Site"
+          },
+          "description": "Main site first; remaining sites ordered by siteId."
+        }
+      }
+    },
+    "AdministrativeGeography": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "Geographic classifications. localAuthorityArea identifies the DfE LA-code area.",
+      "properties": {
+        "localAuthorityArea": {
+          "$ref": "#/definitions/LocalAuthorityValue"
+        },
+        "governmentOfficeRegion": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "districtAdministrative": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "administrativeWard": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "parliamentaryConstituency": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "urbanRuralClassification": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "lowerSuperOutputArea": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "middleSuperOutputArea": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "governmentStatisticalServiceLocalAuthorityCode": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published GSS local authority code."
+        }
+      }
+    },
+    "HeadteacherOrPrincipal": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "Include at least one meaningful published member.",
+      "properties": {
+        "headTitle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headFirstName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headLastName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jobTitle": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "Leadership": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "headteacherOrPrincipal": {
+          "$ref": "#/definitions/HeadteacherOrPrincipal"
+        }
+      }
+    },
+    "StatutoryAgeRange": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "statutoryLowAge must be less than or equal to statutoryHighAge.",
+      "required": [
+        "statutoryLowAge",
+        "statutoryHighAge"
+      ],
+      "properties": {
+        "statutoryLowAge": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 19
+        },
+        "statutoryHighAge": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 25
+        }
+      }
+    },
+    "EducationAdmissionsAndProvision": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "statutoryAgeRange": {
+          "$ref": "#/definitions/StatutoryAgeRange"
+        },
+        "genderOfEntry": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "admissionsPolicy": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "boardingProvision": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "nurseryProvision": {
+          "$ref": "#/definitions/NamedValue"
+        },
+        "sixthFormProvision": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "specialClassProvision": {
+          "type": "boolean"
+        },
+        "section41Approval": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/NamedValue"
+            }
+          ],
+          "description": "Include only when applicable and published."
+        }
+      }
+    },
+    "CapacityAndPupilMeasures": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "providerCapacity": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "numberOfPupilsStudents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "censusDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "pupilsEligibleForFreeSchoolMeals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "percentagePupilsEligibleForFreeSchoolMeals": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Published percentage; retain the supplied value. No common denominator with other counts is implied."
+        },
+        "numberOfMales": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Pupil-population count."
+        },
+        "numberOfFemales": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Pupil-population count."
+        }
+      }
+    },
+    "FaithContext": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "religiousCharacter": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "religiousEthos": {
+          "$ref": "#/definitions/NamedValue"
+        },
+        "diocese": {
+          "$ref": "#/definitions/CodedValue"
+        }
+      }
+    },
+    "ResourcedProvisionMeasure": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "resourcedProvisionPupilCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resourcedProvisionCapacity": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "SenUnitMeasure": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "senUnitPupilCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "senUnitCapacity": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "SenAndResourcedProvision": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "typeOfSenProvision": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/NamedValue"
+          },
+          "description": "Unique published SEN-need names, sorted by name using ordinal comparison.",
+          "uniqueItems": true
+        },
+        "typeOfResourcedProvision": {
+          "$ref": "#/definitions/NamedValue"
+        },
+        "resourcedProvisionMeasure": {
+          "$ref": "#/definitions/ResourcedProvisionMeasure"
+        },
+        "senUnitMeasure": {
+          "$ref": "#/definitions/SenUnitMeasure"
+        }
+      },
+      "example": {
+        "typeOfSenProvision": [
+          {
+            "name": "PD - Physical Disability"
+          },
+          {
+            "name": "SpLD - Specific Learning Difficulty"
+          }
+        ],
+        "typeOfResourcedProvision": {
+          "name": "Resourced provision and SEN unit"
+        },
+        "resourcedProvisionMeasure": {
+          "resourcedProvisionPupilCount": 10,
+          "resourcedProvisionCapacity": 10
+        },
+        "senUnitMeasure": {
+          "senUnitPupilCount": 28,
+          "senUnitCapacity": 32
+        }
+      }
+    },
+    "AlternativeProvisionCharacteristics": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "Include applicable published facts; these fields are not restricted to the pupil referral unit type.",
+      "properties": {
+        "teenMothersProvision": {
+          "type": "boolean"
+        },
+        "childcareFacilitiesProvision": {
+          "type": "boolean"
+        },
+        "senPupilReferralUnit": {
+          "type": "boolean"
+        },
+        "emotionalBehaviouralDifficultiesProvision": {
+          "type": "boolean"
+        },
+        "fullTimeProvision": {
+          "type": "boolean"
+        },
+        "pupilsEducatedByOtherProviders": {
+          "type": "boolean"
+        },
+        "teenMothersCapacity": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pupilReferralUnitCapacity": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "InspectionRecord": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "inspectorateName": {
+          "$ref": "#/definitions/NamedValue"
+        },
+        "inspectorateReport": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published inspection-report URI.",
+          "format": "uri"
+        },
+        "dateOfLastInspectionVisit": {
+          "type": "string",
+          "format": "date"
+        },
+        "dateOfNextInspectionVisit": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "AcademyTrust": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "academyTrustType"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published party or group name."
+        },
+        "groupUid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group UID for this role.",
+          "pattern": "^[0-9]+$"
+        },
+        "groupId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group ID; preserve prefix and leading zeroes."
+        },
+        "companiesHouseNumber": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Companies House number; preserve leading zeroes."
+        },
+        "academyTrustType": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/NamedValue"
+            }
+          ],
+          "description": "Single-academy trust, Multi-academy trust or Secure single-academy trust. Historical entries retain the type recorded for that relationship."
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship start, inclusive."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship end, exclusive; may be future-dated for a current relationship."
+        }
+      }
+    },
+    "Sponsor": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "A sponsor may be an organisation or an individual. academyTrustType is absent. personId and companiesHouseNumber must not be published together.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published party or group name."
+        },
+        "groupUid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group UID for this role.",
+          "pattern": "^[0-9]+$"
+        },
+        "groupId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group ID; preserve prefix and leading zeroes."
+        },
+        "companiesHouseNumber": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Organisations only; published company number."
+        },
+        "personId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Individual sponsors only; stable published person identifier.",
+          "format": "uuid",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship start, inclusive."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship end, exclusive; may be future-dated for a current relationship."
+        }
+      }
+    },
+    "MaintainingLocalAuthority": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "The council maintaining the school; distinct from administrativeGeography.localAuthorityArea.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published DfE LA code evidenced for this relationship and period.",
+          "pattern": "^[0-9]{3}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published council legal-entity name."
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship start, inclusive."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship end, exclusive; may be future-dated for a current relationship."
+        }
+      }
+    },
+    "Federation": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "Dates describe membership of the federation.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published party or group name."
+        },
+        "groupUid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group UID for this role.",
+          "pattern": "^[0-9]+$"
+        },
+        "groupId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group ID; preserve prefix and leading zeroes."
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship start, inclusive."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship end, exclusive; may be future-dated for a current relationship."
+        }
+      }
+    },
+    "FoundationTrust": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "Published foundation-trust support relationship.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published party or group name."
+        },
+        "groupUid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group UID for this role.",
+          "pattern": "^[0-9]+$"
+        },
+        "groupId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published Group ID; preserve prefix and leading zeroes."
+        },
+        "companiesHouseNumber": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published company number."
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship start, inclusive."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Relationship end, exclusive; may be future-dated for a current relationship."
+        }
+      }
+    },
+    "Predecessor": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "urn",
+        "providerName",
+        "url"
+      ],
+      "properties": {
+        "urn": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Predecessor establishment URN.",
+          "pattern": "^[1-9][0-9]{0,5}$"
+        },
+        "providerName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published predecessor name."
+        },
+        "dateLinked": {
+          "type": "string",
+          "format": "date",
+          "description": "Recorded establishment-link date."
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Root-relative resource URL; its URN must match this item's urn.",
+          "pattern": "^/v1/establishments/[1-9][0-9]{0,5}$"
+        }
+      }
+    },
+    "History": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "previousLA": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/LocalAuthorityValue"
+            }
+          ],
+          "description": "Previous published DfE local authority reference; omit placeholder code 999. This is not a dated maintenance relationship."
+        },
+        "predecessors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Predecessor"
+          },
+          "description": "Direct links only. De-duplicate identical URN/date pairs; sort by URN numerically, then dateLinked ascending, unknown dates last."
+        },
+        "previousAcademyTrusts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/AcademyTrust"
+          },
+          "description": "Sort by startDate ascending, unknown dates last, then name using ordinal comparison, then groupUid and groupId. Historical operators."
+        },
+        "previousSponsors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Sponsor"
+          },
+          "description": "Sort by startDate ascending, unknown dates last, then name using ordinal comparison, then groupUid and groupId. Historical sponsors."
+        },
+        "previousMaintainingLocalAuthorities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/MaintainingLocalAuthority"
+          },
+          "description": "Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical maintenance relationships."
+        },
+        "previousFederations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Federation"
+          },
+          "description": "Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical federation memberships."
+        },
+        "previousFoundationTrusts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/FoundationTrust"
+          },
+          "description": "Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical foundation-trust relationships."
+        }
+      }
+    },
+    "Establishment": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "One establishment object without a wrapper. Optional fields are present when applicable, known and published. Omit nulls, empty strings, empty objects/arrays and placeholders. Preserve zero, false and meaningful classifications such as None. Clients must tolerate additional properties and future published code values. Select current/historical relationships using explicit state, not the presence of endDate. Missing required publication facts return 503 publication-incomplete. Categories other than those mapped here use the same endpoint and must not return 404 solely because their category is not described here.",
+      "required": [
+        "urn",
+        "providerName",
+        "providerType",
+        "providerTypeGroup",
+        "providerStatus",
+        "dateLastChangedOrConfirmed"
+      ],
+      "properties": {
+        "urn": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must match the requested URN.",
+          "pattern": "^[1-9][0-9]{0,5}$"
+        },
+        "providerName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Published establishment name."
+        },
+        "dfeNumber": {
+          "type": "string",
+          "minLength": 1,
+          "description": "DfE LA number and establishment number; include only when both components and the numbering-authority relationship are established.",
+          "pattern": "^[0-9]{3}/[0-9]{4}$"
+        },
+        "ukprn": {
+          "type": "string",
+          "minLength": 1,
+          "description": "UK Provider Reference Number.",
+          "pattern": "^[0-9]{8}$"
+        },
+        "providerType": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/CodedValue"
+            }
+          ],
+          "description": "Detailed establishment type. Code and name must match the published type mapping."
+        },
+        "providerTypeGroup": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/NamedValue"
+            }
+          ],
+          "description": "Implemented establishment type category. See x-establishment-type-mappings."
+        },
+        "educationPhase": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "providerStatus": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/CodedValue"
+            }
+          ],
+          "description": "Published establishment status. Published closed establishments remain retrievable. A proposed closure date alone does not change status to Closed."
+        },
+        "openDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "closedDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "reasonProviderOpened": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "reasonProviderClosed": {
+          "$ref": "#/definitions/CodedValue"
+        },
+        "dateLastChangedOrConfirmed": {
+          "type": "string",
+          "format": "date",
+          "description": "Source record date; distinct from response-generation and projection-refresh timestamps."
+        },
+        "establishmentLocationAndContact": {
+          "$ref": "#/definitions/LocationAndContact"
+        },
+        "administrativeGeography": {
+          "$ref": "#/definitions/AdministrativeGeography"
+        },
+        "establishmentLeadership": {
+          "$ref": "#/definitions/Leadership"
+        },
+        "educationAdmissionsAndProvision": {
+          "$ref": "#/definitions/EducationAdmissionsAndProvision"
+        },
+        "capacityAndPupilMeasures": {
+          "$ref": "#/definitions/CapacityAndPupilMeasures"
+        },
+        "faithContext": {
+          "$ref": "#/definitions/FaithContext"
+        },
+        "senAndResourcedProvision": {
+          "$ref": "#/definitions/SenAndResourcedProvision"
+        },
+        "alternativeProvisionCharacteristics": {
+          "$ref": "#/definitions/AlternativeProvisionCharacteristics"
+        },
+        "inspectionRecord": {
+          "$ref": "#/definitions/InspectionRecord"
+        },
+        "academyTrust": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/AcademyTrust"
+            }
+          ],
+          "description": "Current operating trust; at most one. Academies category."
+        },
+        "sponsor": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Sponsor"
+            }
+          ],
+          "description": "Current sponsor; at most one. Academies category."
+        },
+        "maintainingLocalAuthority": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/MaintainingLocalAuthority"
+            }
+          ],
+          "description": "Current maintenance relationship. Local authority maintained schools category."
+        },
+        "federation": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Federation"
+            }
+          ],
+          "description": "Current federation membership; at most one. Local authority maintained schools category."
+        },
+        "foundationTrust": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/FoundationTrust"
+            }
+          ],
+          "description": "Current foundation-trust relationship; at most one. Local authority maintained schools category."
+        },
+        "history": {
+          "$ref": "#/definitions/History"
+        }
+      },
+      "example": {
+        "urn": "137603",
+        "providerName": "Ridgewood School",
+        "dfeNumber": "371/4033",
+        "ukprn": "10035482",
+        "providerType": {
+          "code": "34",
+          "name": "Academy converter"
+        },
+        "providerTypeGroup": {
+          "name": "Academies"
+        },
+        "educationPhase": {
+          "code": "4",
+          "name": "Secondary"
+        },
+        "providerStatus": {
+          "code": "1",
+          "name": "Open"
+        },
+        "openDate": "2011-11-01",
+        "reasonProviderOpened": {
+          "code": "10",
+          "name": "Academy Converter"
+        },
+        "dateLastChangedOrConfirmed": "2026-05-14",
+        "establishmentLocationAndContact": {
+          "website": "http://www.ridgewoodschool.co.uk",
+          "phoneNumber": "01302783939",
+          "sites": [
+            {
+              "siteId": "4615ea27-a8fc-4405-b35c-5e1c14923de4",
+              "isMainSite": true,
+              "uniquePropertyReferenceNumber": "10006581609",
+              "address": {
+                "addressLine1": "Barnsley Road",
+                "addressLine2": "Scawsby",
+                "townOrCity": "Doncaster",
+                "county": "South Yorkshire",
+                "postcode": "DN5 7UB"
+              },
+              "osGridReference": {
+                "easting": 454286,
+                "northing": 404965
+              }
+            }
+          ]
+        },
+        "administrativeGeography": {
+          "localAuthorityArea": {
+            "code": "371",
+            "name": "Doncaster"
+          },
+          "governmentOfficeRegion": {
+            "code": "D",
+            "name": "Yorkshire and the Humber"
+          },
+          "districtAdministrative": {
+            "code": "E08000017",
+            "name": "Doncaster"
+          },
+          "administrativeWard": {
+            "code": "E05010741",
+            "name": "Roman Ridge"
+          },
+          "parliamentaryConstituency": {
+            "code": "E14001200",
+            "name": "Doncaster North"
+          },
+          "urbanRuralClassification": {
+            "code": "UN1",
+            "name": "Urban: Nearer to a major town or city"
+          },
+          "lowerSuperOutputArea": {
+            "code": "E01007588",
+            "name": "Doncaster 016C"
+          },
+          "middleSuperOutputArea": {
+            "code": "E02001554",
+            "name": "Doncaster 016"
+          },
+          "governmentStatisticalServiceLocalAuthorityCode": "E08000017"
+        },
+        "establishmentLeadership": {
+          "headteacherOrPrincipal": {
+            "headTitle": "Mr",
+            "headFirstName": "Andrew",
+            "headLastName": "Peirson",
+            "jobTitle": "Headteacher"
+          }
+        },
+        "educationAdmissionsAndProvision": {
+          "statutoryAgeRange": {
+            "statutoryLowAge": 11,
+            "statutoryHighAge": 19
+          },
+          "genderOfEntry": {
+            "code": "3",
+            "name": "Mixed"
+          },
+          "admissionsPolicy": {
+            "code": "4",
+            "name": "Non-selective"
+          },
+          "boardingProvision": {
+            "code": "1",
+            "name": "No boarders"
+          },
+          "sixthFormProvision": {
+            "code": "1",
+            "name": "Has a sixth form"
+          },
+          "specialClassProvision": true
+        },
+        "capacityAndPupilMeasures": {
+          "providerCapacity": 1512,
+          "numberOfPupilsStudents": 1453,
+          "censusDate": "2025-01-16",
+          "pupilsEligibleForFreeSchoolMeals": 249,
+          "percentagePupilsEligibleForFreeSchoolMeals": 21,
+          "numberOfMales": 674,
+          "numberOfFemales": 779
+        },
+        "academyTrust": {
+          "name": "LEGER EDUCATION TRUST",
+          "groupUid": "17144",
+          "groupId": "TR00381",
+          "companiesHouseNumber": "07736364",
+          "academyTrustType": {
+            "name": "Multi-academy trust"
+          },
+          "startDate": "2023-07-01"
+        },
+        "sponsor": {
+          "name": "Leger Education Trust",
+          "groupUid": "17252",
+          "groupId": "SP01981",
+          "startDate": "2023-07-01"
+        },
+        "history": {
+          "predecessors": [
+            {
+              "urn": "106789",
+              "providerName": "Ridgewood School",
+              "dateLinked": "2011-11-01",
+              "url": "/v1/establishments/106789"
+            }
+          ]
+        }
+      }
+    },
+    "ValidationError": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "required": [
+        "location",
+        "name",
+        "reason"
+      ],
+      "properties": {
+        "location": {
+          "type": "string",
+          "enum": [
+            "path",
+            "query",
+            "body"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Invalid component name; body for request-body failures."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "Problem": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "description": "RFC 9457 Problem Details. Consumers branch on HTTP status and code.",
+      "required": [
+        "type",
+        "title",
+        "status",
+        "detail",
+        "instance",
+        "code",
+        "requestId"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "about:blank"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Standard HTTP status phrase."
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 400,
+          "maximum": 599,
+          "description": "Must equal the HTTP response status."
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable detail; exclude internal diagnostics and unpublished data."
+        },
+        "instance": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique occurrence identifier.",
+          "format": "uri",
+          "pattern": "^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable API error code; see each response."
+        },
+        "requestId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must match X-Request-ID.",
+          "format": "uuid",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
+        "errors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ValidationError"
+          },
+          "description": "Required for validation failures; omitted for other errors."
+        }
+      },
+      "example": {
+        "type": "about:blank",
+        "title": "Bad Request",
+        "status": 400,
+        "detail": "URN must contain 1 to 6 digits, start with a non-zero digit and be between 1 and 999999.",
+        "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+        "code": "invalid-urn",
+        "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab",
+        "errors": [
+          {
+            "location": "path",
+            "name": "URN",
+            "reason": "Expected a decimal URN without leading zeroes."
+          }
+        ]
+      }
+    }
+  },
+  "x-establishment-type-mappings": [
+    {
+      "providerTypeGroup": {
+        "name": "Academies"
+      },
+      "providerTypes": [
+        {
+          "code": "34",
+          "name": "Academy converter"
+        },
+        {
+          "code": "28",
+          "name": "Academy sponsor led"
+        },
+        {
+          "code": "44",
+          "name": "Academy special converter"
+        },
+        {
+          "code": "33",
+          "name": "Academy special sponsor led"
+        },
+        {
+          "code": "42",
+          "name": "Academy alternative provision converter"
+        },
+        {
+          "code": "43",
+          "name": "Academy alternative provision sponsor led"
+        },
+        {
+          "code": "45",
+          "name": "Academy 16-19 converter"
+        },
+        {
+          "code": "46",
+          "name": "Academy 16 to 19 sponsor led"
+        },
+        {
+          "code": "57",
+          "name": "Academy secure 16 to 19"
+        }
+      ]
+    },
+    {
+      "providerTypeGroup": {
+        "name": "Local authority maintained schools"
+      },
+      "providerTypes": [
+        {
+          "code": "01",
+          "name": "Community school"
+        },
+        {
+          "code": "02",
+          "name": "Voluntary aided school"
+        },
+        {
+          "code": "03",
+          "name": "Voluntary controlled school"
+        },
+        {
+          "code": "05",
+          "name": "Foundation school"
+        },
+        {
+          "code": "14",
+          "name": "Pupil referral unit"
+        },
+        {
+          "code": "15",
+          "name": "Maintained nursery school"
+        }
+      ]
+    }
+  ],
+  "x-schema-rules": [
+    "Optional means present when applicable, known and published; omission reasons are not distinguished in the payload.",
+    "Omit nulls, empty strings, empty containers and placeholders. Preserve false, zero and meaningful negative classifications.",
+    "Code/name pairs and category assignments must match the published reference mapping; current mappings are not a closed enum.",
+    "Statutory low age must not exceed statutory high age.",
+    "At most one site has isMainSite true; main site first, other sites ordered by siteId.",
+    "Predecessor URL URN must equal the item's urn; links are direct and root-relative.",
+    "Select current/historical relationships from explicit state. Relationship periods have inclusive starts and exclusive ends. A future endDate may appear on a current relationship.",
+    "Sponsor objects omit academyTrustType. personId is for individuals; companiesHouseNumber is for organisations; do not publish both on one sponsor.",
+    "Do not infer sponsor identity from establishment type or operating trust; do not infer foundation-trust support from faith classifications.",
+    "A previous LA reference is not proof of a predecessor or a dated maintaining-council relationship.",
+    "Published records in other categories use this route; category absence from this contract is not grounds for 404.",
+    "An establishment has at most one current sponsor, one current federation membership and one current foundation-trust relationship. Publish sponsor, federation and foundationTrust as conditional objects; omit absent relationships. Historical relationships remain arrays."
+  ],
+  "x-response-examples": {
+    "academy": {
+      "urn": "137603",
+      "providerName": "Ridgewood School",
+      "dfeNumber": "371/4033",
+      "ukprn": "10035482",
+      "providerType": {
+        "code": "34",
+        "name": "Academy converter"
+      },
+      "providerTypeGroup": {
+        "name": "Academies"
+      },
+      "educationPhase": {
+        "code": "4",
+        "name": "Secondary"
+      },
+      "providerStatus": {
+        "code": "1",
+        "name": "Open"
+      },
+      "openDate": "2011-11-01",
+      "reasonProviderOpened": {
+        "code": "10",
+        "name": "Academy Converter"
+      },
+      "dateLastChangedOrConfirmed": "2026-05-14",
+      "establishmentLocationAndContact": {
+        "website": "http://www.ridgewoodschool.co.uk",
+        "phoneNumber": "01302783939",
+        "sites": [
+          {
+            "siteId": "4615ea27-a8fc-4405-b35c-5e1c14923de4",
+            "isMainSite": true,
+            "uniquePropertyReferenceNumber": "10006581609",
+            "address": {
+              "addressLine1": "Barnsley Road",
+              "addressLine2": "Scawsby",
+              "townOrCity": "Doncaster",
+              "county": "South Yorkshire",
+              "postcode": "DN5 7UB"
+            },
+            "osGridReference": {
+              "easting": 454286,
+              "northing": 404965
+            }
+          }
+        ]
+      },
+      "administrativeGeography": {
+        "localAuthorityArea": {
+          "code": "371",
+          "name": "Doncaster"
+        },
+        "governmentOfficeRegion": {
+          "code": "D",
+          "name": "Yorkshire and the Humber"
+        },
+        "districtAdministrative": {
+          "code": "E08000017",
+          "name": "Doncaster"
+        },
+        "administrativeWard": {
+          "code": "E05010741",
+          "name": "Roman Ridge"
+        },
+        "parliamentaryConstituency": {
+          "code": "E14001200",
+          "name": "Doncaster North"
+        },
+        "urbanRuralClassification": {
+          "code": "UN1",
+          "name": "Urban: Nearer to a major town or city"
+        },
+        "lowerSuperOutputArea": {
+          "code": "E01007588",
+          "name": "Doncaster 016C"
+        },
+        "middleSuperOutputArea": {
+          "code": "E02001554",
+          "name": "Doncaster 016"
+        },
+        "governmentStatisticalServiceLocalAuthorityCode": "E08000017"
+      },
+      "establishmentLeadership": {
+        "headteacherOrPrincipal": {
+          "headTitle": "Mr",
+          "headFirstName": "Andrew",
+          "headLastName": "Peirson",
+          "jobTitle": "Headteacher"
+        }
+      },
+      "educationAdmissionsAndProvision": {
+        "statutoryAgeRange": {
+          "statutoryLowAge": 11,
+          "statutoryHighAge": 19
+        },
+        "genderOfEntry": {
+          "code": "3",
+          "name": "Mixed"
+        },
+        "admissionsPolicy": {
+          "code": "4",
+          "name": "Non-selective"
+        },
+        "boardingProvision": {
+          "code": "1",
+          "name": "No boarders"
+        },
+        "sixthFormProvision": {
+          "code": "1",
+          "name": "Has a sixth form"
+        },
+        "specialClassProvision": true
+      },
+      "capacityAndPupilMeasures": {
+        "providerCapacity": 1512,
+        "numberOfPupilsStudents": 1453,
+        "censusDate": "2025-01-16",
+        "pupilsEligibleForFreeSchoolMeals": 249,
+        "percentagePupilsEligibleForFreeSchoolMeals": 21,
+        "numberOfMales": 674,
+        "numberOfFemales": 779
+      },
+      "academyTrust": {
+        "name": "LEGER EDUCATION TRUST",
+        "groupUid": "17144",
+        "groupId": "TR00381",
+        "companiesHouseNumber": "07736364",
+        "academyTrustType": {
+          "name": "Multi-academy trust"
+        },
+        "startDate": "2023-07-01"
+      },
+      "sponsor": {
+        "name": "Leger Education Trust",
+        "groupUid": "17252",
+        "groupId": "SP01981",
+        "startDate": "2023-07-01"
+      },
+      "history": {
+        "predecessors": [
+          {
+            "urn": "106789",
+            "providerName": "Ridgewood School",
+            "dateLinked": "2011-11-01",
+            "url": "/v1/establishments/106789"
+          }
+        ]
+      }
+    },
+    "localAuthorityMaintainedSchool": {
+      "urn": "109613",
+      "providerName": "Milton Ernest CofE Primary School",
+      "dfeNumber": "822/3023",
+      "ukprn": "10075753",
+      "providerType": {
+        "code": "03",
+        "name": "Voluntary controlled school"
+      },
+      "providerTypeGroup": {
+        "name": "Local authority maintained schools"
+      },
+      "educationPhase": {
+        "code": "2",
+        "name": "Primary"
+      },
+      "providerStatus": {
+        "code": "1",
+        "name": "Open"
+      },
+      "dateLastChangedOrConfirmed": "2026-06-03",
+      "establishmentLocationAndContact": {
+        "website": "www.ewmeschools.org.uk",
+        "phoneNumber": "01234822079",
+        "sites": [
+          {
+            "siteId": "3ce35ac4-8250-4546-9bd2-ef33a5a39726",
+            "isMainSite": true,
+            "uniquePropertyReferenceNumber": "100081212588",
+            "address": {
+              "addressLine1": "Thurleigh Road",
+              "addressLine2": "Milton Ernest",
+              "townOrCity": "Bedford",
+              "county": "Bedfordshire",
+              "postcode": "MK44 1RF"
+            },
+            "osGridReference": {
+              "easting": 501906,
+              "northing": 256038
+            }
+          }
+        ]
+      },
+      "administrativeGeography": {
+        "localAuthorityArea": {
+          "code": "822",
+          "name": "Bedford"
+        },
+        "governmentOfficeRegion": {
+          "code": "G",
+          "name": "East of England"
+        },
+        "districtAdministrative": {
+          "code": "E06000055",
+          "name": "Bedford"
+        },
+        "administrativeWard": {
+          "code": "E05014512",
+          "name": "Riseley"
+        },
+        "parliamentaryConstituency": {
+          "code": "E14001384",
+          "name": "North Bedfordshire"
+        },
+        "urbanRuralClassification": {
+          "code": "RSN1",
+          "name": "Smaller rural: Nearer to a major town or city"
+        },
+        "lowerSuperOutputArea": {
+          "code": "E01017478",
+          "name": "Bedford 003A"
+        },
+        "middleSuperOutputArea": {
+          "code": "E02003618",
+          "name": "Bedford 003"
+        },
+        "governmentStatisticalServiceLocalAuthorityCode": "E06000055"
+      },
+      "establishmentLeadership": {
+        "headteacherOrPrincipal": {
+          "headTitle": "Mrs",
+          "headFirstName": "Lisa",
+          "headLastName": "Virnuls",
+          "jobTitle": "Headteacher"
+        }
+      },
+      "educationAdmissionsAndProvision": {
+        "statutoryAgeRange": {
+          "statutoryLowAge": 4,
+          "statutoryHighAge": 11
+        },
+        "genderOfEntry": {
+          "code": "3",
+          "name": "Mixed"
+        },
+        "boardingProvision": {
+          "code": "1",
+          "name": "No boarders"
+        },
+        "nurseryProvision": {
+          "name": "No Nursery Classes"
+        },
+        "sixthFormProvision": {
+          "code": "2",
+          "name": "Does not have a sixth form"
+        },
+        "specialClassProvision": false
+      },
+      "capacityAndPupilMeasures": {
+        "providerCapacity": 84,
+        "numberOfPupilsStudents": 63,
+        "censusDate": "2025-01-16",
+        "pupilsEligibleForFreeSchoolMeals": 6,
+        "percentagePupilsEligibleForFreeSchoolMeals": 9.5,
+        "numberOfMales": 35,
+        "numberOfFemales": 28
+      },
+      "faithContext": {
+        "religiousCharacter": {
+          "code": "02",
+          "name": "Church of England"
+        },
+        "diocese": {
+          "code": "CE32",
+          "name": "Diocese of St Albans"
+        }
+      },
+      "maintainingLocalAuthority": {
+        "code": "822",
+        "name": "Bedford Borough Council",
+        "startDate": "2009-04-01"
+      },
+      "federation": {
+        "name": "Federation of Eileen Wade and Milton Ernest CoE Primary Schools",
+        "groupUid": "1809",
+        "startDate": "2011-01-13"
+      },
+      "history": {
+        "previousLA": {
+          "code": "820",
+          "name": "Pre LGR (2009) Bedfordshire"
+        }
+      }
+    },
+    "academyWithSen": {
+      "urn": "136286",
+      "providerName": "Westlands School",
+      "dfeNumber": "886/5434",
+      "ukprn": "10031371",
+      "providerType": {
+        "code": "34",
+        "name": "Academy converter"
+      },
+      "providerTypeGroup": {
+        "name": "Academies"
+      },
+      "educationPhase": {
+        "code": "4",
+        "name": "Secondary"
+      },
+      "providerStatus": {
+        "code": "1",
+        "name": "Open"
+      },
+      "openDate": "2010-09-01",
+      "reasonProviderOpened": {
+        "code": "10",
+        "name": "Academy Converter"
+      },
+      "dateLastChangedOrConfirmed": "2026-05-19",
+      "establishmentLocationAndContact": {
+        "website": "http://www.westlands.org.uk/",
+        "phoneNumber": "01795477475",
+        "sites": [
+          {
+            "siteId": "ea3d3b2c-1e0a-545c-b87f-55708d9c56d6",
+            "isMainSite": true,
+            "uniquePropertyReferenceNumber": "100062375039",
+            "address": {
+              "addressLine1": "Westlands Avenue",
+              "townOrCity": "Sittingbourne",
+              "county": "Kent",
+              "postcode": "ME10 1PF"
+            },
+            "osGridReference": {
+              "easting": 588904,
+              "northing": 163864
+            }
+          }
+        ]
+      },
+      "administrativeGeography": {
+        "localAuthorityArea": {
+          "code": "886",
+          "name": "Kent"
+        },
+        "governmentOfficeRegion": {
+          "code": "J",
+          "name": "South East"
+        },
+        "districtAdministrative": {
+          "code": "E07000113",
+          "name": "Swale"
+        },
+        "administrativeWard": {
+          "code": "E05009546",
+          "name": "Borden and Grove Park"
+        },
+        "parliamentaryConstituency": {
+          "code": "E14001474",
+          "name": "Sittingbourne and Sheppey"
+        },
+        "urbanRuralClassification": {
+          "code": "UN1",
+          "name": "Urban: Nearer to a major town or city"
+        },
+        "lowerSuperOutputArea": {
+          "code": "E01024569",
+          "name": "Swale 012C"
+        },
+        "middleSuperOutputArea": {
+          "code": "E02005126",
+          "name": "Swale 012"
+        },
+        "governmentStatisticalServiceLocalAuthorityCode": "E10000016"
+      },
+      "establishmentLeadership": {
+        "headteacherOrPrincipal": {
+          "headTitle": "Miss",
+          "headFirstName": "Christina",
+          "headLastName": "Honess",
+          "jobTitle": "Headteacher"
+        }
+      },
+      "educationAdmissionsAndProvision": {
+        "statutoryAgeRange": {
+          "statutoryLowAge": 11,
+          "statutoryHighAge": 18
+        },
+        "genderOfEntry": {
+          "code": "3",
+          "name": "Mixed"
+        },
+        "admissionsPolicy": {
+          "code": "4",
+          "name": "Non-selective"
+        },
+        "boardingProvision": {
+          "code": "1",
+          "name": "No boarders"
+        },
+        "sixthFormProvision": {
+          "code": "1",
+          "name": "Has a sixth form"
+        },
+        "specialClassProvision": true
+      },
+      "capacityAndPupilMeasures": {
+        "providerCapacity": 1604,
+        "numberOfPupilsStudents": 1746,
+        "censusDate": "2025-01-16",
+        "pupilsEligibleForFreeSchoolMeals": 434,
+        "percentagePupilsEligibleForFreeSchoolMeals": 28.2,
+        "numberOfMales": 911,
+        "numberOfFemales": 835
+      },
+      "faithContext": {
+        "religiousCharacter": {
+          "code": "06",
+          "name": "None"
+        }
+      },
+      "senAndResourcedProvision": {
+        "typeOfSenProvision": [
+          {
+            "name": "PD - Physical Disability"
+          },
+          {
+            "name": "SpLD - Specific Learning Difficulty"
+          }
+        ],
+        "typeOfResourcedProvision": {
+          "name": "Resourced provision and SEN unit"
+        },
+        "resourcedProvisionMeasure": {
+          "resourcedProvisionPupilCount": 10,
+          "resourcedProvisionCapacity": 10
+        },
+        "senUnitMeasure": {
+          "senUnitPupilCount": 28,
+          "senUnitCapacity": 32
+        }
+      },
+      "academyTrust": {
+        "name": "SWALE ACADEMIES TRUST",
+        "groupUid": "4885",
+        "groupId": "TR02230",
+        "companiesHouseNumber": "07344732",
+        "academyTrustType": {
+          "name": "Multi-academy trust"
+        },
+        "startDate": "2010-09-01"
+      },
+      "sponsor": {
+        "name": "Swale Academies Trust",
+        "groupUid": "4886",
+        "groupId": "SP00571",
+        "startDate": "2010-10-01"
+      },
+      "history": {
+        "previousLA": {
+          "code": "922",
+          "name": "Pre LGR (1998) Kent"
+        }
+      }
+    }
+  },
+  "x-response-example-descriptions": {
+    "academyWithSen": "Westlands School, URN 136286. Full academy payload with SEN and resourced provision. The siteId is illustrative. School facts: 16 June 2026; trust and sponsor links: 30 June 2026."
+  }
+}
