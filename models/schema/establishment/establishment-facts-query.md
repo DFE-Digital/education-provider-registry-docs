@@ -18,8 +18,6 @@ was loaded.
 The `e.*` projection includes `ofsted_link`, the optional text navigation link.
 
 The education-provision fact block below includes `has_special_classes`.
-For a combined view of all six E09 fields, use
-[validate-specialist-provision.sql](../migration/validate-scripts/validate-specialist-provision.sql).
 
 ```sql
 SELECT
