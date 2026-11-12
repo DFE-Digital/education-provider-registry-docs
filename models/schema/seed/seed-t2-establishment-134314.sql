@@ -66,7 +66,7 @@ INSERT INTO establishment.establishment_lifecycle
 VALUES
     ('13431400-0000-4000-8000-000000000017',
      '13431400-0000-4000-8000-000000000010', 1,
-     '2007-09-01', NULL, 2, '2026-06-23');
+     '2007-09-01', NULL, (SELECT reason_establishment_opened_id FROM establishment.reason_establishment_opened WHERE code='06'), '2026-06-23');
 
 INSERT INTO establishment.statutory_age_range
     (statutory_age_range_id, education_admissions_and_provision_id,

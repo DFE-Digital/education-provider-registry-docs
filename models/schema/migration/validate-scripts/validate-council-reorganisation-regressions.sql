@@ -29,9 +29,9 @@ BEGIN
     INSERT INTO migration.source_record(source_snapshot_id,source_table,source_key,source_urn)
     SELECT snapshot,'Establishment',urn::text,urn FROM establishment.establishment WHERE urn BETWEEN 999901 AND 999905;
     INSERT INTO migration.maintenance_source_observation(source_record_id,establishment_id,area_code,source_type_name,source_status_code,open_date,close_date)
-    SELECT sr.source_record_id,e.establishment_id,CASE WHEN e.urn=999905 THEN 995 ELSE 999 END,t.name,l.establishment_status_id,l.open_date,l.close_date
+    SELECT sr.source_record_id,e.establishment_id,CASE WHEN e.urn=999905 THEN 995 ELSE 999 END,t.name,status.establishment_status_id,l.open_date,l.close_date
     FROM migration.source_record sr JOIN establishment.establishment e ON e.urn=sr.source_urn
-    JOIN establishment.establishment_type t USING(establishment_type_id) JOIN establishment.establishment_lifecycle l USING(establishment_id)
+    JOIN establishment.establishment_type t USING(establishment_type_id) JOIN establishment.establishment_lifecycle l USING(establishment_id) JOIN establishment.establishment_status status USING(establishment_status_id)
     WHERE sr.source_snapshot_id=snapshot;
     PERFORM migration.derive_maintenance(snapshot);
     source:=jsonb_build_object('system','TEST ONLY reviewed source','table','TEST ONLY order','key','retained-event',

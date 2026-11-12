@@ -45,7 +45,7 @@ try {
   # Minimal reviewed extract projection. No conflicting BAU geography, contact,
   # address or other unreviewed local school fields leak into the approved core.
   $controlledTypeCode=($fixture.extractAssertions | Where-Object URN -eq $fixture.school.urn).'TypeOfEstablishment (code)'
-  $controlled=@{urn=$fixture.school.urn;ukprn=$fixture.school.ukprn;local_authority_code=$fixture.school.localAuthorityCode;establishment_number=$fixture.school.establishmentNumber;name=$fixture.school.name;source_establishment_status_code=$fixture.school.statusCode;open_date=$fixture.school.openDate;close_date=$fixture.school.closeDate;source_establishment_type_code=$controlledTypeCode;education_phase_id=$fixture.school.educationPhaseId}
+  $controlled=@{urn=$fixture.school.urn;ukprn=$fixture.school.ukprn;local_authority_code=$fixture.school.localAuthorityCode;establishment_number=$fixture.school.establishmentNumber;name=$fixture.school.name;source_establishment_status_code=$fixture.school.statusCode;open_date=$fixture.school.openDate;close_date=$fixture.school.closeDate;source_establishment_type_code=$controlledTypeCode;source_education_phase_code=$fixture.school.educationPhaseCode;source_establishment_type_category_code=$fixture.school.establishmentTypeCategoryCode}
   $values=foreach($column in $script:EstablishmentFixtureColumns){if($controlled.ContainsKey($column)){ConvertTo-FixtureValue $controlled[$column]}else{'NULL'}}
   $mergedCsv=Join-Path $workspace 't10-schools.csv'
   $lines=[System.Collections.Generic.List[string]]::new()

@@ -41,6 +41,7 @@ WITH source_establishment AS (
         e.lastChangedDate,
         NULLIF(LTRIM(RTRIM(e.type_code)), '') AS type_code,
         et.name AS type_name,
+        et.group_code AS type_group_code,
         e.educationPhase_code,
         NULLIF(LTRIM(RTRIM(e.furtherEducationType_code)), '') AS furtherEducationType_code,
         NULLIF(LTRIM(RTRIM(e.section41Approved_code)), '') AS section41Approved_code,
@@ -123,37 +124,21 @@ SELECT
     s.reason_establishment_closed_name AS reason_establishment_closed,
     CONVERT(varchar(10), s.lastChangedDate, 23) AS last_changed_date,
     s.type_code AS source_establishment_type_code,
+    s.type_group_code AS source_establishment_type_category_code,
     s.type_name AS source_establishment_type,
     -- Target type UUIDs are resolved by code in the PostgreSQL loader.
     s.type_name AS establishment_type,
     s.educationPhase_code AS source_education_phase_code,
     s.education_phase_name AS source_education_phase,
-    CASE s.education_phase_name
-        WHEN 'Nursery' THEN 1
-        WHEN 'Primary' THEN 2
-        WHEN 'Middle deemed primary' THEN 3
-        WHEN 'Middle deemed secondary' THEN 4
-        WHEN 'Secondary' THEN 5
-        WHEN 'All-through' THEN 6
-        WHEN '16 to 19' THEN 7
-        WHEN 'Not applicable' THEN NULL
-        WHEN 'Not applicable (education phase)' THEN NULL
-        ELSE NULL
-    END AS education_phase_id,
+
     CASE
         WHEN s.education_phase_name IN ('Not applicable','Not applicable (education phase)','Unknown') THEN NULL
         ELSE s.education_phase_name
     END AS education_phase,
     s.gender_code AS source_gender_code,
     s.gender_name AS source_gender,
-    CASE s.gender_name
-        WHEN 'Mixed' THEN 1
-        WHEN 'Boys' THEN 2
-        WHEN 'Girls' THEN 3
-        WHEN 'Not applicable' THEN NULL
-        WHEN 'Not applicable (gender of entry)' THEN NULL
-        ELSE NULL
-    END AS gender_of_entry_type_id,
+    CASE WHEN s.gender_code IN ('1','2','3') THEN CONVERT(integer, s.gender_code) END
+        AS gender_of_entry_type_id,
     CASE
         WHEN s.gender_name IN ('Not applicable','Not applicable (gender of entry)','Unknown') THEN NULL
         ELSE s.gender_name
@@ -166,12 +151,8 @@ SELECT
         WHEN s.admissionsPolicy_code IN ('0', '9') THEN 'Not applicable'
         ELSE NULL
     END AS source_admissions_policy,
-    CASE
-        WHEN s.admissionsPolicy_code IN ('1', '4') THEN 1
-        WHEN s.admissionsPolicy_code = '2' THEN 2
-        WHEN s.admissionsPolicy_code IN ('0', '9') THEN NULL
-        ELSE NULL
-    END AS admissions_policy_id,
+    CASE WHEN s.admissionsPolicy_code IN ('2','4') THEN CONVERT(integer, s.admissionsPolicy_code) END
+        AS admissions_policy_id,
     CASE
         WHEN s.admissionsPolicy_code IN ('1', '4') THEN 'Non-selective'
         WHEN s.admissionsPolicy_code = '2' THEN 'Selective'
@@ -188,17 +169,13 @@ SELECT
         WHEN s.boarders_code = '9' THEN 'Not recorded'
         ELSE NULL
     END AS source_boarding_provision,
-    CASE
-        WHEN s.boarders_code = '1' THEN 1
-        WHEN s.boarders_code = '4' THEN 2
-        WHEN s.boarders_code IN ('2', '3') THEN 3
-        ELSE NULL
-    END AS boarding_provision_id,
+    CASE WHEN s.boarders_code IN ('1','2','3','4') THEN CONVERT(integer, s.boarders_code) END
+        AS boarding_provision_id,
     CASE
         WHEN s.boarders_code = '1' THEN 'No boarders'
-        WHEN s.boarders_code = '4' THEN 'Has boarders'
-        WHEN s.boarders_code IN ('2', '3') THEN 'Boarding school'
-        ELSE NULL
+        WHEN s.boarders_code = '2' THEN 'Children''s home (Boarding school)'
+        WHEN s.boarders_code = '3' THEN 'Boarding school'
+        WHEN s.boarders_code = '4' THEN 'College / FE residential accommodation'
     END AS boarding_provision,
     s.nurseryProvision_code AS source_nursery_provision_code,
     CASE
@@ -303,7 +280,7 @@ SELECT
          WHEN 'CE23' THEN 1023
          WHEN 'CE32' THEN 1032
          WHEN 'RC19' THEN 2019
-         ELSE NULL END AS diocese_id,
+         ELSE NULL END AS source_diocese_id,
     -- A derived navigation link, not a copied inspection record or a claim
     -- that Ofsted has published a report for this URN.
     CONCAT('https://reports.ofsted.gov.uk/search?q=', CONVERT(varchar(6), s.URN)) AS ofsted_link,

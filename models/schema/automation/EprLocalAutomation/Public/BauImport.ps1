@@ -20,9 +20,8 @@ $script:GeographicDatasets = @(
 
 # The establishment transform returns more columns than the load uses. These
 # are the transform's column names, in the column order of the load SQL's
-# source_establishment_fixture table. Reference values are passed as the target
-# IDs the transform has already mapped, except establishment type: the loader
-# resolves its UUID from the published source code and reference data.
+# source_establishment_fixture table. UUID reference values are resolved in PostgreSQL from their published source
+# codes. Other unchanged lookup values retain the existing transform mapping.
 $script:EstablishmentFixtureColumns = @(
     'urn', 'ukprn', 'local_authority_code', 'government_office_region_code',
     'district_administrative_code', 'administrative_ward_code',
@@ -31,7 +30,7 @@ $script:EstablishmentFixtureColumns = @(
     'source_establishment_status_code', 'open_date', 'close_date',
     'source_reason_establishment_opened_code', 'reason_establishment_opened',
     'source_reason_establishment_closed_code', 'reason_establishment_closed',
-    'last_changed_date', 'source_establishment_type_code', 'education_phase_id',
+    'last_changed_date', 'source_establishment_type_code', 'source_education_phase_code',
     'school_capacity', 'pupil_count', 'free_school_meal_measure', 'census_date',
     'resourced_provision_capacity', 'resourced_provision_pupil_count',
     'sen_unit_capacity', 'sen_unit_pupil_count',
@@ -45,8 +44,9 @@ $script:EstablishmentFixtureColumns = @(
     'source_section_41_approval_status_code', 'section_41_approval_status_id',
     'source_religious_character_code', 'religious_character_id',
     'source_religious_ethos_code', 'religious_ethos_id',
-    'source_diocese_code', 'diocese_id', 'source_education_phase', 'ofsted_link',
-    'source_specialist_provision_type_code', 'source_special_classes_code', 'has_special_classes', 'source_observed_date'
+    'source_diocese_code', 'source_diocese_id', 'source_education_phase', 'ofsted_link',
+    'source_specialist_provision_type_code', 'source_special_classes_code', 'has_special_classes', 'source_observed_date',
+    'source_establishment_type_category_code'
 )
 
 function Import-GeographicReferenceData {

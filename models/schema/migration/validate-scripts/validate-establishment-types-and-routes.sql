@@ -9,14 +9,14 @@ BEGIN
         RAISE EXCEPTION 'Expected 41 detailed types, eleven BAU categories and two routes';
     END IF;
     IF (SELECT count(*) FROM information_schema.columns WHERE table_schema='establishment'
-        AND table_name='establishment_type_category') <> 2
+        AND table_name='establishment_type_category') <> 3
        OR NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='establishment'
         AND table_name='establishment_type_category' AND column_name='establishment_type_category_id' AND data_type='uuid')
        OR NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='establishment'
         AND table_name='establishment_type' AND column_name='establishment_type_id' AND data_type='uuid')
        OR NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='establishment'
         AND table_name='establishment' AND column_name='establishment_type_id' AND data_type='uuid') THEN
-        RAISE EXCEPTION 'Type keys must be UUIDs; categories contain only UUID and name';
+        RAISE EXCEPTION 'Type keys must be UUIDs; categories contain UUID, published code and name';
     END IF;
     IF (SELECT count(*) FROM information_schema.columns WHERE table_schema='establishment'
         AND table_name='academy_route') <> 2 THEN
@@ -85,7 +85,7 @@ BEGIN
         RAISE EXCEPTION 'Missing category accepted';
     EXCEPTION WHEN not_null_violation THEN NULL; END;
     BEGIN
-        UPDATE establishment.establishment_type SET establishment_type_category_id=gen_random_uuid() WHERE code='01';
+        UPDATE establishment.establishment_type SET establishment_type_category_id=-1 WHERE code='01';
         RAISE EXCEPTION 'Nonexistent category accepted';
     EXCEPTION WHEN foreign_key_violation THEN NULL; END;
 END $$;

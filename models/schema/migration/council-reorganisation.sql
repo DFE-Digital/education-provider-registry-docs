@@ -1,6 +1,7 @@
 -- Reviewed council events govern their effective periods across source replay.
 CREATE TABLE migration.council_reorganisation (
-    event_id text PRIMARY KEY,
+    council_reorganisation_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id text NOT NULL UNIQUE,
     payload jsonb NOT NULL,
     payload_sha256 text NOT NULL,
     effective_date date NOT NULL,
@@ -12,22 +13,24 @@ CREATE TABLE migration.council_reorganisation (
     note text
 );
 CREATE TABLE migration.council_reorganisation_lineage (
+    council_reorganisation_lineage_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id text NOT NULL REFERENCES migration.council_reorganisation(event_id),
     entity_kind text NOT NULL,
     entity_id uuid NOT NULL,
     action text NOT NULL,
     before_row jsonb,
     after_row jsonb NOT NULL,
-    PRIMARY KEY(event_id,entity_kind,entity_id,action)
+    UNIQUE(event_id,entity_kind,entity_id,action)
 );
 CREATE TABLE migration.council_replay_observation (
+    council_replay_observation_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id text NOT NULL REFERENCES migration.council_reorganisation(event_id),
     establishment_id uuid NOT NULL REFERENCES establishment.establishment(establishment_id),
     observed_date date,
     payload jsonb NOT NULL,
     payload_hash text NOT NULL,
     disposition text NOT NULL CHECK(disposition IN ('retained','review')),
-    PRIMARY KEY(event_id,establishment_id,payload_hash)
+    UNIQUE(event_id,establishment_id,payload_hash)
 );
 
 CREATE FUNCTION migration.apply_council_reorganisation(reviewed_payload jsonb)
@@ -128,7 +131,7 @@ BEGIN
         END IF;
         INSERT INTO establishment.local_authority_area(local_authority_area_id,code,name,local_authority_jurisdiction_id)
         VALUES((fact->>'areaId')::uuid,(fact->>'code')::integer,fact->>'name',(fact->>'jurisdictionId')::integer);
-        INSERT INTO migration.council_reorganisation_lineage
+        INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
         SELECT event_key,'local_authority_area',a.local_authority_area_id,'created',NULL,to_jsonb(a)
         FROM establishment.local_authority_area a WHERE a.local_authority_area_id=(fact->>'areaId')::uuid;
     END LOOP;
@@ -175,37 +178,38 @@ BEGIN
         row_before:=to_jsonb(old);
         UPDATE establishment.local_authority_area_council_period SET end_date=effective_on,is_current=false
         WHERE local_authority_area_council_period_id=old.local_authority_area_council_period_id;
-        INSERT INTO migration.council_reorganisation_lineage
+        INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
         SELECT event_key,'council_period',p.local_authority_area_council_period_id,'changed',row_before,to_jsonb(p)
         FROM establishment.local_authority_area_council_period p WHERE p.local_authority_area_council_period_id=old.local_authority_area_council_period_id;
     END LOOP;
     FOR successor IN SELECT * FROM reorg_successors ORDER BY period_id LOOP
         IF NOT EXISTS(SELECT 1 FROM establishment.local_authority_area_council_period WHERE legal_entity_id=successor.council_id) THEN
-            INSERT INTO migration.council_reorganisation_lineage
+            INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
             SELECT event_key,'legal_entity',c.legal_entity_id,'council_added',to_jsonb(c),to_jsonb(c)
             FROM establishment.legal_entity c WHERE c.legal_entity_id=successor.council_id ON CONFLICT DO NOTHING;
         END IF;
         INSERT INTO establishment.local_authority_area_council_period(local_authority_area_council_period_id,
             local_authority_area_id,legal_entity_id,start_date,is_current)
         VALUES(successor.period_id,successor.area_id,successor.council_id,effective_on,true);
-        INSERT INTO migration.council_reorganisation_lineage
+        INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
         SELECT event_key,'council_period',p.local_authority_area_council_period_id,'created',NULL,to_jsonb(p)
         FROM establishment.local_authority_area_council_period p WHERE p.local_authority_area_council_period_id=successor.period_id;
     END LOOP;
-    FOR mapped IN SELECT m.*,e.establishment_type_id,t.code AS type_code,l.establishment_status_id,l.open_date,l.close_date,j.name AS jurisdiction
+    FOR mapped IN SELECT m.*,e.establishment_type_id,t.code AS type_code,status.establishment_status_id AS establishment_status_code,l.open_date,l.close_date,j.name AS jurisdiction
                   FROM reorg_school_map m JOIN establishment.establishment e USING(establishment_id) JOIN establishment.establishment_type t USING(establishment_type_id)
                   JOIN establishment.establishment_lifecycle l USING(establishment_id)
+    JOIN establishment.establishment_status status USING(establishment_status_id)
                   JOIN establishment.local_authority_area a ON a.local_authority_area_id=m.area_id
                   JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
                   ORDER BY m.establishment_id LOOP
         SELECT to_jsonb(g) INTO row_before FROM establishment.establishment_geography g WHERE g.establishment_id=mapped.establishment_id;
         previous_area:=(row_before->>'local_authority_area_id')::uuid;
         UPDATE establishment.establishment_geography SET local_authority_area_id=mapped.area_id WHERE establishment_id=mapped.establishment_id;
-        INSERT INTO migration.council_reorganisation_lineage
+        INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
         SELECT event_key,'establishment_geography',g.establishment_id,'changed',row_before,to_jsonb(g)
         FROM establishment.establishment_geography g WHERE g.establishment_id=mapped.establishment_id;
         eligibility:=mapped.jurisdiction='English' AND mapped.type_code IN ('01','02','03','05','07','12','14','15')
-                     AND mapped.establishment_status_id IN(1,3) AND (mapped.open_date IS NULL OR mapped.open_date<=effective_on)
+                     AND mapped.establishment_status_code IN(1,3) AND (mapped.open_date IS NULL OR mapped.open_date<=effective_on)
                      AND (mapped.close_date IS NULL OR mapped.close_date>effective_on);
         IF NOT eligibility THEN CONTINUE; END IF;
         SELECT r.* INTO current_row FROM establishment.establishment_responsibility r
@@ -218,7 +222,7 @@ BEGIN
         row_before:=to_jsonb(current_row);
         UPDATE establishment.establishment_responsibility SET end_date=effective_on,end_date_basis='evidenced',is_current=false
         WHERE establishment_responsibility_id=current_row.establishment_responsibility_id;
-        INSERT INTO migration.council_reorganisation_lineage
+        INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
         SELECT event_key,'establishment_responsibility',r.establishment_responsibility_id,'changed',row_before,to_jsonb(r)
         FROM establishment.establishment_responsibility r WHERE r.establishment_responsibility_id=current_row.establishment_responsibility_id;
         INSERT INTO migration.establishment_responsibility_evidence(establishment_responsibility_id,source_record_id,
@@ -233,7 +237,7 @@ BEGIN
         INSERT INTO migration.establishment_responsibility_evidence(establishment_responsibility_id,source_record_id,
             first_observed_date,inference_rule,notes)
         VALUES(responsibility_id,source_id,observed_on,'council-reorganisation',reviewed_payload::text);
-        INSERT INTO migration.council_reorganisation_lineage
+        INSERT INTO migration.council_reorganisation_lineage(event_id,entity_kind,entity_id,action,before_row,after_row)
         SELECT event_key,'establishment_responsibility',r.establishment_responsibility_id,'created',NULL,to_jsonb(r)
         FROM establishment.establishment_responsibility r WHERE r.establishment_responsibility_id=responsibility_id;
     END LOOP;
@@ -262,7 +266,8 @@ BEGIN
         THEN school.establishment_type_id ELSE (SELECT establishment_type_id FROM establishment.establishment_type WHERE name=observed.source_type_name) END);
     allowed:=migration.allow_establishment_replay(observed.urn,source_date,normalized);
     disposition:=CASE WHEN NOT allowed AND (source_date IS NULL OR source_date>governing.effective_date) THEN 'review' ELSE 'retained' END;
-    INSERT INTO migration.council_replay_observation VALUES(governing.event_id,observed.establishment_id,source_date,
+    INSERT INTO migration.council_replay_observation(event_id,establishment_id,observed_date,payload,payload_hash,disposition)
+    VALUES(governing.event_id,observed.establishment_id,source_date,
         normalized,md5(jsonb_build_object('observed_date',source_date,'payload',normalized)::text),disposition) ON CONFLICT DO NOTHING;
     IF allowed THEN
         UPDATE establishment.establishment_responsibility SET first_observed_date=least(first_observed_date,source_date)
@@ -294,18 +299,20 @@ BEGIN
     WHERE e.urn=source_urn AND line.entity_kind='establishment_geography' AND ev.status='applied'
     ORDER BY ev.effective_date DESC LIMIT 1;
     IF NOT FOUND THEN RETURN true; END IF;
-    SELECT e.establishment_id,e.establishment_type_id,l.establishment_status_id,l.open_date,l.close_date,a.code
+    SELECT e.establishment_id,e.establishment_type_id,status.establishment_status_id AS establishment_status_code,l.open_date,l.close_date,a.code
     INTO STRICT school FROM establishment.establishment e JOIN establishment.establishment_lifecycle l USING(establishment_id)
+    JOIN establishment.establishment_status status USING(establishment_status_id)
     JOIN establishment.establishment_geography g USING(establishment_id)
     JOIN establishment.local_authority_area a USING(local_authority_area_id) WHERE e.urn=source_urn;
     IF source_date>governing.effective_date AND
        ROW((source_payload->>'local_authority_code')::integer,(source_payload->>'establishment_type_id')::uuid,
            (source_payload->>'status_code')::integer,(source_payload->>'open_date')::date,(source_payload->>'close_date')::date)
-       IS NOT DISTINCT FROM ROW(school.code,school.establishment_type_id,school.establishment_status_id,school.open_date,school.close_date) THEN
+       IS NOT DISTINCT FROM ROW(school.code,school.establishment_type_id,school.establishment_status_code,school.open_date,school.close_date) THEN
         RETURN true;
     END IF;
     disposition:=CASE WHEN source_date IS NULL OR source_date>governing.effective_date THEN 'review' ELSE 'retained' END;
-    INSERT INTO migration.council_replay_observation VALUES(governing.event_id,school.establishment_id,source_date,
+    INSERT INTO migration.council_replay_observation(event_id,establishment_id,observed_date,payload,payload_hash,disposition)
+    VALUES(governing.event_id,school.establishment_id,source_date,
         source_payload,md5(jsonb_build_object('observed_date',source_date,'payload',source_payload)::text),disposition) ON CONFLICT DO NOTHING;
     RETURN false;
 END $$;

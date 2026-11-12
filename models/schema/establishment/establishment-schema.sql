@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 CREATE SCHEMA establishment;
 
 CREATE TABLE establishment.establishment_type_category (
-    establishment_type_category_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_type_category_id integer PRIMARY KEY,
     name text NOT NULL UNIQUE
 );
 
@@ -24,26 +24,26 @@ CREATE TABLE establishment.academy_route (
 );
 
 CREATE TABLE establishment.establishment_type (
-    establishment_type_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_type_id integer PRIMARY KEY,
     code text NOT NULL UNIQUE,
     name text NOT NULL,
-    establishment_type_category_id uuid NOT NULL
+    establishment_type_category_id integer NOT NULL
         REFERENCES establishment.establishment_type_category (establishment_type_category_id),
     academy_route_id integer REFERENCES establishment.academy_route (academy_route_id),
     -- All nine academy types use BAU's Academies category. Its seeded UUID
     -- is independent of BAU group codes and internal source row IDs.
     CONSTRAINT establishment_type_academy_mapping CHECK (
         CASE code
-            WHEN '34' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
-            WHEN '28' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
-            WHEN '44' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
-            WHEN '33' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
-            WHEN '42' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
-            WHEN '43' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
-            WHEN '45' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 1
-            WHEN '46' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NOT DISTINCT FROM 2
-            WHEN '57' THEN establishment_type_category_id = 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NULL
-            ELSE establishment_type_category_id <> 'f2b9ca2a-74a4-4cb5-b3d5-3bb2bf2a2a10' AND academy_route_id IS NULL
+            WHEN '34' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '28' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '44' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '33' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '42' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '43' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '45' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 1
+            WHEN '46' THEN establishment_type_category_id = 10 AND academy_route_id IS NOT DISTINCT FROM 2
+            WHEN '57' THEN establishment_type_category_id = 10 AND academy_route_id IS NULL
+            ELSE establishment_type_category_id <> 10 AND academy_route_id IS NULL
         END
     )
 );
@@ -53,7 +53,7 @@ COMMENT ON TABLE establishment.establishment_type IS
 
 CREATE TABLE establishment.education_phase (
     education_phase_id integer PRIMARY KEY,
-    name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
+    name text NOT NULL UNIQUE CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
 
 CREATE TABLE establishment.further_education_type (
@@ -86,7 +86,7 @@ CREATE TABLE establishment.religious_ethos (
 );
 
 CREATE TABLE establishment.diocese (
-    diocese_id integer PRIMARY KEY,
+    diocese_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     code text NOT NULL UNIQUE,
     name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
@@ -211,7 +211,7 @@ CREATE TABLE establishment.msoa (
 );
 
 CREATE TABLE establishment.urban_rural (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    id integer PRIMARY KEY,
     code text NOT NULL UNIQUE,
     name text NOT NULL CHECK (name !~* '^(unknown|not applicable( \(.*\))?|does not apply|not known)$')
 );
@@ -222,14 +222,14 @@ CREATE TABLE establishment.establishment (
     ukprn numeric CHECK (ukprn BETWEEN 10000000 AND 99999999),
     establishment_number integer CHECK (establishment_number BETWEEN 1 AND 9999),
     name text NOT NULL,
-    establishment_type_id uuid NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
+    establishment_type_id integer NOT NULL REFERENCES establishment.establishment_type (establishment_type_id),
     ofsted_link text,
     education_phase_id integer REFERENCES establishment.education_phase (education_phase_id),
     further_education_type_id integer REFERENCES establishment.further_education_type (further_education_type_id),
     section_41_approval_status_id integer REFERENCES establishment.section_41_approval_status (section_41_approval_status_id),
     religious_character_id integer REFERENCES establishment.religious_character (religious_character_id),
     religious_ethos_id integer REFERENCES establishment.religious_ethos (religious_ethos_id),
-    diocese_id integer REFERENCES establishment.diocese (diocese_id)
+    diocese_id uuid REFERENCES establishment.diocese (diocese_id)
 );
 
 CREATE TABLE establishment.establishment_geography (
@@ -250,7 +250,7 @@ CREATE TABLE establishment.establishment_geography (
         REFERENCES establishment.lsoa (id),
     msoa_id uuid
         REFERENCES establishment.msoa (id),
-    urban_rural_id uuid
+    urban_rural_id integer
         REFERENCES establishment.urban_rural (id)
 );
 
@@ -264,17 +264,18 @@ CREATE TABLE establishment.establishment_contact (
 
 CREATE TABLE establishment.establishment_status (
     establishment_status_id integer PRIMARY KEY,
-    code integer NOT NULL UNIQUE,
     name text NOT NULL UNIQUE
 );
 
 CREATE TABLE establishment.reason_establishment_opened (
     reason_establishment_opened_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
     name text NOT NULL UNIQUE
 );
 
 CREATE TABLE establishment.reason_establishment_closed (
     reason_establishment_closed_id integer PRIMARY KEY,
+    code text NOT NULL UNIQUE,
     name text NOT NULL UNIQUE
 );
 
@@ -310,12 +311,13 @@ CREATE TABLE establishment.site (
 );
 
 CREATE TABLE establishment.establishment_to_site (
+    establishment_to_site_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     establishment_id uuid NOT NULL
         REFERENCES establishment.establishment (establishment_id),
     site_id uuid NOT NULL
         REFERENCES establishment.site (site_id),
     is_main_site boolean NOT NULL DEFAULT false,
-    PRIMARY KEY (establishment_id, site_id)
+    UNIQUE (establishment_id, site_id)
 );
 
 CREATE UNIQUE INDEX ux_establishment_to_site_one_main

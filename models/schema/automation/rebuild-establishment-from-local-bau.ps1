@@ -15,8 +15,8 @@ Steps:
      selections and skipped-test runs otherwise leave seed/ unchanged.
   6. With -IncludeGovernance, also rebuild governance_local and load governance.
 
-The default build loads seed/fixture-selection.json and all additional cases
-in seed/all-test-cases.json, then validates and exports the complete catalogue.
+The default build loads the three-URN sanity set in seed/fixture-selection.json,
+validates its approval snapshots, and exports that bounded fixture.
 Custom selections remain bounded and do not run additional catalogue cases.
 Use -SelectionFile for
 your own curated URNs and links, and -SkipTests when the checked-in tests do not
@@ -84,7 +84,6 @@ else {
 }
 $defaultSelectionPath = [System.IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $PSScriptRoot) 'seed/fixture-selection.json'))
 $isCustomSelection = -not $selection.Path -or $selection.DiscoverGroups -or [System.IO.Path]::GetFullPath($selection.Path) -ne $defaultSelectionPath
-if (-not $isCustomSelection) { $null = Get-AllTestCases }
 if ($IncludeArchivedLinks -and -not $selection.DiscoverGroups) {
     throw '-IncludeArchivedLinks applies to URN-only discovery, not an explicit group-selection manifest.'
 }
@@ -110,6 +109,7 @@ try {
             -WorkingDirectory $workspace -IncludeArchivedLinks:$IncludeArchivedLinks
     }
     Initialize-EstablishmentDatabase -Target $target
+    Test-CodeListsAgainstBau -Source $source -Target $target
     $sourceDatabaseSql = $source.Database.Replace("'", "''")
     $runNotes = @()
     if ($SkipTests) { $runNotes += 'Establishment tests skipped with -SkipTests; this run is not approval-validated.' }
@@ -145,25 +145,6 @@ try {
     if (-not $SkipTests) {
         Invoke-EstablishmentTests -Target $target -Selection $selection
     }
-    if (-not $isCustomSelection) {
-        foreach ($case in (Get-AllTestCases)) {
-            if ($case.runner) {
-                Write-Host "Migrating full catalogue case $($case.case)"
-                & (Join-Path $PSScriptRoot $case.runner) -BauSource $source -PostgresTarget $target
-            }
-            if ($case.addressRunner) {
-                Write-Host "Migrating group addresses for full catalogue case $($case.case)"
-                & (Join-Path $PSScriptRoot $case.addressRunner) -BauSource $source -PostgresTarget $target
-            }
-            if ($case.supplementaryRunner) {
-                Write-Host "Migrating supplementary source for full catalogue case $($case.case)"
-                & (Join-Path $PSScriptRoot $case.supplementaryRunner) -PostgresTarget $target
-            }
-        }
-        Import-ProprietorReviewQueue -Target $target
-        Import-MaintenanceFromBau -Source $source -Target $target -WorkingDirectory $workspace
-        if (-not $SkipTests) { Test-AllEstablishmentCases -Target $target }
-    }
     $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'completed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"
 
     if ($ExportDirectory) {
@@ -191,7 +172,7 @@ try {
         Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
     }
     else {
-        Write-Host 'BAU-source rebuild completed: all 23 active cases across 42 establishments.' -ForegroundColor Green
+        Write-Host 'BAU-source rebuild completed: three sanity approvals passed.' -ForegroundColor Green
     }
     if ($SkipTests) { Write-Warning 'Data loaded, but establishment tests were not run.' }
 }

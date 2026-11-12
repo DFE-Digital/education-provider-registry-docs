@@ -4,7 +4,9 @@ Contract version: `1.0.0`
 Service lifecycle: `beta`  
 [OpenAPI 2.0 contract](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/api-specs/published-establishment-api.openapi.json)
 
-## Endpoint
+## Endpoints
+
+### Establishment detail
 
 ```http
 GET /v1/establishments/{URN}
@@ -27,6 +29,66 @@ Validate a matched URN before lookup. `/v1/establishments/ABC` returns `400 inva
 GET /v1/establishments/137603 HTTP/1.1
 Accept: application/json
 Accept-Encoding: gzip
+```
+
+### Establishment collection
+
+```http
+GET /v1/establishments
+GET /v1/establishments?status=open
+GET /v1/establishments?status=closed
+```
+
+| Item | Contract |
+| --- | --- |
+| Authentication | None. |
+| Path | `/v1/establishments`; no trailing slash. |
+| `status` | Optional query string. One lowercase value: `open` or `closed`. |
+| No `status` filter | Return both Open and Closed published establishments. |
+| `status=open` | Return published establishments with `providerStatus.code` equal to `1` (Open). |
+| `status=closed` | Return published establishments with `providerStatus.code` equal to `2` (Closed). |
+| Invalid `status` | Empty, repeated or unsupported values: `400 invalid-status-filter`. Values are case-sensitive; do not trim whitespace. |
+| Other query parameters | `400 unsupported-query-parameter`. |
+| Request body | None. Non-empty body: `400 unexpected-request-body`. |
+| Other methods | `405 method-not-allowed`; `Allow: GET`. |
+| Success body | JSON array of complete `Establishment` objects, with the same fields as the detail endpoint for the same published data version. |
+| No matches | `200` with `[]`. |
+| Ordering | URN ascending, compared numerically. One item per URN. |
+| Delivery | Return all matches in one response; no pagination or collection wrapper. |
+| Publication | Read one consistent public projection. Exclude unpublished records and statuses other than Open and Closed. Missing required facts on a matching record: `503 publication-incomplete`; do not return a partial collection. |
+
+Shared request headers, response headers, errors and conditional retrieval apply to both endpoints. A collection ETag covers the complete selected array after content coding.
+
+```http
+GET /v1/establishments HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip
+```
+
+Abbreviated response body; comments mark omitted fields and records. See [Payload examples](#payload-examples) for the complete establishment payloads.
+
+```jsonc
+[
+  {
+    "urn": "106789",
+    "providerName": "Ridgewood School",
+    "providerStatus": {"code": "2", "name": "Closed"}
+    // ... the rest of the establishment payload
+  },
+  {
+    "urn": "136286",
+    "providerName": "Westlands School",
+    "providerStatus": {"code": "1", "name": "Open"}
+    // ... the rest of the establishment payload
+  },
+  {
+    "urn": "137603",
+    "providerName": "Ridgewood School",
+    "providerStatus": {"code": "1", "name": "Open"}
+    // ... the rest of the establishment payload
+  }
+  // ... further establishments
+]
 ```
 
 ## Request headers
@@ -60,13 +122,13 @@ Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`
 
 ## Representation rules
 
-- Return one UTF-8 JSON object without a wrapper or pagination metadata.
+- Detail responses return one UTF-8 JSON object. Collection responses return a UTF-8 JSON array of establishment objects. Neither response uses a wrapper or pagination metadata.
 - Use lower camel case property names.
 - Identifiers and published codes are strings. Counts are integers; percentages are numbers; truth values are booleans.
 - Dates: `YYYY-MM-DD`. Timestamps: RFC 3339 UTC with a `Z` suffix. Preserve date-only precision.
-- **Required:** present in every `200` response. Missing required publication facts: `503 publication-incomplete`.
+- **Required:** present in every establishment object in a `200` response. Missing required publication facts: `503 publication-incomplete`.
 - **Conditional:** present when applicable, known and published.
-- Omit nulls, empty strings, empty objects, empty arrays and placeholder values.
+- Omit nulls, empty strings, empty objects, empty nested arrays and placeholder values. An empty collection response is `[]`.
 - Preserve `0`, `false` and meaningful classifications such as `None` or `No sixth form`.
 - Publish matching code/name pairs. Preserve code spelling and leading zeroes. Exclude internal surrogate identifiers.
 - Clients must tolerate additional properties and future published code values.
@@ -79,12 +141,12 @@ Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`
 
 | Property | Presence | Type | Constraint |
 | --- | --- | --- | --- |
-| `urn` | Required | `string` | Must match the requested URN. Decimal string from 1 to 999999, without leading zeroes. |
+| `urn` | Required | `string` | Decimal string from 1 to 999999, without leading zeroes. In a detail response, must match the requested URN. |
 | `providerName` | Required | `string` | Published establishment name. Non-empty. |
 | `dfeNumber` | Conditional | `string` | Three-digit DfE LA number, a slash and four-digit establishment number; include only when both components and the numbering-authority relationship are established. |
 | `ukprn` | Conditional | `string` | Eight-digit UK Provider Reference Number. |
 | `providerType` | Required | `CodedValue` | Detailed establishment type. Code and name must match the published type mapping. |
-| `providerTypeGroup` | Required | `NamedValue` | Implemented establishment type category; see classification mappings. |
+| `providerTypeGroup` | Required | `CodedValue` | Published type-group code and matching category name; see classification mappings. |
 | `educationPhase` | Conditional | `CodedValue` | — |
 | `providerStatus` | Required | `CodedValue` | Published establishment status. Published closed establishments remain retrievable. A proposed closure date alone does not change status to Closed. |
 | `openDate` | Conditional | `string (date)` | — |
@@ -113,7 +175,7 @@ Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`
 All conditional members follow the representation rules. Objects contain at least one meaningful member; arrays contain at least one item.
 
 ```json
-{"educationPhase": {"code": "4", "name": "Secondary"}, "providerTypeGroup": {"name": "Academies"}}
+{"educationPhase": {"code": "4", "name": "Secondary"}, "providerTypeGroup": {"code": "10", "name": "Academies"}}
 ```
 
 ### CodedValue
@@ -385,7 +447,7 @@ Published foundation-trust support relationship.
 
 ### Academies
 
-`providerTypeGroup.name` = `Academies`.
+`providerTypeGroup` = `{"code": "10", "name": "Academies"}`.
 
 | `providerType.code` | `providerType.name` |
 | --- | --- |
@@ -401,7 +463,7 @@ Published foundation-trust support relationship.
 
 ### Local authority maintained schools
 
-`providerTypeGroup.name` = `Local authority maintained schools`.
+`providerTypeGroup` = `{"code": "4", "name": "Local authority maintained schools"}`.
 
 | `providerType.code` | `providerType.name` |
 | --- | --- |
@@ -444,12 +506,12 @@ Types `07` and `12` use the `Special schools` category. Free schools, university
 6. Evaluate `If-None-Match` using standard weak comparison and wildcard handling.
 7. Match: `304` with no body. Otherwise: `200` with the selected representation.
 
-ETags cover joined public facts. Gzip and identity have different tags. Header changes and refresh-only changes do not change the tag when body bytes are unchanged. An unpublished record returns `404` even if a supplied tag previously matched.
+ETags cover joined public facts. Gzip and identity have different tags. Header changes and refresh-only changes do not change the tag when body bytes are unchanged. An unpublished detail record returns `404` even if a supplied tag previously matched. Collection ETags cover all selected records in numeric URN order, including the empty array. Evaluate conditions after validating the filter and resolving publication eligibility.
 
 ```http
 GET /v1/establishments/137603 HTTP/1.1
 Accept: application/json
-If-None-Match: "rO9kQyPRb8thoFs9-BpqSbbFBniJ3mz6OWIiAKpvx8Q"
+If-None-Match: "dQq3Uqlgg_LtDYp4JkAV6D2wxEKpqeaSoOBIo8H9sNQ"
 ```
 
 ```http
@@ -459,7 +521,7 @@ API-Status: beta
 X-Request-ID: 3210b66e-4af3-4f7d-a2d0-a5f1c83bbbf5
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "rO9kQyPRb8thoFs9-BpqSbbFBniJ3mz6OWIiAKpvx8Q"
+ETag: "dQq3Uqlgg_LtDYp4JkAV6D2wxEKpqeaSoOBIo8H9sNQ"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -468,10 +530,10 @@ Vary: Accept, Accept-Encoding
 
 | HTTP status | Error code | Response |
 | --- | --- | --- |
-| 200 OK | — | `Establishment`; `application/json`. |
+| 200 OK | — | Detail: `Establishment`. Collection: `Establishment[]`, including `[]` when no records match. Content type: `application/json`. |
 | 304 Not Modified | — | No body. |
-| 400 Bad Request | `invalid-urn`, `unexpected-request-body` | Invalid matched URN or non-empty request body. Validation errors include errors. |
-| 404 Not Found | `establishment-not-found` | No published record for a valid URN. Unknown and unpublished records are indistinguishable. Unmatched paths, including a trailing slash, also return 404. |
+| 400 Bad Request | `invalid-urn`, `invalid-status-filter`, `unsupported-query-parameter`, `unexpected-request-body` | Invalid matched URN, invalid collection filter, unsupported collection query parameter or non-empty request body. Validation errors include `errors`; filter errors use location `query`. |
+| 404 Not Found | `establishment-not-found` | Detail: no published record for a valid URN. Unknown and unpublished records are indistinguishable. Unmatched paths, including a trailing slash, also return 404. A collection with no matches returns `200` and `[]`. |
 | 405 Method Not Allowed | `method-not-allowed` | Unsupported method. Allow: GET is required. |
 | 406 Not Acceptable | `not-acceptable` | No acceptable success media type or available content coding. Return application/problem+json for this error. |
 | 429 Too Many Requests | `rate-limit-exceeded` | Anonymous traffic throttled. Retry-After is required; no numeric threshold is specified. |
@@ -548,7 +610,7 @@ API-Status: beta
 X-Request-ID: 3210b66e-4af3-4f7d-a2d0-a5f1c83bbbf5
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "rO9kQyPRb8thoFs9-BpqSbbFBniJ3mz6OWIiAKpvx8Q"
+ETag: "dQq3Uqlgg_LtDYp4JkAV6D2wxEKpqeaSoOBIo8H9sNQ"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -560,7 +622,7 @@ Vary: Accept, Accept-Encoding
   "dfeNumber": "371/4033",
   "ukprn": "10035482",
   "providerType": {"code": "34", "name": "Academy converter"},
-  "providerTypeGroup": {"name": "Academies"},
+  "providerTypeGroup": {"code": "10", "name": "Academies"},
   "educationPhase": {"code": "4", "name": "Secondary"},
   "providerStatus": {"code": "1", "name": "Open"},
   "openDate": "2011-11-01",
@@ -655,7 +717,7 @@ API-Status: beta
 X-Request-ID: ed0d4e4a-ac02-5e3c-acbe-5366cd8b0fab
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "DH_GbHqxXHGm8yUdfJGS2XffltcWHCzY2nw2Ur6lvnA"
+ETag: "DsG5VSOhiiAGjDKs5iG6spwURWZYrApk4fFf69OuVKs"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -667,7 +729,7 @@ Vary: Accept, Accept-Encoding
   "dfeNumber": "886/5434",
   "ukprn": "10031371",
   "providerType": {"code": "34", "name": "Academy converter"},
-  "providerTypeGroup": {"name": "Academies"},
+  "providerTypeGroup": {"code": "10", "name": "Academies"},
   "educationPhase": {"code": "4", "name": "Secondary"},
   "providerStatus": {"code": "1", "name": "Open"},
   "openDate": "2010-09-01",
@@ -757,7 +819,7 @@ API-Status: beta
 X-Request-ID: bfae629b-0a60-4b45-87ac-c0525fdc578a
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "39PYaQBxuvIpmM6VLUL2TihP8IxABijqvYy2-Sa-OR4"
+ETag: "-EiHrZZFQqGvpfYmm0dFCXevocRK0Jtqzs8iBcZBOyA"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -769,7 +831,7 @@ Vary: Accept, Accept-Encoding
   "dfeNumber": "822/3023",
   "ukprn": "10075753",
   "providerType": {"code": "03", "name": "Voluntary controlled school"},
-  "providerTypeGroup": {"name": "Local authority maintained schools"},
+  "providerTypeGroup": {"code": "4", "name": "Local authority maintained schools"},
   "educationPhase": {"code": "2", "name": "Primary"},
   "providerStatus": {"code": "1", "name": "Open"},
   "dateLastChangedOrConfirmed": "2026-06-03",

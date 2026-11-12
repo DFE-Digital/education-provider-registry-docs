@@ -54,6 +54,7 @@ erDiagram
         string name
         string ofsted_link
         uuid establishment_type_id FK
+        uuid education_phase_id FK
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
         integer religious_character_id FK
@@ -114,6 +115,7 @@ erDiagram
 
     ESTABLISHMENT_TYPE_CATEGORY {
         uuid establishment_type_category_id PK
+        integer code
         string name UK
     }
 
@@ -123,7 +125,8 @@ erDiagram
     }
 
     EDUCATION_PHASE {
-        integer education_phase_id PK
+        uuid education_phase_id PK
+        integer code
         string name
     }
 
@@ -137,27 +140,29 @@ erDiagram
     ESTABLISHMENT_LIFECYCLE {
         uuid establishment_lifecycle_id PK
         uuid establishment_id FK, UK
-        integer establishment_status_id FK
+        uuid establishment_status_id FK
         date open_date
         date close_date
-        integer reason_establishment_opened_id FK
-        integer reason_establishment_closed_id FK
+        uuid reason_establishment_opened_id FK
+        uuid reason_establishment_closed_id FK
         date last_changed_date
     }
 
     ESTABLISHMENT_STATUS {
-        integer establishment_status_id PK
+        uuid establishment_status_id PK
         integer code UK
         string name
     }
 
     REASON_ESTABLISHMENT_OPENED {
-        integer reason_establishment_opened_id PK
+        uuid reason_establishment_opened_id PK
+        string code
         string name
     }
 
     REASON_ESTABLISHMENT_CLOSED {
-        integer reason_establishment_closed_id PK
+        uuid reason_establishment_closed_id PK
+        string code
         string name
     }
 
@@ -223,7 +228,7 @@ erDiagram
 
 Each establishment records one detailed administrative type, with its published DfE code. Category and academy route are obtained through that type; they are not stored on the establishment. The nine detailed academy types share the Academies category and use two routes where applicable. The eight converter and sponsor-led types require their specified route; Academy secure 16 to 19 and all non-academy types have no route. All types use the eleven BAU type-group categories, including Free Schools, Special schools and Local authority maintained schools.
 
-Type and category keys are UUIDs. Category contains only its UUID and unique name; route contains only its integer key and unique name. Conceptual academy types are projected from detailed type codes, independently of BAU category. The complete field definitions, nine academy mappings and applicability rules are in [Identity and classification](identity-and-classification.md#establishment-type). The physical schema and migrations use the same structure.
+Type and category keys are UUIDs. Category contains its UUID, unique integer BAU code and unique name; route contains only its integer key and unique name. Conceptual academy types are projected from detailed type codes, independently of BAU category. The complete field definitions, nine academy mappings and applicability rules are in [Identity and classification](identity-and-classification.md#establishment-type). The physical schema and migrations use the same structure.
 
 The detailed entity definitions are split into focused documents:
 

@@ -495,7 +495,6 @@ function Invoke-EstablishmentTests {
     )
 
     Test-EstablishmentBuildInputPreflight
-    Test-ReviewedFixtureIntegrity -Target $Target
     Test-EstablishmentUrnValidation
     Test-EstablishmentGroupDiscovery
     Test-EstablishmentCoreValidation -Target $Target

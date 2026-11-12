@@ -5,11 +5,12 @@ BEGIN
     IF EXISTS (
         SELECT 1 FROM establishment.establishment e
         JOIN establishment.establishment_lifecycle l USING(establishment_id)
+        JOIN establishment.establishment_status status USING(establishment_status_id)
         JOIN establishment.establishment_geography g USING(establishment_id)
         JOIN establishment.local_authority_area a USING(local_authority_area_id)
         JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
         WHERE j.name='English' AND e.establishment_type_id IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('01','02','03','05','07','12','14','15'))
-          AND l.establishment_status_id IN (1,3)
+          AND status.establishment_status_id IN (1,3)
           AND ((SELECT count(*) FROM establishment.establishment_responsibility r
                 WHERE r.establishment_id=e.establishment_id AND responsibility_type_id=5 AND is_current)<>1
                OR NOT EXISTS(SELECT 1 FROM migration.maintenance_source_observation o
@@ -19,11 +20,12 @@ BEGIN
         SELECT 1 FROM establishment.establishment_responsibility r
         JOIN establishment.establishment e USING(establishment_id)
         JOIN establishment.establishment_lifecycle l USING(establishment_id)
+        JOIN establishment.establishment_status status USING(establishment_status_id)
         JOIN establishment.establishment_geography g USING(establishment_id)
         JOIN establishment.local_authority_area a USING(local_authority_area_id)
         JOIN establishment.local_authority_jurisdiction j USING(local_authority_jurisdiction_id)
         WHERE r.responsibility_type_id=5 AND r.is_current AND
-          (l.establishment_status_id NOT IN (1,3) OR e.establishment_type_id NOT IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('01','02','03','05','07','12','14','15'))
+          (status.establishment_status_id NOT IN (1,3) OR e.establishment_type_id NOT IN (SELECT establishment_type_id FROM establishment.establishment_type WHERE code IN ('01','02','03','05','07','12','14','15'))
            OR j.name<>'English' OR r.end_date IS NOT NULL)
     ) THEN RAISE EXCEPTION 'Stage 3: current maintenance on a closed, ineligible or Welsh school'; END IF;
     IF EXISTS (

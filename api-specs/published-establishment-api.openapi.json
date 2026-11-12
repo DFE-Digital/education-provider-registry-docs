@@ -3,7 +3,7 @@
   "info": {
     "title": "Published Establishment API",
     "version": "1.0.0",
-    "description": "Anonymous read-only establishment retrieval. Lifecycle: beta. HTTPS origin is environment-specific. Query parameters and numeric throttling limits are not specified. Success responses use application/json; errors use application/problem+json, as stated on each response."
+    "description": "Anonymous read-only establishment detail and collection retrieval. Lifecycle: beta. HTTPS origin is environment-specific. The collection supports only an optional status=open or status=closed filter; omission includes both. Detail query-parameter behaviour and numeric throttling limits are not specified. Success responses use application/json; errors use application/problem+json, as stated on each response."
   },
   "basePath": "/v1",
   "schemes": [
@@ -20,6 +20,956 @@
     }
   ],
   "paths": {
+    "/establishments": {
+      "get": {
+        "tags": [
+          "Establishments"
+        ],
+        "operationId": "listEstablishments",
+        "summary": "List published establishments",
+        "description": "GET /v1/establishments. Anonymous access. Fixed path is lowercase with no trailing slash. Only status=open or status=closed is supported; omit status to include both Open and Closed records. Values are case-sensitive, are not trimmed and may appear at most once. Empty/repeated/unsupported status values return 400 invalid-status-filter; other query parameter names return 400 unsupported-query-parameter. No request body; a non-empty body returns 400 unexpected-request-body. Unsupported methods return 405 with Allow: GET. Return every matching published establishment in one JSON array without pagination or a wrapper. Use the same full item representation as the detail endpoint for the same published data version; one item per URN, sorted numerically ascending. Omit unpublished records and statuses other than Open and Closed. No matches returns 200 with []. Read one consistent public projection; missing required publication facts in a matching record return 503 publication-incomplete instead of a partial collection. Shared content negotiation, headers and errors apply. Validate filters and resolve publication eligibility before evaluating If-None-Match. Compute the strong ETag over the complete selected array after deterministic UTF-8 serialisation and content coding using the SHA-256/Base64url algorithm of the detail operation. Apply standard weak comparison and wildcard handling. A 304 has no body, Content-Type or Content-Encoding. Last-Modified is not emitted.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "open",
+              "closed"
+            ],
+            "description": "One lowercase value. open selects providerStatus.code 1 (Open); closed selects code 2 (Closed). Omit to include both. Empty or repeated values, whitespace and other values return 400 invalid-status-filter. Unknown query parameter names return 400 unsupported-query-parameter."
+          },
+          {
+            "name": "Accept-Encoding",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Standard content-coding negotiation, supporting gzip and identity with quality values."
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "description": "Standard conditional request: entity-tag list or wildcard. Use weak comparison after request validation and publication checks."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Published Open and Closed establishments selected by the optional status filter. Content-Type: application/json; UTF-8. Return all matches as a JSON array of complete Establishment objects, sorted by URN numerically ascending, with one item per URN. No pagination or wrapper. No matches: 200 with []. This response example illustrates status=open.",
+            "schema": {
+              "$ref": "#/definitions/EstablishmentCollection"
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "ETag": {
+                "type": "string",
+                "description": "Required. Quoted SHA-256 of exact representation bytes after UTF-8 serialisation and content coding; Base64url without padding, no weak prefix.",
+                "pattern": "^\"[A-Za-z0-9_-]{43}\"$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "public, no-cache"
+                ]
+              },
+              "Vary": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "Accept, Accept-Encoding"
+                ]
+              },
+              "Content-Encoding": {
+                "type": "string",
+                "description": "Gzip responses only; omit for uncompressed responses.",
+                "enum": [
+                  "gzip"
+                ]
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "urn": "136286",
+                  "providerName": "Westlands School",
+                  "dfeNumber": "886/5434",
+                  "ukprn": "10031371",
+                  "providerType": {
+                    "code": "34",
+                    "name": "Academy converter"
+                  },
+                  "providerTypeGroup": {
+                    "code": "10",
+                    "name": "Academies"
+                  },
+                  "educationPhase": {
+                    "code": "4",
+                    "name": "Secondary"
+                  },
+                  "providerStatus": {
+                    "code": "1",
+                    "name": "Open"
+                  },
+                  "openDate": "2010-09-01",
+                  "reasonProviderOpened": {
+                    "code": "10",
+                    "name": "Academy Converter"
+                  },
+                  "dateLastChangedOrConfirmed": "2026-05-19",
+                  "establishmentLocationAndContact": {
+                    "website": "http://www.westlands.org.uk/",
+                    "phoneNumber": "01795477475",
+                    "sites": [
+                      {
+                        "siteId": "ea3d3b2c-1e0a-545c-b87f-55708d9c56d6",
+                        "isMainSite": true,
+                        "uniquePropertyReferenceNumber": "100062375039",
+                        "address": {
+                          "addressLine1": "Westlands Avenue",
+                          "townOrCity": "Sittingbourne",
+                          "county": "Kent",
+                          "postcode": "ME10 1PF"
+                        },
+                        "osGridReference": {
+                          "easting": 588904,
+                          "northing": 163864
+                        }
+                      }
+                    ]
+                  },
+                  "administrativeGeography": {
+                    "localAuthorityArea": {
+                      "code": "886",
+                      "name": "Kent"
+                    },
+                    "governmentOfficeRegion": {
+                      "code": "J",
+                      "name": "South East"
+                    },
+                    "districtAdministrative": {
+                      "code": "E07000113",
+                      "name": "Swale"
+                    },
+                    "administrativeWard": {
+                      "code": "E05009546",
+                      "name": "Borden and Grove Park"
+                    },
+                    "parliamentaryConstituency": {
+                      "code": "E14001474",
+                      "name": "Sittingbourne and Sheppey"
+                    },
+                    "urbanRuralClassification": {
+                      "code": "UN1",
+                      "name": "Urban: Nearer to a major town or city"
+                    },
+                    "lowerSuperOutputArea": {
+                      "code": "E01024569",
+                      "name": "Swale 012C"
+                    },
+                    "middleSuperOutputArea": {
+                      "code": "E02005126",
+                      "name": "Swale 012"
+                    },
+                    "governmentStatisticalServiceLocalAuthorityCode": "E10000016"
+                  },
+                  "establishmentLeadership": {
+                    "headteacherOrPrincipal": {
+                      "headTitle": "Miss",
+                      "headFirstName": "Christina",
+                      "headLastName": "Honess",
+                      "jobTitle": "Headteacher"
+                    }
+                  },
+                  "educationAdmissionsAndProvision": {
+                    "statutoryAgeRange": {
+                      "statutoryLowAge": 11,
+                      "statutoryHighAge": 18
+                    },
+                    "genderOfEntry": {
+                      "code": "3",
+                      "name": "Mixed"
+                    },
+                    "admissionsPolicy": {
+                      "code": "4",
+                      "name": "Non-selective"
+                    },
+                    "boardingProvision": {
+                      "code": "1",
+                      "name": "No boarders"
+                    },
+                    "sixthFormProvision": {
+                      "code": "1",
+                      "name": "Has a sixth form"
+                    },
+                    "specialClassProvision": true
+                  },
+                  "capacityAndPupilMeasures": {
+                    "providerCapacity": 1604,
+                    "numberOfPupilsStudents": 1746,
+                    "censusDate": "2025-01-16",
+                    "pupilsEligibleForFreeSchoolMeals": 434,
+                    "percentagePupilsEligibleForFreeSchoolMeals": 28.2,
+                    "numberOfMales": 911,
+                    "numberOfFemales": 835
+                  },
+                  "faithContext": {
+                    "religiousCharacter": {
+                      "code": "06",
+                      "name": "None"
+                    }
+                  },
+                  "senAndResourcedProvision": {
+                    "typeOfSenProvision": [
+                      {
+                        "name": "PD - Physical Disability"
+                      },
+                      {
+                        "name": "SpLD - Specific Learning Difficulty"
+                      }
+                    ],
+                    "typeOfResourcedProvision": {
+                      "name": "Resourced provision and SEN unit"
+                    },
+                    "resourcedProvisionMeasure": {
+                      "resourcedProvisionPupilCount": 10,
+                      "resourcedProvisionCapacity": 10
+                    },
+                    "senUnitMeasure": {
+                      "senUnitPupilCount": 28,
+                      "senUnitCapacity": 32
+                    }
+                  },
+                  "academyTrust": {
+                    "name": "SWALE ACADEMIES TRUST",
+                    "groupUid": "4885",
+                    "groupId": "TR02230",
+                    "companiesHouseNumber": "07344732",
+                    "academyTrustType": {
+                      "name": "Multi-academy trust"
+                    },
+                    "startDate": "2010-09-01"
+                  },
+                  "sponsor": {
+                    "name": "Swale Academies Trust",
+                    "groupUid": "4886",
+                    "groupId": "SP00571",
+                    "startDate": "2010-10-01"
+                  },
+                  "history": {
+                    "previousLA": {
+                      "code": "922",
+                      "name": "Pre LGR (1998) Kent"
+                    }
+                  }
+                },
+                {
+                  "urn": "137603",
+                  "providerName": "Ridgewood School",
+                  "dfeNumber": "371/4033",
+                  "ukprn": "10035482",
+                  "providerType": {
+                    "code": "34",
+                    "name": "Academy converter"
+                  },
+                  "providerTypeGroup": {
+                    "code": "10",
+                    "name": "Academies"
+                  },
+                  "educationPhase": {
+                    "code": "4",
+                    "name": "Secondary"
+                  },
+                  "providerStatus": {
+                    "code": "1",
+                    "name": "Open"
+                  },
+                  "openDate": "2011-11-01",
+                  "reasonProviderOpened": {
+                    "code": "10",
+                    "name": "Academy Converter"
+                  },
+                  "dateLastChangedOrConfirmed": "2026-05-14",
+                  "establishmentLocationAndContact": {
+                    "website": "http://www.ridgewoodschool.co.uk",
+                    "phoneNumber": "01302783939",
+                    "sites": [
+                      {
+                        "siteId": "4615ea27-a8fc-4405-b35c-5e1c14923de4",
+                        "isMainSite": true,
+                        "uniquePropertyReferenceNumber": "10006581609",
+                        "address": {
+                          "addressLine1": "Barnsley Road",
+                          "addressLine2": "Scawsby",
+                          "townOrCity": "Doncaster",
+                          "county": "South Yorkshire",
+                          "postcode": "DN5 7UB"
+                        },
+                        "osGridReference": {
+                          "easting": 454286,
+                          "northing": 404965
+                        }
+                      }
+                    ]
+                  },
+                  "administrativeGeography": {
+                    "localAuthorityArea": {
+                      "code": "371",
+                      "name": "Doncaster"
+                    },
+                    "governmentOfficeRegion": {
+                      "code": "D",
+                      "name": "Yorkshire and the Humber"
+                    },
+                    "districtAdministrative": {
+                      "code": "E08000017",
+                      "name": "Doncaster"
+                    },
+                    "administrativeWard": {
+                      "code": "E05010741",
+                      "name": "Roman Ridge"
+                    },
+                    "parliamentaryConstituency": {
+                      "code": "E14001200",
+                      "name": "Doncaster North"
+                    },
+                    "urbanRuralClassification": {
+                      "code": "UN1",
+                      "name": "Urban: Nearer to a major town or city"
+                    },
+                    "lowerSuperOutputArea": {
+                      "code": "E01007588",
+                      "name": "Doncaster 016C"
+                    },
+                    "middleSuperOutputArea": {
+                      "code": "E02001554",
+                      "name": "Doncaster 016"
+                    },
+                    "governmentStatisticalServiceLocalAuthorityCode": "E08000017"
+                  },
+                  "establishmentLeadership": {
+                    "headteacherOrPrincipal": {
+                      "headTitle": "Mr",
+                      "headFirstName": "Andrew",
+                      "headLastName": "Peirson",
+                      "jobTitle": "Headteacher"
+                    }
+                  },
+                  "educationAdmissionsAndProvision": {
+                    "statutoryAgeRange": {
+                      "statutoryLowAge": 11,
+                      "statutoryHighAge": 19
+                    },
+                    "genderOfEntry": {
+                      "code": "3",
+                      "name": "Mixed"
+                    },
+                    "admissionsPolicy": {
+                      "code": "4",
+                      "name": "Non-selective"
+                    },
+                    "boardingProvision": {
+                      "code": "1",
+                      "name": "No boarders"
+                    },
+                    "sixthFormProvision": {
+                      "code": "1",
+                      "name": "Has a sixth form"
+                    },
+                    "specialClassProvision": true
+                  },
+                  "capacityAndPupilMeasures": {
+                    "providerCapacity": 1512,
+                    "numberOfPupilsStudents": 1453,
+                    "censusDate": "2025-01-16",
+                    "pupilsEligibleForFreeSchoolMeals": 249,
+                    "percentagePupilsEligibleForFreeSchoolMeals": 21,
+                    "numberOfMales": 674,
+                    "numberOfFemales": 779
+                  },
+                  "academyTrust": {
+                    "name": "LEGER EDUCATION TRUST",
+                    "groupUid": "17144",
+                    "groupId": "TR00381",
+                    "companiesHouseNumber": "07736364",
+                    "academyTrustType": {
+                      "name": "Multi-academy trust"
+                    },
+                    "startDate": "2023-07-01"
+                  },
+                  "sponsor": {
+                    "name": "Leger Education Trust",
+                    "groupUid": "17252",
+                    "groupId": "SP01981",
+                    "startDate": "2023-07-01"
+                  },
+                  "history": {
+                    "predecessors": [
+                      {
+                        "urn": "106789",
+                        "providerName": "Ridgewood School",
+                        "dateLinked": "2011-11-01",
+                        "url": "/v1/establishments/106789"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "304": {
+            "description": "Selected published collection matches If-None-Match, including an empty collection. No response body, Content-Type or Content-Encoding.",
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "ETag": {
+                "type": "string",
+                "description": "Required. Quoted SHA-256 of exact representation bytes after UTF-8 serialisation and content coding; Base64url without padding, no weak prefix.",
+                "pattern": "^\"[A-Za-z0-9_-]{43}\"$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "public, no-cache"
+                ]
+              },
+              "Vary": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "Accept, Accept-Encoding"
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Content-Type: application/problem+json; UTF-8. Empty, repeated, case-mismatched or unsupported status values return invalid-status-filter. A query parameter other than status returns unsupported-query-parameter. A non-empty body returns unexpected-request-body. Include errors with location query for filter/parameter failures or body for body failures.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ValidationProblem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "invalid-status-filter",
+                        "unsupported-query-parameter",
+                        "unexpected-request-body"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Bad Request",
+                "status": 400,
+                "detail": "status must be supplied at most once with the value open or closed, or omitted to include both.",
+                "instance": "urn:uuid:57986e3e-0a82-46e9-8f72-d83901c02967",
+                "code": "invalid-status-filter",
+                "requestId": "57986e3e-0a82-46e9-8f72-d83901c02967",
+                "errors": [
+                  {
+                    "location": "query",
+                    "name": "status",
+                    "reason": "Expected one lowercase value: open or closed."
+                  }
+                ]
+              }
+            }
+          },
+          "405": {
+            "description": "Content-Type: application/problem+json; UTF-8. Unsupported method. Allow: GET is required. Error code: method-not-allowed.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        405
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "method-not-allowed"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              },
+              "Allow": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "GET"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Method Not Allowed",
+                "status": 405,
+                "detail": "Unsupported method.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "method-not-allowed",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "406": {
+            "description": "Content-Type: application/problem+json; UTF-8. No acceptable success media type or available content coding. Return application/problem+json for this error. Error code: not-acceptable.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        406
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "not-acceptable"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Not Acceptable",
+                "status": 406,
+                "detail": "No acceptable success media type or available content coding.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "not-acceptable",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "429": {
+            "description": "Content-Type: application/problem+json; UTF-8. Anonymous traffic throttled. Retry-After is required; no numeric threshold is specified. Error code: rate-limit-exceeded.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        429
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "rate-limit-exceeded"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              },
+              "Retry-After": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Required. Retry delay in seconds."
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Too Many Requests",
+                "status": 429,
+                "detail": "Anonymous traffic throttled.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "rate-limit-exceeded",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "500": {
+            "description": "Content-Type: application/problem+json; UTF-8. Unexpected failure. Exclude SQL, stack traces and unpublished data. Error code: internal-error.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        500
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "internal-error"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Internal Server Error",
+                "status": 500,
+                "detail": "Unexpected failure.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "internal-error",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          },
+          "503": {
+            "description": "Content-Type: application/problem+json; UTF-8. Public projection unavailable: publication-unavailable. Required publication facts missing from any selected record: publication-incomplete; do not return a partial collection. Include Retry-After only when retry time is known. Omit Data-Last-Refreshed-At if no public projection has ever loaded.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Problem"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        503
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "publication-unavailable",
+                        "publication-incomplete"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "headers": {
+              "API-Version": {
+                "type": "string",
+                "description": "Required. Full deployed semantic API version; for example 1.0.0."
+              },
+              "API-Status": {
+                "type": "string",
+                "description": "Required. Service lifecycle.",
+                "enum": [
+                  "beta"
+                ]
+              },
+              "X-Request-ID": {
+                "type": "string",
+                "description": "Required. Server-generated request UUID.",
+                "format": "uuid",
+                "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              },
+              "Date": {
+                "type": "string",
+                "description": "Required. HTTP response-generation date."
+              },
+              "Data-Last-Refreshed-At": {
+                "type": "string",
+                "description": "Required when a public projection exists. Latest successful projection refresh, as RFC 3339 UTC with Z suffix; omit if none has ever loaded.",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "Required.",
+                "enum": [
+                  "no-store"
+                ]
+              },
+              "Retry-After": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Include only when retry time is known. Delay in seconds."
+              }
+            },
+            "examples": {
+              "application/problem+json": {
+                "type": "about:blank",
+                "title": "Service Unavailable",
+                "status": 503,
+                "detail": "Public projection unavailable or required publication facts missing.",
+                "instance": "urn:uuid:ab71e49d-8d40-47d4-825c-0809c9737dab",
+                "code": "publication-unavailable",
+                "requestId": "ab71e49d-8d40-47d4-825c-0809c9737dab"
+              }
+            }
+          }
+        }
+      }
+    },
     "/establishments/{URN}": {
       "get": {
         "tags": [
@@ -124,6 +1074,7 @@
                   "name": "Academy converter"
                 },
                 "providerTypeGroup": {
+                  "code": "10",
                   "name": "Academies"
                 },
                 "educationPhase": {
@@ -1683,7 +2634,7 @@
       "type": "object",
       "minProperties": 1,
       "additionalProperties": true,
-      "description": "One establishment object without a wrapper. Optional fields are present when applicable, known and published. Omit nulls, empty strings, empty objects/arrays and placeholders. Preserve zero, false and meaningful classifications such as None. Clients must tolerate additional properties and future published code values. Select current/historical relationships using explicit state, not the presence of endDate. Missing required publication facts return 503 publication-incomplete. Categories other than those mapped here use the same endpoint and must not return 404 solely because their category is not described here.",
+      "description": "One establishment object, returned directly by the detail endpoint or as an item in the collection array. Optional fields are present when applicable, known and published. Omit nulls, empty strings, empty nested objects/arrays and placeholders. The root collection may be empty. Preserve zero, false and meaningful classifications such as None. Clients must tolerate additional properties and future published code values. Select current/historical relationships using explicit state, not the presence of endDate. Missing required publication facts return 503 publication-incomplete. Categories other than those mapped here use the same endpoint and must not return 404 solely because their category is not described here.",
       "required": [
         "urn",
         "providerName",
@@ -1696,7 +2647,7 @@
         "urn": {
           "type": "string",
           "minLength": 1,
-          "description": "Must match the requested URN.",
+          "description": "Establishment URN. In a detail response, must match the requested URN.",
           "pattern": "^[1-9][0-9]{0,5}$"
         },
         "providerName": {
@@ -1727,10 +2678,10 @@
         "providerTypeGroup": {
           "allOf": [
             {
-              "$ref": "#/definitions/NamedValue"
+              "$ref": "#/definitions/CodedValue"
             }
           ],
-          "description": "Implemented establishment type category. See x-establishment-type-mappings."
+          "description": "Published establishment type-group code and matching implemented category name. See x-establishment-type-groups and x-establishment-type-mappings."
         },
         "educationPhase": {
           "$ref": "#/definitions/CodedValue"
@@ -1843,6 +2794,7 @@
           "name": "Academy converter"
         },
         "providerTypeGroup": {
+          "code": "10",
           "name": "Academies"
         },
         "educationPhase": {
@@ -2094,11 +3046,21 @@
           }
         ]
       }
+    },
+    "EstablishmentCollection": {
+      "type": "array",
+      "minItems": 0,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/Establishment"
+      },
+      "description": "All matching published Open and Closed establishments in one consistent public projection. Full item payloads match the detail endpoint. Sort numerically by URN ascending; at most one item per URN. No matches is an empty array. No wrapper or pagination."
     }
   },
   "x-establishment-type-mappings": [
     {
       "providerTypeGroup": {
+        "code": "10",
         "name": "Academies"
       },
       "providerTypes": [
@@ -2142,6 +3104,7 @@
     },
     {
       "providerTypeGroup": {
+        "code": "4",
         "name": "Local authority maintained schools"
       },
       "providerTypes": [
@@ -2184,7 +3147,12 @@
     "Do not infer sponsor identity from establishment type or operating trust; do not infer foundation-trust support from faith classifications.",
     "A previous LA reference is not proof of a predecessor or a dated maintaining-council relationship.",
     "Published records in other categories use this route; category absence from this contract is not grounds for 404.",
-    "An establishment has at most one current sponsor, one current federation membership and one current foundation-trust relationship. Publish sponsor, federation and foundationTrust as conditional objects; omit absent relationships. Historical relationships remain arrays."
+    "An establishment has at most one current sponsor, one current federation membership and one current foundation-trust relationship. Publish sponsor, federation and foundationTrust as conditional objects; omit absent relationships. Historical relationships remain arrays.",
+    "GET /v1/establishments accepts only the optional status query parameter: open or closed. Omission includes both Open and Closed published records; other statuses are excluded.",
+    "Collection items have the same full Establishment shape as detail responses, one item per URN, sorted by URN numerically ascending. Return all matches in one response; no matches is 200 with [].",
+    "Reject empty/repeated/unsupported status values with 400 invalid-status-filter and unsupported collection query parameters with 400 unsupported-query-parameter. Query validation errors use location query.",
+    "Do not return partial collections when a selected record lacks required publication facts; return 503 publication-incomplete.",
+    "providerTypeGroup is a CodedValue with the published EstablishmentTypeGroup code and matching category name. Codes are strings; category UUIDs and lookup IDs are not public codes."
   ],
   "x-response-examples": {
     "academy": {
@@ -2197,6 +3165,7 @@
         "name": "Academy converter"
       },
       "providerTypeGroup": {
+        "code": "10",
         "name": "Academies"
       },
       "educationPhase": {
@@ -2347,6 +3316,7 @@
         "name": "Voluntary controlled school"
       },
       "providerTypeGroup": {
+        "code": "4",
         "name": "Local authority maintained schools"
       },
       "educationPhase": {
@@ -2491,6 +3461,7 @@
         "name": "Academy converter"
       },
       "providerTypeGroup": {
+        "code": "10",
         "name": "Academies"
       },
       "educationPhase": {
@@ -2656,5 +3627,51 @@
   },
   "x-response-example-descriptions": {
     "academyWithSen": "Westlands School, URN 136286. Full academy payload with SEN and resourced provision. The siteId is illustrative. School facts: 16 June 2026; trust and sponsor links: 30 June 2026."
-  }
+  },
+  "x-establishment-type-groups": [
+    {
+      "code": "1",
+      "name": "Colleges"
+    },
+    {
+      "code": "2",
+      "name": "Universities"
+    },
+    {
+      "code": "3",
+      "name": "Independent schools"
+    },
+    {
+      "code": "4",
+      "name": "Local authority maintained schools"
+    },
+    {
+      "code": "5",
+      "name": "Special schools"
+    },
+    {
+      "code": "6",
+      "name": "Welsh schools"
+    },
+    {
+      "code": "9",
+      "name": "Other types"
+    },
+    {
+      "code": "10",
+      "name": "Academies"
+    },
+    {
+      "code": "11",
+      "name": "Free Schools"
+    },
+    {
+      "code": "12",
+      "name": "Children's Centres"
+    },
+    {
+      "code": "13",
+      "name": "Online provider"
+    }
+  ]
 }
