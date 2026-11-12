@@ -45,8 +45,8 @@ GET /v1/establishments?status=closed
 | Path | `/v1/establishments`; no trailing slash. |
 | `status` | Optional query string. One lowercase value: `open` or `closed`. |
 | No `status` filter | Return both Open and Closed published establishments. |
-| `status=open` | Return published establishments with `providerStatus.code` equal to `1` (Open). |
-| `status=closed` | Return published establishments with `providerStatus.code` equal to `2` (Closed). |
+| `status=open` | Return published establishments with `establishmentStatus.code` equal to `1` (Open). |
+| `status=closed` | Return published establishments with `establishmentStatus.code` equal to `2` (Closed). |
 | Invalid `status` | Empty, repeated or unsupported values: `400 invalid-status-filter`. Values are case-sensitive; do not trim whitespace. |
 | Other query parameters | `400 unsupported-query-parameter`. |
 | Request body | None. Non-empty body: `400 unexpected-request-body`. |
@@ -71,20 +71,20 @@ Abbreviated response body; comments mark omitted fields and records. See [Payloa
 [
   {
     "urn": "106789",
-    "providerName": "Ridgewood School",
-    "providerStatus": {"code": "2", "name": "Closed"}
+    "establishmentName": "Ridgewood School",
+    "establishmentStatus": {"code": "2", "name": "Closed"}
     // ... the rest of the establishment payload
   },
   {
     "urn": "136286",
-    "providerName": "Westlands School",
-    "providerStatus": {"code": "1", "name": "Open"}
+    "establishmentName": "Westlands School",
+    "establishmentStatus": {"code": "1", "name": "Open"}
     // ... the rest of the establishment payload
   },
   {
     "urn": "137603",
-    "providerName": "Ridgewood School",
-    "providerStatus": {"code": "1", "name": "Open"}
+    "establishmentName": "Ridgewood School",
+    "establishmentStatus": {"code": "1", "name": "Open"}
     // ... the rest of the establishment payload
   }
   // ... further establishments
@@ -142,13 +142,13 @@ Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`
 | Property | Presence | Type | Constraint |
 | --- | --- | --- | --- |
 | `urn` | Required | `string` | Decimal string from 1 to 999999, without leading zeroes. In a detail response, must match the requested URN. |
-| `providerName` | Required | `string` | Published establishment name. Non-empty. |
+| `establishmentName` | Required | `string` | Published establishment name. Non-empty. |
 | `dfeNumber` | Conditional | `string` | Three-digit DfE LA number, a slash and four-digit establishment number; include only when both components and the numbering-authority relationship are established. |
 | `ukprn` | Conditional | `string` | Eight-digit UK Provider Reference Number. |
 | `providerType` | Required | `CodedValue` | Detailed establishment type. Code and name must match the published type mapping. |
-| `providerTypeGroup` | Required | `CodedValue` | Published type-group code and matching category name; see classification mappings. |
+| `establishmentTypeCategory` | Required | `CodedValue` | Published type-group code and matching category name; see classification mappings. |
 | `educationPhase` | Conditional | `CodedValue` | — |
-| `providerStatus` | Required | `CodedValue` | Published establishment status. Published closed establishments remain retrievable. A proposed closure date alone does not change status to Closed. |
+| `establishmentStatus` | Required | `CodedValue` | Published establishment status. Published closed establishments remain retrievable. A proposed closure date alone does not change status to Closed. |
 | `openDate` | Conditional | `string (date)` | — |
 | `closedDate` | Conditional | `string (date)` | — |
 | `reasonProviderOpened` | Conditional | `CodedValue` | — |
@@ -175,7 +175,7 @@ Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`
 All conditional members follow the representation rules. Objects contain at least one meaningful member; arrays contain at least one item.
 
 ```json
-{"educationPhase": {"code": "4", "name": "Secondary"}, "providerTypeGroup": {"code": "10", "name": "Academies"}}
+{"educationPhase": {"code": "4", "name": "Secondary"}, "establishmentTypeCategory": {"code": "10", "name": "Academies"}}
 ```
 
 ### CodedValue
@@ -288,10 +288,10 @@ statutoryLowAge must be less than or equal to statutoryHighAge.
 | `genderOfEntry` | Conditional | `CodedValue` | — |
 | `admissionsPolicy` | Conditional | `CodedValue` | — |
 | `boardingProvision` | Conditional | `CodedValue` | — |
-| `nurseryProvision` | Conditional | `NamedValue` | — |
+| `nurseryProvision` | Conditional | `CodedValue` | — |
 | `sixthFormProvision` | Conditional | `CodedValue` | — |
 | `specialClassProvision` | Conditional | `boolean` | — |
-| `section41Approval` | Conditional | `NamedValue` | Include only when applicable and published. |
+| `section41Approval` | Conditional | `CodedValue` | Include only when applicable and published. |
 
 ### CapacityAndPupilMeasures
 
@@ -310,7 +310,7 @@ statutoryLowAge must be less than or equal to statutoryHighAge.
 | Property | Presence | Type | Constraint |
 | --- | --- | --- | --- |
 | `religiousCharacter` | Conditional | `CodedValue` | — |
-| `religiousEthos` | Conditional | `NamedValue` | — |
+| `religiousEthos` | Conditional | `CodedValue` | — |
 | `diocese` | Conditional | `CodedValue` | — |
 
 ### ResourcedProvisionMeasure
@@ -368,7 +368,7 @@ Include applicable published facts; these fields are not restricted to the pupil
 | `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
 | `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
 | `companiesHouseNumber` | Conditional | `string` | Published Companies House number; preserve leading zeroes. Non-empty. |
-| `academyTrustType` | Required | `NamedValue` | Single-academy trust, Multi-academy trust or Secure single-academy trust. Historical entries retain the type recorded for that relationship. |
+| `academyTrustType` | Required | `string` | Single-academy trust, Multi-academy trust or Secure single-academy trust. Historical entries retain the type recorded for that relationship. |
 | `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
 | `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
 
@@ -427,7 +427,7 @@ Published foundation-trust support relationship.
 | Property | Presence | Type | Constraint |
 | --- | --- | --- | --- |
 | `urn` | Required | `string` | Predecessor establishment URN as a decimal string from 1 to 999999, without leading zeroes. |
-| `providerName` | Required | `string` | Published predecessor name. Non-empty. |
+| `establishmentName` | Required | `string` | Published predecessor name. Non-empty. |
 | `dateLinked` | Conditional | `string (date)` | Recorded establishment-link date. |
 | `url` | Required | `string` | Root-relative resource URL: `/v1/establishments/{URN}`. Its URN must match this item's urn. |
 
@@ -447,7 +447,7 @@ Published foundation-trust support relationship.
 
 ### Academies
 
-`providerTypeGroup` = `{"code": "10", "name": "Academies"}`.
+`establishmentTypeCategory` = `{"code": "10", "name": "Academies"}`.
 
 | `providerType.code` | `providerType.name` |
 | --- | --- |
@@ -463,7 +463,7 @@ Published foundation-trust support relationship.
 
 ### Local authority maintained schools
 
-`providerTypeGroup` = `{"code": "4", "name": "Local authority maintained schools"}`.
+`establishmentTypeCategory` = `{"code": "4", "name": "Local authority maintained schools"}`.
 
 | `providerType.code` | `providerType.name` |
 | --- | --- |
@@ -511,7 +511,7 @@ ETags cover joined public facts. Gzip and identity have different tags. Header c
 ```http
 GET /v1/establishments/137603 HTTP/1.1
 Accept: application/json
-If-None-Match: "dQq3Uqlgg_LtDYp4JkAV6D2wxEKpqeaSoOBIo8H9sNQ"
+If-None-Match: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
 ```
 
 ```http
@@ -521,7 +521,7 @@ API-Status: beta
 X-Request-ID: 3210b66e-4af3-4f7d-a2d0-a5f1c83bbbf5
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "dQq3Uqlgg_LtDYp4JkAV6D2wxEKpqeaSoOBIo8H9sNQ"
+ETag: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -610,7 +610,7 @@ API-Status: beta
 X-Request-ID: 3210b66e-4af3-4f7d-a2d0-a5f1c83bbbf5
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "dQq3Uqlgg_LtDYp4JkAV6D2wxEKpqeaSoOBIo8H9sNQ"
+ETag: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -618,13 +618,13 @@ Vary: Accept, Accept-Encoding
 ```json
 {
   "urn": "137603",
-  "providerName": "Ridgewood School",
+  "establishmentName": "Ridgewood School",
   "dfeNumber": "371/4033",
   "ukprn": "10035482",
   "providerType": {"code": "34", "name": "Academy converter"},
-  "providerTypeGroup": {"code": "10", "name": "Academies"},
+  "establishmentTypeCategory": {"code": "10", "name": "Academies"},
   "educationPhase": {"code": "4", "name": "Secondary"},
-  "providerStatus": {"code": "1", "name": "Open"},
+  "establishmentStatus": {"code": "1", "name": "Open"},
   "openDate": "2011-11-01",
   "reasonProviderOpened": {"code": "10", "name": "Academy Converter"},
   "dateLastChangedOrConfirmed": "2026-05-14",
@@ -659,7 +659,12 @@ Vary: Accept, Accept-Encoding
     "governmentStatisticalServiceLocalAuthorityCode": "E08000017"
   },
   "establishmentLeadership": {
-    "headteacherOrPrincipal": {"headTitle": "Mr", "headFirstName": "Andrew", "headLastName": "Peirson", "jobTitle": "Headteacher"}
+    "headteacherOrPrincipal": {
+      "headTitle": "Mr",
+      "headFirstName": "Andrew",
+      "headLastName": "Peirson",
+      "jobTitle": "Headteacher"
+    }
   },
   "educationAdmissionsAndProvision": {
     "statutoryAgeRange": {"statutoryLowAge": 11, "statutoryHighAge": 19},
@@ -683,15 +688,20 @@ Vary: Accept, Accept-Encoding
     "groupUid": "17144",
     "groupId": "TR00381",
     "companiesHouseNumber": "07736364",
-    "academyTrustType": {"name": "Multi-academy trust"},
+    "academyTrustType": "Multi-academy trust",
     "startDate": "2023-07-01"
   },
-  "sponsor": {"name": "Leger Education Trust", "groupUid": "17252", "groupId": "SP01981", "startDate": "2023-07-01"},
+  "sponsor": {
+    "name": "Leger Education Trust",
+    "groupUid": "17252",
+    "groupId": "SP01981",
+    "startDate": "2023-07-01"
+  },
   "history": {
     "predecessors": [
       {
         "urn": "106789",
-        "providerName": "Ridgewood School",
+        "establishmentName": "Ridgewood School",
         "dateLinked": "2011-11-01",
         "url": "/v1/establishments/106789"
       }
@@ -717,7 +727,7 @@ API-Status: beta
 X-Request-ID: ed0d4e4a-ac02-5e3c-acbe-5366cd8b0fab
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "DsG5VSOhiiAGjDKs5iG6spwURWZYrApk4fFf69OuVKs"
+ETag: "xXn6PNFo0UwvxjNv3UYo3KW90YhgJGdwFRVo_Ed_r0o"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -725,13 +735,13 @@ Vary: Accept, Accept-Encoding
 ```json
 {
   "urn": "136286",
-  "providerName": "Westlands School",
+  "establishmentName": "Westlands School",
   "dfeNumber": "886/5434",
   "ukprn": "10031371",
   "providerType": {"code": "34", "name": "Academy converter"},
-  "providerTypeGroup": {"code": "10", "name": "Academies"},
+  "establishmentTypeCategory": {"code": "10", "name": "Academies"},
   "educationPhase": {"code": "4", "name": "Secondary"},
-  "providerStatus": {"code": "1", "name": "Open"},
+  "establishmentStatus": {"code": "1", "name": "Open"},
   "openDate": "2010-09-01",
   "reasonProviderOpened": {"code": "10", "name": "Academy Converter"},
   "dateLastChangedOrConfirmed": "2026-05-19",
@@ -765,7 +775,12 @@ Vary: Accept, Accept-Encoding
     "governmentStatisticalServiceLocalAuthorityCode": "E10000016"
   },
   "establishmentLeadership": {
-    "headteacherOrPrincipal": {"headTitle": "Miss", "headFirstName": "Christina", "headLastName": "Honess", "jobTitle": "Headteacher"}
+    "headteacherOrPrincipal": {
+      "headTitle": "Miss",
+      "headFirstName": "Christina",
+      "headLastName": "Honess",
+      "jobTitle": "Headteacher"
+    }
   },
   "educationAdmissionsAndProvision": {
     "statutoryAgeRange": {"statutoryLowAge": 11, "statutoryHighAge": 18},
@@ -796,11 +811,21 @@ Vary: Accept, Accept-Encoding
     "groupUid": "4885",
     "groupId": "TR02230",
     "companiesHouseNumber": "07344732",
-    "academyTrustType": {"name": "Multi-academy trust"},
+    "academyTrustType": "Multi-academy trust",
     "startDate": "2010-09-01"
   },
-  "sponsor": {"name": "Swale Academies Trust", "groupUid": "4886", "groupId": "SP00571", "startDate": "2010-10-01"},
-  "history": {"previousLA": {"code": "922", "name": "Pre LGR (1998) Kent"}}
+  "sponsor": {
+    "name": "Swale Academies Trust",
+    "groupUid": "4886",
+    "groupId": "SP00571",
+    "startDate": "2010-10-01"
+  },
+  "history": {
+    "previousLA": {
+      "code": "922",
+      "name": "Pre LGR (1998) Kent"
+    }
+  }
 }
 ```
 
@@ -819,7 +844,7 @@ API-Status: beta
 X-Request-ID: bfae629b-0a60-4b45-87ac-c0525fdc578a
 Date: Wed, 11 Nov 2026 09:00:00 GMT
 Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "-EiHrZZFQqGvpfYmm0dFCXevocRK0Jtqzs8iBcZBOyA"
+ETag: "kmpF9N7F-eGdLZ2cVpdg7ohuqcSXEMmVtWXNgmgyiuI"
 Cache-Control: public, no-cache
 Vary: Accept, Accept-Encoding
 ```
@@ -827,13 +852,13 @@ Vary: Accept, Accept-Encoding
 ```json
 {
   "urn": "109613",
-  "providerName": "Milton Ernest CofE Primary School",
+  "establishmentName": "Milton Ernest CofE Primary School",
   "dfeNumber": "822/3023",
   "ukprn": "10075753",
   "providerType": {"code": "03", "name": "Voluntary controlled school"},
-  "providerTypeGroup": {"code": "4", "name": "Local authority maintained schools"},
+  "establishmentTypeCategory": {"code": "4", "name": "Local authority maintained schools"},
   "educationPhase": {"code": "2", "name": "Primary"},
-  "providerStatus": {"code": "1", "name": "Open"},
+  "establishmentStatus": {"code": "1", "name": "Open"},
   "dateLastChangedOrConfirmed": "2026-06-03",
   "establishmentLocationAndContact": {
     "website": "www.ewmeschools.org.uk",
@@ -866,13 +891,18 @@ Vary: Accept, Accept-Encoding
     "governmentStatisticalServiceLocalAuthorityCode": "E06000055"
   },
   "establishmentLeadership": {
-    "headteacherOrPrincipal": {"headTitle": "Mrs", "headFirstName": "Lisa", "headLastName": "Virnuls", "jobTitle": "Headteacher"}
+    "headteacherOrPrincipal": {
+      "headTitle": "Mrs",
+      "headFirstName": "Lisa",
+      "headLastName": "Virnuls",
+      "jobTitle": "Headteacher"
+    }
   },
   "educationAdmissionsAndProvision": {
     "statutoryAgeRange": {"statutoryLowAge": 4, "statutoryHighAge": 11},
     "genderOfEntry": {"code": "3", "name": "Mixed"},
     "boardingProvision": {"code": "1", "name": "No boarders"},
-    "nurseryProvision": {"name": "No Nursery Classes"},
+    "nurseryProvision": {"code": "2", "name": "No Nursery Classes"},
     "sixthFormProvision": {"code": "2", "name": "Does not have a sixth form"},
     "specialClassProvision": false
   },
@@ -895,7 +925,12 @@ Vary: Accept, Accept-Encoding
     "groupUid": "1809",
     "startDate": "2011-01-13"
   },
-  "history": {"previousLA": {"code": "820", "name": "Pre LGR (2009) Bedfordshire"}}
+  "history": {
+    "previousLA": {
+      "code": "820",
+      "name": "Pre LGR (2009) Bedfordshire"
+    }
+  }
 }
 ```
 

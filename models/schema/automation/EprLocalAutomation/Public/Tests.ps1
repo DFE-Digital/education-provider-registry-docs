@@ -12,6 +12,9 @@ function Test-EstablishmentCoreValidation {
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-establishment-fixture.sql') -FailureMessage 'Core establishment validation failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-null-reference-policy.sql') -FailureMessage 'Null reference policy failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-group-address-constraints.sql') -FailureMessage 'Group-address constraints failed'
+    Test-SenMigration -Target $Target
+    Test-BauReferenceData -Target $Target
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-reference-identities.sql') -FailureMessage 'Reference identity validation failed'
 }
 
 function Test-EstablishmentBuildInputPreflight {

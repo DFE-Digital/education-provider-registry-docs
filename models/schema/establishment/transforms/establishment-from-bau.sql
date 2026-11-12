@@ -55,6 +55,11 @@ WITH source_establishment AS (
         e.boarders_code,
         e.nurseryProvision_code,
         e.officialSixthForm_code,
+        ap.name AS admissions_policy_name,
+        b.name AS boarding_provision_name,
+        np.name AS nursery_provision_name,
+        sf.name AS sixth_form_provision_name,
+        sp.name AS specialist_provision_type_name,
         e.SchoolCapacity,
         e.NumberOfPupils,
         e.freeSchoolMeals,
@@ -93,6 +98,11 @@ WITH source_establishment AS (
       ON reo.code = e.reasonEstablishmentOpened_code
     LEFT JOIN dbo.ReasonEstablishmentClosed AS rec
       ON rec.code = e.reasonEstablishmentClosed_code
+    LEFT JOIN dbo.AdmissionsPolicy ap ON ap.code=e.admissionsPolicy_code
+    LEFT JOIN dbo.Boarders b ON b.code=e.boarders_code
+    LEFT JOIN dbo.NurseryProvision np ON np.code=e.nurseryProvision_code
+    LEFT JOIN dbo.OfficialSixthForm sf ON sf.code=e.officialSixthForm_code
+    LEFT JOIN dbo.TypeOfReservedProvision sp ON sp.code=e.typeOfReservedProvision_code
     WHERE e.URN = @URN
 )
 SELECT
@@ -126,7 +136,7 @@ SELECT
     s.type_code AS source_establishment_type_code,
     s.type_group_code AS source_establishment_type_category_code,
     s.type_name AS source_establishment_type,
-    -- Target type UUIDs are resolved by code in the PostgreSQL loader.
+    -- Target type identities are resolved by code in the PostgreSQL loader.
     s.type_name AS establishment_type,
     s.educationPhase_code AS source_education_phase_code,
     s.education_phase_name AS source_education_phase,
@@ -144,79 +154,21 @@ SELECT
         ELSE s.gender_name
     END AS gender_of_entry,
     s.admissionsPolicy_code AS source_admissions_policy_code,
-    CASE
-        WHEN s.admissionsPolicy_code = '1' THEN 'Comprehensive (secondary)'
-        WHEN s.admissionsPolicy_code = '2' THEN 'Selective (grammar)'
-        WHEN s.admissionsPolicy_code = '4' THEN 'Non-selective'
-        WHEN s.admissionsPolicy_code IN ('0', '9') THEN 'Not applicable'
-        ELSE NULL
-    END AS source_admissions_policy,
-    CASE WHEN s.admissionsPolicy_code IN ('2','4') THEN CONVERT(integer, s.admissionsPolicy_code) END
-        AS admissions_policy_id,
-    CASE
-        WHEN s.admissionsPolicy_code IN ('1', '4') THEN 'Non-selective'
-        WHEN s.admissionsPolicy_code = '2' THEN 'Selective'
-        WHEN s.admissionsPolicy_code IN ('0', '9') THEN NULL
-        ELSE NULL
-    END AS admissions_policy,
+    s.admissions_policy_name AS source_admissions_policy,
+    TRY_CONVERT(integer,s.admissionsPolicy_code) AS admissions_policy_id,
+    s.admissions_policy_name AS admissions_policy,
     s.boarders_code AS source_boarding_provision_code,
-    CASE
-        WHEN s.boarders_code = '0' THEN 'Not applicable'
-        WHEN s.boarders_code = '1' THEN 'No boarders'
-        WHEN s.boarders_code = '2' THEN 'Children''s home (Boarding school)'
-        WHEN s.boarders_code = '3' THEN 'Boarding school'
-        WHEN s.boarders_code = '4' THEN 'College / FE residential accommodation'
-        WHEN s.boarders_code = '9' THEN 'Not recorded'
-        ELSE NULL
-    END AS source_boarding_provision,
-    CASE WHEN s.boarders_code IN ('1','2','3','4') THEN CONVERT(integer, s.boarders_code) END
-        AS boarding_provision_id,
-    CASE
-        WHEN s.boarders_code = '1' THEN 'No boarders'
-        WHEN s.boarders_code = '2' THEN 'Children''s home (Boarding school)'
-        WHEN s.boarders_code = '3' THEN 'Boarding school'
-        WHEN s.boarders_code = '4' THEN 'College / FE residential accommodation'
-    END AS boarding_provision,
+    s.boarding_provision_name AS source_boarding_provision,
+    TRY_CONVERT(integer,s.boarders_code) AS boarding_provision_id,
+    s.boarding_provision_name AS boarding_provision,
     s.nurseryProvision_code AS source_nursery_provision_code,
-    CASE
-        WHEN s.nurseryProvision_code = '0' THEN 'Not applicable'
-        WHEN s.nurseryProvision_code = '1' THEN 'Has Nursery Classes'
-        WHEN s.nurseryProvision_code = '2' THEN 'No Nursery Classes'
-        WHEN s.nurseryProvision_code = '9' THEN 'Not recorded'
-        ELSE NULL
-    END AS source_nursery_provision,
-    CASE
-        WHEN s.nurseryProvision_code = '1' THEN 1
-        WHEN s.nurseryProvision_code = '2' THEN 2
-        WHEN s.nurseryProvision_code = '0' THEN NULL
-        ELSE NULL
-    END AS nursery_provision_id,
-    CASE
-        WHEN s.nurseryProvision_code = '1' THEN 'Nursery classes'
-        WHEN s.nurseryProvision_code = '2' THEN 'No nursery classes'
-        WHEN s.nurseryProvision_code = '0' THEN NULL
-        ELSE NULL
-    END AS nursery_provision,
+    s.nursery_provision_name AS source_nursery_provision,
+    TRY_CONVERT(integer,s.nurseryProvision_code) AS nursery_provision_id,
+    s.nursery_provision_name AS nursery_provision,
     s.officialSixthForm_code AS source_sixth_form_provision_code,
-    CASE
-        WHEN s.officialSixthForm_code = '0' THEN 'Not applicable'
-        WHEN s.officialSixthForm_code = '1' THEN 'Has a sixth form'
-        WHEN s.officialSixthForm_code = '2' THEN 'Does not have a sixth form'
-        WHEN s.officialSixthForm_code = '9' THEN 'Not recorded'
-        ELSE NULL
-    END AS source_sixth_form_provision,
-    CASE
-        WHEN s.officialSixthForm_code = '1' THEN 1
-        WHEN s.officialSixthForm_code = '2' THEN 2
-        WHEN s.officialSixthForm_code = '0' THEN NULL
-        ELSE NULL
-    END AS sixth_form_provision_id,
-    CASE
-        WHEN s.officialSixthForm_code = '1' THEN 'Sixth form'
-        WHEN s.officialSixthForm_code = '2' THEN 'No sixth form'
-        WHEN s.officialSixthForm_code = '0' THEN NULL
-        ELSE NULL
-    END AS sixth_form_provision,
+    s.sixth_form_provision_name AS source_sixth_form_provision,
+    TRY_CONVERT(integer,s.officialSixthForm_code) AS sixth_form_provision_id,
+    s.sixth_form_provision_name AS sixth_form_provision,
     s.SchoolCapacity AS school_capacity,
     TRY_CONVERT(integer, NULLIF(REPLACE(LTRIM(RTRIM(s.NumberOfPupils)), ',', ''), '')) AS pupil_count,
     TRY_CONVERT(integer, NULLIF(REPLACE(LTRIM(RTRIM(s.freeSchoolMeals)), ',', ''), '')) AS free_school_meal_measure,
@@ -224,26 +176,9 @@ SELECT
         AS source_free_school_meal_percentage,
     CONVERT(varchar(10), s.census_date, 23) AS census_date,
     s.typeOfReservedProvision_code AS source_specialist_provision_type_code,
-    CASE
-        WHEN s.typeOfReservedProvision_code = '0' THEN 'Not applicable'
-        WHEN s.typeOfReservedProvision_code = '1' THEN 'Resource Provision'
-        WHEN s.typeOfReservedProvision_code = '2' THEN 'SEN Unit'
-        WHEN s.typeOfReservedProvision_code = '3' THEN 'Resource Provision and SEN Unit'
-        WHEN s.typeOfReservedProvision_code = '9' THEN 'Not recorded'
-        ELSE NULL
-    END AS source_specialist_provision_type,
-    CASE
-        WHEN s.typeOfReservedProvision_code = '1' THEN 1
-        WHEN s.typeOfReservedProvision_code = '2' THEN 2
-        WHEN s.typeOfReservedProvision_code = '3' THEN 3
-        ELSE NULL
-    END AS specialist_provision_type_id,
-    CASE
-        WHEN s.typeOfReservedProvision_code = '1' THEN 'Resourced provision'
-        WHEN s.typeOfReservedProvision_code = '2' THEN 'SEN unit'
-        WHEN s.typeOfReservedProvision_code = '3' THEN 'Resourced provision and SEN unit'
-        ELSE NULL
-    END AS specialist_provision_type,
+    s.specialist_provision_type_name AS source_specialist_provision_type,
+    TRY_CONVERT(integer,s.typeOfReservedProvision_code) AS specialist_provision_type_id,
+    s.specialist_provision_type_name AS specialist_provision_type,
     s.resourcedProvisionCapacity AS resourced_provision_capacity,
     s.resourcedProvisionOnRoll AS resourced_provision_pupil_count,
     s.senUnitCapacity AS sen_unit_capacity,
@@ -259,28 +194,15 @@ SELECT
     s.Postcode AS address_postcode,
     s.UPRN AS site_uprn,
     s.furtherEducationType_code AS source_further_education_type_code,
-    CASE WHEN s.furtherEducationType_code IN ('01','02','03','04','05','06','07','08','09')
-         THEN CONVERT(integer, s.furtherEducationType_code)
-         ELSE NULL END AS further_education_type_id,
+    TRY_CONVERT(integer,s.furtherEducationType_code) AS further_education_type_id,
     s.section41Approved_code AS source_section_41_approval_status_code,
-    CASE WHEN s.section41Approved_code IN ('1','2')
-         THEN CONVERT(integer, s.section41Approved_code)
-         ELSE NULL END AS section_41_approval_status_id,
+    TRY_CONVERT(integer,s.section41Approved_code) AS section_41_approval_status_id,
     s.religiousCharacter_code AS source_religious_character_code,
-    CASE WHEN s.religiousCharacter_code IN ('02','03','06')
-         THEN CONVERT(integer, s.religiousCharacter_code)
-         ELSE NULL END AS religious_character_id,
+    TRY_CONVERT(integer,s.religiousCharacter_code) AS religious_character_id,
     s.religiousEthos_code AS source_religious_ethos_code,
-    CASE WHEN s.religiousEthos_code IN ('06','15')
-         THEN CONVERT(integer, s.religiousEthos_code)
-         ELSE NULL END AS religious_ethos_id,
+    TRY_CONVERT(integer,s.religiousEthos_code) AS religious_ethos_id,
     s.diocese_code AS source_diocese_code,
-    CASE s.diocese_code
-         WHEN 'CE14' THEN 1014
-         WHEN 'CE23' THEN 1023
-         WHEN 'CE32' THEN 1032
-         WHEN 'RC19' THEN 2019
-         ELSE NULL END AS source_diocese_id,
+    CAST(NULL AS integer) AS source_diocese_id,
     -- A derived navigation link, not a copied inspection record or a claim
     -- that Ofsted has published a report for this URN.
     CONCAT('https://reports.ofsted.gov.uk/search?q=', CONVERT(varchar(6), s.URN)) AS ofsted_link,

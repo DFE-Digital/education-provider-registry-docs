@@ -34,7 +34,7 @@ SELECT
     ec.website,
     ec.telephone_number,
     es.establishment_status_id,
-    es.establishment_status_id AS establishment_status_code,
+    es.code AS establishment_status_code,
     es.name AS establishment_status,
     elc.open_date,
     elc.close_date,
@@ -47,12 +47,12 @@ SELECT
     et.code AS establishment_type_code,
     et.name AS establishment_type,
     et.establishment_type_category_id,
-    category.establishment_type_category_id AS establishment_type_category_code,
+    category.code AS establishment_type_category_code,
     category.name AS establishment_type_category,
     et.academy_route_id,
     route.name AS academy_route,
     e.education_phase_id,
-    ep.education_phase_id AS education_phase_code,
+    ep.code AS education_phase_code,
     ep.name AS education_phase,
     ets.is_main_site,
     ms.site_name AS main_site_name,
@@ -96,7 +96,13 @@ SELECT
     e.diocese_id,
     d.name AS diocese,
     e.ofsted_link,
-    eap.has_special_classes
+    eap.has_special_classes,
+    coalesce((
+        SELECT jsonb_agg(jsonb_build_object('code', s.code, 'name', s.name) ORDER BY s.code)
+        FROM establishment.establishment_sen AS link
+        JOIN establishment.sen AS s ON s.sen_id = link.sen_id
+        WHERE link.establishment_id = e.establishment_id
+    ), '[]'::jsonb) AS sen_provision
 FROM params AS p
 JOIN establishment.establishment AS e
   ON e.urn = p.urn

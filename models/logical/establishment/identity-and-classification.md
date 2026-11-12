@@ -31,8 +31,8 @@ erDiagram
         numeric ukprn
         string name
         string ofsted_link
-        uuid establishment_type_id FK
-        uuid education_phase_id FK
+        integer establishment_type_id FK
+        integer education_phase_id FK
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
         integer religious_character_id FK
@@ -86,42 +86,42 @@ erDiagram
     ESTABLISHMENT_LIFECYCLE {
         uuid establishment_lifecycle_id PK
         uuid establishment_id FK, UK
-        uuid establishment_status_id FK
+        integer establishment_status_id FK
         date open_date
         date close_date
-        uuid reason_establishment_opened_id FK
-        uuid reason_establishment_closed_id FK
+        integer reason_establishment_opened_id FK
+        integer reason_establishment_closed_id FK
         date last_changed_date
     }
 
     ESTABLISHMENT_STATUS {
-        uuid establishment_status_id PK
+        integer establishment_status_id PK
         integer code UK
         string name
     }
 
     REASON_ESTABLISHMENT_OPENED {
-        uuid reason_establishment_opened_id PK
+        integer reason_establishment_opened_id PK
         string code
         string name UK
     }
 
     REASON_ESTABLISHMENT_CLOSED {
-        uuid reason_establishment_closed_id PK
+        integer reason_establishment_closed_id PK
         string code
         string name UK
     }
 
     ESTABLISHMENT_TYPE {
-        uuid establishment_type_id PK
+        integer establishment_type_id PK
         string code UK
         string name
-        uuid establishment_type_category_id FK
+        integer establishment_type_category_id FK
         integer academy_route_id FK
     }
 
     ESTABLISHMENT_TYPE_CATEGORY {
-        uuid establishment_type_category_id PK
+        integer establishment_type_category_id PK
         integer code
         string name UK
     }
@@ -132,7 +132,7 @@ erDiagram
     }
 
     EDUCATION_PHASE {
-        uuid education_phase_id PK
+        integer education_phase_id PK
         integer code
         string name
     }
@@ -197,11 +197,11 @@ and what reason explains that change?
 | --- | --- | --- |
 | `establishment_lifecycle_id` | Yes | Generated opaque technical key for the lifecycle record. |
 | `establishment_id` | Yes | One-to-one owner relationship to `establishment`; unique in this table. |
-| `establishment_status_id` | Yes | UUID reference to the establishment-status code list. |
+| `establishment_status_id` | Yes | integer ID reference to the establishment-status code list. |
 | `open_date` | Conditional | Date the establishment opened, where supplied by the source. |
 | `close_date` | Conditional | Date the establishment closed, where supplied by the source. |
-| `reason_establishment_opened_id` | Conditional | UUID reference to the opening-reason code list, where supplied by the source. |
-| `reason_establishment_closed_id` | Conditional | UUID reference to the closure-reason code list, where supplied by the source. |
+| `reason_establishment_opened_id` | Conditional | integer ID reference to the opening-reason code list, where supplied by the source. |
+| `reason_establishment_closed_id` | Conditional | integer ID reference to the closure-reason code list, where supplied by the source. |
 | `last_changed_date` | Conditional | Source-system date on which the lifecycle data last changed. |
 
 ### BAU source mapping
@@ -223,13 +223,13 @@ The first migration maps lifecycle facts from `dbo.Establishment` and its contro
 
 | Entity | Key attributes | Meaning |
 | --- | --- | --- |
-| `establishment_status` | `establishment_status_id` (UUID), integer `code`, `name` | Current lifecycle status, such as open or closed. |
-| `reason_establishment_opened` | `reason_establishment_opened_id` (UUID), text `code`, `name` | Controlled reason explaining an opening event. |
-| `reason_establishment_closed` | `reason_establishment_closed_id` (UUID), text `code`, `name` | Controlled reason explaining a closure event. |
+| `establishment_status` | `establishment_status_id` (integer ID), integer `code`, `name` | Current lifecycle status, such as open or closed. |
+| `reason_establishment_opened` | `reason_establishment_opened_id` (integer ID), text `code`, `name` | Controlled reason explaining an opening event. |
+| `reason_establishment_closed` | `reason_establishment_closed_id` (integer ID), text `code`, `name` | Controlled reason explaining a closure event. |
 
 ## Establishment status
 
-`establishment_status` contains a UUID primary key, a required unique integer `code` copied unchanged from BAU, and a required unique `name`. Lifecycle records reference its UUID.
+`establishment_status` contains a integer identity primary key, a required unique integer `code` copied unchanged from BAU, and a required unique `name`. Lifecycle records reference its integer ID.
 
 | Code | Name |
 | --- | --- |
@@ -240,7 +240,7 @@ The first migration maps lifecycle facts from `dbo.Establishment` and its contro
 
 ## Reason establishment opened
 
-`reason_establishment_opened` contains a UUID primary key, a required unique text `code` copied unchanged from BAU, and a required unique `name`. Preserve leading zeroes. Lifecycle records use an optional UUID reference; omit it when no meaningful source reason is recorded.
+`reason_establishment_opened` contains a integer identity primary key, a required unique text `code` copied unchanged from BAU, and a required unique `name`. Preserve leading zeroes. Lifecycle records use an optional integer ID reference; omit it when no meaningful source reason is recorded.
 
 | Code | Name |
 | --- | --- |
@@ -260,7 +260,7 @@ The first migration maps lifecycle facts from `dbo.Establishment` and its contro
 
 ## Reason establishment closed
 
-`reason_establishment_closed` contains a UUID primary key, a required unique text `code` copied unchanged from BAU, and a required unique `name`. Preserve leading zeroes. Lifecycle records use an optional UUID reference; omit it when no meaningful source reason is recorded.
+`reason_establishment_closed` contains a integer identity primary key, a required unique text `code` copied unchanged from BAU, and a required unique `name`. Preserve leading zeroes. Lifecycle records use an optional integer ID reference; omit it when no meaningful source reason is recorded.
 
 | Code | Name |
 | --- | --- |
@@ -296,10 +296,10 @@ Which detailed establishment type does the administrative team record?
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `establishment_type_id` | Yes | Seeded UUID reference-data identifier, independent of the published code. |
+| `establishment_type_id` | Yes | Sequence-generated integer reference-data identifier, independent of the published code. |
 | `code` | Yes | Unique published DfE establishment type code, stored as text. This is business reference data, not migration lineage. |
 | `name` | Yes | Human-readable detailed establishment-type label. |
-| `establishment_type_category_id` | Yes | Required UUID reference to the BAU-aligned type category. |
+| `establishment_type_category_id` | Yes | Required integer ID reference to the BAU-aligned type category. |
 | `academy_route_id` | Conditional | Reference to the route specified in the academy mapping below; null for every other type. |
 
 ### Establishment type category
@@ -308,11 +308,11 @@ Which detailed establishment type does the administrative team record?
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `establishment_type_category_id` | Yes | Seeded UUID reference-data identifier. |
+| `establishment_type_category_id` | Yes | Sequence-generated integer reference-data identifier. |
 | `code` | Yes | Unique integer BAU EstablishmentTypeGroup code; the API returns it as a string. |
 | `name` | Yes | Unique human-readable category label, retaining the BAU group name. |
 
-The category has these three columns. Its code is the published BAU group code, distinct from the target UUID and BAU's internal row ID.
+The category has these three columns. Its code is the published BAU group code, distinct from the target integer ID and BAU's internal row ID.
 
 | Category |
 | --- |
@@ -328,7 +328,7 @@ The category has these three columns. Its code is the published BAU group code, 
 | Welsh schools |
 | Other types |
 
-Every detailed type has one required category. Migration resolves `Establishment.type_code` to the target type UUID and verifies the reference mapping against BAU `EstablishmentType.group_code`. The target category UUID is reached through the type. Its unique integer `code` is the unchanged BAU EstablishmentTypeGroup code and is reconciled against `EstablishmentType.group_code`.
+Every detailed type has one required category. Migration resolves `Establishment.type_code` to the target type integer ID and verifies the reference mapping against BAU `EstablishmentType.group_code`. The target category integer ID is reached through the type. Its unique integer `code` is the unchanged BAU EstablishmentTypeGroup code and is reconciled against `EstablishmentType.group_code`.
 
 ### Academy route
 
@@ -336,7 +336,7 @@ Every detailed type has one required category. Migration resolves `Establishment
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `academy_route_id` | Yes | Seeded UUID reference-data identifier. |
+| `academy_route_id` | Yes | Sequence-generated integer reference-data identifier. |
 | `name` | Yes | Unique human-readable route label. |
 
 | Route |
@@ -377,7 +377,7 @@ Which education phase does this establishment provide?
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `education_phase_id` | Yes | Seeded UUID reference-data identifier. |
+| `education_phase_id` | Yes | Sequence-generated integer reference-data identifier. |
 | `code` | Yes | Unique integer BAU EducationPhase code, distinct from the target UUID. |
 | `name` | Yes | Human-readable phase label. |
 
@@ -389,7 +389,7 @@ These are two independent, optional classifications directly referenced by an es
 
 `section_41_approval_status` has the same reference-data structure. BAU `Establishment.section41Approved_code` maps to Approved (`1`), Not approved (`2`) or Not applicable (`3`). Approved and Not approved are retained; Not applicable and missing source values map to null.
 
-The reference lists are grounded in the BAU `sql_archive/1.0.0/Setup/dictionaries/FurtherEducationType.sql` and current `Section41Approved.java` definitions. The transform explicitly maps recognised codes to seeded IDs or to null for recognised absence codes. The loader rejects other nonblank source codes with no mapping. Foreign keys reject IDs absent from the seeded reference lists.
+The reference lists are imported from the complete local BAU `FurtherEducationType` and `Section41Approved` dictionaries. Names come from the source, not archived setup scripts or fixed seed labels. Archived and absence values are excluded. Establishment codes are resolved against the imported dictionaries; missing source references fail instead of being treated as absent relationships. See [Source-owned reference data](../../schema/automation/source-reference-data.md).
 
 These fields hold current classifications for E15. No additional history or unnamed additional classifications are introduced by this slice.
 
@@ -399,7 +399,7 @@ Establishment has three optional references: `religious_character_id`, `religiou
 
 Religious character describes the establishment's designated religious character. Religious ethos is recorded separately; migration does not infer one from the other. Diocese records the named diocese, where applicable. For example, a Church of England establishment may reference the Diocese of Ely. Another establishment may explicitly record None for religious character and have a null diocese reference.
 
-The migration reads BAU `religiousCharacter_code`, `religiousEthos_code` and `diocese_code`. Unknown, Not applicable and missing source values map to null. None remains a meaningful religious-character or ethos value. The seeded lists cover codes observed in the selected migration fixtures, rather than the full BAU catalogue. An unrecognised nonblank code stops the load for review.
+The migration reads BAU `religiousCharacter_code`, `religiousEthos_code` and `diocese_code`. Unknown, Not applicable and missing source values map to null. None remains a meaningful religious-character or ethos value. The full eligible source dictionaries are imported, including values unused by the selected establishments. Source codes resolve through those dictionaries, and missing references stop the load for review.
 
 ## Ofsted link (E17)
 

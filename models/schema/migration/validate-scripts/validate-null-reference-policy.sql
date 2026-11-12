@@ -13,7 +13,7 @@ BEGIN
         FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
         WHERE n.nspname='establishment' AND c.relkind='r'
           AND c.relname IN (
-              'education_phase','gender_of_entry_type','admissions_policy',
+              'sen','education_phase','gender_of_entry_type','admissions_policy',
               'boarding_provision','nursery_provision','sixth_form_provision',
               'specialist_provision_type','further_education_type',
               'section_41_approval_status','religious_character','religious_ethos',
@@ -45,4 +45,4 @@ BEGIN
     END LOOP;
 END $$;
 
-SELECT 'PASS: no Unknown or Not applicable reference rows or links' AS result;
+SELECT 'PASS: no Unknown or Not applicable rows or links in the audited reference lists' AS result;

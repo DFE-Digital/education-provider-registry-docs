@@ -2,6 +2,9 @@
 
 This document defines specialist provision, resourced provision and SEN unit measures.
 
+The establishment's [SEN classifications](sen.md) are a separate direct
+relationship. They do not identify which needs belong to a particular facility.
+
 ## Specialist Provision ERD
 
 The specialist-provision branch is shown separately because it has its own internal structure and would make the main establishment ERD too dense.
@@ -27,6 +30,7 @@ erDiagram
 
     SPECIALIST_PROVISION_TYPE {
         integer specialist_provision_type_id PK
+        integer code UK
         string name
     }
 

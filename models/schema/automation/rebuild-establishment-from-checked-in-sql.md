@@ -39,3 +39,5 @@ run on its own; see the [automation README](README.md).
 The fixture files are repository data, not a live BAU source. Their provenance,
 selected URNs and any sanitisation or synthetic values must be recorded when
 they are regenerated from the BAU-source rebuild.
+
+The fixture includes 13 current SEN lookup values and the selected establishments' SEN associations, with no target archive column. SEN loader regression checks run as part of core validation. The shared maintenance observation file is scoped to the establishments actually restored, with exactly one observation required per selected URN; a larger stored observation set does not expand the fixture selection.

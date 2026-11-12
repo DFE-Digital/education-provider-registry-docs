@@ -3,9 +3,9 @@ function Test-CodeListsAgainstBau {
     param([Parameter(Mandatory)]$Source, [Parameter(Mandatory)]$Target)
 
     $lists = @(
-        @{ Target = 'establishment_type_category'; Source = 'EstablishmentTypeGroup'; CodeColumn = 'establishment_type_category_id' },
-        @{ Target = 'establishment_status'; Source = 'EstablishmentStatus'; CodeColumn = 'establishment_status_id' },
-        @{ Target = 'education_phase'; Source = 'EducationPhase'; CodeColumn = 'education_phase_id' },
+        @{ Target = 'establishment_type_category'; Source = 'EstablishmentTypeGroup'; CodeColumn = 'code' },
+        @{ Target = 'establishment_status'; Source = 'EstablishmentStatus'; CodeColumn = 'code' },
+        @{ Target = 'education_phase'; Source = 'EducationPhase'; CodeColumn = 'code' },
         @{ Target = 'reason_establishment_opened'; Source = 'ReasonEstablishmentOpened'; CodeColumn = 'code' },
         @{ Target = 'reason_establishment_closed'; Source = 'ReasonEstablishmentClosed'; CodeColumn = 'code' }
     )
@@ -37,7 +37,7 @@ function Test-CodeListsAgainstBau {
         try { while ($reader.Read()) { $sourceGroups.Add([string]$reader['code'], [string]$reader['group_code']) } }
         finally { $reader.Dispose(); $command.Dispose() }
         $types = @(ConvertFrom-Csv (Invoke-Psql -Target $Target -Output Csv -Command @'
-SELECT t.code,c.establishment_type_category_id::text AS group_code FROM establishment.establishment_type t
+SELECT t.code,c.code::text AS group_code FROM establishment.establishment_type t
 JOIN establishment.establishment_type_category c USING(establishment_type_category_id) ORDER BY t.code;
 '@ -FailureMessage 'Type/group code lookup failed'))
         foreach ($type in $types) {
