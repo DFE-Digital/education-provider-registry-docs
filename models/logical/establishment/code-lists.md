@@ -1,6 +1,7 @@
 # Code lists
 
-Source-backed target data, 12 November 2026. Lists longer than 50 rows show the first 50 only. Full data: [reference export](../../schema/seed/seed-reference-data.sql). Omitted BAU absence codes are noted below each affected list; original labels are retained.
+A code list is a controlled set of codes and labels used to classify data, such as establishment types or admissions policies. Preserving BAU codes and their meanings keeps migrated records interpretable and maintains consistency with existing APIs, extracts and reports. Target internal IDs are separate; the BAU `code` provides the stable mapping back to the source. Any excluded values are recorded below.
+
 
 ## establishment_type_category
 
