@@ -115,8 +115,7 @@ Both paths rebuild disposable local schemas. They are modelling and repeatable t
 Both default paths restore three sanity establishments: specialist provision
 URN 100018, Milton Ernest CofE Primary School URN 109613, and Ridgewood School
 URN 137603. Each path runs the core constraints, one approval per establishment,
-and the exact three-record scope check. Numbered T-case catalogues and runners
-are not part of the default rebuild or test suite.
+and the exact three-record scope check.
 
 
 ## From zero to a populated local PostgreSQL database

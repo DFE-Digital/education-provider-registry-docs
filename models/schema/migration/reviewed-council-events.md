@@ -49,4 +49,4 @@ Ordinary establishment and maintenance loads consult the ledger. Older or equall
 
 The destructive rebuild preflight rejects a nonempty event ledger. Preserve/export the ledger and use additive replay rather than resetting reviewed history. A fresh initial build with no event ledger remains supported. This work supplies no automatic scheduler or invented live reorganisation event.
 
-Run [the read-only Stage 5 validator](validate-scripts/validate-council-reorganisations-stage-5.sql), together with the maintenance and area/council checks, after application. The [rollback regressions](validate-scripts/validate-council-reorganisation-regressions.sql) cover retained codes, reviewed splits, exclusions, event identity, chronology, atomic rollback, older and newer source replay and earliest supporting observations.
+

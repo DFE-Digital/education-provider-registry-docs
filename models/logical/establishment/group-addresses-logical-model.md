@@ -264,9 +264,7 @@ The BAU administrative address retains its original values, including its
 source-obfuscated third line and null county. This is an additional address
 purpose, not a correction or inferred move.
 
-The [source observation](../../schema/seed/fixtures/t10-registered-office.json)
-and [registered-office validation](../../schema/migration/validate-scripts/validate-t10-registered-office.sql)
-are checked in. The source URL, raw published address, observation date,
+The source URL, raw published address, observation date,
 normalised components and company number are retained in migration evidence.
 
 T2 also exercises this model: identical primary addresses from its SAT and MAT source records resolve to one Hive Education Trust association, with separate evidence for each observation and unknown business dates. A classification change does not itself create another address period. Its blank sponsor and contact blocks remain evidence only.

@@ -18,24 +18,20 @@ From education-provider-registry-docs:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-checked-in-sql.ps1"
 
-The default fixture, `seed/seed-establishment-fixture.sql`, loads T1 Co-op
-Academy Stoke-On-Trent, URN 136102, and T2 St Mary Magdalene Academy, URN
-134314. It is the dependency-ordered export of the complete selected
-establishment set.
-Select a different set with repeated -SeedFile arguments only when deliberately
-extending the migration scope.
+The default fixture, `seed/seed-establishment-fixture.sql`, loads the three
+sanity establishments: URNs 100018, 109613 and 137603. Select a different set
+with repeated -SeedFile arguments only when deliberately extending the scope.
 
 ## Execution flow
 
 1. Validate the local PostgreSQL target.
 2. Rebuild the disposable establishment schema.
 3. Load the shared checked-in reference/static fixture seed.
-4. Load the combined Establishment-owned sample SQL file for T1 and T2.
+4. Load the checked-in Establishment fixture and its migration evidence.
 5. Fail fast on SQL errors.
 
 The command then runs all establishment tests (`Invoke-EstablishmentTests`):
-core validation, groups validation, an approval snapshot per selected URN, and
-scope. It fails if any physical Establishment table is empty, if the checked-in
+core validation, an approval snapshot per selected URN, and scope. It fails if any physical Establishment table is empty, if the checked-in
 reference seed is incomplete, or if an Establishment child slice has not been
 captured. Each step is a function in the `EprLocalAutomation` module and can be
 run on its own; see the [automation README](README.md).

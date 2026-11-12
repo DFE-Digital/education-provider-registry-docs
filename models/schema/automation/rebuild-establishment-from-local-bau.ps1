@@ -17,7 +17,6 @@ Steps:
 
 The default build loads the three-URN sanity set in seed/fixture-selection.json,
 validates its approval snapshots, and exports that bounded fixture.
-Custom selections remain bounded and do not run additional catalogue cases.
 Use -SelectionFile for
 your own curated URNs and links, and -SkipTests when the checked-in tests do not
 apply to your data. Custom selections and skipped-test runs never automatically
@@ -132,11 +131,6 @@ try {
     foreach ($group in $selection.OrganisationGroups) {
         Import-OrganisationGroupFromBau -Source $source -Target $target -SourceGroupId $group.SourceGroupId `
             -ExpectedMemberUrns $group.MemberUrns -SelectedMembersOnly:([bool]$group.SelectedMembersOnly) `
-            -WorkingDirectory $workspace -MigrationRunId $migrationRunId
-    }
-
-    foreach ($proprietor in $selection.ControlledProprietors) {
-        Import-ControlledProprietorFromBau -Source $source -Target $target -Fixture $proprietor `
             -WorkingDirectory $workspace -MigrationRunId $migrationRunId
     }
 
