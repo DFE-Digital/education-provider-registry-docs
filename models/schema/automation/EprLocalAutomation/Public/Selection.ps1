@@ -98,6 +98,15 @@ function Get-FixtureSelection {
     if (@($proprietors).Count -ne @($proprietors.legalEntityId | Select-Object -Unique).Count) {
         throw 'Controlled proprietor party IDs must be distinct.'
     }
+    if ($null -ne $selection.discoverGroups -and $selection.discoverGroups -isnot [bool]) {
+        throw 'discoverGroups must be true or false.'
+    }
+    $discoverGroups = if ($null -ne $selection.discoverGroups) {
+        [bool]$selection.discoverGroups
+    }
+    else {
+        @($links).Count -eq 0 -and @($groups).Count -eq 0
+    }
     return [pscustomobject]@{
         PSTypeName     = 'Epr.FixtureSelection'
         Path           = $Path
@@ -105,7 +114,7 @@ function Get-FixtureSelection {
         PartyRoleLinks = @($links)
         OrganisationGroups = @($groups)
         ControlledProprietors = @($proprietors)
-        DiscoverGroups = (@($links).Count -eq 0 -and @($groups).Count -eq 0)
+        DiscoverGroups = $discoverGroups
     }
 }
 

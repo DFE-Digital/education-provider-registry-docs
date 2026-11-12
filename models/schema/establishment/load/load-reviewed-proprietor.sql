@@ -47,14 +47,15 @@ BEGIN
  SELECT e.establishment_id INTO STRICT school FROM establishment.establishment e
  JOIN establishment.establishment_lifecycle l USING(establishment_id)
  JOIN establishment.establishment_status s USING(establishment_status_id) JOIN establishment.establishment_type school_type USING(establishment_type_id)
+ LEFT JOIN establishment.education_phase phase USING(education_phase_id)
  JOIN establishment.establishment_geography geo USING(establishment_id)
  JOIN establishment.local_authority_area la USING(local_authority_area_id)
  WHERE e.urn=(d->'school'->>'urn')::integer
-   AND ROW(e.name,e.ukprn,e.establishment_number,school_type.code,e.education_phase_id,
+   AND ROW(e.name,e.ukprn,e.establishment_number,school_type.code,phase.education_phase_id,
            l.open_date,l.close_date,s.name,la.code::text)
        IS NOT DISTINCT FROM ROW(d->'school'->>'name',(d->'school'->>'ukprn')::numeric,
            (d->'school'->>'establishmentNumber')::integer,d->'school'->>'establishmentTypeCode',
-           (d->'school'->>'educationPhaseId')::integer,(d->'school'->>'openDate')::date,
+           (d->'school'->>'educationPhaseCode')::integer,(d->'school'->>'openDate')::date,
            (d->'school'->>'closeDate')::date,d->>'targetSchoolStatus',d->'school'->>'localAuthorityCode');
  INSERT INTO establishment.establishment_responsibility(establishment_id,legal_entity_id,responsibility_type_id,is_current)
    SELECT school,party,responsibility_type_id,true FROM establishment.establishment_responsibility_type WHERE name='Proprietor'

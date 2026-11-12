@@ -26,8 +26,10 @@ SELECT
     e.*,
     et.code AS establishment_type_code,
     et.name AS establishment_type,
+    category.code AS establishment_type_category_code,
     category.name AS establishment_type_category,
     route.name AS academy_route,
+    ep.code AS education_phase_code,
     ep.name AS education_phase,
     fet.code AS further_education_type_code,
     fet.name AS further_education_type,
@@ -68,9 +70,15 @@ WHERE e.urn = <URN>
 
 UNION ALL
 
-SELECT 'lifecycle', to_jsonb(l)
+SELECT 'lifecycle', to_jsonb(l) || jsonb_build_object(
+    'establishment_status_code', st.code, 'establishment_status', st.name,
+    'reason_establishment_opened_code', reo.code, 'reason_establishment_opened', reo.name,
+    'reason_establishment_closed_code', rec.code, 'reason_establishment_closed', rec.name)
 FROM establishment e
 JOIN establishment_lifecycle l ON l.establishment_id = e.establishment_id
+JOIN establishment_status st USING (establishment_status_id)
+LEFT JOIN reason_establishment_opened reo USING (reason_establishment_opened_id)
+LEFT JOIN reason_establishment_closed rec USING (reason_establishment_closed_id)
 WHERE e.urn = <URN>
 
 UNION ALL

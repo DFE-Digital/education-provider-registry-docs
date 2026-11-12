@@ -3,10 +3,10 @@
 -- invoking psql. This avoids Windows drive-letter parsing in psql variables.
 -- The source extract is pipe-delimited CSV and has a header row.
 --
--- Reference values arrive as target IDs, already mapped from BAU codes by
--- transforms/establishment-from-bau.sql, except establishment type: its UUID
--- is resolved here from the published source code and seeded reference data.
--- Category and academy route are obtained through that type.
+-- Type, status, phase and reason UUIDs are resolved here from the unchanged
+-- published BAU codes. Other reference lists retain their existing mappings.
+-- Category and academy route are obtained through the detailed type; its source
+-- category code must agree with the seeded reference mapping.
 
 BEGIN;
 
@@ -34,7 +34,7 @@ CREATE TEMP TABLE source_establishment_fixture (
     reason_closed_name text,
     last_changed_date date,
     source_establishment_type_code text,
-    education_phase_id integer,
+    source_education_phase_code text,
     school_capacity integer,
     pupil_count integer,
     free_school_meal_measure integer,
@@ -68,22 +68,30 @@ CREATE TEMP TABLE source_establishment_fixture (
     source_religious_ethos_code text,
     religious_ethos_id integer,
     source_diocese_code text,
-    diocese_id integer,
+    source_diocese_id integer,
     source_education_phase text,
     ofsted_link text,
     source_specialist_provision_type_code text,
     source_special_classes_code text,
     has_special_classes boolean,
-    source_observed_date date
+    source_observed_date date,
+    source_establishment_type_category_code text
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
 
-ALTER TABLE source_establishment_fixture ADD COLUMN establishment_type_id uuid;
+ALTER TABLE source_establishment_fixture
+    ADD COLUMN establishment_type_id integer,
+    ADD COLUMN diocese_id uuid;
 UPDATE source_establishment_fixture s
 SET establishment_type_id = t.establishment_type_id
 FROM establishment.establishment_type t
 WHERE t.code = NULLIF(BTRIM(s.source_establishment_type_code), '');
+
+UPDATE source_establishment_fixture s
+SET diocese_id = d.diocese_id
+FROM establishment.diocese d
+WHERE d.code = NULLIF(BTRIM(s.source_diocese_code), '');
 
 -- Resolve the type before replay filtering so an unsupported code cannot be
 -- silently discarded as an older source observation.
@@ -101,6 +109,40 @@ BEGIN
     END IF;
 END;
 $$;
+
+-- UUID code lists resolve by published code, independently of legacy IDs/names.
+ALTER TABLE source_establishment_fixture
+    ADD COLUMN establishment_status_id integer,
+    ADD COLUMN education_phase_id integer,
+    ADD COLUMN reason_establishment_opened_id integer,
+    ADD COLUMN reason_establishment_closed_id integer;
+UPDATE source_establishment_fixture s SET establishment_status_id=r.establishment_status_id
+FROM establishment.establishment_status r WHERE r.establishment_status_id::text=NULLIF(BTRIM(s.status_code),'');
+UPDATE source_establishment_fixture s SET education_phase_id=r.education_phase_id
+FROM establishment.education_phase r WHERE r.education_phase_id::text=NULLIF(BTRIM(s.source_education_phase_code),'');
+UPDATE source_establishment_fixture s SET reason_establishment_opened_id=r.reason_establishment_opened_id
+FROM establishment.reason_establishment_opened r WHERE r.code=NULLIF(BTRIM(s.reason_opened_code),'');
+UPDATE source_establishment_fixture s SET reason_establishment_closed_id=r.reason_establishment_closed_id
+FROM establishment.reason_establishment_closed r WHERE r.code=NULLIF(BTRIM(s.reason_closed_code),'');
+DO $$
+DECLARE invalid_codes text;
+BEGIN
+    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO invalid_codes
+    FROM source_establishment_fixture s
+    JOIN establishment.establishment_type t USING(establishment_type_id)
+    JOIN establishment.establishment_type_category c USING(establishment_type_category_id)
+    WHERE s.establishment_status_id IS NULL
+       OR (NULLIF(BTRIM(s.source_education_phase_code),'') IS NOT NULL
+           AND BTRIM(s.source_education_phase_code) NOT IN ('0','9') AND s.education_phase_id IS NULL)
+       OR (NULLIF(BTRIM(s.reason_opened_code),'') IS NOT NULL
+           AND BTRIM(s.reason_opened_code) NOT IN ('00','13','99') AND s.reason_establishment_opened_id IS NULL)
+       OR (NULLIF(BTRIM(s.reason_closed_code),'') IS NOT NULL
+           AND BTRIM(s.reason_closed_code) NOT IN ('00','99') AND s.reason_establishment_closed_id IS NULL)
+       OR NULLIF(BTRIM(s.source_establishment_type_category_code),'') IS DISTINCT FROM c.establishment_type_category_id::text;
+    IF invalid_codes IS NOT NULL THEN
+        RAISE EXCEPTION 'Missing, unsupported or conflicting status, education phase, lifecycle reason or type-group code for URN %.',invalid_codes;
+    END IF;
+END $$;
 
 SELECT pg_advisory_xact_lock(hashtextextended('council-maintenance-transition',0));
 DELETE FROM source_establishment_fixture s
@@ -172,13 +214,6 @@ DO $$
 DECLARE
     unmapped text;
 BEGIN
-    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
-    FROM source_establishment_fixture
-    WHERE education_phase_id IS NULL AND source_education_phase IS NOT NULL
-      AND source_education_phase NOT IN ('Unknown','Not applicable','Not applicable (education phase)');
-    IF unmapped IS NOT NULL THEN
-        RAISE EXCEPTION 'Education phase could not be mapped for URN %. Add the BAU phase to the mapping in transforms/establishment-from-bau.sql.', unmapped;
-    END IF;
     SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
     FROM source_establishment_fixture
     WHERE source_further_education_type_code IS NOT NULL AND source_further_education_type_code NOT IN ('00','99') AND further_education_type_id IS NULL;
@@ -325,28 +360,14 @@ INSERT INTO establishment.establishment_lifecycle (
     reason_establishment_opened_id, reason_establishment_closed_id, last_changed_date
 )
 SELECT e.establishment_id,
-       es.establishment_status_id,
+       s.establishment_status_id,
        s.open_date,
        s.close_date,
-       reo.reason_establishment_opened_id,
-       rec.reason_establishment_closed_id,
+       s.reason_establishment_opened_id,
+       s.reason_establishment_closed_id,
        s.last_changed_date
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
-JOIN establishment.establishment_status AS es
-  ON es.code = NULLIF(BTRIM(s.status_code), '')::integer
-LEFT JOIN LATERAL (
-    SELECT r.reason_establishment_opened_id
-    FROM establishment.reason_establishment_opened AS r
-    WHERE r.name = NULLIF(BTRIM(s.reason_opened_name), '')
-    LIMIT 1
-) AS reo ON TRUE
-LEFT JOIN LATERAL (
-    SELECT r.reason_establishment_closed_id
-    FROM establishment.reason_establishment_closed AS r
-    WHERE r.name = NULLIF(BTRIM(s.reason_closed_name), '')
-    LIMIT 1
-) AS rec ON TRUE
 ON CONFLICT (establishment_id) DO UPDATE SET
     establishment_status_id = EXCLUDED.establishment_status_id,
     open_date = EXCLUDED.open_date,

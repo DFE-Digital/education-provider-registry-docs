@@ -32,7 +32,7 @@ erDiagram
         string name
         string ofsted_link
         uuid establishment_type_id FK
-        integer education_phase_id FK
+        uuid education_phase_id FK
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
         integer religious_character_id FK
@@ -86,27 +86,29 @@ erDiagram
     ESTABLISHMENT_LIFECYCLE {
         uuid establishment_lifecycle_id PK
         uuid establishment_id FK, UK
-        integer establishment_status_id FK
+        uuid establishment_status_id FK
         date open_date
         date close_date
-        integer reason_establishment_opened_id FK
-        integer reason_establishment_closed_id FK
+        uuid reason_establishment_opened_id FK
+        uuid reason_establishment_closed_id FK
         date last_changed_date
     }
 
     ESTABLISHMENT_STATUS {
-        integer establishment_status_id PK
+        uuid establishment_status_id PK
         integer code UK
         string name
     }
 
     REASON_ESTABLISHMENT_OPENED {
-        integer reason_establishment_opened_id PK
+        uuid reason_establishment_opened_id PK
+        string code
         string name UK
     }
 
     REASON_ESTABLISHMENT_CLOSED {
-        integer reason_establishment_closed_id PK
+        uuid reason_establishment_closed_id PK
+        string code
         string name UK
     }
 
@@ -120,6 +122,7 @@ erDiagram
 
     ESTABLISHMENT_TYPE_CATEGORY {
         uuid establishment_type_category_id PK
+        integer code
         string name UK
     }
 
@@ -129,7 +132,8 @@ erDiagram
     }
 
     EDUCATION_PHASE {
-        integer education_phase_id PK
+        uuid education_phase_id PK
+        integer code
         string name
     }
 ```
@@ -193,11 +197,11 @@ and what reason explains that change?
 | --- | --- | --- |
 | `establishment_lifecycle_id` | Yes | Generated opaque technical key for the lifecycle record. |
 | `establishment_id` | Yes | One-to-one owner relationship to `establishment`; unique in this table. |
-| `establishment_status_id` | Yes | Controlled establishment-status reference value. |
+| `establishment_status_id` | Yes | UUID reference to the establishment-status code list. |
 | `open_date` | Conditional | Date the establishment opened, where supplied by the source. |
 | `close_date` | Conditional | Date the establishment closed, where supplied by the source. |
-| `reason_establishment_opened_id` | Conditional | Controlled reason for opening, where supplied by the source. |
-| `reason_establishment_closed_id` | Conditional | Controlled reason for closure, where supplied by the source. |
+| `reason_establishment_opened_id` | Conditional | UUID reference to the opening-reason code list, where supplied by the source. |
+| `reason_establishment_closed_id` | Conditional | UUID reference to the closure-reason code list, where supplied by the source. |
 | `last_changed_date` | Conditional | Source-system date on which the lifecycle data last changed. |
 
 ### BAU source mapping
@@ -219,62 +223,60 @@ The first migration maps lifecycle facts from `dbo.Establishment` and its contro
 
 | Entity | Key attributes | Meaning |
 | --- | --- | --- |
-| `establishment_status` | `establishment_status_id`, numeric `code`, `name` | Current lifecycle status, such as open or closed. |
-| `reason_establishment_opened` | `reason_establishment_opened_id`, `name` | Controlled reason explaining an opening event. |
-| `reason_establishment_closed` | `reason_establishment_closed_id`, `name` | Controlled reason explaining a closure event. |
+| `establishment_status` | `establishment_status_id` (UUID), integer `code`, `name` | Current lifecycle status, such as open or closed. |
+| `reason_establishment_opened` | `reason_establishment_opened_id` (UUID), text `code`, `name` | Controlled reason explaining an opening event. |
+| `reason_establishment_closed` | `reason_establishment_closed_id` (UUID), text `code`, `name` | Controlled reason explaining a closure event. |
 
 ## Establishment status
 
-`establishment_status` is a closed, controlled list. A lifecycle record must use one of these values; applications must not create new status labels as free text. The identifiers below are the canonical vocabulary values.
+`establishment_status` contains a UUID primary key, a required unique integer `code` copied unchanged from BAU, and a required unique `name`. Lifecycle records reference its UUID.
 
-| Value | Canonical identifier | Meaning |
-| --- | --- | --- |
-| Open | `est:OpenStatus` | The establishment is currently open and operating. |
-| Closed | `est:ClosedStatus` | The establishment has closed and is retained for historical reference. |
-| Open, but proposed to close | `est:OpenProposedToCloseStatus` | The establishment is open, but a formal closure proposal is in progress. |
-| Proposed to open | `est:ProposedToOpenStatus` | The establishment is approved or planned but has not yet opened. |
-
-These four values are the complete list for this model slice. The BAU `status_code` is mapped to the corresponding canonical value through `dbo.EstablishmentStatus`; the BAU code itself is an integration detail and is not used as an unbounded label in the logical model.
+| Code | Name |
+| --- | --- |
+| `1` | Open |
+| `2` | Closed |
+| `3` | Open, but proposed to close |
+| `4` | Proposed to open |
 
 ## Reason establishment opened
 
-`reason_establishment_opened` is a closed, controlled list. The value is optional because absence means that the source supplied no opening reason; it must not be replaced with a made-up "not recorded" value.
+`reason_establishment_opened` contains a UUID primary key, a required unique text `code` copied unchanged from BAU, and a required unique `name`. Preserve leading zeroes. Lifecycle records use an optional UUID reference; omit it when no meaningful source reason is recorded.
 
-| Value | Canonical identifier |
+| Code | Name |
 | --- | --- |
-| Academy Converter | `est:AcademyConverterOpenReason` |
-| New Provision | `est:NewProvisionOpenReason` |
-| Result of Amalgamation | `est:ResultOfAmalgamationOpenReason` |
-| Fresh Start | `est:FreshStartOpenReason` |
-| Academy Free School | `est:AcademyFreeSchoolOpenReason` |
-| Result of Closure | `est:ResultOfClosureOpenReason` |
-| Change Religious Character | `est:ChangeReligiousCharacterOpenReason` |
-| Change in status | `est:ChangeInStatusOpenReason` |
-| Former Independent | `est:FormerIndependentOpenReason` |
-| Split school | `est:SplitSchoolOpenReason` |
-| New Nursery School | `est:NewNurserySchoolOpenReason` |
-| Meets accreditation standards | `est:MeetsAccreditationStandardsOpenReason` |
-| Free Special School | `est:FreeSpecialSchoolOpenReason` |
+| `01` | Result of Amalgamation |
+| `02` | Result of Closure |
+| `03` | Change Religious Character |
+| `04` | Fresh Start |
+| `05` | New Nursery School |
+| `06` | New Provision |
+| `07` | Former Independent |
+| `08` | Split school |
+| `09` | Change in status |
+| `10` | Academy Converter |
+| `11` | Academy Free School |
+| `12` | Free Special School |
+| `14` | Meets accreditation standards |
 
 ## Reason establishment closed
 
-`reason_establishment_closed` is a closed, controlled list. The value is optional and is only populated when the source records a closure reason.
+`reason_establishment_closed` contains a UUID primary key, a required unique text `code` copied unchanged from BAU, and a required unique `name`. Preserve leading zeroes. Lifecycle records use an optional UUID reference; omit it when no meaningful source reason is recorded.
 
-| Value | Canonical identifier |
+| Code | Name |
 | --- | --- |
-| Academy Converter | `est:AcademyConverterCloseReason` |
-| Result of Amalgamation/Merger | `est:ResultOfAmalgamationMergerCloseReason` |
-| Closure | `est:ClosureCloseReason` |
-| For Academy | `est:ForAcademyCloseReason` |
-| Fresh Start | `est:FreshStartCloseReason` |
-| Close Nursery School | `est:CloseNurserySchoolCloseReason` |
-| Change Religious Character | `est:ChangeReligiousCharacterCloseReason` |
-| Does not meet criteria for registration | `est:DoesNotMeetCriteriaForRegistrationCloseReason` |
-| De-registered | `est:DeRegisteredCloseReason` |
-| Academy Free School | `est:AcademyFreeSchoolCloseReason` |
-| Change in status | `est:ChangeInStatusCloseReason` |
-| Transferred to new sponsor | `est:TransferredToNewSponsorCloseReason` |
-| Created in Error - application rejected | `est:CreatedInErrorCloseReason` |
+| `01` | Result of Amalgamation/Merger |
+| `02` | Closure |
+| `03` | Change Religious Character |
+| `04` | Fresh Start |
+| `05` | Close Nursery School |
+| `06` | For Academy |
+| `07` | De-registered |
+| `08` | Does not meet criteria for registration |
+| `09` | Change in status |
+| `10` | Academy Converter |
+| `11` | Academy Free School |
+| `12` | Transferred to new sponsor |
+| `14` | Created in Error - application rejected |
 
 ## Establishment type
 
@@ -307,9 +309,10 @@ Which detailed establishment type does the administrative team record?
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
 | `establishment_type_category_id` | Yes | Seeded UUID reference-data identifier. |
+| `code` | Yes | Unique integer BAU EstablishmentTypeGroup code; the API returns it as a string. |
 | `name` | Yes | Unique human-readable category label, retaining the BAU group name. |
 
-The category has only these two columns. BAU's group code is used to interpret source relationships during migration. Neither that code nor BAU's numeric row ID is stored as a category attribute. There is no `canonical_identifier` or `archived` column.
+The category has these three columns. Its code is the published BAU group code, distinct from the target UUID and BAU's internal row ID.
 
 | Category |
 | --- |
@@ -325,7 +328,7 @@ The category has only these two columns. BAU's group code is used to interpret s
 | Welsh schools |
 | Other types |
 
-Every detailed type has one required category. Migration resolves `Establishment.type_code` to the target type UUID and verifies the reference mapping against BAU `EstablishmentType.group_code`. The target category UUID is reached through the type.
+Every detailed type has one required category. Migration resolves `Establishment.type_code` to the target type UUID and verifies the reference mapping against BAU `EstablishmentType.group_code`. The target category UUID is reached through the type. Its unique integer `code` is the unchanged BAU EstablishmentTypeGroup code and is reconciled against `EstablishmentType.group_code`.
 
 ### Academy route
 
@@ -333,7 +336,7 @@ Every detailed type has one required category. Migration resolves `Establishment
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `academy_route_id` | Yes | Seeded integer reference-data identifier. |
+| `academy_route_id` | Yes | Seeded UUID reference-data identifier. |
 | `name` | Yes | Unique human-readable route label. |
 
 | Route |
@@ -374,7 +377,8 @@ Which education phase does this establishment provide?
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
-| `education_phase_id` | Yes | Seeded integer reference-data identifier. |
+| `education_phase_id` | Yes | Seeded UUID reference-data identifier. |
+| `code` | Yes | Unique integer BAU EducationPhase code, distinct from the target UUID. |
 | `name` | Yes | Human-readable phase label. |
 
 ## Further-education type and Section 41 approval

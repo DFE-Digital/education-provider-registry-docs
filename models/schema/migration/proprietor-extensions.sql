@@ -1,11 +1,13 @@
 -- Reviewed Stage 4 decisions. Personal attributes and partner people are deferred.
 CREATE TABLE migration.proprietor_review (
-    decision_id text PRIMARY KEY,
+    proprietor_review_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    decision_id text NOT NULL UNIQUE,
     payload jsonb NOT NULL,
     review_status text NOT NULL CHECK(review_status IN ('pending','accepted')),
     review_note text NOT NULL
 );
 CREATE TABLE migration.proprietor_fact_evidence (
+    proprietor_fact_evidence_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     decision_id text NOT NULL REFERENCES migration.proprietor_review(decision_id),
     fact_key text NOT NULL,
     source_record_id uuid NOT NULL REFERENCES migration.source_record(source_record_id),
@@ -13,7 +15,7 @@ CREATE TABLE migration.proprietor_fact_evidence (
     target_id uuid,
     payload jsonb NOT NULL,
     review_status text NOT NULL CHECK(review_status IN ('pending','accepted')),
-    PRIMARY KEY(decision_id,fact_key)
+    UNIQUE(decision_id,fact_key)
 );
 
 CREATE FUNCTION migration.proprietor_source(run_id uuid,extract_key text,s jsonb)
@@ -48,7 +50,7 @@ BEGIN
               AND review_status='accepted' AND payload IS DISTINCT FROM d) THEN
         RAISE EXCEPTION 'Accepted proprietor decision changed; explicit correction required';
     END IF;
-    INSERT INTO migration.proprietor_review VALUES(key,d,
+    INSERT INTO migration.proprietor_review(decision_id,payload,review_status,review_note) VALUES(key,d,
         CASE WHEN d->>'reviewStatus'='accepted' THEN 'accepted' ELSE 'pending' END,
         coalesce(nullif(d->>'reviewEvidence',''),'Identity, classification or registration evidence requires review'))
     ON CONFLICT(decision_id) DO NOTHING;
@@ -91,13 +93,15 @@ BEGIN
         confidence,decision_status,rationale)
     SELECT source_id,'legal_entity',party,'reviewed-proprietor-entity','reviewed','accepted',d->>'reviewEvidence'
     WHERE NOT EXISTS(SELECT 1 FROM migration.identity_resolution WHERE source_record_id=source_id AND target_entity_id=party);
-    INSERT INTO migration.proprietor_fact_evidence VALUES(key,'identity',source_id,'legal_entity',party,d,'accepted') ON CONFLICT DO NOTHING;
+    INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+    VALUES(key,'identity',source_id,'legal_entity',party,d,'accepted') ON CONFLICT DO NOTHING;
     FOR fact IN SELECT value FROM jsonb_array_elements(coalesce(d->'schools','[]')) LOOP
         SELECT e.establishment_id INTO STRICT school_id FROM establishment.establishment e WHERE urn=(fact->>'urn')::integer;
         fact_id:=(fact->>'responsibilityId')::uuid;
         IF fact_id IS NULL OR NOT fact ? 'isCurrent' THEN RAISE EXCEPTION 'Reviewed responsibility needs a stable ID and current assertion'; END IF;
-        IF (fact->>'isCurrent')::boolean AND NOT EXISTS(SELECT 1 FROM establishment.establishment_lifecycle
-             WHERE establishment_id=school_id AND establishment_status_id IN (1,3)) THEN
+        IF (fact->>'isCurrent')::boolean AND NOT EXISTS(SELECT 1 FROM establishment.establishment_lifecycle l
+             JOIN establishment.establishment_status s USING(establishment_status_id)
+             WHERE l.establishment_id=school_id AND s.code IN (1,3)) THEN
             RAISE EXCEPTION 'Closed school cannot acquire a current reviewed proprietor';
         END IF;
         IF (fact->>'isCurrent')::boolean AND NOT EXISTS(SELECT 1 FROM establishment.establishment
@@ -118,13 +122,15 @@ BEGIN
         SELECT fact_id,source_id,(d->'source'->>'observedDate')::date,'reviewed-proprietor-v1',d::text
         WHERE NOT EXISTS(SELECT 1 FROM migration.establishment_responsibility_evidence
                          WHERE establishment_responsibility_id=fact_id AND source_record_id=source_id);
-        INSERT INTO migration.proprietor_fact_evidence VALUES(key,'responsibility/'||fact_id,source_id,
+        INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+        VALUES(key,'responsibility/'||fact_id,source_id,
             'establishment_responsibility',fact_id,fact,'accepted') ON CONFLICT DO NOTHING;
     END LOOP;
     FOR fact IN SELECT value FROM jsonb_array_elements(coalesce(d->'identifiers','[]')) LOOP
         IF fact->>'verified' IS DISTINCT FROM 'true' OR nullif(fact->>'verificationEvidence','') IS NULL THEN
             source_id:=migration.proprietor_source(run_id,'proprietor/'||key||'/identifier/'||(fact->>'value'),fact->'source');
-            INSERT INTO migration.proprietor_fact_evidence VALUES(key,'identifier/'||(fact->>'value'),source_id,
+            INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+            VALUES(key,'identifier/'||(fact->>'value'),source_id,
                 'organisation_identifier',NULL,fact,'pending') ON CONFLICT DO NOTHING;
             CONTINUE;
         END IF;
@@ -144,14 +150,16 @@ BEGIN
         JOIN establishment.organisation_identifier_type t USING(organisation_identifier_type_id)
         WHERE i.legal_entity_id=party AND t.name=fact->>'type' AND i.value=fact->>'value' AND i.is_current;
         source_id:=migration.proprietor_source(run_id,'proprietor/'||key||'/identifier/'||(fact->>'value'),fact->'source');
-        INSERT INTO migration.proprietor_fact_evidence VALUES(key,'identifier/'||(fact->>'value'),source_id,
+        INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+        VALUES(key,'identifier/'||(fact->>'value'),source_id,
             'organisation_identifier',fact_id,fact,'accepted') ON CONFLICT DO NOTHING;
     END LOOP;
     FOR fact IN SELECT value FROM jsonb_array_elements(coalesce(d->'addresses','[]')) LOOP
         source_id:=migration.proprietor_source(run_id,'proprietor/'||key||'/address/'||(fact->>'factKey'),fact->'source');
         SELECT address_purpose_id INTO purpose FROM establishment.address_purpose WHERE name=fact->>'purpose';
         IF purpose IS NULL OR nullif(fact->>'reviewEvidence','') IS NULL THEN
-            INSERT INTO migration.proprietor_fact_evidence VALUES(key,'address/'||(fact->>'factKey'),source_id,
+            INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+            VALUES(key,'address/'||(fact->>'factKey'),source_id,
                 'address',NULL,fact,'pending') ON CONFLICT DO NOTHING;
             CONTINUE;
         END IF;
@@ -175,11 +183,13 @@ BEGIN
                        AND address_purpose_id=purpose AND is_current) THEN
             RAISE EXCEPTION 'Reviewed address conflicts with an existing current use';
         END IF;
-        INSERT INTO migration.proprietor_fact_evidence VALUES(key,'address/'||(fact->>'factKey'),source_id,
+        INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+        VALUES(key,'address/'||(fact->>'factKey'),source_id,
             'legal_entity_address',link_id,fact,'accepted') ON CONFLICT DO NOTHING;
     END LOOP;
     IF d ? 'contactObservations' THEN
-        INSERT INTO migration.proprietor_fact_evidence VALUES(key,'contacts',
+        INSERT INTO migration.proprietor_fact_evidence(decision_id,fact_key,source_record_id,target_kind,target_id,payload,review_status)
+        VALUES(key,'contacts',
             migration.proprietor_source(run_id,'proprietor/'||key||'/contacts',d->'source'),
             'deferred_legal_entity_contacts',NULL,d->'contactObservations','pending') ON CONFLICT DO NOTHING;
     END IF;
