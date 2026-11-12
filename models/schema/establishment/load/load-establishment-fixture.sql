@@ -3,8 +3,8 @@
 -- invoking psql. This avoids Windows drive-letter parsing in psql variables.
 -- The source extract is pipe-delimited CSV and has a header row.
 --
--- Type, status, phase and reason UUIDs are resolved here from the unchanged
--- published BAU codes. Other reference lists retain their existing mappings.
+-- Resolve type, lifecycle, phase and provision classifications from the
+-- imported source dictionaries and retained source business codes.
 -- Category and academy route are obtained through the detailed type; its source
 -- category code must agree with the seeded reference mapping.
 
@@ -75,7 +75,11 @@ CREATE TEMP TABLE source_establishment_fixture (
     source_special_classes_code text,
     has_special_classes boolean,
     source_observed_date date,
-    source_establishment_type_category_code text
+    source_establishment_type_category_code text,
+    source_admissions_policy_code text,
+    source_boarding_provision_code text,
+    source_nursery_provision_code text,
+    source_sixth_form_provision_code text
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
@@ -92,6 +96,53 @@ UPDATE source_establishment_fixture s
 SET diocese_id = d.diocese_id
 FROM establishment.diocese d
 WHERE d.code = NULLIF(BTRIM(s.source_diocese_code), '');
+
+-- Resolve source-owned classifications from the actual imported dictionaries.
+-- Retained source metadata distinguishes an intentional exclusion from a broken
+-- source reference. Transform-generated integer hints are never authoritative.
+CREATE TEMP TABLE imported_reference_mapping ON COMMIT DROP AS
+SELECT j->>'reference_list' AS reference_list,j->>'code' AS code,
+       (j->>'included')::boolean AS included
+FROM (SELECT notes::jsonb AS payload FROM migration.migration_run
+      WHERE run_type='reference-data' AND status='completed'
+      ORDER BY completed_at DESC LIMIT 1) r,
+     LATERAL jsonb_array_elements(r.payload->'source_rows') j;
+DO $$
+DECLARE r record; invalid boolean; target_code text;
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM imported_reference_mapping) THEN
+        RAISE EXCEPTION 'Load source-owned reference dictionaries before importing establishments';
+    END IF;
+    FOR r IN SELECT * FROM (VALUES
+        ('admissions_policy','admissions_policy_id','source_admissions_policy_code',false),
+        ('boarding_provision','boarding_provision_id','source_boarding_provision_code',false),
+        ('nursery_provision','nursery_provision_id','source_nursery_provision_code',false),
+        ('sixth_form_provision','sixth_form_provision_id','source_sixth_form_provision_code',false),
+        ('specialist_provision_type','specialist_provision_type_id','source_specialist_provision_type_code',false),
+        ('further_education_type','further_education_type_id','source_further_education_type_code',true),
+        ('section_41_approval_status','section_41_approval_status_id','source_section_41_approval_status_code',true),
+        ('religious_character','religious_character_id','source_religious_character_code',true),
+        ('religious_ethos','religious_ethos_id','source_religious_ethos_code',true),
+        ('diocese','diocese_id','source_diocese_code',true)
+    ) v(reference_list,key_column,source_column,has_code) LOOP
+        EXECUTE format('SELECT EXISTS(SELECT 1 FROM source_establishment_fixture s
+            WHERE nullif(btrim(s.%I),'''') IS NOT NULL AND NOT EXISTS(SELECT 1 FROM imported_reference_mapping m
+                WHERE m.reference_list=$1 AND m.code=s.%I))',r.source_column,r.source_column)
+            INTO invalid USING r.reference_list;
+        IF invalid THEN RAISE EXCEPTION 'Source establishment has a missing dictionary reference: %',r.reference_list; END IF;
+        EXECUTE format('UPDATE source_establishment_fixture SET %I=NULL',r.key_column);
+        target_code:='t.code::text';
+        EXECUTE format('UPDATE source_establishment_fixture s SET %I=t.%I
+            FROM imported_reference_mapping m JOIN establishment.%I t ON %s=m.code
+            WHERE m.reference_list=$1 AND m.included AND s.%I=m.code',
+            r.key_column,r.key_column,r.reference_list,target_code,r.source_column) USING r.reference_list;
+        EXECUTE format('SELECT EXISTS(SELECT 1 FROM source_establishment_fixture s
+            JOIN imported_reference_mapping m ON m.code=s.%I AND m.reference_list=$1
+            WHERE m.included AND s.%I IS NULL)',r.source_column,r.key_column) INTO invalid USING r.reference_list;
+        IF invalid THEN RAISE EXCEPTION 'Included source reference is missing from target: %',r.reference_list; END IF;
+    END LOOP;
+END $$;
+DROP TABLE imported_reference_mapping;
 
 -- Resolve the type before replay filtering so an unsupported code cannot be
 -- silently discarded as an older source observation.
@@ -110,16 +161,16 @@ BEGIN
 END;
 $$;
 
--- UUID code lists resolve by published code, independently of legacy IDs/names.
+-- Reference identities resolve by business code, independently of source row IDs.
 ALTER TABLE source_establishment_fixture
     ADD COLUMN establishment_status_id integer,
     ADD COLUMN education_phase_id integer,
     ADD COLUMN reason_establishment_opened_id integer,
     ADD COLUMN reason_establishment_closed_id integer;
 UPDATE source_establishment_fixture s SET establishment_status_id=r.establishment_status_id
-FROM establishment.establishment_status r WHERE r.establishment_status_id::text=NULLIF(BTRIM(s.status_code),'');
+FROM establishment.establishment_status r WHERE r.code::text=NULLIF(BTRIM(s.status_code),'');
 UPDATE source_establishment_fixture s SET education_phase_id=r.education_phase_id
-FROM establishment.education_phase r WHERE r.education_phase_id::text=NULLIF(BTRIM(s.source_education_phase_code),'');
+FROM establishment.education_phase r WHERE r.code::text=NULLIF(BTRIM(s.source_education_phase_code),'');
 UPDATE source_establishment_fixture s SET reason_establishment_opened_id=r.reason_establishment_opened_id
 FROM establishment.reason_establishment_opened r WHERE r.code=NULLIF(BTRIM(s.reason_opened_code),'');
 UPDATE source_establishment_fixture s SET reason_establishment_closed_id=r.reason_establishment_closed_id
@@ -138,7 +189,7 @@ BEGIN
            AND BTRIM(s.reason_opened_code) NOT IN ('00','13','99') AND s.reason_establishment_opened_id IS NULL)
        OR (NULLIF(BTRIM(s.reason_closed_code),'') IS NOT NULL
            AND BTRIM(s.reason_closed_code) NOT IN ('00','99') AND s.reason_establishment_closed_id IS NULL)
-       OR NULLIF(BTRIM(s.source_establishment_type_category_code),'') IS DISTINCT FROM c.establishment_type_category_id::text;
+       OR NULLIF(BTRIM(s.source_establishment_type_category_code),'') IS DISTINCT FROM c.code::text;
     IF invalid_codes IS NOT NULL THEN
         RAISE EXCEPTION 'Missing, unsupported or conflicting status, education phase, lifecycle reason or type-group code for URN %.',invalid_codes;
     END IF;
@@ -216,34 +267,8 @@ DECLARE
 BEGIN
     SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
     FROM source_establishment_fixture
-    WHERE source_further_education_type_code IS NOT NULL AND source_further_education_type_code NOT IN ('00','99') AND further_education_type_id IS NULL;
-    IF unmapped IS NOT NULL THEN
-        RAISE EXCEPTION 'Further-education type could not be mapped for URN %.', unmapped;
-    END IF;
-
-    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
-    FROM source_establishment_fixture
-    WHERE source_section_41_approval_status_code IS NOT NULL AND source_section_41_approval_status_code <> '3' AND section_41_approval_status_id IS NULL;
-    IF unmapped IS NOT NULL THEN
-        RAISE EXCEPTION 'Section 41 approval status could not be mapped for URN %.', unmapped;
-    END IF;
-
-    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
-    FROM source_establishment_fixture
-    WHERE (source_religious_character_code IS NOT NULL AND source_religious_character_code NOT IN ('00','99') AND religious_character_id IS NULL)
-       OR (source_religious_ethos_code IS NOT NULL AND source_religious_ethos_code NOT IN ('00','99') AND religious_ethos_id IS NULL)
-       OR (source_diocese_code IS NOT NULL AND source_diocese_code NOT IN ('0000','9999') AND diocese_id IS NULL);
-    IF unmapped IS NOT NULL THEN
-        RAISE EXCEPTION 'Faith or diocese classification could not be mapped for URN %. Review the source code and seeded reference list.', unmapped;
-    END IF;
-    SELECT string_agg(urn::text, ', ' ORDER BY urn) INTO unmapped
-    FROM source_establishment_fixture
-    WHERE (source_specialist_provision_type_code IS NOT NULL
-           AND source_specialist_provision_type_code NOT IN ('0','9')
-           AND specialist_provision_type_id IS NULL)
-       OR (source_special_classes_code IS NOT NULL
-           AND source_special_classes_code NOT IN ('0','9')
-           AND has_special_classes IS NULL);
+    WHERE source_special_classes_code IS NOT NULL
+      AND source_special_classes_code NOT IN ('0','9') AND has_special_classes IS NULL;
     IF unmapped IS NOT NULL THEN
         RAISE EXCEPTION 'Specialist provision or special classes could not be mapped for URN %.', unmapped;
     END IF;

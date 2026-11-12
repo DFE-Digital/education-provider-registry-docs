@@ -20,8 +20,8 @@ $script:GeographicDatasets = @(
 
 # The establishment transform returns more columns than the load uses. These
 # are the transform's column names, in the column order of the load SQL's
-# source_establishment_fixture table. UUID reference values are resolved in PostgreSQL from their published source
-# codes. Other unchanged lookup values retain the existing transform mapping.
+# source_establishment_fixture table. Reference values are resolved in PostgreSQL
+# from the imported dictionaries and original source business codes.
 $script:EstablishmentFixtureColumns = @(
     'urn', 'ukprn', 'local_authority_code', 'government_office_region_code',
     'district_administrative_code', 'administrative_ward_code',
@@ -46,7 +46,9 @@ $script:EstablishmentFixtureColumns = @(
     'source_religious_ethos_code', 'religious_ethos_id',
     'source_diocese_code', 'source_diocese_id', 'source_education_phase', 'ofsted_link',
     'source_specialist_provision_type_code', 'source_special_classes_code', 'has_special_classes', 'source_observed_date',
-    'source_establishment_type_category_code'
+    'source_establishment_type_category_code',
+    'source_admissions_policy_code','source_boarding_provision_code',
+    'source_nursery_provision_code','source_sixth_form_provision_code'
 )
 
 function Import-GeographicReferenceData {
@@ -96,6 +98,7 @@ function Import-EstablishmentFromBau {
         -RowCount 'ExactlyOne' -Description "establishment URN $Urn" | Out-Null
     Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-establishment-fixture.sql') `
         -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "establishment URN $Urn"
+    Import-EstablishmentSenFromBau -Source $Source -Target $Target -Urn $Urn -WorkingDirectory $WorkingDirectory
 }
 
 function Import-EstablishmentPartyRoleFromBau {

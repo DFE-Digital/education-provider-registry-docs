@@ -6,6 +6,12 @@ function Assert-EstablishmentBuildInputs {
 
     $paths = @(
         (Get-SchemaPath 'establishment/establishment-schema.sql'),
+        (Get-SchemaPath 'establishment/sen-schema.sql'),
+        (Get-SchemaPath 'establishment/transforms/reference-data-from-bau.sql'),
+        (Get-SchemaPath 'establishment/load/load-reference-data-fixture.sql'),
+        (Get-SchemaPath 'seed/seed-target-reference-data.sql'),
+        (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql'),
+        (Get-SchemaPath 'seed/seed-address-purposes.sql'),
         (Get-SchemaPath 'migration/migration-schema.sql'),
         (Get-SchemaPath 'migration/maintenance-derivation.sql'),
         (Get-SchemaPath 'migration/proprietor-extensions.sql'),
@@ -18,6 +24,7 @@ function Assert-EstablishmentBuildInputs {
     if ($IncludeReferenceSeed) {
         $paths += @(
             (Get-SchemaPath 'seed/seed-reference-data.sql'),
+            (Get-SchemaPath 'seed/seed-sen-reference-data.sql'),
             (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql'),
             (Get-SchemaPath 'seed/seed-address-purposes.sql')
         )
@@ -57,14 +64,21 @@ function Import-ReferenceSeed {
     Loads the checked-in reference data: the shared reference seed and the
     academy-trust controlled values.
     #>
-    param([Parameter(Mandatory)]$Target)
+    param([Parameter(Mandatory)]$Target,[switch]$TargetOwnedOnly)
 
-    Write-Step 'Loading the checked-in reference seed'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-reference-data.sql') -FailureMessage 'Reference-data seed failed'
+    if ($TargetOwnedOnly) {
+        Write-Step 'Loading target-owned reference values'
+        Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-target-reference-data.sql') -FailureMessage 'Target-owned reference seed failed'
+    } else {
+        Write-Step 'Loading the checked-in reference seed'
+        Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-reference-data.sql') -FailureMessage 'Reference-data seed failed'
+        Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-sen-reference-data.sql') -FailureMessage 'SEN reference-data seed failed'
+    }
 
     Write-Step 'Loading the academy-trust reference seed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql') -FailureMessage 'Academy-trust reference-data seed failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-address-purposes.sql') -FailureMessage 'Address-purpose seed failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/sync-reference-sequences.sql') -FailureMessage 'Reference sequence synchronisation failed'
 }
 
 function Initialize-EstablishmentDatabase {
@@ -73,11 +87,11 @@ function Initialize-EstablishmentDatabase {
     Recreates the establishment and migration schemas and loads reference data,
     ready for establishment data to be loaded.
     #>
-    param([Parameter(Mandatory)]$Target)
+    param([Parameter(Mandatory)]$Target,[switch]$FromBau)
 
-    Assert-EstablishmentBuildInputs -IncludeReferenceSeed
+    Assert-EstablishmentBuildInputs -IncludeReferenceSeed:(-not $FromBau)
     Reset-EstablishmentSchema -Target $Target
-    Import-ReferenceSeed -Target $Target
+    Import-ReferenceSeed -Target $Target -TargetOwnedOnly:$FromBau
 }
 
 function Initialize-GovernanceDatabase {

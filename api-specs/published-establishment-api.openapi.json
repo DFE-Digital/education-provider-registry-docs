@@ -38,7 +38,7 @@
               "open",
               "closed"
             ],
-            "description": "One lowercase value. open selects providerStatus.code 1 (Open); closed selects code 2 (Closed). Omit to include both. Empty or repeated values, whitespace and other values return 400 invalid-status-filter. Unknown query parameter names return 400 unsupported-query-parameter."
+            "description": "One lowercase value. open selects establishmentStatus.code 1 (Open); closed selects code 2 (Closed). Omit to include both. Empty or repeated values, whitespace and other values return 400 invalid-status-filter. Unknown query parameter names return 400 unsupported-query-parameter."
           },
           {
             "name": "Accept-Encoding",
@@ -120,14 +120,14 @@
               "application/json": [
                 {
                   "urn": "136286",
-                  "providerName": "Westlands School",
+                  "establishmentName": "Westlands School",
                   "dfeNumber": "886/5434",
                   "ukprn": "10031371",
                   "providerType": {
                     "code": "34",
                     "name": "Academy converter"
                   },
-                  "providerTypeGroup": {
+                  "establishmentTypeCategory": {
                     "code": "10",
                     "name": "Academies"
                   },
@@ -135,7 +135,7 @@
                     "code": "4",
                     "name": "Secondary"
                   },
-                  "providerStatus": {
+                  "establishmentStatus": {
                     "code": "1",
                     "name": "Open"
                   },
@@ -273,9 +273,7 @@
                     "groupUid": "4885",
                     "groupId": "TR02230",
                     "companiesHouseNumber": "07344732",
-                    "academyTrustType": {
-                      "name": "Multi-academy trust"
-                    },
+                    "academyTrustType": "Multi-academy trust",
                     "startDate": "2010-09-01"
                   },
                   "sponsor": {
@@ -293,14 +291,14 @@
                 },
                 {
                   "urn": "137603",
-                  "providerName": "Ridgewood School",
+                  "establishmentName": "Ridgewood School",
                   "dfeNumber": "371/4033",
                   "ukprn": "10035482",
                   "providerType": {
                     "code": "34",
                     "name": "Academy converter"
                   },
-                  "providerTypeGroup": {
+                  "establishmentTypeCategory": {
                     "code": "10",
                     "name": "Academies"
                   },
@@ -308,7 +306,7 @@
                     "code": "4",
                     "name": "Secondary"
                   },
-                  "providerStatus": {
+                  "establishmentStatus": {
                     "code": "1",
                     "name": "Open"
                   },
@@ -420,9 +418,7 @@
                     "groupUid": "17144",
                     "groupId": "TR00381",
                     "companiesHouseNumber": "07736364",
-                    "academyTrustType": {
-                      "name": "Multi-academy trust"
-                    },
+                    "academyTrustType": "Multi-academy trust",
                     "startDate": "2023-07-01"
                   },
                   "sponsor": {
@@ -435,7 +431,7 @@
                     "predecessors": [
                       {
                         "urn": "106789",
-                        "providerName": "Ridgewood School",
+                        "establishmentName": "Ridgewood School",
                         "dateLinked": "2011-11-01",
                         "url": "/v1/establishments/106789"
                       }
@@ -1066,14 +1062,14 @@
             "examples": {
               "application/json": {
                 "urn": "137603",
-                "providerName": "Ridgewood School",
+                "establishmentName": "Ridgewood School",
                 "dfeNumber": "371/4033",
                 "ukprn": "10035482",
                 "providerType": {
                   "code": "34",
                   "name": "Academy converter"
                 },
-                "providerTypeGroup": {
+                "establishmentTypeCategory": {
                   "code": "10",
                   "name": "Academies"
                 },
@@ -1081,7 +1077,7 @@
                   "code": "4",
                   "name": "Secondary"
                 },
-                "providerStatus": {
+                "establishmentStatus": {
                   "code": "1",
                   "name": "Open"
                 },
@@ -1193,9 +1189,7 @@
                   "groupUid": "17144",
                   "groupId": "TR00381",
                   "companiesHouseNumber": "07736364",
-                  "academyTrustType": {
-                    "name": "Multi-academy trust"
-                  },
+                  "academyTrustType": "Multi-academy trust",
                   "startDate": "2023-07-01"
                 },
                 "sponsor": {
@@ -1208,7 +1202,7 @@
                   "predecessors": [
                     {
                       "urn": "106789",
-                      "providerName": "Ridgewood School",
+                      "establishmentName": "Ridgewood School",
                       "dateLinked": "2011-11-01",
                       "url": "/v1/establishments/106789"
                     }
@@ -2116,7 +2110,7 @@
           "$ref": "#/definitions/CodedValue"
         },
         "nurseryProvision": {
-          "$ref": "#/definitions/NamedValue"
+          "$ref": "#/definitions/CodedValue"
         },
         "sixthFormProvision": {
           "$ref": "#/definitions/CodedValue"
@@ -2127,7 +2121,7 @@
         "section41Approval": {
           "allOf": [
             {
-              "$ref": "#/definitions/NamedValue"
+              "$ref": "#/definitions/CodedValue"
             }
           ],
           "description": "Include only when applicable and published."
@@ -2182,7 +2176,7 @@
           "$ref": "#/definitions/CodedValue"
         },
         "religiousEthos": {
-          "$ref": "#/definitions/NamedValue"
+          "$ref": "#/definitions/CodedValue"
         },
         "diocese": {
           "$ref": "#/definitions/CodedValue"
@@ -2354,10 +2348,11 @@
           "description": "Published Companies House number; preserve leading zeroes."
         },
         "academyTrustType": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/NamedValue"
-            }
+          "type": "string",
+          "enum": [
+            "Single-academy trust",
+            "Multi-academy trust",
+            "Secure single-academy trust"
           ],
           "description": "Single-academy trust, Multi-academy trust or Secure single-academy trust. Historical entries retain the type recorded for that relationship."
         },
@@ -2539,7 +2534,7 @@
       "additionalProperties": true,
       "required": [
         "urn",
-        "providerName",
+        "establishmentName",
         "url"
       ],
       "properties": {
@@ -2549,7 +2544,7 @@
           "description": "Predecessor establishment URN.",
           "pattern": "^[1-9][0-9]{0,5}$"
         },
-        "providerName": {
+        "establishmentName": {
           "type": "string",
           "minLength": 1,
           "description": "Published predecessor name."
@@ -2637,10 +2632,10 @@
       "description": "One establishment object, returned directly by the detail endpoint or as an item in the collection array. Optional fields are present when applicable, known and published. Omit nulls, empty strings, empty nested objects/arrays and placeholders. The root collection may be empty. Preserve zero, false and meaningful classifications such as None. Clients must tolerate additional properties and future published code values. Select current/historical relationships using explicit state, not the presence of endDate. Missing required publication facts return 503 publication-incomplete. Categories other than those mapped here use the same endpoint and must not return 404 solely because their category is not described here.",
       "required": [
         "urn",
-        "providerName",
+        "establishmentName",
         "providerType",
-        "providerTypeGroup",
-        "providerStatus",
+        "establishmentTypeCategory",
+        "establishmentStatus",
         "dateLastChangedOrConfirmed"
       ],
       "properties": {
@@ -2650,7 +2645,7 @@
           "description": "Establishment URN. In a detail response, must match the requested URN.",
           "pattern": "^[1-9][0-9]{0,5}$"
         },
-        "providerName": {
+        "establishmentName": {
           "type": "string",
           "minLength": 1,
           "description": "Published establishment name."
@@ -2675,7 +2670,7 @@
           ],
           "description": "Detailed establishment type. Code and name must match the published type mapping."
         },
-        "providerTypeGroup": {
+        "establishmentTypeCategory": {
           "allOf": [
             {
               "$ref": "#/definitions/CodedValue"
@@ -2686,7 +2681,7 @@
         "educationPhase": {
           "$ref": "#/definitions/CodedValue"
         },
-        "providerStatus": {
+        "establishmentStatus": {
           "allOf": [
             {
               "$ref": "#/definitions/CodedValue"
@@ -2786,14 +2781,14 @@
       },
       "example": {
         "urn": "137603",
-        "providerName": "Ridgewood School",
+        "establishmentName": "Ridgewood School",
         "dfeNumber": "371/4033",
         "ukprn": "10035482",
         "providerType": {
           "code": "34",
           "name": "Academy converter"
         },
-        "providerTypeGroup": {
+        "establishmentTypeCategory": {
           "code": "10",
           "name": "Academies"
         },
@@ -2801,7 +2796,7 @@
           "code": "4",
           "name": "Secondary"
         },
-        "providerStatus": {
+        "establishmentStatus": {
           "code": "1",
           "name": "Open"
         },
@@ -2913,9 +2908,7 @@
           "groupUid": "17144",
           "groupId": "TR00381",
           "companiesHouseNumber": "07736364",
-          "academyTrustType": {
-            "name": "Multi-academy trust"
-          },
+          "academyTrustType": "Multi-academy trust",
           "startDate": "2023-07-01"
         },
         "sponsor": {
@@ -2928,7 +2921,7 @@
           "predecessors": [
             {
               "urn": "106789",
-              "providerName": "Ridgewood School",
+              "establishmentName": "Ridgewood School",
               "dateLinked": "2011-11-01",
               "url": "/v1/establishments/106789"
             }
@@ -3059,7 +3052,7 @@
   },
   "x-establishment-type-mappings": [
     {
-      "providerTypeGroup": {
+      "establishmentTypeCategory": {
         "code": "10",
         "name": "Academies"
       },
@@ -3103,7 +3096,7 @@
       ]
     },
     {
-      "providerTypeGroup": {
+      "establishmentTypeCategory": {
         "code": "4",
         "name": "Local authority maintained schools"
       },
@@ -3152,19 +3145,19 @@
     "Collection items have the same full Establishment shape as detail responses, one item per URN, sorted by URN numerically ascending. Return all matches in one response; no matches is 200 with [].",
     "Reject empty/repeated/unsupported status values with 400 invalid-status-filter and unsupported collection query parameters with 400 unsupported-query-parameter. Query validation errors use location query.",
     "Do not return partial collections when a selected record lacks required publication facts; return 503 publication-incomplete.",
-    "providerTypeGroup is a CodedValue with the published EstablishmentTypeGroup code and matching category name. Codes are strings; category UUIDs and lookup IDs are not public codes."
+    "establishmentTypeCategory is a CodedValue with the published EstablishmentTypeGroup code and matching category name. Codes are strings; category UUIDs and lookup IDs are not public codes."
   ],
   "x-response-examples": {
     "academy": {
       "urn": "137603",
-      "providerName": "Ridgewood School",
+      "establishmentName": "Ridgewood School",
       "dfeNumber": "371/4033",
       "ukprn": "10035482",
       "providerType": {
         "code": "34",
         "name": "Academy converter"
       },
-      "providerTypeGroup": {
+      "establishmentTypeCategory": {
         "code": "10",
         "name": "Academies"
       },
@@ -3172,7 +3165,7 @@
         "code": "4",
         "name": "Secondary"
       },
-      "providerStatus": {
+      "establishmentStatus": {
         "code": "1",
         "name": "Open"
       },
@@ -3284,9 +3277,7 @@
         "groupUid": "17144",
         "groupId": "TR00381",
         "companiesHouseNumber": "07736364",
-        "academyTrustType": {
-          "name": "Multi-academy trust"
-        },
+        "academyTrustType": "Multi-academy trust",
         "startDate": "2023-07-01"
       },
       "sponsor": {
@@ -3299,7 +3290,7 @@
         "predecessors": [
           {
             "urn": "106789",
-            "providerName": "Ridgewood School",
+            "establishmentName": "Ridgewood School",
             "dateLinked": "2011-11-01",
             "url": "/v1/establishments/106789"
           }
@@ -3308,14 +3299,14 @@
     },
     "localAuthorityMaintainedSchool": {
       "urn": "109613",
-      "providerName": "Milton Ernest CofE Primary School",
+      "establishmentName": "Milton Ernest CofE Primary School",
       "dfeNumber": "822/3023",
       "ukprn": "10075753",
       "providerType": {
         "code": "03",
         "name": "Voluntary controlled school"
       },
-      "providerTypeGroup": {
+      "establishmentTypeCategory": {
         "code": "4",
         "name": "Local authority maintained schools"
       },
@@ -3323,7 +3314,7 @@
         "code": "2",
         "name": "Primary"
       },
-      "providerStatus": {
+      "establishmentStatus": {
         "code": "1",
         "name": "Open"
       },
@@ -3407,7 +3398,8 @@
           "name": "No boarders"
         },
         "nurseryProvision": {
-          "name": "No Nursery Classes"
+          "name": "No Nursery Classes",
+          "code": "2"
         },
         "sixthFormProvision": {
           "code": "2",
@@ -3453,14 +3445,14 @@
     },
     "academyWithSen": {
       "urn": "136286",
-      "providerName": "Westlands School",
+      "establishmentName": "Westlands School",
       "dfeNumber": "886/5434",
       "ukprn": "10031371",
       "providerType": {
         "code": "34",
         "name": "Academy converter"
       },
-      "providerTypeGroup": {
+      "establishmentTypeCategory": {
         "code": "10",
         "name": "Academies"
       },
@@ -3468,7 +3460,7 @@
         "code": "4",
         "name": "Secondary"
       },
-      "providerStatus": {
+      "establishmentStatus": {
         "code": "1",
         "name": "Open"
       },
@@ -3606,9 +3598,7 @@
         "groupUid": "4885",
         "groupId": "TR02230",
         "companiesHouseNumber": "07344732",
-        "academyTrustType": {
-          "name": "Multi-academy trust"
-        },
+        "academyTrustType": "Multi-academy trust",
         "startDate": "2010-09-01"
       },
       "sponsor": {

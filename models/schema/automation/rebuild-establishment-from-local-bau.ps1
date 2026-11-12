@@ -107,7 +107,12 @@ try {
         $selection = Find-EstablishmentGroupsFromBau -Source $source -Selection $selection `
             -WorkingDirectory $workspace -IncludeArchivedLinks:$IncludeArchivedLinks
     }
-    Initialize-EstablishmentDatabase -Target $target
+    # Extract required dictionaries before resetting a usable target. The BAU
+    # path does not read exported reference/establishment fixture seeds.
+    $referenceCsv=Export-BauReferenceData -Source $source -WorkingDirectory $workspace
+    Initialize-EstablishmentDatabase -Target $target -FromBau
+    Import-BauReferenceData -Target $target -CsvPath $referenceCsv -SourceDatabase $source.Database -WorkingDirectory $workspace
+    Import-SenReferenceData -Source $source -Target $target -WorkingDirectory $workspace
     Test-CodeListsAgainstBau -Source $source -Target $target
     $sourceDatabaseSql = $source.Database.Replace("'", "''")
     $runNotes = @()

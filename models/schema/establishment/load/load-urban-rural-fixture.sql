@@ -8,9 +8,10 @@ BEGIN
     END IF;
 END;
 $$;
-INSERT INTO establishment.urban_rural (id, code, name)
-SELECT row_number() OVER (ORDER BY BTRIM(code))::integer, BTRIM(code), BTRIM(name)
+INSERT INTO establishment.urban_rural (code, name)
+SELECT BTRIM(code), BTRIM(name)
 FROM source_urban_rural_fixture
 WHERE NULLIF(BTRIM(code), '') IS NOT NULL
+ORDER BY BTRIM(code)
 ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name;
 COMMIT;

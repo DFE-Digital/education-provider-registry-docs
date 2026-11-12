@@ -223,6 +223,25 @@ WHERE e.urn = <URN>;
 
 ## 6. Migration evidence
 
+SEN associations can be inspected separately without multiplying the establishment row:
+
+```sql
+SELECT e.urn, l.establishment_sen_id, s.sen_id, s.code, s.name
+FROM establishment e
+JOIN establishment_sen l USING (establishment_id)
+JOIN sen s USING (sen_id)
+WHERE e.urn = <URN>
+ORDER BY s.code;
+
+SELECT migration_run_id, source_database, completed_at, notes::jsonb AS sen_source_evidence
+FROM migration.migration_run
+WHERE run_type = 'establishment-sen'
+  AND (notes::jsonb ->> 'urn')::integer = <URN>
+ORDER BY completed_at;
+```
+
+The [single-establishment projection](transforms/select-establishment-by-urn.sql) also returns `sen_provision` as a code/name JSON array, or `[]` when no associations exist.
+
 This returns the migration-time evidence that supports the responsibility and
 classification rows. It shows the source records and assertion metadata used
 to explain how the target facts were derived.

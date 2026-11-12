@@ -33,6 +33,7 @@ BEGIN
               'specialist_provision',
               'resourced_provision',
               'sen_unit_provision',
+              'establishment_sen',
               'legal_entity_sole_trader',
               'legal_entity_partner'
           )

@@ -47,11 +47,15 @@ module steps, so reading one shows the whole flow.
 
 ## What the default build contains
 
+The BAU path imports source-owned dictionaries directly from MSSQL, including the full eligible admissions, boarding, diocese, further-education, nursery, sixth-form, section 41 and specialist-provision lists. It does not initialise those values from the exported SQL snapshot. See [Source-owned reference data](source-reference-data.md) for the complete flow and exclusions.
+
 Both rebuild paths build the three sanity establishments in
 `seed/fixture-selection.json`: URNs 100018, 109613 and 137603. The selection has
 no group links or organisation groups.
 
 ## Running the whole flow
+
+To add SEN to an existing populated target without rebuilding other model slices, use [migrate-sen-from-local-bau.ps1](migrate-sen-from-local-bau.ps1). It backs up the local database and applies the lookup and selected associations in one transaction. See the [SEN migration runbook](migrate-sen-from-local-bau.md).
 
 From `education-provider-registry-docs`:
 
@@ -131,6 +135,11 @@ Remove-RunWorkspace -Path $workspace
 | | `Initialize-EstablishmentDatabase` | Both of the above. |
 | | `Initialize-GovernanceDatabase` | Drops and recreates the governance schema. |
 | BAU import | `Import-GeographicReferenceData` | Loads all geographic reference data from BAU. |
+| | `Export-BauReferenceData` | Extracts all 19 source dictionaries before the target reset. |
+| | `Import-BauReferenceData` | Loads full eligible dictionaries, reconciles exact source labels and records provenance. |
+| | `Import-SenReferenceData` | Reconciles the 13 current SEN meanings with the local source, excluding archived values. |
+| | `Import-EstablishmentSenFromBau` | Reconciles one establishment's full SEN association set and records source provenance. |
+| | `Update-EstablishmentSenFromBau` | Adds SEN to every existing target establishment in one transaction, after extracting and taking a database backup. |
 | | `Import-EstablishmentFromBau` | Loads one establishment. |
 | | `Import-EstablishmentPartyRoleFromBau` | Loads one group link as a legal entity or an explicitly reviewed person sponsor, with its role, applicable classification, group identifiers and responsibility. |
 | | `Import-OrganisationGroupFromBau` | Loads a federation or children's-centre group and its complete selected membership. Children's-centre groups retain their recorded authority and current lead assertion as a separate lead period with unknown business boundaries. Existing lead periods are retained on changes; current lead status is derived from lead periods, not a stored membership flag. |
@@ -139,6 +148,8 @@ Remove-RunWorkspace -Path $workspace
 | | `Export-EstablishmentFixture` | Exports the database as SQL with pg_dump. |
 | | `Update-CheckedInSeed` | Copies an export into `seed/`. |
 | Tests | `Test-EstablishmentUrnValidation` | URN selection boundaries and parameter-validation ranges. |
+| | `Test-SenMigration` | Current lookup, key constraints and 12 actual-loader scenarios, with test changes rolled back. |
+| | `Test-BauReferenceData` | Nine source-reference importer scenarios, with all changes rolled back. |
 | | `Test-EstablishmentGroupDiscovery` | Source-free checks of discovery routing, unchanged URN scope, archive opt-in and invalid/duplicate-link rejection. |
 | | `Test-EstablishmentCoreValidation` | Core population and keys, the null-reference policy and group-address constraints. Test records roll back. |
 | | `Test-EstablishmentMigrationEvidence` | For a selection with group links or organisation groups: the rebuild's migration run retains every selected extract and source record. |

@@ -9,7 +9,7 @@ $script:ReferenceSeedTables = @(
     'further_education_type', 'section_41_approval_status',
     'religious_character', 'religious_ethos', 'diocese',
     'gender_of_entry_type', 'admissions_policy', 'boarding_provision',
-    'nursery_provision', 'sixth_form_provision', 'specialist_provision_type',
+    'nursery_provision', 'sixth_form_provision', 'specialist_provision_type', 'sen',
     'establishment_status', 'reason_establishment_opened',
     'reason_establishment_closed', 'local_authority_area', 'government_office_region',
     'gss_local_authority_code', 'district_administrative', 'administrative_ward',
@@ -21,7 +21,7 @@ $script:EstablishmentSeedTables = @(
     'establishment_lifecycle', 'address', 'site', 'establishment_to_site',
     'capacity_and_pupil_measures', 'education_admissions_and_provision',
     'statutory_age_range', 'specialist_provision', 'resourced_provision',
-    'sen_unit_provision', 'legal_entity', 'person', 'organisation_identifier',
+    'sen_unit_provision', 'establishment_sen', 'legal_entity', 'person', 'organisation_identifier',
     'legal_entity_sole_trader', 'legal_entity_partner',
     'establishment_party_role', 'academy_trust_classification',
     'establishment_responsibility', 'organisation_group',
@@ -71,7 +71,22 @@ function Import-CheckedInEstablishmentFixture {
     Import-ProprietorReviewQueue -Target $Target
     $maintenanceWorkspace = New-RunWorkspace
     try {
-        Import-MaintenanceObservationFixture -Target $Target -CsvPath (Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv') `
+        # The stored observation set can cover more URNs than the current seed.
+        # Keep this replay within the actual target selection and require coverage.
+        $targetUrns = (Invoke-Psql -Target $Target -Command 'SELECT urn FROM establishment.establishment ORDER BY urn' `
+            -Output Scalar -FailureMessage 'Cannot read checked-in maintenance scope') -split '\s+'
+        $maintenanceRows = @(Import-Csv -LiteralPath (Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv') -Delimiter '|' |
+            Where-Object { $_.urn -in $targetUrns })
+        if ($maintenanceRows.Count -ne $targetUrns.Count -or
+            @($maintenanceRows.urn | Select-Object -Unique).Count -ne $targetUrns.Count) {
+            throw 'Checked-in maintenance observations must cover each selected establishment exactly once.'
+        }
+        $maintenanceCsv = Join-Path $maintenanceWorkspace 'selected-maintenance-source-observations.csv'
+        $maintenanceLines = @(Get-Content -LiteralPath (Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv'))
+        $selectedLines = @($maintenanceLines[0]) + @($maintenanceLines | Select-Object -Skip 1 |
+            Where-Object { ($_ -split '\|',2)[0] -in $targetUrns })
+        [System.IO.File]::WriteAllLines($maintenanceCsv, [string[]]$selectedLines, [System.Text.UTF8Encoding]::new($false))
+        Import-MaintenanceObservationFixture -Target $Target -CsvPath $maintenanceCsv `
             -SourceDatabase 'gias_bau_test_local' -WorkingDirectory $maintenanceWorkspace
     } finally { Remove-RunWorkspace -Path $maintenanceWorkspace }
 }

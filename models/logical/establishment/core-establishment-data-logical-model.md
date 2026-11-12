@@ -12,6 +12,11 @@ this reference does not identify a school's operator or maintainer.
 
 ## Logical Model
 
+The [SEN entities](sen.md) add a direct many-to-many establishment classification
+through `establishment_sen`, separate from the specialist facility branch.
+For this slice, SEN `00` (Not Applicable) creates no association;
+archived SEN values are excluded and the target has no archive column.
+
 Optional references use null for Unknown, Not applicable and missing source
 values. These are not rows in the business reference lists. Null alone does
 not distinguish the reasons for absence; use the source or migration evidence
@@ -32,6 +37,8 @@ erDiagram
     ESTABLISHMENT ||--o| EDUCATION_ADMISSIONS_AND_PROVISION : "has"
     ESTABLISHMENT ||--o| CAPACITY_AND_PUPIL_MEASURES : "has"
     ESTABLISHMENT ||--o| SPECIALIST_PROVISION : "has"
+    ESTABLISHMENT ||--o{ ESTABLISHMENT_SEN : "records SEN"
+    SEN ||--o{ ESTABLISHMENT_SEN : "classifies"
     ESTABLISHMENT ||--o| ESTABLISHMENT_CONTACT : "has contact"
     ESTABLISHMENT ||--o| ESTABLISHMENT_LIFECYCLE : "has lifecycle"
     ESTABLISHMENT ||--o| ESTABLISHMENT_GEOGRAPHY : "has geography"
@@ -53,13 +60,25 @@ erDiagram
         numeric ukprn
         string name
         string ofsted_link
-        uuid establishment_type_id FK
-        uuid education_phase_id FK
+        integer establishment_type_id FK
+        integer education_phase_id FK
         integer further_education_type_id FK
         integer section_41_approval_status_id FK
         integer religious_character_id FK
         integer religious_ethos_id FK
         integer diocese_id FK
+    }
+
+    ESTABLISHMENT_SEN {
+        uuid establishment_sen_id PK
+        uuid establishment_id FK
+        integer sen_id FK
+    }
+
+    SEN {
+        integer sen_id PK
+        string code UK
+        string name
     }
 
     FURTHER_EDUCATION_TYPE {
@@ -106,15 +125,15 @@ erDiagram
     }
 
     ESTABLISHMENT_TYPE {
-        uuid establishment_type_id PK
+        integer establishment_type_id PK
         string code UK
         string name
-        uuid establishment_type_category_id FK
+        integer establishment_type_category_id FK
         integer academy_route_id FK
     }
 
     ESTABLISHMENT_TYPE_CATEGORY {
-        uuid establishment_type_category_id PK
+        integer establishment_type_category_id PK
         integer code
         string name UK
     }
@@ -125,7 +144,7 @@ erDiagram
     }
 
     EDUCATION_PHASE {
-        uuid education_phase_id PK
+        integer education_phase_id PK
         integer code
         string name
     }
@@ -140,54 +159,59 @@ erDiagram
     ESTABLISHMENT_LIFECYCLE {
         uuid establishment_lifecycle_id PK
         uuid establishment_id FK, UK
-        uuid establishment_status_id FK
+        integer establishment_status_id FK
         date open_date
         date close_date
-        uuid reason_establishment_opened_id FK
-        uuid reason_establishment_closed_id FK
+        integer reason_establishment_opened_id FK
+        integer reason_establishment_closed_id FK
         date last_changed_date
     }
 
     ESTABLISHMENT_STATUS {
-        uuid establishment_status_id PK
+        integer establishment_status_id PK
         integer code UK
         string name
     }
 
     REASON_ESTABLISHMENT_OPENED {
-        uuid reason_establishment_opened_id PK
+        integer reason_establishment_opened_id PK
         string code
         string name
     }
 
     REASON_ESTABLISHMENT_CLOSED {
-        uuid reason_establishment_closed_id PK
+        integer reason_establishment_closed_id PK
         string code
         string name
     }
 
     GENDER_OF_ENTRY_TYPE {
         integer gender_of_entry_type_id PK
+        integer code UK
         string name
     }
 
     ADMISSIONS_POLICY {
         integer admissions_policy_id PK
+        integer code UK
         string name
     }
 
     BOARDING_PROVISION {
         integer boarding_provision_id PK
+        integer code UK
         string name
     }
 
     NURSERY_PROVISION {
         integer nursery_provision_id PK
+        integer code UK
         string name
     }
 
     SIXTH_FORM_PROVISION {
         integer sixth_form_provision_id PK
+        integer code UK
         string name
     }
 
@@ -228,7 +252,7 @@ erDiagram
 
 Each establishment records one detailed administrative type, with its published DfE code. Category and academy route are obtained through that type; they are not stored on the establishment. The nine detailed academy types share the Academies category and use two routes where applicable. The eight converter and sponsor-led types require their specified route; Academy secure 16 to 19 and all non-academy types have no route. All types use the eleven BAU type-group categories, including Free Schools, Special schools and Local authority maintained schools.
 
-Type and category keys are UUIDs. Category contains its UUID, unique integer BAU code and unique name; route contains only its integer key and unique name. Conceptual academy types are projected from detailed type codes, independently of BAU category. The complete field definitions, nine academy mappings and applicability rules are in [Identity and classification](identity-and-classification.md#establishment-type). The physical schema and migrations use the same structure.
+Type and category keys are independent integer identities starting at 1. Category contains its internal ID, unique integer BAU code and unique name; route contains only its integer key and unique name. Conceptual academy types are projected from detailed type codes, independently of BAU category. The complete field definitions, nine academy mappings and applicability rules are in [Identity and classification](identity-and-classification.md#establishment-type). The physical schema and migrations use the same structure.
 
 The detailed entity definitions are split into focused documents:
 

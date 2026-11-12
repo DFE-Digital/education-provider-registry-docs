@@ -86,7 +86,7 @@ or conflicting source evidence still requires review.
 1. Check that the SQL Server source and PostgreSQL target are local.
    For a URN-only selection, discover and validate supported group links before
    the target is recreated (`Find-EstablishmentGroupsFromBau`).
-2. Recreate the establishment and migration schemas, and load the checked-in reference seeds (`Initialize-EstablishmentDatabase`).
+2. Extract all 19 non-geographic source dictionaries before resetting the target (`Export-BauReferenceData`). Recreate the schemas with target-owned definitions only (`Initialize-EstablishmentDatabase -FromBau`), then load and reconcile the complete eligible source dictionaries (`Import-BauReferenceData`).
 3. Load geographic reference data from the local BAU copy (`Import-GeographicReferenceData`): local authorities, Government Office Regions, districts, wards, parliamentary constituencies, LSOAs, MSOAs, urban/rural classifications, GSS local-authority codes, and the local-authority to GSS and GOR mappings.
 4. Load each selected URN (`Import-EstablishmentFromBau`), then each selected group link (`Import-EstablishmentPartyRoleFromBau`) and organisation group.
 5. Print the loaded establishments with their pupil and free-school-meal measures (`Show-EstablishmentSummary`).
@@ -99,9 +99,9 @@ Each numbered step is a function in the `EprLocalAutomation` module, and can be 
 
 Each BAU establishment rebuild creates one `migration.migration_run` for its group evidence. Every selected party-link extract retains its own `source_snapshot` and `source_record` beneath that run, so source-level lineage is unchanged. The run is `running` during import and testing, `completed` after the Establishment import and any enabled tests succeed, or `failed` if that workflow fails. When `-SkipTests` is used, notes distinguish a completed untested import from an approval-validated fixture. The source database name is recorded from the connection settings. An independently invoked party-link loader, without a rebuild run ID, still creates a separate mini-migration run. A checked-in SQL rebuild restores the captured run rather than claiming that a fresh BAU extraction took place.
 
-Reference dictionaries are runtime inputs only for this current implementation;
-the target schema and checked-in seed remain the shared baseline for the
-checked-in-fixture rebuild.
+Source-owned reference dictionaries are loaded directly from MSSQL on every BAU rebuild, including values unused by the selected URNs. This path does not load the exported reference-data SQL snapshot. Static definitions are limited to target-owned routes, roles, legal forms and identifiers; reviewed council mappings remain a separate target input. The checked-in SQL export is used for offline fixture replay. See [Source-owned reference data](source-reference-data.md).
+
+SEN is included in each selected establishment import. The source dictionary is reconciled with the 13 seeded current values before importing establishments. Archived values and their associations are excluded; current associations in legacy buckets 2–4 fail for review. SEN links and their migration provenance are exported with the fixtures. See the [SEN entities](../../logical/establishment/sen.md) and [additive migration runbook](migrate-sen-from-local-bau.md).
 
 ## Scope boundary
 

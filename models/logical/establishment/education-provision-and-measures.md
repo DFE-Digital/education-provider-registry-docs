@@ -78,6 +78,8 @@ What gender-of-entry classification applies to this establishment?
 
 ## Admissions policy
 
+See [Admissions policy and boarding provision](admissions-and-boarding.md) for both code lists, optional relationship rules and BAU absence mappings. `Not applicable` has no target lookup row; the relevant foreign key is null. `No boarders` remains a recorded boarding classification.
+
 `admissions_policy` provides the controlled classification of the
 establishment's admissions policy.
 

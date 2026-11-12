@@ -2,6 +2,8 @@
 
 This directory contains the PostgreSQL physical schemas, SQL seeds and local automation used to build the Education Provider Registry model.
 
+SEN classifications use the [SEN logical entities](../logical/establishment/sen.md) and [shared physical schema](establishment/sen-schema.sql). Both rebuild paths include the current lookup and establishment associations. For a populated target, the [additive SEN migration](automation/migrate-sen-from-local-bau.md) takes a database backup and migrates the existing URN selection in one transaction.
+
 This is a work-in-progress business schema. Application/database roles, grants,
 write restrictions and correction-audit machinery are not defined here. Those
 require separate decisions. Local modelling runs use the existing administrator
@@ -26,6 +28,8 @@ flowchart TD
 | Checked-in-fixture rebuild | You do not have the BAU SQL Server copy. | `rebuild-establishment-from-checked-in-sql.ps1` | [Rebuild Establishment From Checked-in SQL](automation/rebuild-establishment-from-checked-in-sql.md) |
 
 ## Establishment data flow and execution engines
+
+The BAU-source path obtains source-owned lookup values from MSSQL, including complete eligible dictionaries unused by the selected URNs. It loads only target-owned definitions from static seeds. SQL exports are the offline replay path. See [Source-owned reference data](automation/source-reference-data.md).
 
 By default, the BAU-source rebuild reads MSSQL BAU, loads PostgreSQL, runs the tests, then exports the validated PostgreSQL data as static SQL INSERT files. Custom selections and skipped-test runs do not automatically refresh the checked-in fixture. INSERT exports come from PostgreSQL, not directly from the MSSQL query results.
 

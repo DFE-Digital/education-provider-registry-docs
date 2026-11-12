@@ -48,7 +48,7 @@ erDiagram
         uuid parliamentary_constituency_id FK
         uuid lsoa_id FK
         uuid msoa_id FK
-        uuid urban_rural_id FK
+        integer urban_rural_id FK
     }
 
     GOVERNMENT_OFFICE_REGION {
@@ -89,7 +89,7 @@ erDiagram
     }
 
     URBAN_RURAL {
-        uuid id PK
+        integer id PK
         string code UK
         string name
     }
@@ -138,6 +138,7 @@ erDiagram
 
     LOCAL_AUTHORITY_JURISDICTION {
         integer local_authority_jurisdiction_id PK
+        string code UK
         string name UK
     }
 ```

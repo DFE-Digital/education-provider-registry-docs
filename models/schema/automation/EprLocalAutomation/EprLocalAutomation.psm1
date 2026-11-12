@@ -47,6 +47,11 @@ Export-ModuleMember -Function @(
 
     # Loading from the local BAU copy
     'Import-GeographicReferenceData'
+    'Export-BauReferenceData'
+    'Import-BauReferenceData'
+    'Import-SenReferenceData'
+    'Import-EstablishmentSenFromBau'
+    'Update-EstablishmentSenFromBau'
     'Import-LocalAuthorityCouncilFixture'
     'Import-MaintenanceFromBau'
     'Import-MaintenanceObservationFixture'
@@ -65,6 +70,8 @@ Export-ModuleMember -Function @(
     'Test-EstablishmentUrnValidation'
     'Test-EstablishmentGroupDiscovery'
     'Test-EstablishmentCoreValidation'
+    'Test-SenMigration'
+    'Test-BauReferenceData'
     'Test-EstablishmentMigrationEvidence'
     'Test-EstablishmentApproval'
     'Test-EstablishmentScope'

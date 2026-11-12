@@ -6,7 +6,12 @@ BEGIN;
 CREATE TEMP TABLE source_local_authority_fixture (
     code text,
     name text,
-    jurisdiction_name text
+    jurisdiction_name text,
+    contact_email text,
+    contact_first_name text,
+    contact_last_name text,
+    contact_phone text,
+    contact_title text
 ) ON COMMIT DROP;
 
 \copy source_local_authority_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
@@ -27,18 +32,9 @@ ON CONFLICT (code) DO UPDATE SET
     name = EXCLUDED.name,
     local_authority_jurisdiction_id = EXCLUDED.local_authority_jurisdiction_id;
 
--- These records are deliberately synthetic. Every identifying value is
--- prefixed with FAKE so they cannot be mistaken for source contact data.
+-- Full source contact replay. No synthetic contacts are generated.
 DELETE FROM establishment.local_authority_area_contact
-WHERE contact_role LIKE 'FAKE%';
-
-WITH first_ten AS (
-    SELECT local_authority_area_id,
-           ROW_NUMBER() OVER (ORDER BY code) AS sequence_number
-    FROM establishment.local_authority_area
-    ORDER BY code
-    LIMIT 10
-)
+WHERE contact_role LIKE 'FAKE%' OR contact_role='BAU local authority contact';
 INSERT INTO establishment.local_authority_area_contact (
     local_authority_area_id,
     contact_email,
@@ -49,14 +45,11 @@ INSERT INTO establishment.local_authority_area_contact (
     contact_role,
     is_current
 )
-SELECT local_authority_area_id,
-       'FAKE.local-authority-contact-' || LPAD(sequence_number::text, 2, '0') || '@example.invalid',
-       'FAKE Contact ' || LPAD(sequence_number::text, 2, '0'),
-       'FAKE Local Authority',
-       'FAKE Contact Title',
-       'FAKE-0000-' || LPAD(sequence_number::text, 2, '0'),
-       'FAKE Local Authority Contact ' || LPAD(sequence_number::text, 2, '0'),
+SELECT a.local_authority_area_id,
+       s.contact_email,s.contact_first_name,s.contact_last_name,s.contact_title,s.contact_phone,
+       'BAU local authority contact',
        true
-FROM first_ten;
+FROM source_local_authority_fixture s JOIN establishment.local_authority_area a ON a.code=s.code::integer
+WHERE coalesce(s.contact_email,s.contact_first_name,s.contact_last_name,s.contact_title,s.contact_phone) IS NOT NULL;
 
 COMMIT;
