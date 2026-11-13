@@ -7,7 +7,7 @@ function Assert-LocalAuthorityCouncilSeed {
     $hash = (Get-FileHash -LiteralPath $jsonPath -Algorithm SHA256).Hash.ToLowerInvariant()
     $expected = [IO.File]::ReadAllText($templatePath).Replace('__MAPPING_SHA256__',$hash).Replace('__MAPPING_JSON__',$json.Replace("'","''"))
     if ([IO.File]::ReadAllText($seedPath) -cne $expected) {
-        throw 'Council seed differs from its mapping/template. Review changes and run update-local-authority-council-seed.ps1.'
+        throw 'Council seed differs from its mapping/template. Review changes and regenerate seed/seed-local-authority-area-councils.sql from the mapping JSON and SQL template.'
     }
 }
 

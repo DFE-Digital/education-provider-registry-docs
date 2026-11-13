@@ -2,7 +2,7 @@
 
 function Assert-EstablishmentBuildInputs {
     # Resolve and check every requested input before any destructive reset.
-    param([switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @())
+    param([switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @(),[switch]$EstablishmentsOnly)
 
     $paths = @(
         (Get-SchemaPath 'establishment/establishment-schema.sql'),
@@ -13,20 +13,21 @@ function Assert-EstablishmentBuildInputs {
         (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql'),
         (Get-SchemaPath 'seed/seed-address-purposes.sql'),
         (Get-SchemaPath 'migration/migration-schema.sql'),
+        (Get-SchemaPath 'migration/load-development-establishment-seed.sql'),
         (Get-SchemaPath 'migration/maintenance-derivation.sql'),
         (Get-SchemaPath 'migration/proprietor-extensions.sql'),
         (Get-SchemaPath 'migration/council-reorganisation.sql'),
-        (Get-SchemaPath 'seed/seed-stage-4-proprietor-review.sql'),
-        (Get-SchemaPath 'establishment/load/load-maintenance-responsibility-fixture.sql'),
-        (Get-SchemaPath 'establishment/transforms/maintenance-responsibility-from-bau.sql'),
         (Get-SchemaPath 'migration/group-address-evidence-schema.sql')
     )
+    if (-not $EstablishmentsOnly) {
+        $paths+=@((Get-SchemaPath 'seed/seed-stage-4-proprietor-review.sql'),
+            (Get-SchemaPath 'establishment/load/load-maintenance-responsibility-fixture.sql'),
+            (Get-SchemaPath 'establishment/transforms/maintenance-responsibility-from-bau.sql'))
+    }
     if ($IncludeReferenceSeed) {
         $paths += @(
             (Get-SchemaPath 'seed/seed-reference-data.sql'),
-            (Get-SchemaPath 'seed/seed-sen-reference-data.sql'),
-            (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql'),
-            (Get-SchemaPath 'seed/seed-address-purposes.sql')
+            (Get-SchemaPath 'seed/seed-sen-reference-data.sql')
         )
     }
     if ($FixtureSeedFile.Count -gt 0) {
@@ -37,7 +38,7 @@ function Assert-EstablishmentBuildInputs {
         $paths += Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv'
     }
     Assert-FileExists -Path $paths
-    Assert-LocalAuthorityCouncilSeed
+    if (-not $EstablishmentsOnly) { Assert-LocalAuthorityCouncilSeed }
 }
 
 function Reset-EstablishmentSchema {
@@ -46,10 +47,11 @@ function Reset-EstablishmentSchema {
     Drops and recreates the establishment and migration schemas. All data in
     them is lost.
     #>
-    param([Parameter(Mandatory)]$Target)
+    param([Parameter(Mandatory)]$Target,
+          [switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @(),[switch]$EstablishmentsOnly)
 
-    Assert-EstablishmentBuildInputs
-    Assert-CouncilEventResetAllowed -Target $Target
+    Assert-EstablishmentBuildInputs -IncludeReferenceSeed:$IncludeReferenceSeed -FixtureSeedFile $FixtureSeedFile -EstablishmentsOnly:$EstablishmentsOnly
+    if (-not $EstablishmentsOnly) { Assert-CouncilEventResetAllowed -Target $Target }
     Write-Step 'Recreating the establishment schema'
     Invoke-Psql -Target $Target -Command 'DROP SCHEMA IF EXISTS establishment CASCADE;' -FailureMessage 'Establishment schema reset failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/establishment-schema.sql') -FailureMessage 'Establishment schema creation failed'
@@ -87,10 +89,10 @@ function Initialize-EstablishmentDatabase {
     Recreates the establishment and migration schemas and loads reference data,
     ready for establishment data to be loaded.
     #>
-    param([Parameter(Mandatory)]$Target,[switch]$FromBau)
+    param([Parameter(Mandatory)]$Target,[switch]$FromBau,
+          [string[]]$FixtureSeedFile = @(),[switch]$EstablishmentsOnly)
 
-    Assert-EstablishmentBuildInputs -IncludeReferenceSeed:(-not $FromBau)
-    Reset-EstablishmentSchema -Target $Target
+    Reset-EstablishmentSchema -Target $Target -IncludeReferenceSeed:(-not $FromBau) -FixtureSeedFile $FixtureSeedFile -EstablishmentsOnly:$EstablishmentsOnly
     Import-ReferenceSeed -Target $Target -TargetOwnedOnly:$FromBau
 }
 

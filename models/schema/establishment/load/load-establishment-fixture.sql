@@ -9,6 +9,7 @@
 -- category code must agree with the seeded reference mapping.
 
 BEGIN;
+SET LOCAL synchronous_commit = off;
 
 CREATE TEMP TABLE source_establishment_fixture (
     urn integer,
@@ -83,6 +84,8 @@ CREATE TEMP TABLE source_establishment_fixture (
 ) ON COMMIT DROP;
 
 \copy source_establishment_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+CREATE UNIQUE INDEX ON source_establishment_fixture (urn);
+ANALYZE source_establishment_fixture;
 
 ALTER TABLE source_establishment_fixture
     ADD COLUMN establishment_type_id integer,
@@ -107,8 +110,20 @@ FROM (SELECT notes::jsonb AS payload FROM migration.migration_run
       WHERE run_type='reference-data' AND status='completed'
       ORDER BY completed_at DESC LIMIT 1) r,
      LATERAL jsonb_array_elements(r.payload->'source_rows') j;
+CREATE UNIQUE INDEX ON imported_reference_mapping (reference_list, code);
+ANALYZE imported_reference_mapping;
+\echo Resolving source-owned establishment classifications...
 DO $$
-DECLARE r record; invalid boolean; target_code text;
+DECLARE
+    r record;
+    invalid boolean;
+    resolved_map jsonb;
+    known_map jsonb;
+    missing_map jsonb;
+    key_type text;
+    value_expression text;
+    assignments text := '';
+    changes text := '';
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM imported_reference_mapping) THEN
         RAISE EXCEPTION 'Load source-owned reference dictionaries before importing establishments';
@@ -125,24 +140,41 @@ BEGIN
         ('religious_ethos','religious_ethos_id','source_religious_ethos_code',true),
         ('diocese','diocese_id','source_diocese_code',true)
     ) v(reference_list,key_column,source_column,has_code) LOOP
+        -- Resolve each small dictionary once. JSON key lookup avoids a source
+        -- self-join and correlated dictionary scans for every establishment.
+        EXECUTE format('SELECT
+            coalesce(jsonb_object_agg(m.code,to_jsonb(t.%I)),''{}''::jsonb),
+            coalesce(jsonb_object_agg(m.code,true),''{}''::jsonb),
+            coalesce(jsonb_object_agg(m.code,true) FILTER (WHERE m.included AND t.%I IS NULL),''{}''::jsonb)
+            FROM imported_reference_mapping m
+            LEFT JOIN establishment.%I t ON t.code::text=m.code AND m.included
+            WHERE m.reference_list=$1',r.key_column,r.key_column,r.reference_list)
+            INTO resolved_map,known_map,missing_map USING r.reference_list;
         EXECUTE format('SELECT EXISTS(SELECT 1 FROM source_establishment_fixture s
-            WHERE nullif(btrim(s.%I),'''') IS NOT NULL AND NOT EXISTS(SELECT 1 FROM imported_reference_mapping m
-                WHERE m.reference_list=$1 AND m.code=s.%I))',r.source_column,r.source_column)
-            INTO invalid USING r.reference_list;
+            WHERE nullif(btrim(s.%I),'''') IS NOT NULL AND NOT ($1 ? s.%I))',
+            r.source_column,r.source_column) INTO invalid USING known_map;
         IF invalid THEN RAISE EXCEPTION 'Source establishment has a missing dictionary reference: %',r.reference_list; END IF;
-        EXECUTE format('UPDATE source_establishment_fixture SET %I=NULL',r.key_column);
-        target_code:='t.code::text';
-        EXECUTE format('UPDATE source_establishment_fixture s SET %I=t.%I
-            FROM imported_reference_mapping m JOIN establishment.%I t ON %s=m.code
-            WHERE m.reference_list=$1 AND m.included AND s.%I=m.code',
-            r.key_column,r.key_column,r.reference_list,target_code,r.source_column) USING r.reference_list;
-        EXECUTE format('SELECT EXISTS(SELECT 1 FROM source_establishment_fixture s
-            JOIN imported_reference_mapping m ON m.code=s.%I AND m.reference_list=$1
-            WHERE m.included AND s.%I IS NULL)',r.source_column,r.key_column) INTO invalid USING r.reference_list;
-        IF invalid THEN RAISE EXCEPTION 'Included source reference is missing from target: %',r.reference_list; END IF;
+        IF missing_map <> '{}'::jsonb THEN
+            EXECUTE format('SELECT EXISTS(SELECT 1 FROM source_establishment_fixture s WHERE $1 ? s.%I)',r.source_column)
+                INTO invalid USING missing_map;
+            IF invalid THEN RAISE EXCEPTION 'Included source reference is missing from target: %',r.reference_list; END IF;
+        END IF;
+        SELECT format_type(atttypid,atttypmod) INTO key_type
+        FROM pg_attribute WHERE attrelid='source_establishment_fixture'::regclass
+          AND attname=r.key_column AND NOT attisdropped;
+        value_expression := format('(%L::jsonb ->> s.%I)::%s',resolved_map::text,r.source_column,key_type);
+        IF assignments <> '' THEN
+            assignments := assignments || ', ';
+            changes := changes || ' OR ';
+        END IF;
+        assignments := assignments || format('%I=%s',r.key_column,value_expression);
+        changes := changes || format('s.%I IS DISTINCT FROM %s',r.key_column,value_expression);
     END LOOP;
+    EXECUTE 'UPDATE source_establishment_fixture s SET ' || assignments || ' WHERE ' || changes;
 END $$;
 DROP TABLE imported_reference_mapping;
+ANALYZE source_establishment_fixture;
+\echo Source-owned establishment classifications resolved.
 
 -- Resolve the type before replay filtering so an unsupported code cannot be
 -- silently discarded as an older source observation.
@@ -415,14 +447,9 @@ SELECT e.establishment_id,
        s.address_uprn
 FROM source_establishment_fixture AS s
 JOIN establishment.establishment AS e ON e.urn = s.urn
-LEFT JOIN establishment.site AS ms
-  ON EXISTS (
-      SELECT 1
-      FROM establishment.establishment_to_site AS ets
-      WHERE ets.establishment_id = e.establishment_id
-        AND ets.site_id = ms.site_id
-        AND ets.is_main_site
-  );
+LEFT JOIN establishment.establishment_to_site AS ets
+  ON ets.establishment_id=e.establishment_id AND ets.is_main_site
+LEFT JOIN establishment.site AS ms ON ms.site_id=ets.site_id;
 
 INSERT INTO establishment.address (
     address_id, address_line_1, address_line_2, address_line_3,

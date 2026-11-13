@@ -21,22 +21,12 @@ function Open-BauConnection {
 }
 
 function ConvertTo-FixtureValue {
-    <#
-    .SYNOPSIS
-    Formats one source value for a fixture: NULL for missing values, ISO dates,
-    invariant-culture numbers, and no pipe characters inside a value.
-    #>
+    # Used by source-reference regression fixtures; bulk exports use the reader loop.
     param($Value)
-
-    if ($null -eq $Value -or $Value -is [System.DBNull]) { return 'NULL' }
-    if ($Value -is [datetime]) { return $Value.ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture) }
-    if ($Value -is [System.IFormattable]) {
-        $text = $Value.ToString($null, [System.Globalization.CultureInfo]::InvariantCulture)
-    }
-    else {
-        $text = $Value.ToString()
-    }
-    return $text.Replace('|', ' ')
+    if ($null -eq $Value -or $Value -is [DBNull]) { return 'NULL' }
+    if ($Value -is [datetime]) { return $Value.ToString('yyyy-MM-dd',[Globalization.CultureInfo]::InvariantCulture) }
+    $text=if ($Value -is [IFormattable]) { $Value.ToString($null,[Globalization.CultureInfo]::InvariantCulture) } else { $Value.ToString() }
+    return $text.Replace('|',' ')
 }
 
 function Get-SqlWithVariables {
@@ -57,6 +47,45 @@ function Get-SqlWithVariables {
         }
     }
     return $sql
+}
+
+function Write-BauReaderToCsv {
+    # Stream the result with PowerShell loops, without a pipeline per cell.
+    param([Parameter(Mandatory)]$Reader,[Parameter(Mandatory)][string]$CsvPath,
+          [string[]]$Columns,[string]$RowCount='Any',[string]$Description='source extract')
+    $width=if ($Columns) { $Columns.Length } else { $Reader.FieldCount }
+    $ordinals=[int[]]::new($width)
+    $names=[string[]]::new($width)
+    $values=[string[]]::new($width)
+    $quotedCharacters=[char[]]@('"',"`r","`n")
+    $culture=[Globalization.CultureInfo]::InvariantCulture
+    for ($index=0;$index -lt $width;$index++) {
+        $names[$index]=if ($Columns) { $Columns[$index] } else { $Reader.GetName($index) }
+        $ordinals[$index]=$Reader.GetOrdinal($names[$index])
+    }
+    $writer=[IO.StreamWriter]::new($CsvPath,$false,[Text.UTF8Encoding]::new($false),65536)
+    $rows=0
+    try {
+        $writer.WriteLine([string]::Join('|',$names))
+        while ($Reader.Read()) {
+            $rows++
+            if ($RowCount -eq 'ExactlyOne' -and $rows -gt 1) { throw 'Expected exactly one row, but more than one was returned.' }
+            for ($index=0;$index -lt $width;$index++) {
+                $value=$Reader.GetValue($ordinals[$index])
+                if ($null -eq $value -or $value -is [DBNull]) { $values[$index]='NULL'; continue }
+                $cell=if ($value -is [datetime]) { $value.ToString('yyyy-MM-dd',$culture) }
+                    elseif ($value -is [IFormattable]) { $value.ToString($null,$culture) }
+                    else { $value.ToString() }
+                $cell=$cell.Replace('|',' ')
+                if ($cell.IndexOfAny($quotedCharacters) -ge 0) { $cell='"'+$cell.Replace('"','""')+'"' }
+                $values[$index]=$cell
+            }
+            $writer.WriteLine([string]::Join('|',$values))
+            if ($rows % 10000 -eq 0) { Write-Host "    $Description`: $rows rows extracted." }
+        }
+    } finally { $writer.Dispose() }
+    if ($rows -eq 0 -and $RowCount -ne 'Any') { throw 'No rows were returned from the local BAU copy.' }
+    return $rows
 }
 
 function Export-BauQueryToCsv {
@@ -81,36 +110,18 @@ function Export-BauQueryToCsv {
     )
 
     $sql = Get-SqlWithVariables -SqlFile $SqlFile -Variables $Variables
+    Write-Host "    Extracting $Description from $($Source.SqlServer)/$($Source.Database)..."
+    $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
     $connection = $null; $command = $null; $reader = $null; $writer = $null
     $rows = 0
     try {
         $connection = Open-BauConnection -Source $Source
         $command = $connection.CreateCommand()
         $command.CommandText = $sql
+        $command.CommandTimeout = 600
         $reader = $command.ExecuteReader()
 
-        if ($Columns) {
-            $ordinals = foreach ($column in $Columns) {
-                try { $reader.GetOrdinal($column) }
-                catch { throw "The transform for $Description does not return column '$column'." }
-            }
-            $header = $Columns
-        }
-        else {
-            $ordinals = 0..($reader.FieldCount - 1)
-            $header = foreach ($ordinal in $ordinals) { $reader.GetName($ordinal) }
-        }
-
-        $writer = [System.IO.StreamWriter]::new($CsvPath, $false, [System.Text.UTF8Encoding]::new($false))
-        $writer.WriteLine(($header -join '|'))
-        while ($reader.Read()) {
-            $rows++
-            if ($RowCount -eq 'ExactlyOne' -and $rows -gt 1) {
-                throw "Expected exactly one row for $Description, but more than one was returned."
-            }
-            $values = foreach ($ordinal in $ordinals) { ConvertTo-FixtureValue -Value $reader.GetValue($ordinal) }
-            $writer.WriteLine(($values -join '|'))
-        }
+        $rows = Write-BauReaderToCsv -Reader $reader -CsvPath $CsvPath -Columns $Columns -RowCount $RowCount -Description $Description
     }
     catch {
         throw "BAU extract failed for ${Description}: $($_.Exception.Message)"
@@ -125,6 +136,7 @@ function Export-BauQueryToCsv {
     if ($rows -eq 0 -and $RowCount -ne 'Any') {
         throw "No rows were returned from the local BAU copy for $Description."
     }
+    Write-Host "    Extracted $rows rows for $Description ($([int]$elapsed.Elapsed.TotalSeconds)s)."
     return $rows
 }
 
@@ -141,7 +153,8 @@ function Invoke-FixtureLoad {
         [Parameter(Mandatory)][string]$WorkingDirectory,
         [Parameter(Mandatory)][string]$Description,
         [guid]$MigrationRunId = [guid]::Empty,
-        [hashtable]$TemplateValues
+        [hashtable]$TemplateValues,
+        [switch]$Quiet
     )
 
     Assert-FileExists -Path $LoadSqlFile
@@ -157,5 +170,5 @@ function Invoke-FixtureLoad {
     }
     $workingCopy = Join-Path $WorkingDirectory ('load-' + [System.IO.Path]::GetFileNameWithoutExtension($CsvPath) + '.sql')
     [System.IO.File]::WriteAllText($workingCopy, $loadSql, [System.Text.UTF8Encoding]::new($false))
-    Invoke-Psql -Target $Target -File $workingCopy -FailureMessage "PostgreSQL load failed for $Description"
+    Invoke-Psql -Target $Target -File $workingCopy -Quiet:$Quiet -FailureMessage "PostgreSQL load failed for $Description"
 }

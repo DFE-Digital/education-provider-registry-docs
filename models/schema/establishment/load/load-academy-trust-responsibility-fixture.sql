@@ -36,6 +36,7 @@ CREATE TEMP TABLE establishment_party_role_fixture (
 ) ON COMMIT DROP;
 
 \copy establishment_party_role_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+ANALYZE establishment_party_role_fixture;
 
 -- Resolve once per source row; subsequent writes use the resolved UUID,
 -- never a name join. A source UID identifies an already-mapped party.
@@ -634,6 +635,8 @@ BEGIN
 END
 $$;
 
+-- One-row context statistics prevent broad joins against accumulated evidence.
+ANALYZE migration_context;
 INSERT INTO migration.source_record (
     source_snapshot_id, source_table, source_key, source_group_id, source_urn
 )

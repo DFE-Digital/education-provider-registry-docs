@@ -61,7 +61,8 @@ function Import-GeographicReferenceData {
     param(
         [Parameter(Mandatory)]$Source,
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][string]$WorkingDirectory
+        [Parameter(Mandatory)][string]$WorkingDirectory,
+        [switch]$EstablishmentsOnly
     )
 
     foreach ($dataset in $script:GeographicDatasets) {
@@ -74,119 +75,25 @@ function Import-GeographicReferenceData {
             -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "geographic dataset $($dataset.Name)"
         Write-Host "    $rows rows loaded."
     }
-    Import-LocalAuthorityCouncilFixture -Target $Target
-}
-
-function Import-EstablishmentFromBau {
-    <#
-    .SYNOPSIS
-    Loads one establishment, with its geography, contact, lifecycle, main site,
-    measures and provision, from the local BAU copy.
-    #>
-    param(
-        [Parameter(Mandatory)]$Source,
-        [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(1, 999999)][int]$Urn,
-        [Parameter(Mandatory)][string]$WorkingDirectory
-    )
-
-    Write-Step "Loading establishment URN $Urn"
-    $csvPath = Join-Path $WorkingDirectory "establishment-$Urn.csv"
-    Export-BauQueryToCsv -Source $Source `
-        -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-from-bau.sql') `
-        -Variables @{ URN = $Urn } -CsvPath $csvPath -Columns $script:EstablishmentFixtureColumns `
-        -RowCount 'ExactlyOne' -Description "establishment URN $Urn" | Out-Null
-    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-establishment-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "establishment URN $Urn"
-    Import-EstablishmentSenFromBau -Source $Source -Target $Target -Urn $Urn -WorkingDirectory $WorkingDirectory
-}
-
-function Import-EstablishmentPartyRoleFromBau {
-    <#
-    .SYNOPSIS
-    Loads one BAU group link for an establishment as a legal entity, its
-    establishment-party role and classification, its group identifiers and the
-    establishment responsibility.
-    .PARAMETER IncludeArchived
-    Also accept an archived link, for historical links such as a former SAT.
-    #>
-    param(
-        [Parameter(Mandatory)]$Source,
-        [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(1, 999999)][int]$Urn,
-        [Parameter(Mandatory)][ValidateRange(1, 999999999)][int]$SourceGroupId,
-        [switch]$IncludeArchived,
-        [Parameter(Mandatory)][string]$WorkingDirectory,
-        [guid]$MigrationRunId = [guid]::Empty
-    )
-
-    Write-Step "Loading establishment-party link: URN $Urn, source group $SourceGroupId"
-    $description = "URN $Urn and source group $SourceGroupId"
-    $includeArchivedFlag = 0
-    if ($IncludeArchived) { $includeArchivedFlag = 1 }
-    $csvPath = Join-Path $WorkingDirectory "establishment-party-$Urn-$SourceGroupId.csv"
-    Export-BauQueryToCsv -Source $Source `
-        -SqlFile (Get-SchemaPath 'establishment/transforms/academy-trust-responsibility-from-bau.sql') `
-        -Variables @{ URN = $Urn; GROUP_ID = $SourceGroupId; INCLUDE_ARCHIVED = $includeArchivedFlag } `
-        -CsvPath $csvPath -RowCount 'ExactlyOne' -Description $description | Out-Null
-    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-academy-trust-responsibility-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description $description -MigrationRunId $MigrationRunId
+    if (-not $EstablishmentsOnly) { Import-LocalAuthorityCouncilFixture -Target $Target }
 }
 
 function Import-OrganisationGroupFromBau {
-    <#
-    .SYNOPSIS
-    Loads a current federation or children's-centre group, including recorded
-    authority and lead designation. By default requires complete membership;
-    -SelectedMembersOnly restricts extraction to ExpectedMemberUrns.
-    #>
+    # Uses the ordinary group-membership fixture loader, but is called only for
+    # successfully seeded establishment URNs by the development relationship path.
     param(
-        [Parameter(Mandatory)]$Source,
-        [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(1, 999999999)][int]$SourceGroupId,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateRange(1, 999999)][int[]]$ExpectedMemberUrns,
-        [switch]$SelectedMembersOnly,
-        [Parameter(Mandatory)][string]$WorkingDirectory,
-        [guid]$MigrationRunId = [guid]::Empty
+        [Parameter(Mandatory)]$Source,[Parameter(Mandatory)]$Target,
+        [Parameter(Mandatory)][ValidateRange(1,999999999)][int]$SourceGroupId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateRange(1,999999)][int[]]$ExpectedMemberUrns,
+        [switch]$SelectedMembersOnly,[Parameter(Mandatory)][string]$WorkingDirectory,
+        [guid]$MigrationRunId=[guid]::Empty
     )
-    Write-Step "Loading organisation group $SourceGroupId"
-    $csvPath = Join-Path $WorkingDirectory "organisation-group-$SourceGroupId.csv"
+    $csvPath=Join-Path $WorkingDirectory "development-organisation-group-$SourceGroupId.csv"
     Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/organisation-group-membership-from-bau.sql') `
-        -Variables @{
-            GROUP_ID = $SourceGroupId
-            SELECTED_MEMBERS_ONLY = [int][bool]$SelectedMembersOnly
-            MEMBER_URN_VALUES = (($ExpectedMemberUrns | ForEach-Object { '(' + [string][int]$_ + ')' }) -join ',')
-        } -CsvPath $csvPath -RowCount AtLeastOne -Description "organisation group $SourceGroupId" | Out-Null
-    $memberUrns = @(Import-Csv -LiteralPath $csvPath -Delimiter '|' | ForEach-Object { [int]$_.establishment_urn })
-    if ($memberUrns.Count -ne $ExpectedMemberUrns.Count -or
-        (Compare-Object ($ExpectedMemberUrns | Sort-Object) ($memberUrns | Sort-Object))) {
-        throw "Organisation group $SourceGroupId members differ from the approved selection."
-    }
+        -Variables @{ GROUP_ID=$SourceGroupId; SELECTED_MEMBERS_ONLY=[int][bool]$SelectedMembersOnly
+            MEMBER_URN_VALUES=(($ExpectedMemberUrns | ForEach-Object {'('+[string][int]$_+')'}) -join ',') } `
+        -CsvPath $csvPath -RowCount AtLeastOne -Description "development organisation group $SourceGroupId" | Out-Null
     Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-organisation-group-membership-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "organisation group $SourceGroupId" -MigrationRunId $MigrationRunId `
-        -TemplateValues @{ MEMBERSHIP_SCOPE = $(if ($SelectedMembersOnly) { 'selected-urns' } else { 'complete' }) }
-}
-
-function Import-GovernanceFromBau {
-    <#
-    .SYNOPSIS
-    Loads the current governance appointments and terms for one establishment
-    into governance_local.
-    #>
-    param(
-        [Parameter(Mandatory)]$Source,
-        [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(1, 999999)][int]$Urn,
-        [Parameter(Mandatory)][string]$WorkingDirectory
-    )
-
-    Write-Step "Loading governance appointments for URN $Urn"
-    $csvPath = Join-Path $WorkingDirectory "governance-$Urn.csv"
-    $rows = Export-BauQueryToCsv -Source $Source `
-        -SqlFile (Get-SchemaPath 'governance/transforms/governance-appointment-from-bau.sql') `
-        -Variables @{ URN = $Urn } -CsvPath $csvPath -RowCount 'Any' -Description "governance for URN $Urn"
-    if ($rows -eq 0) { Write-Host "    No current governance appointments for URN $Urn; loading an empty fixture." }
-    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'governance/load/load-governance-appointment-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "governance for URN $Urn"
-    Write-Host "    $rows appointments loaded."
+        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "development organisation group $SourceGroupId" -MigrationRunId $MigrationRunId `
+        -TemplateValues @{ MEMBERSHIP_SCOPE='selected-urns' }
 }

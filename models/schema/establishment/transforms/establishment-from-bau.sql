@@ -103,7 +103,7 @@ WITH source_establishment AS (
     LEFT JOIN dbo.NurseryProvision np ON np.code=e.nurseryProvision_code
     LEFT JOIN dbo.OfficialSixthForm sf ON sf.code=e.officialSixthForm_code
     LEFT JOIN dbo.TypeOfReservedProvision sp ON sp.code=e.typeOfReservedProvision_code
-    WHERE e.URN = @URN
+    WHERE e.status_code IN ('1','2','3') AND (@URN IS NULL OR e.URN = @URN)
 )
 SELECT
     s.URN AS urn,
@@ -232,5 +232,6 @@ SELECT
     a.easting,
     a.northing
 FROM dbo.EstablishmentAdditionalAddresses AS a
-WHERE a.URN = @URN
+WHERE (@URN IS NULL OR a.URN = @URN)
+  AND EXISTS (SELECT 1 FROM dbo.Establishment e WHERE e.URN=a.URN AND e.status_code IN ('1','2','3'))
 ORDER BY a.record_number;

@@ -1,188 +1,62 @@
 <#
 .SYNOPSIS
-Rebuilds establishment_local from a local BAU SQL Server copy. By default it
-tests the repository selection and refreshes the checked-in SQL fixtures.
-
+Seeds the disposable local target with BAU establishments for development.
 .DESCRIPTION
-Steps:
-  1. Discover groups for a URN-only selection, before changing the target.
-     Recreate the establishment and migration schemas and load reference seeds.
-  2. Load geographic reference data from BAU.
-  3. Load each selected establishment, then each selected establishment-party link.
-  4. Print a summary and run all establishment tests, unless -SkipTests is used.
-  5. For the default tested selection, export and refresh the checked-in
-     fixtures in seed/. Use -ExportDirectory for a separate export; custom
-     selections and skipped-test runs otherwise leave seed/ unchanged.
-  6. With -IncludeGovernance, also rebuild governance_local and load governance.
-
-The default build loads the three-URN sanity set in seed/fixture-selection.json,
-validates its approval snapshots, and exports that bounded fixture.
-Use -SelectionFile for
-your own curated URNs and links, and -SkipTests when the checked-in tests do not
-apply to your data. Custom selections and skipped-test runs never automatically
-refresh seed/; use -ExportDirectory for a separate export if needed. SQL load
-checks and database constraints still apply when tests are skipped.
-
-Use -Urn for a comma-separated list, or a URN-only selection file, to discover
-current groups automatically. Organisation memberships are restricted to the
-supplied URNs. -IncludeArchivedLinks additionally discovers archived party links.
-
-.EXAMPLE
-.\rebuild-establishment-from-local-bau.ps1 -SqlServer localhost -UseWindowsAuthentication
-
-.EXAMPLE
-.\rebuild-establishment-from-local-bau.ps1 -SqlServer localhost -SelectionFile .\my-fixture-selection.json -SkipTests
-
-.EXAMPLE
-.\rebuild-establishment-from-local-bau.ps1 -SqlServer localhost -Urn '109443,20338' -SkipTests
+Imports Open, Closed and Open-but-proposed-to-close establishments and their
+core geography, contact, lifecycle, site, measure and provision rows, followed
+by lossy current party, maintenance and SEN relationships.
+Failed batches are rolled back and split. Failed individual establishments
+are skipped and recorded in migration.establishment_load_error.
+It does not migrate governance. Relationship rows that do not fit the model are
+logged and skipped; this is a development seed, not an identity migration.
 #>
 [CmdletBinding()]
 param(
-    [string]$SqlServer = 'localhost',
-    [string]$SourceDatabase = 'gias_bau_test_local',
-    [string]$SqlUser = 'reader',
+    [string]$SqlServer='localhost',
+    [string]$SourceDatabase='gias_bau_test_local',
+    [string]$SqlUser='reader',
     [switch]$UseWindowsAuthentication,
     [string]$SelectionFile,
     [ValidateNotNullOrEmpty()][Alias('Urns')][string[]]$Urn,
-    [switch]$IncludeArchivedLinks,
-    [switch]$SkipTests,
-    [string]$PostgresHost = '127.0.0.1',
-    [int]$PostgresPort = 5432,
-    [string]$PostgresDatabase = 'establishment_local',
-    [string]$PostgresUser = 'postgres',
-    [string]$PostgresPassword = $env:PGPASSWORD,
-    # Parent folder for this run's working files.
-    [string]$FixtureDirectory = [System.IO.Path]::GetTempPath(),
-    # Export here for review. Only the default tested selection automatically
-    # exports to the run's working folder and refreshes seed/.
+    [string]$PostgresHost='127.0.0.1',
+    [int]$PostgresPort=5432,
+    [string]$PostgresDatabase='establishment_local',
+    [string]$PostgresUser='postgres',
+    [string]$PostgresPassword=$env:PGPASSWORD,
+    [ValidateRange(1,10000)][int]$BatchSize=1000,
+    [string]$FixtureDirectory=[IO.Path]::GetTempPath(),
     [string]$ExportDirectory,
-    [switch]$IncludeGovernance,
     [switch]$KeepFixture
 )
-
-$ErrorActionPreference = 'Stop'
-Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLocalAutomation.psm1') -Force
-
-if ($PSBoundParameters.ContainsKey('Urn') -and $SelectionFile) {
-    throw 'Supply either -Urn or -SelectionFile, not both.'
-}
+$ErrorActionPreference='Stop'
+Import-Module (Join-Path $PSScriptRoot 'EprLocalAutomation/EprLocalAutomation.psm1') -Force
+if ($PSBoundParameters.ContainsKey('Urn') -and $SelectionFile) { throw 'Supply either -Urn or -SelectionFile, not both.' }
+$requestedUrns=@()
 if ($PSBoundParameters.ContainsKey('Urn')) {
-    $requestedUrns = @($Urn | ForEach-Object {
-        foreach ($urnPart in ($_ -split ',')) {
-            if ($urnPart.Trim() -notmatch '^[0-9]+$') { throw 'Supply URNs as integers or a comma-separated list of integers.' }
-            [int]$urnPart.Trim()
+    $requestedUrns=@($Urn | ForEach-Object {
+        foreach ($part in ($_ -split ',')) {
+            if ($part.Trim() -notmatch '^[0-9]+$') { throw 'Supply URNs as integers or a comma-separated list of integers.' }
+            [int]$part.Trim()
         }
     })
-    $selection = Get-FixtureSelection -Urn $requestedUrns
+    $requestedUrns=(Get-FixtureSelection -Urn $requestedUrns).Urns
+} elseif ($SelectionFile) {
+    $manifest=Get-Content -LiteralPath $SelectionFile -Raw | ConvertFrom-Json
+    $requestedUrns=(Get-FixtureSelection -Urn @($manifest.urns)).Urns
 }
-elseif ($SelectionFile) {
-    $selection = Get-FixtureSelection -Path $SelectionFile
-}
-else {
-    $selection = Get-FixtureSelection
-}
-$defaultSelectionPath = [System.IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $PSScriptRoot) 'seed/fixture-selection.json'))
-$isCustomSelection = -not $selection.Path -or $selection.DiscoverGroups -or [System.IO.Path]::GetFullPath($selection.Path) -ne $defaultSelectionPath
-if ($IncludeArchivedLinks -and -not $selection.DiscoverGroups) {
-    throw '-IncludeArchivedLinks applies to URN-only discovery, not an explicit group-selection manifest.'
-}
-if ($SkipTests) {
-    Write-Warning 'Establishment tests will be skipped. This run will not be approval-validated.'
-}
-$source = New-BauSource -SqlServer $SqlServer -Database $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication
-$target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
-$workspace = New-RunWorkspace -ParentDirectory $FixtureDirectory
-$migrationRunId = $null
-
-function Invoke-PsqlForRebuild {
-    param($Target, [string]$Command)
-    & (Get-Module EprLocalAutomation) {
-        param($runTarget, $runCommand)
-        Invoke-Psql -Target $runTarget -Command $runCommand -Output Scalar -FailureMessage 'Migration run update failed'
-    } $Target $Command
-}
-
+$source=New-BauSource -SqlServer $SqlServer -Database $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication
+$target=New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
+$workspace=New-RunWorkspace -ParentDirectory $FixtureDirectory
 try {
-    if ($selection.DiscoverGroups) {
-        $selection = Find-EstablishmentGroupsFromBau -Source $source -Selection $selection `
-            -WorkingDirectory $workspace -IncludeArchivedLinks:$IncludeArchivedLinks
-    }
-    # Extract required dictionaries before resetting a usable target. The BAU
-    # path does not read exported reference/establishment fixture seeds.
     $referenceCsv=Export-BauReferenceData -Source $source -WorkingDirectory $workspace
     Initialize-EstablishmentDatabase -Target $target -FromBau
     Import-BauReferenceData -Target $target -CsvPath $referenceCsv -SourceDatabase $source.Database -WorkingDirectory $workspace
-    Import-SenReferenceData -Source $source -Target $target -WorkingDirectory $workspace
-    Test-CodeListsAgainstBau -Source $source -Target $target
-    $sourceDatabaseSql = $source.Database.Replace("'", "''")
-    $runNotes = @()
-    if ($SkipTests) { $runNotes += 'Establishment tests skipped with -SkipTests; this run is not approval-validated.' }
-    if (@($selection.OrganisationGroups | Where-Object { $_.SelectedMembersOnly }).Count -gt 0) {
-        $runNotes += 'Discovered organisation-group memberships cover supplied URNs only, not complete source groups.'
-    }
-    $testNotesSql = 'NULL'
-    if ($runNotes.Count -gt 0) { $testNotesSql = "'" + ($runNotes -join ' ').Replace("'", "''") + "'" }
-    $migrationRunId = [guid](Invoke-PsqlForRebuild -Target $target -Command "INSERT INTO migration.migration_run (run_type, source_system, source_database, source_snapshot_date, status, transform_version, notes) VALUES ('establishment-rebuild', 'GIAS BAU', '$sourceDatabaseSql', CURRENT_DATE, 'running', 'establishment-party-responsibility-v2', $testNotesSql) RETURNING migration_run_id;")
     Import-GeographicReferenceData -Source $source -Target $target -WorkingDirectory $workspace
-
-    foreach ($selectedUrn in $selection.Urns) {
-        Import-EstablishmentFromBau -Source $source -Target $target -Urn $selectedUrn -WorkingDirectory $workspace
-    }
-    foreach ($link in $selection.PartyRoleLinks) {
-        Import-EstablishmentPartyRoleFromBau -Source $source -Target $target -Urn $link.Urn `
-            -SourceGroupId $link.SourceGroupId -IncludeArchived:$link.IncludeArchived -WorkingDirectory $workspace -MigrationRunId $migrationRunId
-    }
-
-    foreach ($group in $selection.OrganisationGroups) {
-        Import-OrganisationGroupFromBau -Source $source -Target $target -SourceGroupId $group.SourceGroupId `
-            -ExpectedMemberUrns $group.MemberUrns -SelectedMembersOnly:([bool]$group.SelectedMembersOnly) `
-            -WorkingDirectory $workspace -MigrationRunId $migrationRunId
-    }
-
-    if ($isCustomSelection) { Import-MaintenanceFromBau -Source $source -Target $target -WorkingDirectory $workspace }
-    Show-EstablishmentSummary -Target $target -Urn $selection.Urns
-    if (-not $SkipTests) {
-        Invoke-EstablishmentTests -Target $target -Selection $selection
-    }
-    $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'completed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"
-
-    if ($ExportDirectory) {
-        Export-EstablishmentFixture -Target $target -OutputDirectory $ExportDirectory
-    }
-    elseif ($SkipTests -or $isCustomSelection) {
-        Write-Host 'Checked-in seed files left unchanged. Use -ExportDirectory for a separate export.'
-    }
-    else {
-        $exportDirectory = Join-Path $workspace 'export'
-        Export-EstablishmentFixture -Target $target -OutputDirectory $exportDirectory
-        Update-CheckedInSeed -FromDirectory $exportDirectory
-    }
-
-    if ($IncludeGovernance) {
-        $governanceTarget = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database 'governance_local' -User $PostgresUser -Password $PostgresPassword
-        Initialize-GovernanceDatabase -Target $governanceTarget
-        foreach ($selectedUrn in $selection.Urns) {
-            Import-GovernanceFromBau -Source $source -Target $governanceTarget -Urn $selectedUrn -WorkingDirectory $workspace
-        }
-        Show-GovernanceSummary -Target $governanceTarget -Urn $selection.Urns
-    }
-
-    if ($isCustomSelection) {
-        Write-Host "BAU-source rebuild completed for URNs: $($selection.Urns -join ', ')." -ForegroundColor Green
-    }
-    else {
-        Write-Host 'BAU-source rebuild completed: three sanity approvals passed.' -ForegroundColor Green
-    }
-    if ($SkipTests) { Write-Warning 'Data loaded, but establishment tests were not run.' }
-}
-catch {
-    if ($migrationRunId) {
-        try {
-            $null = Invoke-PsqlForRebuild -Target $target -Command "UPDATE migration.migration_run SET status = 'failed', completed_at = now() WHERE migration_run_id = '$migrationRunId';"
-        } catch { Write-Warning 'Could not record the failed migration run.' }
-    }
-    throw
-}
-finally {
+    $result=Import-DevelopmentEstablishmentSeed -Source $source -Target $target -WorkingDirectory $workspace -Urn $requestedUrns -BatchSize $BatchSize
+    Import-DevelopmentRelationships -Source $source -Target $target -WorkingDirectory $workspace -MigrationRunId $result.run_id
+    Write-Host "Development seed completed: $($result.loaded) loaded, $($result.skipped) skipped, $($result.attempted) attempted."
+    Write-Host 'Skipped establishments: SELECT urn, sqlstate, error_message FROM migration.establishment_load_error ORDER BY urn;'
+    if ($ExportDirectory) { Export-EstablishmentFixture -Target $target -OutputDirectory $ExportDirectory }
+} finally {
     Remove-RunWorkspace -Path $workspace -Keep:$KeepFixture
 }

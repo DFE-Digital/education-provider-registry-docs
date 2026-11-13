@@ -1,6 +1,6 @@
 # Reviewed council reorganisations
 
-Stage 5 applies an accepted event atomically, retaining council and maintenance history. The [event SQL](council-reorganisation.sql) owns the ledger and transition. The PowerShell entry point is `automation/apply-reviewed-council-reorganisation.ps1 -DecisionFile <reviewed-json-path>`, run against the guarded local target.
+Stage 5 applies an accepted event atomically, retaining council and maintenance history. The [event SQL](council-reorganisation.sql) owns the ledger and transition. Both rebuild paths load this SQL as part of the migration schema; applying a reviewed event is a separate SQL operation through `migration.apply_council_reorganisation(jsonb)`.
 
 | Payload field | Requirement |
 | --- | --- |

@@ -1,11 +1,12 @@
 -- Current federations and children's-centre groups; no responsibility projection.
 DECLARE @GROUP_ID numeric(19, 0) = $(GROUP_ID);
 DECLARE @SELECTED_MEMBERS_ONLY bit = $(SELECTED_MEMBERS_ONLY);
+DECLARE @BULK_LOAD bit = $(BULK_LOAD);
 DECLARE @MEMBER_SCOPE table (urn numeric(19, 0) PRIMARY KEY);
-INSERT INTO @MEMBER_SCOPE (urn) VALUES $(MEMBER_URN_VALUES);
+INSERT INTO @MEMBER_SCOPE (urn) SELECT urn FROM (VALUES $(MEMBER_URN_VALUES)) AS selected(urn);
 IF NOT EXISTS (SELECT 1 FROM dbo.EstablishmentGroup WHERE id = @GROUP_ID AND type_code IN ('01','08') AND closedDate IS NULL)
     THROW 50001, 'Selected group must be an open federation or childrens-centre group.', 1;
-IF EXISTS (SELECT 1 FROM dbo.EstablishmentGroup WHERE id=@GROUP_ID AND type_code='01')
+IF @BULK_LOAD=0 AND EXISTS (SELECT 1 FROM dbo.EstablishmentGroup WHERE id=@GROUP_ID AND type_code='01')
    AND (SELECT count(DISTINCT urn) FROM dbo.GroupLink WHERE group_id=@GROUP_ID AND (archived=0 OR archived IS NULL)) < 2
     THROW 50001, 'Source federation requires at least two current members.', 1;
 IF EXISTS (
@@ -14,7 +15,7 @@ IF EXISTS (
     LEFT JOIN dbo.Establishment e ON e.URN = gl.urn
     WHERE gl.group_id = @GROUP_ID AND (gl.archived = 0 OR gl.archived IS NULL)
       AND (@SELECTED_MEMBERS_ONLY=0 OR gl.urn IN (SELECT urn FROM @MEMBER_SCOPE))
-      AND (e.URN IS NULL OR e.status_code IS NULL OR e.status_code <> '1'
+      AND (e.URN IS NULL OR e.status_code IS NULL OR e.status_code NOT IN ('1','3')
         OR (eg.type_code='08' AND (e.type_code IS NULL OR e.type_code<>'47'))
         OR (eg.type_code='01' AND e.type_code NOT IN (
           SELECT code FROM dbo.EstablishmentType WHERE name IN (
@@ -36,6 +37,7 @@ IF (SELECT count(*) FROM dbo.GroupLink WHERE group_id=@GROUP_ID AND ccLinkType='
     AND (archived=0 OR archived IS NULL)) > 1
     THROW 50001, 'Childrens-centre group has multiple lead members.', 1;
 
+-- Bulk group projection starts here.
 SELECT CONVERT(varchar(20), eg.id) AS group_uid,
        NULLIF(LTRIM(RTRIM(eg.groupId)), '') AS group_id,
        LTRIM(RTRIM(eg.name)) AS group_name,
