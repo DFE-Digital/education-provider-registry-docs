@@ -2,7 +2,7 @@
 
 ## Status
 
-Open
+Open — decision pending.
 
 ## Date
 
