@@ -8,8 +8,8 @@ The BAU rebuild reads source-owned reference values from local MSSQL. It does no
 2. Create the target schema and load target-owned route, role, legal-form and identifier definitions.
 3. Import the complete eligible dictionaries. Reconcile source and target code/name sets in both directions.
 4. Load geographic reference data and actual local-authority contacts from MSSQL.
-5. Resolve establishment relationships against the imported dictionaries by source business code.
-6. Validate, then export the target for offline fixture replay.
+5. Resolve core establishment reference keys by source business code. A source establishment that fails to load is skipped and logged by the development seed runner.
+6. Export only when an explicit `-ExportDirectory` is supplied. The development seed does not run fixture approvals or regenerate checked-in seeds automatically.
 
 The [source transform](../establishment/transforms/reference-data-from-bau.sql) reads every dictionary row. The [loader](../establishment/load/load-reference-data-fixture.sql) records all extracted rows, inclusion flags, source tables and counts in migration run/snapshot/record evidence. Target rows are not restricted to values used by the selected establishments.
 
@@ -25,7 +25,7 @@ The [source transform](../establishment/transforms/reference-data-from-bau.sql) 
 - Import all eligible source rows, including values unused by the current establishment selection. Delete stale unreferenced target values; foreign keys prevent silently deleting referenced values.
 - Fail on a source establishment code absent from its dictionary. A recorded exclusion becomes no relationship; an included value missing from the target is an error.
 
-The local-authority contact import copies the source contact facts. It generates no synthetic FAKE contacts. Reviewed council identities and area periods remain a separately maintained target mapping; they are not claimed to be copied from BAU council tables.
+The local-authority contact import copies the source contact facts. It generates no synthetic FAKE contacts. The development seed does not import council identities or other legal entities. Reviewed council mappings remain part of the separate fixture workflow.
 
 ## Expanded dictionaries: 12 November 2026
 

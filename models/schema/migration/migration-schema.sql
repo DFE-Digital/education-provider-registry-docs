@@ -18,6 +18,31 @@ CREATE TABLE migration.migration_run (
     notes text
 );
 
+CREATE TABLE migration.establishment_load_error (
+    establishment_load_error_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    migration_run_id uuid NOT NULL REFERENCES migration.migration_run(migration_run_id),
+    urn integer NOT NULL,
+    sqlstate character(5) NOT NULL,
+    error_message text NOT NULL,
+    error_detail text,
+    source_row jsonb NOT NULL,
+    recorded_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    UNIQUE (migration_run_id,urn)
+);
+
+CREATE TABLE migration.relationship_load_error (
+    relationship_load_error_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    migration_run_id uuid NOT NULL REFERENCES migration.migration_run(migration_run_id),
+    urn integer NOT NULL,
+    relationship_kind text NOT NULL,
+    error_message text NOT NULL,
+    source_row jsonb,
+    recorded_at timestamptz NOT NULL DEFAULT clock_timestamp()
+);
+
+CREATE INDEX relationship_load_error_run_urn_idx
+    ON migration.relationship_load_error (migration_run_id, urn);
+
 CREATE TABLE migration.source_snapshot (
     source_snapshot_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     migration_run_id uuid NOT NULL REFERENCES migration.migration_run (migration_run_id),

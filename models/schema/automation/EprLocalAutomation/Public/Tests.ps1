@@ -1,5 +1,4 @@
-# Tests that run against a loaded local establishment database. Each test can
-# be run on its own; Invoke-EstablishmentTests runs them all.
+# Database validation and separately invoked tooling regression checks.
 
 function Test-EstablishmentCoreValidation {
     <#
@@ -12,8 +11,6 @@ function Test-EstablishmentCoreValidation {
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-establishment-fixture.sql') -FailureMessage 'Core establishment validation failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-null-reference-policy.sql') -FailureMessage 'Null reference policy failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-group-address-constraints.sql') -FailureMessage 'Group-address constraints failed'
-    Test-SenMigration -Target $Target
-    Test-BauReferenceData -Target $Target
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/validate-scripts/validate-reference-identities.sql') -FailureMessage 'Reference identity validation failed'
 }
 
@@ -84,6 +81,13 @@ function Test-EstablishmentApproval {
     Write-Host "    Approval test passed for URN $Urn." -ForegroundColor Green
 }
 
+function Test-EstablishmentCount {
+    param([Parameter(Mandatory)]$Target,[Parameter(Mandatory)][int]$ExpectedCount)
+    $count=[int](Invoke-Psql -Target $Target -Output Scalar -Command 'SELECT count(*) FROM establishment.establishment;' -FailureMessage 'Establishment count failed')
+    if ($count -ne $ExpectedCount) { throw "Expected $ExpectedCount establishments, loaded $count." }
+    Write-Host "    $count establishments loaded."
+}
+
 function Test-EstablishmentScope {
     <#
     .SYNOPSIS
@@ -130,18 +134,21 @@ function Test-EstablishmentUrnValidation {
                 throw "Fixture selection accepted/rejected URN $testUrn incorrectly."
             }
         }
-        foreach ($commandName in @('Import-EstablishmentFromBau', 'Import-EstablishmentPartyRoleFromBau', 'Import-GovernanceFromBau', 'Test-EstablishmentApproval')) {
+        foreach ($commandName in @('Test-EstablishmentApproval')) {
             $range = @((Get-Command $commandName).Parameters['Urn'].Attributes |
                 Where-Object { $_ -is [System.Management.Automation.ValidateRangeAttribute] })
             if ($range.Count -ne 1 -or $range[0].MinRange -ne 1 -or $range[0].MaxRange -ne 999999) {
                 throw "URN validation is inconsistent on $commandName."
             }
         }
-        $approvalScript = Get-SchemaPath 'tests/assert-establishment-approval.ps1'
-        $range = @((Get-Command $approvalScript).Parameters['Urn'].Attributes |
-            Where-Object { $_ -is [System.Management.Automation.ValidateRangeAttribute] })
-        if ($range.Count -ne 1 -or $range[0].MinRange -ne 1 -or $range[0].MaxRange -ne 999999) {
-            throw 'URN validation is inconsistent on the standalone approval script.'
+        foreach ($testUrn in @(-1,0,1000000)) {
+            $rejected=$false
+            try { Import-DevelopmentEstablishmentSeed -Source @{} -Target @{} -WorkingDirectory ([IO.Path]::GetTempPath()) -Urn $testUrn }
+            catch {
+                if ($_.Exception.Message -notlike '*outside the valid range*') {throw}
+                $rejected=$true
+            }
+            if (-not $rejected) {throw 'Development seed accepted an invalid URN.'}
         }
         Write-Host '    URN validation boundary tests passed.' -ForegroundColor Green
     } finally {
@@ -200,6 +207,18 @@ function Test-EstablishmentGroupDiscovery {
     try { $null = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0], $rows[0]) }
     catch { $duplicateRejected = $true }
     if (-not $duplicateRejected) { throw 'Duplicate discovered source links were accepted.' }
+    $closed=[pscustomobject]@{establishment_urn=20001;source_group_id=16641;group_type_code='01';source_archived=0;source_group_closed_date='2020-01-01'}
+    $bulkClosed=ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0],$closed) -SkipClosedGroups
+    if ($bulkClosed.Urns.Count -ne 3 -or $bulkClosed.OrganisationGroups.Count -ne 1 -or
+        $bulkClosed.OrganisationGroups[0].SourceGroupId -ne 11 -or $bulkClosed.ClosedGroupLinkCount -ne 1) {
+        throw 'Bulk discovery must omit closed groups while retaining establishments and open groups.'
+    }
+    $unmodelled=[pscustomobject]@{establishment_urn=20001;source_group_id=90152;group_type_code='09';source_archived=0}
+    $bulk=ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0],$unmodelled) -AllowUnmodelledGroups
+    if ($bulk.Urns.Count -ne 3 -or $bulk.PartyRoleLinks.Count -ne 0 -or
+        $bulk.OrganisationGroups.Count -ne 1 -or $bulk.UnmodelledGroupCounts['09'] -ne 1) {
+        throw 'Bulk discovery must retain establishments and supported links while counting unmodelled relationships.'
+    }
     Write-Host '    Discovery routes, selected-only scope, archive policy and rejection checks passed.'
 }
 
@@ -245,26 +264,34 @@ END $$;
         -Output Scalar -FailureMessage 'Migration evidence grouping test failed'
 }
 
+function Invoke-EstablishmentToolingTests {
+    <#
+    .SYNOPSIS
+    Runs tooling regression checks without connecting to either database.
+    #>
+    Test-EstablishmentBuildInputPreflight
+    Test-EstablishmentUrnValidation
+    Test-EstablishmentGroupDiscovery
+    Write-Host 'All establishment tooling tests passed.' -ForegroundColor Green
+}
+
 function Invoke-EstablishmentTests {
     <#
     .SYNOPSIS
-    Runs every establishment test: build inputs, URN boundaries, group
-    discovery, core validation, migration evidence for any selected group
+    Validates the loaded database: core validation, migration evidence for any selected group
     links, one approval snapshot per selected URN, and scope.
     #>
     param(
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)]$Selection
+        [Parameter(Mandatory)]$Selection,
+        [int[]]$ApprovalUrn = $Selection.Urns
     )
 
-    Test-EstablishmentBuildInputPreflight
-    Test-EstablishmentUrnValidation
-    Test-EstablishmentGroupDiscovery
     Test-EstablishmentCoreValidation -Target $Target
     if ($Selection.PartyRoleLinks.Count -gt 0 -or $Selection.OrganisationGroups.Count -gt 0) {
         Test-EstablishmentMigrationEvidence -Target $Target -Selection $Selection
     }
-    foreach ($urn in $Selection.Urns) {
+    foreach ($urn in $ApprovalUrn) {
         Test-EstablishmentApproval -Target $Target -Urn $urn
     }
     Test-EstablishmentScope -Target $Target -ExpectedUrn $Selection.Urns

@@ -56,7 +56,8 @@ INNER JOIN dbo.StaffRole AS source_role
     ON source_role.code = sr.staffRole_code
 LEFT JOIN role_mapping AS mapping
     ON mapping.source_staff_role_code = sr.staffRole_code
-WHERE sr.establishment_URN = @URN
+WHERE (@URN IS NULL OR sr.establishment_URN = @URN)
+  AND EXISTS (SELECT 1 FROM dbo.Establishment e WHERE e.URN=sr.establishment_URN AND e.status_code IN ('1','2','3'))
   AND sr.status = 1
   AND ISNULL(sr.deleted, 0) = 0
   AND ISNULL(sr.forcedArchived, 0) = 0

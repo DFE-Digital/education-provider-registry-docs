@@ -29,6 +29,7 @@ $script:EstablishmentSeedTables = @(
     'legal_entity_address', 'organisation_group_address', 'local_authority_area_council_period'
 )
 $script:MigrationSeedTables = @(
+    'establishment_load_error',
     'migration_run', 'source_snapshot', 'source_record',
     'establishment_party_role_evidence', 'establishment_responsibility_evidence',
     'academy_trust_classification_evidence', 'organisation_group_member_evidence',

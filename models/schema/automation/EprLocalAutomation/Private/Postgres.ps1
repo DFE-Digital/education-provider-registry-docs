@@ -28,6 +28,7 @@ function Get-PsqlArgumentList {
         [string]$Command,
         [hashtable]$Variables,
         [switch]$SingleTransaction,
+        [switch]$Quiet,
         [ValidateSet('Console', 'Csv', 'Scalar')][string]$Output = 'Console'
     )
 
@@ -43,6 +44,7 @@ function Get-PsqlArgumentList {
     if ($Output -eq 'Csv') { $arguments += @('-q', '-P', 'format=csv') }
     if ($SingleTransaction) { $arguments += '--single-transaction' }
     if ($Output -eq 'Scalar') { $arguments += @('-A', '-t', '-q') }
+    if ($Quiet -and $Output -eq 'Console') { $arguments += '-q' }
     if ($Variables) {
         foreach ($name in ($Variables.Keys | Sort-Object)) {
             $arguments += @('-v', "$name=$($Variables[$name])")
@@ -82,6 +84,8 @@ function Invoke-Psql {
         [string]$Command,
         [hashtable]$Variables,
         [switch]$SingleTransaction,
+        [switch]$Quiet,
+        [scriptblock]$OnOutputLine,
         [ValidateSet('Console', 'Csv', 'Scalar')][string]$Output = 'Console',
         [Parameter(Mandatory)][string]$FailureMessage
     )
@@ -90,11 +94,19 @@ function Invoke-Psql {
     if ($File) { Assert-FileExists -Path $File }
 
     $psql = Get-PostgresClientPath -Tool 'psql'
-    $arguments = Get-PsqlArgumentList -Target $Target -File $File -Command $Command -Variables $Variables -Output $Output -SingleTransaction:$SingleTransaction
+    $arguments = Get-PsqlArgumentList -Target $Target -File $File -Command $Command -Variables $Variables -Output $Output -SingleTransaction:$SingleTransaction -Quiet:$Quiet
 
     $result = Invoke-WithPostgresPassword -Target $Target -ScriptBlock {
-        if ($Output -eq 'Console') {
-            & $psql @arguments | Out-Host
+        if ($OnOutputLine) {
+            $savedPreference=$ErrorActionPreference
+            try {
+                $ErrorActionPreference='Continue'
+                & $psql @arguments 2>&1 | ForEach-Object { & $OnOutputLine $_.ToString() }
+            } finally {$ErrorActionPreference=$savedPreference}
+        }
+        elseif ($Output -eq 'Console') {
+            if ($Quiet) { & $psql @arguments 2>$null | Out-Null }
+            else { & $psql @arguments | Out-Host }
         }
         else {
             (& $psql @arguments | Out-String)

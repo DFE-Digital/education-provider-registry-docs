@@ -28,9 +28,7 @@ Import-Module (Join-Path (Join-Path $PSScriptRoot 'EprLocalAutomation') 'EprLoca
 
 $target = New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
 $selection = Get-FixtureSelection
-Assert-EstablishmentBuildInputs -IncludeReferenceSeed -FixtureSeedFile $SeedFile
-
-Initialize-EstablishmentDatabase -Target $target
+Initialize-EstablishmentDatabase -Target $target -FixtureSeedFile $SeedFile
 Import-CheckedInEstablishmentFixture -Target $target -SeedFile $SeedFile
 Invoke-EstablishmentTests -Target $target -Selection $selection
 

@@ -6,5 +6,5 @@ SELECT CAST(e.URN AS integer) AS urn,CAST(e.LA_code AS integer) AS area_code,
        CAST(SYSUTCDATETIME() AS date) AS observed_date
 FROM dbo.Establishment e
 LEFT JOIN dbo.EstablishmentType t ON t.code=e.type_code
-WHERE e.URN IN ($(URNS))
+WHERE e.status_code IN ('1','2','3') AND ($(ALL_SOURCE)=1 OR e.URN IN ($(URNS)))
 ORDER BY e.URN;

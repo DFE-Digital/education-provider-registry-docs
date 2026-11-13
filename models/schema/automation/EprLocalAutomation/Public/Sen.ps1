@@ -23,49 +23,6 @@ function Import-EstablishmentSenFromBau {
         -TemplateValues @{ EXPECTED_URN = $Urn; SOURCE_DATABASE = $Source.Database }
 }
 
-function Update-EstablishmentSenFromBau {
-    <#
-    .SYNOPSIS
-    Adds and migrates SEN for every establishment already in the local target.
-    Extracts first, takes a full database backup, then applies one transaction.
-    #>
-    param([Parameter(Mandatory)]$Source, [Parameter(Mandatory)]$Target,
-          [Parameter(Mandatory)][string]$WorkingDirectory)
-    Write-Step 'Preparing additive SEN migration for the existing local selection'
-    $urnText = Invoke-Psql -Target $Target -Command 'SELECT urn FROM establishment.establishment ORDER BY urn' `
-        -Output Scalar -FailureMessage 'Cannot read existing target selection'
-    $urns = @($urnText -split '\s+' | Where-Object { $_ } | ForEach-Object { [int]$_ })
-    if ($urns.Count -eq 0) { throw 'The local target contains no establishments.' }
-    $referenceCsv = Join-Path $WorkingDirectory 'sen-reference.csv'
-    Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/sen-reference-from-bau.sql') `
-        -CsvPath $referenceCsv -RowCount AtLeastOne -Description 'SEN reference data' | Out-Null
-    foreach ($urn in $urns) {
-        Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-sen-from-bau.sql') `
-            -Variables @{ URN=$urn } -CsvPath (Join-Path $WorkingDirectory "establishment-sen-$urn.csv") `
-            -RowCount AtLeastOne -Description "SEN associations for $urn" | Out-Null
-    }
-    $backupPath = Join-Path $WorkingDirectory 'before-sen-migration.sql'
-    Invoke-PgDump -Target $Target -Arguments @('--no-owner','--no-privileges','--file',$backupPath) `
-        -FailureMessage 'Pre-migration backup failed'
-
-    $sql = "BEGIN;`n" + (Get-Content -LiteralPath (Get-SchemaPath 'establishment/sen-schema.sql') -Raw) + "`n"
-    $referenceSql = Get-Content -LiteralPath (Get-SchemaPath 'establishment/load/load-sen-reference-fixture.sql') -Raw
-    $sql += [regex]::Replace($referenceSql, '(?m)^(BEGIN|COMMIT);\r?$', '').Replace('__FIXTURE_PATH__',
-        ($referenceCsv.Replace('\','/').Replace("'","''"))) + "`n"
-    $linkSql = Get-Content -LiteralPath (Get-SchemaPath 'establishment/load/load-establishment-sen-fixture.sql') -Raw
-    foreach ($urn in $urns) {
-        $csv = Join-Path $WorkingDirectory "establishment-sen-$urn.csv"
-        $sql += [regex]::Replace($linkSql, '(?m)^(BEGIN|COMMIT);\r?$', '').Replace('__FIXTURE_PATH__',
-            $csv.Replace('\','/').Replace("'","''")).Replace('__EXPECTED_URN__',[string]$urn).Replace(
-            '__SOURCE_DATABASE__',$Source.Database.Replace("'","''")) + "`n"
-    }
-    $sql += (Get-Content -LiteralPath (Get-SchemaPath 'migration/validate-scripts/validate-sen.sql') -Raw) + "`nCOMMIT;`n"
-    $upgradePath = Join-Path $WorkingDirectory 'migrate-sen.sql'
-    [System.IO.File]::WriteAllText($upgradePath, $sql, [System.Text.UTF8Encoding]::new($false))
-    Invoke-Psql -Target $Target -File $upgradePath -FailureMessage 'Additive SEN migration failed; transaction rolled back'
-    Write-Host "SEN migrated for $($urns.Count) establishments. Pre-migration backup: $backupPath"
-}
-
 function Test-SenMigration {
     # Exercise the actual loader, rolling every case back in its own session.
     param([Parameter(Mandatory)]$Target)

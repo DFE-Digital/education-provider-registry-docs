@@ -9,6 +9,7 @@ CREATE TEMP TABLE group_membership_fixture (
     source_link_type text
 ) ON COMMIT DROP;
 \copy group_membership_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+ANALYZE group_membership_fixture;
 
 CREATE TEMP TABLE group_membership_context (
     organisation_group_id uuid NOT NULL, migration_run_id uuid NOT NULL, source_snapshot_id uuid NOT NULL
@@ -88,6 +89,7 @@ BEGIN
     INSERT INTO group_membership_context VALUES (group_id, run_id, snapshot_id);
 END $$;
 
+ANALYZE group_membership_context;
 INSERT INTO establishment.group_identifier (organisation_group_id, group_identifier_type_id, group_identifier_issuer_id, value, is_current)
 SELECT DISTINCT c.organisation_group_id, t.group_identifier_type_id, issuer.group_identifier_issuer_id,
        CASE WHEN t.name='Group UID' THEN f.group_uid ELSE f.group_id END, true

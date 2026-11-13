@@ -1,110 +1,77 @@
-# Rebuild Establishment From Local BAU
+# Seed establishments from local BAU
 
-## Purpose
+This command creates a development dataset in the disposable local PostgreSQL
+target. It loads core establishment records and their geography, contact,
+lifecycle, main site, measures and provision tables, then a lossy development
+set of party, group, maintenance and SEN relationships. Governance is not
+imported. This is not a reviewed full migration.
 
-This is the BAU-source rebuild. It rebuilds the local PostgreSQL Establishment schema and
-migrates the selected establishment-centric records from the approved local
-BAU SQL Server copy. The selection defaults to
-models/schema/seed/fixture-selection.json. `-SelectionFile` selects a separate
-curated JSON file without changing the repository's fixture manifest. For a
-URN-only selection, group links are discovered automatically. Alternatively
-supply the URNs directly with `-Urn`.
+Source establishments with status Open (`1`), Closed (`2`) or Open, but proposed
+to close (`3`) are included. Other statuses are excluded.
 
-## Prerequisites
-
-- Local SQL Server BAU copy, with a read-only login. The default database is
-  `gias_bau_test_local`; a custom name must end `_local` and use only letters,
-  digits and underscores.
-- The selected establishment-centric BAU tables, including
-  dbo.Establishment and any required child tables, plus dbo.LSOA and dbo.MSOA
-  for the geographic reference-data load.
-- Local PostgreSQL database establishment_local.
-- PostgreSQL credentials available through pgpass.conf.
-
-The script never connects to BAU Test, shared, staging or production systems.
-
-## How to run
-
-From education-provider-registry-docs, using the local SQL reader login:
-
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1"
-
-The command prompts once for the local SQL Server reader password, unless
-EPR_BAU_SQL_PASSWORD is set. Use -KeepFixture to retain the run's working folder of
-extracted CSV fixtures for troubleshooting.
-
-When the local BAU copy is configured for Windows authentication:
+From `education-provider-registry-docs`:
 
 ```powershell
-$bauSqlServer = 'localhost' # Your local machine name or named instance.
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer $bauSqlServer -UseWindowsAuthentication
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer $bauSqlServer
 ```
 
-The local-only source guard recognises the current developer's machine name,
-loopback aliases and local named instances such as `localhost\SQLEXPRESS`.
-Remote/shared servers remain blocked.
+The source must be a local SQL Server copy, normally `gias_bau_test_local`.
+The command prompts for its reader password unless `EPR_BAU_SQL_PASSWORD` is
+set. Use `-UseWindowsAuthentication` for a local Windows-authenticated source.
+The target defaults to `establishment_local`, with PostgreSQL credentials in
+`pgpass.conf` or `PGPASSWORD`.
 
-For the default selection with tests enabled, after validation succeeds the command exports the target into the run's
-working folder and copies the reference, establishment and migration-evidence seed files into
-`models/schema/seed/`. It does not commit those file changes; review them with
-`git diff` before committing. To export somewhere else for review without
-touching `seed/`, supply `-ExportDirectory`.
+## Loading and failures
 
-## Your own URNs without the checked-in tests
+The command recreates the disposable target schemas, loads reference dictionaries
+and geography, then extracts establishment rows once. PostgreSQL stages the raw
+values and attempts batches of 1,000 establishments by default.
 
-Use the [schema README's curation instructions](../README.md#using-a-different-bau-dataset-and-your-own-urns)
-to choose establishments in your local BAU dataset. No manual group list is
-needed for URN-only discovery. The checked-in tests include per-URN approval
-snapshots, which exist only for the default selection.
+When a batch fails on source data or a model constraint, its writes roll back
+and it is split into smaller batches. An individual establishment that still
+fails is skipped. All of its partial child rows roll back. Other establishments
+continue to load. Source values and model constraints are not changed to make
+bad data fit.
 
-```powershell
-$bauSqlServer = 'localhost'
-$bauDatabase = 'gias_bau_test_local' # Or another local BAU copy named *_local.
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer $bauSqlServer -SourceDatabase $bauDatabase -Urn "109443,20338" -SkipTests
+The error is recorded in `migration.establishment_load_error` with the URN,
+PostgreSQL SQLSTATE, message, detail and raw source row. The migration run records
+attempted, loaded and skipped counts and ends as `completed` or
+`completed_with_errors`. Missing establishments are expected in this development
+dataset. Setup, connection, schema and resource failures still stop the command.
+
+Rejected URNs are also added to the checked-in
+`models/schema/seed/known-bad-establishments.json` list, scoped to the BAU source
+database. A later run excludes those URNs before extracting rows, so it does not
+rediscover the same bad data. Remove an entry from that file to retry it after its
+source data or the model has changed. The per-run migration error table remains
+the audit record for rows rejected during that run.
+
+Relationship rows are handled independently after core establishments have
+loaded. Only relationships owned by a loaded establishment are considered.
+The development projection does not apply reviewed identity mappings; rows that
+the target rejects are omitted and recorded in `migration.relationship_load_error`.
+This keeps a relationship data set useful for development without treating it as
+a source-data or identity-resolution exercise.
+
+```sql
+SELECT urn, sqlstate, error_message, error_detail
+FROM migration.establishment_load_error
+ORDER BY urn;
+
+SELECT status, notes
+FROM migration.migration_run
+WHERE run_type = 'development-establishment-seed'
+ORDER BY started_at DESC;
 ```
 
-`-SkipTests` skips `Invoke-EstablishmentTests`, not the import's SQL checks,
-selection validation or database constraints. Migration-run notes record that
-tests were skipped. Existing local target data is still replaced.
+## Optional choices
 
-Custom selections and skipped-test runs do not automatically export or refresh
-`seed/`. For a separate export, add
-`-ExportDirectory "$env:TEMP\epr-my-fixture-export"`. Approval snapshots are not
-updated by this command. The default selection and normal tested rebuild are
-unchanged.
+- `-Urn "109443,20338"` or `-SelectionFile <json>` restricts the core establishment
+  selection. Group declarations in a selection file do not trigger entity imports.
+- `-BatchSize 1000` controls the initial batch size. Splitting happens automatically.
+- `-KeepFixture` retains extracts and generated SQL in the reported workspace.
+- `-ExportDirectory <path>` exports the resulting PostgreSQL data as SQL for review.
 
-The quoted comma-separated list works with `powershell.exe -File`. A JSON
-file with only `organisationType` and `urns` works with `-SelectionFile` instead.
-Only memberships for supplied URNs are imported; the other group members are
-not added. Evidence notes mark these group extracts as partial. Current group
-links are the default; `-IncludeArchivedLinks` additionally selects archived
-party links, not historical federation/children's-centre memberships. Unsupported
-or conflicting source evidence still requires review.
-
-## Execution flow
-
-1. Check that the SQL Server source and PostgreSQL target are local.
-   For a URN-only selection, discover and validate supported group links before
-   the target is recreated (`Find-EstablishmentGroupsFromBau`).
-2. Extract all 19 non-geographic source dictionaries before resetting the target (`Export-BauReferenceData`). Recreate the schemas with target-owned definitions only (`Initialize-EstablishmentDatabase -FromBau`), then load and reconcile the complete eligible source dictionaries (`Import-BauReferenceData`).
-3. Load geographic reference data from the local BAU copy (`Import-GeographicReferenceData`): local authorities, Government Office Regions, districts, wards, parliamentary constituencies, LSOAs, MSOAs, urban/rural classifications, GSS local-authority codes, and the local-authority to GSS and GOR mappings.
-4. Load each selected URN (`Import-EstablishmentFromBau`), then each selected group link (`Import-EstablishmentPartyRoleFromBau`) and organisation group.
-5. Print the loaded establishments with their pupil and free-school-meal measures (`Show-EstablishmentSummary`).
-6. Run all establishment tests (`Invoke-EstablishmentTests`), unless `-SkipTests` is supplied: core validation, an approval snapshot per selected URN, and scope.
-7. Export the database and refresh the checked-in seed files for the default tested selection (`Export-EstablishmentFixture`, `Update-CheckedInSeed`). Custom selections/skipped-test runs export only when `-ExportDirectory` is supplied and do not automatically refresh `seed/`.
-8. With `-IncludeGovernance`, recreate the governance schema and load each URN's governance appointments.
-9. Delete the run's working folder, unless `-KeepFixture` is supplied.
-
-Each numbered step is a function in the `EprLocalAutomation` module, and can be run on its own. See the [automation README](README.md).
-
-Each BAU establishment rebuild creates one `migration.migration_run` for its group evidence. Every selected party-link extract retains its own `source_snapshot` and `source_record` beneath that run, so source-level lineage is unchanged. The run is `running` during import and testing, `completed` after the Establishment import and any enabled tests succeed, or `failed` if that workflow fails. When `-SkipTests` is used, notes distinguish a completed untested import from an approval-validated fixture. The source database name is recorded from the connection settings. An independently invoked party-link loader, without a rebuild run ID, still creates a separate mini-migration run. A checked-in SQL rebuild restores the captured run rather than claiming that a fresh BAU extraction took place.
-
-Source-owned reference dictionaries are loaded directly from MSSQL on every BAU rebuild, including values unused by the selected URNs. This path does not load the exported reference-data SQL snapshot. Static definitions are limited to target-owned routes, roles, legal forms and identifiers; reviewed council mappings remain a separate target input. The checked-in SQL export is used for offline fixture replay. See [Source-owned reference data](source-reference-data.md).
-
-SEN is included in each selected establishment import. The source dictionary is reconciled with the 13 seeded current values before importing establishments. Archived values and their associations are excluded; current associations in legacy buckets 2–4 fail for review. SEN links and their migration provenance are exported with the fixtures. See the [SEN entities](../../logical/establishment/sen.md) and [additive migration runbook](migrate-sen-from-local-bau.md).
-
-## Scope boundary
-
-By default this command migrates Establishment-owned data for the selected
-URNs. It rebuilds the Governance schema and migrates StaffRecord only when
-`-IncludeGovernance` is supplied.
+The command does not run fixture approval tests, update approval snapshots or
+automatically replace checked-in seeds. The checked-in SQL rebuild remains the
+separate reviewed-fixture workflow. Its approvals describe its own curated data.
