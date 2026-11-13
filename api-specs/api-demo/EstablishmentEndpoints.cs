@@ -115,11 +115,11 @@ public static partial class EstablishmentEndpoints
     private static async Task CollectionAsync(HttpContext context, EstablishmentStore store)
     {
         var query = context.Request.Query;
-        var unsupported = query.Keys.Where(key => key != "status").Order(StringComparer.Ordinal).ToList();
+        var unsupported = query.Keys.Where(key => key is not ("status" or "page" or "pageSize")).Order(StringComparer.Ordinal).ToList();
         if (unsupported.Count > 0)
         {
             await Responses.WriteProblem(context, StatusCodes.Status400BadRequest,
-                "unsupported-query-parameter", "Only the status query parameter is supported.",
+                "unsupported-query-parameter", "Only status, page and pageSize query parameters are supported.",
                 unsupported.Select(key => new ValidationError("query", key, "This query parameter is not supported.")).ToList());
             return;
         }
@@ -138,13 +138,56 @@ public static partial class EstablishmentEndpoints
             }
         }
 
-        var result = await store.LoadAsync(urn: null, statusCode, context.RequestAborted);
+        var page = 1;
+        var pageSize = 1000;
+        var pagingErrors = new List<ValidationError>();
+        foreach (var name in new[] { "page", "pageSize" })
+        {
+            if (!query.TryGetValue(name, out var pagingValues)) continue;
+            var maximum = name == "pageSize" ? 10000 : int.MaxValue;
+            if (pagingValues.Count != 1 || !int.TryParse(pagingValues[0],
+                    System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture,
+                    out var number) || number < 1 || number > maximum)
+            {
+                pagingErrors.Add(new("query", name, $"Expected one integer between 1 and {maximum}."));
+            }
+            else if (name == "page") page = number;
+            else pageSize = number;
+        }
+        if (pagingErrors.Count > 0)
+        {
+            await Responses.WriteProblem(context, StatusCodes.Status400BadRequest,
+                "invalid-pagination", "Invalid page or pageSize.", pagingErrors);
+            return;
+        }
+
+        var result = await store.LoadAsync(urn: null, statusCode, context.RequestAborted,
+            pageSize, ((long)page - 1) * pageSize);
         if (await WritePublicationProblemAsync(context, result))
         {
             return;
         }
 
-        await Responses.WriteRepresentation(context, new JsonArray([.. result.Establishments]));
+        string? next = null;
+        if (result.HasNextPage)
+        {
+            var parameters = new Dictionary<string, string?>
+            {
+                ["page"] = ((long)page + 1).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ["pageSize"] = pageSize.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            };
+            if (statusCode is not null) parameters["status"] = query["status"].ToString();
+            next = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(
+                context.Request.PathBase.Add(CollectionPath).Value!, parameters);
+        }
+        await Responses.WriteRepresentation(context, new JsonObject
+        {
+            ["items"] = new JsonArray([.. result.Establishments]),
+            ["page"] = page,
+            ["pageSize"] = pageSize,
+            ["hasNextPage"] = result.HasNextPage,
+            ["next"] = next
+        });
     }
 
     private static async Task<bool> WritePublicationProblemAsync(HttpContext context, LoadResult result)

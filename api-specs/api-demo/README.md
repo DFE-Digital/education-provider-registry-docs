@@ -7,9 +7,21 @@ GET /v1/establishments/{URN}
 GET /v1/establishments
 GET /v1/establishments?status=open
 GET /v1/establishments?status=closed
+GET /v1/establishments?page=2
+GET /v1/establishments?page=2&pageSize=100&status=open
 ```
 
 It's a demo, not production code. It runs on `http://localhost:5080` and only listens on your own machine.
+
+## Pagination
+
+The collection defaults to `page=1` and `pageSize=1000`, ordered by URN. Both parameters must be positive integers supplied once; `pageSize` has a maximum of 10,000. The optional `status` filter applies before pagination and is preserved in the next-page link.
+
+The collection now returns an object containing `items`, `page`, `pageSize`, `hasNextPage` and `next`. This pagination envelope is a demo extension to contract 1.0.0's bare collection array; the individual-establishment endpoint is unchanged.
+
+Follow the relative `next` URL, for example `/v1/establishments?page=2&pageSize=1000`, until `hasNextPage` is `false` and `next` is `null`. A page beyond the available data returns an empty `items` array and the same final-page indicators. An exactly full final page also returns `hasNextPage: false`.
+
+Each request reads a consistent snapshot, but rebuilding or changing the dataset between page requests can shift records between pages.
 
 ## Before you start
 
@@ -18,6 +30,8 @@ You need:
 - the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - PostgreSQL running locally on port 5432
 - the `establishment_local` database, populated by one of the rebuild paths in the [local schema automation](../../models/schema/README.md)
+
+If the .NET 10 SDK is not installed, install it from <https://dotnet.microsoft.com/download/dotnet/10.0>.
 
 The quickest rebuild uses the checked-in SQL. Run it from the repository root:
 
@@ -32,21 +46,17 @@ The demo uses the same password file as the rebuild scripts, `%APPDATA%\postgres
 From this folder:
 
 ```powershell
-.\run.ps1
+dotnet run
 ```
 
-Or, without the script:
-
-```powershell
-dotnet run --configuration Release
-```
+The project runs through the `dotnet` host rather than generating a standalone executable, allowing it to run where Windows blocks execution of newly built `.exe` files.
 
 The first run downloads the PostgreSQL driver from NuGet and builds the program. Press Ctrl+C to stop.
 
 If port 5080 is already in use, pick another:
 
 ```powershell
-.\run.ps1 -Port 5090
+dotnet run --configuration Release -- --urls http://localhost:5090
 ```
 
 ## Try it
@@ -57,7 +67,7 @@ Invoke-RestMethod "http://localhost:5080/v1/establishments?status=open" | Conver
 curl.exe -i http://localhost:5080/v1/establishments/ABC
 ```
 
-Use `curl.exe`, not `curl`. In Windows PowerShell, `curl` is an alias for `Invoke-WebRequest`.
+
 
 A browser works too. Open <http://localhost:5080/v1/establishments/109613>.
 
@@ -85,7 +95,7 @@ For example, to point at a different database:
 
 ```powershell
 $env:ConnectionStrings__Registry = 'Host=127.0.0.1;Port=5432;Database=establishment_test;Username=postgres'
-.\run.ps1
+dotnet run --configuration Release
 ```
 
 There's no password in the settings. The database driver reads it from `%APPDATA%\postgresql\pgpass.conf`.
@@ -105,44 +115,3 @@ Every connection is read-only. The connection string turns on `default_transacti
 - **Ordering.** Collections are sorted by URN, and sites put the main site first. SEN names are sorted. History arrays are sorted by start date (unknown dates last), then name.
 - **Rate limiting.** Over the limit, you get a 429 with `Retry-After`.
 - **Outages.** If the database is down, you get a 503 `publication-unavailable`. Unexpected failures return a 500 with no internal detail.
-
-The ETags won't match the examples in the specification. The data is different, and the demo sends compact JSON rather than the indented JSON in the examples.
-
-## Choices the specification doesn't settle
-
-We had to make some calls the contract leaves open. Each one is easy to change.
-
-| Question | What the demo does |
-| --- | --- |
-| What counts as "published"? | The schema has no published flag. Any establishment with status Open or Closed is published. |
-| Where does `Data-Last-Refreshed-At` come from? | The latest completed run in `migration.migration_run`. With no completed run, every request returns 503 `publication-unavailable`. |
-| Is a federation membership current? | Membership has no current flag. It's current when it hasn't ended and the federation hasn't closed. Trusts, sponsors and councils use the `is_current` flag. |
-| Which LA code goes on `maintainingLocalAuthority`? | The council's LA code for the overlapping period, but only when exactly one code matches. |
-| Should relationships be filtered by category? | No. The demo publishes whatever relationships the data holds. For example, special school 100018 gets its maintaining council. |
-| What about individual sponsors? | They're left out. The schema has no name for a person yet, and `name` is required. |
-| What happens to `HEAD`? | It returns 405, because the contract says GET only. |
-| What if a required fact is missing? | The request returns 503 `publication-incomplete`, for both the detail and the collection. |
-
-## Fields the schema can't fill yet
-
-The schema doesn't hold these yet, so they never appear:
-
-- `establishmentLeadership` (headteacher)
-- `numberOfMales`, `numberOfFemales` and `percentagePupilsEligibleForFreeSchoolMeals`
-- `osGridReference` and `address.country` on sites
-- `alternativeProvisionCharacteristics`
-- `inspectorateName` and the inspection dates. Only the report link is there.
-- `history.previousLA` and `history.predecessors`
-
-The code for academy trusts, sponsors, federations and foundation trusts is written. But the default fixture has none of those for the three schools, so it hasn't run against real rows yet. That's why Ridgewood (137603) has no `academyTrust`. When a fixture includes them, check those properties first.
-
-## Files
-
-| File | What it does |
-| --- | --- |
-| `Program.cs` | Startup, common headers, request log and rate limiting |
-| `EstablishmentEndpoints.cs` | Path matching, request validation and the two endpoints |
-| `EstablishmentStore.cs` | The SQL and the mapping from database rows to API JSON |
-| `Responses.cs` | Problem details, content negotiation, gzip, ETags and 304s |
-| `appsettings.json` | Address, connection string and rate limit |
-| `run.ps1` | Starts the demo |
