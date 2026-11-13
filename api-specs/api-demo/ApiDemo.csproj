@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ApiDemo</RootNamespace>
     <AssemblyName>epr-api-demo</AssemblyName>
+    <UseAppHost>false</UseAppHost>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 

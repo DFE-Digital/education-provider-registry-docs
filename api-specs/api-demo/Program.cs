@@ -6,7 +6,7 @@ using Npgsql;
 // Local demo of the Published Establishment API (contract 1.0.0).
 // Reads the local establishment_local PostgreSQL database and serves:
 //   GET /v1/establishments/{URN}
-//   GET /v1/establishments[?status=open|closed]
+//   GET /v1/establishments[?status=open|closed&page=1&pageSize=1000]
 
 // Read appsettings.json from next to the program, wherever it is started from.
 var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions

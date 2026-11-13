@@ -9,7 +9,8 @@ namespace ApiDemo;
 public sealed record LoadResult(
     DateTimeOffset? RefreshedAt,
     IReadOnlyList<JsonObject> Establishments,
-    IReadOnlyList<int> IncompleteUrns);
+    IReadOnlyList<int> IncompleteUrns,
+    bool HasNextPage = false);
 
 /// <summary>
 /// Reads the establishment schema and builds API payloads.
@@ -27,7 +28,8 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
     /// <summary>The last refresh time seen, used for headers on every response.</summary>
     public DateTimeOffset? LastKnownRefresh { get; private set; }
 
-    public async Task<LoadResult> LoadAsync(int? urn, int? statusCode, CancellationToken ct)
+    public async Task<LoadResult> LoadAsync(int? urn, int? statusCode, CancellationToken ct,
+        int? pageSize = null, long offset = 0)
     {
         await using var connection = await dataSource.OpenConnectionAsync(ct);
         await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.RepeatableRead, ct);
@@ -40,7 +42,12 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
             return new LoadResult(null, [], []);
         }
 
-        var cores = await ReadCoresAsync(connection, urn, statusCode, ct);
+        var cores = await ReadCoresAsync(connection, urn, statusCode, ct, pageSize, offset);
+        var hasNextPage = pageSize is int size && cores.Count > size;
+        if (hasNextPage)
+        {
+            cores.RemoveAt(cores.Count - 1);
+        }
         var ids = cores.Select(c => c.Id).ToArray();
         var sites = await ReadSitesAsync(connection, ids, ct);
         var sen = await ReadSenAsync(connection, ids, ct);
@@ -63,7 +70,7 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
                 establishments.Add(payload);
             }
         }
-        return new LoadResult(refreshedAt, establishments, incomplete);
+        return new LoadResult(refreshedAt, establishments, incomplete, hasNextPage);
     }
 
     // ---------------------------------------------------------------- queries
@@ -75,6 +82,20 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
         """;
 
     private const string CoreSql = """
+        WITH page_owners AS (
+            SELECT e.establishment_id, e.urn
+            FROM establishment e
+            WHERE ($1::int IS NULL OR e.urn = $1)
+              AND EXISTS (
+                  SELECT 1 FROM establishment_lifecycle l
+                  JOIN establishment_status st USING (establishment_status_id)
+                  WHERE l.establishment_id = e.establishment_id
+                    AND st.code IN (1, 2)
+                    AND ($2::int IS NULL OR st.code = $2)
+              )
+            ORDER BY e.urn
+            LIMIT $3 OFFSET $4
+        )
         SELECT e.establishment_id, e.urn, e.ukprn::text AS ukprn, e.establishment_number,
                e.name, e.ofsted_link,
                et.code AS type_code, et.name AS type_name,
@@ -109,6 +130,7 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
                rp.pupil_count AS rp_pupil_count, rp.capacity AS rp_capacity,
                su.pupil_count AS su_pupil_count, su.capacity AS su_capacity
         FROM establishment e
+        JOIN page_owners owner ON owner.establishment_id = e.establishment_id
         JOIN establishment_lifecycle l ON l.establishment_id = e.establishment_id
         JOIN establishment_status st ON st.establishment_status_id = l.establishment_status_id
         LEFT JOIN establishment_type et ON et.establishment_type_id = e.establishment_type_id
@@ -265,11 +287,14 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
     }
 
     private static async Task<List<Core>> ReadCoresAsync(
-        NpgsqlConnection connection, int? urn, int? statusCode, CancellationToken ct)
+        NpgsqlConnection connection, int? urn, int? statusCode, CancellationToken ct,
+        int? pageSize, long offset)
     {
         await using var command = new NpgsqlCommand(CoreSql, connection);
         command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = (object?)urn ?? DBNull.Value });
         command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = (object?)statusCode ?? DBNull.Value });
+        command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = pageSize is int size ? size + 1 : DBNull.Value });
+        command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = offset });
         await using var reader = await command.ExecuteReaderAsync(ct);
         var row = new Row(reader);
         var cores = new List<Core>();
