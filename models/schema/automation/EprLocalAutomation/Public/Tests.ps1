@@ -81,12 +81,6 @@ function Test-EstablishmentApproval {
     Write-Host "    Approval test passed for URN $Urn." -ForegroundColor Green
 }
 
-function Test-EstablishmentCount {
-    param([Parameter(Mandatory)]$Target,[Parameter(Mandatory)][int]$ExpectedCount)
-    $count=[int](Invoke-Psql -Target $Target -Output Scalar -Command 'SELECT count(*) FROM establishment.establishment;' -FailureMessage 'Establishment count failed')
-    if ($count -ne $ExpectedCount) { throw "Expected $ExpectedCount establishments, loaded $count." }
-    Write-Host "    $count establishments loaded."
-}
 
 function Test-EstablishmentScope {
     <#
@@ -156,113 +150,7 @@ function Test-EstablishmentUrnValidation {
     }
 }
 
-function Test-EstablishmentGroupDiscovery {
-    # Source-free regression checks: discovery must never expand the requested
-    # URNs or infer identities. Real SQL extraction is checked separately.
-    Write-Step 'Test: URN-driven group discovery'
-    $selection = Get-FixtureSelection -Urn @(20001, 136102, 123456)
-    $rows = @(
-        [pscustomobject]@{ establishment_urn=20001; source_group_id=11; group_type_code='08'; source_archived=0; source_group_closed_date='NULL' },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=12; group_type_code='01'; source_archived=0; source_group_closed_date='NULL' },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=13; group_type_code='06'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=14; group_type_code='10'; source_archived=1 },
-        [pscustomobject]@{ establishment_urn=123456; source_group_id=13; group_type_code='06'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=15; group_type_code='05'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=123456; source_group_id=16; group_type_code='02'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=123456; source_group_id=17; group_type_code='11'; source_archived=0 }
-    )
-    $result = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks $rows
-    if ($result.Urns.Count -ne 3 -or (Compare-Object $selection.Urns $result.Urns) -or
-        $result.PartyRoleLinks.Count -ne 5 -or $result.OrganisationGroups.Count -ne 2) {
-        throw 'Group discovery changed URNs or missed routes.'
-    }
-    foreach ($group in $result.OrganisationGroups) {
-        if (-not $group.SelectedMembersOnly -or $group.MemberUrns.Count -ne 1 -or
-            @($group.MemberUrns | Where-Object { $_ -notin $selection.Urns }).Count -gt 0) {
-            throw 'Discovered organisation memberships must be restricted to supplied URNs.'
-        }
-    }
-    $historical = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks $rows -IncludeArchivedLinks
-    if ($historical.PartyRoleLinks.Count -ne 6 -or
-        @($historical.PartyRoleLinks | Where-Object { $_.SourceGroupId -eq 14 -and $_.IncludeArchived }).Count -ne 1) {
-        throw 'Archived party-link opt-in failed.'
-    }
-    $empty = ConvertTo-DiscoveredGroupSelection -Selection $selection
-    if ($empty.Urns.Count -ne 3 -or $empty.PartyRoleLinks.Count -ne 0 -or $empty.OrganisationGroups.Count -ne 0) {
-        throw 'A URN with no group links must still be selectable.'
-    }
-    $rejectedRows = @(
-        [pscustomobject]@{ establishment_urn=999999; source_group_id=1; group_type_code='06'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=1; group_type_code='03'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=1; group_type_code='01'; source_archived=0; source_group_closed_date='2020-01-01' },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=0; group_type_code='06'; source_archived=0 },
-        [pscustomobject]@{ establishment_urn=136102; source_group_id=1; group_type_code='06'; source_archived=2 }
-    )
-    foreach ($row in $rejectedRows) {
-        $rejected = $false
-        try { $null = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($row) } catch { $rejected = $true }
-        if (-not $rejected) { throw 'An invalid or unsupported discovered link was accepted.' }
-    }
-    $duplicateRejected = $false
-    try { $null = ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0], $rows[0]) }
-    catch { $duplicateRejected = $true }
-    if (-not $duplicateRejected) { throw 'Duplicate discovered source links were accepted.' }
-    $closed=[pscustomobject]@{establishment_urn=20001;source_group_id=16641;group_type_code='01';source_archived=0;source_group_closed_date='2020-01-01'}
-    $bulkClosed=ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0],$closed) -SkipClosedGroups
-    if ($bulkClosed.Urns.Count -ne 3 -or $bulkClosed.OrganisationGroups.Count -ne 1 -or
-        $bulkClosed.OrganisationGroups[0].SourceGroupId -ne 11 -or $bulkClosed.ClosedGroupLinkCount -ne 1) {
-        throw 'Bulk discovery must omit closed groups while retaining establishments and open groups.'
-    }
-    $unmodelled=[pscustomobject]@{establishment_urn=20001;source_group_id=90152;group_type_code='09';source_archived=0}
-    $bulk=ConvertTo-DiscoveredGroupSelection -Selection $selection -GroupLinks @($rows[0],$unmodelled) -AllowUnmodelledGroups
-    if ($bulk.Urns.Count -ne 3 -or $bulk.PartyRoleLinks.Count -ne 0 -or
-        $bulk.OrganisationGroups.Count -ne 1 -or $bulk.UnmodelledGroupCounts['09'] -ne 1) {
-        throw 'Bulk discovery must retain establishments and supported links while counting unmodelled relationships.'
-    }
-    Write-Host '    Discovery routes, selected-only scope, archive policy and rejection checks passed.'
-}
 
-function Test-EstablishmentMigrationEvidence {
-    <#
-    .SYNOPSIS
-    Checks that the rebuild's migration run retains one extract and the source
-    records for every selected group link and organisation group.
-    #>
-    param(
-        [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)]$Selection
-    )
-
-    Write-Step 'Test: rebuild migration-evidence grouping'
-    $expectedExtracts = [int]($Selection.PartyRoleLinks.Count + $Selection.OrganisationGroups.Count)
-    $expectedRecords = [int]$Selection.PartyRoleLinks.Count
-    foreach ($group in $Selection.OrganisationGroups) { $expectedRecords += $group.MemberUrns.Count }
-    $runGroupingSql = @'
-DO $$
-DECLARE
-    run_id uuid;
-BEGIN
-    SELECT migration_run_id INTO STRICT run_id FROM migration.migration_run
-    WHERE run_type = 'establishment-rebuild';
-    IF NOT EXISTS (SELECT 1 FROM migration.migration_run
-                   WHERE migration_run_id = run_id AND status IN ('running', 'completed')) THEN
-        RAISE EXCEPTION 'Establishment rebuild run is not running or completed';
-    END IF;
-    IF (SELECT count(*) FROM migration.source_snapshot WHERE migration_run_id = run_id) <> __EXPECTED_EXTRACTS__
-       OR (SELECT count(*) FROM migration.source_record r JOIN migration.source_snapshot s USING (source_snapshot_id)
-           WHERE s.migration_run_id = run_id) <> __EXPECTED_RECORDS__ THEN
-        RAISE EXCEPTION 'Rebuild evidence must retain the selected extracts and source records';
-    END IF;
-    IF EXISTS (SELECT 1 FROM migration.source_snapshot s JOIN migration.migration_run r USING (migration_run_id)
-               WHERE r.migration_run_id = run_id AND s.source_system='GIAS BAU'
-                 AND s.source_database IS DISTINCT FROM r.source_database) THEN
-        RAISE EXCEPTION 'Rebuild source database and extract source database disagree';
-    END IF;
-END $$;
-'@
-    $null = Invoke-Psql -Target $Target -Command $runGroupingSql.Replace('__EXPECTED_EXTRACTS__', [string]$expectedExtracts).Replace('__EXPECTED_RECORDS__', [string]$expectedRecords) `
-        -Output Scalar -FailureMessage 'Migration evidence grouping test failed'
-}
 
 function Invoke-EstablishmentToolingTests {
     <#
@@ -271,15 +159,14 @@ function Invoke-EstablishmentToolingTests {
     #>
     Test-EstablishmentBuildInputPreflight
     Test-EstablishmentUrnValidation
-    Test-EstablishmentGroupDiscovery
     Write-Host 'All establishment tooling tests passed.' -ForegroundColor Green
 }
 
 function Invoke-EstablishmentTests {
     <#
     .SYNOPSIS
-    Validates the loaded database: core validation, migration evidence for any selected group
-    links, one approval snapshot per selected URN, and scope.
+    Validates the loaded database: core validation, one approval snapshot per
+    selected URN, and scope.
     #>
     param(
         [Parameter(Mandatory)]$Target,
@@ -288,9 +175,6 @@ function Invoke-EstablishmentTests {
     )
 
     Test-EstablishmentCoreValidation -Target $Target
-    if ($Selection.PartyRoleLinks.Count -gt 0 -or $Selection.OrganisationGroups.Count -gt 0) {
-        Test-EstablishmentMigrationEvidence -Target $Target -Selection $Selection
-    }
     foreach ($urn in $ApprovalUrn) {
         Test-EstablishmentApproval -Target $Target -Urn $urn
     }

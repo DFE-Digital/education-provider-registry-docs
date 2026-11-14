@@ -51,7 +51,14 @@ and evidence, without reading BAU. See the [checked-in SQL runbook](rebuild-esta
 - `establishment/load/load-establishment-fixture.sql` supplies the shared core
   table inserts with their normal constraints.
 - `Public/ReferenceData.ps1` and `Public/BauImport.ps1` supply dictionaries and
-  geography; development seeding omits council/entity fixture imports.
+  geography. Both rebuild paths retain the council fixture import. The BAU
+  development path loads its party relationships through the dedicated development loader.
+- `Invoke-FixtureLoad` renders fixture SQL, escapes literal values and paths,
+  supplies migration-run context and executes the generated file. SEN, group,
+  party and maintenance fixture loads use this helper.
+- `migration/load-development-maintenance-observations.sql` imports development
+  observations without maintenance derivation or replay locking. Checked-in
+  fixtures use `establishment/load/load-maintenance-responsibility-fixture.sql`.
 - `Private/BauExtract.ps1` streams CSV in PowerShell. `Private/Postgres.ps1`
   launches `psql` and `pg_dump`.
 - `seed/known-bad-establishments.json` retains URNs rejected by development

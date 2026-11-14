@@ -33,8 +33,6 @@ Export-ModuleMember -Function @(
     'New-BauSource'
     'New-PostgresTarget'
     'Get-FixtureSelection'
-    'Get-EstablishmentSelectionFromBau'
-    'Find-EstablishmentGroupsFromBau'
     'New-RunWorkspace'
     'Remove-RunWorkspace'
 
@@ -43,16 +41,13 @@ Export-ModuleMember -Function @(
     'Reset-EstablishmentSchema'
     'Import-ReferenceSeed'
     'Initialize-EstablishmentDatabase'
-    'Initialize-GovernanceDatabase'
 
     # Loading from the local BAU copy
     'Import-GeographicReferenceData'
     'Export-BauReferenceData'
     'Import-BauReferenceData'
     'Import-SenReferenceData'
-    'Import-EstablishmentSenFromBau'
     'Import-LocalAuthorityCouncilFixture'
-    'Import-MaintenanceFromBau'
     'Import-MaintenanceObservationFixture'
     'Import-ProprietorReviewQueue'
     'Import-DevelopmentEstablishmentSeed'
@@ -61,16 +56,12 @@ Export-ModuleMember -Function @(
     # Checked-in fixtures
     'Import-CheckedInEstablishmentFixture'
     'Export-EstablishmentFixture'
-    'Update-CheckedInSeed'
 
     # Tests and reports
     'Test-EstablishmentUrnValidation'
-    'Test-EstablishmentGroupDiscovery'
     'Test-EstablishmentCoreValidation'
-    'Test-EstablishmentMigrationEvidence'
     'Test-EstablishmentApproval'
     'Test-EstablishmentScope'
-    'Test-EstablishmentCount'
     'Invoke-EstablishmentTests'
     'Invoke-EstablishmentToolingTests'
 )

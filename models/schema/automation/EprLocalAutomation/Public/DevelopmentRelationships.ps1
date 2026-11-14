@@ -118,11 +118,8 @@ function Import-DevelopmentSenRelationships {
     $rows=@(Import-Csv -LiteralPath $sourceCsv -Delimiter '|' | Where-Object {$scope.Contains([int]$_.urn)})
     $csv=Join-Path $WorkingDirectory 'development-sen.csv'
     Write-DevelopmentCsv -Rows $rows -Path $csv
-    $sql=(Get-Content -LiteralPath (Get-SchemaPath 'migration/load-development-establishment-sen.sql') -Raw).
-        Replace('__FIXTURE_PATH__',$csv.Replace('\','/').Replace("'","''")).Replace('__RUN_ID__',$MigrationRunId)
-    $path=Join-Path $WorkingDirectory 'load-development-sen.sql'
-    [IO.File]::WriteAllText($path,$sql,[Text.UTF8Encoding]::new($false))
-    Invoke-Psql -Target $Target -File $path -Quiet -FailureMessage 'Development SEN relationship load failed'
+    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'migration/load-development-establishment-sen.sql') `
+        -CsvPath $csv -WorkingDirectory $WorkingDirectory -Description 'development SEN relationships' -MigrationRunId $MigrationRunId -Quiet
 }
 
 function Import-DevelopmentOrganisationGroups {
@@ -142,11 +139,8 @@ function Import-DevelopmentOrganisationGroups {
     if ($bulkRows.Count -eq 0) { return }
     $fixture=Join-Path $WorkingDirectory 'development-organisation-groups-filtered.csv'
     Write-DevelopmentCsv -Rows $bulkRows -Path $fixture
-    $sql=(Get-Content -LiteralPath (Get-SchemaPath 'migration/load-development-organisation-groups.sql') -Raw).
-        Replace('__FIXTURE_PATH__',$fixture.Replace('\','/').Replace("'","''"))
-    $path=Join-Path $WorkingDirectory 'load-development-organisation-groups.sql'
-    [IO.File]::WriteAllText($path,"SELECT set_config('epr.migration_run_id','$MigrationRunId',false);`n$sql",[Text.UTF8Encoding]::new($false))
-    Invoke-Psql -Target $Target -File $path -Quiet -FailureMessage 'Development organisation-group load failed'
+    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'migration/load-development-organisation-groups.sql') `
+        -CsvPath $fixture -WorkingDirectory $WorkingDirectory -Description 'development organisation groups' -MigrationRunId $MigrationRunId -Quiet
     Write-Host "    Organisation groups loaded in one PostgreSQL batch."
 }
 

@@ -69,7 +69,9 @@ source-row note identifying the whole phase's scope; it is not a rejection of
 that establishment. The run completes with errors for tolerated data failures.
 
 The maintenance development phase imports source observations only; it does not
-derive maintenance responsibilities. An establishment with no SEN associations
+derive maintenance responsibilities. It uses the explicit
+`migration/load-development-maintenance-observations.sql` loader rather than
+rewriting the checked-in maintenance loader. An establishment with no SEN associations
 is an ordinary empty association set and is not logged as malformed.
 
 ```sql
