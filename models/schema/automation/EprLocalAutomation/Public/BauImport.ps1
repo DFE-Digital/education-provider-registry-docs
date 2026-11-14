@@ -77,23 +77,3 @@ function Import-GeographicReferenceData {
     }
     if (-not $EstablishmentsOnly) { Import-LocalAuthorityCouncilFixture -Target $Target }
 }
-
-function Import-OrganisationGroupFromBau {
-    # Uses the ordinary group-membership fixture loader, but is called only for
-    # successfully seeded establishment URNs by the development relationship path.
-    param(
-        [Parameter(Mandatory)]$Source,[Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][ValidateRange(1,999999999)][int]$SourceGroupId,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateRange(1,999999)][int[]]$ExpectedMemberUrns,
-        [switch]$SelectedMembersOnly,[Parameter(Mandatory)][string]$WorkingDirectory,
-        [guid]$MigrationRunId=[guid]::Empty
-    )
-    $csvPath=Join-Path $WorkingDirectory "development-organisation-group-$SourceGroupId.csv"
-    Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/organisation-group-membership-from-bau.sql') `
-        -Variables @{ GROUP_ID=$SourceGroupId; SELECTED_MEMBERS_ONLY=[int][bool]$SelectedMembersOnly
-            MEMBER_URN_VALUES=(($ExpectedMemberUrns | ForEach-Object {'('+[string][int]$_+')'}) -join ',') } `
-        -CsvPath $csvPath -RowCount AtLeastOne -Description "development organisation group $SourceGroupId" | Out-Null
-    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-organisation-group-membership-fixture.sql') `
-        -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "development organisation group $SourceGroupId" -MigrationRunId $MigrationRunId `
-        -TemplateValues @{ MEMBERSHIP_SCOPE='selected-urns' }
-}

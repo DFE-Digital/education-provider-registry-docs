@@ -15,6 +15,7 @@ function Assert-EstablishmentBuildInputs {
         (Get-SchemaPath 'migration/migration-schema.sql'),
         (Get-SchemaPath 'migration/load-development-establishment-seed.sql'),
         (Get-SchemaPath 'migration/load-development-party-relationships.sql'),
+        (Get-SchemaPath 'migration/load-development-maintenance-observations.sql'),
         (Get-SchemaPath 'migration/maintenance-derivation.sql'),
         (Get-SchemaPath 'migration/proprietor-extensions.sql'),
         (Get-SchemaPath 'migration/council-reorganisation.sql'),
@@ -95,18 +96,4 @@ function Initialize-EstablishmentDatabase {
 
     Reset-EstablishmentSchema -Target $Target -IncludeReferenceSeed:(-not $FromBau) -FixtureSeedFile $FixtureSeedFile -EstablishmentsOnly:$EstablishmentsOnly
     Import-ReferenceSeed -Target $Target -TargetOwnedOnly:$FromBau
-}
-
-function Initialize-GovernanceDatabase {
-    <#
-    .SYNOPSIS
-    Drops and recreates the governance schema in governance_local.
-    #>
-    param([Parameter(Mandatory)]$Target)
-
-    if ($Target.Database -ne 'governance_local') {
-        throw "The governance schema must be built in governance_local. Received: $($Target.Database)"
-    }
-    Write-Step 'Recreating the governance schema'
-    Invoke-Psql -Target $Target -File (Get-SchemaPath 'governance/governance-schema.sql') -FailureMessage 'Governance schema rebuild failed'
 }

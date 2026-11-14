@@ -118,17 +118,3 @@ function Export-EstablishmentFixture {
         Invoke-PgDump -Target $Target -Arguments $arguments -FailureMessage "Export of $($export.Label) failed"
     }
 }
-
-function Update-CheckedInSeed {
-    <#
-    .SYNOPSIS
-    Copies exported reference, establishment and migration evidence SQL into
-    seed/ as one consistent fixture. Review the change with git diff before committing.
-    #>
-    param([Parameter(Mandatory)][string]$FromDirectory)
-
-    $seedRoot = Get-SchemaPath 'seed'
-    foreach ($file in @($script:ReferenceSeedFile, $script:EstablishmentSeedFile, $script:MigrationSeedFile)) {
-        Copy-Item -LiteralPath (Join-Path $FromDirectory $file) -Destination (Join-Path $seedRoot $file) -Force
-    }
-}

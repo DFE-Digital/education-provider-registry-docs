@@ -20,14 +20,6 @@ function Open-BauConnection {
     return $connection
 }
 
-function ConvertTo-FixtureValue {
-    # Used by source-reference regression fixtures; bulk exports use the reader loop.
-    param($Value)
-    if ($null -eq $Value -or $Value -is [DBNull]) { return 'NULL' }
-    if ($Value -is [datetime]) { return $Value.ToString('yyyy-MM-dd',[Globalization.CultureInfo]::InvariantCulture) }
-    $text=if ($Value -is [IFormattable]) { $Value.ToString($null,[Globalization.CultureInfo]::InvariantCulture) } else { $Value.ToString() }
-    return $text.Replace('|',' ')
-}
 
 function Get-SqlWithVariables {
     <#
@@ -158,15 +150,25 @@ function Invoke-FixtureLoad {
     )
 
     Assert-FileExists -Path $LoadSqlFile
-    $loadSql = (Get-Content -LiteralPath $LoadSqlFile -Raw).Replace('__FIXTURE_PATH__', ($CsvPath -replace '\\', '/'))
+    # All values are SQL-literal contents. Render in one pass so a value that
+    # contains a placeholder-looking string is not substituted a second time.
+    $values=@{ FIXTURE_PATH=$CsvPath.Replace('\','/') }
     if ($TemplateValues) {
         foreach ($key in $TemplateValues.Keys) {
-            # Values are escaped SQL-literal contents, not executable SQL.
-            $loadSql = $loadSql.Replace("__$($key)__", ([string]$TemplateValues[$key]).Replace("'", "''"))
+            if ($key -eq 'FIXTURE_PATH' -or $key -eq 'RUN_ID') {throw "Reserved fixture template value: $key"}
+            $values[$key]=[string]$TemplateValues[$key]
         }
     }
+    if ($MigrationRunId -ne [guid]::Empty) { $values.RUN_ID=[string]$MigrationRunId }
+    $template=Get-Content -LiteralPath $LoadSqlFile -Raw
+    $loadSql=[regex]::Replace($template,'__(?<key>[A-Z][A-Z0-9_]*)__',{
+        param($match)
+        $key=$match.Groups['key'].Value
+        if (-not $values.ContainsKey($key)) {throw "Missing fixture template value '$key' in $LoadSqlFile"}
+        ([string]$values[$key]).Replace("'","''")
+    })
     if ($MigrationRunId -ne [guid]::Empty) {
-        $loadSql = "SELECT set_config('epr.migration_run_id', '$MigrationRunId', false);`n" + $loadSql
+        $loadSql = "SET epr.migration_run_id = '$MigrationRunId';`n" + $loadSql
     }
     $workingCopy = Join-Path $WorkingDirectory ('load-' + [System.IO.Path]::GetFileNameWithoutExtension($CsvPath) + '.sql')
     [System.IO.File]::WriteAllText($workingCopy, $loadSql, [System.Text.UTF8Encoding]::new($false))

@@ -2,7 +2,9 @@
 
 Reviewed on 14 November 2026 against [rev.md](rev.md) and the scripts and SQL at review time. This records the findings and proposed increments.
 
-Implementation update: increments 1–3 have now been implemented for the user's next migration run. Quiet failures retain diagnostics and SQLSTATE; a dedicated source-UID-based development party loader replaces the reviewed fixture loader in that path; group state resets per iteration; and normal empty-SEN placeholders are accepted. PowerShell syntax/module checks and read-only PostgreSQL diagnostic-classification checks passed. Full migration verification remains with the user. The remaining increments are proposed work.
+Implementation update: increments 1–3 were implemented and the user confirmed a successful migration run. Increments 4–6 are now implemented for the next user run: unused discovery/import functions and exports are removed; fixture rendering, quoting and run context are centralised; development maintenance has an explicit observations-only SQL loader. PowerShell syntax/module/tooling checks and fixture-rendering checks passed, including apostrophes in paths and values. The default three-URN selection and checked-in maintenance derivation are preserved. Increments 7–10 remain proposed work.
+
+The singular `Write-DevelopmentRelationshipError` helper is retained because increment 1 gave it an active maintenance-phase logging caller; it is no longer dead code.
 
 The purpose remains a quick development dump with repeatable commands, bulk loading, tolerable data loss and useful failure logs. Both the BAU rebuild and checked-in SQL rebuild must continue to work. The checked-in path currently has fixture validations that the BAU path does not run; removing further checks would be a separate change, rather than a prerequisite for simplification.
 
