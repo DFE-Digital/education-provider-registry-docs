@@ -14,6 +14,7 @@ function Assert-EstablishmentBuildInputs {
         (Get-SchemaPath 'seed/seed-address-purposes.sql'),
         (Get-SchemaPath 'migration/migration-schema.sql'),
         (Get-SchemaPath 'migration/load-development-establishment-seed.sql'),
+        (Get-SchemaPath 'migration/load-development-party-relationships.sql'),
         (Get-SchemaPath 'migration/maintenance-derivation.sql'),
         (Get-SchemaPath 'migration/proprietor-extensions.sql'),
         (Get-SchemaPath 'migration/council-reorganisation.sql'),

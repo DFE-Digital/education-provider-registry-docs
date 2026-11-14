@@ -2,6 +2,13 @@
 # reviewed identity mappings: rows that the normal model rejects are logged and
 # omitted without changing the already loaded establishments.
 
+function Test-DevelopmentDataRejection {
+    param([Parameter(Mandatory)][Exception]$Exception)
+    # Execution/configuration/client errors are not ordinary lossy source rows.
+    $state=[string]$Exception.Data['SqlState']
+    return $state -match '^(22|23)' -or $state -eq 'P0001'
+}
+
 function Get-DevelopmentSeedUrns {
     param([Parameter(Mandatory)]$Target)
     $text=Invoke-Psql -Target $Target -Output Csv -Command 'SELECT urn FROM establishment.establishment ORDER BY urn' -FailureMessage 'Development relationship scope query failed'
@@ -13,11 +20,11 @@ function Write-DevelopmentRelationshipError {
           [Parameter(Mandatory)][int]$Urn,[Parameter(Mandatory)][string]$Kind,
           [Parameter(Mandatory)][string]$Message,$SourceRow)
     $messageSql=$Message.Replace("'","''")
-    # This is a fallback logger reached while handling a loader exception.
-    # Keep its insert deliberately scalar-only: PowerShell CSV objects can
-    # contain quotes/newlines which must not turn error logging into a second
-    # failure. The source extract remains in the run workspace when requested.
     $rowSql='NULL'
+    if ($null -ne $SourceRow) {
+        $json=(ConvertTo-Json -InputObject $SourceRow -Compress -Depth 5).Replace("'","''")
+        $rowSql="'$json'::jsonb"
+    }
     $kindSql=$Kind.Replace("'","''")
     $path=Join-Path ([IO.Path]::GetTempPath()) ('log-development-relationship-error-'+[guid]::NewGuid().ToString('N')+'.sql')
     try {
@@ -74,30 +81,28 @@ function Import-DevelopmentPartyRelationships {
     $scope=[Collections.Generic.HashSet[int]]::new([int[]]$LoadedUrns)
     $rows=@(Import-Csv -LiteralPath $csv -Delimiter '|' | Where-Object {$scope.Contains([int]$_.establishment_urn)})
     Write-Host "    Attempting $($rows.Count) party links in $([Math]::Ceiling($rows.Count / 250.0)) lossy slices."
-    $failed=0; $loaded=0
     function Invoke-PartySlice {
         param([object[]]$Slice)
         if ($Slice.Count -eq 0) { return }
         $sliceCsv=Join-Path $WorkingDirectory ('development-party-'+[guid]::NewGuid().ToString('N')+'.csv')
         try {
             Write-DevelopmentCsv -Rows $Slice -Path $sliceCsv
-            Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'establishment/load/load-academy-trust-responsibility-fixture.sql') `
+            Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'migration/load-development-party-relationships.sql') `
                 -CsvPath $sliceCsv -WorkingDirectory $WorkingDirectory -Description "development party relationship slice ($($Slice.Count))" -MigrationRunId $MigrationRunId -Quiet
-            $script:developmentPartyLoaded += $Slice.Count
         } catch {
+            if (-not (Test-DevelopmentDataRejection -Exception $_.Exception)) { throw }
             # This is intentionally lossy and fast: do not split a failed
             # development slice into serial single-row loads. All rows in the
             # failed slice are recorded and omitted together.
-            Write-DevelopmentRelationshipErrors -Target $Target -MigrationRunId $MigrationRunId -Rows $Slice -Kind 'party' -Message $_.Exception.Message -WorkingDirectory $WorkingDirectory
-            $script:developmentPartyFailed += $Slice.Count
+            Write-DevelopmentRelationshipErrors -Target $Target -MigrationRunId $MigrationRunId -Rows $Slice -Kind 'party' -Message ("Rows skipped in failed slice: "+$_.Exception.Message) -WorkingDirectory $WorkingDirectory
         } finally { Remove-Item -LiteralPath $sliceCsv -Force -ErrorAction SilentlyContinue }
     }
-    $script:developmentPartyLoaded=0; $script:developmentPartyFailed=0
     for($offset=0;$offset -lt $rows.Count;$offset+=250) {
         $end=[Math]::Min($offset+249,$rows.Count-1)
         Invoke-PartySlice -Slice @($rows[$offset..$end])
     }
-    Write-Host "    $script:developmentPartyLoaded party links loaded; $script:developmentPartyFailed skipped."
+    $skipped=[int](Invoke-Psql -Target $Target -Output Scalar -FailureMessage 'Party outcome query failed' -Command "SELECT count(*) FROM migration.relationship_load_error WHERE migration_run_id='$MigrationRunId' AND relationship_kind='party';")
+    Write-Host "    $($rows.Count-$skipped) party links loaded; $skipped skipped."
 }
 
 function Import-DevelopmentSenRelationships {
@@ -171,10 +176,19 @@ function Import-DevelopmentRelationships {
                 Write-DevelopmentCsv -Rows $maintenanceRows -Path $maintenanceCsv
                 Import-MaintenanceObservationFixture -Target $Target -CsvPath $maintenanceCsv -SourceDatabase $Source.Database -WorkingDirectory $WorkingDirectory -SkipDerivation
             }
-            catch { Write-Warning "Maintenance relationships were skipped: $($_.Exception.Message)" }
+            catch {
+                $failure=$_.Exception
+                Write-DevelopmentRelationshipError -Target $Target -MigrationRunId $MigrationRunId -Urn ([int]$urns[0]) `
+                    -Kind 'maintenance-phase' -Message $failure.Message `
+                    -SourceRow ([pscustomobject]@{scope='all seeded establishments';establishments=$urns.Count;phase_failed=$true})
+                if (-not (Test-DevelopmentDataRejection -Exception $failure)) { throw }
+                Write-Warning "Maintenance observation phase was skipped: $($failure.Message)"
+            }
         }
         $complete="UPDATE migration.migration_run SET status=CASE WHEN EXISTS (SELECT 1 FROM migration.establishment_load_error WHERE migration_run_id='$MigrationRunId') OR EXISTS (SELECT 1 FROM migration.relationship_load_error WHERE migration_run_id='$MigrationRunId') THEN 'completed_with_errors' ELSE 'completed' END, completed_at=clock_timestamp() WHERE migration_run_id='$MigrationRunId';"
         Invoke-Psql -Target $Target -Quiet -FailureMessage 'Could not complete development migration run' -Command $complete | Out-Null
+        Write-Host 'Relationship outcomes (rejected rows; maintenance-phase entries represent a phase failure):'
+        Invoke-Psql -Target $Target -Command "SELECT relationship_kind,count(*) AS rejected_entries FROM migration.relationship_load_error WHERE migration_run_id='$MigrationRunId' GROUP BY relationship_kind ORDER BY relationship_kind;" -FailureMessage 'Relationship outcome summary failed'
     } catch {
         Invoke-Psql -Target $Target -Quiet -FailureMessage 'Could not fail development migration run' -Command "UPDATE migration.migration_run SET status='failed', completed_at=clock_timestamp() WHERE migration_run_id='$MigrationRunId';" | Out-Null
         throw

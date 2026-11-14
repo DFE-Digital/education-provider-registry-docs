@@ -19,7 +19,8 @@ SELECT '__RUN_ID__', src.urn, 'sen',
 FROM source_development_sen src
 LEFT JOIN establishment.sen s ON s.code=src.sen_code
 WHERE src.source_bucket<>1 OR src.source_archived NOT IN (0,1)
-   OR src.sen_code IS NULL OR (src.sen_code<>'00' AND (s.sen_id IS NULL OR s.name IS DISTINCT FROM src.source_sen_name));
+   OR (src.sen_code IS NULL AND (src.source_bucket IS NOT NULL OR src.source_sen_name IS NOT NULL OR src.source_archived IS NOT NULL))
+   OR (src.sen_code<>'00' AND (s.sen_id IS NULL OR s.name IS DISTINCT FROM src.source_sen_name));
 
 INSERT INTO establishment.establishment_sen (establishment_id, sen_id)
 SELECT e.establishment_id, s.sen_id

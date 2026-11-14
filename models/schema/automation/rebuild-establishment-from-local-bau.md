@@ -53,10 +53,33 @@ the target rejects are omitted and recorded in `migration.relationship_load_erro
 This keeps a relationship data set useful for development without treating it as
 a source-data or identity-resolution exercise.
 
+Development party links use `migration/load-development-party-relationships.sql`.
+The source Group UID identifies a party across its establishment links; matching
+names do not merge parties. Conflicting identifiers and model-rejected links are
+logged with the PostgreSQL SQLSTATE and error text. Each rejected link rolls back
+its own writes. If the staging COPY rejects a whole slice, the slice is logged
+and skipped without individual retries. The summary reports actual party links
+loaded and skipped.
+
+Quiet loads retain database diagnostics for error logs. Execution failures such
+as broken SQL, missing tables or connection failures stop the command instead of
+being counted as ordinary source-data exclusions. A maintenance observation phase
+failure is recorded as `maintenance-phase` against the first scoped URN, with a
+source-row note identifying the whole phase's scope; it is not a rejection of
+that establishment. The run completes with errors for tolerated data failures.
+
+The maintenance development phase imports source observations only; it does not
+derive maintenance responsibilities. An establishment with no SEN associations
+is an ordinary empty association set and is not logged as malformed.
+
 ```sql
 SELECT urn, sqlstate, error_message, error_detail
 FROM migration.establishment_load_error
 ORDER BY urn;
+
+SELECT urn, relationship_kind, error_message, source_row
+FROM migration.relationship_load_error
+ORDER BY recorded_at;
 
 SELECT status, notes
 FROM migration.migration_run

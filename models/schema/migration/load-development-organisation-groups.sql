@@ -18,6 +18,8 @@ BEGIN
                     count(*) member_count, count(DISTINCT establishment_urn) distinct_members
              FROM development_group_source GROUP BY group_uid LOOP
         BEGIN
+            authority_id := NULL;
+            organisation_id := NULL;
             IF g.group_type NOT IN ('Federation','Children''s-centre group')
                OR g.member_count <> g.distinct_members
                OR EXISTS (SELECT 1 FROM development_group_source x WHERE x.group_uid=g.group_uid AND x.source_archived<>0)
@@ -54,11 +56,12 @@ BEGIN
               AND NOT EXISTS (SELECT 1 FROM establishment.organisation_group_member m
                               WHERE m.organisation_group_id=organisation_id AND m.establishment_id=e.establishment_id
                                 AND m.joined_date IS NOT DISTINCT FROM s.joined_date);
-        EXCEPTION WHEN OTHERS THEN
+        EXCEPTION WHEN data_exception OR integrity_constraint_violation OR raise_exception THEN
             IF run_id IS NOT NULL THEN
-                INSERT INTO migration.relationship_load_error(migration_run_id,urn,relationship_kind,error_message)
-                SELECT run_id,establishment_urn,'organisation-group','Development organisation group '||g.group_uid||' was skipped.'
-                FROM development_group_source WHERE group_uid=g.group_uid;
+                INSERT INTO migration.relationship_load_error(migration_run_id,urn,relationship_kind,error_message,source_row)
+                SELECT run_id,establishment_urn,'organisation-group',
+                       'Group '||g.group_uid||' ['||SQLSTATE||']: '||SQLERRM,to_jsonb(src)
+                FROM development_group_source src WHERE group_uid=g.group_uid;
             END IF;
         END;
     END LOOP;
