@@ -27,6 +27,12 @@ The command recreates the disposable target schemas, loads reference dictionarie
 and geography, then extracts establishment rows once. PostgreSQL stages the raw
 values and attempts batches of 1,000 establishments by default.
 
+The entry point creates one shared migration run for core and relationship
+phases and completes it once at the end. The final summary separates eligible
+source candidates, cached exclusions, attempted core rows, loaded rows and new
+rejections, with per-phase relationship and maintenance outcomes in run notes.
+Core batch commits and rejection-cache updates are retained if a later phase fails.
+
 When a batch fails on source data or a model constraint, its writes roll back
 and it is split into smaller batches. An individual establishment that still
 fails is skipped. All of its partial child rows roll back. Other establishments
@@ -57,9 +63,11 @@ Development party links use `migration/load-development-party-relationships.sql`
 The source Group UID identifies a party across its establishment links; matching
 names do not merge parties. Conflicting identifiers and model-rejected links are
 logged with the PostgreSQL SQLSTATE and error text. Each rejected link rolls back
-its own writes. If the staging COPY rejects a whole slice, the slice is logged
-and skipped without individual retries. The summary reports actual party links
-loaded and skipped.
+its own writes. Relationship extracts are staged once per phase and scoped to
+loaded establishment owners in PostgreSQL before validation and logging. If a
+phase's staging COPY rejects its input, the phase failure is logged without
+per-row retries. The summary reports loaded/rejected party links and phase failures
+separately. The same staging approach covers group, SEN and maintenance observations.
 
 Quiet loads retain database diagnostics for error logs. Execution failures such
 as broken SQL, missing tables or connection failures stop the command instead of

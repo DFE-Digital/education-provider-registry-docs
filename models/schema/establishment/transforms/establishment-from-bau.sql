@@ -13,6 +13,10 @@
 
 -- Supply URN with sqlcmd, for example: -v URN=136102
 DECLARE @URN numeric(19, 0) = $(URN);
+DECLARE @SELECTED table (urn numeric(19,0) PRIMARY KEY);
+DECLARE @EXCLUDED table (urn numeric(19,0) PRIMARY KEY);
+INSERT INTO @SELECTED SELECT DISTINCT CONVERT(numeric(19,0),value) FROM STRING_SPLIT('$(SELECTED_URNS)',',') WHERE value<>'';
+INSERT INTO @EXCLUDED SELECT DISTINCT CONVERT(numeric(19,0),value) FROM STRING_SPLIT('$(EXCLUDED_URNS)',',') WHERE value<>'';
 
 WITH source_establishment AS (
     SELECT
@@ -104,6 +108,8 @@ WITH source_establishment AS (
     LEFT JOIN dbo.OfficialSixthForm sf ON sf.code=e.officialSixthForm_code
     LEFT JOIN dbo.TypeOfReservedProvision sp ON sp.code=e.typeOfReservedProvision_code
     WHERE e.status_code IN ('1','2','3') AND (@URN IS NULL OR e.URN = @URN)
+      AND (NOT EXISTS(SELECT 1 FROM @SELECTED) OR e.URN IN (SELECT urn FROM @SELECTED))
+      AND NOT EXISTS(SELECT 1 FROM @EXCLUDED x WHERE x.urn=e.URN)
 )
 SELECT
     s.URN AS urn,
@@ -233,5 +239,7 @@ SELECT
     a.northing
 FROM dbo.EstablishmentAdditionalAddresses AS a
 WHERE (@URN IS NULL OR a.URN = @URN)
+  AND (NOT EXISTS(SELECT 1 FROM @SELECTED) OR a.URN IN (SELECT urn FROM @SELECTED))
+  AND NOT EXISTS(SELECT 1 FROM @EXCLUDED x WHERE x.urn=a.URN)
   AND EXISTS (SELECT 1 FROM dbo.Establishment e WHERE e.URN=a.URN AND e.status_code IN ('1','2','3'))
 ORDER BY a.record_number;

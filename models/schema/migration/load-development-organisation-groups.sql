@@ -7,6 +7,10 @@ CREATE TEMP TABLE development_group_source (
     source_link_type text
 ) ON COMMIT DROP;
 \copy development_group_source FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+DELETE FROM development_group_source s WHERE NOT EXISTS (
+    SELECT 1 FROM establishment.establishment e WHERE e.urn=s.establishment_urn);
+CREATE INDEX ON development_group_source(group_uid);
+ANALYZE development_group_source;
 
 DO $$
 DECLARE g record; member record; organisation_id uuid; authority_id uuid; run_id uuid;
@@ -66,4 +70,10 @@ BEGIN
         END;
     END LOOP;
 END $$;
+UPDATE migration.migration_run SET notes=(coalesce(notes::jsonb,'{}') || jsonb_build_object('organisation_groups',
+    jsonb_build_object('groups',(SELECT count(DISTINCT group_uid) FROM development_group_source),
+        'attempted',(SELECT count(*) FROM development_group_source),
+        'loaded',(SELECT count(*) FROM development_group_source)-(SELECT count(*) FROM migration.relationship_load_error WHERE migration_run_id='__RUN_ID__' AND relationship_kind='organisation-group'),
+        'skipped',(SELECT count(*) FROM migration.relationship_load_error WHERE migration_run_id='__RUN_ID__' AND relationship_kind='organisation-group'))))::text
+WHERE migration_run_id='__RUN_ID__';
 COMMIT;

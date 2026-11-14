@@ -1,6 +1,6 @@
 function Read-KnownBadEstablishments {
     param([Parameter(Mandatory)][string]$Path)
-    if (-not (Test-Path -LiteralPath $Path)) { return @() }
+    if (-not (Test-Path -LiteralPath $Path)) { return }
     $parsed=Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
     foreach ($entry in $parsed) {if ($null -ne $entry) {$entry}}
 }

@@ -61,8 +61,7 @@ function Import-GeographicReferenceData {
     param(
         [Parameter(Mandatory)]$Source,
         [Parameter(Mandatory)]$Target,
-        [Parameter(Mandatory)][string]$WorkingDirectory,
-        [switch]$EstablishmentsOnly
+        [Parameter(Mandatory)][string]$WorkingDirectory
     )
 
     foreach ($dataset in $script:GeographicDatasets) {
@@ -75,5 +74,5 @@ function Import-GeographicReferenceData {
             -CsvPath $csvPath -WorkingDirectory $WorkingDirectory -Description "geographic dataset $($dataset.Name)"
         Write-Host "    $rows rows loaded."
     }
-    if (-not $EstablishmentsOnly) { Import-LocalAuthorityCouncilFixture -Target $Target }
+    Import-LocalAuthorityCouncilFixture -Target $Target
 }

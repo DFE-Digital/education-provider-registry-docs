@@ -45,11 +45,18 @@ and evidence, without reading BAU. See the [checked-in SQL runbook](rebuild-esta
 
 ## Implementation
 
-- `Public/DevelopmentSeed.ps1` prepares the development extract and staged load.
+- `Public/DevelopmentSeed.ps1` prepares the development extract and composes the
+  explicit workspace and batch SQL files in `migration/`.
 - `migration/load-development-establishment-seed.sql` splits failed batches and
   records isolated errors in `migration.establishment_load_error`.
-- `establishment/load/load-establishment-fixture.sql` supplies the shared core
-  table inserts with their normal constraints.
+- `migration/prepare-development-establishments.sql` creates reusable staging
+  workspaces; `migration/apply-development-establishment-batch.sql` contains the
+  explicit core inserts and casts. Batch retries reuse those workspaces.
+- `Public/DevelopmentRun.ps1` creates and completes the shared run on behalf of
+  the BAU entry point; phase loaders do not reopen or complete it.
+- Relationship CSVs are copied directly into PostgreSQL and filtered to loaded
+  establishment owners there, before validation or rejection logging. PowerShell
+  does not materialise and rewrite those extracts.
 - `Public/ReferenceData.ps1` and `Public/BauImport.ps1` supply dictionaries and
   geography. Both rebuild paths retain the council fixture import. The BAU
   development path loads its party relationships through the dedicated development loader.

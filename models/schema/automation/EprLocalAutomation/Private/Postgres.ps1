@@ -3,7 +3,7 @@
 function Get-PostgresClientPath {
     <#
     .SYNOPSIS
-    Finds psql or pg_dump on the PATH, then in the default Windows install folder.
+    Finds psql or pg_dump on PATH, then in the newest complete PostgreSQL install.
     #>
     param([Parameter(Mandatory)][ValidateSet('psql', 'pg_dump')][string]$Tool)
 
@@ -11,8 +11,17 @@ function Get-PostgresClientPath {
         $command = Get-Command $name -ErrorAction SilentlyContinue
         if ($command) { return $command.Source }
     }
-    $windowsDefault = "C:\Program Files\PostgreSQL\18\bin\$Tool.exe"
-    if (Test-Path -LiteralPath $windowsDefault) { return $windowsDefault }
+    $installRoot=Join-Path $env:ProgramFiles 'PostgreSQL'
+    if (Test-Path -LiteralPath $installRoot) {
+        $versions=Get-ChildItem -LiteralPath $installRoot -Directory | Where-Object {$_.Name -match '^\d+(\.\d+)*$'} |
+            Sort-Object {[version]$(if ($_.Name.Contains('.')) {$_.Name} else {$_.Name+'.0'})} -Descending
+        foreach ($version in $versions) {
+            $bin=Join-Path $version.FullName 'bin'
+            if ((Test-Path -LiteralPath (Join-Path $bin 'psql.exe')) -and (Test-Path -LiteralPath (Join-Path $bin 'pg_dump.exe'))) {
+                return (Join-Path $bin "$Tool.exe")
+            }
+        }
+    }
     throw "$Tool not found. Add the PostgreSQL bin folder to PATH."
 }
 

@@ -1,18 +1,10 @@
-# Lossy relationship loading for the disposable BAU development seed. It has no
-# reviewed identity mappings: rows that the normal model rejects are logged and
-# omitted without changing the already loaded establishments.
+# Bulk relationships are scoped in PostgreSQL before validation and logging.
 
 function Test-DevelopmentDataRejection {
     param([Parameter(Mandatory)][Exception]$Exception)
     # Execution/configuration/client errors are not ordinary lossy source rows.
     $state=[string]$Exception.Data['SqlState']
     return $state -match '^(22|23)' -or $state -eq 'P0001'
-}
-
-function Get-DevelopmentSeedUrns {
-    param([Parameter(Mandatory)]$Target)
-    $text=Invoke-Psql -Target $Target -Output Csv -Command 'SELECT urn FROM establishment.establishment ORDER BY urn' -FailureMessage 'Development relationship scope query failed'
-    return @($text -split "`r?`n" | Where-Object {$_ -match '^"?\d+"?$'} | ForEach-Object {[int]$_.Trim('"')})
 }
 
 function Write-DevelopmentRelationshipError {
@@ -33,158 +25,41 @@ function Write-DevelopmentRelationshipError {
     } finally { Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue }
 }
 
-function Write-DevelopmentRelationshipErrors {
-    param([Parameter(Mandatory)]$Target,[Parameter(Mandatory)][guid]$MigrationRunId,
-          [Parameter(Mandatory)][object[]]$Rows,[Parameter(Mandatory)][string]$Kind,
-          [Parameter(Mandatory)][string]$Message,[Parameter(Mandatory)][string]$WorkingDirectory)
-    if ($Rows.Count -eq 0) { return }
-    $messageSql=$Message.Replace("'","''")
-    $kindSql=$Kind.Replace("'","''")
-    $values=@(foreach($row in $Rows) { "('$MigrationRunId',$([int]$row.establishment_urn),'$kindSql','$messageSql',NULL)" })
-    # A rejected 250-row slice can exceed Windows' command-line limit when the
-    # database error is repeated for every row. Use a SQL file, not -Command.
-    $path=Join-Path $WorkingDirectory ('log-development-relationship-errors-'+[guid]::NewGuid().ToString('N')+'.sql')
-    try {
-        [IO.File]::WriteAllText($path,"INSERT INTO migration.relationship_load_error(migration_run_id,urn,relationship_kind,error_message,source_row) VALUES $($values -join ',');",[Text.UTF8Encoding]::new($false))
-        Invoke-Psql -Target $Target -Quiet -FailureMessage 'Development relationship error logging failed' -File $path | Out-Null
-    } finally { Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue }
-}
-
-function Write-DevelopmentCsv {
-    param([Parameter(Mandatory)][object[]]$Rows,[Parameter(Mandatory)][string]$Path)
-    if ($Rows.Count -eq 0) { return }
-    $columns=@($Rows[0].PSObject.Properties.Name)
-    $writer=[IO.StreamWriter]::new($Path,$false,[Text.UTF8Encoding]::new($false),65536)
-    try {
-        $writer.WriteLine(($columns -join '|'))
-        foreach($row in $Rows) {
-            $values=foreach($column in $columns) {
-                $value=$row.$column
-                if ($null -eq $value -or $value -eq 'NULL') { 'NULL'; continue }
-                $text=[string]$value
-                if ($text.IndexOfAny([char[]]@('|','"',"`r","`n")) -ge 0) { '"'+$text.Replace('"','""')+'"' } else {$text}
-            }
-            $writer.WriteLine(($values -join '|'))
-        }
-    } finally { $writer.Dispose() }
-}
-
-function Import-DevelopmentPartyRelationships {
-    param([Parameter(Mandatory)]$Source,[Parameter(Mandatory)]$Target,
-          [Parameter(Mandatory)][int[]]$LoadedUrns,[Parameter(Mandatory)][string]$WorkingDirectory,
-          [Parameter(Mandatory)][guid]$MigrationRunId)
-    Write-Step 'Loading lossy party relationships for seeded establishments'
-    $csv=Join-Path $WorkingDirectory 'development-party-relationships.csv'
-    $count=Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/development-party-relationships-from-bau.sql') `
-        -CsvPath $csv -RowCount Any -Description 'development party relationships'
-    if ($count -eq 0) { return }
-    $scope=[Collections.Generic.HashSet[int]]::new([int[]]$LoadedUrns)
-    $rows=@(Import-Csv -LiteralPath $csv -Delimiter '|' | Where-Object {$scope.Contains([int]$_.establishment_urn)})
-    Write-Host "    Attempting $($rows.Count) party links in $([Math]::Ceiling($rows.Count / 250.0)) lossy slices."
-    function Invoke-PartySlice {
-        param([object[]]$Slice)
-        if ($Slice.Count -eq 0) { return }
-        $sliceCsv=Join-Path $WorkingDirectory ('development-party-'+[guid]::NewGuid().ToString('N')+'.csv')
-        try {
-            Write-DevelopmentCsv -Rows $Slice -Path $sliceCsv
-            Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'migration/load-development-party-relationships.sql') `
-                -CsvPath $sliceCsv -WorkingDirectory $WorkingDirectory -Description "development party relationship slice ($($Slice.Count))" -MigrationRunId $MigrationRunId -Quiet
-        } catch {
-            if (-not (Test-DevelopmentDataRejection -Exception $_.Exception)) { throw }
-            # This is intentionally lossy and fast: do not split a failed
-            # development slice into serial single-row loads. All rows in the
-            # failed slice are recorded and omitted together.
-            Write-DevelopmentRelationshipErrors -Target $Target -MigrationRunId $MigrationRunId -Rows $Slice -Kind 'party' -Message ("Rows skipped in failed slice: "+$_.Exception.Message) -WorkingDirectory $WorkingDirectory
-        } finally { Remove-Item -LiteralPath $sliceCsv -Force -ErrorAction SilentlyContinue }
-    }
-    for($offset=0;$offset -lt $rows.Count;$offset+=250) {
-        $end=[Math]::Min($offset+249,$rows.Count-1)
-        Invoke-PartySlice -Slice @($rows[$offset..$end])
-    }
-    $skipped=[int](Invoke-Psql -Target $Target -Output Scalar -FailureMessage 'Party outcome query failed' -Command "SELECT count(*) FROM migration.relationship_load_error WHERE migration_run_id='$MigrationRunId' AND relationship_kind='party';")
-    Write-Host "    $($rows.Count-$skipped) party links loaded; $skipped skipped."
-}
-
-function Import-DevelopmentSenRelationships {
-    param([Parameter(Mandatory)]$Source,[Parameter(Mandatory)]$Target,
-          [Parameter(Mandatory)][int[]]$LoadedUrns,[Parameter(Mandatory)][string]$WorkingDirectory,
-          [Parameter(Mandatory)][guid]$MigrationRunId)
-    Import-SenReferenceData -Source $Source -Target $Target -WorkingDirectory $WorkingDirectory
-    Write-Step 'Loading lossy SEN relationships for seeded establishments'
-    $sourceCsv=Join-Path $WorkingDirectory 'development-sen-source.csv'
-    Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/establishment-sen-from-bau.sql') `
-        -Variables @{URN='NULL'} -CsvPath $sourceCsv -RowCount Any -Description 'development SEN relationships' | Out-Null
-    $scope=[Collections.Generic.HashSet[int]]::new([int[]]$LoadedUrns)
-    $rows=@(Import-Csv -LiteralPath $sourceCsv -Delimiter '|' | Where-Object {$scope.Contains([int]$_.urn)})
-    $csv=Join-Path $WorkingDirectory 'development-sen.csv'
-    Write-DevelopmentCsv -Rows $rows -Path $csv
-    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'migration/load-development-establishment-sen.sql') `
-        -CsvPath $csv -WorkingDirectory $WorkingDirectory -Description 'development SEN relationships' -MigrationRunId $MigrationRunId -Quiet
-}
-
-function Import-DevelopmentOrganisationGroups {
-    param([Parameter(Mandatory)]$Source,[Parameter(Mandatory)]$Target,
-          [Parameter(Mandatory)][int[]]$LoadedUrns,[Parameter(Mandatory)][string]$WorkingDirectory,
-          [Parameter(Mandatory)][guid]$MigrationRunId)
-    Write-Step 'Loading lossy organisation-group memberships for seeded establishments'
-    $scope=[Collections.Generic.HashSet[int]]::new([int[]]$LoadedUrns)
-    $bulkCsv=Join-Path $WorkingDirectory 'development-organisation-groups.csv'
-    $bulkCount=Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/development-organisation-groups-from-bau.sql') `
-        -CsvPath $bulkCsv -RowCount Any -Description 'development organisation groups'
-    if ($bulkCount -eq 0) { return }
-    $loaded=0; $skipped=0
-    $bulkRows=@(Import-Csv -LiteralPath $bulkCsv -Delimiter '|' | Where-Object {$scope.Contains([int]$_.establishment_urn)})
-    $groups=@($bulkRows | Group-Object group_uid)
-    Write-Host "    Attempting $($groups.Count) organisation groups from one bulk extract."
-    if ($bulkRows.Count -eq 0) { return }
-    $fixture=Join-Path $WorkingDirectory 'development-organisation-groups-filtered.csv'
-    Write-DevelopmentCsv -Rows $bulkRows -Path $fixture
-    Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath 'migration/load-development-organisation-groups.sql') `
-        -CsvPath $fixture -WorkingDirectory $WorkingDirectory -Description 'development organisation groups' -MigrationRunId $MigrationRunId -Quiet
-    Write-Host "    Organisation groups loaded in one PostgreSQL batch."
-}
-
 function Import-DevelopmentRelationships {
     param([Parameter(Mandatory)]$Source,[Parameter(Mandatory)]$Target,
           [Parameter(Mandatory)][string]$WorkingDirectory,[Parameter(Mandatory)][guid]$MigrationRunId)
-    # Core seeding owns this run and completes it before returning. Reopen it
-    # while its dependent development relationships are being loaded, because
-    # the relationship fixtures intentionally require one running shared run.
-    Invoke-Psql -Target $Target -Quiet -FailureMessage 'Could not reopen development migration run' -Command "UPDATE migration.migration_run SET status='running', completed_at=NULL WHERE migration_run_id='$MigrationRunId';" | Out-Null
-    try {
-        $urns=Get-DevelopmentSeedUrns -Target $Target
-        if ($urns.Count -gt 0) {
-            $scope=[Collections.Generic.HashSet[int]]::new([int[]]$urns)
-            Import-DevelopmentPartyRelationships -Source $Source -Target $Target -LoadedUrns $urns -WorkingDirectory $WorkingDirectory -MigrationRunId $MigrationRunId
-            Import-DevelopmentOrganisationGroups -Source $Source -Target $Target -LoadedUrns $urns -WorkingDirectory $WorkingDirectory -MigrationRunId $MigrationRunId
-            Import-DevelopmentSenRelationships -Source $Source -Target $Target -LoadedUrns $urns -WorkingDirectory $WorkingDirectory -MigrationRunId $MigrationRunId
-            try {
-                Write-Step 'Loading lossy maintenance relationships for seeded establishments'
-                # Extract the simple all-source query once. Do not interpolate
-                # tens of thousands of URNs into SQL Server's IN clause.
-                $maintenanceSource=Join-Path $WorkingDirectory 'development-maintenance-source-all.csv'
-                Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath 'establishment/transforms/maintenance-responsibility-from-bau.sql') `
-                    -Variables @{ URNS='0'; ALL_SOURCE=1 } -CsvPath $maintenanceSource -RowCount Any -Description 'development maintenance source observations' | Out-Null
-                $maintenanceRows=@(Import-Csv -LiteralPath $maintenanceSource -Delimiter '|' | Where-Object {$scope.Contains([int]$_.urn)})
-                $maintenanceCsv=Join-Path $WorkingDirectory 'development-maintenance-source.csv'
-                Write-DevelopmentCsv -Rows $maintenanceRows -Path $maintenanceCsv
-                Import-MaintenanceObservationFixture -Target $Target -CsvPath $maintenanceCsv -SourceDatabase $Source.Database -WorkingDirectory $WorkingDirectory -SkipDerivation
+    $scope=ConvertFrom-Json (Invoke-Psql -Target $Target -Output Scalar -FailureMessage 'Relationship scope query failed' `
+        -Command "SELECT json_build_object('count',count(*),'first',min(urn)) FROM establishment.establishment;")
+    if ($scope.count -eq 0) {Write-Host 'No loaded establishments; relationship phases have no owners.';return}
+    $datasets=@(
+        @{Name='party';Transform='development-party-relationships-from-bau.sql';Load='load-development-party-relationships.sql';Variables=@{}},
+        @{Name='organisation-group';Transform='development-organisation-groups-from-bau.sql';Load='load-development-organisation-groups.sql';Variables=@{}},
+        @{Name='sen';Transform='establishment-sen-from-bau.sql';Load='load-development-establishment-sen.sql';Variables=@{URN='NULL'}},
+        @{Name='maintenance';Transform='maintenance-responsibility-from-bau.sql';Variables=@{URNS='0';ALL_SOURCE=1}}
+    )
+    foreach ($dataset in $datasets) {
+        Write-Step "Loading development $($dataset.Name): bulk source extract, PostgreSQL owner filtering"
+        try {
+            if ($dataset.Name -eq 'sen') {Import-SenReferenceData -Source $Source -Target $Target -WorkingDirectory $WorkingDirectory}
+            $csv=Join-Path $WorkingDirectory ("development-"+$dataset.Name+".csv")
+            $count=Export-BauQueryToCsv -Source $Source -SqlFile (Get-SchemaPath ("establishment/transforms/"+$dataset.Transform)) `
+                -Variables $dataset.Variables -CsvPath $csv -RowCount Any -Description ("development "+$dataset.Name)
+            if ($dataset.Name -eq 'maintenance') {
+                Import-MaintenanceObservationFixture -Target $Target -CsvPath $csv -SourceDatabase $Source.Database `
+                    -WorkingDirectory $WorkingDirectory -SkipDerivation -MigrationRunId $MigrationRunId
+            } else {
+                Invoke-FixtureLoad -Target $Target -LoadSqlFile (Get-SchemaPath ("migration/"+$dataset.Load)) `
+                    -CsvPath $csv -WorkingDirectory $WorkingDirectory -Description ("development "+$dataset.Name) `
+                    -MigrationRunId $MigrationRunId -Quiet
             }
-            catch {
-                $failure=$_.Exception
-                Write-DevelopmentRelationshipError -Target $Target -MigrationRunId $MigrationRunId -Urn ([int]$urns[0]) `
-                    -Kind 'maintenance-phase' -Message $failure.Message `
-                    -SourceRow ([pscustomobject]@{scope='all seeded establishments';establishments=$urns.Count;phase_failed=$true})
-                if (-not (Test-DevelopmentDataRejection -Exception $failure)) { throw }
-                Write-Warning "Maintenance observation phase was skipped: $($failure.Message)"
-            }
+            Write-Host "    $count source rows staged; only loaded establishment owners processed."
+        } catch {
+            $failure=$_.Exception
+            Write-DevelopmentRelationshipError -Target $Target -MigrationRunId $MigrationRunId -Urn ([int]$scope.first) `
+                -Kind ($dataset.Name+'-phase') -Message $failure.Message `
+                -SourceRow ([pscustomobject]@{scope='all seeded establishments';establishments=$scope.count;phase_failed=$true})
+            if (-not (Test-DevelopmentDataRejection -Exception $failure)) {throw}
+            Write-Warning "$($dataset.Name) phase skipped: $($failure.Message)"
         }
-        $complete="UPDATE migration.migration_run SET status=CASE WHEN EXISTS (SELECT 1 FROM migration.establishment_load_error WHERE migration_run_id='$MigrationRunId') OR EXISTS (SELECT 1 FROM migration.relationship_load_error WHERE migration_run_id='$MigrationRunId') THEN 'completed_with_errors' ELSE 'completed' END, completed_at=clock_timestamp() WHERE migration_run_id='$MigrationRunId';"
-        Invoke-Psql -Target $Target -Quiet -FailureMessage 'Could not complete development migration run' -Command $complete | Out-Null
-        Write-Host 'Relationship outcomes (rejected rows; maintenance-phase entries represent a phase failure):'
-        Invoke-Psql -Target $Target -Command "SELECT relationship_kind,count(*) AS rejected_entries FROM migration.relationship_load_error WHERE migration_run_id='$MigrationRunId' GROUP BY relationship_kind ORDER BY relationship_kind;" -FailureMessage 'Relationship outcome summary failed'
-    } catch {
-        Invoke-Psql -Target $Target -Quiet -FailureMessage 'Could not fail development migration run' -Command "UPDATE migration.migration_run SET status='failed', completed_at=clock_timestamp() WHERE migration_run_id='$MigrationRunId';" | Out-Null
-        throw
     }
 }
