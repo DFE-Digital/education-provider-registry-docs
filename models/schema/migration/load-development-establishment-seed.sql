@@ -113,9 +113,7 @@ BEGIN
         RAISE INFO 'Establishments processed: %, loaded: %, skipped: %',attempted,loaded,attempted-loaded;
     END LOOP;
     UPDATE migration.migration_run
-    SET status=CASE WHEN attempted=loaded THEN 'completed' ELSE 'completed_with_errors' END,
-        completed_at=clock_timestamp(),
-        notes=jsonb_build_object('purpose','development seed','attempted',attempted,'loaded',loaded,'skipped',attempted-loaded,'known_bad_list_entries',__KNOWN_BAD_COUNT__)::text
+    SET notes=jsonb_build_object('purpose','development seed','source_candidates',__CANDIDATES__,'attempted',attempted,'loaded',loaded,'skipped',attempted-loaded,'known_bad_excluded',__KNOWN_BAD_COUNT__)::text
     WHERE migration_run_id='__RUN_ID__'::uuid;
 END;
 $runner$;

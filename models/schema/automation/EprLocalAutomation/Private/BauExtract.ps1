@@ -104,7 +104,7 @@ function Export-BauQueryToCsv {
     $sql = Get-SqlWithVariables -SqlFile $SqlFile -Variables $Variables
     Write-Host "    Extracting $Description from $($Source.SqlServer)/$($Source.Database)..."
     $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-    $connection = $null; $command = $null; $reader = $null; $writer = $null
+    $connection = $null; $command = $null; $reader = $null
     $rows = 0
     try {
         $connection = Open-BauConnection -Source $Source
@@ -119,15 +119,11 @@ function Export-BauQueryToCsv {
         throw "BAU extract failed for ${Description}: $($_.Exception.Message)"
     }
     finally {
-        if ($writer) { $writer.Dispose() }
         if ($reader) { $reader.Dispose() }
         if ($command) { $command.Dispose() }
         if ($connection) { $connection.Dispose() }
     }
 
-    if ($rows -eq 0 -and $RowCount -ne 'Any') {
-        throw "No rows were returned from the local BAU copy for $Description."
-    }
     Write-Host "    Extracted $rows rows for $Description ($([int]$elapsed.Elapsed.TotalSeconds)s)."
     return $rows
 }

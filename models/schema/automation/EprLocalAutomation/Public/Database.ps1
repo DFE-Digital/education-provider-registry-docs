@@ -2,7 +2,7 @@
 
 function Assert-EstablishmentBuildInputs {
     # Resolve and check every requested input before any destructive reset.
-    param([switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @(),[switch]$EstablishmentsOnly)
+    param([switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @())
 
     $paths = @(
         (Get-SchemaPath 'establishment/establishment-schema.sql'),
@@ -14,18 +14,21 @@ function Assert-EstablishmentBuildInputs {
         (Get-SchemaPath 'seed/seed-address-purposes.sql'),
         (Get-SchemaPath 'migration/migration-schema.sql'),
         (Get-SchemaPath 'migration/load-development-establishment-seed.sql'),
+        (Get-SchemaPath 'migration/prepare-development-establishments.sql'),
+        (Get-SchemaPath 'migration/apply-development-establishment-batch.sql'),
+        (Get-SchemaPath 'establishment/transforms/development-establishment-counts-from-bau.sql'),
         (Get-SchemaPath 'migration/load-development-party-relationships.sql'),
+        (Get-SchemaPath 'migration/load-development-establishment-sen.sql'),
+        (Get-SchemaPath 'migration/load-development-organisation-groups.sql'),
         (Get-SchemaPath 'migration/load-development-maintenance-observations.sql'),
         (Get-SchemaPath 'migration/maintenance-derivation.sql'),
         (Get-SchemaPath 'migration/proprietor-extensions.sql'),
         (Get-SchemaPath 'migration/council-reorganisation.sql'),
         (Get-SchemaPath 'migration/group-address-evidence-schema.sql')
     )
-    if (-not $EstablishmentsOnly) {
         $paths+=@((Get-SchemaPath 'seed/seed-stage-4-proprietor-review.sql'),
             (Get-SchemaPath 'establishment/load/load-maintenance-responsibility-fixture.sql'),
             (Get-SchemaPath 'establishment/transforms/maintenance-responsibility-from-bau.sql'))
-    }
     if ($IncludeReferenceSeed) {
         $paths += @(
             (Get-SchemaPath 'seed/seed-reference-data.sql'),
@@ -40,7 +43,7 @@ function Assert-EstablishmentBuildInputs {
         $paths += Get-SchemaPath 'seed/fixtures/maintenance-source-observations.csv'
     }
     Assert-FileExists -Path $paths
-    if (-not $EstablishmentsOnly) { Assert-LocalAuthorityCouncilSeed }
+    Assert-LocalAuthorityCouncilSeed
 }
 
 function Reset-EstablishmentSchema {
@@ -50,10 +53,10 @@ function Reset-EstablishmentSchema {
     them is lost.
     #>
     param([Parameter(Mandatory)]$Target,
-          [switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @(),[switch]$EstablishmentsOnly)
+          [switch]$IncludeReferenceSeed, [string[]]$FixtureSeedFile = @())
 
-    Assert-EstablishmentBuildInputs -IncludeReferenceSeed:$IncludeReferenceSeed -FixtureSeedFile $FixtureSeedFile -EstablishmentsOnly:$EstablishmentsOnly
-    if (-not $EstablishmentsOnly) { Assert-CouncilEventResetAllowed -Target $Target }
+    Assert-EstablishmentBuildInputs -IncludeReferenceSeed:$IncludeReferenceSeed -FixtureSeedFile $FixtureSeedFile
+    Assert-CouncilEventResetAllowed -Target $Target
     Write-Step 'Recreating the establishment schema'
     Invoke-Psql -Target $Target -Command 'DROP SCHEMA IF EXISTS establishment CASCADE;' -FailureMessage 'Establishment schema reset failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/establishment-schema.sql') -FailureMessage 'Establishment schema creation failed'
@@ -92,8 +95,8 @@ function Initialize-EstablishmentDatabase {
     ready for establishment data to be loaded.
     #>
     param([Parameter(Mandatory)]$Target,[switch]$FromBau,
-          [string[]]$FixtureSeedFile = @(),[switch]$EstablishmentsOnly)
+          [string[]]$FixtureSeedFile = @())
 
-    Reset-EstablishmentSchema -Target $Target -IncludeReferenceSeed:(-not $FromBau) -FixtureSeedFile $FixtureSeedFile -EstablishmentsOnly:$EstablishmentsOnly
+    Reset-EstablishmentSchema -Target $Target -IncludeReferenceSeed:(-not $FromBau) -FixtureSeedFile $FixtureSeedFile
     Import-ReferenceSeed -Target $Target -TargetOwnedOnly:$FromBau
 }

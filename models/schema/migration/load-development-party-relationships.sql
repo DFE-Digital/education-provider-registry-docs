@@ -13,6 +13,10 @@ CREATE TEMP TABLE development_party_source (
     party_kind text, party_mapping_evidence text
 ) ON COMMIT DROP;
 \copy development_party_source FROM '__FIXTURE_PATH__' WITH (FORMAT csv, HEADER true, DELIMITER '|', NULL 'NULL')
+DELETE FROM development_party_source s WHERE NOT EXISTS (
+    SELECT 1 FROM establishment.establishment e WHERE e.urn=s.establishment_urn);
+CREATE INDEX ON development_party_source(group_uid);
+ANALYZE development_party_source;
 
 DO $$
 DECLARE
@@ -117,4 +121,9 @@ BEGIN
         END;
     END LOOP;
 END $$;
+UPDATE migration.migration_run SET notes=(coalesce(notes::jsonb,'{}') || jsonb_build_object('party',
+    jsonb_build_object('attempted',(SELECT count(*) FROM development_party_source),
+        'loaded',(SELECT count(*) FROM development_party_source)-(SELECT count(*) FROM migration.relationship_load_error WHERE migration_run_id='__RUN_ID__' AND relationship_kind='party'),
+        'skipped',(SELECT count(*) FROM migration.relationship_load_error WHERE migration_run_id='__RUN_ID__' AND relationship_kind='party'))))::text
+WHERE migration_run_id='__RUN_ID__';
 COMMIT;

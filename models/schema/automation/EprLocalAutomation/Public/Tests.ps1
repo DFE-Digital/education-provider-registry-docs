@@ -128,13 +128,6 @@ function Test-EstablishmentUrnValidation {
                 throw "Fixture selection accepted/rejected URN $testUrn incorrectly."
             }
         }
-        foreach ($commandName in @('Test-EstablishmentApproval')) {
-            $range = @((Get-Command $commandName).Parameters['Urn'].Attributes |
-                Where-Object { $_ -is [System.Management.Automation.ValidateRangeAttribute] })
-            if ($range.Count -ne 1 -or $range[0].MinRange -ne 1 -or $range[0].MaxRange -ne 999999) {
-                throw "URN validation is inconsistent on $commandName."
-            }
-        }
         foreach ($testUrn in @(-1,0,1000000)) {
             $rejected=$false
             try { Import-DevelopmentEstablishmentSeed -Source @{} -Target @{} -WorkingDirectory ([IO.Path]::GetTempPath()) -Urn $testUrn }

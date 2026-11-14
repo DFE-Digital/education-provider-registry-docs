@@ -52,6 +52,8 @@ Export-ModuleMember -Function @(
     'Import-ProprietorReviewQueue'
     'Import-DevelopmentEstablishmentSeed'
     'Import-DevelopmentRelationships'
+    'Start-DevelopmentSeedRun'
+    'Complete-DevelopmentSeedRun'
 
     # Checked-in fixtures
     'Import-CheckedInEstablishmentFixture'
