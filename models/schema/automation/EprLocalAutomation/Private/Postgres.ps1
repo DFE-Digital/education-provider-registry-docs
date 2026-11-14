@@ -105,7 +105,27 @@ function Invoke-Psql {
             } finally {$ErrorActionPreference=$savedPreference}
         }
         elseif ($Output -eq 'Console') {
-            if ($Quiet) { & $psql @arguments 2>$null | Out-Null }
+            if ($Quiet) {
+                # Hide routine output, but retain the real PostgreSQL failure.
+                # Verbose errors include SQLSTATE for data-vs-execution handling.
+                $savedPreference=$ErrorActionPreference
+                $launchFailure=$null
+                try {
+                    $ErrorActionPreference='Continue'
+                    $diagnostics=@(& $psql @arguments -v VERBOSITY=verbose 2>&1 | ForEach-Object {
+                        if ($_ -is [Management.Automation.ErrorRecord] -and $_.FullyQualifiedErrorId -like '*NativeCommandFailed*') {$launchFailure=$_}
+                        $_.ToString()
+                    })
+                    $exitCode=$LASTEXITCODE
+                } finally { $ErrorActionPreference=$savedPreference }
+                if ($launchFailure) {throw [InvalidOperationException]::new("$FailureMessage`: PostgreSQL client could not start. $launchFailure")}
+                if ($exitCode -ne 0) {
+                    $failure=[InvalidOperationException]::new("$FailureMessage (psql exit code $exitCode)`n"+($diagnostics -join "`n"))
+                    $state=[regex]::Match(($diagnostics -join "`n"),'(?:ERROR|FATAL):\s+([0-9A-Z]{5}):')
+                    if ($state.Success) {$failure.Data['SqlState']=$state.Groups[1].Value}
+                    throw $failure
+                }
+            }
             else { & $psql @arguments | Out-Host }
         }
         else {
