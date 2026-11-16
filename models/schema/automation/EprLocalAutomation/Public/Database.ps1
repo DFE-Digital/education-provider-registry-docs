@@ -6,7 +6,6 @@ function Assert-EstablishmentBuildInputs {
 
     $paths = @(
         (Get-SchemaPath 'establishment/establishment-schema.sql'),
-        (Get-SchemaPath 'establishment/sen-schema.sql'),
         (Get-SchemaPath 'establishment/transforms/reference-data-from-bau.sql'),
         (Get-SchemaPath 'establishment/load/load-reference-data-fixture.sql'),
         (Get-SchemaPath 'seed/seed-target-reference-data.sql'),
