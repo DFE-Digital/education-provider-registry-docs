@@ -21,6 +21,26 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automat
 
 Both recreate the local `establishment` and `migration` schemas. The connection guards permit local sources and targets only. PowerShell coordinates execution; SQL Server extracts source rows and PostgreSQL loads target rows using `psql`.
 
+## Local database passwords
+
+The two database credentials are supplied locally and are not checked into this repository. Each developer needs credentials for their own local databases; the scripts do not create these logins or set their passwords.
+
+| Database | Default connection | Local password configuration | Used by |
+| --- | --- | --- | --- |
+| BAU SQL Server source | `localhost`, database `gias_bau_test_local`, login `reader` | `EPR_BAU_SQL_PASSWORD` in the PowerShell environment. If absent, the BAU rebuild prompts for the reader password. There is no password file read by the SQL Server helper. | BAU rebuild only |
+| PostgreSQL target | `127.0.0.1:5432`, database `establishment_local`, login `postgres` | `%APPDATA%\postgresql\pgpass.conf`, outside the repository. `PGPASSWORD` or the rebuild's `-PostgresPassword` parameter can override the password-file lookup. `PGPASSFILE` can select a different password file. | Both rebuilds; the .NET API demo also uses the local PostgreSQL password file |
+
+The PostgreSQL password file uses one line per connection, in this format:
+
+```text
+hostname:port:database:username:password
+127.0.0.1:5432:establishment_local:postgres:<your-local-postgres-password>
+```
+
+Replace the placeholder with the actual local password. The file contains plaintext credentials; keep it in your local profile and do not copy it into the repository. SQL Server's `EPR_BAU_SQL_PASSWORD` environment variable also contains a plaintext password. A variable set only in a PowerShell session must be supplied again in a new session unless your local environment setup restores it.
+
+For Windows-authenticated SQL Server access, pass `-UseWindowsAuthentication` instead of supplying the reader password. The checked-in SQL rebuild does not need the BAU SQL Server password.
+
 ## BAU development data
 
 The source defaults to `gias_bau_test_local`. Its reader password is taken from `EPR_BAU_SQL_PASSWORD` or prompted for; `-UseWindowsAuthentication` uses Windows authentication instead. PostgreSQL defaults to `establishment_local`, using `pgpass.conf` or `PGPASSWORD`.
