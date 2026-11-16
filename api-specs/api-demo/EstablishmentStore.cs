@@ -29,7 +29,7 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
     public DateTimeOffset? LastKnownRefresh { get; private set; }
 
     public async Task<LoadResult> LoadAsync(int? urn, int? statusCode, CancellationToken ct,
-        int? pageSize = null, long offset = 0)
+        int? pageSize = null, long offset = 0, string[]? typeCodes = null)
     {
         await using var connection = await dataSource.OpenConnectionAsync(ct);
         await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.RepeatableRead, ct);
@@ -42,7 +42,7 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
             return new LoadResult(null, [], []);
         }
 
-        var cores = await ReadCoresAsync(connection, urn, statusCode, ct, pageSize, offset);
+        var cores = await ReadCoresAsync(connection, urn, statusCode, ct, pageSize, offset, typeCodes);
         var hasNextPage = pageSize is int size && cores.Count > size;
         if (hasNextPage)
         {
@@ -73,6 +73,34 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
         return new LoadResult(refreshedAt, establishments, incomplete, hasNextPage);
     }
 
+    public async Task<JsonArray> LoadEstablishmentTypesAsync(CancellationToken ct)
+    {
+        await using var connection = await dataSource.OpenConnectionAsync(ct);
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.RepeatableRead, ct);
+        await ExecuteAsync(connection, "SET TRANSACTION READ ONLY; SET LOCAL search_path = establishment;", ct);
+        LastKnownRefresh = await ReadRefreshedAtAsync(connection, ct);
+        await using var command = new NpgsqlCommand("""
+            SELECT code, name, establishment_type_category_id
+            FROM establishment_type
+            ORDER BY code COLLATE "C"
+            """, connection);
+        var types = new JsonArray();
+        await using (var reader = await command.ExecuteReaderAsync(ct))
+        {
+            while (await reader.ReadAsync(ct))
+            {
+                types.Add(new JsonObject
+                {
+                    ["code"] = reader.GetString(0),
+                    ["name"] = reader.GetString(1),
+                    ["establishment_type_category_id"] = reader.GetInt32(2)
+                });
+            }
+        }
+        await transaction.CommitAsync(ct);
+        return types;
+    }
+
     // ---------------------------------------------------------------- queries
 
     private const string RefreshSql = """
@@ -86,6 +114,11 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
             SELECT e.establishment_id, e.urn
             FROM establishment e
             WHERE ($1::int IS NULL OR e.urn = $1)
+              AND ($5::text[] IS NULL OR EXISTS (
+                  SELECT 1 FROM establishment_type t
+                  WHERE t.establishment_type_id = e.establishment_type_id
+                    AND t.code = ANY($5::text[])
+              ))
               AND EXISTS (
                   SELECT 1 FROM establishment_lifecycle l
                   JOIN establishment_status st USING (establishment_status_id)
@@ -288,13 +321,14 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
 
     private static async Task<List<Core>> ReadCoresAsync(
         NpgsqlConnection connection, int? urn, int? statusCode, CancellationToken ct,
-        int? pageSize, long offset)
+        int? pageSize, long offset, string[]? typeCodes)
     {
         await using var command = new NpgsqlCommand(CoreSql, connection);
         command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = (object?)urn ?? DBNull.Value });
         command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = (object?)statusCode ?? DBNull.Value });
         command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = pageSize is int size ? size + 1 : DBNull.Value });
         command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = offset });
+        command.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Text, Value = (object?)typeCodes ?? DBNull.Value });
         await using var reader = await command.ExecuteReaderAsync(ct);
         var row = new Row(reader);
         var cores = new List<Core>();

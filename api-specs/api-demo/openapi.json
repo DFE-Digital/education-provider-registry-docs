@@ -1,0 +1,746 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Published Establishment API local demo",
+    "description": "Demo contract including pagination, type lookup and OR-based type filtering. Shared payload schemas come from the published contract. Exact lowercase paths, no trailing slash, GET only and no request bodies. Query names are case-sensitive; unknown collection parameters and any lookup query parameter return 400. Type filtering happens before pagination and is preserved in next links.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/v1/establishment-types": {
+      "get": {
+        "operationId": "listEstablishmentTypes",
+        "description": "Full loaded lookup, ordered by code. Returns only code, name and establishment_type_category_id; no filters or pagination. Category IDs are database reference IDs, not category codes.",
+        "summary": "List establishment types",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EstablishmentType"
+                  }
+                }
+              }
+            },
+            "description": "All loaded establishment types in code order; an empty lookup returns [].",
+            "headers": {
+              "API-Version": {
+                "$ref": "#/components/headers/API-Version"
+              },
+              "API-Status": {
+                "$ref": "#/components/headers/API-Status"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "Data-Last-Refreshed-At": {
+                "$ref": "#/components/headers/Data-Last-Refreshed-At"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              }
+            }
+          },
+          "304": {
+            "headers": {
+              "API-Version": {
+                "$ref": "#/components/headers/API-Version"
+              },
+              "API-Status": {
+                "$ref": "#/components/headers/API-Status"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "Data-Last-Refreshed-At": {
+                "$ref": "#/components/headers/Data-Last-Refreshed-At"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              }
+            },
+            "description": "Not modified; no body."
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimit"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        },
+        "parameters": [
+          {
+            "description": "gzip or identity, with quality values.",
+            "name": "Accept-Encoding",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "ETag list or wildcard; weak comparison after request and data validation.",
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/establishments": {
+      "get": {
+        "operationId": "listEstablishments",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstablishmentPage"
+                }
+              }
+            },
+            "description": "A page of full establishment objects, sorted numerically by URN. Filters apply before pagination. Empty pages return items: [], hasNextPage: false and next: null.",
+            "headers": {
+              "API-Version": {
+                "$ref": "#/components/headers/API-Version"
+              },
+              "API-Status": {
+                "$ref": "#/components/headers/API-Status"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "Data-Last-Refreshed-At": {
+                "$ref": "#/components/headers/Data-Last-Refreshed-At"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              }
+            }
+          },
+          "304": {
+            "headers": {
+              "API-Version": {
+                "$ref": "#/components/headers/API-Version"
+              },
+              "API-Status": {
+                "$ref": "#/components/headers/API-Status"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "Data-Last-Refreshed-At": {
+                "$ref": "#/components/headers/Data-Last-Refreshed-At"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              }
+            },
+            "description": "Not modified; no body."
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimit"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        },
+        "summary": "List and filter published establishments",
+        "parameters": [
+          {
+            "name": "establishmenttype",
+            "in": "query",
+            "required": false,
+            "description": "Filter by establishment type code.\nMultiple codes are combined using OR: an establishment matches\nif its type code equals any supplied code.\nThis filter is combined with other filters using AND.\nSupply the parameter once without spaces or empty entries. Duplicate codes have no additional effect. Well-formed unknown codes match nothing; malformed or repeated values return invalid-establishmenttype-filter.",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9]{2}$"
+              },
+              "type": "array"
+            },
+            "example": [
+              "01",
+              "02",
+              "03"
+            ]
+          },
+          {
+            "description": "One lowercase untrimmed value, supplied once. Omit to include Open and Closed published records. Combines with establishmenttype using AND.",
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed"
+              ]
+            },
+            "required": false
+          },
+          {
+            "description": "Supplied at most once; positive integer.",
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "maximum": 2147483647,
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "description": "Supplied at most once; positive integer, at most 10000.",
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "default": 1000,
+              "maximum": 10000,
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "description": "gzip or identity, with quality values.",
+            "name": "Accept-Encoding",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "ETag list or wildcard; weak comparison after request and data validation.",
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/establishments/{URN}": {
+      "get": {
+        "operationId": "getEstablishment",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Establishment"
+                }
+              }
+            },
+            "description": "One published establishment.",
+            "headers": {
+              "API-Version": {
+                "$ref": "#/components/headers/API-Version"
+              },
+              "API-Status": {
+                "$ref": "#/components/headers/API-Status"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "Data-Last-Refreshed-At": {
+                "$ref": "#/components/headers/Data-Last-Refreshed-At"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              }
+            }
+          },
+          "304": {
+            "headers": {
+              "API-Version": {
+                "$ref": "#/components/headers/API-Version"
+              },
+              "API-Status": {
+                "$ref": "#/components/headers/API-Status"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "Data-Last-Refreshed-At": {
+                "$ref": "#/components/headers/Data-Last-Refreshed-At"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              },
+              "Vary": {
+                "$ref": "#/components/headers/Vary"
+              }
+            },
+            "description": "Not modified; no body."
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimit"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "Get one published establishment",
+        "parameters": [
+          {
+            "name": "URN",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,5}$"
+            },
+            "required": true
+          },
+          {
+            "description": "gzip or identity, with quality values.",
+            "name": "Accept-Encoding",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "ETag list or wildcard; weak comparison after request and data validation.",
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "ValidationError": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ValidationProblem"
+            }
+          }
+        },
+        "description": "Invalid query, URN or body. Codes include invalid-establishmenttype-filter, invalid-status-filter, invalid-pagination, unsupported-query-parameter, invalid-urn and unexpected-request-body.",
+        "headers": {
+          "API-Version": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "API-Status": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "beta"
+              ]
+            }
+          },
+          "X-Request-ID": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Data-Last-Refreshed-At": {
+            "description": "Latest known refresh, when available.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "Only GET is supported; Allow: GET.",
+        "headers": {
+          "Allow": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "GET"
+              ]
+            }
+          }
+        }
+      },
+      "NotAcceptable": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "JSON or an available content coding is not acceptable.",
+        "headers": {
+          "API-Version": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "API-Status": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "beta"
+              ]
+            }
+          },
+          "X-Request-ID": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Data-Last-Refreshed-At": {
+            "description": "Latest known refresh, when available.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "RateLimit": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "Rate limit exceeded; Retry-After gives the wait in seconds.",
+        "headers": {
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "Unavailable": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "Database/publication unavailable or a selected record is incomplete.",
+        "headers": {
+          "API-Version": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "API-Status": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "beta"
+              ]
+            }
+          },
+          "X-Request-ID": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Data-Last-Refreshed-At": {
+            "description": "Latest known refresh, when available.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "InternalError": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "Unexpected server error.",
+        "headers": {
+          "API-Version": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "API-Status": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "beta"
+              ]
+            }
+          },
+          "X-Request-ID": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Data-Last-Refreshed-At": {
+            "description": "Latest known refresh, when available.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "No published resource matches the path.",
+        "headers": {
+          "API-Version": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "API-Status": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "beta"
+              ]
+            }
+          },
+          "X-Request-ID": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Data-Last-Refreshed-At": {
+            "description": "Latest known refresh, when available.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Establishment": {
+        "$ref": "../published-establishment-api.openapi.json#/definitions/Establishment"
+      },
+      "EstablishmentType": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "name",
+          "establishment_type_category_id"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[0-9]{2}$",
+            "example": "01"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "example": "Community school"
+          },
+          "establishment_type_category_id": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "example": 4
+          }
+        }
+      },
+      "EstablishmentPage": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNextPage": {
+            "type": "boolean"
+          },
+          "next": {
+            "description": "Relative next-page URL with status and establishmenttype filters preserved, or null on the final page.",
+            "type": "string",
+            "nullable": true
+          },
+          "pageSize": {
+            "maximum": 10000,
+            "type": "integer",
+            "minimum": 1
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Establishment"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "hasNextPage",
+          "next"
+        ]
+      },
+      "Problem": {
+        "$ref": "../published-establishment-api.openapi.json#/definitions/Problem"
+      },
+      "ValidationProblem": {
+        "$ref": "../published-establishment-api.openapi.json#/definitions/ValidationProblem"
+      }
+    },
+    "headers": {
+      "API-Version": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "API-Status": {
+        "schema": {
+          "type": "string",
+          "enum": [
+            "beta"
+          ]
+        }
+      },
+      "X-Request-ID": {
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "Data-Last-Refreshed-At": {
+        "description": "Latest known refresh, when available.",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "ETag": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Cache-Control": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Vary": {
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

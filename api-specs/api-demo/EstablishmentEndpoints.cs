@@ -4,19 +4,24 @@ using Npgsql;
 
 namespace ApiDemo;
 
-/// <summary>Request validation and the two endpoints.</summary>
+/// <summary>Request validation and establishment/reference-data endpoints.</summary>
 public static partial class EstablishmentEndpoints
 {
     private const string CollectionPath = "/v1/establishments";
+    private const string TypesPath = "/v1/establishment-types";
+    private const string OpenApiPath = "/openapi/v1.json";
 
     [GeneratedRegex("^[1-9][0-9]{0,5}$")]
     private static partial Regex UrnPattern();
 
-    public static async Task HandleAsync(HttpContext context, EstablishmentStore store, ILogger log)
+    [GeneratedRegex("\\A[0-9]{2}\\z")]
+    private static partial Regex TypeCodePattern();
+
+    public static async Task HandleAsync(HttpContext context, EstablishmentStore store, ILogger log, JsonObject specification)
     {
         try
         {
-            await HandleCoreAsync(context, store);
+            await HandleCoreAsync(context, store, specification);
         }
         catch (Exception ex) when (ex is NpgsqlException or TimeoutException)
         {
@@ -36,14 +41,14 @@ public static partial class EstablishmentEndpoints
         }
     }
 
-    private static async Task HandleCoreAsync(HttpContext context, EstablishmentStore store)
+    private static async Task HandleCoreAsync(HttpContext context, EstablishmentStore store, JsonObject specification)
     {
         var request = context.Request;
         var path = request.Path.Value ?? "";
 
         // 1. Match the path exactly: lowercase segments, no trailing slash.
         string? urnSegment = null;
-        if (path == CollectionPath)
+        if (path == CollectionPath || path == TypesPath || path == OpenApiPath)
         {
             // collection
         }
@@ -77,7 +82,20 @@ public static partial class EstablishmentEndpoints
             return;
         }
 
-        if (urnSegment is null)
+        if (path == TypesPath || path == OpenApiPath)
+        {
+            if (request.Query.Count > 0)
+            {
+                await Responses.WriteProblem(context, StatusCodes.Status400BadRequest,
+                    "unsupported-query-parameter", $"{path} does not accept query parameters.",
+                    request.Query.Keys.Order(StringComparer.Ordinal)
+                        .Select(key => new ValidationError("query", key, "This query parameter is not supported.")).ToList());
+                return;
+            }
+            JsonNode payload = path == OpenApiPath ? specification : await store.LoadEstablishmentTypesAsync(context.RequestAborted);
+            await Responses.WriteRepresentation(context, payload);
+        }
+        else if (urnSegment is null)
         {
             await CollectionAsync(context, store);
         }
@@ -115,11 +133,11 @@ public static partial class EstablishmentEndpoints
     private static async Task CollectionAsync(HttpContext context, EstablishmentStore store)
     {
         var query = context.Request.Query;
-        var unsupported = query.Keys.Where(key => key is not ("status" or "page" or "pageSize")).Order(StringComparer.Ordinal).ToList();
+        var unsupported = query.Keys.Where(key => key is not ("status" or "establishmenttype" or "page" or "pageSize")).Order(StringComparer.Ordinal).ToList();
         if (unsupported.Count > 0)
         {
             await Responses.WriteProblem(context, StatusCodes.Status400BadRequest,
-                "unsupported-query-parameter", "Only status, page and pageSize query parameters are supported.",
+                "unsupported-query-parameter", "Only status, establishmenttype, page and pageSize query parameters are supported.",
                 unsupported.Select(key => new ValidationError("query", key, "This query parameter is not supported.")).ToList());
             return;
         }
@@ -136,6 +154,20 @@ public static partial class EstablishmentEndpoints
                     [new("query", "status", "Expected exactly one value: open or closed.")]);
                 return;
             }
+        }
+
+        string[]? typeCodes = null;
+        if (query.TryGetValue("establishmenttype", out var typeValues))
+        {
+            var codes = typeValues.Count == 1 ? typeValues[0]?.Split(',') : null;
+            if (codes is null || codes.Any(code => !TypeCodePattern().IsMatch(code)))
+            {
+                await Responses.WriteProblem(context, StatusCodes.Status400BadRequest,
+                    "invalid-establishmenttype-filter", "establishmenttype must be a comma-separated list of two-digit codes, given once.",
+                    [new("query", "establishmenttype", "Expected codes such as 01,02,03, without whitespace or empty entries.")]);
+                return;
+            }
+            typeCodes = codes.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();
         }
 
         var page = 1;
@@ -162,7 +194,7 @@ public static partial class EstablishmentEndpoints
         }
 
         var result = await store.LoadAsync(urn: null, statusCode, context.RequestAborted,
-            pageSize, ((long)page - 1) * pageSize);
+            pageSize, ((long)page - 1) * pageSize, typeCodes);
         if (await WritePublicationProblemAsync(context, result))
         {
             return;
@@ -177,6 +209,7 @@ public static partial class EstablishmentEndpoints
                 ["pageSize"] = pageSize.ToString(System.Globalization.CultureInfo.InvariantCulture)
             };
             if (statusCode is not null) parameters["status"] = query["status"].ToString();
+            if (typeCodes is not null) parameters["establishmenttype"] = string.Join(',', typeCodes);
             next = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(
                 context.Request.PathBase.Add(CollectionPath).Value!, parameters);
         }

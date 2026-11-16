@@ -20,6 +20,36 @@
     }
   ],
   "paths": {
+    "/establishment-types": {
+      "get": {
+        "tags": ["Establishments"],
+        "summary": "List establishment types",
+        "operationId": "listEstablishmentTypes",
+        "description": "Return the full establishment-type lookup as a bare JSON array, ordered by code. Each item contains code, name and establishment_type_category_id only. Codes are strings preserving leading zeroes; category IDs are integer reference-data identifiers. Include types with no published establishments. No query parameters or request body. Shared negotiation, ETags, headers and errors apply.",
+        "parameters": [
+          {"name": "Accept-Encoding", "in": "header", "required": false, "type": "string", "description": "Supports gzip and identity with quality values."},
+          {"name": "If-None-Match", "in": "header", "required": false, "type": "string", "description": "Conditional request using weak comparison or wildcard after validation."}
+        ],
+        "responses": {
+          "200": {
+            "description": "The full loaded type dictionary, ordered by code; an empty dictionary returns [].",
+            "schema": {"type": "array", "items": {"$ref": "#/definitions/EstablishmentType"}},
+            "examples": {"application/json": [
+              {"code": "01", "name": "Community school", "establishment_type_category_id": 4},
+              {"code": "02", "name": "Voluntary aided school", "establishment_type_category_id": 4},
+              {"code": "03", "name": "Voluntary controlled school", "establishment_type_category_id": 4},
+              {"code": "05", "name": "Foundation school", "establishment_type_category_id": 4}
+            ]}
+          },
+          "304": {"description": "Not modified; no response body."},
+          "400": {"description": "Unsupported query parameter or non-empty request body.", "schema": {"$ref": "#/definitions/ValidationProblem"}},
+          "405": {"description": "Only GET is allowed; Allow: GET.", "schema": {"$ref": "#/definitions/Problem"}},
+          "406": {"description": "Unacceptable media type or content coding.", "schema": {"$ref": "#/definitions/Problem"}},
+          "429": {"description": "Rate limit exceeded.", "schema": {"$ref": "#/definitions/Problem"}},
+          "503": {"description": "Reference data is unavailable.", "schema": {"$ref": "#/definitions/Problem"}}
+        }
+      }
+    },
     "/establishments": {
       "get": {
         "tags": [
@@ -27,8 +57,19 @@
         ],
         "operationId": "listEstablishments",
         "summary": "List published establishments",
-        "description": "GET /v1/establishments. Anonymous access. Fixed path is lowercase with no trailing slash. Only status=open or status=closed is supported; omit status to include both Open and Closed records. Values are case-sensitive, are not trimmed and may appear at most once. Empty/repeated/unsupported status values return 400 invalid-status-filter; other query parameter names return 400 unsupported-query-parameter. No request body; a non-empty body returns 400 unexpected-request-body. Unsupported methods return 405 with Allow: GET. Return every matching published establishment in one JSON array without pagination or a wrapper. Use the same full item representation as the detail endpoint for the same published data version; one item per URN, sorted numerically ascending. Omit unpublished records and statuses other than Open and Closed. No matches returns 200 with []. Read one consistent public projection; missing required publication facts in a matching record return 503 publication-incomplete instead of a partial collection. Shared content negotiation, headers and errors apply. Validate filters and resolve publication eligibility before evaluating If-None-Match. Compute the strong ETag over the complete selected array after deterministic UTF-8 serialisation and content coding using the SHA-256/Base64url algorithm of the detail operation. Apply standard weak comparison and wildcard handling. A 304 has no body, Content-Type or Content-Encoding. Last-Modified is not emitted.",
+        "description": "GET /v1/establishments. Anonymous access. Fixed path is lowercase with no trailing slash. The optional status filter accepts open or closed; omit status to include both Open and Closed records. The optional establishmenttype filter accepts comma-separated two-digit type codes combined using OR; combine it with status using AND. Values are case-sensitive, are not trimmed and may appear at most once. Empty/repeated/unsupported status values return 400 invalid-status-filter. Empty/repeated/malformed establishmenttype values return 400 invalid-establishmenttype-filter. Query names other than status and establishmenttype return 400 unsupported-query-parameter. No request body; a non-empty body returns 400 unexpected-request-body. Unsupported methods return 405 with Allow: GET. Return every matching published establishment in one JSON array without pagination or a wrapper. Use the same full item representation as the detail endpoint for the same published data version; one item per URN, sorted numerically ascending. Omit unpublished records and statuses other than Open and Closed. No matches returns 200 with []. Read one consistent public projection; missing required publication facts in a matching record return 503 publication-incomplete instead of a partial collection. Shared content negotiation, headers and errors apply. Validate filters and resolve publication eligibility before evaluating If-None-Match. Compute the strong ETag over the complete selected array after deterministic UTF-8 serialisation and content coding using the SHA-256/Base64url algorithm of the detail operation. Apply standard weak comparison and wildcard handling. A 304 has no body, Content-Type or Content-Encoding. Last-Modified is not emitted.",
         "parameters": [
+          {
+            "name": "establishmenttype",
+            "in": "query",
+            "required": false,
+            "description": "Filter by establishment type code. Multiple codes are combined using OR: an establishment matches if its type code equals any supplied code. This filter is combined with other filters using AND. Supply the parameter once, as comma-separated two-digit strings without whitespace or empty entries. Duplicates have no additional effect. Well-formed codes absent from the lookup match no establishments.",
+            "type": "array",
+            "collectionFormat": "csv",
+            "minItems": 1,
+            "items": {"type": "string", "pattern": "^[0-9]{2}$"},
+            "x-example": ["01", "02", "03"]
+          },
           {
             "name": "status",
             "in": "query",
@@ -57,7 +98,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Published Open and Closed establishments selected by the optional status filter. Content-Type: application/json; UTF-8. Return all matches as a JSON array of complete Establishment objects, sorted by URN numerically ascending, with one item per URN. No pagination or wrapper. No matches: 200 with []. This response example illustrates status=open.",
+            "description": "Published Open and Closed establishments selected by the optional status and establishmenttype filters. Content-Type: application/json; UTF-8. Return all matches as a JSON array of complete Establishment objects, sorted by URN numerically ascending, with one item per URN. No pagination or wrapper. No matches: 200 with []. This response example illustrates status=open.",
             "schema": {
               "$ref": "#/definitions/EstablishmentCollection"
             },
@@ -493,7 +534,7 @@
             }
           },
           "400": {
-            "description": "Content-Type: application/problem+json; UTF-8. Empty, repeated, case-mismatched or unsupported status values return invalid-status-filter. A query parameter other than status returns unsupported-query-parameter. A non-empty body returns unexpected-request-body. Include errors with location query for filter/parameter failures or body for body failures.",
+            "description": "Content-Type: application/problem+json; UTF-8. Empty, repeated, case-mismatched or unsupported status values return invalid-status-filter. Empty, repeated or malformed establishmenttype values return invalid-establishmenttype-filter. A query parameter other than status or establishmenttype returns unsupported-query-parameter. A non-empty body returns unexpected-request-body. Include errors with location query for filter/parameter failures or body for body failures.",
             "schema": {
               "allOf": [
                 {
@@ -512,6 +553,7 @@
                       "type": "string",
                       "enum": [
                         "invalid-status-filter",
+                        "invalid-establishmenttype-filter",
                         "unsupported-query-parameter",
                         "unexpected-request-body"
                       ]
@@ -3040,6 +3082,16 @@
         ]
       }
     },
+    "EstablishmentType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "name", "establishment_type_category_id"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[0-9]{2}$", "example": "01"},
+        "name": {"type": "string", "minLength": 1, "example": "Community school"},
+        "establishment_type_category_id": {"type": "integer", "format": "int32", "minimum": 1, "example": 4}
+      }
+    },
     "EstablishmentCollection": {
       "type": "array",
       "minItems": 0,
@@ -3141,9 +3193,9 @@
     "A previous LA reference is not proof of a predecessor or a dated maintaining-council relationship.",
     "Published records in other categories use this route; category absence from this contract is not grounds for 404.",
     "An establishment has at most one current sponsor, one current federation membership and one current foundation-trust relationship. Publish sponsor, federation and foundationTrust as conditional objects; omit absent relationships. Historical relationships remain arrays.",
-    "GET /v1/establishments accepts only the optional status query parameter: open or closed. Omission includes both Open and Closed published records; other statuses are excluded.",
+    "GET /v1/establishments accepts optional status (open or closed) and establishmenttype (comma-separated type codes) filters. Type codes use OR, different filters use AND. Omitting status includes both Open and Closed published records; other statuses are excluded.",
     "Collection items have the same full Establishment shape as detail responses, one item per URN, sorted by URN numerically ascending. Return all matches in one response; no matches is 200 with [].",
-    "Reject empty/repeated/unsupported status values with 400 invalid-status-filter and unsupported collection query parameters with 400 unsupported-query-parameter. Query validation errors use location query.",
+    "Reject empty/repeated/unsupported status values with 400 invalid-status-filter, empty/repeated/malformed establishmenttype values with 400 invalid-establishmenttype-filter, and unsupported collection query parameters with 400 unsupported-query-parameter. Query validation errors use location query.",
     "Do not return partial collections when a selected record lacks required publication facts; return 503 publication-incomplete.",
     "establishmentTypeCategory is a CodedValue with the published EstablishmentTypeGroup code and matching category name. Codes are strings; category UUIDs and lookup IDs are not public codes."
   ],

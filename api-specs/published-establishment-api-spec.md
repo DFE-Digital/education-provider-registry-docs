@@ -37,6 +37,8 @@ Accept-Encoding: gzip
 GET /v1/establishments
 GET /v1/establishments?status=open
 GET /v1/establishments?status=closed
+GET /v1/establishments?establishmenttype=01,02,03
+GET /v1/establishments?establishmenttype=01,02,03&status=open
 ```
 
 | Item | Contract |
@@ -48,6 +50,8 @@ GET /v1/establishments?status=closed
 | `status=open` | Return published establishments with `establishmentStatus.code` equal to `1` (Open). |
 | `status=closed` | Return published establishments with `establishmentStatus.code` equal to `2` (Closed). |
 | Invalid `status` | Empty, repeated or unsupported values: `400 invalid-status-filter`. Values are case-sensitive; do not trim whitespace. |
+| `establishmenttype` | Optional comma-separated array of two-digit type codes, supplied once without whitespace or empty entries. Multiple codes use **OR**; different filters use **AND**. Codes retain leading zeroes. Duplicate codes have no additional effect; well-formed unknown codes match no records. |
+| Invalid `establishmenttype` | Empty, repeated or malformed values: `400 invalid-establishmenttype-filter`, with a query validation error named `establishmenttype`. |
 | Other query parameters | `400 unsupported-query-parameter`. |
 | Request body | None. Non-empty body: `400 unexpected-request-body`. |
 | Other methods | `405 method-not-allowed`; `Allow: GET`. |
@@ -57,7 +61,9 @@ GET /v1/establishments?status=closed
 | Delivery | Return all matches in one response; no pagination or collection wrapper. |
 | Publication | Read one consistent public projection. Exclude unpublished records and statuses other than Open and Closed. Missing required facts on a matching record: `503 publication-incomplete`; do not return a partial collection. |
 
-Shared request headers, response headers, errors and conditional retrieval apply to both endpoints. A collection ETag covers the complete selected array after content coding.
+Shared request headers, response headers, errors and conditional retrieval apply to all endpoints. A collection ETag covers the complete selected array after content coding.
+
+The [demo OpenAPI 3 contract](api-demo/openapi.json) describes its existing pagination extension and declares `establishmenttype` with `style: form` and `explode: false`. The published Swagger 2 contract expresses the same comma-separated array using `collectionFormat: csv`.
 
 ```http
 GET /v1/establishments HTTP/1.1
@@ -88,6 +94,25 @@ Abbreviated response body; comments mark omitted fields and records. See [Payloa
     // ... the rest of the establishment payload
   }
   // ... further establishments
+]
+```
+
+### Establishment types
+
+```http
+GET /v1/establishment-types
+```
+
+Return the full loaded `establishment_type` lookup as a bare JSON array, ordered by code. Each item contains only string `code`, string `name` and integer `establishment_type_category_id`. The category ID is a reference-data identifier, rather than a published category code. Types with no published establishments are included. An empty lookup returns `200` with `[]`.
+
+No query parameters or request body are accepted. The same method, negotiation, caching and problem-response rules apply. The following is an abbreviated example; the endpoint returns all loaded types:
+
+```json
+[
+  { "code": "01", "name": "Community school", "establishment_type_category_id": 4 },
+  { "code": "02", "name": "Voluntary aided school", "establishment_type_category_id": 4 },
+  { "code": "03", "name": "Voluntary controlled school", "establishment_type_category_id": 4 },
+  { "code": "05", "name": "Foundation school", "establishment_type_category_id": 4 }
 ]
 ```
 
@@ -532,7 +557,7 @@ Vary: Accept, Accept-Encoding
 | --- | --- | --- |
 | 200 OK | — | Detail: `Establishment`. Collection: `Establishment[]`, including `[]` when no records match. Content type: `application/json`. |
 | 304 Not Modified | — | No body. |
-| 400 Bad Request | `invalid-urn`, `invalid-status-filter`, `unsupported-query-parameter`, `unexpected-request-body` | Invalid matched URN, invalid collection filter, unsupported collection query parameter or non-empty request body. Validation errors include `errors`; filter errors use location `query`. |
+| 400 Bad Request | `invalid-urn`, `invalid-status-filter`, `invalid-establishmenttype-filter`, `unsupported-query-parameter`, `unexpected-request-body` | Invalid matched URN, invalid collection filter, unsupported query parameter or non-empty request body. Validation errors include `errors`; filter errors use location `query`. |
 | 404 Not Found | `establishment-not-found` | Detail: no published record for a valid URN. Unknown and unpublished records are indistinguishable. Unmatched paths, including a trailing slash, also return 404. A collection with no matches returns `200` and `[]`. |
 | 405 Method Not Allowed | `method-not-allowed` | Unsupported method. Allow: GET is required. |
 | 406 Not Acceptable | `not-acceptable` | No acceptable success media type or available content coding. Return application/problem+json for this error. |

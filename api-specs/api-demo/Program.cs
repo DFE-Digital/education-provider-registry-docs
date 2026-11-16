@@ -6,7 +6,10 @@ using Npgsql;
 // Local demo of the Published Establishment API (contract 1.0.0).
 // Reads the local establishment_local PostgreSQL database and serves:
 //   GET /v1/establishments/{URN}
-//   GET /v1/establishments[?status=open|closed&page=1&pageSize=1000]
+//   GET /v1/establishments[?status=open|closed&establishmenttype=01,02,03&page=1&pageSize=1000]
+//   GET /v1/establishment-types
+//   GET /openapi/v1.json
+//   GET /swagger
 
 // Read appsettings.json from next to the program, wherever it is started from.
 var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions
@@ -41,6 +44,7 @@ builder.Services.AddRateLimiter(options =>
 var app = builder.Build();
 var store = app.Services.GetRequiredService<EstablishmentStore>();
 var log = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("api");
+var specification = OpenApiDocument.Load(AppContext.BaseDirectory);
 
 // Headers that go on every response, including 429s from the rate limiter.
 app.Use(async (context, next) =>
@@ -69,8 +73,16 @@ app.Use(async (context, next) =>
 
 app.UseRateLimiter();
 
+app.UseSwaggerUI(options =>
+{
+    options.RoutePrefix = "swagger";
+    options.DocumentTitle = "EPR API demo";
+    options.SwaggerEndpoint("../openapi/v1.json", "EPR API v1");
+    options.EnableTryItOutByDefault();
+});
+
 // One terminal handler, so we control exact path matching. ASP.NET routing
 // would accept a trailing slash, which the contract says must return 404.
-app.Run(context => EstablishmentEndpoints.HandleAsync(context, store, log));
+app.Run(context => EstablishmentEndpoints.HandleAsync(context, store, log, specification));
 
 app.Run();

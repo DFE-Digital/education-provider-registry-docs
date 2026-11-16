@@ -1,10 +1,15 @@
 # Published Establishment API demo
 
-A small .NET 10 program that serves the two endpoints in the [Published Establishment API specification](../published-establishment-api-spec.md) (contract 1.0.0). It reads real data from a local `establishment_local` PostgreSQL database, built with the [local schema automation](../../models/schema/README.md).
+A small .NET 10 program that serves the [Published Establishment API specification](../published-establishment-api-spec.md) (contract 1.0.0), with the pagination extension described below. Its [OpenAPI 3 contract](openapi.json) describes the demo's routes and response shapes. It reads real data from a local `establishment_local` PostgreSQL database, built with the [local schema automation](../../models/schema/README.md).
 
 ```http
 GET /v1/establishments/{URN}
+GET /v1/establishment-types
+GET /openapi/v1.json
+GET /swagger
 GET /v1/establishments
+GET /v1/establishments?establishmenttype=01,02,03
+GET /v1/establishments?establishmenttype=01,02,03&status=open
 GET /v1/establishments?status=open
 GET /v1/establishments?status=closed
 GET /v1/establishments?page=2
@@ -13,9 +18,46 @@ GET /v1/establishments?page=2&pageSize=100&status=open
 
 It's a demo, not production code. It runs on `http://localhost:5080` and only listens on your own machine.
 
+## Establishment types and filtering
+
+`GET /v1/establishment-types` returns every row from `establishment.establishment_type`, ordered by code, as a bare JSON array. Each object contains only `code`, `name` and `establishment_type_category_id`. Codes retain leading zeroes; category IDs are integers. The endpoint accepts no query parameters.
+
+```json
+[
+  { "code": "01", "name": "Community school", "establishment_type_category_id": 4 },
+  { "code": "02", "name": "Voluntary aided school", "establishment_type_category_id": 4 },
+  { "code": "03", "name": "Voluntary controlled school", "establishment_type_category_id": 4 },
+  { "code": "05", "name": "Foundation school", "establishment_type_category_id": 4 }
+]
+```
+
+This is an abbreviated example; the endpoint returns the full loaded lookup, including types with no published establishments.
+
+`establishmenttype=01,02,03` selects any of those type codes (**OR**). It combines with `status` using **AND**, before pagination. Supply the parameter once, using comma-separated two-digit strings without spaces. Empty entries, repeated parameters and malformed codes return `400 invalid-establishmenttype-filter`. Duplicate codes have no additional effect. Well-formed codes absent from the lookup match no establishments.
+
+## OpenAPI resource
+
+Open <http://localhost:5080/openapi/v1.json> or request:
+
+```http
+GET /openapi/v1.json
+```
+
+This serves the maintained [demo OpenAPI 3 contract](openapi.json), bundled with the shared establishment and problem schemas so consumers need only one URL. It includes the establishment-types resource, OR/AND filter description and the demo's pagination envelope. It supports ETags and conditional requests and is available without a database connection. The relative server URL uses the origin serving the document, including when the demo runs on a different port.
+
+```powershell
+Invoke-RestMethod http://localhost:5080/openapi/v1.json | ConvertTo-Json -Depth 30
+```
+
+## Swagger UI
+
+Open <http://localhost:5080/swagger> to browse the API and send **Try it out** requests from your browser. Swagger UI loads the existing `/openapi/v1.json` resource, including its OR/AND filter descriptions and response schemas. The UI's HTML, JavaScript and CSS are served locally from the Swagger UI package; no CDN is required. It follows the demo's port when you override `--urls`.
+
+The OpenAPI JSON can also be imported into other API clients. Swagger UI and the specification resource are available without a database connection; establishment requests still need the local database.
+
 ## Pagination
 
-The collection defaults to `page=1` and `pageSize=1000`, ordered by URN. Both parameters must be positive integers supplied once; `pageSize` has a maximum of 10,000. The optional `status` filter applies before pagination and is preserved in the next-page link.
+The collection defaults to `page=1` and `pageSize=1000`, ordered by URN. Both parameters must be positive integers supplied once; `pageSize` has a maximum of 10,000. The optional `status` and `establishmenttype` filters apply before pagination and are preserved in the next-page link.
 
 The collection now returns an object containing `items`, `page`, `pageSize`, `hasNextPage` and `next`. This pagination envelope is a demo extension to contract 1.0.0's bare collection array; the individual-establishment endpoint is unchanged.
 
@@ -63,6 +105,8 @@ dotnet run --configuration Release -- --urls http://localhost:5090
 
 ```powershell
 Invoke-RestMethod http://localhost:5080/v1/establishments/137603 | ConvertTo-Json -Depth 10
+Invoke-RestMethod http://localhost:5080/v1/establishment-types | ConvertTo-Json
+Invoke-RestMethod "http://localhost:5080/v1/establishments?establishmenttype=01,02,03&status=open" | ConvertTo-Json -Depth 10
 Invoke-RestMethod "http://localhost:5080/v1/establishments?status=open" | ConvertTo-Json -Depth 10
 curl.exe -i http://localhost:5080/v1/establishments/ABC
 ```
@@ -101,6 +145,16 @@ dotnet run --configuration Release
 There's no password in the settings. The database driver reads it from `%APPDATA%\postgresql\pgpass.conf`.
 
 Every connection is read-only. The connection string turns on `default_transaction_read_only`, and every request also runs `SET TRANSACTION READ ONLY`. It still logs in as `postgres`, though. A real service would use a read-only role.
+
+## Regression checks
+
+With the demo running against a disposable populated test database, run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\Smoke.ps1
+```
+
+The checks are read-only. The test data needs at least two of types `01`, `02`, `03`, including one closed establishment of a selected type, plus URN `100018`. Tests cover lookup shape, OR/AND filtering, pagination, invalid input, caching and the bundled OpenAPI resource. Use `-BaseUrl` to test a different port.
 
 ## What the demo follows from the contract
 
