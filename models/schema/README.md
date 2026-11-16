@@ -2,6 +2,8 @@
 
 This directory contains the PostgreSQL model, seed data and PowerShell tooling for local development. The databases are disposable modelling targets.
 
+The scripts in `automation/` use `establishment/transforms/` to extract BAU data and `establishment/load/` to load reference data and fixtures into PostgreSQL. Dedicated development loaders live in `migration/`; the checked-in rebuild primarily restores SQL from `seed/`.
+
 ## Choose a dataset
 
 | Path | Behaviour |
