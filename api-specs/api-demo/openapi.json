@@ -15,7 +15,7 @@
     "/v1/establishment-types": {
       "get": {
         "operationId": "listEstablishmentTypes",
-        "description": "Full loaded lookup, ordered by code. Returns only code, name and establishment_type_category_id; no filters or pagination. Category IDs are database reference IDs, not category codes.",
+        "description": "Full loaded lookup, ordered by code. Returns only code and name; no filters or pagination. Codes retain leading zeroes.",
         "summary": "List establishment types",
         "responses": {
           "200": {
@@ -634,8 +634,7 @@
         "additionalProperties": false,
         "required": [
           "code",
-          "name",
-          "establishment_type_category_id"
+          "name"
         ],
         "properties": {
           "code": {
@@ -647,12 +646,6 @@
             "type": "string",
             "minLength": 1,
             "example": "Community school"
-          },
-          "establishment_type_category_id": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 1,
-            "example": 4
           }
         }
       },

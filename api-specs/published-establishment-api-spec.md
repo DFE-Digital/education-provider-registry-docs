@@ -4,119 +4,13 @@ Contract version: `1.0.0`
 Service lifecycle: `beta`  
 [OpenAPI 2.0 contract](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/api-specs/published-establishment-api.openapi.json)
 
-## Endpoints
+## Common API rules
 
-### Establishment detail
+All endpoints use the environment-specific HTTPS origin and require no authentication. The request and response headers, status codes and error format below define the shared rules; each endpoint describes its request and success response.
 
-```http
-GET /v1/establishments/{URN}
-```
+JSON negotiation, conditional retrieval and problem responses apply to the JSON endpoints. Swagger UI serves HTML and static assets, with the differences described in its endpoint section. Publication checks apply to establishment data; the OpenAPI document and Swagger UI remain available independently of the database.
 
-| Item | Contract |
-| --- | --- |
-| Origin | Environment-specific HTTPS origin. |
-| Authentication | None. |
-| Path | Lowercase fixed segments; no trailing slash. |
-| `URN` | Required decimal string. Range: 1–999999. No leading zeroes, signs, whitespace or separators. |
-| Query parameters | Not specified. |
-| Request body | None. Non-empty body: `400 unexpected-request-body`. |
-| Other methods | `405 method-not-allowed`; `Allow: GET`. |
-| Unmatched path | `404`, including a trailing slash or missing path segment. |
-
-Validate a matched URN before lookup. `/v1/establishments/ABC` returns `400 invalid-urn`. A valid URN without a published record returns `404 establishment-not-found`.
-
-```http
-GET /v1/establishments/137603 HTTP/1.1
-Accept: application/json
-Accept-Encoding: gzip
-```
-
-### Establishment collection
-
-```http
-GET /v1/establishments
-GET /v1/establishments?status=open
-GET /v1/establishments?status=closed
-GET /v1/establishments?establishmenttype=01,02,03
-GET /v1/establishments?establishmenttype=01,02,03&status=open
-```
-
-| Item | Contract |
-| --- | --- |
-| Authentication | None. |
-| Path | `/v1/establishments`; no trailing slash. |
-| `status` | Optional query string. One lowercase value: `open` or `closed`. |
-| No `status` filter | Return both Open and Closed published establishments. |
-| `status=open` | Return published establishments with `establishmentStatus.code` equal to `1` (Open). |
-| `status=closed` | Return published establishments with `establishmentStatus.code` equal to `2` (Closed). |
-| Invalid `status` | Empty, repeated or unsupported values: `400 invalid-status-filter`. Values are case-sensitive; do not trim whitespace. |
-| `establishmenttype` | Optional comma-separated array of two-digit type codes, supplied once without whitespace or empty entries. Multiple codes use **OR**; different filters use **AND**. Codes retain leading zeroes. Duplicate codes have no additional effect; well-formed unknown codes match no records. |
-| Invalid `establishmenttype` | Empty, repeated or malformed values: `400 invalid-establishmenttype-filter`, with a query validation error named `establishmenttype`. |
-| Other query parameters | `400 unsupported-query-parameter`. |
-| Request body | None. Non-empty body: `400 unexpected-request-body`. |
-| Other methods | `405 method-not-allowed`; `Allow: GET`. |
-| Success body | JSON array of complete `Establishment` objects, with the same fields as the detail endpoint for the same published data version. |
-| No matches | `200` with `[]`. |
-| Ordering | URN ascending, compared numerically. One item per URN. |
-| Delivery | Return all matches in one response; no pagination or collection wrapper. |
-| Publication | Read one consistent public projection. Exclude unpublished records and statuses other than Open and Closed. Missing required facts on a matching record: `503 publication-incomplete`; do not return a partial collection. |
-
-Shared request headers, response headers, errors and conditional retrieval apply to all endpoints. A collection ETag covers the complete selected array after content coding.
-
-The [demo OpenAPI 3 contract](api-demo/openapi.json) describes its existing pagination extension and declares `establishmenttype` with `style: form` and `explode: false`. The published Swagger 2 contract expresses the same comma-separated array using `collectionFormat: csv`.
-
-```http
-GET /v1/establishments HTTP/1.1
-Accept: application/json
-Accept-Encoding: gzip
-```
-
-Abbreviated response body; comments mark omitted fields and records. See [Payload examples](#payload-examples) for the complete establishment payloads.
-
-```jsonc
-[
-  {
-    "urn": "106789",
-    "establishmentName": "Ridgewood School",
-    "establishmentStatus": {"code": "2", "name": "Closed"}
-    // ... the rest of the establishment payload
-  },
-  {
-    "urn": "136286",
-    "establishmentName": "Westlands School",
-    "establishmentStatus": {"code": "1", "name": "Open"}
-    // ... the rest of the establishment payload
-  },
-  {
-    "urn": "137603",
-    "establishmentName": "Ridgewood School",
-    "establishmentStatus": {"code": "1", "name": "Open"}
-    // ... the rest of the establishment payload
-  }
-  // ... further establishments
-]
-```
-
-### Establishment types
-
-```http
-GET /v1/establishment-types
-```
-
-Return the full loaded `establishment_type` lookup as a bare JSON array, ordered by code. Each item contains only string `code`, string `name` and integer `establishment_type_category_id`. The category ID is a reference-data identifier, rather than a published category code. Types with no published establishments are included. An empty lookup returns `200` with `[]`.
-
-No query parameters or request body are accepted. The same method, negotiation, caching and problem-response rules apply. The following is an abbreviated example; the endpoint returns all loaded types:
-
-```json
-[
-  { "code": "01", "name": "Community school", "establishment_type_category_id": 4 },
-  { "code": "02", "name": "Voluntary aided school", "establishment_type_category_id": 4 },
-  { "code": "03", "name": "Voluntary controlled school", "establishment_type_category_id": 4 },
-  { "code": "05", "name": "Foundation school", "establishment_type_category_id": 4 }
-]
-```
-
-## Request headers
+### Request headers
 
 | Header | Required | Behaviour |
 | --- | --- | --- |
@@ -124,7 +18,7 @@ No query parameters or request body are accepted. The same method, negotiation, 
 | `Accept-Encoding` | No | Support `gzip` and identity using standard quality-value rules. No acceptable available coding: `406`. |
 | `If-None-Match` | No | Entity-tag list or `*`. Apply standard weak comparison after validation and publication checks. |
 
-## Response headers
+### Response headers
 
 | Header | Applies to | Value / rule |
 | --- | --- | --- |
@@ -143,415 +37,9 @@ No query parameters or request body are accepted. The same method, negotiation, 
 | `Allow` | 405 | GET. |
 | `Retry-After` | 429; 503 when known | Positive integer delay in seconds. |
 
-Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`. If no public projection has ever loaded, return `503 publication-unavailable` and omit `Data-Last-Refreshed-At`.
+Omit `Content-Type` and `Content-Encoding` on `304`. Do not emit `Last-Modified`. For establishment detail and collection requests, if no public projection has ever loaded, return `503 publication-unavailable` and omit `Data-Last-Refreshed-At`. Documentation endpoints do not require a loaded projection.
 
-## Representation rules
-
-- Detail responses return one UTF-8 JSON object. Collection responses return a UTF-8 JSON array of establishment objects. Neither response uses a wrapper or pagination metadata.
-- Use lower camel case property names.
-- Identifiers and published codes are strings. Counts are integers; percentages are numbers; truth values are booleans.
-- Dates: `YYYY-MM-DD`. Timestamps: RFC 3339 UTC with a `Z` suffix. Preserve date-only precision.
-- **Required:** present in every establishment object in a `200` response. Missing required publication facts: `503 publication-incomplete`.
-- **Conditional:** present when applicable, known and published.
-- Omit nulls, empty strings, empty objects, empty nested arrays and placeholder values. An empty collection response is `[]`.
-- Preserve `0`, `false` and meaningful classifications such as `None` or `No sixth form`.
-- Publish matching code/name pairs. Preserve code spelling and leading zeroes. Exclude internal surrogate identifiers.
-- Clients must tolerate additional properties and future published code values.
-- Published closed establishments return `200` with their published status and available facts.
-- Apply optional-field rules per fact and detailed type. SEN and alternative-provision fields are not restricted solely by the category name.
-- Return available published facts from one consistent public projection.
-- No standalone current `providerNumber`, `laestab`, academy-route, vocabulary-concept or generic responsibility property.
-
-## Payload fields
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `urn` | Required | `string` | Decimal string from 1 to 999999, without leading zeroes. In a detail response, must match the requested URN. |
-| `establishmentName` | Required | `string` | Published establishment name. Non-empty. |
-| `dfeNumber` | Conditional | `string` | Three-digit DfE LA number, a slash and four-digit establishment number; include only when both components and the numbering-authority relationship are established. |
-| `ukprn` | Conditional | `string` | Eight-digit UK Provider Reference Number. |
-| `providerType` | Required | `CodedValue` | Detailed establishment type. Code and name must match the published type mapping. |
-| `establishmentTypeCategory` | Required | `CodedValue` | Published type-group code and matching category name; see classification mappings. |
-| `educationPhase` | Conditional | `CodedValue` | — |
-| `establishmentStatus` | Required | `CodedValue` | Published establishment status. Published closed establishments remain retrievable. A proposed closure date alone does not change status to Closed. |
-| `openDate` | Conditional | `string (date)` | — |
-| `closedDate` | Conditional | `string (date)` | — |
-| `reasonProviderOpened` | Conditional | `CodedValue` | — |
-| `reasonProviderClosed` | Conditional | `CodedValue` | — |
-| `dateLastChangedOrConfirmed` | Required | `string (date)` | Source record date; distinct from response-generation and projection-refresh timestamps. |
-| `establishmentLocationAndContact` | Conditional | `LocationAndContact` | — |
-| `administrativeGeography` | Conditional | `AdministrativeGeography` | — |
-| `establishmentLeadership` | Conditional | `Leadership` | — |
-| `educationAdmissionsAndProvision` | Conditional | `EducationAdmissionsAndProvision` | — |
-| `capacityAndPupilMeasures` | Conditional | `CapacityAndPupilMeasures` | — |
-| `faithContext` | Conditional | `FaithContext` | — |
-| `senAndResourcedProvision` | Conditional | `SenAndResourcedProvision` | — |
-| `alternativeProvisionCharacteristics` | Conditional | `AlternativeProvisionCharacteristics` | — |
-| `inspectionRecord` | Conditional | `InspectionRecord` | — |
-| `academyTrust` | Conditional | `AcademyTrust` | Current operating trust; at most one. Academies category. |
-| `sponsor` | Conditional | `Sponsor` | Current sponsor; at most one. Academies category. |
-| `maintainingLocalAuthority` | Conditional | `MaintainingLocalAuthority` | Current maintenance relationship. Local authority maintained schools category. |
-| `federation` | Conditional | `Federation` | Current federation membership; at most one. Local authority maintained schools category. |
-| `foundationTrust` | Conditional | `FoundationTrust` | Current foundation-trust relationship; at most one. Local authority maintained schools category. |
-| `history` | Conditional | `History` | — |
-
-## Field structures
-
-All conditional members follow the representation rules. Objects contain at least one meaningful member; arrays contain at least one item.
-
-```json
-{"educationPhase": {"code": "4", "name": "Secondary"}, "establishmentTypeCategory": {"code": "10", "name": "Academies"}}
-```
-
-### CodedValue
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `code` | Required | `string` | Published code; preserve spelling and leading zeroes. Internal database identifiers are excluded. Non-empty. |
-| `name` | Required | `string` | Published name matching the code. Non-empty. |
-
-### NamedValue
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `name` | Required | `string` | Published classification name. Non-empty. |
-
-### LocalAuthorityValue
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `code` | Required | `string` | Three-digit published DfE local authority code. |
-| `name` | Required | `string` | Published local authority lookup label. Non-empty. |
-
-### Address
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `addressLine1` | Conditional | `string` | Non-empty. |
-| `addressLine2` | Conditional | `string` | Non-empty. |
-| `addressLine3` | Conditional | `string` | Non-empty. |
-| `townOrCity` | Conditional | `string` | Non-empty. |
-| `county` | Conditional | `string` | Non-empty. |
-| `postcode` | Conditional | `string` | Non-empty. |
-| `country` | Conditional | `string` | Non-empty. |
-
-### OsGridReference
-
-British National Grid, EPSG:27700. Publish only for the site to which the coordinates apply.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `easting` | Required | `integer` | — |
-| `northing` | Required | `integer` | — |
-
-### Site
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `siteId` | Required | `string (uuid)` | Stable published site UUID. |
-| `isMainSite` | Required | `boolean` | At most one site per establishment has this value set to true. |
-| `siteName` | Conditional | `string` | Non-empty. |
-| `uniquePropertyReferenceNumber` | Conditional | `string` | Published UPRN as a non-empty decimal string. |
-| `address` | Conditional | `Address` | — |
-| `osGridReference` | Conditional | `OsGridReference` | — |
-
-### LocationAndContact
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `website` | Conditional | `string` | Published website string; a scheme is not required. Non-empty. |
-| `phoneNumber` | Conditional | `string` | Published telephone number; preserve meaningful formatting. Non-empty. |
-| `sites` | Conditional | `Site[]` | Main site first; remaining sites ordered by siteId. Non-empty array. |
-
-### AdministrativeGeography
-
-Geographic classifications. localAuthorityArea identifies the DfE LA-code area.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `localAuthorityArea` | Conditional | `LocalAuthorityValue` | — |
-| `governmentOfficeRegion` | Conditional | `CodedValue` | — |
-| `districtAdministrative` | Conditional | `CodedValue` | — |
-| `administrativeWard` | Conditional | `CodedValue` | — |
-| `parliamentaryConstituency` | Conditional | `CodedValue` | — |
-| `urbanRuralClassification` | Conditional | `CodedValue` | — |
-| `lowerSuperOutputArea` | Conditional | `CodedValue` | — |
-| `middleSuperOutputArea` | Conditional | `CodedValue` | — |
-| `governmentStatisticalServiceLocalAuthorityCode` | Conditional | `string` | Published GSS local authority code. Non-empty. |
-
-### HeadteacherOrPrincipal
-
-Include at least one meaningful published member.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `headTitle` | Conditional | `string` | Non-empty. |
-| `headFirstName` | Conditional | `string` | Non-empty. |
-| `headLastName` | Conditional | `string` | Non-empty. |
-| `jobTitle` | Conditional | `string` | Non-empty. |
-
-### Leadership
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `headteacherOrPrincipal` | Conditional | `HeadteacherOrPrincipal` | — |
-
-### StatutoryAgeRange
-
-statutoryLowAge must be less than or equal to statutoryHighAge.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `statutoryLowAge` | Required | `integer` | Minimum: 0. Maximum: 19. |
-| `statutoryHighAge` | Required | `integer` | Minimum: 0. Maximum: 25. |
-
-### EducationAdmissionsAndProvision
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `statutoryAgeRange` | Conditional | `StatutoryAgeRange` | — |
-| `genderOfEntry` | Conditional | `CodedValue` | — |
-| `admissionsPolicy` | Conditional | `CodedValue` | — |
-| `boardingProvision` | Conditional | `CodedValue` | — |
-| `nurseryProvision` | Conditional | `CodedValue` | — |
-| `sixthFormProvision` | Conditional | `CodedValue` | — |
-| `specialClassProvision` | Conditional | `boolean` | — |
-| `section41Approval` | Conditional | `CodedValue` | Include only when applicable and published. |
-
-### CapacityAndPupilMeasures
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `providerCapacity` | Conditional | `integer` | Minimum: 0. |
-| `numberOfPupilsStudents` | Conditional | `integer` | Minimum: 0. |
-| `censusDate` | Conditional | `string (date)` | — |
-| `pupilsEligibleForFreeSchoolMeals` | Conditional | `integer` | Minimum: 0. |
-| `percentagePupilsEligibleForFreeSchoolMeals` | Conditional | `number` | Published percentage; retain the supplied value. No common denominator with other counts is implied. Minimum: 0. Maximum: 100. |
-| `numberOfMales` | Conditional | `integer` | Pupil-population count. Minimum: 0. |
-| `numberOfFemales` | Conditional | `integer` | Pupil-population count. Minimum: 0. |
-
-### FaithContext
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `religiousCharacter` | Conditional | `CodedValue` | — |
-| `religiousEthos` | Conditional | `CodedValue` | — |
-| `diocese` | Conditional | `CodedValue` | — |
-
-### ResourcedProvisionMeasure
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `resourcedProvisionPupilCount` | Conditional | `integer` | Minimum: 0. |
-| `resourcedProvisionCapacity` | Conditional | `integer` | Minimum: 0. |
-
-### SenUnitMeasure
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `senUnitPupilCount` | Conditional | `integer` | Minimum: 0. |
-| `senUnitCapacity` | Conditional | `integer` | Minimum: 0. |
-
-### SenAndResourcedProvision
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `typeOfSenProvision` | Conditional | `NamedValue[]` | Unique published SEN-need names, sorted by name using ordinal comparison. Non-empty array. Unique items. |
-| `typeOfResourcedProvision` | Conditional | `NamedValue` | — |
-| `resourcedProvisionMeasure` | Conditional | `ResourcedProvisionMeasure` | — |
-| `senUnitMeasure` | Conditional | `SenUnitMeasure` | — |
-
-### AlternativeProvisionCharacteristics
-
-Include applicable published facts; these fields are not restricted to the pupil referral unit type.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `teenMothersProvision` | Conditional | `boolean` | — |
-| `childcareFacilitiesProvision` | Conditional | `boolean` | — |
-| `senPupilReferralUnit` | Conditional | `boolean` | — |
-| `emotionalBehaviouralDifficultiesProvision` | Conditional | `boolean` | — |
-| `fullTimeProvision` | Conditional | `boolean` | — |
-| `pupilsEducatedByOtherProviders` | Conditional | `boolean` | — |
-| `teenMothersCapacity` | Conditional | `integer` | Minimum: 0. |
-| `pupilReferralUnitCapacity` | Conditional | `integer` | Minimum: 0. |
-
-### InspectionRecord
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `inspectorateName` | Conditional | `NamedValue` | — |
-| `inspectorateReport` | Conditional | `string (uri)` | Published inspection-report URI. Non-empty. |
-| `dateOfLastInspectionVisit` | Conditional | `string (date)` | — |
-| `dateOfNextInspectionVisit` | Conditional | `string (date)` | — |
-
-### AcademyTrust
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `name` | Required | `string` | Published party or group name. Non-empty. |
-| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
-| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
-| `companiesHouseNumber` | Conditional | `string` | Published Companies House number; preserve leading zeroes. Non-empty. |
-| `academyTrustType` | Required | `string` | Single-academy trust, Multi-academy trust or Secure single-academy trust. Historical entries retain the type recorded for that relationship. |
-| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
-| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
-
-### Sponsor
-
-A sponsor may be an organisation or an individual. academyTrustType is absent. personId and companiesHouseNumber must not be published together.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `name` | Required | `string` | Published party or group name. Non-empty. |
-| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
-| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
-| `companiesHouseNumber` | Conditional | `string` | Organisations only; published company number. Non-empty. |
-| `personId` | Conditional | `string (uuid)` | Individual sponsors only; stable published person UUID. |
-| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
-| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
-
-### MaintainingLocalAuthority
-
-The council maintaining the school; distinct from administrativeGeography.localAuthorityArea.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `code` | Conditional | `string` | Three-digit published DfE LA code evidenced for this relationship and period. |
-| `name` | Required | `string` | Published council legal-entity name. Non-empty. |
-| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
-| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
-
-### Federation
-
-Dates describe membership of the federation.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `name` | Required | `string` | Published party or group name. Non-empty. |
-| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
-| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
-| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
-| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
-
-### FoundationTrust
-
-Published foundation-trust support relationship.
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `name` | Required | `string` | Published party or group name. Non-empty. |
-| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
-| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
-| `companiesHouseNumber` | Conditional | `string` | Published company number. Non-empty. |
-| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
-| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
-
-### Predecessor
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `urn` | Required | `string` | Predecessor establishment URN as a decimal string from 1 to 999999, without leading zeroes. |
-| `establishmentName` | Required | `string` | Published predecessor name. Non-empty. |
-| `dateLinked` | Conditional | `string (date)` | Recorded establishment-link date. |
-| `url` | Required | `string` | Root-relative resource URL: `/v1/establishments/{URN}`. Its URN must match this item's urn. |
-
-### History
-
-| Property | Presence | Type | Constraint |
-| --- | --- | --- | --- |
-| `previousLA` | Conditional | `LocalAuthorityValue` | Previous published DfE local authority reference; omit placeholder code 999. This is not a dated maintenance relationship. |
-| `predecessors` | Conditional | `Predecessor[]` | Direct links only. De-duplicate identical URN/date pairs; sort by URN numerically, then dateLinked ascending, unknown dates last. Non-empty array. |
-| `previousAcademyTrusts` | Conditional | `AcademyTrust[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison, then groupUid and groupId. Historical operators. Non-empty array. |
-| `previousSponsors` | Conditional | `Sponsor[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison, then groupUid and groupId. Historical sponsors. Non-empty array. |
-| `previousMaintainingLocalAuthorities` | Conditional | `MaintainingLocalAuthority[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical maintenance relationships. Non-empty array. |
-| `previousFederations` | Conditional | `Federation[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical federation memberships. Non-empty array. |
-| `previousFoundationTrusts` | Conditional | `FoundationTrust[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical foundation-trust relationships. Non-empty array. |
-
-## Classification mappings
-
-### Academies
-
-`establishmentTypeCategory` = `{"code": "10", "name": "Academies"}`.
-
-| `providerType.code` | `providerType.name` |
-| --- | --- |
-| `34` | Academy converter |
-| `28` | Academy sponsor led |
-| `44` | Academy special converter |
-| `33` | Academy special sponsor led |
-| `42` | Academy alternative provision converter |
-| `43` | Academy alternative provision sponsor led |
-| `45` | Academy 16-19 converter |
-| `46` | Academy 16 to 19 sponsor led |
-| `57` | Academy secure 16 to 19 |
-
-### Local authority maintained schools
-
-`establishmentTypeCategory` = `{"code": "4", "name": "Local authority maintained schools"}`.
-
-| `providerType.code` | `providerType.name` |
-| --- | --- |
-| `01` | Community school |
-| `02` | Voluntary aided school |
-| `03` | Voluntary controlled school |
-| `05` | Foundation school |
-| `14` | Pupil referral unit |
-| `15` | Maintained nursery school |
-
-Types `07` and `12` use the `Special schools` category. Free schools, university technical colleges and studio schools use `Free Schools`. Other published categories use this endpoint; an undescribed category is not grounds for `404`.
-
-## Relationship rules
-
-| Category | Current properties | Historical properties within `history` |
-| --- | --- | --- |
-| Academies | `academyTrust`, `sponsor` | `previousAcademyTrusts`, `previousSponsors` |
-| Local authority maintained schools | `maintainingLocalAuthority`, `federation`, `foundationTrust` | `previousMaintainingLocalAuthorities`, `previousFederations`, `previousFoundationTrusts` |
-
-- An establishment has at most one current `sponsor`, one current `federation` and one current `foundationTrust`. Omit absent relationships. Historical relationships remain arrays.
-- Select current and historical relationships using explicit current state. An absent end date does not establish current state.
-- Relationship periods use inclusive starts and exclusive ends. Omit unknown dates. A current relationship may have a known future end date.
-- Current and historical entries use the same item structures. Historical trusts retain the recorded trust type and period-specific identifiers.
-- Use identifiers for the relevant party role. Preserve identity across trust-type changes unless a distinct party is established.
-- De-duplicate identical party/relationship-period records without merging distinct parties. Names alone do not establish identity.
-- Do not infer sponsors from provider type or operating trust, or foundation-trust support from religious character or diocese.
-- `academyTrust` has at most one current operator. `academyTrustType` is absent from sponsor objects.
-- `personId` applies to individual sponsors; `companiesHouseNumber` applies to organisations. Do not publish both on one sponsor.
-- `maintainingLocalAuthority` identifies the maintaining council. `administrativeGeography.localAuthorityArea` identifies the geographic LA-code area.
-- `history.previousLA` is a previous LA reference; it does not establish a predecessor or a dated maintenance relationship.
-- Predecessor `url` values start with a single `/`, contain no scheme or hostname, and use the same URN as their item. Do not recursively expand predecessors.
-
-## Conditional retrieval
-
-1. Validate the request and resolve publication eligibility.
-2. Select the negotiated representation and content coding.
-3. Serialise deterministically to UTF-8 JSON; use deterministic gzip output when selected.
-4. Calculate SHA-256 over the exact representation bytes after content coding. Exclude HTTP transfer framing.
-5. Encode the 32 digest bytes directly as Base64url without padding. Enclose the 43-character value in double quotes; no `W/` prefix.
-6. Evaluate `If-None-Match` using standard weak comparison and wildcard handling.
-7. Match: `304` with no body. Otherwise: `200` with the selected representation.
-
-ETags cover joined public facts. Gzip and identity have different tags. Header changes and refresh-only changes do not change the tag when body bytes are unchanged. An unpublished detail record returns `404` even if a supplied tag previously matched. Collection ETags cover all selected records in numeric URN order, including the empty array. Evaluate conditions after validating the filter and resolving publication eligibility.
-
-```http
-GET /v1/establishments/137603 HTTP/1.1
-Accept: application/json
-If-None-Match: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
-```
-
-```http
-HTTP/1.1 304 Not Modified
-API-Version: 1.0.0
-API-Status: beta
-X-Request-ID: 3210b66e-4af3-4f7d-a2d0-a5f1c83bbbf5
-Date: Wed, 11 Nov 2026 09:00:00 GMT
-Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
-ETag: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
-Cache-Control: public, no-cache
-Vary: Accept, Accept-Encoding
-```
-
-## Status codes
+### Status codes
 
 | HTTP status | Error code | Response |
 | --- | --- | --- |
@@ -565,7 +53,7 @@ Vary: Accept, Accept-Encoding
 | 500 Internal Server Error | `internal-error` | Unexpected failure. Exclude SQL, stack traces and unpublished data. |
 | 503 Service Unavailable | `publication-unavailable`, `publication-incomplete` | Public projection unavailable or required publication facts missing. Include Retry-After only when known. If no public projection has ever loaded, omit Data-Last-Refreshed-At. |
 
-## Error payload
+### Error payload
 
 Format: [RFC 9457 — Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html).
 
@@ -614,13 +102,410 @@ Cache-Control: no-store
 }
 ```
 
-## Payload examples
+### Conditional retrieval
+
+1. Validate the request and resolve publication eligibility.
+2. Select the negotiated representation and content coding.
+3. Serialise deterministically to UTF-8 JSON; use deterministic gzip output when selected.
+4. Calculate SHA-256 over the exact representation bytes after content coding. Exclude HTTP transfer framing.
+5. Encode the 32 digest bytes directly as Base64url without padding. Enclose the 43-character value in double quotes; no `W/` prefix.
+6. Evaluate `If-None-Match` using standard weak comparison and wildcard handling.
+7. Match: `304` with no body. Otherwise: `200` with the selected representation.
+
+ETags cover joined public facts. Gzip and identity have different tags. Header changes and refresh-only changes do not change the tag when body bytes are unchanged. An unpublished detail record returns `404` even if a supplied tag previously matched. Collection ETags cover all selected records in numeric URN order, including the empty array. Evaluate conditions after validating the filter and resolving publication eligibility.
+
+```http
+GET /v1/establishments/137603 HTTP/1.1
+Accept: application/json
+If-None-Match: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
+```
+
+```http
+HTTP/1.1 304 Not Modified
+API-Version: 1.0.0
+API-Status: beta
+X-Request-ID: 3210b66e-4af3-4f7d-a2d0-a5f1c83bbbf5
+Date: Wed, 11 Nov 2026 09:00:00 GMT
+Data-Last-Refreshed-At: 2026-11-11T08:00:00Z
+ETag: "dobOVWXzDWe5tdBN7VbMdFrfxZweCrAkFvBw-zDSpgM"
+Cache-Control: public, no-cache
+Vary: Accept, Accept-Encoding
+```
+
+### Representation rules
+
+- Detail responses return one UTF-8 JSON object. Collection responses return a UTF-8 JSON array of establishment objects. Neither response uses a wrapper or pagination metadata.
+- Use lower camel case property names for establishment payloads. The establishment-type lookup contains only `code` and `name`; OpenAPI documents retain the OpenAPI format's property names.
+- Identifiers and published codes are strings. Counts are integers; percentages are numbers; truth values are booleans.
+- Dates: `YYYY-MM-DD`. Timestamps: RFC 3339 UTC with a `Z` suffix. Preserve date-only precision.
+- **Required:** present in every establishment object in a `200` response. Missing required publication facts: `503 publication-incomplete`.
+- **Conditional:** present when applicable, known and published.
+- Omit nulls, empty strings, empty objects, empty nested arrays and placeholder values. An empty collection response is `[]`.
+- Preserve `0`, `false` and meaningful classifications such as `None` or `No sixth form`.
+- Publish matching code/name pairs. Preserve code spelling and leading zeroes. Exclude internal surrogate identifiers.
+- Clients must tolerate additional properties and future published code values.
+- Published closed establishments return `200` with their published status and available facts.
+- Apply optional-field rules per fact and detailed type. SEN and alternative-provision fields are not restricted solely by the category name.
+- Return available published facts from one consistent public projection.
+- No standalone current `providerNumber`, `laestab`, academy-route, vocabulary-concept or generic responsibility property.
+
+### Payload fields
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `urn` | Required | `string` | Decimal string from 1 to 999999, without leading zeroes. In a detail response, must match the requested URN. |
+| `establishmentName` | Required | `string` | Published establishment name. Non-empty. |
+| `dfeNumber` | Conditional | `string` | Three-digit DfE LA number, a slash and four-digit establishment number; include only when both components and the numbering-authority relationship are established. |
+| `ukprn` | Conditional | `string` | Eight-digit UK Provider Reference Number. |
+| `providerType` | Required | `CodedValue` | Detailed establishment type. Code and name must match the published type mapping. |
+| `establishmentTypeCategory` | Required | `CodedValue` | Published type-group code and matching category name; see classification mappings. |
+| `educationPhase` | Conditional | `CodedValue` | — |
+| `establishmentStatus` | Required | `CodedValue` | Published establishment status. Published closed establishments remain retrievable. A proposed closure date alone does not change status to Closed. |
+| `openDate` | Conditional | `string (date)` | — |
+| `closedDate` | Conditional | `string (date)` | — |
+| `reasonProviderOpened` | Conditional | `CodedValue` | — |
+| `reasonProviderClosed` | Conditional | `CodedValue` | — |
+| `dateLastChangedOrConfirmed` | Required | `string (date)` | Source record date; distinct from response-generation and projection-refresh timestamps. |
+| `establishmentLocationAndContact` | Conditional | `LocationAndContact` | — |
+| `administrativeGeography` | Conditional | `AdministrativeGeography` | — |
+| `establishmentLeadership` | Conditional | `Leadership` | — |
+| `educationAdmissionsAndProvision` | Conditional | `EducationAdmissionsAndProvision` | — |
+| `capacityAndPupilMeasures` | Conditional | `CapacityAndPupilMeasures` | — |
+| `faithContext` | Conditional | `FaithContext` | — |
+| `senAndResourcedProvision` | Conditional | `SenAndResourcedProvision` | — |
+| `alternativeProvisionCharacteristics` | Conditional | `AlternativeProvisionCharacteristics` | — |
+| `inspectionRecord` | Conditional | `InspectionRecord` | — |
+| `academyTrust` | Conditional | `AcademyTrust` | Current operating trust; at most one. Academies category. |
+| `sponsor` | Conditional | `Sponsor` | Current sponsor; at most one. Academies category. |
+| `maintainingLocalAuthority` | Conditional | `MaintainingLocalAuthority` | Current maintenance relationship. Local authority maintained schools category. |
+| `federation` | Conditional | `Federation` | Current federation membership; at most one. Local authority maintained schools category. |
+| `foundationTrust` | Conditional | `FoundationTrust` | Current foundation-trust relationship; at most one. Local authority maintained schools category. |
+| `history` | Conditional | `History` | — |
+
+### Field structures
+
+All conditional members follow the representation rules. Objects contain at least one meaningful member; arrays contain at least one item.
+
+```json
+{"educationPhase": {"code": "4", "name": "Secondary"}, "establishmentTypeCategory": {"code": "10", "name": "Academies"}}
+```
+
+#### CodedValue
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `code` | Required | `string` | Published code; preserve spelling and leading zeroes. Internal database identifiers are excluded. Non-empty. |
+| `name` | Required | `string` | Published name matching the code. Non-empty. |
+
+#### NamedValue
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `name` | Required | `string` | Published classification name. Non-empty. |
+
+#### LocalAuthorityValue
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `code` | Required | `string` | Three-digit published DfE local authority code. |
+| `name` | Required | `string` | Published local authority lookup label. Non-empty. |
+
+#### Address
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `addressLine1` | Conditional | `string` | Non-empty. |
+| `addressLine2` | Conditional | `string` | Non-empty. |
+| `addressLine3` | Conditional | `string` | Non-empty. |
+| `townOrCity` | Conditional | `string` | Non-empty. |
+| `county` | Conditional | `string` | Non-empty. |
+| `postcode` | Conditional | `string` | Non-empty. |
+| `country` | Conditional | `string` | Non-empty. |
+
+#### OsGridReference
+
+British National Grid, EPSG:27700. Publish only for the site to which the coordinates apply.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `easting` | Required | `integer` | — |
+| `northing` | Required | `integer` | — |
+
+#### Site
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `siteId` | Required | `string (uuid)` | Stable published site UUID. |
+| `isMainSite` | Required | `boolean` | At most one site per establishment has this value set to true. |
+| `siteName` | Conditional | `string` | Non-empty. |
+| `uniquePropertyReferenceNumber` | Conditional | `string` | Published UPRN as a non-empty decimal string. |
+| `address` | Conditional | `Address` | — |
+| `osGridReference` | Conditional | `OsGridReference` | — |
+
+#### LocationAndContact
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `website` | Conditional | `string` | Published website string; a scheme is not required. Non-empty. |
+| `phoneNumber` | Conditional | `string` | Published telephone number; preserve meaningful formatting. Non-empty. |
+| `sites` | Conditional | `Site[]` | Main site first; remaining sites ordered by siteId. Non-empty array. |
+
+#### AdministrativeGeography
+
+Geographic classifications. localAuthorityArea identifies the DfE LA-code area.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `localAuthorityArea` | Conditional | `LocalAuthorityValue` | — |
+| `governmentOfficeRegion` | Conditional | `CodedValue` | — |
+| `districtAdministrative` | Conditional | `CodedValue` | — |
+| `administrativeWard` | Conditional | `CodedValue` | — |
+| `parliamentaryConstituency` | Conditional | `CodedValue` | — |
+| `urbanRuralClassification` | Conditional | `CodedValue` | — |
+| `lowerSuperOutputArea` | Conditional | `CodedValue` | — |
+| `middleSuperOutputArea` | Conditional | `CodedValue` | — |
+| `governmentStatisticalServiceLocalAuthorityCode` | Conditional | `string` | Published GSS local authority code. Non-empty. |
+
+#### HeadteacherOrPrincipal
+
+Include at least one meaningful published member.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `headTitle` | Conditional | `string` | Non-empty. |
+| `headFirstName` | Conditional | `string` | Non-empty. |
+| `headLastName` | Conditional | `string` | Non-empty. |
+| `jobTitle` | Conditional | `string` | Non-empty. |
+
+#### Leadership
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `headteacherOrPrincipal` | Conditional | `HeadteacherOrPrincipal` | — |
+
+#### StatutoryAgeRange
+
+statutoryLowAge must be less than or equal to statutoryHighAge.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `statutoryLowAge` | Required | `integer` | Minimum: 0. Maximum: 19. |
+| `statutoryHighAge` | Required | `integer` | Minimum: 0. Maximum: 25. |
+
+#### EducationAdmissionsAndProvision
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `statutoryAgeRange` | Conditional | `StatutoryAgeRange` | — |
+| `genderOfEntry` | Conditional | `CodedValue` | — |
+| `admissionsPolicy` | Conditional | `CodedValue` | — |
+| `boardingProvision` | Conditional | `CodedValue` | — |
+| `nurseryProvision` | Conditional | `CodedValue` | — |
+| `sixthFormProvision` | Conditional | `CodedValue` | — |
+| `specialClassProvision` | Conditional | `boolean` | — |
+| `section41Approval` | Conditional | `CodedValue` | Include only when applicable and published. |
+
+#### CapacityAndPupilMeasures
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `providerCapacity` | Conditional | `integer` | Minimum: 0. |
+| `numberOfPupilsStudents` | Conditional | `integer` | Minimum: 0. |
+| `censusDate` | Conditional | `string (date)` | — |
+| `pupilsEligibleForFreeSchoolMeals` | Conditional | `integer` | Minimum: 0. |
+| `percentagePupilsEligibleForFreeSchoolMeals` | Conditional | `number` | Published percentage; retain the supplied value. No common denominator with other counts is implied. Minimum: 0. Maximum: 100. |
+| `numberOfMales` | Conditional | `integer` | Pupil-population count. Minimum: 0. |
+| `numberOfFemales` | Conditional | `integer` | Pupil-population count. Minimum: 0. |
+
+#### FaithContext
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `religiousCharacter` | Conditional | `CodedValue` | — |
+| `religiousEthos` | Conditional | `CodedValue` | — |
+| `diocese` | Conditional | `CodedValue` | — |
+
+#### ResourcedProvisionMeasure
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `resourcedProvisionPupilCount` | Conditional | `integer` | Minimum: 0. |
+| `resourcedProvisionCapacity` | Conditional | `integer` | Minimum: 0. |
+
+#### SenUnitMeasure
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `senUnitPupilCount` | Conditional | `integer` | Minimum: 0. |
+| `senUnitCapacity` | Conditional | `integer` | Minimum: 0. |
+
+#### SenAndResourcedProvision
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `typeOfSenProvision` | Conditional | `NamedValue[]` | Unique published SEN-need names, sorted by name using ordinal comparison. Non-empty array. Unique items. |
+| `typeOfResourcedProvision` | Conditional | `NamedValue` | — |
+| `resourcedProvisionMeasure` | Conditional | `ResourcedProvisionMeasure` | — |
+| `senUnitMeasure` | Conditional | `SenUnitMeasure` | — |
+
+#### AlternativeProvisionCharacteristics
+
+Include applicable published facts; these fields are not restricted to the pupil referral unit type.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `teenMothersProvision` | Conditional | `boolean` | — |
+| `childcareFacilitiesProvision` | Conditional | `boolean` | — |
+| `senPupilReferralUnit` | Conditional | `boolean` | — |
+| `emotionalBehaviouralDifficultiesProvision` | Conditional | `boolean` | — |
+| `fullTimeProvision` | Conditional | `boolean` | — |
+| `pupilsEducatedByOtherProviders` | Conditional | `boolean` | — |
+| `teenMothersCapacity` | Conditional | `integer` | Minimum: 0. |
+| `pupilReferralUnitCapacity` | Conditional | `integer` | Minimum: 0. |
+
+#### InspectionRecord
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `inspectorateName` | Conditional | `NamedValue` | — |
+| `inspectorateReport` | Conditional | `string (uri)` | Published inspection-report URI. Non-empty. |
+| `dateOfLastInspectionVisit` | Conditional | `string (date)` | — |
+| `dateOfNextInspectionVisit` | Conditional | `string (date)` | — |
+
+#### AcademyTrust
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `name` | Required | `string` | Published party or group name. Non-empty. |
+| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
+| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
+| `companiesHouseNumber` | Conditional | `string` | Published Companies House number; preserve leading zeroes. Non-empty. |
+| `academyTrustType` | Required | `string` | Single-academy trust, Multi-academy trust or Secure single-academy trust. Historical entries retain the type recorded for that relationship. |
+| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
+| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
+
+#### Sponsor
+
+A sponsor may be an organisation or an individual. academyTrustType is absent. personId and companiesHouseNumber must not be published together.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `name` | Required | `string` | Published party or group name. Non-empty. |
+| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
+| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
+| `companiesHouseNumber` | Conditional | `string` | Organisations only; published company number. Non-empty. |
+| `personId` | Conditional | `string (uuid)` | Individual sponsors only; stable published person UUID. |
+| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
+| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
+
+#### MaintainingLocalAuthority
+
+The council maintaining the school; distinct from administrativeGeography.localAuthorityArea.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `code` | Conditional | `string` | Three-digit published DfE LA code evidenced for this relationship and period. |
+| `name` | Required | `string` | Published council legal-entity name. Non-empty. |
+| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
+| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
+
+#### Federation
+
+Dates describe membership of the federation.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `name` | Required | `string` | Published party or group name. Non-empty. |
+| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
+| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
+| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
+| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
+
+#### FoundationTrust
+
+Published foundation-trust support relationship.
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `name` | Required | `string` | Published party or group name. Non-empty. |
+| `groupUid` | Conditional | `string` | Published Group UID for this role as a non-empty decimal string. |
+| `groupId` | Conditional | `string` | Published Group ID; preserve prefix and leading zeroes. Non-empty. |
+| `companiesHouseNumber` | Conditional | `string` | Published company number. Non-empty. |
+| `startDate` | Conditional | `string (date)` | Relationship start, inclusive. |
+| `endDate` | Conditional | `string (date)` | Relationship end, exclusive; may be future-dated for a current relationship. |
+
+#### Predecessor
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `urn` | Required | `string` | Predecessor establishment URN as a decimal string from 1 to 999999, without leading zeroes. |
+| `establishmentName` | Required | `string` | Published predecessor name. Non-empty. |
+| `dateLinked` | Conditional | `string (date)` | Recorded establishment-link date. |
+| `url` | Required | `string` | Root-relative resource URL: `/v1/establishments/{URN}`. Its URN must match this item's urn. |
+
+#### History
+
+| Property | Presence | Type | Constraint |
+| --- | --- | --- | --- |
+| `previousLA` | Conditional | `LocalAuthorityValue` | Previous published DfE local authority reference; omit placeholder code 999. This is not a dated maintenance relationship. |
+| `predecessors` | Conditional | `Predecessor[]` | Direct links only. De-duplicate identical URN/date pairs; sort by URN numerically, then dateLinked ascending, unknown dates last. Non-empty array. |
+| `previousAcademyTrusts` | Conditional | `AcademyTrust[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison, then groupUid and groupId. Historical operators. Non-empty array. |
+| `previousSponsors` | Conditional | `Sponsor[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison, then groupUid and groupId. Historical sponsors. Non-empty array. |
+| `previousMaintainingLocalAuthorities` | Conditional | `MaintainingLocalAuthority[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical maintenance relationships. Non-empty array. |
+| `previousFederations` | Conditional | `Federation[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical federation memberships. Non-empty array. |
+| `previousFoundationTrusts` | Conditional | `FoundationTrust[]` | Sort by startDate ascending, unknown dates last, then name using ordinal comparison. Historical foundation-trust relationships. Non-empty array. |
+
+
+## Endpoints
+
+All paths are relative to the environment-specific HTTPS origin.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/v1/establishments/{URN}` | Retrieve one published establishment. |
+| GET | `/v1/establishments` | List published establishments, optionally filtered by `status` and `establishmenttype`. |
+| GET | `/v1/establishment-types` | List establishment type codes and names. |
+| GET | `/openapi/v1.json` | Retrieve the deployed API's OpenAPI document as JSON. |
+| GET | `/swagger` | Browse the OpenAPI document and try requests in Swagger UI. |
+
+### Establishment detail
+
+```http
+GET /v1/establishments/{URN}
+```
+
+#### Request
+
+| Item | Contract |
+| --- | --- |
+| Origin | Environment-specific HTTPS origin. |
+| Authentication | None. |
+| Path | Lowercase fixed segments; no trailing slash. |
+| `URN` | Required decimal string. Range: 1–999999. No leading zeroes, signs, whitespace or separators. |
+| Query parameters | Not specified. |
+| Request body | None. Non-empty body: `400 unexpected-request-body`. |
+| Other methods | `405 method-not-allowed`; `Allow: GET`. |
+| Unmatched path | `404`, including a trailing slash or missing path segment. |
+
+Validate a matched URN before lookup. `/v1/establishments/ABC` returns `400 invalid-urn`. A valid URN without a published record returns `404 establishment-not-found`.
+
+#### Response
+
+Return one complete establishment object as `application/json`. A valid URN without a published record returns `404 establishment-not-found`. Shared publication, caching and error rules apply. See [payload fields](#payload-fields) and [field structures](#field-structures) for the response schema.
+
+#### Examples
+
+```http
+GET /v1/establishments/137603 HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip
+```
 
 Illustrative payloads; not live responses.
 
-### Academy
+##### Academy
 
-#### Ridgewood School  URN 137603
+###### Ridgewood School  URN 137603
 
 ```http
 GET /v1/establishments/137603 HTTP/1.1
@@ -735,7 +620,7 @@ Vary: Accept, Accept-Encoding
 }
 ```
 
-#### Westlands School URN 136286
+###### Westlands School URN 136286
 
 The example `siteId` is illustrative.
 
@@ -854,7 +739,7 @@ Vary: Accept, Accept-Encoding
 }
 ```
 
-### Local authority maintained school
+##### Local authority maintained school
 
 ```http
 GET /v1/establishments/109613 HTTP/1.1
@@ -960,3 +845,168 @@ Vary: Accept, Accept-Encoding
 ```
 
 Example ETags identify the displayed uncompressed JSON as UTF-8 without a byte-order mark, with LF line endings and no final newline.
+
+### Establishment collection
+
+```http
+GET /v1/establishments
+GET /v1/establishments?status=open
+GET /v1/establishments?status=closed
+GET /v1/establishments?status=open,closed
+GET /v1/establishments?establishmenttype=01,02,03
+GET /v1/establishments?establishmenttype=01,02,03&status=open
+```
+
+#### Request
+
+| Item | Contract |
+| --- | --- |
+| Authentication | None. |
+| Path | `/v1/establishments`; no trailing slash. |
+| `status` | Optional comma-separated array of lowercase values: `open` and `closed`. Supply the parameter once without whitespace or empty entries. Multiple values use **OR**; different filters use **AND**. Duplicate values have no additional effect. |
+| No `status` filter | Return both Open and Closed published establishments. |
+| `status=open` | Return published establishments with `establishmentStatus.code` equal to `1` (Open). |
+| `status=closed` | Return published establishments with `establishmentStatus.code` equal to `2` (Closed). |
+| `status=open,closed` | Return published establishments that are Open **OR** Closed, equivalent to omitting `status`. Value order has no effect. |
+| Invalid `status` | Empty values or entries, repeated parameter names, whitespace or unsupported values (including `close`): `400 invalid-status-filter`. Values are case-sensitive; do not trim whitespace. |
+| `establishmenttype` | Optional comma-separated array of two-digit type codes, supplied once without whitespace or empty entries. Multiple codes use **OR**; different filters use **AND**. Codes retain leading zeroes. Duplicate codes have no additional effect; well-formed unknown codes match no records. |
+| Invalid `establishmenttype` | Empty, repeated or malformed values: `400 invalid-establishmenttype-filter`, with a query validation error named `establishmenttype`. |
+| Other query parameters | `400 unsupported-query-parameter`. |
+| Request body | None. Non-empty body: `400 unexpected-request-body`. |
+| Other methods | `405 method-not-allowed`; `Allow: GET`. |
+
+
+For example, `GET /v1/establishments?establishmenttype=01,02,03` returns establishments whose `providerType.code` is `01` **OR** `02` **OR** `03`. Add `&status=open` to require an Open status as well. Discover available type codes using [`GET /v1/establishment-types`](#establishment-types).
+
+`GET /v1/establishments?status=open,closed&establishmenttype=01,02,03` applies `(Open OR Closed) AND (type 01 OR type 02 OR type 03)`.
+
+#### Response
+
+| Item | Contract |
+| --- | --- |
+| Success body | JSON array of complete `Establishment` objects, with the same fields as the detail endpoint for the same published data version. |
+| No matches | `200` with `[]`. |
+| Ordering | URN ascending, compared numerically. One item per URN. |
+| Delivery | Return all matches in one response; no pagination or collection wrapper. |
+| Publication | Read one consistent public projection. Exclude unpublished records and statuses other than Open and Closed. Missing required facts on a matching record: `503 publication-incomplete`; do not return a partial collection. |
+
+Shared request headers, response headers, errors and conditional retrieval apply to the JSON data endpoints. A collection ETag covers the complete selected array after content coding.
+
+#### Examples
+
+```http
+GET /v1/establishments HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip
+```
+
+Abbreviated response body; comments mark omitted fields and records. See [detail examples](#examples) for the complete establishment payloads.
+
+```jsonc
+[
+  {
+    "urn": "106789",
+    "establishmentName": "Ridgewood School",
+    "establishmentStatus": {"code": "2", "name": "Closed"}
+    // ... the rest of the establishment payload
+  },
+  {
+    "urn": "136286",
+    "establishmentName": "Westlands School",
+    "establishmentStatus": {"code": "1", "name": "Open"}
+    // ... the rest of the establishment payload
+  },
+  {
+    "urn": "137603",
+    "establishmentName": "Ridgewood School",
+    "establishmentStatus": {"code": "1", "name": "Open"}
+    // ... the rest of the establishment payload
+  }
+  // ... further establishments
+]
+```
+
+### Establishment types
+
+```http
+GET /v1/establishment-types
+```
+
+#### Request
+
+| Item | Contract |
+| --- | --- |
+| Authentication | None. |
+| Path | `/v1/establishment-types`; no trailing slash. |
+| Query parameters | None. Unsupported parameters: `400 unsupported-query-parameter`. |
+| Request body | None. Non-empty body: `400 unexpected-request-body`. |
+| Other methods | `405 method-not-allowed`; `Allow: GET`. |
+
+#### Response
+
+Return the full loaded `establishment_type` lookup as a bare JSON array, ordered by code. Each item contains only string `code` and string `name`. Codes retain leading zeroes. Types with no published establishments are included. An empty lookup returns `200` with `[]`.
+
+Shared negotiation, caching and problem-response rules apply.
+
+#### Examples
+
+The following is an abbreviated example; the endpoint returns all loaded types:
+
+```json
+[
+  { "code": "01", "name": "Community school" },
+  { "code": "02", "name": "Voluntary aided school" },
+  { "code": "03", "name": "Voluntary controlled school" },
+  { "code": "05", "name": "Foundation school" }
+]
+```
+
+### OpenAPI document
+
+```http
+GET /openapi/v1.json
+```
+
+#### Request
+
+| Item | Contract |
+| --- | --- |
+| Authentication | None. |
+| Path | `/openapi/v1.json`; no trailing slash. |
+| Query parameters | None. Unsupported parameters: `400 unsupported-query-parameter`. |
+| Request body | None. Non-empty body: `400 unexpected-request-body`. |
+| Other methods | `405 method-not-allowed`; `Allow: GET`. |
+
+#### Response
+
+Return the deployed API's machine-readable OpenAPI document as `application/json`.
+
+The document describes the deployed data endpoints, parameters, response schemas and errors, including the establishment-type lookup and the filter's OR/AND semantics. Bundle referenced payload schemas into the document so consumers need only this URL. Use a relative server URL so requests use the origin serving the document.
+
+Support JSON content negotiation, gzip, ETags and `If-None-Match` conditional requests using the shared representation rules. This resource is available independently of the database and public-projection availability; it does not return a publication error solely because establishment data is unavailable.
+
+The current [demo](api-demo/README.md#openapi-resource) serves OpenAPI 3.0.3, including its pagination extension. The linked published OpenAPI 2.0 contract defines the published data contract; the document served by a deployment must describe that deployment's collection response shape.
+
+### Swagger UI
+
+```http
+GET /swagger
+```
+
+#### Request
+
+| Item | Contract |
+| --- | --- |
+| Authentication | None. |
+| Path | `/swagger`; may redirect to `/swagger/index.html`. |
+| Query parameters | None required. |
+| Request body | None required. |
+| Method | GET. |
+
+#### Response
+
+Provide an HTML Swagger UI page (`text/html`) that loads `/openapi/v1.json` from the same deployment. The entry URL may redirect to `/swagger/index.html`. Consumers can browse operations, read schemas and filter descriptions, and send requests using **Try it out**.
+
+Serve the UI's JavaScript and CSS from the application, without a CDN dependency. Resolve the OpenAPI URL relative to the UI so it follows the serving origin and port. The page is available independently of the database; requests made through **Try it out** still follow each data endpoint's availability and validation rules.
+
+Swagger UI uses HTML and static assets, so the JSON data endpoints' content negotiation, ETag and problem-response rules do not define the UI's responses.

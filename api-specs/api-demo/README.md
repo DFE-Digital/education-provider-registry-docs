@@ -20,14 +20,14 @@ It's a demo, not production code. It runs on `http://localhost:5080` and only li
 
 ## Establishment types and filtering
 
-`GET /v1/establishment-types` returns every row from `establishment.establishment_type`, ordered by code, as a bare JSON array. Each object contains only `code`, `name` and `establishment_type_category_id`. Codes retain leading zeroes; category IDs are integers. The endpoint accepts no query parameters.
+`GET /v1/establishment-types` returns every row from `establishment.establishment_type`, ordered by code, as a bare JSON array. Each object contains only `code` and `name`. Codes retain leading zeroes. The endpoint accepts no query parameters.
 
 ```json
 [
-  { "code": "01", "name": "Community school", "establishment_type_category_id": 4 },
-  { "code": "02", "name": "Voluntary aided school", "establishment_type_category_id": 4 },
-  { "code": "03", "name": "Voluntary controlled school", "establishment_type_category_id": 4 },
-  { "code": "05", "name": "Foundation school", "establishment_type_category_id": 4 }
+  { "code": "01", "name": "Community school" },
+  { "code": "02", "name": "Voluntary aided school" },
+  { "code": "03", "name": "Voluntary controlled school" },
+  { "code": "05", "name": "Foundation school" }
 ]
 ```
 
@@ -145,16 +145,6 @@ dotnet run --configuration Release
 There's no password in the settings. The database driver reads it from `%APPDATA%\postgresql\pgpass.conf`.
 
 Every connection is read-only. The connection string turns on `default_transaction_read_only`, and every request also runs `SET TRANSACTION READ ONLY`. It still logs in as `postgres`, though. A real service would use a read-only role.
-
-## Regression checks
-
-With the demo running against a disposable populated test database, run:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\Smoke.ps1
-```
-
-The checks are read-only. The test data needs at least two of types `01`, `02`, `03`, including one closed establishment of a selected type, plus URN `100018`. Tests cover lookup shape, OR/AND filtering, pagination, invalid input, caching and the bundled OpenAPI resource. Use `-BaseUrl` to test a different port.
 
 ## What the demo follows from the contract
 

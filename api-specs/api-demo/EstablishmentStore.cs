@@ -80,7 +80,7 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
         await ExecuteAsync(connection, "SET TRANSACTION READ ONLY; SET LOCAL search_path = establishment;", ct);
         LastKnownRefresh = await ReadRefreshedAtAsync(connection, ct);
         await using var command = new NpgsqlCommand("""
-            SELECT code, name, establishment_type_category_id
+            SELECT code, name
             FROM establishment_type
             ORDER BY code COLLATE "C"
             """, connection);
@@ -92,8 +92,7 @@ public sealed class EstablishmentStore(NpgsqlDataSource dataSource)
                 types.Add(new JsonObject
                 {
                     ["code"] = reader.GetString(0),
-                    ["name"] = reader.GetString(1),
-                    ["establishment_type_category_id"] = reader.GetInt32(2)
+                    ["name"] = reader.GetString(1)
                 });
             }
         }
