@@ -4,6 +4,24 @@ Contract version: `1.0.0`
 Service lifecycle: `beta`  
 [OpenAPI 2.0 contract](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/api-specs/published-establishment-api.openapi.json)
 
+## Endpoint and filter summary
+
+| Method | Endpoint | Filters and parameters |
+| --- | --- | --- |
+| GET | [`/v1/establishments/{URN}`](#establishment-detail) | Required path parameter `URN`: decimal string from 1 to 999999, without leading zeroes. Query parameters are not specified. |
+| GET | [`/v1/establishments`](#establishment-collection) | Optional `status`: comma-separated `open`, `closed`, or both. Optional `establishmenttype`: comma-separated two-digit type codes, such as `01,02,03`. |
+| GET | [`/v1/establishment-types`](#establishment-types) | No filters or query parameters. Returns type codes and names. |
+| GET | [`/openapi/v1.json`](#openapi-document) | No filters or query parameters. Returns the OpenAPI document. |
+| GET | [`/swagger`](#swagger-ui) | No filters or query parameters required. Opens Swagger UI. |
+
+For the establishment collection, values within a filter use **OR**; different filters combine using **AND**. Supply each filter once, without whitespace or empty entries. Omitting `status` includes both Open and Closed published establishments; omitting `establishmenttype` includes all types. The published collection has no pagination parameters.
+
+```http
+GET /v1/establishments?status=open,closed&establishmenttype=01,02,03
+```
+
+This returns published establishments that are **(Open OR Closed) AND (type 01 OR type 02 OR type 03)**.
+
 ## Common API rules
 
 All endpoints use the environment-specific HTTPS origin and require no authentication. The request and response headers, status codes and error format below define the shared rules; each endpoint describes its request and success response.
