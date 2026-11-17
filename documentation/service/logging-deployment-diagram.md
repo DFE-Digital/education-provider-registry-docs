@@ -76,7 +76,7 @@ C4Deployment
 
 ## Logging configuration
 
-The support columns map the logging design to the supplied security documents. They describe contributions to controls, rather than completed assessments or proof of deployed operation. Exact source locations and remaining gaps are in the [security control mappings and TODOs](logging-security-controls.md).
+The support columns map the logging design to the supplied security documents. They describe contributions to controls, rather than completed assessments or proof of deployed operation. 
 
 | Component | Ownership | Logging / collection | Destination and transport | Configuration and status | Baseline support | OWASP support |
 | --- | --- | --- | --- | --- | --- | --- |
