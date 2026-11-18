@@ -139,13 +139,13 @@ Application metric configuration is complete when `/metrics` responds internally
 
 ### Shared platform configuration
 
+Application metrics export, discovery, scrape-port selection and internal access are covered under [EPR configuration for Prometheus monitoring](#epr-configuration-for-prometheus-monitoring).
+
 | Area | EPR configuration to implement | Detail |
 | --- | --- | --- |
 | Production monitoring | Set `enable_monitoring = true` for the applicable EPR production HTTP workloads. | Keep this distinct from Prometheus application scraping and platform alert registration. |
-| Prometheus discovery | Pass `enable_prometheus_monitoring = true` to each HTTP workload's shared application module. | The module adds `prometheus.io/scrape = true`, `prometheus.io/path = /metrics` and the configured workload port. Use the actual serving port; the data repository currently declares its application `is_web = false`, so identify the real API workload/port before wiring this in. |
-| Application metrics endpoint | Implement a .NET Prometheus-compatible exporter at `/metrics`. | Keep the metrics path excluded from public ingress, following the platform's metrics-blocking pattern. |
-| Deployment alerts | Add one `gias-production/<actual-deployment-name>` entry per EPR deployment to the platform's production `alertable_apps` map, using an agreed EPR receiver. | Deployment names and the EPR receiver identifier must come from the deployed configuration; placeholders are not ready-to-apply values. |
-| Shared dashboards | Use the shared Grafana/Thanos services and create EPR-filtered request panels. | Retain the platform metrics store, access mechanism and metrics-retention configuration. |
+| Deployment alerts | EPR should coordinate this with the TSC platform team. |
+| Shared dashboards | EPR should coordinate this with the TSC platform team. |  |
 
 ### Application metrics
 
@@ -154,16 +154,12 @@ EPR's .NET applications expose the following request measurements:
 | Measurement | EPR target |
 | --- | --- |
 | Request count | Counter by HTTP method and stable API operation/route. |
-| Request duration | Histogram in seconds; use latency boundaries `0.1`, `0.5`, `1`, `5`, `10` where compatible with the selected exporter. |
-| Unsuccessful requests | Counter distinguishing operation and bounded failure/status classification. |
-| Response size | Histogram in bytes; use boundaries `100`, `1000`, `10000`, `100000`, `1000000` where compatible with the selected exporter. |
+| Request duration | Record how long requests take, grouped into time ranges. Show how many meet the response-time target and how quickly 95% of requests finish |
+| Unsuccessful requests | Count failed requests by API operation and HTTP response status code |
+| Response size | Record response sizes in bytes, grouped into size ranges so we can see how large API responses are |
 
-The website uses the same request/latency/failure/size approach for its HTTP routes. Document the .NET metric names, units and stable operation/route labels with the exporter. Raw URLs, personal data and unbounded error-message labels are not required for these measurements. Exporting these metrics supplies dashboards; it does not automatically add latency/error alert rules to the shared platform baseline.
 
-### Shared alerts and response
 
-Retain the existing platform rule expressions and defaults when registering EPR: container-restart increase, high CPU and high memory. In the inspected template, CPU uses threshold `0.8` in the CPU-rate expression, memory uses ratio `0.8`, and the restart expression is an increase greater than zero over 30 minutes with a one-minute `for` period. Its restart annotation mentions another crash-count value; the expression is authoritative for this design.
 
-Use the existing Alertmanager service-receiver route: 30-second grouping wait, five-minute group interval, six-hour repeat interval and resolved notifications. Configure EPR's receiver identifier, secret reference, Teams destination and response owner through the shared platform process. 
 
 
