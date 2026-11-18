@@ -23,10 +23,10 @@ C4Deployment
     UpdateLayoutConfig($c4ShapeInRow="5", $c4BoundaryInRow="1")
 ```
 ```mermaid
-%%{init: {"wrap": true, "c4": {"width": 260}}}%%
+%%{init: {"wrap": true, "c4": {"width": 360}}}%%
 C4Deployment
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 
     title EPR - application metrics and alerting (target)
     Person(engineer, "EPR / platform engineer", "Uses shared dashboards and responds to alerts")
