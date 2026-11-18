@@ -7,8 +7,9 @@ This is the **target EPR configuration**, not confirmation of deployed integrati
 
 ### Key
 ```mermaid
-%%{init: {"wrap": true, "c4": {"width": 280}}}%%
+
 C4Deployment
+    UpdateLayoutConfig($c4ShapeInRow="5", $c4BoundaryInRow="1")
     Container(key_workloads, "EPR workloads", "")
     Container(key_sources, "Metric sources", "")
     Container(key_collection, "Collection / query", "")
