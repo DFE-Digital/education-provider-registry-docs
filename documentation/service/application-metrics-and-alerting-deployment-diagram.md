@@ -26,7 +26,6 @@ C4Deployment
 %%{init: {"wrap": true, "c4": {"width": 260}}}%%
 C4Deployment
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 
     title EPR - application metrics and alerting (target)
     Person(engineer, "EPR / platform engineer", "Uses shared dashboards and responds to alerts")
@@ -103,7 +102,6 @@ C4Deployment
     UpdateElementStyle(engineer, $bgColor="#ede9fe", $fontColor="#3b0764", $borderColor="#7c3aed")
     UpdateElementStyle(alertmanager, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
     UpdateElementStyle(teams, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
-
 
 ```
 
