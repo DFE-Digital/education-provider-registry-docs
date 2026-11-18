@@ -106,57 +106,57 @@ C4Deployment
 
 ## What each component does
 
-| Component | EPR target configuration | Ownership |
-| --- | --- | --- |
-| Website and public API | Expose Prometheus-format metrics at `/metrics`; expose lightweight `/ping` and dependency-aware `/healthcheck`. Implement these in the .NET applications. | EPR |
-| kube-state-metrics | Exposes Kubernetes resource state, including desired/running replicas, pod status and container restarts. Prometheus scrapes its endpoint. | Teacher Services Cloud |
-| Kubelet / cAdvisor | Exposes container CPU, memory and other resource-usage metrics, including those for EPR containers. Prometheus collects them through the Kubernetes API proxy. | Teacher Services Cloud |
-| Node exporter | Exposes AKS node metrics, including host CPU, memory, disk and network activity. Prometheus scrapes its endpoint. | Teacher Services Cloud |
-| Shared ingress controller metrics | Exposes ingress traffic and controller metrics through the configured controller endpoint. Available measurements depend on the deployed controller configuration. | Teacher Services Cloud |
-| Prometheus | Scrape the EPR application endpoints using shared module annotations; evaluate existing deployment-alert rules. | Teacher Services Cloud manages collection; EPR implements and maintains the application's `/metrics` endpoint |
-| Thanos | Existing current/retained metrics query and storage layer. | Teacher Services Cloud |
-| Grafana | Use shared namespace/pod dashboards filtered to EPR | Teacher Services Cloud hosts; EPR owns service panels |
-| Alertmanager and Teams receiver | Register each EPR deployment under `alertable_apps` and route to an EPR service receiver | Teacher Services Cloud configuration; EPR response ownership |
+
+| Component | EPR target configuration | Ownership | Baseline security support | OWASP support |
+| --- | --- | --- | --- | --- |
+| Website and public API | Expose Prometheus-format metrics at `/metrics`; expose lightweight `/ping` and dependency-aware `/healthcheck`. Implement these in the .NET applications. | EPR | 3.8: application metric flows | A09: operational monitoring input only |
+| kube-state-metrics | Exposes Kubernetes resource state, including desired/running replicas, pod status and container restarts. Prometheus scrapes its endpoint. | Teacher Services Cloud | 3.8: cluster-state metric flow | A09: deployment-state monitoring input only |
+| Kubelet / cAdvisor | Exposes container CPU, memory and other resource-usage metrics, including those for EPR containers. Prometheus collects them through the Kubernetes API proxy. | Teacher Services Cloud | 3.8: container metric flow | A09: resource-usage monitoring input only |
+| Node exporter | Exposes AKS node metrics, including host CPU, memory, disk and network activity. Prometheus scrapes its endpoint. | Teacher Services Cloud | 3.8: host metric flow | A09: resource-usage monitoring input only |
+| Shared ingress controller metrics | Exposes ingress traffic and controller metrics through the configured controller endpoint. Available measurements depend on the deployed controller configuration. | Teacher Services Cloud | 3.8: ingress metric flow | A09: traffic monitoring input only |
+| Prometheus | Scrape the EPR application endpoints using shared module annotations; evaluate existing deployment-alert rules. | Teacher Services Cloud manages collection; EPR implements and maintains the application's `/metrics` endpoint | 3.8: collection and alert flows | A09: operational collection and deployment alerts only |
+| Thanos | Existing current/retained metrics query and storage layer. | Teacher Services Cloud | 3.8: metric storage/query flow | A09: shared metric queries; security-log retention not established |
+| Grafana | Use shared namespace/pod dashboards filtered to EPR | Teacher Services Cloud hosts; EPR owns service panels | 3.8: metric query/display flow | A09: dashboards support investigation; review process not established |
+| Alertmanager and Teams receiver | Register each EPR deployment under `alertable_apps` and route to an EPR service receiver | Teacher Services Cloud configuration; EPR response ownership | 3.8: notification flow; 13.1: routing contribution only; security escalation not established | A09: notification routing; security use cases and response playbooks not established |
 
 ## EPR configuration for Prometheus monitoring
 
 EPR must configure each application whose request metrics are to be collected. Teacher Services Cloud supplies the shared collectors and monitoring services; the EPR team implements the application endpoint and enables its discovery.
 
-| EPR responsibility | Where to configure it | Required configuration |
-| --- | --- | --- |
-| Expose application metrics | Website and public API .NET applications | Add a Prometheus-compatible exporter and serve its output at `/metrics`.  |
-| Instrument requests | Application code and exporter configuration | Record the request counts, durations, failures and response sizes defined under [Application metrics](#application-metrics). Use stable operation/route labels, with consistent names, units and meanings. |
-| Enable discovery | Each application's Terraform variables, environment values and shared application module call | Pass `enable_prometheus_monitoring = true`. |
-| Select the correct Prometheus scrape port | The application's Terraform settings: `is_web`, `web_port` and `worker_port`. | Ensure `/metrics` is served on the annotated port.  |
-| Keep metrics internal | Ingress and platform configuration | Retain the platform's metrics-path blocking configuration so Prometheus can scrape the workload internally while the public website/API does not expose `/metrics`. |
+| EPR responsibility | Where to configure it | Required configuration | Baseline security support | OWASP support |
+| --- | --- | --- | --- | --- |
+| Expose application metrics | Website and public API .NET applications | Add a Prometheus-compatible exporter and serve its output at `/metrics`.  | 3.8: metric source and path | A09: operational monitoring input only |
+| Instrument requests | Application code and exporter configuration | Record the request counts, durations, failures and response sizes defined under [Application metrics](#application-metrics). Use stable operation/route labels, with consistent names, units and meanings. | | A09: request monitoring context; no security-event audit trail |
+| Enable discovery | Each application's Terraform variables, environment values and shared application module call | Pass `enable_prometheus_monitoring = true`. | 3.8: collection configuration | A09: enables operational metric collection only |
+| Select the correct Prometheus scrape port | The application's Terraform settings: `is_web`, `web_port` and `worker_port`. | Ensure `/metrics` is served on the annotated port.  | 3.8: collection endpoint | A09: enables operational metric collection only |
+| Keep metrics internal | Ingress and platform configuration | Retain the platform's metrics-path blocking configuration so Prometheus can scrape the workload internally while the public website/API does not expose `/metrics`. | | A01: restrict public access to the metrics endpoint |
 
 
 The existing kube-state-metrics, kubelet/cAdvisor and node-exporter collectors already supply infrastructure measurements such as pod state, CPU and memory. EPR does not implement those collectors or need an application exporter to obtain those infrastructure metrics.
 
 Application metric configuration is complete when `/metrics` responds internally on the configured port, Prometheus reports the application target as healthy, and its measurements can be queried through the shared Grafana/Thanos service. Deployment-alert registration and Teams routing are separate configuration, described below; enabling application scraping does not enable those alerts automatically.
 
-## EPR integration
+## EPR configuration for share platfor
 
-### Shared platform configuration
 
 Application metrics export, discovery, scrape-port selection and internal access are covered under [EPR configuration for Prometheus monitoring](#epr-configuration-for-prometheus-monitoring).
 
-| Area | EPR configuration to implement | Detail |
-| --- | --- | --- |
-| Production monitoring | Set `enable_monitoring = true` for the applicable EPR production HTTP workloads. | Keep this distinct from Prometheus application scraping and platform alert registration. |
-| Deployment alerts | EPR should coordinate this with the TSC platform team. |
-| Shared dashboards | EPR should coordinate this with the TSC platform team. |  |
+| Area | EPR configuration to implement | Detail | Baseline security support | OWASP support |
+| --- | --- | --- | --- | --- |
+| Production monitoring | Set `enable_monitoring = true` for the applicable EPR production HTTP workloads. | Keep this distinct from Prometheus application scraping and platform alert registration. | | A09: operational monitoring contribution only |
+| Deployment alerts | EPR should coordinate this with the TSC platform team. | | 13.1: routing contribution only; security alerts and 24/7 escalation not established | A09: operational alerts only; security use cases and response playbooks not established |
+| Shared dashboards | EPR should coordinate this with the TSC platform team. | | | A09: visibility for investigation; scheduled security review not established |
 
 ### Application metrics
 
 EPR's .NET applications expose the following request measurements:
 
-| Measurement | EPR target |
-| --- | --- |
-| Request count | Counter by HTTP method and stable API operation/route. |
-| Request duration | Record how long requests take, grouped into time ranges. Show how many meet the response-time target and how quickly 95% of requests finish |
-| Unsuccessful requests | Count failed requests by API operation and HTTP response status code |
-| Response size | Record response sizes in bytes, grouped into size ranges so we can see how large API responses are |
+| Measurement | EPR target | Baseline security support | OWASP support |
+| --- | --- | --- | --- |
+| Request count | Counter by HTTP method and stable API operation/route. | | A09: traffic trends; no attack-detection rule established |
+| Request duration | Record how long requests take, grouped into time ranges. Show how many meet the response-time target and how quickly 95% of requests finish | | A09: performance trends; no security-alert threshold established |
+| Unsuccessful requests | Count failed requests by API operation and HTTP response status code | | A09 / A10: repeated-failure counts support investigation; exception logs and alerts not established |
+| Response size | Record response sizes in bytes, grouped into size ranges so we can see how large API responses are | | A09: response-volume trends; no data-loss detection rule established |
 
 
 
