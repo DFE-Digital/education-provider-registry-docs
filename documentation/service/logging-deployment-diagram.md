@@ -24,7 +24,7 @@ C4Deployment
 ```
 
 ```mermaid
-%%{init: {"wrap": true, "c4": {"width": 260}}}%%
+%%{init: {"wrap": true, "c4": {"width": 360}}}%%
 C4Deployment
     title EPR public beta - logging view
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
