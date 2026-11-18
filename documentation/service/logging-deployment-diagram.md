@@ -52,17 +52,17 @@ C4Deployment
     Rel(adf, law, "Pipeline, activity<br/>and trigger logs (design)", "TLS 1.2")
 
     %% Separate collection labels around Filebeat.
-    UpdateRelStyle(web, filebeat, $offsetX="-34", $offsetY="-10")
-    UpdateRelStyle(api, filebeat, $offsetX="-41", $offsetY="0")
-    UpdateRelStyle(ingress, filebeat, $offsetX="30", $offsetY="0")
-    UpdateRelStyle(filebeat, logit, $offsetX="0", $offsetY="-20")
+    UpdateRelStyle(web, filebeat, $offsetX="0", $offsetY="-30")
+    UpdateRelStyle(api, filebeat, $offsetX="50", $offsetY="0")
+    UpdateRelStyle(ingress, filebeat, $offsetX="10", $offsetY="20")
+    UpdateRelStyle(filebeat, logit, $offsetX="90", $offsetY="430")
 
     %% Stagger labels on the diagnostic paths into Log Analytics.
-    UpdateRelStyle(webEp, law, $offsetX="-90", $offsetY="-45")
-    UpdateRelStyle(apiEp, law, $offsetX="90", $offsetY="30")
-    UpdateRelStyle(readSrv, law, $offsetX="-90", $offsetY="-35")
-    UpdateRelStyle(txSrv, law, $offsetX="90", $offsetY="-150")
-    UpdateRelStyle(adf, law, $offsetX="0", $offsetY="-35")
+    UpdateRelStyle(webEp, law, $offsetX="200", $offsetY="60")
+    UpdateRelStyle(apiEp, law, $offsetX="250", $offsetY="140")
+    UpdateRelStyle(readSrv, law, $offsetX="-60", $offsetY="60")
+    UpdateRelStyle(txSrv, law, $offsetX="20", $offsetY="60")
+    UpdateRelStyle(adf, law, $offsetX="-50", $offsetY="-85")
 
     %% Edge endpoints: amber
     UpdateElementStyle(webEp, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
