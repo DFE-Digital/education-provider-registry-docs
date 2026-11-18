@@ -4,6 +4,10 @@
 This is the **target EPR configuration**, not confirmation of deployed integrations.  Metrics monitoring and alerting are separate from Security Information and Event Management (SIEM).
 
 ## Deployment diagram
+
+```mermaid
+info
+```
 ### Key
 ```mermaid
 %%{init: {"wrap": true, "c4": {"width": 180}}}%%
