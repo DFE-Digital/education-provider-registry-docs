@@ -26,7 +26,7 @@ C4Deployment
 
 C4Deployment
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 
     title EPR - application metrics and alerting (target)
     Person(engineer, "EPR / platform engineer", "Uses shared dashboards and responds to alerts")
