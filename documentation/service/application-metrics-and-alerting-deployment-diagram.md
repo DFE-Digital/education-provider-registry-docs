@@ -10,7 +10,7 @@ info
 ```
 ### Key
 ```mermaid
-%%{init: {"wrap": true, "c4": {"width": 180}}}%%
+%%{init: {"wrap": true, "c4": {"width": 280}}}%%
 C4Deployment
     Container(key_workloads, "EPR workloads", "")
     Container(key_sources, "Metric sources", "")
