@@ -7,7 +7,7 @@ This view shows only components involved in log collection and delivery from the
 C4Deployment
     title EPR public beta - logging view
 
-    UpdateLayoutConfig($c4ShapeInRow="5", $c4BoundaryInRow="2")
+    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 
     System_Ext(logit, "logit.io", "Shared TSC log stacks")
 
@@ -40,16 +40,29 @@ C4Deployment
         Container(law, "Log Analytics", "Azure Monitor workspaces", "Front Door, PostgreSQL and Data Factory diagnostics<br/>Logical grouping; separate workspaces may apply")
     }
 
-    Rel(web, filebeat, "Container stdout/stderr collected")
-    Rel(api, filebeat, "Container stdout/stderr collected")
-    Rel(ingress, filebeat, "Ingress container logs collected")
-    Rel(filebeat, logit, "Ships collected logs", "TLS")
+    Rel(web, filebeat, "stdout/stderr<br/>collection")
+    Rel(api, filebeat, "stdout/stderr<br/>collection")
+    Rel(ingress, filebeat, "Ingress log<br/>collection")
+    Rel(filebeat, logit, "Collected logs", "TLS")
 
-    Rel(webEp, law, "Front Door profile access and WAF diagnostics", "TLS 1.2")
-    Rel(apiEp, law, "Same profile: API access and WAF diagnostics", "TLS 1.2")
-    Rel(readSrv, law, "Server diagnostics, when monitoring enabled", "TLS 1.2")
-    Rel(txSrv, law, "Server diagnostics, when monitoring enabled", "TLS 1.2")
-    Rel(adf, law, "Pipeline, activity and trigger diagnostics (design)", "TLS 1.2")
+    Rel(webEp, law, "Access and WAF<br/>diagnostics", "TLS 1.2")
+    Rel(apiEp, law, "API access and WAF<br/>(same profile)", "TLS 1.2")
+    Rel(readSrv, law, "Server diagnostics<br/>(when enabled)", "TLS 1.2")
+    Rel(txSrv, law, "Server diagnostics<br/>(when enabled)", "TLS 1.2")
+    Rel(adf, law, "Pipeline, activity<br/>and trigger logs (design)", "TLS 1.2")
+
+    %% Separate collection labels around Filebeat.
+    UpdateRelStyle(web, filebeat, $offsetX="-34", $offsetY="-10")
+    UpdateRelStyle(api, filebeat, $offsetX="-41", $offsetY="0")
+    UpdateRelStyle(ingress, filebeat, $offsetX="30", $offsetY="0")
+    UpdateRelStyle(filebeat, logit, $offsetX="0", $offsetY="-20")
+
+    %% Stagger labels on the diagnostic paths into Log Analytics.
+    UpdateRelStyle(webEp, law, $offsetX="-90", $offsetY="-45")
+    UpdateRelStyle(apiEp, law, $offsetX="90", $offsetY="30")
+    UpdateRelStyle(readSrv, law, $offsetX="-90", $offsetY="-35")
+    UpdateRelStyle(txSrv, law, $offsetX="90", $offsetY="-150")
+    UpdateRelStyle(adf, law, $offsetX="0", $offsetY="-35")
 
     %% Edge endpoints: amber
     UpdateElementStyle(webEp, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
@@ -71,7 +84,7 @@ C4Deployment
     %% Log destinations: purple
     UpdateElementStyle(law, $bgColor="#ede9fe", $fontColor="#3b0764", $borderColor="#7c3aed")
     UpdateElementStyle(logit, $bgColor="#ede9fe", $fontColor="#3b0764", $borderColor="#7c3aed")
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
+
 ```
 
 ## Logging configuration
