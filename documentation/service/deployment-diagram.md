@@ -1,5 +1,7 @@
 # Education Provider Registry: public beta deployment
 
+This document covers request handling, data flows, deployment, secrets and network security. Log collection, destinations and configuration are described in the [logging deployment view](logging-deployment-diagram.md). Metric collection, dashboards and deployment-alert integration are described in the [application metrics and alerting view](application-metrics-and-alerting-deployment-diagram.md).
+
 
 
 
@@ -17,7 +19,6 @@ C4Deployment
     System_Ext(fauapi, "FaUAPI", "DfE API catalogue")
 
     System_Ext(gh, "GitHub Actions", "Build and deploy. OIDC, no stored secrets.")
-    System_Ext(logit, "logit.io", "Shared TSC log stacks")
     System_Ext(browser, "Public user", "Browser. Anonymous, read-only.")
     System_Ext(consumer, "API consumer", "Third-party system. Key per ADR 0005.")
 
@@ -33,7 +34,6 @@ C4Deployment
 
                 Deployment_Node(platform, "Shared TSC platform services", "Platform-managed components") {
                 Container(ingress, "Shared ingress controller", "TSC platform. nginx, moving to Traefik.", "Public load balancer<br/>Port 80 off<br/>Trusts forwarded headers from anyone")
-                Container(filebeat, "Platform Filebeat", "TSC-managed DaemonSet", "Collects opted-in pod logs<br/>Sends logs to logit.io over TLS")
                 }
 
                 Deployment_Node(ns, "EPR application workloads", "Kubernetes namespace: gias-production") {
@@ -56,7 +56,6 @@ C4Deployment
             ContainerDb(bau, "BAU GIAS DB", "MSSQL", "Source of truth in beta")
             Container(adf, "Data Factory", "Managed VNet", "BAU feed (O8)")
         }
-        Container(law, "Log Analytics", "Azure Monitor workspaces", "Front Door access and WAF diagnostics<br/>PostgreSQL diagnostics when enabled<br/>Logical grouping; may use separate workspaces")
     }
 
 
@@ -78,14 +77,6 @@ C4Deployment
     Rel(secrets, web, "Injects website secrets")
     Rel(secrets, api, "Injects API secrets")
     Rel(gh, fauapi, "Publishes OpenAPI spec (O18)")
-    Rel(webEp, law, "Front Door profile diagnostics: access and WAF logs")
-    Rel(apiEp, law, "Same profile diagnostics: API access and WAF logs")
-    Rel(readSrv, law, "Server diagnostics, when monitoring enabled")
-    Rel(txSrv, law, "Server diagnostics, when monitoring enabled")
-    Rel(ingress, filebeat, "Collects ingress container logs")
-    Rel(web, filebeat, "Container stdout/stderr collected")
-    Rel(api, filebeat, "Container stdout/stderr collected")
-    Rel(filebeat, logit, "TLS")
 
     UpdateElementStyle(webEp, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
     UpdateElementStyle(apiEp, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
@@ -108,36 +99,12 @@ We will build this comparison one row at a time as we review each aspect against
 | Component or connection | Technology / location shown | Configuration or behaviour stated in the diagram |
 | --- | --- | --- |
 | Read replica db | PostgreSQL Flexible Server in the S189 environment VNet | Private subnet; no public access; zone-redundant HA |
-| Inherited ingress logging | Shared TSC Filebeat → logit.io | Platform collects annotated ingress pod logs and sends them to the shared Logit stack over TLS. |
-| Inherited Front Door diagnostic logging | Azure Monitor diagnostic settings → Log Analytics | Shared domains module supports access and WAF logs from the Front Door profile when monitoring is enabled, covering both endpoints. Enablement and retention require confirmation (O17, O20). |
-| Inherited PostgreSQL diagnostic logging | Shared PostgreSQL module → Log Analytics | Server diagnostic categories go to a module-created workspace when monitoring is enabled. PostgreSQL audit configuration and enabled categories require confirmation (O17). |
 
 ### Security Information and Event Management (SIEM)
 
-The website and public API use the shared TSC logging path:
+See the [logging deployment view](logging-deployment-diagram.md#logging-configuration) for collection destinations and the limits of the current central-SIEM integration.
 
-1. Our website/API writes logs to **stdout/stderr**.
-2. The container runtime stores that output as log files on the AKS node.
-3. Shared **Filebeat**, running on the nodes, discovers pods with the `logit.io/send: "true"` annotation and reads their logs.
-4. Filebeat sends them over TLS to the cluster's configured **logit.io** destination.
-
-The shared application Terraform module adds the annotation when `enable_logit = true`. TSC manages Filebeat and its destination configuration. Our applications write to the console and do not need a direct connection to Filebeat or logit.io. EPR owns the events and fields emitted, log levels and filtering of sensitive information; those details remain to be agreed.
-
-### Inherited logging and service-owned decisions
-
-The diagram shows logging mechanisms available through the existing TSC platform and shared Terraform modules. Diagnostic settings must be enabled in our environment before the Azure-resource paths shown are active. Log Analytics represents the relevant workspaces collectively; the Front Door and PostgreSQL modules can create separate workspaces. No forwarding connection from Log Analytics to logit.io is established by the inspected configuration.
-
-| Component | Inherited mechanism | Responsibility |
-| --- | --- | --- |
-| Shared ingress | Platform pod annotations opt its container logs into Filebeat collection and logit.io delivery. | TSC manages the collector and ingress configuration. Confirm the configuration deployed in our cluster, including the Traefik transition. |
-| Filebeat and logit.io | Shared collector, TLS delivery and environment log stack. | TSC manages the shipping infrastructure. Confirm retention, access and operational ownership. |
-| Front Door / WAF | Shared domains module provides diagnostic settings targeting Log Analytics. | EPR enables the module setting and confirms access/WAF categories, retention and costs (O17, O20). |
-| PostgreSQL servers | Shared PostgreSQL module provides server diagnostic settings targeting Log Analytics. | EPR confirms monitoring enablement, required categories and any audit settings (O17). Database contents are not automatically copied into logs. |
-| Website and public API | Shared application module offers Filebeat/Logit opt-in. | EPR selects stdout/stderr collection through platform Filebeat to logit.io, as shown. Verify collection enablement in each environment; event content, formatting, filtering and alerts remain to be reviewed. |
-| Data Factory | **Design decision:** enable `azure_enable_monitoring` and send pipeline, activity and trigger logs to Log Analytics over TLS. | Create or reuse an environment workspace and verify diagnostic settings; implementation pending. See [logging view](logging/logging-deployment-diagram.md). |
-| Key Vault and BAU MSSQL | No Logit route established in this review. | Review these components' diagnostic configuration and required destinations separately. |
-
-
+Logging requirements for Key Vault and BAU MSSQL remain to be reviewed separately; neither is covered by that view.
 
 ## Secrets
 
@@ -183,8 +150,6 @@ C4Deployment
     Deployment_Node(aks, "TSC AKS cluster", "Shared. Nodes patched by the TSC platform.") {
         Deployment_Node(platform, "Platform namespaces", "Run by the TSC team") {
             Container(ingressCtl, "Ingress controller", "nginx today", "TLS 1.2 and 1.3<br/>50 MB bodies, 120 s timeouts<br/>Can't check our Front Door ID")
-            Container(filebeat, "Filebeat", "DaemonSet", "Ships pod stdout to Logit")
-            Container(prom, "Prometheus", "Platform monitoring", "Alerts for apps in alertable_apps")
         }
         Deployment_Node(ns, "EPR application workloads", "Kubernetes namespace: gias-production") {
             Container(ingWeb, "Website ingress", "Kubernetes Ingress", "[web-origin].teacherservices.cloud")
@@ -199,8 +164,6 @@ C4Deployment
         ContainerDb(read, "Read server", "PostgreSQL", "epr_web_reader<br/>epr_api_reader")
         ContainerDb(tx, "Transactional server", "PostgreSQL", "Unpublished data")
     }
-    System_Ext(logit, "logit.io", "Platform log stacks")
-    System_Ext(teams, "Teams channel", "Alerts")
 
     Rel(afd, ingressCtl, "HTTPS")
     Rel(direct, ingressCtl, "HTTPS to the default hostname")
@@ -215,11 +178,6 @@ C4Deployment
     Rel(gh, secrets, "Supplies application secrets at deploy")
     Rel(secrets, web, "Injects website secrets")
     Rel(secrets, api, "Injects API secrets")
-    Rel(ingressCtl, filebeat, "Collects ingress container logs")
-    Rel(web, filebeat, "Container stdout/stderr collected")
-    Rel(api, filebeat, "Container stdout/stderr collected")
-    Rel(filebeat, logit, "TLS")
-    Rel(prom, teams, "Webhook")
 
     UpdateRelStyle(direct, ingressCtl, $textColor="#b91c1c", $lineColor="#b91c1c")
     UpdateRelStyle(web, tx, $textColor="#b91c1c", $lineColor="#b91c1c")
@@ -338,13 +296,15 @@ Why a separate API hostname:
 
 ### Logging and monitoring
 
+See the [logging configuration](logging-deployment-diagram.md#logging-configuration) for collection, diagnostic settings, destinations, transport and ownership. See [application metrics and alerting](application-metrics-and-alerting-deployment-diagram.md#what-each-component-does) for metric collection, dashboards and deployment-alert integration.
+
+The following requirements are not defined by those views and remain open:
+
 | ID | Control | Where | Status | Baseline | OWASP |
 | --- | --- | --- | --- | --- | --- |
-| LOG-01 | Inherited ingress logs use Filebeat → logit.io. EPR website/API logging content and collection configuration remain to be reviewed. | Platform collector and application pods | Ingress mechanism inherited; application decisions pending | 8.1, 8.5 | A09 |
-| LOG-02 | Front Door and PostgreSQL shared modules support diagnostic logs to Log Analytics when enabled. Confirm categories, PostgreSQL audit settings and enablement. Other Azure-resource logging and any further forwarding remain open. | Azure Monitor diagnostic settings | **Open** (O17, O20) | 8.2, 8.9 | A09 |
-| LOG-03 | Retention agreed with the SOC. The baseline asks for 90 days hot and a year cold. | All log stores | **Open** (O17) | 8.3 | A09 |
-| LOG-04 | Alerts for WAF block spikes, origin-lock refusals, 401 and 429 spikes, replication lag, failed BAU runs. Someone owns them out of hours. | Log Analytics, Prometheus | **Proposed** (O23) | 13.1 | A09 |
-| LOG-05, LOG-06 | Monitoring and StatusCake on in production. Both apps listed in `alertable_apps`. | TSC repo, our config | **Proposed**. Off today. | 8.2 | A09 |
+| LOG-03 | Document the standard log-retention policy and its application to EPR, following central provision without divergence. | Log destinations | **Open** (O17) | 8.1 | A09 |
+| LOG-04 | Define alerts for WAF block spikes, origin-lock refusals, 401 and 429 spikes, replication lag and failed BAU runs, with an agreed out-of-hours response owner. | Security-event and service-failure alert configuration | **Proposed** (O23); separate from shared deployment alerts | 13.1 | A09 |
+| LOG-06 | Enable StatusCake availability checks in production. | Platform availability configuration | **Proposed**; deployed enablement not established | | A09 |
 
 ## Encryption in transit, hop by hop
 
@@ -359,7 +319,6 @@ This is the connection matrix that baseline safeguard 3.10 and OWASP A04 ask for
 | Read server → transactional server, replication | PostgreSQL over TLS | Read server. Subscription connection uses `verify-full`. | **Proposed** (O26) |
 | Data Factory → BAU and transactional | TLS | Data Factory | **Open** (O8) |
 | Pod → FaUAPI, if ADR 0005 chooses a key check | HTTPS | Pod | **Open** (O1) |
-| Filebeat → Logit | TLS | Platform | Platform assurance needed |
 | Engineer → database | AKS API over TLS, then `konduit.sh` tunnel to TLS on the database | Engineer's tools | **Proposed** |
 | Pipeline → Azure and AKS | HTTPS with OIDC tokens | GitHub runner | **Proposed** |
 
@@ -423,20 +382,20 @@ From the [baseline security risk assessment output coverage](../../../security/s
 | 3.3 Data access lists | Database roles listed for each workload | IAM-01, IAM-02 | Exported grants and tests that writes fail |
 | 3.8 Data flows | Request paths, replication and BAU feed set out | DATA-01 | Owner review, BAU feed path (O8) |
 | 3.10 Encryption in transit | [Hop-by-hop matrix](#encryption-in-transit-hop-by-hop) | EDGE-06, DATA-03 | Tests rejecting wrong-name and expired certificates |
-| 3.11 Encryption at rest | Azure-managed keys on servers, backups and storage | DATA-04 | Configuration evidence, platform assurance for logs |
+| 3.11 Encryption at rest | Azure-managed keys on servers, backups and storage | DATA-04 | Configuration evidence |
 | 3.12 Segmentation by sensitivity | Public apps read only the projection. Unpublished data stays on the transactional server. | IAM-02, EDGE-09, DATA-01 | Network enforcement (O11) and negative tests |
-| 3.14 Logging access to sensitive data | PostgreSQL audit configuration to confirm on the transactional server | LOG-02 | Agree required events and verify collection (O17) |
+| 3.14 Logging access to sensitive data | See [logging configuration](logging-deployment-diagram.md#logging-configuration). | | |
 | 4.1 No public management interfaces | Databases and Key Vault have no public access | EDGE-08, N6 | External test |
 | 4.2 Network configuration ownership | Front Door and WAF are ours. Ingress and cluster network are the TSC team's. | | A written ownership split agreed with the TSC team |
 | 4.4 WAF in blocking mode | Prevention mode on both hostnames | EDGE-04, EDGE-05 | Blocked test requests, tier decision (O7) |
 | 4.6 Secure management | IaC through the pipeline, `konduit.sh` for database access | PIPE-02, IAM-04 | Ask the TSC team how the AKS API server is exposed (N7) |
 | 5.4, 6.5 Admin rights and MFA | Named accounts, MFA, PIM | IAM-04, IAM-05 | PIM configuration evidence |
 | 7.3 Operating system patching | Nodes patched by the TSC platform. Images rebuilt monthly by us. | PIPE-09 | Platform patch schedule, image rebuild records |
-| 8.2, 8.9 Log coverage and **Security Information and Event Management** (SIEM) | Inherited ingress logging to logit.io; shared Front Door/PostgreSQL diagnostics to Log Analytics when enabled. Application and other resource coverage pending. | LOG-01, LOG-02 | Trace test events to each configured destination; confirm coverage (O17, O20). |
+| 8.2, 8.9 Log coverage and Security Information and Event Management (SIEM) | See [logging configuration](logging-deployment-diagram.md#logging-configuration). | | |
 | 11.2, 11.4 Backups, held apart | Point-in-time restore, geo-redundant backup, nightly dump | DATA-06, DATA-07 | Decide geo-redundancy before creating the server (O15) |
 | 12.2 Secure network design | [Reachability matrix](#who-can-reach-what) | EDGE-09, N5 | Tests for each row |
 | 12.3 Network managed by IaC | Front Door and WAF through the domains module in the website repo | | Change records for a sample network change |
-| 13.1 Central alerting, 24/7 | Alerts listed with routes | LOG-04 | Out-of-hours owner (O23) |
+| 13.1 Central alerting, 24/7 | See [deployment-alert routing](application-metrics-and-alerting-deployment-diagram.md#what-each-component-does). Security-event alerts and out-of-hours response remain under [Logging and monitoring](#logging-and-monitoring). | LOG-04 | Security-event rules and out-of-hours owner (O23) |
 | 15.1 Service providers | TSC platform, FaUAPI, Logit, GitHub, Microsoft | | Provider register in the service operations manual |
 | 16.7 Hardening baseline | Pod security settings, headers, `AllowedHosts` | APP-15, N4, APP-06 to APP-08 | Comparison with the DfE Azure baseline |
 | 16.8 Production apart from non-production | Separate servers, Key Vault and credentials. Separate origin secret. | ENV-01, N2 | Separate namespaces for pre-prod and prod (O9) |
@@ -456,7 +415,7 @@ From the [OWASP controls and actions](../../../security/security-by-design/epr-o
 | A06 Insecure design | Tier separation, published-only projection, threat model on these diagrams | Network enforcement (O11) |
 | A07 Authentication failures | MFA and PIM for engineers, no app accounts | Key decision for the API (ADR 0005) |
 | A08 Integrity failures | Independent review, production approval, publication column test | Signed or attested images |
-| A09 Logging and alerting | Inherited Filebeat/logit.io and Azure Monitor/Log Analytics mechanisms | Application logging, diagnostic enablement and retention (O17, O20), out-of-hours owner (O23) |
+| A09 Logging and alerting | See [logging configuration](logging-deployment-diagram.md#logging-configuration) and [application metrics and alerting](application-metrics-and-alerting-deployment-diagram.md#what-each-component-does). | Additional requirements under [Logging and monitoring](#logging-and-monitoring) |
 | A10 Exceptional conditions | App limits, HA, pod disruption budgets, safe errors | Load test (O10), failure drills |
 
 ## Risks we accept
