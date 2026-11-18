@@ -2,11 +2,31 @@
 
 This view shows only components involved in log collection and delivery from the [main deployment diagram](../deployment-diagram.md). It omits request handling, data feeds, secrets and replication relationships.
 
+## Deployment diagram
+
+### Key
+
+```mermaid
+%%{init: {"wrap": true, "c4": {"width": 180}}}%%
+C4Deployment
+    Container(key_workloads, "EPR workloads", "")
+    Container(key_collection, "Platform log collection", "")
+    Container(key_databases, "Database servers", "")
+    Container(key_destinations, "Log destinations", "")
+    Container(key_edge, "Front Door endpoints", "")
+
+    UpdateElementStyle(key_workloads, $bgColor="#e9f6ef", $fontColor="#18324b", $borderColor="#26775e")
+    UpdateElementStyle(key_collection, $bgColor="#ccfbf1", $fontColor="#134e4a", $borderColor="#0f766e")
+    UpdateElementStyle(key_databases, $bgColor="#dbeafe", $fontColor="#172554", $borderColor="#2563eb")
+    UpdateElementStyle(key_destinations, $bgColor="#ede9fe", $fontColor="#3b0764", $borderColor="#7c3aed")
+    UpdateElementStyle(key_edge, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
+    UpdateLayoutConfig($c4ShapeInRow="5", $c4BoundaryInRow="1")
+```
+
 ```mermaid
 %%{init: {"wrap": true, "c4": {"width": 260}}}%%
 C4Deployment
     title EPR public beta - logging view
-
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 
     System_Ext(logit, "logit.io", "Shared Teacher Services Cloud log stacks")
