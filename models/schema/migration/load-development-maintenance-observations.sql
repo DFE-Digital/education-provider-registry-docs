@@ -7,6 +7,9 @@ CREATE TEMP TABLE source_maintenance_fixture (
 \copy source_maintenance_fixture FROM '__FIXTURE_PATH__' WITH (FORMAT csv,HEADER true,DELIMITER '|',NULL 'NULL',ENCODING 'UTF8')
 DELETE FROM source_maintenance_fixture s WHERE NOT EXISTS (
     SELECT 1 FROM establishment.establishment e WHERE e.urn=s.urn);
+-- Validation joins source_record's text key. Index that same expression so
+-- stale source_record statistics cannot cause a full fixture scan per row.
+CREATE INDEX source_maintenance_fixture_source_key_idx ON source_maintenance_fixture ((urn::text));
 ANALYZE source_maintenance_fixture;
 
 DO $$

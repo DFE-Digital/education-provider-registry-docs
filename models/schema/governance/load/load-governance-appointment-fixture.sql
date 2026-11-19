@@ -52,7 +52,14 @@ BEGIN
         WHERE fixture.governance_role_type_id IS NULL
            OR fixture.governance_role_type_id NOT IN (1, 2, 3, 4, 5, 6, 7)
     ) THEN
-        RAISE EXCEPTION 'Fixture contains a missing or unmapped BAU appointment role.';
+        RAISE EXCEPTION 'Fixture contains a missing or unmapped BAU appointment role.'
+            USING DETAIL = (SELECT jsonb_agg(to_jsonb(rejected))::text FROM (
+                SELECT source_governance_appointment_id, establishment_urn, governance_role_type_id
+                FROM source_governance_appointment_fixture
+                WHERE governance_role_type_id IS NULL OR governance_role_type_id NOT IN (1, 2, 3, 4, 5, 6, 7)
+                ORDER BY source_governance_appointment_id LIMIT 20
+            ) rejected),
+            HINT = 'Inspect these StaffRecord uid values and their StaffRole codes in local BAU. No roles have been guessed or rows skipped.';
     END IF;
 
     IF EXISTS (

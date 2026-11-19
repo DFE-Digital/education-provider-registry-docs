@@ -1,13 +1,15 @@
 # Local automation
 
-The two entry points serve different purposes:
+The entry points serve different purposes:
 
 | Command | Purpose |
 | --- | --- |
+| [rebuild-from-local-bau.ps1](rebuild-from-local-bau.ps1) | Run either domain or both using `-Establishment` and `-Governance`. See the [combined runbook](rebuild-from-local-bau.md). |
+| [rebuild-governance-from-local-bau.ps1](rebuild-governance-from-local-bau.ps1) | Rebuild Governance roles, appointments, optional terms and Chair assignments from local BAU. See the [Governance runbook](rebuild-governance-from-local-bau.md). |
 | [rebuild-establishment-from-local-bau.ps1](rebuild-establishment-from-local-bau.ps1) | Seed establishments and lossy current relationships for development; skip and log rows that do not fit the model. |
 | [rebuild-establishment-from-checked-in-sql.ps1](rebuild-establishment-from-checked-in-sql.ps1) | Restore the reviewed checked-in fixture and run its database validation and approval tests. |
 
-Both use the `EprLocalAutomation` PowerShell module and local-only connection guards.
+All use the `EprLocalAutomation` PowerShell module and local-only connection guards.
 
 ## BAU development seed
 

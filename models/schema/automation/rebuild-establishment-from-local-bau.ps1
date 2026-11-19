@@ -15,6 +15,7 @@ param(
     [string]$SqlServer='localhost',
     [string]$SourceDatabase='gias_bau_test_local',
     [string]$SqlUser='reader',
+    [securestring]$SqlPassword,
     [switch]$UseWindowsAuthentication,
     [string]$SelectionFile,
     [ValidateNotNullOrEmpty()][Alias('Urns')][string[]]$Urn,
@@ -44,7 +45,7 @@ if ($PSBoundParameters.ContainsKey('Urn')) {
     $manifest=Get-Content -LiteralPath $SelectionFile -Raw | ConvertFrom-Json
     $requestedUrns=(Get-FixtureSelection -Urn @($manifest.urns)).Urns
 }
-$source=New-BauSource -SqlServer $SqlServer -Database $SourceDatabase -SqlUser $SqlUser -UseWindowsAuthentication:$UseWindowsAuthentication
+$source=New-BauSource -SqlServer $SqlServer -Database $SourceDatabase -SqlUser $SqlUser -SqlPassword $SqlPassword -UseWindowsAuthentication:$UseWindowsAuthentication
 $target=New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Database $PostgresDatabase -User $PostgresUser -Password $PostgresPassword
 $workspace=New-RunWorkspace -ParentDirectory $FixtureDirectory
 $migrationRunId=[guid]::Empty

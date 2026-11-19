@@ -8,7 +8,10 @@
     dbo.StaffRecord and dbo.StaffRole and returns no person, contact, address,
     appointing body or encrypted data. It projects appointment and step-down
     dates as the current source term boundary. The mapping below translates
-    the reviewed BAU StaffRole code set into target-owned Governance role types.
+    the BAU StaffRole IDs defined by eLookupGovernorRole into target-owned
+    Governance role types. StaffRole.id and StaffRole.code are distinct fields;
+    IDs must not be inferred from the numeric-looking codes. NA (ID 14) has no
+    appointment-role mapping and is rejected by the loader if encountered.
     Chair source rows produce an appointment role plus a Chair role
     assignment; BAU source codes are not retained in the target schema.
 
@@ -23,26 +26,30 @@ IF @URN NOT BETWEEN 1 AND 999999
 WITH role_mapping AS (
     SELECT *
     FROM (VALUES
-        (N'01', 1, 8),
-        (N'02', 1, NULL),
-        (N'03', 2, 8),
-        (N'04', 2, NULL),
-        (N'05', 3, NULL),
-        (N'06', 5, NULL),
-        (N'07', 6, NULL),
-        (N'08', 4, 8),
-        (N'09', 4, NULL),
-        (N'11', 4, 8),
-        (N'12', 4, 8),
-        (N'13', 4, NULL),
-        (N'14', 4, NULL),
-        (N'15', 7, NULL),
-        (N'16', 7, NULL),
-        (N'17', 7, NULL),
-        (N'18', 7, NULL),
-        (N'19', 7, NULL),
-        (N'20', 7, NULL)
-    ) AS mapping(source_staff_role_code, governance_role_type_id, office_holder_role_type_id)
+        (1, 1, 8),
+        (2, 1, NULL),
+        (3, 2, 8),
+        (4, 2, NULL),
+        (5, 3, NULL),
+        (6, 5, NULL),
+        (7, 6, NULL),
+        (8, 4, 8),
+        (9, 4, NULL),
+        (10, 4, 8),
+        (11, 4, 8),
+        (12, 4, NULL),
+        (13, 4, NULL),
+        (15, 7, NULL),
+        (16, 7, NULL),
+        (17, 7, NULL),
+        (18, 7, NULL),
+        (19, 7, NULL),
+        (20, 7, NULL),
+        (21, 3, NULL),
+        (22, 3, NULL),
+        (23, 7, NULL),
+        (24, 7, NULL)
+    ) AS mapping(source_staff_role_id, governance_role_type_id, office_holder_role_type_id)
 )
 SELECT
     sr.uid AS source_governance_appointment_id,
@@ -55,7 +62,7 @@ FROM dbo.StaffRecord AS sr
 INNER JOIN dbo.StaffRole AS source_role
     ON source_role.code = sr.staffRole_code
 LEFT JOIN role_mapping AS mapping
-    ON mapping.source_staff_role_code = sr.staffRole_code
+    ON mapping.source_staff_role_id = source_role.id
 WHERE (@URN IS NULL OR sr.establishment_URN = @URN)
   AND EXISTS (SELECT 1 FROM dbo.Establishment e WHERE e.URN=sr.establishment_URN AND e.status_code IN ('1','2','3'))
   AND sr.status = 1

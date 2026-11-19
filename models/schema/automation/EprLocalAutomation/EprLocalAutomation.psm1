@@ -43,6 +43,8 @@ Export-ModuleMember -Function @(
     'Initialize-EstablishmentDatabase'
 
     # Loading from the local BAU copy
+    'Import-BauGovernanceSeed'
+    'Import-GovernanceFixture'
     'Import-GeographicReferenceData'
     'Export-BauReferenceData'
     'Import-BauReferenceData'

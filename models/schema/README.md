@@ -6,6 +6,11 @@ The scripts in `automation/` use `establishment/transforms/` to extract BAU data
 
 ## Choose a dataset
 
+To run the independent domain seeds through one command, use
+[rebuild-from-local-bau.ps1](automation/rebuild-from-local-bau.md) with
+`-Establishment`, `-Governance`, or both. It targets `epr_establishment` on 5433
+and `epr_governance` on 5434 by default.
+
 | Path | Behaviour |
 | --- | --- |
 | [Local BAU development seed](automation/rebuild-establishment-from-local-bau.md) | Bulk loads establishments and lossy current relationships. Skips and logs rows that fail to load. |
@@ -22,6 +27,41 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automat
 ```
 
 Both recreate the local `establishment` and `migration` schemas. The connection guards permit local sources and targets only. PowerShell coordinates execution; SQL Server extracts source rows and PostgreSQL loads target rows using `psql`.
+
+## Choose a PostgreSQL instance
+
+Both rebuild scripts already accept `-PostgresHost`, `-PostgresPort`, `-PostgresDatabase` and `-PostgresUser`. No new target switch is needed. They default to `127.0.0.1:5432`, database `establishment_local`, user `postgres`. The pgAdmin connection label does not select the target.
+
+For the **Establishment Transaction** instance on port **5433**, first create `epr_establishment` if it does not already exist. The rebuild creates schemas and loads data inside an existing database; it does not create the database itself. Run from the `education-provider-registry-docs` repository root:
+
+```powershell
+$psql = 'C:\Program Files\PostgreSQL\18\bin\psql.exe'
+& $psql -h 127.0.0.1 -p 5433 -U postgres -d postgres -c 'CREATE DATABASE epr_establishment;'
+```
+
+Then run the BAU rebuild with an explicit target:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -SqlServer "localhost" -PostgresHost "127.0.0.1" -PostgresPort 5433 -PostgresDatabase "epr_establishment" -PostgresUser "postgres"
+```
+
+This recreates the `establishment` and `migration` schemas in **`epr_establishment` on port 5433**. Configure its PostgreSQL password before running the rebuild: the password-file entry for port 5432 does not match port 5433. Add a separate entry to `%APPDATA%\postgresql\pgpass.conf`, using the password chosen when initialising this source instance:
+
+```text
+127.0.0.1:5433:epr_establishment:postgres:<your-establishment-instance-password>
+```
+
+Verify the connection and loaded establishment count, then refresh **Databases** under **Establishment Transaction** in pgAdmin:
+
+```powershell
+& $psql -h 127.0.0.1 -p 5433 -U postgres -d epr_establishment -c 'SELECT current_database(), inet_server_port(); SELECT count(*) FROM establishment.establishment;'
+```
+
+The rebuild is not hard coded to the existing PostgreSQL 18 Windows service. Its client helper finds `psql` and `pg_dump` on `PATH`, or falls back to the newest installed PostgreSQL directory containing both tools. These are client executables; the supplied host, port and database select the server instance. The explicit PostgreSQL 18 path above is for the manual create/check commands on this laptop.
+
+The automation permits only local hosts and database names `establishment_local`, `governance_local`, `epr_establishment`, `epr_governance`, `establishment` or `governance`. For both domains on one transactional instance, use the [combined runner's explicit single-instance parameters](automation/rebuild-from-local-bau.md). Its tables differ from the replication walkthrough's synthetic fixture; that walkthrough's publication and destination definitions need adapting before replicating the full model.
+
+The Establishment rebuild does not populate Governance. Use the separate [Governance rebuild](automation/rebuild-governance-from-local-bau.md) to populate `epr_governance` on **Governance Transaction**, port **5434**. It loads role types, appointments, optional terms and Chair assignments in one transaction.
 
 ## Local database passwords
 

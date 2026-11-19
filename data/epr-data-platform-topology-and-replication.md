@@ -130,6 +130,8 @@ Read Projection Terraform currently lives in `education-provider-registry-data`.
 
 ADF extracts and transforms BAU SQL Server data and loads both transactional databases daily. Native PostgreSQL logical replication copies the permitted base-table subset into the single Read Projection database using two source publications and two destination subscriptions.
 
+Developers configure this mechanism using the supporting [EPR logical replication configuration specification](epr-logical-replication-configuration.md), which includes the server/database/schema boundaries and publication and subscription SQL.
+
 ```mermaid
 flowchart LR
     BAU["BAU Edubase<br/>SQL Server in S189"]

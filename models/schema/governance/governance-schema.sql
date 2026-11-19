@@ -1,5 +1,5 @@
 -- PostgreSQL DDL for models/logical/governance/current-governance-appointments-logical-model.md
--- Target: local database governance_local, schema governance
+-- Target: local database governance_local, epr_governance or governance, schema governance
 --
 -- Disposable local baseline: this script intentionally drops and recreates the
 -- governance schema. Do not run it against shared, Test, staging or production
@@ -7,8 +7,8 @@
 
 DO $$
 BEGIN
-    IF current_database() <> 'governance_local' THEN
-        RAISE EXCEPTION 'This script may run only in governance_local. Current database: %', current_database();
+    IF current_database() NOT IN ('governance_local', 'epr_governance', 'governance') THEN
+        RAISE EXCEPTION 'This script may run only in governance_local, epr_governance or governance. Current database: %', current_database();
     END IF;
 END $$;
 

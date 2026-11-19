@@ -4,7 +4,7 @@
 
 $script:AllowedBauServers = @('localhost', '127.0.0.1', '.', '(local)', [System.Environment]::MachineName)
 $script:AllowedPostgresHosts = @('localhost', '127.0.0.1')
-$script:AllowedPostgresDatabases = @('establishment_local', 'governance_local')
+$script:AllowedPostgresDatabases = @('establishment_local', 'governance_local', 'epr_establishment', 'epr_governance', 'establishment', 'governance')
 
 function Assert-LocalBauSource {
     param(
@@ -31,6 +31,6 @@ function Assert-LocalPostgresTarget {
         throw "The PostgreSQL host must be local. Received: $PostgresHost"
     }
     if ($Database -notin $script:AllowedPostgresDatabases) {
-        throw "The PostgreSQL target must be establishment_local or governance_local. Received: $Database"
+        throw "The PostgreSQL target must be one of: $($script:AllowedPostgresDatabases -join ', '). Received: $Database"
     }
 }
