@@ -14,3 +14,4 @@ Source locations:
 - `docs-site/` - Nanoc site used to publish readable generated views.
 
 The source files remain the source of truth. The published site is a readable view generated from those files.
+
