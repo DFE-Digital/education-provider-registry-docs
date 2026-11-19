@@ -6,44 +6,51 @@ Each environment must have two server instances. The transactional instance host
 
 ## Instance, database and schema boundaries
 
+The diagram uses compact labels; the tables below give the full instance and replication-object names.
+
 ```mermaid
-flowchart LR
-    subgraph TX["Transactional server instance<br/>&lt;subscription-identifier&gt;&lt;env-identifier&gt;-pg-epr-transactional"]
-        direction TB
-        subgraph EDB["Database: establishment"]
-            subgraph ES["Schema: establishment"]
-                ET["Published Establishment tables"]
+%%{init: {"flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 40, "rankSpacing": 60}, "themeVariables": {"fontSize": "14px"}}}%%
+flowchart TB
+    subgraph TX["Transactional server instance"]
+        subgraph EDB["Database<br/>establishment"]
+            subgraph ES["Schema<br/>establishment"]
+                ET["Published<br/>Establishment tables"]
             end
-            EP["Publication: establishment_publication"]
+            EP["Establishment<br/>publication"]
             ET --> EP
         end
-        subgraph GDB["Database: governance"]
-            subgraph GS["Schema: governance"]
-                GT["Published Governance tables"]
+        subgraph GDB["Database<br/>governance"]
+            subgraph GS["Schema<br/>governance"]
+                GT["Published<br/>Governance tables"]
             end
-            GP["Publication: governance_publication"]
+            GP["Governance<br/>publication"]
             GT --> GP
         end
     end
 
-    subgraph READ["Read server instance<br/>&lt;subscription-identifier&gt;&lt;env-identifier&gt;-pg-epr-read"]
-        subgraph RDB["Database: read_projection"]
-            ER["Subscription: establishment_subscription"]
-            GR["Subscription: governance_subscription"]
-            subgraph RES["Schema: establishment"]
-                RET["Matching Establishment tables"]
+    subgraph READ["Read server instance"]
+        subgraph RDB["Database<br/>read_projection"]
+            ER["Establishment<br/>subscription"]
+            GR["Governance<br/>subscription"]
+            subgraph RES["Schema<br/>establishment"]
+                RET["Matching<br/>Establishment tables"]
             end
-            subgraph RGS["Schema: governance"]
-                RGT["Matching Governance tables"]
+            subgraph RGS["Schema<br/>governance"]
+                RGT["Matching<br/>Governance tables"]
             end
             ER --> RET
             GR --> RGT
         end
     end
 
-    EP -->|"Initial copy + committed changes"| ER
-    GP -->|"Initial copy + committed changes"| GR
+    EP -->|"Logical replication"| ER
+    GP -->|"Logical replication"| GR
 ```
+
+| Diagram boundary | Server instance name |
+| --- | --- |
+| Transactional server instance | `<subscription-identifier><env-identifier>-pg-epr-transactional` |
+| Read server instance | `<subscription-identifier><env-identifier>-pg-epr-read` |
 
 Arrows show data movement. The subscriber must initiate both connections from the read instance to the transactional private endpoint. Each connection must select its own source database using `dbname`. Publications are database-scoped; destination matching uses schema-qualified table names. [Subscription behaviour](https://www.postgresql.org/docs/18/logical-replication-subscription.html)
 
