@@ -1,4 +1,4 @@
-# Education Provider Registry: logging deployment view
+# Logging deployment view
 
 This view shows only components involved in log collection and delivery from the [main deployment diagram](../deployment-diagram.md). It omits request handling, data feeds, secrets and replication relationships.
 
@@ -22,11 +22,11 @@ C4Deployment
     UpdateElementStyle(key_edge, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
     UpdateLayoutConfig($c4ShapeInRow="5", $c4BoundaryInRow="1")
 ```
-
+### Logging view
 ```mermaid
 %%{init: {"wrap": true, "c4": {"width": 360}}}%%
 C4Deployment
-    title EPR public beta - logging view
+
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 
     System_Ext(logit, "logit.io", "Shared Teacher Services Cloud log stacks")

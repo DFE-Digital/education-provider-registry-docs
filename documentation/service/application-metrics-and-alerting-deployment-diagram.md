@@ -1,4 +1,4 @@
-# Education Provider Registry: application metrics and alerting
+# Application metrics and alerting
 
 
 This is the **target EPR configuration**, not confirmation of deployed integrations.  Metrics monitoring and alerting are separate from Security Information and Event Management (SIEM).
