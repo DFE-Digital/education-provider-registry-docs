@@ -1,6 +1,5 @@
-﻿# Availability checks and Azure resource alerting
+﻿# Aavailabavavailability checks and Azure resource alerting
 
-EPR adopts [Register trainee teachers](../../source-material/comparisons-with-tsc-services/monitoring-and-alerting-comparison.md) as its direct reference for external uptime/dependency checks, certificate monitoring and shared PostgreSQL alerts. Data Factory alerts use the existing shared module as an EPR-specific extension.
 
 This is the **target EPR configuration**, not confirmation of deployed integrations. See also the [logging view](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/documentation/service/logging-deployment-diagram.md) and [main deployment diagram](https://github.com/DFE-Digital/education-provider-registry-docs/blob/main/documentation/service/deployment-diagram.md).
 
