@@ -116,7 +116,6 @@ Configure the website and public API separately, using their real published host
 | Dependencies | `/healthcheck` | Checks the dependencies used by that workload; Register uses `trigger_rate = 1`. | 3.8: dependency-check flow | A09: dependency-failure monitoring; cause and security significance require investigation |
 | TLS certificate | Published TLS hostnames | Certificate validity and expiry; Register uses `trigger_rate = 0`. | 3.8: certificate-check flow; 3.10: certificate-health contribution only | A04: certificate validity/expiry monitoring; protocol and cipher strength not established |
 
-Reuse the shared StatusCake module and replace Register's URLs and contact-group IDs with EPR's. Keep `/metrics` internal. Do not introduce Rails-only Redis or queue checks into a workload that does not use those dependencies.
 
 
 
