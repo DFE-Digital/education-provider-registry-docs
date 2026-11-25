@@ -34,19 +34,19 @@ C4Deployment
         Deployment_Node(vnet, "s189{env-code}01-tsc-{env}-vnet", "Azure virtual network") {
             Deployment_Node(aks, "s189{env-code}01-tsc-{env}-aks", "Teacher Services Cloud AKS cluster", "Shared with other TSC services") {
 
-                Deployment_Node(platform, "{platform-namespace}", "Shared TSC platform services", "Platform-managed namespace or logical grouping; confirm deployed scope") {
+                Deployment_Node(platform, "{platform-namespace}", "Shared TSC platform services", "") {
                 Container(ingress, "Shared ingress controller", "TSC platform. nginx, moving to Traefik.", "Public load balancer<br/>Port 80 off<br/>Trusts forwarded headers from anyone")
                 }
 
-                Deployment_Node(ns, "gias-{namespace-env}", "Kubernetes namespace", "EPR application workloads") {
+                Deployment_Node(ns, "gias-{namespace-env}", "Kubernetes namespace", "") {
                     Container(web, "Website", "ASP.NET Core, 2+ pods", "Refuses requests without our Front Door ID<br/>GET and HEAD only<br/>Read-only DB role")
                     Container(api, "Public API", "ASP.NET Core, 2+ pods", "Refuses requests without our Front Door ID<br/>GET and HEAD only<br/>Own read-only DB role")
                 }
             }
-            Deployment_Node(readSrv, "s189{env-code}01-eprweb-{env-short}-pg", "PostgreSQL Flexible Server", "Private subnet, no public access<br/>Zone-redundant HA") {
+            Deployment_Node(readSrv, "s189{env-code}01-eprweb-{env-short}-pg", "PostgreSQL Flexible Server", "") {
                 ContainerDb(projection, "Read Projection DB", "read_projection", "Published data only")
             }
-            Deployment_Node(txSrv, "s189{env-code}01-eprdat-{env-short}-pg", "PostgreSQL Flexible Server", "Private subnet, no public access<br/>No route from public pods") {
+            Deployment_Node(txSrv, "s189{env-code}01-eprdat-{env-short}-pg", "PostgreSQL Flexible Server", "") {
                 ContainerDb(estDb, "Establishment DB", "establishment", "Transactional data")
                 ContainerDb(govDb, "Governance DB", "governance", "Transactional data")
             }
@@ -63,17 +63,36 @@ C4Deployment
 
     Rel(browser, webEp, "HTTPS")
     Rel(consumer, apiEp, "HTTPS")
-    Rel(webEp, ingress, "HTTPS, origin name checked")
-    Rel(apiEp, ingress, "HTTPS, origin name checked")
+    Rel(webEp, ingress, "HTTPS<br/>Origin name checked")
+    Rel(apiEp, ingress, "HTTPS<br/>Origin name checked")
     Rel(ingress, web, "HTTP in cluster")
     Rel(ingress, api, "HTTP in cluster")
-    Rel(web, projection, "SQL, TLS verify-full")
-    Rel(api, projection, "SQL, TLS verify-full")
-    Rel(estDb, projection, "Logical replication, TLS")
-    Rel(govDb, projection, "Published columns only, TLS")
+    Rel(web, projection, "SQL over TLS<br/>verify-full")
+    Rel(api, projection, "SQL over TLS<br/>verify-full")
+    Rel(estDb, projection, "Logical replication<br/>TLS")
+    Rel(govDb, projection, "Published columns only<br/>TLS")
     Rel(adf, bau, "Reads")
     Rel(adf, estDb, "Writes")
     Rel(adf, govDb, "Writes")
+
+    %% Separate labels on paired request paths.
+    UpdateRelStyle(browser, webEp, $offsetX="100", $offsetY="-120")
+    UpdateRelStyle(consumer, apiEp, $offsetX="-20", $offsetY="-220")
+    UpdateRelStyle(webEp, ingress, $offsetX="-200", $offsetY="-10")
+    UpdateRelStyle(apiEp, ingress, $offsetX="-110", $offsetY="20")
+    UpdateRelStyle(ingress, web, $offsetX="-60", $offsetY="-20")
+    UpdateRelStyle(ingress, api, $offsetX="-70", $offsetY="20")
+
+    %% Stagger the four labels entering the Read Projection.
+    UpdateRelStyle(web, projection, $offsetX="-90", $offsetY="-20")
+    UpdateRelStyle(api, projection, $offsetX="-180", $offsetY="50")
+    UpdateRelStyle(estDb, projection, $offsetX="-40", $offsetY="-25")
+    UpdateRelStyle(govDb, projection, $offsetX="-70", $offsetY="40")
+
+    %% Separate ADF extraction and destination labels.
+    UpdateRelStyle(adf, bau, $offsetX="-5", $offsetY="-85")
+    UpdateRelStyle(adf, estDb, $offsetX="58", $offsetY="-35")
+    UpdateRelStyle(adf, govDb, $offsetX="140", $offsetY="-80")
 
     UpdateElementStyle(webEp, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
     UpdateElementStyle(apiEp, $bgColor="#fef3c7", $fontColor="#78350f", $borderColor="#d97706")
@@ -286,22 +305,6 @@ The reachability matrix behind baseline safeguards 3.12 and 12.2. Each row needs
 | Read server | Transactional server | Replication only | Subnet rules, because we can't edit `pg_hba.conf` | 3.12, 12.2: intended reachability; test this path to prove enforcement | A01 / A06: access boundaries; evidence needed |
 | Pre-prod | Production | No | Separate namespaces, servers and credentials | 16.8: separation target; separate namespaces and tests needed | A02: environment isolation |
 | Our pods | Internet | Only what we need | Egress network policy | 3.12, 12.2: intended reachability; test this path to prove enforcement | A01 / A06: access boundaries; evidence needed |
-
-
-
-
-## Environments
-
-Values come from the [data repo's global config](https://github.com/DFE-Digital/education-provider-registry-data/tree/main/global_config), as on the current deployment page.
-
-| Environment | Azure subscription | AKS cluster | Namespace | Front Door | Baseline security support | OWASP support |
-| --- | --- | --- | --- | --- | --- | --- |
-| Development | `s189-teacher-services-cloud-test` | `test` | `gias-development` | **Open** | 1.1: environment inventory; IDs, tags and review still needed; 16.8: isolation not proved by names | A02: environment mapping; separation tests needed |
-| Test | `s189-teacher-services-cloud-test` | `test` | `gias-test` | **Open** | 1.1: environment inventory; IDs, tags and review still needed; 16.8: isolation not proved by names | A02: environment mapping; separation tests needed |
-| Pre-production | `s189-teacher-services-cloud-production` | `production` | `gias-production` | Own endpoints and WAF policies on the shared profile (O25) | 1.1: environment inventory; IDs, tags and review still needed; 16.8: isolation not proved by names | A02: environment mapping; separation tests needed |
-| Production | `s189-teacher-services-cloud-production` | `production` | `gias-production` | Own endpoints and WAF policies on the shared profile (O25) | 1.1: environment inventory; IDs, tags and review still needed; 16.8: isolation not proved by names | A02: environment mapping; separation tests needed |
-
-Pre-production and production share a namespace today (O9). Baseline safeguard 16.8 says production can't talk to non-production, so we propose a separate namespace for pre-production.
 
 
 
