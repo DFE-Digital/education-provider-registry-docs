@@ -140,7 +140,7 @@ The existing kube-state-metrics, kubelet/cAdvisor and node-exporter collectors a
 
 Application metric configuration is complete when `/metrics` responds internally on the configured port, Prometheus reports the application target as healthy, and its measurements can be queried through the shared Grafana/Thanos service. Deployment-alert registration and Teams routing are separate configuration, described below; enabling application scraping does not enable those alerts automatically.
 
-## EPR configuration for share platfor
+## EPR configuration for shared platform
 
 
 Application metrics export, discovery, scrape-port selection and internal access are covered under [EPR configuration for Prometheus monitoring](#epr-configuration-for-prometheus-monitoring).
