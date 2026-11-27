@@ -205,7 +205,7 @@ Formation of a shadow council is separate from its assumption of functions. The 
 
 During backfill an area can have zero recorded council periods. Full completion requires at least one period for every in-scope area, including abolished and Welsh authorities. The checked-in mapping records evidence and pending decisions. Stage 2b loads 188 council identities and 207 periods for all 206 areas, including 175 current area periods. A current area lookup is not evidence of a historical school's maintaining council.
 
-Structural guards reject non-public-body holders, invalid legal-form changes and removal of the last area link from a council holding maintenance responsibilities. The final-state check allows an area link to be replaced atomically. Maintenance responsibilities themselves are implemented in a later stage.
+A council-area holder must be a Public body, and it keeps that legal form while it holds area links. A council holding maintenance responsibilities must keep at least one area link. The database schema doesn't enforce these rules. We'll check them in validation or in the application. Maintenance responsibilities themselves are implemented in a later stage.
 
 ### Local-authority jurisdiction
 

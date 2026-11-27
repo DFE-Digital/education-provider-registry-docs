@@ -1,7 +1,7 @@
 # Establishment reorganisation: logical model
 
 
-Physical implementation: the [establishment schema](../../schema/establishment/establishment-schema.sql) now defines these tables and integrity constraints. Target-owned reference seeds and isolated schema tests are included; source-backed case migration is still to do. See the [migration test-case catalogue](../../../../docs/transformation/data/modelling/reorganisation/reorganisation-migration-test-cases.md).
+Physical implementation: the [establishment schema](../../schema/establishment/establishment-schema.sql) now defines these tables, with keys and single-row checks only. Rules that span several rows, such as pattern matching, lifecycle agreement and cycle detection, will be checked in validation or in the application. Target-owned reference seeds and isolated schema tests are included; source-backed case migration is still to do. See the [migration test-case catalogue](../../../../docs/transformation/data/modelling/reorganisation/reorganisation-migration-test-cases.md).
 
 We call this topic **establishment reorganisation**, the term DfE and councils already use for closures, mergers and splits. It describes something that happened in the world. It isn't an edit to an establishment record.
 
