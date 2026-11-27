@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Establishment reorganisations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="page">
+<div class="wrap">
+
+<header class="intro">
+<h1>Establishment reorganisations</h1>
+<p>Latest at the top. Reorganisations without a reviewed date come last. Each entry is one reorganisation, showing which establishments closed, opened or continued.</p>
+</header>
+
+<form id="search" class="search" novalidate>
+<label for="urn-input" class="search-label">URN</label>
+<span class="hint">Enter an establishment's URN to see only the reorganisations it took part in.</span>
+<div class="search-row">
+<input id="urn-input" type="text" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="For example 135771">
+<button type="button" id="clear" class="link-button" hidden>Clear</button>
+</div>
+<label for="connected-input" class="check">
+<input id="connected-input" type="checkbox" checked>
+Include connected reorganisations, through predecessors, successors and provision transfers
+</label>
+</form>
+
+<div id="prompt" class="panel">
+<h2>Enter a URN to see its timeline</h2>
+<p>Try 130540 Leeds College of Technology, or 121739 Sedbergh Junior School.</p>
+</div>
+
+<p id="summary" class="summary" aria-live="polite" hidden></p>
+
+<div id="chips" class="chips" role="group" aria-label="Show patterns"></div>
+
+<div class="legend">
+<span><span class="key-box closed"></span>Closed</span>
+<span><span class="key-box opened"></span>Opened</span>
+<span><span class="key-box continued"></span>Continued</span>
+<span><span class="key-line"></span>Succession</span>
+<span><span class="key-line dashed"></span>Provision transfer</span>
+</div>
+
+<div id="message" class="panel" hidden>
+<h2 id="message-title"></h2>
+<p id="message-text"></p>
+</div>
+
+<div id="timeline" class="timeline" hidden></div>
+
+<p class="footnote">Patterns, outcomes and dates are interpretations still to be reviewed.</p>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
