@@ -1,6 +1,6 @@
 # Published Establishment API demo
 
-A small .NET 10 program that serves the [Published Establishment API specification](../published-establishment-api-spec.md) (contract 1.0.0), with the pagination extension described below. Its [OpenAPI 3 contract](openapi.json) describes the demo's routes and response shapes. It reads real data from a local `establishment_local` PostgreSQL database, built with the [local schema automation](../../models/schema/README.md).
+A small .NET 10 program that serves the [Published Establishment API specification](../published-establishment-api-spec.md) (contract 1.0.0), with the pagination extension described below. Its [OpenAPI 3 contract](openapi.json) describes the demo's routes and response shapes. It reads real data from a local `establishment_local` PostgreSQL database, built with the [local schema automation](../../models/schema/local-schema-and-migration-guide.md).
 
 ```http
 GET /v1/establishments/{URN}
@@ -71,7 +71,7 @@ You need:
 
 - the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - PostgreSQL running locally on port 5432
-- the `establishment_local` database, populated by one of the rebuild paths in the [local schema automation](../../models/schema/README.md)
+- the `establishment_local` database, populated by one of the rebuild paths in the [local schema automation](../../models/schema/local-schema-and-migration-guide.md)
 
 If the .NET 10 SDK is not installed, install it from <https://dotnet.microsoft.com/download/dotnet/10.0>.
 

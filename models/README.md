@@ -1,4 +1,4 @@
-﻿# Models
+# Models
 
 This folder contains machine-readable semantic model files for the Education Provider Registry data prototype.
 
@@ -18,6 +18,8 @@ The governance model files live in [`governance/`](governance/), following the s
 The logical-model artefacts live in [`logical/`](logical/):
 
 - `core-establishment-data-logical-model.md` - the first core logical-model slice for anonymous Find and Share, covering establishment identity, name, establishment type, statutory age range and education phase.
+
+- [Establishment succession logical model](logical/establishment/establishment-succession-logical-model.md) - predecessor/successor relationships, classifications, dates and integrity rules.
 
 ## SKOS
 
