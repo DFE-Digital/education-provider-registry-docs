@@ -36,10 +36,10 @@ esto:establishmentDetailsConceptualModel
     dcterms:description "OWL 2 conceptual model for the Education Provider Registry. Declares classes and object properties for the entities and relationships in the Education Provider Registry data model."@en ;
     rdfs:comment "This ontology defines the classes and object properties for the Education Provider Registry (EPR) data model. It covers establishment identity and identifiers, lifecycle, classification, accountability, education provision, capacity measures, faith context, SEN and resourced provision, and external references. Class IRIs are shared with the SKOS vocabulary so that vocabulary concepts and ontology classes resolve to the same URI. Object properties are defined in the /ontology/ namespace."@en ;
     dcterms:created "2026-06-18"^^xsd:date ;
-    dcterms:modified "2026-11-02"^^xsd:date ;
+    dcterms:modified "2026-11-27"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "2.3" ;
+    owl:versionInfo "2.4" ;
     vann:preferredNamespacePrefix "epro" ;
     vann:preferredNamespaceUri "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/> ;
@@ -77,6 +77,7 @@ esto:establishmentDetailsConceptualModel
     rdfs:comment "v2.1: yes/no provision facts no longer modelled as named negative values. Nursery classes, sixth form, special classes and boarders are each recorded as a true-or-false value, following the existing value-class pattern (est:TeenageMothersProvision): new properties esto:hasNurseryProvision, esto:hasSixthFormProvision, esto:hasSpecialClassProvision and esto:hasBoardingProvision link est:EducationAdmissionsAndProvision to est:NurseryProvision, est:SixthFormProvision, est:SpecialClassProvision and est:BoardingProvision, whose instances carry rdf:value xsd:boolean. Where a school has boarders, the new class est:BoardingType (via esto:classifiedByBoardingType) says whether it is a boarding school (est:BoardingSchool) or a school with some boarders (est:HasBoarders). Deleted outright: est:NoBoarders, est:HasNurseryClasses, est:NoNurseryClasses, est:HasSixthForm, est:NoSixthForm, est:HasSpecialClasses, est:NoSpecialClasses, and properties esto:classifiedByBoardingProvision, esto:classifiedByNurseryProvision, esto:classifiedBySixthFormProvision and esto:classifiedBySpecialClassProvision."@en ;
     rdfs:comment "v2.2: mapped to the W3C Organization Ontology (ORG, http://www.w3.org/ns/org#) with SKOS mapping annotations on the EPR terms themselves (skos:exactMatch, skos:closeMatch, skos:broadMatch, skos:relatedMatch). ORG is not imported and no OWL axioms are asserted against it, so the mappings add no inferences. Mapped: est:Organisation, est:LegalEntity, est:Establishment, est:EstablishmentGroup, est:GroupMembership, est:GroupMembershipRoleType, est:LeadCentreDesignation, est:Site, est:HeadteacherOrPrincipal, and properties for membership, membership role and dates, sites and site address, registered address, identifiers, legal form and the present-day responsibility links. Deliberately not mapped, because ORG has no equivalent: est:RecognisedRole, est:AcademyTrustClassification and est:EstablishmentResponsibility (ORG has no standing roles held in their own right, no dated classifications and no dated relationships between organisations)."@en ;
     rdfs:comment "v2.3: local authorities, sole traders, partnerships and maintenance, following the review of the proposed legal-entity extensions (docs/transformation/data/modelling/legal-entity/proposed-legal-entity-extensions-review.md). (1) est:LocalAuthority is the council: the body with education functions under the Education Act 1996, s.579. It is now a subclass of est:LegalEntity, not directly of est:Organisation. New class est:LocalAuthorityArea (subclass of est:AdministrativeGeography) is the area DfE identifies by a three-digit LA number (new class est:LocalAuthorityNumber, via esto:hasLocalAuthorityNumber). New class est:LocalAuthorityAreaPeriod, via esto:hasLocalAuthorityAreaPeriod and esto:hasLocalAuthority, records which local authority was responsible for an area and when: Kent County Council covered area 922 and then area 886. esto:hasLocalAuthorityContext, which scopes an establishment number, now points at the area, because independent schools and academies have an LAESTAB in an area that does not maintain them. New esto:classifiedByLocalAuthorityArea gives an establishment's geographic area. (2) Maintenance is a responsibility: new named individual est:MaintenanceResponsibility, held by a local authority, and new shortcut esto:maintainedByLocalAuthority for the present-day maintaining local authority. (3) Every individual proprietor is a sole-trader legal entity: esto:hasProprietor narrowed to est:LegalEntity, and a person can now only sponsor an establishment. New esto:hasTrader links a sole-trader legal entity to its person. (4) New class est:PartnershipMembership, via esto:hasPartnershipMembership and esto:hasPartner, records a dated partner, person or legal entity, in a traditional partnership. (5) est:LegalForm given 12 named individual values. Deleted outright: est:EstablishmentAccountability, esto:hasAccountabilityRelationship and esto:accountableToLocalAuthority, replaced by the maintenance responsibility."@en ;
+    rdfs:comment "v2.4: establishment reorganisation. New class est:EstablishmentReorganisation (skos:closeMatch org:ChangeEvent): a completed change in which provision moves between two or more establishments. It has exactly one est:ReorganisationPattern (7 named individuals: replacement, absorption, amalgamation, split, spin-out, transfer between continuing establishments and complex reorganisation), an optional est:ReorganisationCause (an open list in the vocabulary, starting with academy conversion and fresh start) and an optional est:ReorganisationEffectiveDate. Each establishment taking part has an est:ReorganisationParticipation with exactly one est:ReorganisationOutcome (closed, opened or continued) and any number of est:ReorganisationEffect. An effect names the characteristic of provision that changed, using the existing classes est:StatutoryAgeRange, est:SchoolCapacity, est:SixthFormProvision, est:NurseryProvision and est:ReligiousCharacter, and its est:ProvisionChangeDirection (5 named individuals). Where provision went is recorded as an est:Succession, from an establishment that closed, or an est:ProvisionTransfer, from one that carried on. Every succession and provision transfer results from exactly one reorganisation. New shortcut esto:hasSuccessor and its inverse esto:hasPredecessor. A change to one establishment alone is not a reorganisation, and proposed reorganisations are not modelled. The opening and closing reasons are unchanged, but their comments now explain how they relate to a reorganisation. Comments about councils now say local government reorganisation, so that the word reorganisation on its own is not ambiguous."@en ;
     est:status "Provisional"@en .
 
 
@@ -193,7 +194,7 @@ est:OpenDate
 est:ReasonEstablishmentOpened
     a owl:Class ;
     rdfs:label "Reason establishment opened"@en ;
-    rdfs:comment "The classification describing why the establishment was opened."@en .
+    rdfs:comment "The classification describing why the establishment was opened. It describes one establishment. When the opening is part of a reorganisation, such as an amalgamation, the est:EstablishmentReorganisation records the whole change and its pattern and cause. v2.4: relationship to reorganisation explained."@en .
 
 est:ClosedDate
     a owl:Class ;
@@ -203,7 +204,7 @@ est:ClosedDate
 est:ReasonEstablishmentClosed
     a owl:Class ;
     rdfs:label "Reason establishment closed"@en ;
-    rdfs:comment "The classification describing why the establishment closed."@en .
+    rdfs:comment "The classification describing why the establishment closed. It describes one establishment. When the closure is part of a reorganisation, such as an academy conversion, the est:EstablishmentReorganisation records the whole change and its pattern and cause. v2.4: relationship to reorganisation explained."@en .
 
 
 #################################################################
@@ -272,7 +273,7 @@ est:LocalAuthorityAreaPeriod
     a owl:Class ;
     esto:changesOverTime true ;
     rdfs:label "Local authority area period"@en ;
-    rdfs:comment "A period during which a local authority was the local authority for an area. Kent County Council covered area 922 until 1998 and then area 886. Buckinghamshire County Council and then Buckinghamshire Council covered area 825. One area can have different local authorities over time, and one local authority can cover several areas over time. A reorganisation ends one period and starts another on vesting day. Added v2.3."@en .
+    rdfs:comment "A period during which a local authority was the local authority for an area. Kent County Council covered area 922 until 1998 and then area 886. Buckinghamshire County Council and then Buckinghamshire Council covered area 825. One area can have different local authorities over time, and one local authority can cover several areas over time. A local government reorganisation ends one period and starts another on vesting day. Added v2.3."@en .
 
 #################################################################
 # Classes - education, admissions and provision
@@ -2444,6 +2445,195 @@ est:GroupClosedDate
     rdfs:comment "The date on which the group closed. Populated when GroupStatus transitions to Closed."@en .
 
 #################################################################
+# Classes - establishment reorganisation (v2.4)
+#
+# A reorganisation is something that happened in the world: one
+# school replaced another, several combined, one was split, or part
+# of one moved to another. It is not an edit to an establishment.
+# The reorganisation says what happened. Participations, outcomes
+# and effects say what it did to each establishment. Successions
+# and provision transfers say where provision went.
+#################################################################
+
+est:EstablishmentReorganisation
+    a owl:Class ;
+    skos:closeMatch org:ChangeEvent ;
+    rdfs:label "Establishment reorganisation"@en ;
+    rdfs:comment "A completed change in which provision moves between two or more establishments: one replaces another, several combine, one is split, or part of one moves to another. An infant school and a junior school closing so that a new primary school can open is one reorganisation, not two. A reorganisation always involves at least two establishments. A change to one establishment alone, such as adding a sixth form, is a change to that establishment, not a reorganisation. A reorganisation is a historical fact, so it has no end. It results in one or more successions or provision transfers, which say where provision went. In ORG terms, the participants that gave provision are its original organisations and those that received it are its resulting organisations. Proposed reorganisations are not modelled. Added v2.4."@en .
+
+est:ReorganisationPattern
+    a owl:Class ;
+    rdfs:label "Reorganisation pattern"@en ;
+    rdfs:comment "The shape of an establishment reorganisation, decided by how many establishments gave and received provision, and whether each closed, opened or carried on: replacement, absorption, amalgamation, split, spin-out, transfer between continuing establishments or complex reorganisation. Added v2.4."@en .
+
+est:ReorganisationCause
+    a owl:Class ;
+    rdfs:label "Reorganisation cause"@en ;
+    rdfs:comment "Why an establishment reorganisation happened, such as an academy conversion or a fresh start. The cause is separate from the pattern: an academy conversion is the cause of a replacement. The list is open, like religious character, so its values are concepts in the vocabulary, not named individuals. Absent where the cause is not known. It is never inferred from the pattern. Added v2.4."@en .
+
+est:ReorganisationEffectiveDate
+    a owl:Class ;
+    rdfs:label "Reorganisation effective date"@en ;
+    rdfs:comment "The date on which an establishment reorganisation took effect. It is not automatically the open or closed date of any establishment taking part. Instances carry the date as rdf:value with an xsd:date datatype. Added v2.4."@en .
+
+est:ReorganisationParticipation
+    a owl:Class ;
+    rdfs:label "Reorganisation participation"@en ;
+    rdfs:comment "One establishment's part in an establishment reorganisation, with its outcome and any effects on its provision. An establishment takes part at most once in a reorganisation, and can take part in many reorganisations over time. Whether it gave or received provision follows from the reorganisation's successions and provision transfers. One participant can do both. Added v2.4."@en .
+
+est:ReorganisationOutcome
+    a owl:Class ;
+    rdfs:label "Reorganisation outcome"@en ;
+    rdfs:comment "What a reorganisation did to the identity of an establishment taking part: it closed, it opened, or it carried on. Every participant has exactly one outcome. Added v2.4."@en .
+
+est:ReorganisationEffect
+    a owl:Class ;
+    rdfs:label "Reorganisation effect"@en ;
+    rdfs:comment "A change to the provision of an establishment that opened or carried on, caused by a reorganisation, such as a changed age range or more places. It names the characteristic of provision that changed and the direction of the change. The values before and after belong to the establishment's own facts, such as its statutory age range, not to the effect. An establishment that closed has no effects: closing is its outcome. Added v2.4."@en .
+
+est:ProvisionChangeDirection
+    a owl:Class ;
+    rdfs:label "Provision change direction"@en ;
+    rdfs:comment "How a reorganisation changed a characteristic of an establishment's provision: added, removed, increased, reduced or changed. Added v2.4."@en .
+
+est:Succession
+    a owl:Class ;
+    rdfs:label "Succession"@en ;
+    rdfs:comment "The fact that an establishment closed in a reorganisation and another establishment took over its provision. The successor can be newly opened or already exist. The predecessor and successor are always different establishments. Each pair is recorded once, whichever way it is read. Succession is a historical fact: it does not end when the successor later closes or has its own successor. Added v2.4."@en .
+
+est:ProvisionTransfer
+    a owl:Class ;
+    rdfs:label "Provision transfer"@en ;
+    rdfs:comment "The fact that provision moved in a reorganisation from an establishment that carried on to another establishment, new or existing. A spin-out, where a new school is created from part of one that stays open, is a provision transfer, not a succession, because nothing closed. A provision transfer is a historical fact, so it has no end. Added v2.4."@en .
+
+
+#################################################################
+# Object properties - establishment reorganisation (v2.4)
+#################################################################
+
+esto:hasReorganisationPattern
+    a owl:ObjectProperty ;
+    rdfs:label "has reorganisation pattern"@en ;
+    rdfs:domain est:EstablishmentReorganisation ;
+    rdfs:range est:ReorganisationPattern ;
+    rdfs:comment "Cardinality: exactly 1. The pattern should agree with the reorganisation's participants, successions and provision transfers. A mismatch is reported as a data-quality warning. Added v2.4."@en .
+
+esto:hasReorganisationCause
+    a owl:ObjectProperty ;
+    rdfs:label "has reorganisation cause"@en ;
+    rdfs:domain est:EstablishmentReorganisation ;
+    rdfs:range est:ReorganisationCause ;
+    rdfs:comment "Cardinality: 0..1. Absent where the cause is not known. Added v2.4."@en .
+
+esto:hasReorganisationEffectiveDate
+    a owl:ObjectProperty ;
+    rdfs:label "has reorganisation effective date"@en ;
+    rdfs:domain est:EstablishmentReorganisation ;
+    rdfs:range est:ReorganisationEffectiveDate ;
+    rdfs:comment "Cardinality: 0..1. Absent where the date is not known. Added v2.4."@en .
+
+esto:hasReorganisationParticipation
+    a owl:ObjectProperty ;
+    rdfs:label "has reorganisation participation"@en ;
+    rdfs:domain est:EstablishmentReorganisation ;
+    rdfs:range est:ReorganisationParticipation ;
+    rdfs:comment "Cardinality: 2..*. Each establishment taking part, at most once each. Added v2.4."@en .
+
+esto:hasParticipant
+    a owl:ObjectProperty ;
+    rdfs:label "has participant"@en ;
+    rdfs:domain est:ReorganisationParticipation ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "Cardinality: exactly 1. The establishment taking part. Added v2.4."@en .
+
+esto:hasReorganisationOutcome
+    a owl:ObjectProperty ;
+    rdfs:label "has reorganisation outcome"@en ;
+    rdfs:domain est:ReorganisationParticipation ;
+    rdfs:range est:ReorganisationOutcome ;
+    rdfs:comment "Cardinality: exactly 1. Whether the establishment closed, opened or carried on. Its lifecycle dates corroborate the outcome but do not replace it. Added v2.4."@en .
+
+esto:hasReorganisationEffect
+    a owl:ObjectProperty ;
+    rdfs:label "has reorganisation effect"@en ;
+    rdfs:domain est:ReorganisationParticipation ;
+    rdfs:range est:ReorganisationEffect ;
+    rdfs:comment "Cardinality: 0..*. None for an establishment that closed. Added v2.4."@en .
+
+esto:affectsProvision
+    a owl:ObjectProperty ;
+    rdfs:label "affects provision"@en ;
+    rdfs:domain est:ReorganisationEffect ;
+    rdfs:comment "Cardinality: exactly 1. The characteristic of provision that changed, given as the class that describes it: est:StatutoryAgeRange, est:SchoolCapacity, est:SixthFormProvision, est:NurseryProvision or est:ReligiousCharacter. Each class is used as a value through OWL 2 punning, and each is also a vocabulary concept. The allowed values are enforced in establishment-shacl.ttl. Added v2.4."@en .
+
+esto:hasProvisionChangeDirection
+    a owl:ObjectProperty ;
+    rdfs:label "has provision change direction"@en ;
+    rdfs:domain est:ReorganisationEffect ;
+    rdfs:range est:ProvisionChangeDirection ;
+    rdfs:comment "Cardinality: exactly 1. Sixth form and nursery provision are added or removed, capacity is increased or reduced, and age range and religious character are changed. Added v2.4."@en .
+
+esto:resultsInSuccession
+    a owl:ObjectProperty ;
+    rdfs:label "results in succession"@en ;
+    rdfs:domain est:EstablishmentReorganisation ;
+    rdfs:range est:Succession ;
+    rdfs:comment "Cardinality: 0..*. Every succession results from exactly one reorganisation. A reorganisation results in at least one succession or provision transfer. Added v2.4."@en .
+
+esto:resultsInProvisionTransfer
+    a owl:ObjectProperty ;
+    rdfs:label "results in provision transfer"@en ;
+    rdfs:domain est:EstablishmentReorganisation ;
+    rdfs:range est:ProvisionTransfer ;
+    rdfs:comment "Cardinality: 0..*. Every provision transfer results from exactly one reorganisation. Added v2.4."@en .
+
+esto:hasPredecessorEstablishment
+    a owl:ObjectProperty ;
+    rdfs:label "has predecessor establishment"@en ;
+    rdfs:domain est:Succession ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "Cardinality: exactly 1. The establishment that closed. Its outcome in the reorganisation is closed. Added v2.4."@en .
+
+esto:hasSuccessorEstablishment
+    a owl:ObjectProperty ;
+    rdfs:label "has successor establishment"@en ;
+    rdfs:domain est:Succession ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "Cardinality: exactly 1. The establishment that took over the predecessor's provision, new or existing. Added v2.4."@en .
+
+esto:hasOriginEstablishment
+    a owl:ObjectProperty ;
+    rdfs:label "has origin establishment"@en ;
+    rdfs:domain est:ProvisionTransfer ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "Cardinality: exactly 1. The establishment the provision came from. It did not close in the reorganisation. Added v2.4."@en .
+
+esto:hasRecipientEstablishment
+    a owl:ObjectProperty ;
+    rdfs:label "has recipient establishment"@en ;
+    rdfs:domain est:ProvisionTransfer ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "Cardinality: exactly 1. The establishment that received the provision, new or existing. Added v2.4."@en .
+
+esto:hasSuccessor
+    a owl:ObjectProperty ;
+    skos:broadMatch org:linkedTo ;
+    rdfs:label "has successor"@en ;
+    rdfs:domain est:Establishment ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "An establishment that took over this establishment's provision when it closed. A shortcut: it holds when an est:Succession has this establishment as its predecessor and the other as its successor. Cardinality: 0..*, because a split has several successors. Added v2.4."@en .
+
+esto:hasPredecessor
+    a owl:ObjectProperty ;
+    owl:inverseOf esto:hasSuccessor ;
+    skos:broadMatch org:linkedTo ;
+    rdfs:label "has predecessor"@en ;
+    rdfs:domain est:Establishment ;
+    rdfs:range est:Establishment ;
+    rdfs:comment "An establishment that closed and whose provision this establishment took over. The inverse of esto:hasSuccessor. Cardinality: 0..*, because an amalgamation has several predecessors. Added v2.4."@en .
+
+
+#################################################################
 # Named individuals - closed enumeration values (v0.8, v1.0)
 #
 # Classification values for closed, stable enumerations that
@@ -2903,7 +3093,7 @@ est:ProprietorResponsibility
 est:MaintenanceResponsibility
     a owl:NamedIndividual, est:ResponsibilityType ;
     rdfs:label "Maintained by local authority"@en ;
-    rdfs:comment "The establishment, an LA-maintained school, is maintained by the local authority: the local authority funds it and is responsible for it under the School Standards and Framework Act 1998, s.22. Held only by an est:LocalAuthority. Only the types under est:LaMaintainedSchool can have one: community, voluntary aided, voluntary controlled, foundation, community special and foundation special schools, pupil referral units and LA nursery schools. A maintained school has one maintaining local authority at a time. Academies and independent schools have none, even though they are in a local authority area. A reorganisation ends the responsibility with the old local authority and starts one with the new local authority on vesting day. Replaces est:EstablishmentAccountability. Added v2.3."@en .
+    rdfs:comment "The establishment, an LA-maintained school, is maintained by the local authority: the local authority funds it and is responsible for it under the School Standards and Framework Act 1998, s.22. Held only by an est:LocalAuthority. Only the types under est:LaMaintainedSchool can have one: community, voluntary aided, voluntary controlled, foundation, community special and foundation special schools, pupil referral units and LA nursery schools. A maintained school has one maintaining local authority at a time. Academies and independent schools have none, even though they are in a local authority area. A local government reorganisation ends the responsibility with the old local authority and starts one with the new local authority on vesting day. Replaces est:EstablishmentAccountability. Added v2.3."@en .
 
 # Legal form (12 values, v2.3)
 est:CharitableCompanyLimitedByGuarantee
@@ -2981,3 +3171,81 @@ est:ExceptedCharity
     a owl:NamedIndividual, est:CharityStatus ;
     rdfs:label "Excepted charity"@en ;
     rdfs:comment "A charity excepted from registration with the Charity Commission, while remaining subject to its regulation. Added v2.0."@en .
+
+# Reorganisation pattern (7 values, v2.4)
+est:ReplacementPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Replacement"@en ;
+    rdfs:comment "One establishment closes and a new establishment opens to replace it. An academy conversion is usually a replacement: the maintained school closes and the academy opens as a new establishment. Added v2.4."@en .
+
+est:AbsorptionPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Absorption"@en ;
+    rdfs:comment "One or more establishments close and an existing establishment carries on and takes over their provision, keeping its identity. Business registers call this a take-over. Added v2.4."@en .
+
+est:AmalgamationPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Amalgamation"@en ;
+    rdfs:comment "Two or more establishments close and a new establishment opens in their place. Business registers call this a merger. Added v2.4."@en .
+
+est:SplitPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Split"@en ;
+    rdfs:comment "One establishment closes and its provision goes to two or more establishments, new or existing. Business registers call this a break-up. Added v2.4."@en .
+
+est:SpinOutPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Spin-out"@en ;
+    rdfs:comment "One establishment carries on and one or more new establishments are created from part of its provision. Business registers call this a split-off. Added v2.4."@en .
+
+est:TransferBetweenContinuingEstablishmentsPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Transfer between continuing establishments"@en ;
+    rdfs:comment "Provision moves between establishments that all carry on, and none opens or closes, such as a nursery moving from one school to another. Added v2.4."@en .
+
+est:ComplexReorganisationPattern
+    a owl:NamedIndividual, est:ReorganisationPattern ;
+    rdfs:label "Complex reorganisation"@en ;
+    rdfs:comment "Two or more establishments give provision and two or more receive it, as in a local reorganisation of several schools. It can combine successions and provision transfers. Added v2.4."@en .
+
+# Reorganisation outcome (3 values, v2.4)
+est:ClosedInReorganisation
+    a owl:NamedIndividual, est:ReorganisationOutcome ;
+    rdfs:label "Closed"@en ;
+    rdfs:comment "The establishment closed as part of the reorganisation. Its lifecycle status should be closed. Added v2.4."@en .
+
+est:OpenedInReorganisation
+    a owl:NamedIndividual, est:ReorganisationOutcome ;
+    rdfs:label "Opened"@en ;
+    rdfs:comment "The establishment opened as part of the reorganisation. Added v2.4."@en .
+
+est:ContinuedThroughReorganisation
+    a owl:NamedIndividual, est:ReorganisationOutcome ;
+    rdfs:label "Continued"@en ;
+    rdfs:comment "The establishment existed before the reorganisation and carried on after it, keeping its identity. Added v2.4."@en .
+
+# Provision change direction (5 values, v2.4)
+est:ProvisionAdded
+    a owl:NamedIndividual, est:ProvisionChangeDirection ;
+    rdfs:label "Added"@en ;
+    rdfs:comment "The establishment gained provision it did not have before, such as a sixth form or nursery. Added v2.4."@en .
+
+est:ProvisionRemoved
+    a owl:NamedIndividual, est:ProvisionChangeDirection ;
+    rdfs:label "Removed"@en ;
+    rdfs:comment "The establishment stopped providing something, such as a sixth form or nursery. Added v2.4."@en .
+
+est:ProvisionIncreased
+    a owl:NamedIndividual, est:ProvisionChangeDirection ;
+    rdfs:label "Increased"@en ;
+    rdfs:comment "The establishment has more of something, such as more places. Added v2.4."@en .
+
+est:ProvisionReduced
+    a owl:NamedIndividual, est:ProvisionChangeDirection ;
+    rdfs:label "Reduced"@en ;
+    rdfs:comment "The establishment has less of something, such as fewer places. Added v2.4."@en .
+
+est:ProvisionChanged
+    a owl:NamedIndividual, est:ProvisionChangeDirection ;
+    rdfs:label "Changed"@en ;
+    rdfs:comment "A characteristic was changed rather than added, removed, increased or reduced, such as an age range or a religious character. Added v2.4."@en .

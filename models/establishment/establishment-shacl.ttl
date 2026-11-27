@@ -32,10 +32,11 @@
     dcterms:title "Education Provider Registry SHACL Shapes"@en ;
     dcterms:description "SHACL node shapes expressing per-type and per-group field-applicability rules for GIAS establishment records."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-11-02"^^xsd:date ;
+    dcterms:modified "2026-11-27"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "1.2" ;
+    owl:versionInfo "1.3" ;
+    rdfs:comment "v1.3: aligned with establishment-ontology.ttl v2.4. New shapes for establishment reorganisations, participations, effects, successions and provision transfers. A reorganisation has exactly one pattern, at least two participants and at least one succession or provision transfer. Each participant has exactly one outcome, and one that closed has no effects. An effect's direction must suit the characteristic it affects. A succession's predecessor must be a participant whose outcome is closed, and a provision transfer's origin must not have closed. Succession must not form a cycle. These cross-checks are the first SHACL-SPARQL constraints in this file, using the prefixes declared on this shapes graph."@en ;
     rdfs:comment "v1.2: aligned with establishment-ontology.ttl v2.3. The 19 per-type rules on the deleted accountability path now check esto:maintainedByLocalAuthority. LA-maintained schools require one; children's centres and Welsh establishments, previously required to have a local authority, now must not have one, because a children's centre is not a maintained school and GIAS cannot tell a Welsh maintained school from an independent one. A maintenance responsibility is held only by a local authority, and only LA-maintained types can have one. A proprietor must now be a legal entity, and a person can only sponsor an establishment. New shapes for local authorities, local authority areas and their periods, sole traders and partnership memberships."@en ;
     rdfs:comment "v1.1: aligned with establishment-ontology.ttl v2.1. Per-type rules for boarding, nursery, sixth-form and special-class provision now check the true-or-false provision values (esto:hasBoardingProvision, esto:hasNurseryProvision, esto:hasSixthFormProvision, esto:hasSpecialClassProvision). New shapes check that each value is an xsd:boolean, and that a boarding type is only recorded for a school that has boarders."@en ;
     rdfs:comment "v1.0: aligned with establishment-ontology.ttl v2.0. Per-type shapes check esto:runByAcademyTrust and esto:hasProprietor instead of the deleted accountability links. Sponsorship shapes rewritten around est:EstablishmentResponsibility. New shapes for legal entities, recognised roles, academy trust classifications, responsibilities, dated periods, lead centre designations and group local authorities, including the rules that a person can hold only the academy sponsor role and can only sponsor an establishment or be its proprietor."@en ;
@@ -3120,4 +3121,328 @@ est:BoardingTypeShape
         sh:hasValue true ;
         sh:name "Has boarders"@en ;
         sh:message "A boarding type is only recorded for a school whose boarding provision is true."@en ;
+    ] .
+
+
+#################################################################
+# Establishment reorganisation shapes (v1.3)
+#
+# Aligned with establishment-ontology.ttl v2.4. The rules that tie
+# a succession or provision transfer to the participants of its
+# reorganisation need SPARQL. They use the prefixes declared on
+# this shapes graph below.
+#################################################################
+
+<https://dfe-digital.github.io/education-provider-registry-docs/shapes/>
+    sh:declare
+        [ sh:prefix "esto" ; sh:namespace "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ] ,
+        [ sh:prefix "est" ; sh:namespace "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/"^^xsd:anyURI ] .
+
+est:EstablishmentReorganisationShape
+    a sh:NodeShape ;
+    rdfs:label "Establishment reorganisation shape"@en ;
+    rdfs:comment "A reorganisation has exactly one pattern, at most one cause and one effective date, at least two participants, and results in at least one succession or provision transfer. Added v1.3."@en ;
+    sh:targetClass est:EstablishmentReorganisation ;
+
+    sh:property [
+        sh:path esto:hasReorganisationPattern ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:ReplacementPattern est:AbsorptionPattern est:AmalgamationPattern est:SplitPattern est:SpinOutPattern est:TransferBetweenContinuingEstablishmentsPattern est:ComplexReorganisationPattern ) ;
+        sh:name "Reorganisation pattern"@en ;
+        sh:message "A reorganisation must have exactly one pattern: replacement, absorption, amalgamation, split, spin-out, transfer between continuing establishments or complex reorganisation."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasReorganisationCause ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:name "Reorganisation cause"@en ;
+        sh:message "A reorganisation may record at most one cause, given as a concept."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasReorganisationEffectiveDate ;
+        sh:maxCount 1 ;
+        sh:class est:ReorganisationEffectiveDate ;
+        sh:name "Effective date"@en ;
+        sh:message "A reorganisation may record at most one effective date, typed est:ReorganisationEffectiveDate."@en ;
+    ] ;
+
+    sh:property [
+        sh:path ( esto:hasReorganisationEffectiveDate rdf:value ) ;
+        sh:datatype xsd:date ;
+        sh:name "Effective date value"@en ;
+        sh:message "An effective date must be an xsd:date."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasReorganisationParticipation ;
+        sh:minCount 2 ;
+        sh:class est:ReorganisationParticipation ;
+        sh:name "Participation"@en ;
+        sh:message "A reorganisation must involve at least two establishments, each through an est:ReorganisationParticipation."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:resultsInSuccession ;
+        sh:class est:Succession ;
+        sh:name "Succession"@en ;
+        sh:message "esto:resultsInSuccession must point to an est:Succession."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:resultsInProvisionTransfer ;
+        sh:class est:ProvisionTransfer ;
+        sh:name "Provision transfer"@en ;
+        sh:message "esto:resultsInProvisionTransfer must point to an est:ProvisionTransfer."@en ;
+    ] ;
+
+    sh:or (
+        [ sh:path esto:resultsInSuccession ; sh:minCount 1 ]
+        [ sh:path esto:resultsInProvisionTransfer ; sh:minCount 1 ]
+    ) ;
+    sh:message "A reorganisation must result in at least one succession or provision transfer."@en .
+
+est:ReorganisationParticipationShape
+    a sh:NodeShape ;
+    rdfs:label "Reorganisation participation shape"@en ;
+    rdfs:comment "A participation belongs to exactly one reorganisation, names exactly one establishment and has exactly one outcome. An establishment that closed has no effects. Added v1.3."@en ;
+    sh:targetClass est:ReorganisationParticipation ;
+
+    sh:property [
+        sh:path esto:hasParticipant ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:Establishment ;
+        sh:name "Participant"@en ;
+        sh:message "A participation must name exactly one establishment."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasReorganisationOutcome ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:ClosedInReorganisation est:OpenedInReorganisation est:ContinuedThroughReorganisation ) ;
+        sh:name "Outcome"@en ;
+        sh:message "A participation must have exactly one outcome: closed, opened or continued."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasReorganisationEffect ;
+        sh:class est:ReorganisationEffect ;
+        sh:name "Effect"@en ;
+        sh:message "esto:hasReorganisationEffect must point to an est:ReorganisationEffect."@en ;
+    ] ;
+
+    sh:property [
+        sh:path [ sh:inversePath esto:hasReorganisationParticipation ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Reorganisation"@en ;
+        sh:message "A participation must belong to exactly one reorganisation."@en ;
+    ] ;
+
+    sh:or (
+        [ sh:not [ sh:path esto:hasReorganisationOutcome ; sh:hasValue est:ClosedInReorganisation ] ]
+        [ sh:path esto:hasReorganisationEffect ; sh:maxCount 0 ]
+    ) ;
+    sh:message "An establishment that closed in a reorganisation has no effects: closing is its outcome."@en .
+
+est:ReorganisationEffectShape
+    a sh:NodeShape ;
+    rdfs:label "Reorganisation effect shape"@en ;
+    rdfs:comment "An effect belongs to exactly one participation and names one characteristic of provision and one direction that suits it. Sixth form and nursery provision are added or removed, capacity is increased or reduced, and age range and religious character are changed. Added v1.3."@en ;
+    sh:targetClass est:ReorganisationEffect ;
+
+    sh:property [
+        sh:path esto:affectsProvision ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:StatutoryAgeRange est:SchoolCapacity est:SixthFormProvision est:NurseryProvision est:ReligiousCharacter ) ;
+        sh:name "Provision affected"@en ;
+        sh:message "An effect must name exactly one characteristic: statutory age range, school capacity, sixth-form provision, nursery provision or religious character."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasProvisionChangeDirection ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( est:ProvisionAdded est:ProvisionRemoved est:ProvisionIncreased est:ProvisionReduced est:ProvisionChanged ) ;
+        sh:name "Direction"@en ;
+        sh:message "An effect must have exactly one direction: added, removed, increased, reduced or changed."@en ;
+    ] ;
+
+    sh:property [
+        sh:path [ sh:inversePath esto:hasReorganisationEffect ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Participation"@en ;
+        sh:message "An effect must belong to exactly one participation."@en ;
+    ] ;
+
+    sh:or (
+        [ sh:property [ sh:path esto:affectsProvision ; sh:in ( est:SixthFormProvision est:NurseryProvision ) ] ;
+          sh:property [ sh:path esto:hasProvisionChangeDirection ; sh:in ( est:ProvisionAdded est:ProvisionRemoved ) ] ]
+        [ sh:property [ sh:path esto:affectsProvision ; sh:in ( est:SchoolCapacity ) ] ;
+          sh:property [ sh:path esto:hasProvisionChangeDirection ; sh:in ( est:ProvisionIncreased est:ProvisionReduced ) ] ]
+        [ sh:property [ sh:path esto:affectsProvision ; sh:in ( est:StatutoryAgeRange est:ReligiousCharacter ) ] ;
+          sh:property [ sh:path esto:hasProvisionChangeDirection ; sh:in ( est:ProvisionChanged ) ] ]
+    ) ;
+    sh:message "The direction does not suit the characteristic. Sixth form and nursery provision are added or removed, capacity is increased or reduced, and age range and religious character are changed."@en .
+
+est:SuccessionShape
+    a sh:NodeShape ;
+    rdfs:label "Succession shape"@en ;
+    rdfs:comment "A succession has exactly one predecessor and one successor, which are different establishments, and results from exactly one reorganisation. Each pair is recorded once. Added v1.3."@en ;
+    sh:targetClass est:Succession ;
+
+    sh:property [
+        sh:path esto:hasPredecessorEstablishment ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:Establishment ;
+        sh:disjoint esto:hasSuccessorEstablishment ;
+        sh:name "Predecessor"@en ;
+        sh:message "A succession must have exactly one predecessor, which is an establishment different from the successor."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasSuccessorEstablishment ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:Establishment ;
+        sh:name "Successor"@en ;
+        sh:message "A succession must have exactly one successor, which is an establishment."@en ;
+    ] ;
+
+    sh:property [
+        sh:path [ sh:inversePath esto:resultsInSuccession ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Reorganisation"@en ;
+        sh:message "A succession must result from exactly one reorganisation."@en ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+        sh:message "The succession from {?from} to {?to} is recorded more than once."@en ;
+        sh:select """
+            SELECT $this ?from ?to WHERE {
+                $this esto:hasPredecessorEstablishment ?from ; esto:hasSuccessorEstablishment ?to .
+                ?other a est:Succession ; esto:hasPredecessorEstablishment ?from ; esto:hasSuccessorEstablishment ?to .
+                FILTER (?other != $this)
+            }
+        """ ;
+    ] .
+
+est:ProvisionTransferShape
+    a sh:NodeShape ;
+    rdfs:label "Provision transfer shape"@en ;
+    rdfs:comment "A provision transfer has exactly one origin and one recipient, which are different establishments, and results from exactly one reorganisation. Added v1.3."@en ;
+    sh:targetClass est:ProvisionTransfer ;
+
+    sh:property [
+        sh:path esto:hasOriginEstablishment ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:Establishment ;
+        sh:disjoint esto:hasRecipientEstablishment ;
+        sh:name "Origin"@en ;
+        sh:message "A provision transfer must have exactly one origin, which is an establishment different from the recipient."@en ;
+    ] ;
+
+    sh:property [
+        sh:path esto:hasRecipientEstablishment ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class est:Establishment ;
+        sh:name "Recipient"@en ;
+        sh:message "A provision transfer must have exactly one recipient, which is an establishment."@en ;
+    ] ;
+
+    sh:property [
+        sh:path [ sh:inversePath esto:resultsInProvisionTransfer ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:name "Reorganisation"@en ;
+        sh:message "A provision transfer must result from exactly one reorganisation."@en ;
+    ] .
+
+est:ReorganisationPairsShape
+    a sh:NodeShape ;
+    rdfs:label "Reorganisation pairs shape"@en ;
+    rdfs:comment "Ties successions and provision transfers to the participants of their reorganisation. Both establishments in a pair take part in it. A succession's predecessor has outcome closed, and a provision transfer's origin does not. An establishment takes part at most once. Added v1.3."@en ;
+    sh:targetClass est:EstablishmentReorganisation ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+        sh:message "{?establishment} is in one of this reorganisation's successions or provision transfers, but does not take part in it."@en ;
+        sh:select """
+            SELECT DISTINCT $this ?establishment WHERE {
+                {
+                    $this esto:resultsInSuccession ?pair .
+                    ?pair esto:hasPredecessorEstablishment|esto:hasSuccessorEstablishment ?establishment .
+                } UNION {
+                    $this esto:resultsInProvisionTransfer ?pair .
+                    ?pair esto:hasOriginEstablishment|esto:hasRecipientEstablishment ?establishment .
+                }
+                FILTER NOT EXISTS { $this esto:hasReorganisationParticipation/esto:hasParticipant ?establishment . }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+        sh:message "{?establishment} is a predecessor in this reorganisation, so its outcome must be closed."@en ;
+        sh:select """
+            SELECT DISTINCT $this ?establishment WHERE {
+                $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?establishment .
+                $this esto:hasReorganisationParticipation ?participation .
+                ?participation esto:hasParticipant ?establishment .
+                FILTER NOT EXISTS { ?participation esto:hasReorganisationOutcome est:ClosedInReorganisation . }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+        sh:message "{?establishment} is the origin of a provision transfer in this reorganisation, so it must not have closed. Provision from an establishment that closed is a succession."@en ;
+        sh:select """
+            SELECT DISTINCT $this ?establishment WHERE {
+                $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?establishment .
+                $this esto:hasReorganisationParticipation ?participation .
+                ?participation esto:hasParticipant ?establishment ;
+                    esto:hasReorganisationOutcome est:ClosedInReorganisation .
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+        sh:message "{?establishment} takes part in this reorganisation more than once."@en ;
+        sh:select """
+            SELECT DISTINCT $this ?establishment WHERE {
+                $this esto:hasReorganisationParticipation ?first, ?second .
+                ?first esto:hasParticipant ?establishment .
+                ?second esto:hasParticipant ?establishment .
+                FILTER (?first != ?second)
+            }
+        """ ;
+    ] .
+
+est:SuccessionCycleShape
+    a sh:NodeShape ;
+    rdfs:label "Succession cycle shape"@en ;
+    rdfs:comment "Following successors must never lead back to the establishment you started from. Added v1.3."@en ;
+    sh:targetObjectsOf esto:hasPredecessorEstablishment ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
+        sh:message "Following successors from this establishment leads back to it."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this (^esto:hasPredecessorEstablishment/esto:hasSuccessorEstablishment)+ $this .
+            }
+        """ ;
     ] .

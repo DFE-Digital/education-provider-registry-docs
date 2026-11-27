@@ -307,7 +307,29 @@ These record that a person holds the same underlying role across multiple establ
 
 ---
 
-## 8. Vocabulary-Level Constructs
+## 8. Establishment Reorganisation
+
+Added with ontology v2.4. DfE school organisation guidance is the domain authority. The Eurostat business-register terms are a parallel: they name the same patterns for businesses, but their rules for when a unit keeps its identity do not apply to schools. By those rules an academy conversion would look like the same unit carrying on, whereas DfE gives the academy a new URN.
+
+| Term | Category | Reference | Link quality |
+|---|---|---|---|
+| <a id="establishment-reorganisation"></a>Establishment reorganisation | Real-world | [DfE: Opening, closing and making changes to schools](https://www.gov.uk/guidance/opening-closing-and-making-changes-to-schools) — the statutory processes by which schools open, close and change | Relevant — GOV.UK describes the processes, but does not define "reorganisation" as a single term |
+| <a id="replacement-pattern"></a>Replacement | Real-world (limited) | [DfE: Opening, closing and making changes to schools](https://www.gov.uk/guidance/opening-closing-and-making-changes-to-schools) — a closure and an opening proposed together | Indirect — "replacement" is our label for the pattern |
+| <a id="absorption-pattern"></a>Absorption | Real-world (limited) | [Eurostat-OECD Manual on Business Demography Statistics](https://www.oecd.org/economics/eurostat-oecd-manual-on-business-demography-statistics_9789264041882-en) — in a take-over, the unit that takes over keeps its identifier | Parallel — business-register term "take-over", not school guidance |
+| <a id="amalgamation-pattern"></a>Amalgamation | Real-world | [DfE: Opening, closing and making changes to schools](https://www.gov.uk/guidance/opening-closing-and-making-changes-to-schools) — amalgamation is a recognised school organisation change, and GIAS records it as an opening and closing reason | Relevant — wording to confirm against the current guidance, which changed on 1 September 2026 |
+| <a id="split-pattern"></a>Split | Real-world (limited) | [Eurostat: Business registers recommendations manual, 2021, demographic events](https://ec.europa.eu/eurostat/documents/3859598/12453409/KS-GQ-21-001-EN-N.pdf) — break-up | Parallel — GIAS records "Split school" as an opening reason |
+| <a id="spin-out-pattern"></a>Spin-out | Real-world (limited) | [Eurostat: Business registers recommendations manual, 2021, demographic events](https://ec.europa.eu/eurostat/documents/3859598/12453409/KS-GQ-21-001-EN-N.pdf) — split-off | Parallel |
+| <a id="transfer-between-continuing-establishments-pattern"></a>Transfer between continuing establishments | Real-world (limited) | [DfE: Making significant changes (prescribed alterations) to maintained schools](https://assets.publishing.service.gov.uk/media/68947395ad0cbc0e276430d8/making-significant-changes-prescribed-alterations-to-maintained-schools.pdf) — for example, removing a nursery or sixth form at one school and adding one at another | Indirect — each change is a separate prescribed alteration |
+| <a id="complex-reorganisation-pattern"></a>Complex reorganisation | Real-world (limited) | [Eurostat: Business registers recommendations manual, 2021, demographic events](https://ec.europa.eu/eurostat/documents/3859598/12453409/KS-GQ-21-001-EN-N.pdf) — restructuring | Parallel |
+| <a id="academy-conversion-cause"></a>Academy conversion | Real-world | [Convert to an academy: guide for schools](https://www.gov.uk/guidance/convert-to-an-academy-information-for-schools) | Direct — the process by which a maintained school converts to an academy |
+| <a id="fresh-start-cause"></a>Fresh start | Real-world (limited) | No current GOV.UK definition found in this review. GIAS records "Fresh Start" as an opening and closing reason. | None found |
+| <a id="reorganisation-effect"></a>Reorganisation effect | Real-world | [DfE: Making significant changes (prescribed alterations) to maintained schools](https://assets.publishing.service.gov.uk/media/68947395ad0cbc0e276430d8/making-significant-changes-prescribed-alterations-to-maintained-schools.pdf) — the statutory list of significant changes to a maintained school, under The School Organisation (Prescribed Alterations to Maintained Schools) (England) Regulations 2013 | Direct for maintained schools |
+| <a id="succession"></a>Succession | Real-world (limited) | [Convert to an academy: guide for schools](https://www.gov.uk/guidance/convert-to-an-academy-information-for-schools) — a converting school closes and the academy opens as a new school | Indirect — predecessor and successor are our labels |
+| <a id="provision-transfer"></a>Provision transfer | Real-world (limited) | [Eurostat: Business registers recommendations manual, 2021, demographic events](https://ec.europa.eu/eurostat/documents/3859598/12453409/KS-GQ-21-001-EN-N.pdf) — split-off, where the original unit continues | Parallel |
+
+---
+
+## 9. Vocabulary-Level Constructs
 
 These concepts belong entirely to the GIAS vocabulary model. No GOV.UK counterpart exists at this level of abstraction.
 
@@ -317,5 +339,3 @@ These concepts belong entirely to the GIAS vocabulary model. No GOV.UK counterpa
 | <a id="recordcurrencyandstewardship"></a>RecordCurrencyAndStewardship | GIAS construct | GIAS data stewardship concept. No GOV.UK definition. |
 | <a id="datelastchangedorconfirmed"></a>DateLastChangedOrConfirmed | GIAS construct | GIAS record-management field. No GOV.UK definition. |
 | <a id="establishmentgroupmembership"></a>EstablishmentGroupMembership | GIAS construct | GIAS model concept for the relationship between establishments and groups. |
-| <a id="grouprelationship-grouprelationshiptype"></a>GroupRelationship / GroupRelationshipType | GIAS construct | GIAS model concept for group-to-group history (e.g. SAT → MAT). The underlying events are real; the relational model is GIAS. |
-| <a id="successor-mat-predecessor-sat"></a>Successor MAT / Predecessor SAT | GIAS construct | GIAS group relationship type values. Real events, GIAS labels. |

@@ -39,10 +39,11 @@
     dcterms:title "Education Provider Registry Data Quality SHACL Shapes"@en ;
     dcterms:description "Value-level SHACL constraints for EPR establishment records: datatypes, numeric ranges and cardinality rules for identity, lifecycle and measure fields."@en ;
     dcterms:created "2026-06-19"^^xsd:date ;
-    dcterms:modified "2026-11-02"^^xsd:date ;
+    dcterms:modified "2026-11-27"^^xsd:date ;
     dcterms:publisher "Department for Education"@en ;
     dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ;
-    owl:versionInfo "0.2" ;
+    owl:versionInfo "0.3" ;
+    rdfs:comment "v0.3: aligned with establishment-ontology.ttl v2.4. Warnings added for establishment reorganisations: a predecessor whose lifecycle is not closed, a pattern that does not match the reorganisation's successions, provision transfers and outcomes, a participant that neither gives nor receives provision, and a successor shortcut with no matching succession."@en ;
     rdfs:comment "v0.2: aligned with establishment-ontology.ttl v2.3. Two warnings added: a traditional partnership with fewer than two recorded partners, and a maintaining local authority that is not the current local authority for the establishment's area. The second is a SHACL-SPARQL constraint, because SHACL Core cannot compare two paths."@en ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/> ;
     rdfs:seeAlso <https://dfe-digital.github.io/education-provider-registry-docs/shapes/> ;
@@ -387,6 +388,203 @@ est:MaintainingAuthorityMatchesAreaShape
                     ?period <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/hasLocalAuthority> ?la .
                     FILTER NOT EXISTS { ?period <https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/hasEndDate> ?end }
                 }
+            }
+        """ ;
+    ] .
+
+
+#################################################################
+# Establishment reorganisation (v0.3)
+#
+# Warnings, not violations. A mismatch means either the recorded
+# pattern or the recorded participants are wrong, and needs review.
+# The SPARQL uses the prefixes declared on this shapes graph below.
+#################################################################
+
+<https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/>
+    sh:declare
+        [ sh:prefix "esto" ; sh:namespace "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/ontology/"^^xsd:anyURI ] ,
+        [ sh:prefix "est" ; sh:namespace "https://dfe-digital.github.io/education-provider-registry-docs/models/establishment/vocabulary/"^^xsd:anyURI ] .
+
+est:PredecessorLifecycleClosedShape
+    a sh:NodeShape ;
+    rdfs:label "Predecessor lifecycle closed shape"@en ;
+    rdfs:comment "Warning, not violation: the predecessor in a succession should have the lifecycle status closed. Its outcome in the reorganisation is closed, so the two should agree. Added v0.3."@en ;
+    sh:targetClass est:Succession ;
+    sh:severity sh:Warning ;
+    sh:property [
+        sh:path ( esto:hasPredecessorEstablishment esto:hasEstablishmentLifecycle esto:classifiedByEstablishmentStatus ) ;
+        sh:severity sh:Warning ;
+        sh:hasValue est:ClosedStatus ;
+        sh:name "Predecessor status"@en ;
+        sh:message "The predecessor's lifecycle status should be closed."@en ;
+    ] .
+
+est:ReorganisationPatternMatchShape
+    a sh:NodeShape ;
+    rdfs:label "Reorganisation pattern match shape"@en ;
+    rdfs:comment "Warning, not violation: a reorganisation's pattern should agree with its successions, provision transfers and the outcomes of the establishments in them. Added v0.3."@en ;
+    sh:targetClass est:EstablishmentReorganisation ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as a replacement, but it does not have one establishment that closed and one that opened, linked by a succession."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:ReplacementPattern .
+                FILTER (
+                    EXISTS { $this esto:resultsInProvisionTransfer ?anyTransfer }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver1 } } { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver2 } } FILTER (?giver1 != ?giver2) }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver1 } } { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver2 } } FILTER (?receiver1 != ?receiver2) }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?rp . ?rp esto:hasParticipant ?receiver ; esto:hasReorganisationOutcome est:OpenedInReorganisation . } }
+                )
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as an absorption, but it does not have successions only, from establishments that closed into one existing establishment that carried on."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:AbsorptionPattern .
+                FILTER (
+                    EXISTS { $this esto:resultsInProvisionTransfer ?anyTransfer }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver1 } } { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver2 } } FILTER (?receiver1 != ?receiver2) }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?rp . ?rp esto:hasParticipant ?receiver ; esto:hasReorganisationOutcome est:ContinuedThroughReorganisation . } }
+                )
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as an amalgamation, but it does not have successions only, from two or more establishments that closed into one that opened."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:AmalgamationPattern .
+                FILTER (
+                    EXISTS { $this esto:resultsInProvisionTransfer ?anyTransfer }
+                    || !EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver1 } } { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver2 } } FILTER (?giver1 != ?giver2) }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver1 } } { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver2 } } FILTER (?receiver1 != ?receiver2) }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?rp . ?rp esto:hasParticipant ?receiver ; esto:hasReorganisationOutcome est:OpenedInReorganisation . } }
+                )
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as a split, but it does not have successions only, from one establishment that closed into two or more others."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:SplitPattern .
+                FILTER (
+                    EXISTS { $this esto:resultsInProvisionTransfer ?anyTransfer }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver1 } } { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver2 } } FILTER (?giver1 != ?giver2) }
+                    || !EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver1 } } { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver2 } } FILTER (?receiver1 != ?receiver2) }
+                )
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as a spin-out, but it does not have provision transfers only, from one establishment that carried on into establishments that opened."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:SpinOutPattern .
+                FILTER (
+                    EXISTS { $this esto:resultsInSuccession ?anySuccession }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver1 } } { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver2 } } FILTER (?giver1 != ?giver2) }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?gp . ?gp esto:hasParticipant ?giver ; esto:hasReorganisationOutcome est:ContinuedThroughReorganisation . } }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?rp . ?rp esto:hasParticipant ?receiver ; esto:hasReorganisationOutcome est:OpenedInReorganisation . } }
+                )
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as a transfer between continuing establishments, but it does not have provision transfers only, between establishments that all carried on."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:TransferBetweenContinuingEstablishmentsPattern .
+                FILTER (
+                    EXISTS { $this esto:resultsInSuccession ?anySuccession }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?gp . ?gp esto:hasParticipant ?giver ; esto:hasReorganisationOutcome est:ContinuedThroughReorganisation . } }
+                    || EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver } } FILTER NOT EXISTS { $this esto:hasReorganisationParticipation ?rp . ?rp esto:hasParticipant ?receiver ; esto:hasReorganisationOutcome est:ContinuedThroughReorganisation . } }
+                )
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "This reorganisation is recorded as a complex reorganisation, but it does not have two or more establishments giving provision and two or more receiving it."@en ;
+        sh:select """
+            SELECT $this WHERE {
+                $this esto:hasReorganisationPattern est:ComplexReorganisationPattern .
+                FILTER (
+                    !EXISTS { { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver1 } } { { $this esto:resultsInSuccession/esto:hasPredecessorEstablishment ?giver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasOriginEstablishment ?giver2 } } FILTER (?giver1 != ?giver2) }
+                    || !EXISTS { { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver1 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver1 } } { { $this esto:resultsInSuccession/esto:hasSuccessorEstablishment ?receiver2 } UNION { $this esto:resultsInProvisionTransfer/esto:hasRecipientEstablishment ?receiver2 } } FILTER (?receiver1 != ?receiver2) }
+                )
+            }
+        """ ;
+    ] .
+
+est:ParticipantInPairShape
+    a sh:NodeShape ;
+    rdfs:label "Participant in pair shape"@en ;
+    rdfs:comment "Warning, not violation: every establishment taking part in a reorganisation should give or receive provision in at least one of its successions or provision transfers. Added v0.3."@en ;
+    sh:targetClass est:EstablishmentReorganisation ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "{?establishment} takes part in this reorganisation but neither gives nor receives provision in it."@en ;
+        sh:select """
+            SELECT DISTINCT $this ?establishment WHERE {
+                $this esto:hasReorganisationParticipation/esto:hasParticipant ?establishment .
+                FILTER NOT EXISTS {
+                    {
+                        $this esto:resultsInSuccession ?pair .
+                        ?pair esto:hasPredecessorEstablishment|esto:hasSuccessorEstablishment ?establishment .
+                    } UNION {
+                        $this esto:resultsInProvisionTransfer ?pair .
+                        ?pair esto:hasOriginEstablishment|esto:hasRecipientEstablishment ?establishment .
+                    }
+                }
+            }
+        """ ;
+    ] .
+
+est:SuccessorShortcutShape
+    a sh:NodeShape ;
+    rdfs:label "Successor shortcut shape"@en ;
+    rdfs:comment "Warning, not violation: the shortcuts esto:hasSuccessor and esto:hasPredecessor should match a recorded est:Succession. Added v0.3."@en ;
+    sh:targetSubjectsOf esto:hasSuccessor, esto:hasPredecessor ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "{?successor} is recorded as a successor of this establishment, but no succession records it."@en ;
+        sh:select """
+            SELECT $this ?successor WHERE {
+                $this esto:hasSuccessor ?successor .
+                FILTER NOT EXISTS { ?succession esto:hasPredecessorEstablishment $this ; esto:hasSuccessorEstablishment ?successor . }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:prefixes <https://dfe-digital.github.io/education-provider-registry-docs/shapes/data-quality/> ;
+        sh:message "{?predecessor} is recorded as a predecessor of this establishment, but no succession records it."@en ;
+        sh:select """
+            SELECT $this ?predecessor WHERE {
+                $this esto:hasPredecessor ?predecessor .
+                FILTER NOT EXISTS { ?succession esto:hasPredecessorEstablishment ?predecessor ; esto:hasSuccessorEstablishment $this . }
             }
         """ ;
     ] .

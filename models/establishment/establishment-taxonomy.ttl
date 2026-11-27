@@ -24,7 +24,7 @@ est:establishmentDetailsTaxonomy
     dcterms:title "Education Provider Registry Taxonomy"@en ;
     dcterms:description "Faceted taxonomy containing classifications used by the fields shown in the establishment record Details tab in the public view."@en ;
     dcterms:created "2026-06-16"^^xsd:date ;
-    dcterms:modified "2026-11-02"^^xsd:date ;
+    dcterms:modified "2026-11-27"^^xsd:date ;
     est:status "Provisional"@en ;
     skos:hasTopConcept
         est:EstablishmentType,
@@ -41,7 +41,11 @@ est:establishmentDetailsTaxonomy
         est:AcademyTrustType,
         est:ResponsibilityType,
         est:CharityStatus,
-        est:LegalForm .
+        est:LegalForm,
+        est:ReorganisationPattern,
+        est:ReorganisationCause,
+        est:ReorganisationOutcome,
+        est:ProvisionChangeDirection .
 
 #################################################################
 # Facet collection
@@ -65,7 +69,11 @@ est:establishmentDetailsTaxonomyFacets
         est:AcademyTrustType,
         est:ResponsibilityType,
         est:CharityStatus,
-        est:LegalForm .
+        est:LegalForm,
+        est:ReorganisationPattern,
+        est:ReorganisationCause,
+        est:ReorganisationOutcome,
+        est:ProvisionChangeDirection .
 
 #################################################################
 # Type-group collection
@@ -1233,4 +1241,164 @@ est:TraditionalPartnership
     skos:inScheme est:establishmentDetailsTaxonomy ;
     skos:prefLabel "Traditional partnership"@en ;
     skos:broader est:LegalForm ;
+    est:status "Provisional"@en .
+
+
+#################################################################
+# Establishment reorganisation facets (v2.4)
+#################################################################
+
+est:ReorganisationPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Reorganisation pattern"@en ;
+    skos:definition "The shape of an establishment reorganisation: how many establishments gave and received provision, and whether each closed, opened or carried on."@en ;
+    skos:narrower est:ReplacementPattern, est:AbsorptionPattern, est:AmalgamationPattern, est:SplitPattern, est:SpinOutPattern, est:TransferBetweenContinuingEstablishmentsPattern, est:ComplexReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:ReplacementPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Replacement"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:AbsorptionPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Absorption"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:AmalgamationPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Amalgamation"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:SplitPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Split"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:SpinOutPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Spin-out"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:TransferBetweenContinuingEstablishmentsPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Transfer between continuing establishments"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:ComplexReorganisationPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Complex reorganisation"@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+est:ReorganisationCause
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Reorganisation cause"@en ;
+    skos:definition "Why an establishment reorganisation happened. An open list."@en ;
+    skos:narrower est:AcademyConversionCause, est:FreshStartCause ;
+    est:status "Provisional"@en .
+
+est:AcademyConversionCause
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Academy conversion"@en ;
+    skos:broader est:ReorganisationCause ;
+    est:status "Provisional"@en .
+
+est:FreshStartCause
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Fresh start"@en ;
+    skos:broader est:ReorganisationCause ;
+    est:status "Provisional"@en .
+
+est:ReorganisationOutcome
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Reorganisation outcome"@en ;
+    skos:definition "What a reorganisation did to the identity of an establishment taking part."@en ;
+    skos:narrower est:ClosedInReorganisation, est:OpenedInReorganisation, est:ContinuedThroughReorganisation ;
+    est:status "Provisional"@en .
+
+est:ClosedInReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Closed"@en ;
+    skos:broader est:ReorganisationOutcome ;
+    est:status "Provisional"@en .
+
+est:OpenedInReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Opened"@en ;
+    skos:broader est:ReorganisationOutcome ;
+    est:status "Provisional"@en .
+
+est:ContinuedThroughReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Continued"@en ;
+    skos:broader est:ReorganisationOutcome ;
+    est:status "Provisional"@en .
+
+est:ProvisionChangeDirection
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:topConceptOf est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Provision change direction"@en ;
+    skos:definition "How a reorganisation changed a characteristic of an establishment's provision."@en ;
+    skos:narrower est:ProvisionAdded, est:ProvisionRemoved, est:ProvisionIncreased, est:ProvisionReduced, est:ProvisionChanged ;
+    est:status "Provisional"@en .
+
+est:ProvisionAdded
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Added"@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+est:ProvisionRemoved
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Removed"@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+est:ProvisionIncreased
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Increased"@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+est:ProvisionReduced
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Reduced"@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+est:ProvisionChanged
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsTaxonomy ;
+    skos:prefLabel "Changed"@en ;
+    skos:broader est:ProvisionChangeDirection ;
     est:status "Provisional"@en .

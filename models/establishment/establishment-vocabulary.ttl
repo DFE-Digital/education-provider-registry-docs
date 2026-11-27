@@ -46,6 +46,7 @@ est:establishmentDetailsVocabulary
         est:EstablishmentIdentity,
         est:EstablishmentClassification,
         est:EstablishmentLifecycle,
+        est:EstablishmentReorganisation,
         est:RecordCurrencyAndStewardship,
         est:EstablishmentLocationAndContact,
         est:EstablishmentLeadership,
@@ -118,6 +119,38 @@ est:lifecycle
         est:ReasonEstablishmentOpened,
         est:ClosedDate,
         est:ReasonEstablishmentClosed .
+
+est:reorganisation
+    a skos:Collection ;
+    skos:prefLabel "Establishment reorganisation"@en ;
+    skos:member
+        est:EstablishmentReorganisation,
+        est:ReorganisationPattern,
+        est:ReplacementPattern,
+        est:AbsorptionPattern,
+        est:AmalgamationPattern,
+        est:SplitPattern,
+        est:SpinOutPattern,
+        est:TransferBetweenContinuingEstablishmentsPattern,
+        est:ComplexReorganisationPattern,
+        est:ReorganisationCause,
+        est:AcademyConversionCause,
+        est:FreshStartCause,
+        est:ReorganisationEffectiveDate,
+        est:ReorganisationParticipation,
+        est:ReorganisationOutcome,
+        est:ClosedInReorganisation,
+        est:OpenedInReorganisation,
+        est:ContinuedThroughReorganisation,
+        est:ReorganisationEffect,
+        est:ProvisionChangeDirection,
+        est:ProvisionAdded,
+        est:ProvisionRemoved,
+        est:ProvisionIncreased,
+        est:ProvisionReduced,
+        est:ProvisionChanged,
+        est:Succession,
+        est:ProvisionTransfer .
 
 est:recordCurrencyAndStewardship
     a skos:Collection ;
@@ -346,6 +379,7 @@ est:EstablishmentLifecycle
         est:OpenDate,
         est:ReasonEstablishmentClosed,
         est:ReasonEstablishmentOpened ;
+    skos:related est:EstablishmentReorganisation ;
     est:status "Provisional"@en .
 
 est:RecordCurrencyAndStewardship
@@ -1768,7 +1802,7 @@ est:LocalAuthorityAreaPeriod
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Local authority area period"@en ;
     skos:definition "A period during which a local authority was the local authority for an area."@en ;
-    skos:scopeNote "Kent County Council covered area 922 until 1998 and then area 886. Buckinghamshire County Council and then Buckinghamshire Council covered area 825. One area can have different local authorities over time, and one local authority can cover several areas over time. A reorganisation ends one period and starts another on vesting day. Added v2.3."@en ;
+    skos:scopeNote "Kent County Council covered area 922 until 1998 and then area 886. Buckinghamshire County Council and then Buckinghamshire Council covered area 825. One area can have different local authorities over time, and one local authority can cover several areas over time. A local government reorganisation ends one period and starts another on vesting day. Added v2.3."@en ;
     skos:broader est:LegalEntitiesRolesAndResponsibilities ;
     skos:related est:LocalAuthority, est:LocalAuthorityArea ;
     est:status "Provisional"@en .
@@ -1888,7 +1922,7 @@ est:ReasonEstablishmentOpened
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Reason establishment opened"@en ;
     skos:definition "A coded value recording the circumstances under which the establishment came into existence or was registered, such as a new school, a conversion from maintained to academy status, an amalgamation, or a change of age range creating a new registration."@en ;
-    skos:scopeNote "Closed enumeration of 13 values, matching the real GIAS extract. No individual value for 'Not applicable' or 'Not recorded' - absence of the classifying triple expresses both."@en ;
+    skos:scopeNote "Closed enumeration of 13 values, matching the real GIAS extract. No individual value for 'Not applicable' or 'Not recorded' - absence of the classifying triple expresses both. v2.4: each reason describes one establishment. When the opening is part of a reorganisation, the reorganisation records the whole change, and related reasons point to its pattern or cause."@en ;
     skos:broader est:EstablishmentLifecycle ;
     skos:narrower
         est:AcademyConverterOpenReason,
@@ -1909,7 +1943,7 @@ est:ReasonEstablishmentOpened
 
 est:AcademyConverterOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy Converter"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+    skos:prefLabel "Academy Converter"@en ; skos:broader est:ReasonEstablishmentOpened ; skos:related est:AcademyConversionCause, est:ReplacementPattern ; est:status "Provisional"@en .
 
 est:NewProvisionOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1917,11 +1951,11 @@ est:NewProvisionOpenReason
 
 est:ResultOfAmalgamationOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Result of Amalgamation"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+    skos:prefLabel "Result of Amalgamation"@en ; skos:broader est:ReasonEstablishmentOpened ; skos:related est:AmalgamationPattern ; est:status "Provisional"@en .
 
 est:FreshStartOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Fresh Start"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+    skos:prefLabel "Fresh Start"@en ; skos:broader est:ReasonEstablishmentOpened ; skos:related est:FreshStartCause, est:ReplacementPattern ; est:status "Provisional"@en .
 
 est:AcademyFreeSchoolOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1929,7 +1963,7 @@ est:AcademyFreeSchoolOpenReason
 
 est:ResultOfClosureOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Result of Closure"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+    skos:prefLabel "Result of Closure"@en ; skos:broader est:ReasonEstablishmentOpened ; skos:related est:ReplacementPattern ; est:status "Provisional"@en .
 
 est:ChangeReligiousCharacterOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1945,7 +1979,7 @@ est:FormerIndependentOpenReason
 
 est:SplitSchoolOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Split school"@en ; skos:broader est:ReasonEstablishmentOpened ; est:status "Provisional"@en .
+    skos:prefLabel "Split school"@en ; skos:broader est:ReasonEstablishmentOpened ; skos:related est:SplitPattern, est:SpinOutPattern ; est:status "Provisional"@en .
 
 est:NewNurserySchoolOpenReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
@@ -1975,8 +2009,8 @@ est:ReasonEstablishmentClosed
     a skos:Concept ;
     skos:inScheme est:establishmentDetailsVocabulary ;
     skos:prefLabel "Reason establishment closed"@en ;
-    skos:definition "A coded value recording the circumstances under which the establishment closed, such as amalgamation with another school, academy conversion (which closes the predecessor maintained school record), low pupil numbers, or voluntary closure."@en ;
-    skos:scopeNote "Closed enumeration of 13 values, matching the real GIAS extract. No individual value for 'Not applicable' - absence of the classifying triple expresses it."@en ;
+    skos:definition "A coded value recording the circumstances under which the establishment closed, such as amalgamation with another school, academy conversion (which closes the maintained school, and the academy opens as a new establishment), low pupil numbers, or voluntary closure."@en ;
+    skos:scopeNote "Closed enumeration of 13 values, matching the real GIAS extract. No individual value for 'Not applicable' - absence of the classifying triple expresses it. v2.4: each reason describes one establishment. When the closure is part of a reorganisation, the reorganisation records the whole change, and related reasons point to its pattern or cause."@en ;
     skos:broader est:EstablishmentLifecycle ;
     skos:narrower
         est:AcademyConverterCloseReason,
@@ -1997,11 +2031,11 @@ est:ReasonEstablishmentClosed
 
 est:AcademyConverterCloseReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Academy Converter"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+    skos:prefLabel "Academy Converter"@en ; skos:broader est:ReasonEstablishmentClosed ; skos:related est:AcademyConversionCause, est:ReplacementPattern ; est:status "Provisional"@en .
 
 est:ResultOfAmalgamationMergerCloseReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Result of Amalgamation/Merger"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+    skos:prefLabel "Result of Amalgamation/Merger"@en ; skos:broader est:ReasonEstablishmentClosed ; skos:related est:AmalgamationPattern, est:AbsorptionPattern ; est:status "Provisional"@en .
 
 est:ClosureCloseReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
@@ -2009,11 +2043,11 @@ est:ClosureCloseReason
 
 est:ForAcademyCloseReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "For Academy"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+    skos:prefLabel "For Academy"@en ; skos:broader est:ReasonEstablishmentClosed ; skos:related est:AcademyConversionCause ; est:status "Provisional"@en .
 
 est:FreshStartCloseReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
-    skos:prefLabel "Fresh Start"@en ; skos:broader est:ReasonEstablishmentClosed ; est:status "Provisional"@en .
+    skos:prefLabel "Fresh Start"@en ; skos:broader est:ReasonEstablishmentClosed ; skos:related est:FreshStartCause, est:ReplacementPattern ; est:status "Provisional"@en .
 
 est:CloseNurserySchoolCloseReason
     a skos:Concept ; skos:inScheme est:establishmentDetailsVocabulary ;
@@ -3772,7 +3806,7 @@ est:MaintenanceResponsibility
     skos:prefLabel "Maintained by local authority"@en ;
     skos:altLabel "Maintaining authority"@en ;
     skos:definition "The establishment, an LA-maintained school, is maintained by the local authority: the local authority funds it and is responsible for it under the School Standards and Framework Act 1998."@en ;
-    skos:scopeNote "Held only by a local authority. Only community, voluntary aided, voluntary controlled, foundation, community special and foundation special schools, pupil referral units and LA nursery schools can have one. A maintained school has one maintaining local authority at a time. Academies, independent schools and FE colleges have none, even though they are in a local authority area. A reorganisation ends the responsibility with the old local authority and starts one with the new local authority on vesting day. Replaces est:EstablishmentAccountability and est:MaintainingAuthority. Added v2.3."@en ;
+    skos:scopeNote "Held only by a local authority. Only community, voluntary aided, voluntary controlled, foundation, community special and foundation special schools, pupil referral units and LA nursery schools can have one. A maintained school has one maintaining local authority at a time. Academies, independent schools and FE colleges have none, even though they are in a local authority area. A local government reorganisation ends the responsibility with the old local authority and starts one with the new local authority on vesting day. Replaces est:EstablishmentAccountability and est:MaintainingAuthority. Added v2.3."@en ;
     skos:broader est:ResponsibilityType ;
     skos:related est:LocalAuthority, est:CommunitySchool ;
     est:status "Provisional"@en ;
@@ -3817,4 +3851,296 @@ est:GroupMembershipEndDate
     skos:definition "The date on which an establishment left an establishment group."@en ;
     skos:scopeNote "Added v2.0."@en ;
     skos:broader est:GroupMembership ;
+    est:status "Provisional"@en .
+
+
+#################################################################
+# Establishment reorganisation (v2.4)
+#################################################################
+
+est:EstablishmentReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:topConceptOf est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Establishment reorganisation"@en ;
+    skos:altLabel "School reorganisation"@en ;
+    skos:definition "A completed change in which provision moves between two or more establishments: one replaces another, several combine, one is split, or part of one moves to another."@en ;
+    skos:scopeNote "A reorganisation always involves at least two establishments. A change to one establishment alone, such as adding a sixth form, is a change to that establishment, not a reorganisation. It is a historical fact, so it has no end. Proposed reorganisations are not modelled. Added v2.4."@en ;
+    skos:narrower est:ReorganisationPattern, est:ReorganisationCause, est:ReorganisationEffectiveDate, est:ReorganisationParticipation, est:ReorganisationOutcome, est:ReorganisationEffect, est:ProvisionChangeDirection, est:Succession, est:ProvisionTransfer ;
+    skos:related est:EstablishmentLifecycle ;
+    est:status "Provisional"@en .
+
+
+est:ReorganisationPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reorganisation pattern"@en ;
+    skos:definition "The shape of an establishment reorganisation, decided by how many establishments gave and received provision, and whether each closed, opened or carried on."@en ;
+    skos:scopeNote "Closed list of 7 values. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:narrower est:ReplacementPattern, est:AbsorptionPattern, est:AmalgamationPattern, est:SplitPattern, est:SpinOutPattern, est:TransferBetweenContinuingEstablishmentsPattern, est:ComplexReorganisationPattern ;
+    est:status "Provisional"@en .
+
+
+est:ReplacementPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Replacement"@en ;
+    skos:definition "One establishment closes and a new establishment opens to replace it."@en ;
+    skos:scopeNote "An academy conversion is usually a replacement: the maintained school closes and the academy opens as a new establishment. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    skos:related est:AcademyConverterOpenReason, est:AcademyConverterCloseReason, est:FreshStartOpenReason, est:FreshStartCloseReason, est:ResultOfClosureOpenReason ;
+    est:status "Provisional"@en .
+
+
+est:AbsorptionPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Absorption"@en ;
+    skos:definition "One or more establishments close and an existing establishment carries on and takes over their provision, keeping its identity."@en ;
+    skos:scopeNote "Business registers call this a take-over. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    skos:related est:ResultOfAmalgamationMergerCloseReason ;
+    est:status "Provisional"@en .
+
+
+est:AmalgamationPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Amalgamation"@en ;
+    skos:definition "Two or more establishments close and a new establishment opens in their place."@en ;
+    skos:scopeNote "Business registers call this a merger. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    skos:related est:ResultOfAmalgamationOpenReason, est:ResultOfAmalgamationMergerCloseReason ;
+    est:status "Provisional"@en .
+
+
+est:SplitPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Split"@en ;
+    skos:definition "One establishment closes and its provision goes to two or more establishments, new or existing."@en ;
+    skos:scopeNote "Business registers call this a break-up. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    skos:related est:SplitSchoolOpenReason ;
+    est:status "Provisional"@en .
+
+
+est:SpinOutPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Spin-out"@en ;
+    skos:definition "One establishment carries on and one or more new establishments are created from part of its provision."@en ;
+    skos:scopeNote "Business registers call this a split-off. It results in provision transfers, not successions, because nothing closes. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    skos:related est:SplitSchoolOpenReason ;
+    est:status "Provisional"@en .
+
+
+est:TransferBetweenContinuingEstablishmentsPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Transfer between continuing establishments"@en ;
+    skos:definition "Provision moves between establishments that all carry on, and none opens or closes."@en ;
+    skos:scopeNote "For example, a nursery moving from one school to another. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+
+est:ComplexReorganisationPattern
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Complex reorganisation"@en ;
+    skos:definition "Two or more establishments give provision and two or more receive it."@en ;
+    skos:scopeNote "For example, a local reorganisation of several schools. It can combine successions and provision transfers. Added v2.4."@en ;
+    skos:broader est:ReorganisationPattern ;
+    est:status "Provisional"@en .
+
+
+est:ReorganisationCause
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reorganisation cause"@en ;
+    skos:definition "Why an establishment reorganisation happened."@en ;
+    skos:scopeNote "An open list. The cause is separate from the pattern: an academy conversion is the cause of a replacement. It is never inferred from the pattern. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:narrower est:AcademyConversionCause, est:FreshStartCause ;
+    est:status "Provisional"@en .
+
+
+est:AcademyConversionCause
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Academy conversion"@en ;
+    skos:definition "A maintained school converts to an academy."@en ;
+    skos:scopeNote "The maintained school closes and the academy opens as a new establishment, so the reorganisation is usually a replacement. Added v2.4."@en ;
+    skos:broader est:ReorganisationCause ;
+    skos:related est:AcademyConverterOpenReason, est:AcademyConverterCloseReason, est:ForAcademyCloseReason ;
+    est:status "Provisional"@en .
+
+
+est:FreshStartCause
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Fresh start"@en ;
+    skos:definition "A school closes and a new school opens in its place to make a fresh start."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ReorganisationCause ;
+    skos:related est:FreshStartOpenReason, est:FreshStartCloseReason ;
+    est:status "Provisional"@en .
+
+
+est:ReorganisationEffectiveDate
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reorganisation effective date"@en ;
+    skos:definition "The date on which an establishment reorganisation took effect."@en ;
+    skos:scopeNote "It is not automatically the open or closed date of any establishment taking part. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    est:status "Provisional"@en .
+
+
+est:ReorganisationParticipation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reorganisation participation"@en ;
+    skos:definition "One establishment's part in an establishment reorganisation, with its outcome and any effects on its provision."@en ;
+    skos:scopeNote "An establishment takes part at most once in a reorganisation, and can take part in many reorganisations over time. One participant can both give and receive provision. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    est:status "Provisional"@en .
+
+
+est:ReorganisationOutcome
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reorganisation outcome"@en ;
+    skos:definition "What a reorganisation did to the identity of an establishment taking part: it closed, it opened, or it carried on."@en ;
+    skos:scopeNote "Closed list of 3 values. Every participant has exactly one outcome. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:narrower est:ClosedInReorganisation, est:OpenedInReorganisation, est:ContinuedThroughReorganisation ;
+    est:status "Provisional"@en .
+
+
+est:ClosedInReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Closed"@en ;
+    skos:definition "The establishment closed as part of the reorganisation."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ReorganisationOutcome ;
+    est:status "Provisional"@en .
+
+
+est:OpenedInReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Opened"@en ;
+    skos:definition "The establishment opened as part of the reorganisation."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ReorganisationOutcome ;
+    est:status "Provisional"@en .
+
+
+est:ContinuedThroughReorganisation
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Continued"@en ;
+    skos:definition "The establishment existed before the reorganisation and carried on after it, keeping its identity."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ReorganisationOutcome ;
+    est:status "Provisional"@en .
+
+
+est:ReorganisationEffect
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reorganisation effect"@en ;
+    skos:definition "A change to the provision of an establishment that opened or carried on, caused by a reorganisation, such as a changed age range or more places."@en ;
+    skos:scopeNote "It names the characteristic of provision that changed and the direction of the change. The values before and after belong to the establishment's own facts. An establishment that closed has no effects. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:related est:StatutoryAgeRange, est:SchoolCapacity, est:SixthFormProvision, est:NurseryProvision, est:ReligiousCharacter ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionChangeDirection
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Provision change direction"@en ;
+    skos:definition "How a reorganisation changed a characteristic of an establishment's provision."@en ;
+    skos:scopeNote "Closed list of 5 values. Sixth form and nursery provision are added or removed, capacity is increased or reduced, and age range and religious character are changed. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:narrower est:ProvisionAdded, est:ProvisionRemoved, est:ProvisionIncreased, est:ProvisionReduced, est:ProvisionChanged ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionAdded
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Added"@en ;
+    skos:definition "The establishment gained provision it did not have before, such as a sixth form or nursery."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionRemoved
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Removed"@en ;
+    skos:definition "The establishment stopped providing something, such as a sixth form or nursery."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionIncreased
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Increased"@en ;
+    skos:definition "The establishment has more of something, such as more places."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionReduced
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Reduced"@en ;
+    skos:definition "The establishment has less of something, such as fewer places."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionChanged
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Changed"@en ;
+    skos:definition "A characteristic was changed rather than added, removed, increased or reduced, such as an age range or a religious character."@en ;
+    skos:scopeNote "Added v2.4."@en ;
+    skos:broader est:ProvisionChangeDirection ;
+    est:status "Provisional"@en .
+
+
+est:Succession
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Succession"@en ;
+    skos:altLabel "Predecessor and successor"@en ;
+    skos:definition "The fact that an establishment closed in a reorganisation and another establishment took over its provision."@en ;
+    skos:scopeNote "The successor can be newly opened or already exist. Succession is a historical fact: it does not end when the successor later closes. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:related est:ProvisionTransfer ;
+    est:status "Provisional"@en .
+
+
+est:ProvisionTransfer
+    a skos:Concept ;
+    skos:inScheme est:establishmentDetailsVocabulary ;
+    skos:prefLabel "Provision transfer"@en ;
+    skos:definition "The fact that provision moved in a reorganisation from an establishment that carried on to another establishment, new or existing."@en ;
+    skos:scopeNote "A spin-out is a provision transfer, not a succession, because nothing closed. Added v2.4."@en ;
+    skos:broader est:EstablishmentReorganisation ;
+    skos:related est:Succession ;
     est:status "Provisional"@en .
