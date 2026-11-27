@@ -1,8 +1,7 @@
 # Establishment reorganisation: logical model
 
-Draft for review, 27 November 2026. This model puts the [establishment change taxonomy](establishment-change-taxonomy.md) into logical form. It extends the [succession creation rules](../establishment-succession-creation-rules.md) and the [original succession proposal](../establishment-succession-logical-model-proposal.md). It doesn't change the physical schema.
 
-We call this area **establishment reorganisation**, the term DfE and councils already use for closures, mergers and splits. It describes something that happened in the world. It isn't an edit to an establishment record.
+We call this topic **establishment reorganisation**, the term DfE and councils already use for closures, mergers and splits. It describes something that happened in the world. It isn't an edit to an establishment record.
 
 ## What the model separates
 
@@ -163,7 +162,7 @@ A reorganisation with only one succession pair still needs its pattern. Teign is
 
 ### Reorganisation cause
 
-`reorganisation_cause` is a short list of reasons for a reorganisation. It has an integer key and a unique name. These values are candidates to agree with business specialists.
+`reorganisation_cause` records why the reorganisation happened, separately from its pattern and participant effects. It has an integer key and a unique name. Use the following working list of causes.
 
 | Cause | Note |
 | --- | --- |
@@ -300,7 +299,7 @@ When we later group a pair into a reorganisation, its date moves to the reorgani
 
 ## Ongoing associations
 
-Sixth-form partnerships and children's centre links aren't reorganisations, so they don't belong in this model. Each needs its own named relationship, with start and end dates and participant roles. We should first check whether they fit the [groups model](../../../../../../education-provider-registry-docs/models/logical/establishment/establishment-groups-logical-model.md), since GIAS already has group types for children's centres.
+Sixth-form partnerships and children's centre links aren't reorganisations, so they don't belong in this model. Each needs its own named relationship, with start and end dates and participant roles. We should first check whether they fit the group model since GIAS already has group types for children's centres.
 
 ## Examples
 
@@ -351,31 +350,4 @@ If review finds the two continuing schools didn't exchange provision, there are 
 
 These six BAU links become one reorganisation, three participants, two effects and up to four pairs.
 
-## BAU source mapping
 
-BAU records pairs in `dbo.EstablishmentLink`, not reorganisations. Migration loads the pairs first and builds reorganisations only from reviewed evidence.
-
-| BAU evidence | Used for |
-| --- | --- |
-| `1` Predecessor, `2` Successor | Direction of a pair only |
-| `1L`, `6`, `6.1`, `6.2`, `2K` | Candidate absorption or amalgamation reorganisations |
-| `1F`, `2F` | Candidate split or spin-out reorganisations, decided by whether the origin closed |
-| `1I` Closure | Candidate outcome Closed |
-| `2A`, `2O`, `2P`, `2Q` | Candidate effects on the receiving establishment |
-| Lifecycle open and close dates | Outcome checks, and whether a receiver is new or existing |
-| Lifecycle opening and closing reasons | Evidence for cause and pattern |
-| `4`, `5`, `CC` | Not this model. Ongoing associations. |
-| `0`, `9` | Held for review |
-
-Source rows, raw codes, link dates and review decisions stay in migration evidence, outside the live tables. The [LinkType analysis](../bau-linktype-scenario-conceptual-analysis.md) has the code-by-code detail.
-
-## Decisions needed
-
-1. Is the reorganisation entity needed now, or can the first delivery load only succession pairs and add reorganisations later? The model allows both, because reorganisations are optional for pairs.
-2. Should the pattern be stored and checked, as proposed, or only worked out from participants when read?
-3. Confirm the new pattern *Transfer between continuing establishments*.
-4. Agree the cause and effect-type lists, especially the values that come only from archived BAU labels.
-5. Agree that the reorganisation's pattern and cause replace `establishment_succession_type`.
-6. Does a school marked "proposed to close" need a proposed reorganisation? This model covers completed reorganisations only.
-7. Write creation rules for provision transfer.
-8. Should *Change to one establishment* stay a pattern? One school adding a sixth form is a stretch for the word reorganisation. Dropping it would mean a reorganisation always involves two or more establishments, and one school's own changes live only in its dated attribute history.
