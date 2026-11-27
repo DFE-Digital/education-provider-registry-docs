@@ -1211,20 +1211,6 @@
         "source_database":  "gias_bau_test_local"
     },
     {
-        "urn":  130540,
-        "sqlstate":  "23514",
-        "first_seen":  "2026-11-13T12:47:09.798822+00:00",
-        "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
-        "source_database":  "gias_bau_test_local"
-    },
-    {
-        "urn":  130541,
-        "sqlstate":  "23514",
-        "first_seen":  "2026-11-13T12:47:09.798897+00:00",
-        "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
-        "source_database":  "gias_bau_test_local"
-    },
-    {
         "urn":  130542,
         "sqlstate":  "23514",
         "first_seen":  "2026-11-13T12:47:09.79899+00:00",
@@ -1239,23 +1225,9 @@
         "source_database":  "gias_bau_test_local"
     },
     {
-        "urn":  130544,
-        "sqlstate":  "23514",
-        "first_seen":  "2026-11-13T12:47:09.799138+00:00",
-        "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
-        "source_database":  "gias_bau_test_local"
-    },
-    {
         "urn":  130545,
         "sqlstate":  "23514",
         "first_seen":  "2026-11-13T12:47:09.799363+00:00",
-        "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
-        "source_database":  "gias_bau_test_local"
-    },
-    {
-        "urn":  130546,
-        "sqlstate":  "23514",
-        "first_seen":  "2026-11-13T12:47:09.79947+00:00",
         "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
         "source_database":  "gias_bau_test_local"
     },
@@ -4273,13 +4245,6 @@
         "urn":  135752,
         "sqlstate":  "23514",
         "first_seen":  "2026-11-13T12:48:49.370941+00:00",
-        "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
-        "source_database":  "gias_bau_test_local"
-    },
-    {
-        "urn":  135771,
-        "sqlstate":  "23514",
-        "first_seen":  "2026-11-13T12:48:49.371029+00:00",
         "error_message":  "new row for relation \"statutory_age_range\" violates check constraint \"statutory_age_range_upper_statutory_age_check\"",
         "source_database":  "gias_bau_test_local"
     },

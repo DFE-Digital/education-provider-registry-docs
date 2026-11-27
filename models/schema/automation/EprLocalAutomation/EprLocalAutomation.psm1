@@ -32,6 +32,7 @@ Export-ModuleMember -Function @(
     # Connections and run settings
     'New-BauSource'
     'New-PostgresTarget'
+    'Assert-PostgresConnection'
     'Get-FixtureSelection'
     'New-RunWorkspace'
     'Remove-RunWorkspace'
@@ -41,6 +42,8 @@ Export-ModuleMember -Function @(
     'Reset-EstablishmentSchema'
     'Import-ReferenceSeed'
     'Initialize-EstablishmentDatabase'
+    'Resolve-LinkedEstablishmentSelection'
+    'Import-EstablishmentReorganisations'
 
     # Loading from the local BAU copy
     'Import-BauGovernanceSeed'

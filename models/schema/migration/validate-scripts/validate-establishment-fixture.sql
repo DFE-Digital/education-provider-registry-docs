@@ -14,6 +14,9 @@ BEGIN
         WHERE table_schema = 'establishment'
           AND table_type = 'BASE TABLE'
           AND table_name NOT IN (
+              -- Reorganisation business rows are optional until cases are migrated.
+              'establishment_reorganisation', 'reorganisation_participant',
+              'reorganisation_effect', 'establishment_succession', 'establishment_provision_transfer',
               'legal_entity_address',
               'organisation_group_address',
               'academy_trust_classification',

@@ -11,6 +11,12 @@ function Assert-EstablishmentBuildInputs {
         (Get-SchemaPath 'seed/seed-target-reference-data.sql'),
         (Get-SchemaPath 'seed/seed-academy-trust-reference-data.sql'),
         (Get-SchemaPath 'seed/seed-address-purposes.sql'),
+        (Get-SchemaPath 'seed/seed-reorganisation-reference-data.sql'),
+        (Get-SchemaPath 'establishment/cases/reorganisation-migration-cases.json'),
+        (Get-SchemaPath 'migration/load-reviewed-reorganisation.sql'),
+        (Get-SchemaPath 'establishment/transforms/reorganisation-links-from-bau.sql'),
+        (Get-SchemaPath 'establishment/transforms/reorganisation-participants-from-bau.sql'),
+        (Get-SchemaPath 'establishment/transforms/linked-establishment-selection-from-bau.sql'),
         (Get-SchemaPath 'migration/migration-schema.sql'),
         (Get-SchemaPath 'migration/load-development-establishment-seed.sql'),
         (Get-SchemaPath 'migration/prepare-development-establishments.sql'),
@@ -59,6 +65,7 @@ function Reset-EstablishmentSchema {
     Write-Step 'Recreating the establishment schema'
     Invoke-Psql -Target $Target -Command 'DROP SCHEMA IF EXISTS establishment CASCADE;' -FailureMessage 'Establishment schema reset failed'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'establishment/establishment-schema.sql') -FailureMessage 'Establishment schema creation failed'
+    Invoke-Psql -Target $Target -File (Get-SchemaPath 'seed/seed-reorganisation-reference-data.sql') -FailureMessage 'Reorganisation reference seed failed'
 
     Write-Step 'Recreating the migration schema'
     Invoke-Psql -Target $Target -File (Get-SchemaPath 'migration/migration-schema.sql') -FailureMessage 'Migration schema rebuild failed'

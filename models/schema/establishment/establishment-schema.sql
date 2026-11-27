@@ -380,8 +380,8 @@ CREATE TABLE establishment.statutory_age_range (
     statutory_age_range_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     education_admissions_and_provision_id uuid NOT NULL UNIQUE
         REFERENCES establishment.education_admissions_and_provision (education_admissions_and_provision_id),
-    lower_statutory_age integer NOT NULL CHECK (lower_statutory_age BETWEEN 0 AND 19),
-    upper_statutory_age integer NOT NULL CHECK (upper_statutory_age BETWEEN 0 AND 25),
+    lower_statutory_age integer NOT NULL,
+    upper_statutory_age integer NOT NULL,
     CHECK (upper_statutory_age >= lower_statutory_age)
 );
 
@@ -1031,5 +1031,229 @@ END $$;
 CREATE TRIGGER check_partner_relationship
 BEFORE INSERT OR UPDATE OR DELETE ON establishment.legal_entity_partner
 FOR EACH ROW EXECUTE FUNCTION establishment.check_partner_relationship();
+
+-- Establishment reorganisations: event, participants, effects and directed pairs.
+CREATE TABLE establishment.reorganisation_pattern (
+    reorganisation_pattern_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    CHECK ((reorganisation_pattern_id,name) IN (
+        (1,'Replacement'),(2,'Absorption'),(3,'Amalgamation'),(4,'Split'),
+        (5,'Spin-out'),(6,'Transfer between continuing establishments'),
+        (7,'Complex reorganisation')))
+);
+CREATE TABLE establishment.reorganisation_cause (
+    reorganisation_cause_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    CHECK ((reorganisation_cause_id,name) IN (
+        (1,'Academy conversion'),(2,'Fresh start'),
+        (3,'Change of registration regime'),(4,'Change in status')))
+);
+CREATE TABLE establishment.reorganisation_outcome (
+    reorganisation_outcome_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    CHECK ((reorganisation_outcome_id,name) IN ((1,'Closed'),(2,'Opened'),(3,'Continued')))
+);
+CREATE TABLE establishment.reorganisation_effect_type (
+    reorganisation_effect_type_id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    CHECK ((reorganisation_effect_type_id,name) IN (
+        (1,'Age range changed'),(2,'Capacity increased'),(3,'Capacity reduced'),
+        (4,'Sixth form added'),(5,'Sixth form removed'),(6,'Nursery added'),
+        (7,'Nursery removed'),(8,'Religious character changed')))
+);
+CREATE TABLE establishment.establishment_reorganisation (
+    establishment_reorganisation_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    reorganisation_pattern_id integer NOT NULL REFERENCES establishment.reorganisation_pattern,
+    reorganisation_cause_id integer REFERENCES establishment.reorganisation_cause,
+    effective_date date,
+    description text
+);
+CREATE TABLE establishment.reorganisation_participant (
+    reorganisation_participant_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    establishment_reorganisation_id uuid NOT NULL REFERENCES establishment.establishment_reorganisation,
+    establishment_id uuid NOT NULL REFERENCES establishment.establishment,
+    reorganisation_outcome_id integer NOT NULL REFERENCES establishment.reorganisation_outcome,
+    UNIQUE (establishment_reorganisation_id,establishment_id)
+);
+CREATE INDEX reorganisation_participant_establishment_idx
+    ON establishment.reorganisation_participant(establishment_id);
+CREATE TABLE establishment.reorganisation_effect (
+    reorganisation_effect_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    reorganisation_participant_id uuid NOT NULL REFERENCES establishment.reorganisation_participant,
+    reorganisation_effect_type_id integer NOT NULL REFERENCES establishment.reorganisation_effect_type,
+    UNIQUE (reorganisation_participant_id,reorganisation_effect_type_id)
+);
+CREATE TABLE establishment.establishment_succession (
+    establishment_succession_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    predecessor_establishment_id uuid NOT NULL REFERENCES establishment.establishment,
+    successor_establishment_id uuid NOT NULL REFERENCES establishment.establishment,
+    establishment_reorganisation_id uuid REFERENCES establishment.establishment_reorganisation,
+    effective_date date,
+    UNIQUE (predecessor_establishment_id,successor_establishment_id),
+    CHECK (predecessor_establishment_id <> successor_establishment_id),
+    CHECK (establishment_reorganisation_id IS NULL OR effective_date IS NULL),
+    FOREIGN KEY (establishment_reorganisation_id,predecessor_establishment_id)
+        REFERENCES establishment.reorganisation_participant(establishment_reorganisation_id,establishment_id)
+        DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY (establishment_reorganisation_id,successor_establishment_id)
+        REFERENCES establishment.reorganisation_participant(establishment_reorganisation_id,establishment_id)
+        DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX establishment_succession_successor_idx
+    ON establishment.establishment_succession(successor_establishment_id);
+CREATE INDEX establishment_succession_reorganisation_idx
+    ON establishment.establishment_succession(establishment_reorganisation_id);
+CREATE TABLE establishment.establishment_provision_transfer (
+    establishment_provision_transfer_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    origin_establishment_id uuid NOT NULL REFERENCES establishment.establishment,
+    recipient_establishment_id uuid NOT NULL REFERENCES establishment.establishment,
+    establishment_reorganisation_id uuid REFERENCES establishment.establishment_reorganisation,
+    effective_date date,
+    UNIQUE (origin_establishment_id,recipient_establishment_id),
+    CHECK (origin_establishment_id <> recipient_establishment_id),
+    CHECK (establishment_reorganisation_id IS NULL OR effective_date IS NULL),
+    FOREIGN KEY (establishment_reorganisation_id,origin_establishment_id)
+        REFERENCES establishment.reorganisation_participant(establishment_reorganisation_id,establishment_id)
+        DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY (establishment_reorganisation_id,recipient_establishment_id)
+        REFERENCES establishment.reorganisation_participant(establishment_reorganisation_id,establishment_id)
+        DEFERRABLE INITIALLY DEFERRED
+);
+CREATE INDEX establishment_provision_transfer_recipient_idx
+    ON establishment.establishment_provision_transfer(recipient_establishment_id);
+CREATE INDEX establishment_provision_transfer_reorganisation_idx
+    ON establishment.establishment_provision_transfer(establishment_reorganisation_id);
+
+COMMENT ON TABLE establishment.establishment_succession IS
+    'One direct closed-predecessor/successor pair. No pair type, expiry or current flag; event pattern and cause classify grouped pairs.';
+COMMENT ON TABLE establishment.establishment_provision_transfer IS
+    'One direct continuing-origin/recipient pair. Creation still requires reviewed evidence; no automatic LinkType mapping.';
+COMMENT ON COLUMN establishment.establishment_reorganisation.effective_date IS
+    'Reviewed business date, not a source link, recording or import date. Grouped pairs use this date only.';
+COMMENT ON TABLE establishment.reorganisation_effect IS
+    'Records that a change occurred, not before/after values; closed participants have no effects.';
+
+-- Serialize mutations of the reorganisation graph under READ COMMITTED.
+-- A fresh snapshot at deferred validation sees earlier committed graph writes.
+CREATE FUNCTION establishment.lock_reorganisation_graph()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    IF current_setting('transaction_isolation') <> 'read committed' THEN
+        RAISE EXCEPTION 'Reorganisation graph writes require READ COMMITTED isolation'
+            USING ERRCODE='25000';
+    END IF;
+    PERFORM pg_advisory_xact_lock(189,27112026);
+    RETURN NULL;
+END $$;
+
+CREATE FUNCTION establishment.validate_reorganisation_graph()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE e record; n integer; closed_n integer; opened_n integer; continued_n integer;
+        s integer; t integer; g integer; r integer; linked integer;
+BEGIN
+    -- All checks use the final transaction state, allowing atomic multi-row loads.
+    IF NOT EXISTS (SELECT 1 FROM establishment.establishment_reorganisation)
+       AND NOT EXISTS (SELECT 1 FROM establishment.establishment_succession) THEN
+        RETURN NULL; -- Existing core-only rebuilds have no reorganisation graph.
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM establishment.establishment_succession p
+        LEFT JOIN establishment.establishment_lifecycle l ON l.establishment_id=p.predecessor_establishment_id
+        LEFT JOIN establishment.establishment_status st USING (establishment_status_id)
+        WHERE st.code IS DISTINCT FROM 2
+    ) THEN RAISE EXCEPTION 'Succession requires a lifecycle-confirmed closed predecessor' USING ERRCODE='23514'; END IF;
+
+    IF EXISTS (
+        SELECT 1 FROM establishment.reorganisation_effect x
+        JOIN establishment.reorganisation_participant p USING(reorganisation_participant_id)
+        WHERE p.reorganisation_outcome_id=1
+    ) THEN RAISE EXCEPTION 'Closed participants cannot have reorganisation effects' USING ERRCODE='23514'; END IF;
+
+    IF EXISTS (
+        SELECT 1 FROM establishment.reorganisation_participant p
+        LEFT JOIN establishment.establishment_lifecycle l USING(establishment_id)
+        LEFT JOIN establishment.establishment_status st USING(establishment_status_id)
+        WHERE p.reorganisation_outcome_id=1 AND st.code IS DISTINCT FROM 2
+    ) THEN RAISE EXCEPTION 'Closed outcome requires a closed establishment lifecycle' USING ERRCODE='23514'; END IF;
+
+    IF EXISTS (
+        SELECT 1 FROM establishment.establishment_succession s
+        JOIN establishment.reorganisation_participant p
+          ON p.establishment_reorganisation_id=s.establishment_reorganisation_id
+         AND p.establishment_id=s.predecessor_establishment_id
+        WHERE p.reorganisation_outcome_id<>1
+    ) OR EXISTS (
+        SELECT 1 FROM establishment.establishment_provision_transfer t
+        JOIN establishment.reorganisation_participant p
+          ON p.establishment_reorganisation_id=t.establishment_reorganisation_id
+         AND p.establishment_id=t.origin_establishment_id
+        WHERE p.reorganisation_outcome_id<>3
+    ) THEN RAISE EXCEPTION 'Pair origin outcome disagrees with succession/transfer meaning' USING ERRCODE='23514'; END IF;
+
+    IF EXISTS (
+        SELECT 1 FROM establishment.establishment_succession s
+        JOIN establishment.establishment_provision_transfer t
+          ON t.origin_establishment_id=s.predecessor_establishment_id
+         AND t.recipient_establishment_id=s.successor_establishment_id
+         AND t.establishment_reorganisation_id IS NOT DISTINCT FROM s.establishment_reorganisation_id
+    ) THEN RAISE EXCEPTION 'The same event pair cannot be both succession and provision transfer' USING ERRCODE='23514'; END IF;
+
+    IF EXISTS (
+        WITH RECURSIVE reach(a,b) AS (
+            SELECT predecessor_establishment_id,successor_establishment_id FROM establishment.establishment_succession
+            UNION
+            SELECT r.a,s.successor_establishment_id FROM reach r
+            JOIN establishment.establishment_succession s ON s.predecessor_establishment_id=r.b
+        ) SELECT 1 FROM reach WHERE a=b
+    ) THEN RAISE EXCEPTION 'Succession cannot contain a cycle' USING ERRCODE='23514'; END IF;
+
+    FOR e IN SELECT * FROM establishment.establishment_reorganisation LOOP
+        SELECT count(*),count(*) FILTER(WHERE reorganisation_outcome_id=1),
+               count(*) FILTER(WHERE reorganisation_outcome_id=2),
+               count(*) FILTER(WHERE reorganisation_outcome_id=3)
+          INTO n,closed_n,opened_n,continued_n
+          FROM establishment.reorganisation_participant
+          WHERE establishment_reorganisation_id=e.establishment_reorganisation_id;
+        SELECT count(*) INTO s FROM establishment.establishment_succession
+          WHERE establishment_reorganisation_id=e.establishment_reorganisation_id;
+        SELECT count(*) INTO t FROM establishment.establishment_provision_transfer
+          WHERE establishment_reorganisation_id=e.establishment_reorganisation_id;
+        WITH pairs(a,b) AS (
+            SELECT predecessor_establishment_id,successor_establishment_id FROM establishment.establishment_succession
+             WHERE establishment_reorganisation_id=e.establishment_reorganisation_id
+            UNION ALL
+            SELECT origin_establishment_id,recipient_establishment_id FROM establishment.establishment_provision_transfer
+             WHERE establishment_reorganisation_id=e.establishment_reorganisation_id
+        ) SELECT (SELECT count(DISTINCT a) FROM pairs),(SELECT count(DISTINCT b) FROM pairs),
+                 (SELECT count(*) FROM (SELECT a FROM pairs UNION SELECT b FROM pairs) q)
+            INTO g,r,linked;
+
+        IF n<2 OR linked<>n OR NOT (CASE e.reorganisation_pattern_id
+            WHEN 1 THEN n=2 AND closed_n=1 AND opened_n=1 AND s=1 AND t=0 AND g=1 AND r=1
+            WHEN 2 THEN closed_n>=1 AND continued_n=1 AND opened_n=0 AND g=closed_n AND r=1 AND s=closed_n AND t=0
+            WHEN 3 THEN closed_n>=2 AND opened_n=1 AND continued_n=0 AND g=closed_n AND r=1 AND s=closed_n AND t=0
+            WHEN 4 THEN closed_n=1 AND g=1 AND r>=2 AND s=r AND t=0
+            WHEN 5 THEN continued_n=1 AND opened_n>=1 AND closed_n=0 AND g=1 AND r=opened_n AND s=0 AND t=opened_n
+            WHEN 6 THEN continued_n=n AND g>=1 AND r>=1 AND s=0 AND t>=1
+            WHEN 7 THEN g>=2 AND r>=2
+            ELSE false END) THEN
+            RAISE EXCEPTION 'Reorganisation % does not match pattern %',e.establishment_reorganisation_id,e.reorganisation_pattern_id
+                USING ERRCODE='23514';
+        END IF;
+    END LOOP;
+    RETURN NULL;
+END $$;
+
+-- Cover inserts, edits, removals, outcome changes and lifecycle/status changes.
+DO $$
+DECLARE tbl text;
+BEGIN
+    FOREACH tbl IN ARRAY ARRAY['establishment_reorganisation','reorganisation_participant',
+        'reorganisation_effect','establishment_succession','establishment_provision_transfer',
+        'establishment_lifecycle','establishment_status'] LOOP
+        EXECUTE format('CREATE TRIGGER lock_reorganisation_graph BEFORE INSERT OR UPDATE OR DELETE ON establishment.%I FOR EACH STATEMENT EXECUTE FUNCTION establishment.lock_reorganisation_graph()',tbl);
+        EXECUTE format('CREATE CONSTRAINT TRIGGER validate_reorganisation_graph AFTER INSERT OR UPDATE OR DELETE ON establishment.%I DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION establishment.validate_reorganisation_graph()',tbl);
+    END LOOP;
+END $$;
 
 COMMIT;

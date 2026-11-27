@@ -1,6 +1,8 @@
 # Establishment reorganisation: logical model
 
 
+Physical implementation: the [establishment schema](../../schema/establishment/establishment-schema.sql) now defines these tables and integrity constraints. Target-owned reference seeds and isolated schema tests are included; source-backed case migration is still to do. See the [migration test-case catalogue](../../../../docs/transformation/data/modelling/reorganisation/reorganisation-migration-test-cases.md).
+
 We call this topic **establishment reorganisation**, the term DfE and councils already use for closures, mergers and splits. It describes something that happened in the world. It isn't an edit to an establishment record.
 
 ## What the model separates
@@ -143,9 +145,10 @@ What shape did this reorganisation take: replacement, absorption, amalgamation, 
 | Spin-out | One establishment carries on and one or more new establishments are created from part of it. |
 | Transfer between continuing establishments | Provision moves between establishments that all carry on, and none is created. |
 | Complex reorganisation | Two or more establishments give provision and two or more receive it. |
-| Change to one establishment | One establishment changes its provision, with no other establishment involved. |
 
 *Transfer between continuing establishments* isn't in the taxonomy yet. We found the gap while writing the rules. Without it, a nursery moving from one open school to another open school has no pattern. It needs business confirmation.
+
+A change affecting only one establishment belongs in its dated attribute history. It does not create a reorganisation. Effects record changes that accompany a reorganisation between establishments.
 
 ### Pattern rules
 
@@ -162,7 +165,8 @@ In these rules, a **giver** is a participant that is the predecessor or origin i
 | Spin-out | Exactly one, continued | One or more, all opened | Provision transfer only |
 | Transfer between continuing establishments | One or more, all continued | One or more, all continued | Provision transfer only |
 | Complex reorganisation | Two or more | Two or more | Any mix |
-| Change to one establishment | None | None | None. Exactly one participant, continued, with at least one effect. |
+
+Every reorganisation involves at least two distinct establishments, and every participant appears in a succession or provision-transfer pair within that event.
 
 A reorganisation with only one succession pair still needs its pattern. Teign is a replacement. Joseph Priestley into Leeds City College is an absorption.
 
@@ -273,7 +277,7 @@ One effect type replaces each combined BAU label. `2Q` "Merged - expansion in sc
 
 ## Establishment succession
 
-`establishment_succession` records that provision moved from an establishment that closed. The [succession creation rules](../establishment-succession-creation-rules.md) still apply in full.
+`establishment_succession` records that provision moved from an establishment that closed. The [succession creation rules](../../../../docs/transformation/data/modelling/reorganisation/establishment-succession-creation-rules.md) still apply in full.
 
 Business-friendly pattern:
 

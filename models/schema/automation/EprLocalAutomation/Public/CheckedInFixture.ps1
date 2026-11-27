@@ -17,6 +17,8 @@ $script:ReferenceSeedTables = @(
     'local_authority_area_contact', 'local_authority_area_government_office_region', 'address_purpose'
 )
 $script:EstablishmentSeedTables = @(
+    'establishment_reorganisation', 'reorganisation_participant', 'reorganisation_effect',
+    'establishment_succession', 'establishment_provision_transfer',
     'establishment', 'establishment_geography', 'establishment_contact',
     'establishment_lifecycle', 'address', 'site', 'establishment_to_site',
     'capacity_and_pupil_measures', 'education_admissions_and_provision',

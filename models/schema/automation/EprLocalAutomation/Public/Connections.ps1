@@ -2,6 +2,12 @@
 # targets. Every other function takes one of these objects, so connection
 # details are set once per run.
 
+function Assert-PostgresConnection {
+    param([Parameter(Mandatory)]$Target)
+    Invoke-Psql -Target $Target -Output Scalar -Command 'SELECT 1;' `
+        -FailureMessage "Cannot connect to PostgreSQL target $($Target.PostgresHost):$($Target.Port)/$($Target.Database). Check the transactional instance endpoint and that the server is running" | Out-Null
+}
+
 function New-BauSource {
     <#
     .SYNOPSIS

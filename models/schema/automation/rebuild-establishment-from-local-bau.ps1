@@ -50,13 +50,18 @@ $target=New-PostgresTarget -PostgresHost $PostgresHost -Port $PostgresPort -Data
 $workspace=New-RunWorkspace -ParentDirectory $FixtureDirectory
 $migrationRunId=[guid]::Empty
 try {
+    Assert-PostgresConnection -Target $target
+    # Resolve the complete linked selection before resetting the target. An
+    # empty selection means all establishments and needs no graph expansion.
+    $resolvedUrns=@(Resolve-LinkedEstablishmentSelection -Source $source -WorkingDirectory $workspace -Urn $requestedUrns)
     $referenceCsv=Export-BauReferenceData -Source $source -WorkingDirectory $workspace
     Initialize-EstablishmentDatabase -Target $target -FromBau
     Import-BauReferenceData -Target $target -CsvPath $referenceCsv -SourceDatabase $source.Database -WorkingDirectory $workspace
     Import-GeographicReferenceData -Source $source -Target $target -WorkingDirectory $workspace
     $migrationRunId=Start-DevelopmentSeedRun -Source $source -Target $target
-    $result=Import-DevelopmentEstablishmentSeed -Source $source -Target $target -WorkingDirectory $workspace -Urn $requestedUrns -BatchSize $BatchSize -MigrationRunId $migrationRunId
+    $result=Import-DevelopmentEstablishmentSeed -Source $source -Target $target -WorkingDirectory $workspace -Urn $resolvedUrns -BatchSize $BatchSize -MigrationRunId $migrationRunId
     Import-DevelopmentRelationships -Source $source -Target $target -WorkingDirectory $workspace -MigrationRunId $migrationRunId
+    Import-EstablishmentReorganisations -Source $source -Target $target -WorkingDirectory $workspace -Urn $resolvedUrns -MigrationRunId $migrationRunId
     Complete-DevelopmentSeedRun -Target $target -MigrationRunId $migrationRunId
     Write-Host "Development seed completed: $($result.source_candidates) source candidates, $($result.known_bad_excluded) cached exclusions, $($result.loaded) loaded, $($result.skipped) new rejections, $($result.attempted) attempted."
     Write-Host 'Skipped establishments: SELECT urn, sqlstate, error_message FROM migration.establishment_load_error ORDER BY urn;'

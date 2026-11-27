@@ -21,7 +21,7 @@ DO $$ BEGIN
         END IF;
     END IF;
 END $$;
-'@ -FailureMessage 'Reviewed council history prevents destructive reset'
+'@ -FailureMessage 'Could not complete the council-history reset check'
 }
 
 function Import-LocalAuthorityCouncilFixture {

@@ -23,6 +23,67 @@ The target defaults to `establishment_local`, with PostgreSQL credentials in
 
 ## Loading and failures
 
+### Selecting establishments and their links
+
+A selected rebuild resolves the complete connected set of non-archived BAU
+establishment links before resetting the target. It follows links in either
+direction and deduplicates reciprocal links, shared neighbours and cycles.
+Selecting **113557** therefore also loads **136494**; selecting **136494** also
+loads **113557**. The same expansion applies to a list or selection file.
+
+From the workspace root:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\education-provider-registry-docs\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -Urn 113557 -PostgresPort 5433 -PostgresDatabase establishment
+```
+
+For a list, use `-Urn "113557,136494"`. Omit the selection to migrate all eligible
+establishments. Both selected and full runs reset the schemas. The target above
+is the documented instance on port 5433; for the older local target use
+`-PostgresPort 5432 -PostgresDatabase establishment_local`.
+
+The load order is reference data, all resolved establishment core rows, ordinary
+relationships, then reorganisations. A full migration likewise runs the
+reorganisation phase at the end, after all establishment batches have finished.
+Related establishments remain subject to the existing source status filters and
+rejection rules; a missing or rejected endpoint is recorded as a
+`reorganisation-dependency` rather than creating a partial event.
+
+The reorganisation phase implements R01-R07 from
+`establishment/cases/reorganisation-migration-cases.json`. The generic loader reads
+patterns, causes, participants, outcomes and directed succession pairs from that
+file. It validates each pair's two non-archived BAU assertions and checks source
+lifecycle dates against the target before writing the event in one transaction.
+
+| Case | Pattern | Participants | Succession pairs |
+| --- | --- | --- | --- |
+| R01 | Replacement | 2 | 1 |
+| R02 | Absorption | 2 | 1 |
+| R03 | Amalgamation | 4 | 3 |
+| R04 | Split | 3 | 2 |
+| Total | 4 events | 11 | 7 |
+
+Leeds City College is Continued in R02 and Opened in R03, in separate events.
+The four mappings are enabled for local migration testing; their event dates
+remain unasserted. Source labels do not automatically classify other events.
+Reprocessing assertions preserves existing establishment, event, participant and
+pair UUIDs. Conflicting existing events, lifecycle data or dated standalone pairs
+stop the case rather than silently replacing those facts. A rebuild still resets
+the schemas and recreates the dataset.
+
+Per-case results and source evidence are retained in
+`migration.migration_run.notes` under `reorganisations`. Missing endpoints are
+recorded in `migration.relationship_load_error`, with no partial event created.
+Selection expansion follows all active establishment link types; it does not
+classify them as reorganisations. R05-R07 use the accepted local test assumptions described below.
+
+Focused loader tests use isolated schemas and controlled source links:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\education-provider-registry-docs\models\schema\establishment\cases\test-reorganisation-migration.ps1"
+```
+### Rebuilding the dataset
+
 The command recreates the disposable target schemas, loads reference dictionaries
 and geography, then extracts establishment rows once. PostgreSQL stages the raw
 values and attempts batches of 1,000 establishments by default.
@@ -108,3 +169,26 @@ ORDER BY started_at DESC;
 The command does not run fixture approval tests, update approval snapshots or
 automatically replace checked-in seeds. The checked-in SQL rebuild remains the
 separate reviewed-fixture workflow. Its approvals describe its own curated data.
+
+The case JSON contains R01-R07 and a shared `urns` list per case. All seven mappings are enabled; R05-R07 are accepted local test assumptions.
+To rebuild just the enabled case selections from the workspace root:
+
+```powershell
+$cases = Get-Content ".\education-provider-registry-docs\models\schema\establishment\cases\reorganisation-migration-cases.json" -Raw | ConvertFrom-Json
+$urns = (($cases.cases | Where-Object migration_enabled).urns | Sort-Object -Unique) -join ','
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\education-provider-registry-docs\models\schema\automation\rebuild-establishment-from-local-bau.ps1" -Urn $urns -PostgresPort 5433 -PostgresDatabase establishment
+```
+
+## Accepted R05-R07 assumptions and local migration result
+
+27 November 2026: the user accepted the unresolved assumptions for local test migration. These assumptions do not establish the corresponding business events as independently verified facts.
+
+| Case | Accepted local test assumption |
+| --- | --- |
+| R05 | Provision transfers from Rosedale College (137077) to Rosedale Primary (141561). |
+| R06 | A separate provision transfer goes from Sedbergh School (112451) to Casterton (112445). |
+| R07 | Sedbergh Junior (121739) succeeds into both survivors, with a provision transfer from Casterton (112445) to Sedbergh School (112451). Casterton has an age-range effect and Sedbergh School a capacity effect. |
+
+R06 and R07 are assumed to be distinct events. Their opposite transfer directions are allocated separately; the same directed transfer is not counted in both events. Event dates remain unset. Source link dates validate lifecycle context but are not asserted as event dates. Assumption status, acceptance date, rationale and source observations are retained under `reorganisations` in `migration.migration_run.notes`.
+
+The local migration into `127.0.0.1:5433/establishment` completed successfully: **7 events, 18 participants, 9 succession pairs, 3 provision transfers and 2 effects**. All seven patterns are represented, with no core or relationship rejections. Isolated repeat-import tests also pass for all seven cases.

@@ -1,0 +1,355 @@
+{
+  "cases": [
+    {
+      "case_id": "R01",
+      "pattern": "Replacement",
+      "migration_enabled": true,
+      "review_status": "local_test_mapping",
+      "urns": [
+        113557,
+        136494
+      ],
+      "description": "Teign School academy conversion (reviewed case R01)",
+      "cause": "Academy conversion",
+      "effective_date": null,
+      "participants": [
+        {
+          "urn": 113557,
+          "name": "Teign School",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 136494,
+          "name": "Teign School",
+          "outcome": "Opened"
+        }
+      ],
+      "succession_pairs": [
+        {
+          "predecessor_urn": 113557,
+          "successor_urn": 136494,
+          "forward_link_type": "2",
+          "reverse_link_type": "1"
+        }
+      ],
+      "mapping_note": "Enabled for the local migration test catalogue; source links and lifecycle must validate. Event date remains unasserted."
+    },
+    {
+      "case_id": "R02",
+      "pattern": "Absorption",
+      "migration_enabled": true,
+      "review_status": "local_test_mapping",
+      "urns": [
+        130546,
+        135771
+      ],
+      "description": "Joseph Priestley College absorbed into the continuing Leeds City College",
+      "participants": [
+        {
+          "urn": 130546,
+          "name": "Joseph Priestley College",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 135771,
+          "name": "Leeds City College",
+          "outcome": "Continued"
+        }
+      ],
+      "source_link_ids": [
+        14635,
+        14636
+      ],
+      "review_note": "Local test mapping: reciprocal 2K assertions and lifecycle support absorption into the continuing Leeds City College. Event date remains unasserted.",
+      "cause": null,
+      "effective_date": null,
+      "succession_pairs": [
+        {
+          "predecessor_urn": 130546,
+          "successor_urn": 135771,
+          "forward_link_type": "2K",
+          "reverse_link_type": "2K"
+        }
+      ],
+      "mapping_note": "Enabled for the local migration test catalogue; source links and lifecycle must validate. Event date remains unasserted."
+    },
+    {
+      "case_id": "R03",
+      "pattern": "Amalgamation",
+      "migration_enabled": true,
+      "review_status": "local_test_mapping",
+      "urns": [
+        130540,
+        130541,
+        130544,
+        135771
+      ],
+      "description": "Three Leeds colleges amalgamate into the newly opened Leeds City College",
+      "participants": [
+        {
+          "urn": 130540,
+          "name": "Leeds College of Technology",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 130541,
+          "name": "Park Lane College Leeds",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 130544,
+          "name": "Leeds Thomas Danby",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 135771,
+          "name": "Leeds City College",
+          "outcome": "Opened"
+        }
+      ],
+      "source_link_ids": [
+        9289,
+        9290,
+        9291,
+        9292,
+        9293,
+        9294
+      ],
+      "review_note": "Local test mapping: three closed predecessors share Leeds City College as the newly opened successor. Source links and lifecycle dates checked; keep this event separate from R02.",
+      "cause": null,
+      "effective_date": null,
+      "succession_pairs": [
+        {
+          "predecessor_urn": 130540,
+          "successor_urn": 135771,
+          "forward_link_type": "2",
+          "reverse_link_type": "1"
+        },
+        {
+          "predecessor_urn": 130541,
+          "successor_urn": 135771,
+          "forward_link_type": "2",
+          "reverse_link_type": "1"
+        },
+        {
+          "predecessor_urn": 130544,
+          "successor_urn": 135771,
+          "forward_link_type": "2",
+          "reverse_link_type": "1"
+        }
+      ],
+      "mapping_note": "Enabled for the local migration test catalogue; source links and lifecycle must validate. Event date remains unasserted."
+    },
+    {
+      "case_id": "R04",
+      "pattern": "Split",
+      "migration_enabled": true,
+      "review_status": "local_test_mapping",
+      "urns": [
+        139979,
+        141384,
+        141385
+      ],
+      "description": "Westlands School closes and provision splits between Green Gates Academy and Westlands Academy",
+      "participants": [
+        {
+          "urn": 139979,
+          "name": "Westlands School",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 141384,
+          "name": "Green Gates Academy",
+          "outcome": "Opened"
+        },
+        {
+          "urn": 141385,
+          "name": "Westlands Academy",
+          "outcome": "Opened"
+        }
+      ],
+      "source_link_ids": [
+        19541,
+        19542,
+        19543,
+        19544
+      ],
+      "review_note": "Local test mapping: two successor pairs use 2F with 1F/1L reciprocals. Source closure/opening dates checked; event date remains unasserted.",
+      "cause": null,
+      "effective_date": null,
+      "succession_pairs": [
+        {
+          "predecessor_urn": 139979,
+          "successor_urn": 141384,
+          "forward_link_type": "2F",
+          "reverse_link_type": "1F"
+        },
+        {
+          "predecessor_urn": 139979,
+          "successor_urn": 141385,
+          "forward_link_type": "2F",
+          "reverse_link_type": "1L"
+        }
+      ],
+      "mapping_note": "Enabled for the local migration test catalogue; source links and lifecycle must validate. Event date remains unasserted."
+    },
+    {
+      "case_id": "R05",
+      "pattern": "Spin-out",
+      "migration_enabled": true,
+      "review_status": "accepted_local_test_assumption",
+      "urns": [
+        137077,
+        141561
+      ],
+      "description": "Assumed Rosedale Primary spin-out from Rosedale College (local test R05)",
+      "participants": [
+        {
+          "urn": 137077,
+          "name": "Rosedale College",
+          "outcome": "Continued"
+        },
+        {
+          "urn": 141561,
+          "name": "Rosedale Primary School",
+          "outcome": "Opened"
+        }
+      ],
+      "source_link_ids": [
+        19912,
+        19913
+      ],
+      "review_note": "Accepted local test assumption: provision moved from Rosedale College to Rosedale Primary; BAU split assertions do not independently prove the transfer.",
+      "cause": null,
+      "effective_date": null,
+      "succession_pairs": [],
+      "effects": [],
+      "assumption_accepted_on": "2026-11-27",
+      "provision_transfer_pairs": [
+        {
+          "origin_urn": 137077,
+          "recipient_urn": 141561,
+          "forward_link_type": "2F",
+          "reverse_link_type": "1F"
+        }
+      ],
+      "validation_date": "2014-11-01"
+    },
+    {
+      "case_id": "R06",
+      "pattern": "Transfer between continuing establishments",
+      "migration_enabled": true,
+      "review_status": "accepted_local_test_assumption",
+      "urns": [
+        112451,
+        112445
+      ],
+      "description": "Assumed separate Sedbergh School to Casterton transfer (local test R06)",
+      "participants": [
+        {
+          "urn": 112451,
+          "name": "Sedbergh School",
+          "outcome": "Continued"
+        },
+        {
+          "urn": 112445,
+          "name": "Casterton, Sedbergh Preparatory School",
+          "outcome": "Continued"
+        }
+      ],
+      "source_link_ids": [
+        17517,
+        17519
+      ],
+      "review_note": "Accepted local test assumption: School to Casterton is a separate transfer event. Its reverse is allocated to R07. The source observations do not establish two independent events or transfer directions.",
+      "cause": null,
+      "effective_date": null,
+      "succession_pairs": [],
+      "effects": [],
+      "assumption_accepted_on": "2026-11-27",
+      "provision_transfer_pairs": [
+        {
+          "origin_urn": 112451,
+          "recipient_urn": 112445,
+          "forward_link_type": "2O",
+          "reverse_link_type": "2P"
+        }
+      ],
+      "validation_date": "2013-09-20"
+    },
+    {
+      "case_id": "R07",
+      "pattern": "Complex reorganisation",
+      "migration_enabled": true,
+      "review_status": "accepted_local_test_assumption",
+      "urns": [
+        121739,
+        112445,
+        112451
+      ],
+      "description": "Assumed Sedbergh complex reorganisation (local test R07)",
+      "participants": [
+        {
+          "urn": 121739,
+          "name": "Sedbergh Junior School",
+          "outcome": "Closed"
+        },
+        {
+          "urn": 112445,
+          "name": "Casterton, Sedbergh Preparatory School",
+          "outcome": "Continued"
+        },
+        {
+          "urn": 112451,
+          "name": "Sedbergh School",
+          "outcome": "Continued"
+        }
+      ],
+      "source_link_ids": [
+        17515,
+        17516,
+        17517,
+        17518,
+        17519,
+        17520
+      ],
+      "review_note": "Accepted local test assumptions: the Junior closure and both succession pairs form one event with a Casterton to School provision transfer, age-range effect on Casterton and capacity effect on School. R06 is treated as separate. These source labels do not independently prove the transfers, effects or event separation.",
+      "cause": null,
+      "effective_date": null,
+      "succession_pairs": [
+        {
+          "predecessor_urn": 121739,
+          "successor_urn": 112445,
+          "forward_link_type": "2O",
+          "reverse_link_type": "1I"
+        },
+        {
+          "predecessor_urn": 121739,
+          "successor_urn": 112451,
+          "forward_link_type": "2P",
+          "reverse_link_type": "1I"
+        }
+      ],
+      "effects": [
+        {
+          "urn": 112445,
+          "effect": "Age range changed"
+        },
+        {
+          "urn": 112451,
+          "effect": "Capacity increased"
+        }
+      ],
+      "assumption_accepted_on": "2026-11-27",
+      "provision_transfer_pairs": [
+        {
+          "origin_urn": 112445,
+          "recipient_urn": 112451,
+          "forward_link_type": "2P",
+          "reverse_link_type": "2O"
+        }
+      ],
+      "validation_date": "2013-09-20"
+    }
+  ]
+}
