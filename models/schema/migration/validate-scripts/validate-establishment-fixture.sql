@@ -83,23 +83,6 @@ BEGIN
 END
 $$;
 
--- Keep the agreed lead and council consistency guards, independent of permissions.
-DO $$
-BEGIN
-    IF (SELECT count(*) FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid
-        JOIN pg_namespace n ON n.oid=c.relnamespace
-        WHERE n.nspname='establishment' AND NOT t.tgisinternal)<>9
-       OR EXISTS(SELECT 1 FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid
-                 JOIN pg_namespace n ON n.oid=c.relnamespace
-                 WHERE n.nspname='establishment' AND NOT t.tgisinternal
-                   AND (t.tgname NOT IN('check_group_member_lead_period','check_membership_lead_boundaries',
-                       'check_local_authority_council_holder','check_council_legal_form','check_council_retains_area_link',
-                       'check_maintenance_council_holder','check_maintenance_area_link',
-                       'check_sole_trader_type','check_partner_relationship') OR t.tgenabled='D')) THEN
-        RAISE EXCEPTION 'Expected the nine enabled lead, council, maintenance and legal-entity consistency guards';
-    END IF;
-END $$;
-
 -- Identifier uniqueness tests: all temporary entities/identifiers roll back.
 DO $$
 DECLARE

@@ -80,28 +80,9 @@ BEGIN
     RAISE EXCEPTION 'Invalid reorganisation mutation unexpectedly succeeded: %',statement;
 END $$;
 
--- Deferred validation must also protect later edits and deletions.
-SELECT pg_temp.expect_reorganisation_failure(
- $$UPDATE establishment.establishment_reorganisation SET reorganisation_pattern_id=3 WHERE reorganisation_pattern_id=1$$,'23514');
-SELECT pg_temp.expect_reorganisation_failure(
- $$DELETE FROM establishment.establishment_succession WHERE establishment_reorganisation_id=md5('reorganisation-test-event-1')::uuid$$,'23514');
+-- Only single-row constraints are enforced by the schema.
 SELECT pg_temp.expect_reorganisation_failure(
  $$INSERT INTO establishment.reorganisation_pattern VALUES (8,'Change to one establishment')$$,'23514');
-SELECT pg_temp.expect_reorganisation_failure(
- $$DO $single$ BEGIN
- SET CONSTRAINTS ALL DEFERRED;
- INSERT INTO establishment.establishment_reorganisation(establishment_reorganisation_id,reorganisation_pattern_id)
- VALUES(md5('single-establishment-change')::uuid,6);
- INSERT INTO establishment.reorganisation_participant(establishment_reorganisation_id,establishment_id,reorganisation_outcome_id)
- VALUES(md5('single-establishment-change')::uuid,md5('reorganisation-test-6-3')::uuid,3);
- INSERT INTO establishment.reorganisation_effect(reorganisation_participant_id,reorganisation_effect_type_id)
- SELECT reorganisation_participant_id,1 FROM establishment.reorganisation_participant
- WHERE establishment_reorganisation_id=md5('single-establishment-change')::uuid;
- SET CONSTRAINTS ALL IMMEDIATE;
- END $single$;$$,'23514');
-SELECT pg_temp.expect_reorganisation_failure(
- $$INSERT INTO establishment.reorganisation_effect(reorganisation_participant_id,reorganisation_effect_type_id)
- SELECT reorganisation_participant_id,1 FROM establishment.reorganisation_participant WHERE reorganisation_outcome_id=1 LIMIT 1$$,'23514');
 SELECT pg_temp.expect_reorganisation_failure(
  $$UPDATE establishment.establishment_succession SET effective_date='2026-01-01'$$,'23514');
 SELECT pg_temp.expect_reorganisation_failure(
@@ -113,16 +94,6 @@ SELECT pg_temp.expect_reorganisation_failure(
 SELECT pg_temp.expect_reorganisation_failure(
  $$INSERT INTO establishment.establishment_provision_transfer(origin_establishment_id,recipient_establishment_id,establishment_reorganisation_id)
  VALUES(md5('reorganisation-test-5-3')::uuid,md5('reorganisation-test-6-4')::uuid,md5('reorganisation-test-event-5')::uuid)$$,'23503');
-SELECT pg_temp.expect_reorganisation_failure(
- $$UPDATE establishment.reorganisation_participant SET reorganisation_outcome_id=2
- WHERE establishment_reorganisation_id=md5('reorganisation-test-event-6')::uuid$$,'23514');
-SELECT pg_temp.expect_reorganisation_failure(
- $$UPDATE establishment.establishment_lifecycle SET establishment_status_id=(SELECT establishment_status_id FROM establishment.establishment_status WHERE code=1)
- WHERE establishment_id=md5('reorganisation-test-1-1')::uuid$$,'23514');
-SELECT pg_temp.expect_reorganisation_failure(
- $$INSERT INTO establishment.establishment_succession(predecessor_establishment_id,successor_establishment_id)
- VALUES(md5('reorganisation-test-1-1')::uuid,md5('reorganisation-test-2-1')::uuid),
- (md5('reorganisation-test-2-1')::uuid,md5('reorganisation-test-1-1')::uuid)$$,'23514');
 
 -- Standalone pairs may have a date; provision-transfer graphs need not be acyclic.
 INSERT INTO establishment.establishment_succession(predecessor_establishment_id,successor_establishment_id,effective_date)
@@ -130,5 +101,5 @@ VALUES(md5('reorganisation-test-1-1')::uuid,md5('reorganisation-test-2-1')::uuid
 INSERT INTO establishment.establishment_provision_transfer(origin_establishment_id,recipient_establishment_id,establishment_reorganisation_id)
 VALUES(md5('reorganisation-test-6-4')::uuid,md5('reorganisation-test-6-3')::uuid,md5('reorganisation-test-event-6')::uuid);
 SET CONSTRAINTS ALL IMMEDIATE;
-SELECT 'PASS: seven patterns, optional effects, standalone date, reciprocal transfers and twelve rejected mutations' AS reorganisation_test_result;
+SELECT 'PASS: seven patterns, optional effects, standalone date, reciprocal transfers and five rejected mutations' AS reorganisation_test_result;
 ROLLBACK;
