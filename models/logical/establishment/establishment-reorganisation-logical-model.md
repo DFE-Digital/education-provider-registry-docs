@@ -128,6 +128,12 @@ What happened, when did it take effect, and why?
 
 `reorganisation_pattern` is a closed list. Each value has an integer key and a unique name, like `academy_route`.
 
+Business-friendly pattern:
+
+```text
+What shape did this reorganisation take: replacement, absorption, amalgamation, split or another pattern?
+```
+
 | Pattern | Meaning |
 | --- | --- |
 | Replacement | One establishment closes and a new one opens to replace it. |
@@ -164,6 +170,12 @@ A reorganisation with only one succession pair still needs its pattern. Teign is
 
 `reorganisation_cause` records why the reorganisation happened, separately from its pattern and participant effects. It has an integer key and a unique name. Use the following working list of causes.
 
+Business-friendly pattern:
+
+```text
+Why did this reorganisation happen?
+```
+
 | Cause | Note |
 | --- | --- |
 | Academy conversion | Evidenced for Teign. |
@@ -198,6 +210,12 @@ and did each one close, open or carry on?
 ### Reorganisation outcome
 
 `reorganisation_outcome` is a closed list with an integer key and a unique name.
+
+Business-friendly pattern:
+
+```text
+Did this establishment close, open or carry on as part of this reorganisation?
+```
 
 | Outcome | Meaning | Lifecycle check |
 | --- | --- | --- |
@@ -234,6 +252,12 @@ As a result of this reorganisation, what changed about this establishment?
 
 `reorganisation_effect_type` is a list with an integer key and a unique name. These values are candidates. Several come only from archived BAU labels, so they need business confirmation.
 
+Business-friendly pattern:
+
+```text
+What kind of change occurred: for example, did the age range change or capacity increase?
+```
+
 | Effect type | BAU evidence |
 | --- | --- |
 | Age range changed | `2O`, `2Q`; archived `1B`, `1C`, `2B`, `2C` |
@@ -251,6 +275,12 @@ One effect type replaces each combined BAU label. `2Q` "Merged - expansion in sc
 
 `establishment_succession` records that provision moved from an establishment that closed. The [succession creation rules](../establishment-succession-creation-rules.md) still apply in full.
 
+Business-friendly pattern:
+
+```text
+Which establishment closed, and which establishment took over its provision?
+```
+
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
 | `establishment_succession_id` | Yes | Generated opaque technical key. |
@@ -262,6 +292,12 @@ One effect type replaces each combined BAU label. `2Q` "Merged - expansion in sc
 ## Establishment provision transfer
 
 `establishment_provision_transfer` records that provision moved from an establishment that carried on.
+
+Business-friendly pattern:
+
+```text
+Which establishment gave provision while carrying on, and which establishment received it?
+```
 
 | Column | Required | Meaning and rule |
 | --- | --- | --- |
